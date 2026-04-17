@@ -55,7 +55,7 @@ export async function generateMaterialsPDF(session: VisaSession): Promise<Uint8A
   for (const mat of required) {
     if (y < 60) break
     page.drawRectangle({ x: MARGIN, y: y - 4, width: PAGE_W - MARGIN * 2, height: 22, color: C.lightGray })
-    page.drawText('✓', { x: MARGIN + 6, y: y + 4, size: 10, font: boldFont, color: C.green })
+    page.drawText('OK', { x: MARGIN + 6, y: y + 4, size: 10, font: boldFont, color: C.green })
     page.drawText(mat.name, { x: MARGIN + 22, y: y + 4, size: 10, font: regularFont, color: C.darkGray, maxWidth: PAGE_W - MARGIN * 2 - 30 })
     if (mat.description) {
       page.drawText(mat.description, { x: MARGIN + 22, y: y - 8, size: 7, font: regularFont, color: C.midGray, maxWidth: PAGE_W - MARGIN * 2 - 30 })
@@ -75,7 +75,7 @@ export async function generateMaterialsPDF(session: VisaSession): Promise<Uint8A
     for (const mat of conditional) {
       if (y < 60) break
       page.drawRectangle({ x: MARGIN, y: y - 4, width: PAGE_W - MARGIN * 2, height: 22, color: C.warmYellow })
-      page.drawText('△', { x: MARGIN + 6, y: y + 4, size: 10, font: boldFont, color: C.amber })
+      page.drawText('IF', { x: MARGIN + 6, y: y + 4, size: 10, font: boldFont, color: C.amber })
       page.drawText(mat.name, { x: MARGIN + 22, y: y + 4, size: 10, font: regularFont, color: C.darkGray, maxWidth: PAGE_W - MARGIN * 2 - 30 })
       if (mat.condition) {
         page.drawText(`If: ${mat.condition}`, { x: MARGIN + 22, y: y - 8, size: 7, font: regularFont, color: C.midGray, maxWidth: PAGE_W - MARGIN * 2 - 30 })
