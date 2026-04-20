@@ -57,8 +57,8 @@ export default function Home() {
             >
               <div className="flex justify-between items-center">
                 <div>
-                  <div className="font-bold">{v.label}</div>
-                  <div className="text-slate-400 text-sm">{v.description}</div>
+                  <div className="font-bold">{v.labelZh}</div>
+                  <div className="text-slate-400 text-sm">{v.descriptionZh}</div>
                 </div>
                 <div className="text-amber-400 font-bold text-sm">¥{v.price.toLocaleString()}</div>
               </div>

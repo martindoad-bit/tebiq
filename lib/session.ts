@@ -1,4 +1,4 @@
-import { VisaSession, SessionStatus, SurveyAnswer, Material, SubmissionStep } from '@/types/session'
+import { VisaSession, SessionStatus, SurveyAnswer } from '@/types/session'
 import { cookies } from 'next/headers'
 
 const SESSION_COOKIE = 'tebiq_session'
@@ -9,8 +9,6 @@ export function createSession(visaType: string): VisaSession {
     visaType,
     status: 'created' as SessionStatus,
     answers: [] as SurveyAnswer[],
-    materials: [] as Material[],
-    submissionSteps: [] as SubmissionStep[],
     requiresReferral: false,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
