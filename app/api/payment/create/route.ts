@@ -14,9 +14,6 @@ export async function POST(req: NextRequest) {
 
     const session = createSession(visaType)
     session.status = 'payment_pending'
-    session.materials = config.materials
-    session.submissionSteps = config.submissionSteps
-
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'
 
     // Skip PayPay in development
