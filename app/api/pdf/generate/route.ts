@@ -11,10 +11,6 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Session not found' }, { status: 404 })
     }
 
-    if (session.status !== 'survey_completed') {
-      return NextResponse.json({ error: 'Survey not completed' }, { status: 400 })
-    }
-
     if (!session.formData) {
   // Build formData on the fly from answers if missing
   const { buildFormData } = await import('@/lib/ai/claude')
