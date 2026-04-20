@@ -16,8 +16,10 @@ export async function POST(req: NextRequest) {
     }
 
     if (!session.formData) {
-      return NextResponse.json({ error: 'Form data missing' }, { status: 400 })
-    }
+  // Build formData on the fly from answers if missing
+  const { buildFormData } = await import('@/lib/ai/claude')
+  session.formData = await buildFormData(session.answers, session.visaType)
+}
 
     const pdfBytes = await generateApplicationPDF(session)
 
