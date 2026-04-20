@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
     const payUrl = await createPaymentSession({
       merchantPaymentId: session.sessionId,
       amount: config.price,
-      orderDescription: `TEBIQ ${config.label}`,
+      orderDescription: `TEBIQ ${config.labelZh}`,
       redirectUrl: `${baseUrl}/survey?session=${session.sessionId}`,
     })
 
