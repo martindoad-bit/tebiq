@@ -1,104 +1,39 @@
-import { VisaTypeConfig } from '@/types/session'
+// Visa type metadata only.
+// Form questions live in visa-form-fields.ts
+// To add a new visa type: add a key here AND add questions in visa-form-fields.ts
 
-export const VISA_TYPES: Record<string, VisaTypeConfig> = {
+export interface VisaTypeMeta {
+  id: string
+  labelZh: string       // Chinese label shown to user
+  labelJa: string       // Japanese label for PDF form header
+  descriptionZh: string // Chinese description
+  price: number
+  // Required materials list (secondary feature - shown after form generation)
+  materials?: string[]
+}
+
+export const VISA_TYPES: Record<string, VisaTypeMeta> = {
   work: {
     id: 'work',
-    label: 'Work Visa',
-    description: 'Engineer / Specialist in Humanities / International Services',
-    price: 9800,
-    referralConditions: ['Residence period less than 1 year', 'History of denial', 'First renewal after job change'],
+    labelZh: '工作签证（技人国）',
+    labelJa: '技術・人文知識・国際業務',
+    descriptionZh: '技術・人文知識・国際業務 在留期間更新',
+    price: 2980,
     materials: [
-      { name: 'Passport (original + copy)' },
-      { name: 'Residence Card (original + copy)' },
-      { name: 'Resident Certificate (within 3 months)' },
-      { name: 'Employment Certificate or Job Offer Letter' },
-      { name: 'Withholding Tax Certificate (last 1 year)' },
-      { name: 'Company Registration Certificate' },
-      { name: 'Company Financial Statements (last 2 years)' },
-      { name: 'Reason Statement', conditional: true, condition: 'If changing jobs or job type' },
-      { name: 'Resignation Certificate from Previous Employer', conditional: true, condition: 'If changed jobs' },
-    ],
-    submissionSteps: [
-      { step: 1, title: 'Prepare Documents', description: 'Gather all documents and make copies' },
-      { step: 2, title: 'Submit to Immigration Bureau', description: 'Submit at the counter of your jurisdiction (mail may be available)' },
-      { step: 3, title: 'Wait for Review', description: 'Standard processing: 2 weeks to 3 months' },
-      { step: 4, title: 'Receive Result', description: 'If approved, receive new Residence Card' },
+      'パスポート（原本＋コピー）',
+      '在留カード（原本＋コピー）',
+      '住民票（3ヶ月以内）',
+      '在職証明書または雇用契約書',
+      '源泉徴収票（直近1年分）',
+      '会社の登記事項証明書',
+      '会社の決算書（直近2期分）',
     ],
   },
-  spouse: {
-    id: 'spouse',
-    label: 'Spouse Visa',
-    description: 'Spouse of Japanese national or permanent resident',
-    price: 9800,
-    referralConditions: ['Short marriage period', 'Living separately', 'Low Japanese proficiency'],
-    materials: [
-      { name: 'Passport (original + copy)' },
-      { name: 'Residence Card (original + copy)' },
-      { name: 'Resident Certificate (within 3 months)' },
-      { name: 'Family Register of Japanese spouse' },
-      { name: 'Marriage Certificate (with translation if foreign)' },
-      { name: "Spouse's Municipal Tax Certificate" },
-      { name: "Spouse's Withholding Tax Certificate" },
-      { name: 'Photos of couple (multiple)' },
-      { name: 'Questionnaire (immigration designated form)' },
-      { name: 'Reason Statement', conditional: true, condition: 'If living separately or long absence from Japan' },
-    ],
-    submissionSteps: [
-      { step: 1, title: 'Prepare Documents', description: 'Gather documents from both Japanese and foreign side' },
-      { step: 2, title: 'Submit to Immigration Bureau', description: 'Submit at the counter of your jurisdiction' },
-      { step: 3, title: 'Wait for Review', description: 'Standard processing: 1 to 3 months' },
-      { step: 4, title: 'Receive Result', description: 'If approved, receive new Residence Card' },
-    ],
-  },
-  permanent: {
-    id: 'permanent',
-    label: 'Permanent Residence',
-    description: 'Application for permanent residency',
-    price: 14800,
-    referralConditions: ['Less than 10 years in Japan', 'Unpaid taxes or pension', 'Past immigration violations'],
-    materials: [
-      { name: 'Passport (original + copy)' },
-      { name: 'Residence Card (original + copy)' },
-      { name: 'Resident Certificate (all household members)' },
-      { name: 'Municipal Tax Certificate (last 3 years)' },
-      { name: 'Municipal Tax Payment Certificate (last 3 years)' },
-      { name: 'Pension Payment Certificate' },
-      { name: 'Health Insurance Card (original + copy)' },
-      { name: 'Employment or Business Certificate' },
-      { name: 'Withholding Tax Certificate (last 3 years)' },
-      { name: 'Guarantor Letter (Japanese national or permanent resident)' },
-      { name: 'Reason Statement' },
-    ],
-    submissionSteps: [
-      { step: 1, title: 'Prepare Documents', description: 'Gather 3 years of tax and pension documents (most time-consuming)' },
-      { step: 2, title: 'Submit to Immigration Bureau', description: 'Must submit in person at your jurisdiction (no mail)' },
-      { step: 3, title: 'Wait for Review', description: 'Standard processing: 4 months to 1 year' },
-      { step: 4, title: 'Receive Result', description: 'If approved, receive Permanent Residence Card' },
-    ],
-  },
-  student: {
-    id: 'student',
-    label: 'Student Visa',
-    description: 'Enrollment at school or university',
-    price: 7800,
-    referralConditions: ['Low attendance rate', 'Changing schools'],
-    materials: [
-      { name: 'Passport (original + copy)' },
-      { name: 'Residence Card (original + copy)' },
-      { name: 'Resident Certificate (within 3 months)' },
-      { name: 'Enrollment Certificate (issued by school)' },
-      { name: 'Academic Transcript' },
-      { name: 'Attendance Certificate (issued by school)' },
-      { name: 'Financial Support Certificate (remittance proof etc.)' },
-      { name: 'Reason Statement', conditional: true, condition: 'If changing schools' },
-    ],
-    submissionSteps: [
-      { step: 1, title: 'Prepare Documents', description: 'Obtain certificates from your current school' },
-      { step: 2, title: 'Submit to Immigration Bureau', description: 'Submit at the counter of your jurisdiction' },
-      { step: 3, title: 'Wait for Review', description: 'Standard processing: 2 weeks to 2 months' },
-      { step: 4, title: 'Receive Result', description: 'If approved, receive new Residence Card' },
-    ],
-  },
+
+  // Future:
+  // spouse: { id: 'spouse', labelZh: '配偶者ビザ', labelJa: '日本人の配偶者等', ... },
+  // permanent: { id: 'permanent', labelZh: '永住申請', labelJa: '永住者', ... },
+  // student: { id: 'student', labelZh: '留学ビザ', labelJa: '留学', ... },
 }
 
 export const VISA_TYPE_LIST = Object.values(VISA_TYPES)

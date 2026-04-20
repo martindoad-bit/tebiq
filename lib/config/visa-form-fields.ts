@@ -1,0 +1,178 @@
+import { FormQuestion } from '@/types/session'
+
+// Question definitions per visa type.
+// Each question maps directly to an ApplicationFormData field.
+// To add a new visa type: add a new key with its question array.
+// Conditional questions are automatically shown/hidden based on previous answers.
+
+export const FORM_QUESTIONS: Record<string, FormQuestion[]> = {
+
+  // 技術・人文知識・国際業務 在留期間更新
+  work: [
+    {
+      id: 'nationality',
+      questionZh: '你的国籍是？',
+      fieldLabelJa: '国籍・地域',
+      type: 'text',
+      required: true,
+      hint: '例：中国',
+    },
+    {
+      id: 'nameKanji',
+      questionZh: '护照上的姓名（中文/汉字）？',
+      fieldLabelJa: '氏名（漢字）',
+      type: 'text',
+      required: true,
+      hint: '例：张伟　请按护照上的写法填写',
+    },
+    {
+      id: 'nameRoman',
+      questionZh: '护照上的姓名（英文罗马字）？',
+      fieldLabelJa: '氏名（ローマ字）',
+      type: 'text',
+      required: true,
+      hint: '例：ZHANG WEI　请大写，与护照完全一致',
+    },
+    {
+      id: 'dateOfBirth',
+      questionZh: '出生日期？',
+      fieldLabelJa: '生年月日',
+      type: 'date',
+      required: true,
+      hint: '例：1990年5月20日',
+    },
+    {
+      id: 'gender',
+      questionZh: '性别？',
+      fieldLabelJa: '性別',
+      type: 'select',
+      options: ['男', '女'],
+      required: true,
+    },
+    {
+      id: 'maritalStatus',
+      questionZh: '婚姻状况？',
+      fieldLabelJa: '配偶者の有無',
+      type: 'select',
+      options: ['未婚', '已婚'],
+      required: true,
+    },
+    {
+      id: 'addressJapan',
+      questionZh: '现居日本地址？',
+      fieldLabelJa: '住居地',
+      type: 'text',
+      required: true,
+      hint: '例：東京都新宿区西新宿1-1-1〇〇マンション201号室　请填写住民票上的地址',
+    },
+    {
+      id: 'passportNumber',
+      questionZh: '护照号码？',
+      fieldLabelJa: '旅券番号',
+      type: 'text',
+      required: true,
+      hint: '例：E12345678',
+    },
+    {
+      id: 'passportExpiry',
+      questionZh: '护照有效期至？',
+      fieldLabelJa: '旅券有効期限',
+      type: 'date',
+      required: true,
+      hint: '例：2030年3月15日　请确认护照在签证到期后仍有效',
+    },
+    {
+      id: 'residenceCardNumber',
+      questionZh: '在留卡号码？',
+      fieldLabelJa: '在留カード番号',
+      type: 'text',
+      required: true,
+      hint: '在留卡正面右上角的12位字母+数字，例：AB12345678CD',
+    },
+    {
+      id: 'visaExpiryDate',
+      questionZh: '在留期间到期日（在留卡上的期限）？',
+      fieldLabelJa: '在留期間の満了日',
+      type: 'date',
+      required: true,
+      hint: '例：2025年8月15日',
+    },
+    {
+      id: 'employerName',
+      questionZh: '公司名称（日文）？',
+      fieldLabelJa: '勤務先名称',
+      type: 'text',
+      required: true,
+      hint: '例：株式会社〇〇、〇〇合同会社',
+    },
+    {
+      id: 'employerAddress',
+      questionZh: '公司地址？',
+      fieldLabelJa: '勤務先所在地',
+      type: 'text',
+      required: true,
+      hint: '例：東京都渋谷区渋谷1-1-1',
+    },
+    {
+      id: 'employerPhone',
+      questionZh: '公司电话号码？',
+      fieldLabelJa: '勤務先電話番号',
+      type: 'text',
+      required: true,
+      hint: '例：03-1234-5678',
+    },
+    {
+      id: 'jobTitle',
+      questionZh: '你的职位名称？',
+      fieldLabelJa: '職名',
+      type: 'text',
+      required: true,
+      hint: '例：ソフトウェアエンジニア、営業担当、通訳・翻訳',
+    },
+    {
+      id: 'annualIncome',
+      questionZh: '年收入（税前，日元）？',
+      fieldLabelJa: '年収',
+      type: 'number',
+      required: true,
+      hint: '例：450万、4500000　请填写税前总额',
+    },
+    {
+      id: 'isDispatched',
+      questionZh: '你是通过派遣公司工作吗？',
+      fieldLabelJa: '派遣・請負',
+      type: 'yn',
+      required: true,
+      hint: '即：实际在A公司工作，但劳动合同签的是B派遣公司',
+    },
+    {
+      id: 'finalEducation',
+      questionZh: '最终学历？',
+      fieldLabelJa: '最終学歴',
+      type: 'text',
+      required: true,
+      hint: '例：大学本科（学士）、硕士研究生（修士）、大专（短大・専門学校）、高中',
+    },
+    {
+      id: 'hasChangedJobs',
+      questionZh: '自上次签证更新（或首次来日）以来，是否换过工作/公司？',
+      fieldLabelJa: '転職の有無',
+      type: 'yn',
+      required: true,
+    },
+    {
+      id: 'previousEmployer',
+      questionZh: '上家公司的名称是？',
+      fieldLabelJa: '前職勤務先名称',
+      type: 'text',
+      required: false,
+      hint: '请填写日文公司名',
+      conditional: { dependsOn: 'hasChangedJobs', matchValue: 'yes' },
+    },
+  ],
+
+  // Future visa types:
+  // spouse: [ ... ],
+  // permanent: [ ... ],
+  // student: [ ... ],
+}

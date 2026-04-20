@@ -1,34 +1,32 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { generateMaterialsPDF } from '@/lib/pdf/generator'
-import { uploadPDF } from '@/lib/pdf/storage'
-import { VisaSession } from '@/types/session'
+import { getSession } from '@/lib/session'
+import { generateApplicationPDF } from '@/lib/pdf/generator'
 
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json()
-    const session = body.session as VisaSession | undefined
+    const { sessionId } = await req.json() as { sessionId: string }
 
+    const session = await getSession(sessionId)
     if (!session) {
-      return NextResponse.json({ error: 'session required' }, { status: 400 })
+      return NextResponse.json({ error: 'Session not found' }, { status: 404 })
     }
 
-    const buffer = await generateMaterialsPDF(session)
-    const hasReferralWarning = session.requiresReferral ?? false
-
-    // Upload to S3 if configured, otherwise return base64
-    if (process.env.S3_BUCKET && process.env.S3_ACCESS_KEY && process.env.S3_SECRET_KEY) {
-      try {
-        const { downloadUrl, key } = await uploadPDF(buffer, session.sessionId)
-        return NextResponse.json({ downloadUrl, hasReferralWarning, key })
-      } catch (err) {
-        console.error('S3 upload failed, falling back to base64:', err)
-      }
+    if (session.status !== 'survey_completed') {
+      return NextResponse.json({ error: 'Survey not completed' }, { status: 400 })
     }
 
-    const base64 = Buffer.from(buffer).toString('base64')
-    return NextResponse.json({
-      downloadUrl: `data:application/pdf;base64,${base64}`,
-      hasReferralWarning,
+    if (!session.formData) {
+      return NextResponse.json({ error: 'Form data missing' }, { status: 400 })
+    }
+
+    const pdfBytes = await generateApplicationPDF(session)
+
+    return new NextResponse(pdfBytes, {
+      headers: {
+        'Content-Type': 'application/pdf',
+        'Content-Disposition': 'attachment; filename="tebiq-application.pdf"',
+        'Cache-Control': 'no-store',
+      },
     })
   } catch (error) {
     console.error('PDF generation error:', error)
