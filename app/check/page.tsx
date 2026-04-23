@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import {
   QUESTIONS,
@@ -18,6 +18,12 @@ export default function CheckPage() {
   const [history, setHistory] = useState<AnsweredItem[]>([])
   const [selectedOption, setSelectedOption] = useState<number | null>(null)
   const [isExiting, setIsExiting] = useState(false)
+  const [learnMoreOpen, setLearnMoreOpen] = useState(false)
+
+  // 切到下一题时折叠"了解更多"
+  useEffect(() => {
+    setLearnMoreOpen(false)
+  }, [currentId])
 
   const current = QUESTIONS[currentId]
   const answeredCount = history.length
@@ -139,9 +145,40 @@ export default function CheckPage() {
               <h2 className="text-xl font-bold leading-relaxed">{current.text}</h2>
             </div>
 
-            <p className="text-slate-500 text-xs mb-5 px-2 leading-relaxed">
+            <p className="text-slate-500 text-xs px-2 leading-relaxed">
               💡 为什么问这个：{current.why}
             </p>
+
+            {current.learnMore && (
+              <div className="px-2 mb-5 mt-2">
+                <button
+                  type="button"
+                  onClick={() => setLearnMoreOpen(o => !o)}
+                  className="text-amber-400/80 hover:text-amber-400 text-xs font-bold flex items-center gap-1 transition-colors"
+                  aria-expanded={learnMoreOpen}
+                >
+                  了解更多
+                  <span
+                    className={`inline-block transition-transform text-[10px] ${
+                      learnMoreOpen ? 'rotate-180' : ''
+                    }`}
+                  >
+                    ▾
+                  </span>
+                </button>
+                {learnMoreOpen && (
+                  <div className="mt-2 bg-blue-950/50 border-l-2 border-amber-400/60 px-3 py-2.5 rounded-r">
+                    <p className="text-slate-300 text-xs leading-relaxed">
+                      {current.learnMore}
+                    </p>
+                    <p className="text-slate-600 text-[10px] mt-2 italic">
+                      本说明为系统初版，待书士审核完善
+                    </p>
+                  </div>
+                )}
+              </div>
+            )}
+            {!current.learnMore && <div className="mb-5" />}
 
             <div className={useGrid ? 'grid grid-cols-2 gap-3' : 'space-y-3'}>
               {current.options.map((opt, i) => {

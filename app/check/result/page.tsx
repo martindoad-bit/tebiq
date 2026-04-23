@@ -16,9 +16,109 @@ const LS_USER_KEY = 'tebiq_user'
 const CTA_LINK = '#placeholder'
 const SHARE_TEXT = '我刚用 TEBIQ 查了续签前置条件，3 分钟就能发现隐藏风险，推荐给在日华人朋友。'
 
+// 入管审查重点优先级：数字越小越严重
+// 税款 / 不法残留 = 1（绝对硬伤）→ 申报变更 = 2 → 社保 = 3 → 其他按题号
+const SEVERITY_PRIORITY: Record<string, number> = {
+  '4': 1, // 住民税未按时申报
+  '5': 1, // 未缴税款 / 罚款
+  '7': 1, // 不法残留
+  '2': 2, // 换工作未在 14 天内申报
+  '6': 3, // 社保断缴
+}
+
+function severityWeight(t: TriggeredItem): number {
+  const base = SEVERITY_PRIORITY[t.id] ?? 99
+  return base * 10 + (t.severity === 'red' ? 0 : 1) // 同优先级内 red 优先
+}
+
+function sortBySeverityPriority(items: TriggeredItem[]): TriggeredItem[] {
+  return [...items].sort((a, b) => {
+    const wa = severityWeight(a)
+    const wb = severityWeight(b)
+    if (wa !== wb) return wa - wb
+    return a.id.localeCompare(b.id)
+  })
+}
+
+function answersByQuestion(history: AnsweredItem[]): Record<string, number> {
+  const out: Record<string, number> = {}
+  for (const item of history) out[item.questionId] = item.optionIndex
+  return out
+}
+
+// === 个性化情况摘要 ===
+
+function buildSummary(verdict: JudgeResult['verdict'], result: JudgeResult, history: AnsweredItem[]): string {
+  if (verdict === 'green') return greenSummary(history)
+  if (verdict === 'yellow') return yellowSummary(result.triggered)
+  return redSummary(result.triggered)
+}
+
+function greenSummary(history: AnsweredItem[]): string {
+  const a = answersByQuestion(history)
+  const points: string[] = []
+
+  // 工作连续性
+  if (a['1'] === 1) points.push('续签期间未换工作')
+  else if (a['2'] === 0 && a['3'] === 0) points.push('换工作已合规申报、空窗期短')
+
+  // 税款
+  if (a['4'] === 0 && a['5'] === 0) points.push('住民税按时缴纳、无欠款')
+
+  // 社保
+  if (a['6'] === 0) points.push('社保全程参保')
+
+  // 在留期限
+  if (a['7'] === 0) points.push('未出现不法残留')
+
+  // 兜底
+  if (points.length === 0) points.push('关键风险项均通过')
+
+  return `你的情况：${points.slice(0, 3).join('，')}。主要需要确认材料完整性即可。`
+}
+
+function yellowSummary(triggered: TriggeredItem[]): string {
+  const sorted = sortBySeverityPriority(triggered)
+  const top = sorted[0]
+  const pro = triggered.filter(t => !t.selfFix).length
+  const proPart = pro > 0 ? `，其中 ${pro} 项建议咨询书士` : ''
+  return `发现 ${triggered.length} 项需要处理：最关键是「${top.triggerLabel}」${proPart}。`
+}
+
+function redSummary(triggered: TriggeredItem[]): string {
+  const reds = triggered.filter(t => t.severity === 'red')
+  const top = sortBySeverityPriority(reds)[0]
+  return `发现 ${reds.length} 项严重风险，最优先要解决：「${top.triggerLabel}」。在这之前不建议自行递签。`
+}
+
+function SummaryCard({
+  verdict,
+  summary,
+}: {
+  verdict: JudgeResult['verdict']
+  summary: string
+}) {
+  const borderColor =
+    verdict === 'red'
+      ? 'border-red-500'
+      : verdict === 'yellow'
+        ? 'border-amber-400'
+        : 'border-emerald-500'
+  return (
+    <div className={`bg-slate-800/70 border-l-4 ${borderColor} rounded-r-xl px-5 py-4 mb-4`}>
+      <div className="text-slate-400 text-xs font-bold mb-2 tracking-wide">你的情况</div>
+      <p className="text-slate-100 text-sm leading-relaxed">{summary}</p>
+      <p className="text-slate-600 text-[10px] mt-3 leading-relaxed">
+        本摘要由系统自动组合生成，不构成法律意见。具体方案请咨询持牌行政书士。
+      </p>
+    </div>
+  )
+}
+
 export default function CheckResultPage() {
   const router = useRouter()
   const [result, setResult] = useState<JudgeResult | null>(null)
+  const [history, setHistory] = useState<AnsweredItem[]>([])
 
   useEffect(() => {
     const raw = sessionStorage.getItem(STORAGE_KEY)
@@ -27,11 +127,12 @@ export default function CheckResultPage() {
       return
     }
     try {
-      const history = JSON.parse(raw) as AnsweredItem[]
-      const j = judge(history)
+      const parsed = JSON.parse(raw) as AnsweredItem[]
+      setHistory(parsed)
+      const j = judge(parsed)
       setResult(j)
       // 登录用户自动保存结果到账号
-      autoSave(history).catch(() => {
+      autoSave(parsed).catch(() => {
         /* 未登录或网络错误，静默 */
       })
     } catch {
@@ -47,9 +148,11 @@ export default function CheckResultPage() {
     )
   }
 
-  if (result.verdict === 'green') return <GreenResult />
-  if (result.verdict === 'yellow') return <YellowResult result={result} />
-  return <RedResult result={result} />
+  const summary = buildSummary(result.verdict, result, history)
+
+  if (result.verdict === 'green') return <GreenResult summary={summary} />
+  if (result.verdict === 'yellow') return <YellowResult result={result} summary={summary} />
+  return <RedResult result={result} summary={summary} />
 }
 
 async function autoSave(history: AnsweredItem[]) {
@@ -223,7 +326,7 @@ function SaveResultButton({
 
 // ============ 绿色页 ============
 
-function GreenResult() {
+function GreenResult({ summary }: { summary: string }) {
   const captureRef = useRef<HTMLDivElement>(null)
 
   return (
@@ -242,6 +345,8 @@ function GreenResult() {
         </div>
       }
     >
+      <SummaryCard verdict="green" summary={summary} />
+
       <div className="space-y-3 mb-6">
         <SaveResultButton captureRef={captureRef} verdict="green" />
         <PremiumCallout />
@@ -428,7 +533,7 @@ function PremiumCallout() {
 
 // ============ 黄色页 ============
 
-function YellowResult({ result }: { result: JudgeResult }) {
+function YellowResult({ result, summary }: { result: JudgeResult; summary: string }) {
   const captureRef = useRef<HTMLDivElement>(null)
   const selfFix = result.triggered.filter(t => t.selfFix)
   const needPro = result.triggered.filter(t => !t.selfFix)
@@ -449,6 +554,8 @@ function YellowResult({ result }: { result: JudgeResult }) {
         </div>
       }
     >
+      <SummaryCard verdict="yellow" summary={summary} />
+
       <div className="mb-6">
         <SaveResultButton captureRef={captureRef} verdict="yellow" />
       </div>
@@ -499,7 +606,7 @@ function YellowResult({ result }: { result: JudgeResult }) {
 
 // ============ 红色页 ============
 
-function RedResult({ result }: { result: JudgeResult }) {
+function RedResult({ result, summary }: { result: JudgeResult; summary: string }) {
   const captureRef = useRef<HTMLDivElement>(null)
   const reds = result.triggered.filter(t => t.severity === 'red')
   const yellows = result.triggered.filter(t => t.severity === 'yellow')
@@ -520,6 +627,8 @@ function RedResult({ result }: { result: JudgeResult }) {
         </div>
       }
     >
+      <SummaryCard verdict="red" summary={summary} />
+
       <div className="mb-6">
         <SaveResultButton captureRef={captureRef} verdict="red" />
       </div>
