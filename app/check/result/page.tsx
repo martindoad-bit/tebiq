@@ -275,12 +275,49 @@ function GreenResult() {
         </div>
 
         <div className="mt-4 md:mt-0">
-          {GIJINKOKU_MATERIALS.map(group => (
-            <CategoryGroup key={group.category} group={group} />
-          ))}
+          <MaterialChecklist />
         </div>
       </div>
     </ResultShell>
+  )
+}
+
+function MaterialChecklist() {
+  return (
+    <>
+      {GIJINKOKU_MATERIALS.map(group => (
+        <CategoryGroup key={group.category} group={group} />
+      ))}
+    </>
+  )
+}
+
+function CollapsibleChecklist() {
+  const [open, setOpen] = useState(false)
+  return (
+    <div className="mt-8">
+      <button
+        type="button"
+        onClick={() => setOpen(o => !o)}
+        className="w-full flex items-center justify-between bg-slate-800 border border-slate-700 hover:border-slate-600 rounded-2xl px-5 py-4 text-left transition-colors"
+        aria-expanded={open}
+      >
+        <div className="flex-1 min-w-0 pr-3">
+          <div className="text-amber-400 font-bold text-base leading-snug">
+            无论结果如何，以下材料都需要准备
+          </div>
+          <div className="text-slate-400 text-xs mt-1 leading-relaxed">
+            技人国续签所需的标准材料 · 共 {GIJINKOKU_MATERIALS.reduce((s, g) => s + g.materials.length, 0)} 项
+          </div>
+        </div>
+        <Chevron open={open} />
+      </button>
+      {open && (
+        <div className="mt-3">
+          <MaterialChecklist />
+        </div>
+      )}
+    </div>
   )
 }
 
@@ -454,6 +491,8 @@ function YellowResult({ result }: { result: JudgeResult }) {
           联系专业书士确认 →
         </a>
       </div>
+
+      <CollapsibleChecklist />
     </ResultShell>
   )
 }
@@ -513,6 +552,8 @@ function RedResult({ result }: { result: JudgeResult }) {
           立即联系专业书士 →
         </a>
       </div>
+
+      <CollapsibleChecklist />
     </ResultShell>
   )
 }
