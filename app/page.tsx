@@ -25,8 +25,15 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-slate-900 text-white">
+      {/* 中文自查入口（轻量，不打断主漏斗） */}
+      <div className="bg-blue-950 border-b border-slate-800 px-4 py-2 text-center text-sm">
+        <a href="/check" className="text-amber-400 hover:text-amber-300">
+          中文用户：先做免费续签风险自查 →
+        </a>
+      </div>
+
       {/* Hero */}
-      <div className="bg-gradient-to-b from-blue-950 to-slate-900 px-4 pt-16 pb-12 text-center">
+      <div className="bg-gradient-to-b from-blue-950 to-slate-900 px-4 pt-12 pb-12 text-center">
         <div className="inline-block bg-amber-400 text-blue-950 text-sm font-bold px-3 py-1 rounded-full mb-6">
           TEBIQ
         </div>
