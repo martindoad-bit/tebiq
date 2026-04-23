@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation'
 import {
   judge,
   GIJINKOKU_CHECKLIST,
-  type Answer,
+  type AnsweredItem,
   type JudgeResult,
 } from '@/lib/check/questions'
 
@@ -22,8 +22,8 @@ export default function CheckResultPage() {
       return
     }
     try {
-      const answers = JSON.parse(raw) as Record<number, Answer>
-      setResult(judge(answers))
+      const history = JSON.parse(raw) as AnsweredItem[]
+      setResult(judge(history))
     } catch {
       router.replace('/check')
     }
