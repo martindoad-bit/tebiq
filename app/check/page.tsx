@@ -104,7 +104,7 @@ export default function CheckPage() {
 
       {/* 顶部进度 + 颜色随严重度变化 */}
       <div className="bg-blue-950 px-4 pt-6 pb-4">
-        <div className="max-w-md mx-auto">
+        <div className="max-w-md md:max-w-2xl mx-auto">
           <div className="flex justify-between items-center mb-2">
             <span className="text-slate-300 text-sm">
               已回答{' '}
@@ -128,8 +128,8 @@ export default function CheckPage() {
       </div>
 
       {/* 问题卡片：用 key 触发重新挂载，配合 anim-enter 实现入场动画 */}
-      <div className="flex-1 flex items-center justify-center px-4 py-8 overflow-hidden">
-        <div className="max-w-md w-full">
+      <div className="flex-1 flex items-center justify-center px-4 py-8 md:py-16 overflow-hidden">
+        <div className="max-w-md md:max-w-xl w-full">
           <div
             key={currentId}
             className={isExiting ? 'anim-exit' : 'anim-enter'}
