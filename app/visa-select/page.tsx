@@ -117,7 +117,7 @@ const VISAS: Visa[] = [
     nameZh: '经营管理',
     audience: '在日本设立公司的经营者、管理职 · 2025/10 政策大幅收紧',
     badge: 'alert',
-    href: '/check/keiei',
+    href: '/check/keiei/quiz',
     icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <rect x="4" y="2" width="16" height="20" rx="2" ry="2" />
@@ -135,7 +135,7 @@ const VISAS: Visa[] = [
     nameZh: '配偶者',
     audience: '日本人或永住者的配偶、子女 · 取决于婚姻关系',
     badge: 'detail',
-    href: '/check/haigusha',
+    href: '/check/haigusha/quiz',
     icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
@@ -148,7 +148,7 @@ const VISAS: Visa[] = [
     nameZh: '定住者',
     audience: '日系人、长期居留经法务大臣特别认可者',
     badge: 'detail',
-    href: '/check/teijusha',
+    href: '/check/teijusha/quiz',
     icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
@@ -176,7 +176,7 @@ const VISAS: Visa[] = [
     nameZh: '特定技能',
     audience: '介护、餐饮、农业等 14 个特定行业的劳动者',
     badge: 'detail',
-    href: '/check/tokutei',
+    href: '/check/tokutei/quiz',
     icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
