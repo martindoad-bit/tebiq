@@ -1,7 +1,15 @@
-import { kv } from '@vercel/kv'
+import { Redis } from '@upstash/redis'
 
-// 内存 fallback：本地 dev / 没配 KV 环境变量时用
-// 生产环境 Vercel KV 配好后会优先走 kv，此 Map 不会被读
+// Vercel KV 集成把环境变量加了 tebiq_ 前缀，所以这里手动读
+const redis =
+  process.env.tebiq_KV_REST_API_URL && process.env.tebiq_KV_REST_API_TOKEN
+    ? new Redis({
+        url: process.env.tebiq_KV_REST_API_URL,
+        token: process.env.tebiq_KV_REST_API_TOKEN,
+      })
+    : null
+
+// 内存 fallback：本地 dev / 没配 KV 时用
 interface MemEntry {
   value: unknown
   expiresAt?: number
@@ -27,25 +35,38 @@ function memSet(key: string, value: unknown, ex?: number): void {
 
 export const storage = {
   async get<T = unknown>(key: string): Promise<T | null> {
-    try {
-      return (await kv.get<T>(key)) ?? null
-    } catch {
-      return (memGet(key) as T) ?? null
+    if (redis) {
+      try {
+        return (await redis.get<T>(key)) ?? null
+      } catch {
+        return (memGet(key) as T) ?? null
+      }
     }
+    return (memGet(key) as T) ?? null
   },
   async set(key: string, value: unknown, options?: { ex?: number }): Promise<void> {
-    try {
-      if (options?.ex) await kv.set(key, value, { ex: options.ex })
-      else await kv.set(key, value)
-    } catch {
-      memSet(key, value, options?.ex)
+    if (redis) {
+      try {
+        if (options?.ex) await redis.set(key, value, { ex: options.ex })
+        else await redis.set(key, value)
+        return
+      } catch {
+        memSet(key, value, options?.ex)
+        return
+      }
     }
+    memSet(key, value, options?.ex)
   },
   async del(key: string): Promise<void> {
-    try {
-      await kv.del(key)
-    } catch {
-      memoryStore.delete(key)
+    if (redis) {
+      try {
+        await redis.del(key)
+        return
+      } catch {
+        memoryStore.delete(key)
+        return
+      }
     }
+    memoryStore.delete(key)
   },
 }
