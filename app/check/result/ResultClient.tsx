@@ -28,17 +28,58 @@ function SummaryCard({
 }) {
   const borderColor =
     verdict === 'red'
-      ? 'border-red-500'
+      ? 'border-[#DC2626]'
       : verdict === 'yellow'
-        ? 'border-amber-400'
-        : 'border-emerald-500'
+        ? 'border-primary'
+        : 'border-[#16A34A]'
   return (
-    <div className={`bg-slate-800/70 border-l-4 ${borderColor} rounded-r-xl px-5 py-4 mb-4`}>
-      <div className="text-slate-400 text-xs font-bold mb-2 tracking-wide">你的情况</div>
-      <p className="text-slate-100 text-sm leading-relaxed">{summary}</p>
-      <p className="text-slate-600 text-[10px] mt-3 leading-relaxed">
+    <div className={`bg-card border-l-4 ${borderColor} rounded-r-xl px-5 py-5 mb-4`}>
+      <div className="text-body text-xs font-bold mb-2 tracking-wide">你的情况</div>
+      <p className="text-title text-base leading-relaxed">{summary}</p>
+      <p className="text-muted text-xs mt-4 leading-relaxed">
         本摘要由系统自动组合生成，不构成法律意见。具体方案请咨询持牌行政书士。
       </p>
+    </div>
+  )
+}
+
+function SaveToAccountPrompt({ verdict, count }: { verdict: 'red' | 'yellow' | 'green'; count: number }) {
+  const [authState, setAuthState] = useState<'loading' | 'in' | 'out'>('loading')
+
+  useEffect(() => {
+    fetch('/api/auth/me', { cache: 'no-store' })
+      .then(r => r.json())
+      .then(d => setAuthState(d?.user ? 'in' : 'out'))
+      .catch(() => setAuthState('out'))
+  }, [])
+
+  if (authState === 'loading') return null
+
+  if (authState === 'in') {
+    return (
+      <div className="no-capture bg-[#DCFCE7] border border-[#16A34A] rounded-2xl px-4 py-3 text-title text-sm font-bold flex items-center gap-2">
+        <span>✅</span>
+        <span>已保存到你的账号</span>
+        <Link href="/my" className="ml-auto text-title hover:text-title underline underline-offset-4">
+          查看历史
+        </Link>
+      </div>
+    )
+  }
+
+  const next = encodeURIComponent(`/check/result?v=${verdict}&n=${count}`)
+  return (
+    <div className="no-capture bg-highlight border border-blue-800 rounded-2xl p-4">
+      <div className="text-primary font-bold text-sm mb-1">📋 保存这次自查结果</div>
+      <p className="text-body text-sm leading-relaxed mb-3">
+        登录后下次续签时，可以一键对比变化
+      </p>
+      <Link
+        href={`/login?next=${next}`}
+        className="flex items-center justify-center w-full min-h-[48px] bg-primary hover:bg-primary-hover text-white font-bold py-3 rounded-xl text-sm transition-all"
+      >
+        登录 / 注册
+      </Link>
     </div>
   )
 }
@@ -74,8 +115,8 @@ export default function ResultClient() {
 
   if (!result) {
     return (
-      <main className="min-h-screen bg-slate-900 text-white flex items-center justify-center">
-        <div className="text-slate-400">载入判断结果中…</div>
+      <main className="min-h-screen bg-base text-title flex items-center justify-center">
+        <div className="text-muted">载入判断结果中…</div>
       </main>
     )
   }
@@ -129,7 +170,7 @@ function ResultShell({
   children: React.ReactNode
 }) {
   return (
-    <main className="min-h-screen bg-slate-900 text-white">
+    <main className="min-h-screen bg-base text-title">
       <TopBar />
       <div ref={captureRef} id="result-capture">
         {banner}
@@ -143,12 +184,12 @@ function ResultShell({
 
 function TopBar() {
   return (
-    <header className="no-capture sticky top-0 z-10 bg-slate-900/95 backdrop-blur border-b border-slate-800">
+    <header className="no-capture sticky top-0 z-10 bg-card/95 backdrop-blur border-b border-line">
       <div className="max-w-md md:max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
-        <Link href="/" className="font-bold tracking-wider text-amber-400 text-lg">
+        <Link href="/" className="font-bold tracking-wider text-primary text-lg">
           TEBIQ
         </Link>
-        <Link href="/visa-select" className="text-slate-400 hover:text-slate-200 text-sm">
+        <Link href="/visa-select" className="text-muted hover:text-body text-sm">
           重新选择签证
         </Link>
       </div>
@@ -163,11 +204,11 @@ function CaptureFooter() {
     '0',
   )}.${String(date.getDate()).padStart(2, '0')}`
   return (
-    <div className="bg-slate-950 px-4 py-5 text-center border-t border-slate-800">
+    <div className="bg-base px-4 py-5 text-center border-t border-line">
       <div className="max-w-md md:max-w-3xl mx-auto flex items-center justify-between text-xs">
-        <div className="text-amber-400 font-bold tracking-wider">TEBIQ</div>
-        <div className="text-slate-500">测试日期 {dateStr}</div>
-        <div className="text-slate-500">tebiq.jp</div>
+        <div className="text-primary font-bold tracking-wider">TEBIQ</div>
+        <div className="text-muted">测试日期 {dateStr}</div>
+        <div className="text-muted">tebiq.jp</div>
       </div>
     </div>
   )
@@ -178,13 +219,13 @@ function BottomActions() {
     <div className="no-capture mt-8 mb-12 flex flex-col items-center gap-3">
       <Link
         href="/knowledge"
-        className="text-amber-400 hover:text-amber-300 text-sm font-bold underline underline-offset-4"
+        className="text-primary hover:text-primary-hover text-sm font-bold underline underline-offset-4"
       >
         了解签证基础知识 →
       </Link>
       <Link
         href="/check"
-        className="text-slate-400 text-sm hover:text-slate-200 underline underline-offset-4"
+        className="text-muted text-sm hover:text-body underline underline-offset-4"
         onClick={() => {
           sessionStorage.removeItem(STORAGE_KEY)
           sessionStorage.removeItem(SAVED_FOR_KEY)
@@ -193,7 +234,7 @@ function BottomActions() {
       >
         重新测试
       </Link>
-      <Link href="/" className="text-slate-500 text-xs hover:text-slate-300">
+      <Link href="/" className="text-muted text-xs hover:text-body">
         返回首页
       </Link>
     </div>
@@ -262,10 +303,10 @@ function SaveResultButton({
 
   const colorClass =
     verdict === 'red'
-      ? 'bg-red-500 hover:bg-red-400 text-white'
+      ? 'bg-[#DC2626] hover:bg-[#B91C1C] text-white'
       : verdict === 'yellow'
-        ? 'bg-amber-400 hover:bg-amber-300 text-slate-900'
-        : 'bg-emerald-500 hover:bg-emerald-400 text-white'
+        ? 'bg-primary hover:bg-primary-hover text-white'
+        : 'bg-[#16A34A] hover:bg-[#15803D] text-title'
 
   return (
     <button
@@ -287,13 +328,13 @@ function GreenResult({ summary }: { summary: string }) {
     <ResultShell
       captureRef={captureRef}
       banner={
-        <div className="bg-gradient-to-b from-emerald-700 to-emerald-900 px-4 pt-12 pb-10 text-center">
-          <div className="inline-block bg-amber-400 text-blue-950 text-xs font-bold px-3 py-1 rounded-full mb-4">
+        <div className="bg-gradient-to-b from-[#16A34A] to-[#15803D] text-white px-4 pt-12 pb-10 text-center">
+          <div className="inline-block bg-white/20 text-white text-xs font-bold px-3 py-1 rounded-full mb-4">
             TEBIQ · 续签自查
           </div>
           <div className="text-5xl mb-3">✓</div>
           <h1 className="text-2xl md:text-3xl font-bold mb-2">恭喜，你可以开始准备材料</h1>
-          <p className="text-emerald-100 text-sm leading-relaxed px-4">
+          <p className="text-title text-sm leading-relaxed px-4">
             前置条件全部通过，没有发现明显风险点
           </p>
         </div>
@@ -303,30 +344,31 @@ function GreenResult({ summary }: { summary: string }) {
 
       <div className="space-y-3 mb-6">
         <SaveResultButton captureRef={captureRef} verdict="green" />
+        <SaveToAccountPrompt verdict="green" count={0} />
         <PremiumCallout />
       </div>
 
       {/* PC 端左右分栏：左结论右清单；移动端纵向 */}
       <div className="md:grid md:grid-cols-2 md:gap-6">
         <div>
-          <div className="bg-slate-800 border border-slate-700 rounded-2xl p-5 mb-4">
-            <h2 className="text-amber-400 font-bold mb-2 text-base">
+          <div className="bg-card border border-line rounded-2xl p-5 mb-4">
+            <h2 className="text-primary font-bold mb-2 text-base">
               技人国续签材料清单
             </h2>
-            <p className="text-slate-300 text-sm leading-relaxed">
+            <p className="text-body text-sm leading-relaxed">
               以下是续签所需的标准材料。建议提前 2 个月开始准备，
               点击展开每项可查看详细办理信息。
             </p>
           </div>
 
-          <div className="bg-blue-950 border border-blue-900 rounded-2xl p-5">
-            <p className="text-slate-200 text-sm leading-relaxed mb-4">
+          <div className="bg-highlight border border-line rounded-2xl p-5">
+            <p className="text-body text-sm leading-relaxed mb-4">
               材料齐全后即可前往最近的入管局递交。
               如果在准备过程中遇到任何不确定的地方，可以咨询持牌行政书士。
             </p>
             <a
               href={CTA_LINK}
-              className="flex items-center justify-center w-full min-h-[56px] bg-slate-700 hover:bg-slate-600 text-white font-bold py-4 rounded-xl text-sm transition-all"
+              className="flex items-center justify-center w-full min-h-[56px] bg-slate-700 hover:bg-slate-600 text-title font-bold py-4 rounded-xl text-sm transition-all"
             >
               联系专业书士确认 →
             </a>
@@ -358,14 +400,14 @@ function CollapsibleChecklist() {
       <button
         type="button"
         onClick={() => setOpen(o => !o)}
-        className="w-full flex items-center justify-between bg-slate-800 border border-slate-700 hover:border-slate-600 rounded-2xl px-5 py-4 text-left transition-colors"
+        className="w-full flex items-center justify-between bg-card border border-line hover:border-line rounded-2xl px-5 py-4 text-left transition-colors"
         aria-expanded={open}
       >
         <div className="flex-1 min-w-0 pr-3">
-          <div className="text-amber-400 font-bold text-base leading-snug">
+          <div className="text-primary font-bold text-base leading-snug">
             无论结果如何，以下材料都需要准备
           </div>
-          <div className="text-slate-400 text-xs mt-1 leading-relaxed">
+          <div className="text-muted text-xs mt-1 leading-relaxed">
             技人国续签所需的标准材料 · 共 {GIJINKOKU_MATERIALS.reduce((s, g) => s + g.materials.length, 0)} 项
           </div>
         </div>
@@ -386,8 +428,8 @@ function CategoryGroup({
   group: { category: string; materials: MaterialDetail[] }
 }) {
   return (
-    <div className="bg-slate-800 border border-slate-700 rounded-2xl mb-4 overflow-hidden">
-      <h3 className="font-bold text-white text-base px-5 pt-5 pb-3">
+    <div className="bg-card border border-line rounded-2xl mb-4 overflow-hidden">
+      <h3 className="font-bold text-title text-base px-5 pt-5 pb-3">
         {group.category}
       </h3>
       <ul>
@@ -415,15 +457,15 @@ function ExpandableMaterial({ material }: { material: MaterialDetail }) {
   const tips = detail?.tips ?? material.pitfall
 
   return (
-    <li className="border-t border-slate-700/60 first:border-t-0">
+    <li className="border-t border-line first:border-t-0">
       <button
         type="button"
         onClick={() => setOpen(o => !o)}
         className="w-full flex items-center gap-3 px-5 py-4 hover:bg-slate-700/30 active:bg-slate-700/50 transition-colors text-left"
         aria-expanded={open}
       >
-        <span className="text-emerald-400 flex-shrink-0">□</span>
-        <span className="flex-1 text-white text-sm font-bold leading-snug">
+        <span className="text-[#16A34A] flex-shrink-0">□</span>
+        <span className="flex-1 text-title text-sm font-bold leading-snug">
           {material.name}
         </span>
         <Chevron open={open} />
@@ -435,11 +477,11 @@ function ExpandableMaterial({ material }: { material: MaterialDetail }) {
           <Detail label="多久拿到" value={time} />
           <Detail label="大概费用" value={cost} />
           <Detail label="可在线办理" value={online} />
-          <div className="bg-amber-950/60 border-l-2 border-amber-400 px-3 py-2 mt-3 rounded">
-            <div className="text-amber-400 font-bold text-xs mb-1">
+          <div className="bg-highlight border-l-2 border-primary px-3 py-2 mt-3 rounded">
+            <div className="text-primary font-bold text-xs mb-1">
               ⚠ 外国人常见踩坑
             </div>
-            <p className="text-amber-100 text-xs leading-relaxed">{tips}</p>
+            <p className="text-body text-xs leading-relaxed">{tips}</p>
           </div>
         </div>
       )}
@@ -450,8 +492,8 @@ function ExpandableMaterial({ material }: { material: MaterialDetail }) {
 function Detail({ label, value }: { label: string; value: string }) {
   return (
     <div className="text-xs leading-relaxed">
-      <span className="text-slate-500">{label}：</span>
-      <span className="text-slate-200">{value}</span>
+      <span className="text-muted">{label}：</span>
+      <span className="text-body">{value}</span>
     </div>
   )
 }
@@ -467,7 +509,7 @@ function Chevron({ open }: { open: boolean }) {
       strokeWidth="2.5"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className={`text-slate-400 flex-shrink-0 transition-transform ${
+      className={`text-muted flex-shrink-0 transition-transform ${
         open ? 'rotate-180' : ''
       }`}
     >
@@ -483,7 +525,7 @@ function PremiumCallout() {
     <button
       type="button"
       disabled
-      className="w-full min-h-[56px] bg-slate-800 border-2 border-dashed border-slate-700 text-slate-500 rounded-xl text-sm cursor-not-allowed"
+      className="w-full min-h-[56px] bg-card border-2 border-dashed border-line text-muted rounded-xl text-sm cursor-not-allowed"
       title="即将推出"
     >
       升级到完整服务（即将推出）
@@ -502,13 +544,13 @@ function YellowResult({ result, summary }: { result: JudgeResult; summary: strin
     <ResultShell
       captureRef={captureRef}
       banner={
-        <div className="bg-gradient-to-b from-amber-600 to-amber-800 px-4 pt-12 pb-10 text-center">
-          <div className="inline-block bg-slate-900 text-amber-400 text-xs font-bold px-3 py-1 rounded-full mb-4">
+        <div className="bg-gradient-to-b from-primary to-primary-hover text-white px-4 pt-12 pb-10 text-center">
+          <div className="inline-block bg-white/20 text-white text-xs font-bold px-3 py-1 rounded-full mb-4">
             TEBIQ · 续签自查
           </div>
           <div className="text-5xl mb-3">⚠</div>
           <h1 className="text-2xl md:text-3xl font-bold mb-2">需要先解决几个问题</h1>
-          <p className="text-amber-100 text-sm leading-relaxed">
+          <p className="text-body text-sm leading-relaxed">
             发现 {result.triggered.length} 项需要注意，建议处理后再申请
           </p>
         </div>
@@ -516,13 +558,14 @@ function YellowResult({ result, summary }: { result: JudgeResult; summary: strin
     >
       <SummaryCard verdict="yellow" summary={summary} />
 
-      <div className="mb-6">
+      <div className="space-y-3 mb-6">
         <SaveResultButton captureRef={captureRef} verdict="yellow" />
+        <SaveToAccountPrompt verdict="yellow" count={result.triggered.length} />
       </div>
 
       {selfFix.length > 0 && (
         <div className="mb-6">
-          <h2 className="font-bold text-emerald-400 text-sm mb-3 px-1">
+          <h2 className="font-bold text-[#16A34A] text-sm mb-3 px-1">
             ✓ 可以自己处理（{selfFix.length} 项）
           </h2>
           <div className="space-y-3">
@@ -535,7 +578,7 @@ function YellowResult({ result, summary }: { result: JudgeResult; summary: strin
 
       {needPro.length > 0 && (
         <div className="mb-6">
-          <h2 className="font-bold text-amber-400 text-sm mb-3 px-1">
+          <h2 className="font-bold text-primary text-sm mb-3 px-1">
             ⚖ 建议咨询书士（{needPro.length} 项）
           </h2>
           <div className="space-y-3">
@@ -546,14 +589,14 @@ function YellowResult({ result, summary }: { result: JudgeResult; summary: strin
         </div>
       )}
 
-      <div className="bg-amber-950 border border-amber-900 rounded-2xl p-5 mt-6">
-        <p className="text-amber-100 text-sm leading-relaxed mb-4">
+      <div className="bg-highlight border border-primary rounded-2xl p-5 mt-6">
+        <p className="text-body text-sm leading-relaxed mb-4">
           这些问题不是绝对致命，但自行处理容易留下隐患。
           建议在递交申请前请书士过一遍材料和情况说明书。
         </p>
         <a
           href={CTA_LINK}
-          className="flex items-center justify-center w-full min-h-[60px] bg-amber-400 hover:bg-amber-300 text-slate-900 font-bold py-4 rounded-xl transition-all"
+          className="flex items-center justify-center w-full min-h-[60px] bg-primary hover:bg-primary-hover text-white font-bold py-4 rounded-xl transition-all"
         >
           联系专业书士确认 →
         </a>
@@ -575,13 +618,13 @@ function RedResult({ result, summary }: { result: JudgeResult; summary: string }
     <ResultShell
       captureRef={captureRef}
       banner={
-        <div className="bg-gradient-to-b from-red-700 to-red-900 px-4 pt-12 pb-10 text-center">
-          <div className="inline-block bg-slate-900 text-red-300 text-xs font-bold px-3 py-1 rounded-full mb-4">
+        <div className="bg-gradient-to-b from-[#DC2626] to-[#B91C1C] text-white px-4 pt-12 pb-10 text-center">
+          <div className="inline-block bg-base text-title text-xs font-bold px-3 py-1 rounded-full mb-4">
             TEBIQ · 续签自查
           </div>
           <div className="text-5xl mb-3">!</div>
           <h1 className="text-2xl md:text-3xl font-bold mb-2">检测到高风险项</h1>
-          <p className="text-red-100 text-sm leading-relaxed">
+          <p className="text-title text-sm leading-relaxed">
             发现 {reds.length} 项严重风险，请勿自行递签
           </p>
         </div>
@@ -589,12 +632,16 @@ function RedResult({ result, summary }: { result: JudgeResult; summary: string }
     >
       <SummaryCard verdict="red" summary={summary} />
 
-      <div className="mb-6">
+      <div className="space-y-3 mb-6">
         <SaveResultButton captureRef={captureRef} verdict="red" />
+        <SaveToAccountPrompt
+          verdict="red"
+          count={result.triggered.filter(t => t.severity === 'red').length}
+        />
       </div>
 
-      <div className="bg-red-950 border border-red-900 rounded-2xl p-5 mb-6">
-        <p className="text-red-100 text-sm leading-relaxed">
+      <div className="bg-[#FEE2E2] border border-[#DC2626] rounded-2xl p-5 mb-6">
+        <p className="text-title text-sm leading-relaxed">
           下列任何一项都可能直接导致续签被拒，甚至影响今后在留资格。
           强烈建议先与持牌行政书士确认应对方案，再决定如何提交申请。
         </p>
@@ -609,14 +656,14 @@ function RedResult({ result, summary }: { result: JudgeResult; summary: string }
         ))}
       </div>
 
-      <div className="bg-red-950 border border-red-700 rounded-2xl p-5">
-        <p className="text-red-100 text-sm leading-relaxed mb-4 font-bold">
+      <div className="bg-[#FEE2E2] border border-[#DC2626] rounded-2xl p-5">
+        <p className="text-title text-sm leading-relaxed mb-4 font-bold">
           请务必在提交申请前联系持牌行政书士。
           每多拖一天，处理空间都会变小。
         </p>
         <a
           href={CTA_LINK}
-          className="flex items-center justify-center w-full min-h-[60px] bg-red-500 hover:bg-red-400 text-white font-bold py-4 rounded-xl transition-all"
+          className="flex items-center justify-center w-full min-h-[60px] bg-[#DC2626] hover:bg-[#B91C1C] text-white font-bold py-4 rounded-xl transition-all"
         >
           立即联系专业书士 →
         </a>
@@ -636,16 +683,16 @@ function TriggerCard({
   item: TriggeredItem
   accentColor: 'red' | 'amber'
 }) {
-  const borderClass = accentColor === 'red' ? 'border-red-500' : 'border-amber-400'
-  const titleClass = accentColor === 'red' ? 'text-red-400' : 'text-amber-400'
+  const borderClass = accentColor === 'red' ? 'border-[#DC2626]' : 'border-primary'
+  const titleClass = accentColor === 'red' ? 'text-[#DC2626]' : 'text-primary'
 
   return (
-    <div className={`bg-slate-800 border-l-4 ${borderClass} rounded-r-xl p-4`}>
-      <div className="font-bold text-white text-base leading-snug mb-2">
+    <div className={`bg-card border-l-4 ${borderClass} rounded-r-xl p-4`}>
+      <div className="font-bold text-title text-base leading-snug mb-2">
         {item.triggerLabel}
       </div>
       <div className={`${titleClass} text-xs font-bold mb-2`}>书士建议</div>
-      <p className="text-slate-300 text-sm leading-relaxed">{item.fixHint}</p>
+      <p className="text-body text-sm leading-relaxed">{item.fixHint}</p>
     </div>
   )
 }

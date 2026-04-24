@@ -2,13 +2,13 @@ import Link from 'next/link'
 
 export default function EijushaPage() {
   return (
-    <main className="min-h-screen bg-slate-900 text-white flex flex-col">
-      <header className="sticky top-0 z-10 bg-slate-900/95 backdrop-blur border-b border-slate-800">
+    <main className="min-h-screen bg-base text-title flex flex-col">
+      <header className="sticky top-0 z-10 bg-card/95 backdrop-blur border-b border-line">
         <div className="max-w-md md:max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
-          <Link href="/" className="font-bold tracking-wider text-amber-400 text-lg">
+          <Link href="/" className="font-bold tracking-wider text-primary text-lg">
             TEBIQ
           </Link>
-          <Link href="/visa-select" className="text-slate-400 hover:text-slate-200 text-sm">
+          <Link href="/visa-select" className="text-muted hover:text-body text-sm">
             ← 选择其他签证
           </Link>
         </div>
@@ -17,7 +17,7 @@ export default function EijushaPage() {
       <div className="flex-1 px-4 py-8 md:py-12">
         <div className="max-w-md md:max-w-3xl mx-auto">
           <h1 className="text-2xl md:text-4xl font-bold mb-6 leading-tight">
-            <span className="text-amber-400">永住者</span>
+            <span className="text-primary">永住者</span>
             ビザの更新について
           </h1>
 
@@ -27,14 +27,14 @@ export default function EijushaPage() {
           </div>
 
           <Section title="永住者在留卡更新（每 7 年）">
-            <p className="text-slate-300 text-sm leading-relaxed mb-2">
+            <p className="text-body text-sm leading-relaxed mb-2">
               这不是签证更新，是在留卡本身的有效期更新。
             </p>
-            <p className="text-slate-300 text-sm leading-relaxed mb-3">
+            <p className="text-body text-sm leading-relaxed mb-3">
               需要在有效期满前に最寄りの入管局で手続き。
             </p>
-            <div className="text-slate-400 text-xs leading-relaxed mb-1">
-              <span className="text-slate-500">所需材料：</span>
+            <div className="text-muted text-xs leading-relaxed mb-1">
+              <span className="text-muted">所需材料：</span>
               申请书、护照、现在留卡、照片、手续费 4000 日元印纸
             </div>
             <DraftMark />
@@ -50,7 +50,7 @@ export default function EijushaPage() {
           </Section>
 
           <Section title="想申请永住的人">
-            <p className="text-slate-300 text-sm leading-relaxed mb-3">
+            <p className="text-body text-sm leading-relaxed mb-3">
               技人国持有者申请永住的基本条件：
             </p>
             <ul className="space-y-2 mb-3">
@@ -59,7 +59,7 @@ export default function EijushaPage() {
               <Bullet>无违规记录</Bullet>
               <Bullet>现在留期间为 3 年或 5 年</Bullet>
             </ul>
-            <p className="text-amber-300 text-sm font-bold leading-relaxed">
+            <p className="text-primary-hover text-sm font-bold leading-relaxed">
               详细条件复杂，强烈建议咨询书士。
             </p>
             <DraftMark />
@@ -67,23 +67,23 @@ export default function EijushaPage() {
 
           <a
             href="#placeholder"
-            className="flex items-center justify-center w-full min-h-[60px] bg-amber-400 hover:bg-amber-300 text-slate-900 font-bold py-4 rounded-xl text-base transition-all mt-6"
+            className="flex items-center justify-center w-full min-h-[60px] bg-primary hover:bg-primary-hover text-white font-bold py-4 rounded-xl text-base transition-all mt-6"
           >
             咨询永住申请条件 →
           </a>
 
-          <p className="text-center text-slate-600 text-xs mt-8 leading-relaxed">
+          <p className="text-center text-muted text-xs mt-8 leading-relaxed">
             本页面内容不构成法律意见，具体情况请咨询持牌行政书士。
           </p>
 
           <div className="mt-8 flex flex-col items-center gap-3 pb-[env(safe-area-inset-bottom)]">
             <Link
               href="/knowledge"
-              className="text-amber-400 hover:text-amber-300 text-sm font-bold underline underline-offset-4"
+              className="text-primary hover:text-primary-hover text-sm font-bold underline underline-offset-4"
             >
               了解签证基础知识 →
             </Link>
-            <Link href="/" className="text-slate-500 text-xs hover:text-slate-300">
+            <Link href="/" className="text-muted text-xs hover:text-body">
               返回首页
             </Link>
           </div>
@@ -103,8 +103,8 @@ function Section({
   children: React.ReactNode
 }) {
   return (
-    <div className="bg-slate-800 border border-slate-700 rounded-2xl p-5 mb-4">
-      <h2 className={`${tone === 'amber' ? 'text-amber-400' : 'text-amber-400'} font-bold text-base mb-3`}>
+    <div className="bg-card border border-line rounded-2xl p-5 mb-4">
+      <h2 className={`${tone === 'amber' ? 'text-primary' : 'text-primary'} font-bold text-base mb-3`}>
         【{title}】
       </h2>
       {children}
@@ -114,13 +114,13 @@ function Section({
 
 function Bullet({ children }: { children: React.ReactNode }) {
   return (
-    <li className="flex gap-2 text-slate-300 text-sm leading-relaxed">
-      <span className="text-amber-400 flex-shrink-0">•</span>
+    <li className="flex gap-2 text-body text-sm leading-relaxed">
+      <span className="text-primary flex-shrink-0">•</span>
       <span>{children}</span>
     </li>
   )
 }
 
 function DraftMark() {
-  return <p className="text-slate-600 text-[10px] mt-3 italic">[待书士审核]</p>
+  return <p className="text-muted text-[10px] mt-3 italic">[待书士审核]</p>
 }

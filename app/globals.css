@@ -3,11 +3,12 @@
 @tailwind utilities;
 
 :root {
-  --navy: #172B6A;
-  --amber: #FF9E1B;
+  --background: #FAFAF7;
+  --foreground: #374151;
 }
 
-body {
-  background: #F5F7FA;
-  font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
+html, body {
+  background: #FAFAF7;
+  color: #374151;
+  font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Kaku Gothic ProN', 'Noto Sans SC', 'Noto Sans JP', sans-serif;
 }

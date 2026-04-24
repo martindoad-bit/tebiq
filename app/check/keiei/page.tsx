@@ -2,16 +2,16 @@ import Link from 'next/link'
 
 export default function KeieiPage() {
   return (
-    <main className="min-h-screen bg-slate-900 text-white flex flex-col">
+    <main className="min-h-screen bg-base text-title flex flex-col">
       {/* 顶部导航 */}
-      <header className="sticky top-0 z-10 bg-slate-900/95 backdrop-blur border-b border-slate-800">
+      <header className="sticky top-0 z-10 bg-card/95 backdrop-blur border-b border-line">
         <div className="max-w-md md:max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
-          <Link href="/" className="font-bold tracking-wider text-amber-400 text-lg">
+          <Link href="/" className="font-bold tracking-wider text-primary text-lg">
             TEBIQ
           </Link>
           <Link
             href="/visa-select"
-            className="text-slate-400 hover:text-slate-200 text-sm"
+            className="text-muted hover:text-body text-sm"
           >
             ← 选择其他签证
           </Link>
@@ -21,7 +21,7 @@ export default function KeieiPage() {
       <div className="flex-1 px-4 py-8 md:py-12">
         <div className="max-w-md md:max-w-3xl mx-auto">
           <h1 className="text-2xl md:text-4xl font-bold mb-6 leading-tight">
-            <span className="text-amber-400">経営・管理</span>ビザの续签
+            <span className="text-primary">経営・管理</span>ビザの续签
           </h1>
 
           {/* 警告横幅 */}
@@ -31,8 +31,8 @@ export default function KeieiPage() {
 
           {/* 新要求 */}
           <Section title="新要求（2025 年 10 月 16 日起生效）">
-            <p className="text-slate-300 text-sm leading-relaxed mb-4">
-              以下条件必须<span className="text-amber-400 font-bold">同时满足</span>：
+            <p className="text-body text-sm leading-relaxed mb-4">
+              以下条件必须<span className="text-primary font-bold">同时满足</span>：
             </p>
             <ul className="space-y-3">
               <Bullet
@@ -61,17 +61,17 @@ export default function KeieiPage() {
 
           {/* 过渡期 */}
           <Section title="已持有经营管理签证的人（过渡期）">
-            <p className="text-slate-300 text-sm leading-relaxed">
+            <p className="text-body text-sm leading-relaxed">
               2028 年 10 月 16 日前更新时，入管局会综合评判经营状况和今后展望。
               建议尽早确认自身情况是否符合新要求。
             </p>
           </Section>
 
           {/* 提示 */}
-          <div className="bg-slate-800 border border-slate-700 rounded-2xl p-5 mb-8">
-            <p className="text-slate-200 text-sm leading-relaxed">
+          <div className="bg-card border border-line rounded-2xl p-5 mb-8">
+            <p className="text-body text-sm leading-relaxed">
               由于要求复杂，个人情况差异大，
-              <span className="text-amber-400 font-bold">
+              <span className="text-primary font-bold">
                 强烈建议在准备材料前先咨询书士
               </span>
               。
@@ -81,17 +81,17 @@ export default function KeieiPage() {
           {/* 强 CTA */}
           <a
             href="#placeholder"
-            className="flex items-center justify-center w-full min-h-[60px] bg-red-500 hover:bg-red-400 text-white font-bold py-4 rounded-xl text-base transition-all"
+            className="flex items-center justify-center w-full min-h-[60px] bg-[#DC2626] hover:bg-[#B91C1C] text-white font-bold py-4 rounded-xl text-base transition-all"
           >
             预约书士咨询经营管理签证续签 →
           </a>
 
           {/* 来源 + 免责 */}
           <div className="mt-10 text-center space-y-1">
-            <p className="text-slate-500 text-xs leading-relaxed">
+            <p className="text-muted text-xs leading-relaxed">
               信息来源：出入国在留管理庁（令和 7 年 10 月 16 日施行）
             </p>
-            <p className="text-slate-600 text-xs leading-relaxed">
+            <p className="text-muted text-xs leading-relaxed">
               本页面内容不构成法律意见，具体情况请咨询持牌行政书士。
             </p>
           </div>
@@ -99,11 +99,11 @@ export default function KeieiPage() {
           <div className="mt-8 flex flex-col items-center gap-3">
             <Link
               href="/knowledge"
-              className="text-amber-400 hover:text-amber-300 text-sm font-bold underline underline-offset-4"
+              className="text-primary hover:text-primary-hover text-sm font-bold underline underline-offset-4"
             >
               了解签证基础知识 →
             </Link>
-            <Link href="/" className="text-slate-500 text-xs hover:text-slate-300">
+            <Link href="/" className="text-muted text-xs hover:text-body">
               返回首页
             </Link>
           </div>
@@ -115,8 +115,8 @@ export default function KeieiPage() {
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="bg-slate-800 border border-slate-700 rounded-2xl p-5 mb-6">
-      <h2 className="text-amber-400 font-bold text-base mb-4">【{title}】</h2>
+    <div className="bg-card border border-line rounded-2xl p-5 mb-6">
+      <h2 className="text-primary font-bold text-base mb-4">【{title}】</h2>
       {children}
     </div>
   )
@@ -125,10 +125,10 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 function Bullet({ label, value }: { label: string; value: string }) {
   return (
     <li className="flex gap-3">
-      <span className="text-amber-400 flex-shrink-0 mt-0.5">•</span>
+      <span className="text-primary flex-shrink-0 mt-0.5">•</span>
       <div className="flex-1 min-w-0">
-        <span className="text-white font-bold text-sm">{label}：</span>
-        <span className="text-slate-300 text-sm leading-relaxed">{value}</span>
+        <span className="text-title font-bold text-sm">{label}：</span>
+        <span className="text-body text-sm leading-relaxed">{value}</span>
       </div>
     </li>
   )

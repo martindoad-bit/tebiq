@@ -1,193 +1,215 @@
 import Link from 'next/link'
+import { storage } from '@/lib/storage'
 
-export default function Home() {
+export const revalidate = 60
+
+async function getLiveCount(): Promise<number> {
+  try {
+    const [g, y, r] = await Promise.all([
+      storage.get<number>('stats:result:green'),
+      storage.get<number>('stats:result:yellow'),
+      storage.get<number>('stats:result:red'),
+    ])
+    return (g ?? 0) + (y ?? 0) + (r ?? 0)
+  } catch {
+    return 0
+  }
+}
+
+export default async function Home() {
+  const totalTests = await getLiveCount()
+
   return (
-    <main className="min-h-screen bg-slate-900 text-white flex flex-col">
+    <main className="min-h-screen bg-base text-body flex flex-col">
       {/* 顶部导航 */}
-      <header className="sticky top-0 z-10 bg-slate-900/95 backdrop-blur border-b border-slate-800">
+      <header className="sticky top-0 z-10 bg-card/95 backdrop-blur border-b border-line">
         <div className="max-w-md md:max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
-          <Link href="/" className="font-bold tracking-wider text-amber-400 text-lg">
+          <Link href="/" className="font-bold tracking-wider text-title text-lg">
             TEBIQ
           </Link>
           <Link
             href="/visa-select"
-            className="bg-amber-400 hover:bg-amber-300 text-slate-900 font-bold text-sm px-4 py-2 rounded-lg transition-all"
+            className="bg-primary hover:bg-primary-hover text-white font-bold text-sm px-4 py-2 rounded-lg transition-all"
           >
             开始自查
           </Link>
         </div>
       </header>
 
-      {/* Hero */}
-      <section className="bg-gradient-to-b from-blue-950 to-slate-900 px-4 pt-16 md:pt-24 pb-14 md:pb-20">
-        <div className="max-w-md md:max-w-2xl mx-auto text-center">
-          <h1 className="text-4xl md:text-6xl font-bold mb-5 leading-tight">
-            在日签证，<br />
-            <span className="text-amber-400">先查后办</span>
-          </h1>
-          <p className="text-slate-300 text-base md:text-lg leading-relaxed mb-2">
-            3 分钟，看清你的续签风险
-          </p>
-          <p className="text-slate-400 text-sm md:text-base leading-relaxed mb-10">
-            200+ 真实案例经验，完全免费
-          </p>
+      {/* Hero - 左右分栏 PC / 上下堆叠 mobile */}
+      <section className="px-4 pt-10 md:pt-20 pb-12 md:pb-20">
+        <div className="max-w-md md:max-w-6xl mx-auto md:grid md:grid-cols-2 md:gap-12 md:items-start">
+          {/* 左：标题 + CTA + 信任点 */}
+          <div>
+            <h1 className="text-4xl md:text-5xl font-bold mb-4 leading-tight text-title">
+              在日签证，<br />先查后办
+            </h1>
+            <p className="text-body text-base md:text-lg leading-relaxed mb-2">
+              3 分钟了解你的续签风险
+            </p>
+            <p className="text-muted text-sm md:text-base leading-relaxed mb-8">
+              提前发现可能影响结果的隐患
+            </p>
 
-          <div className="md:max-w-md md:mx-auto">
             <Link
               href="/visa-select"
-              className="flex items-center justify-center w-full min-h-[60px] bg-amber-400 hover:bg-amber-300 text-slate-900 font-bold py-4 rounded-xl text-lg transition-all"
+              className="flex items-center justify-center w-full md:max-w-sm min-h-[60px] bg-primary hover:bg-primary-hover text-white font-bold py-4 rounded-xl text-lg transition-all shadow-sm"
             >
-              开始免费自查 →
+              免费开始自查 →
             </Link>
-            <Link
-              href="/visa-select"
-              className="block mt-5 text-amber-400 text-sm hover:text-amber-300 underline underline-offset-4"
-            >
-              查看支持的签证类型
-            </Link>
-          </div>
-        </div>
-      </section>
+            <p className="text-muted text-xs mt-3">
+              3 分钟完成 · 无需注册 · 答案不上传
+            </p>
 
-      {/* 三栏价值点（移动端纵向，PC 横向） */}
-      <section className="px-4 py-12 md:py-16">
-        <div className="max-w-md md:max-w-5xl mx-auto">
-          <h2 className="text-center text-slate-300 text-base md:text-lg font-bold mb-6 md:mb-10">
-            为什么用 TEBIQ
-          </h2>
-          <div className="space-y-3 md:space-y-0 md:grid md:grid-cols-3 md:gap-6">
-            {VALUE_PROPS.map(v => (
-              <div
-                key={v.title}
-                className="flex md:flex-col gap-4 md:gap-3 bg-slate-800 border border-slate-700 rounded-xl p-4 md:p-6"
-              >
-                <div className="flex-shrink-0 w-11 h-11 md:w-14 md:h-14 bg-blue-950 text-amber-400 rounded-lg flex items-center justify-center">
-                  {v.icon}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="font-bold text-white text-base md:text-lg mb-1 md:mb-2">{v.title}</div>
-                  <div className="text-slate-400 text-sm leading-relaxed">
-                    {v.desc}
-                  </div>
-                </div>
-              </div>
-            ))}
+            <ul className="mt-8 space-y-3">
+              {TRUST_POINTS.map(t => (
+                <li key={t} className="flex items-start gap-2 text-body text-sm leading-relaxed">
+                  <Check />
+                  <span>{t}</span>
+                </li>
+              ))}
+            </ul>
           </div>
-        </div>
-      </section>
 
-      {/* 使用说明 */}
-      <section className="bg-blue-950/40 px-4 py-12 md:py-16">
-        <div className="max-w-md md:max-w-2xl mx-auto">
-          <h2 className="text-center text-slate-300 text-base md:text-lg font-bold mb-6 md:mb-10">
-            如何使用
-          </h2>
-          <div className="space-y-4">
+          {/* 右：三步流程卡 */}
+          <div className="mt-10 md:mt-0 space-y-3">
             {STEPS.map(s => (
-              <div key={s.n} className="flex gap-4 items-start">
-                <div className="w-9 h-9 bg-amber-400 text-slate-900 rounded-full flex items-center justify-center font-bold flex-shrink-0 text-sm">
+              <div
+                key={s.n}
+                className="flex gap-4 bg-card border border-line rounded-2xl p-5 shadow-sm"
+              >
+                <div className="flex-shrink-0 text-2xl font-bold text-primary leading-none w-12">
                   {s.n}
                 </div>
-                <div className="flex-1 min-w-0 pt-1">
-                  <div className="font-bold text-white text-base">{s.title}</div>
-                  <div className="text-slate-400 text-sm leading-relaxed mt-0.5">
-                    {s.desc}
-                  </div>
+                <div className="flex-1 min-w-0">
+                  <div className="font-bold text-title text-base mb-1">{s.title}</div>
+                  <div className="text-muted text-sm leading-relaxed">{s.subtitle}</div>
                 </div>
               </div>
             ))}
           </div>
+        </div>
+      </section>
 
+      {/* 模块 1：你是否有这些疑问 */}
+      <section className="bg-card border-t border-line px-4 py-12 md:py-16">
+        <div className="max-w-md md:max-w-3xl mx-auto">
+          <h2 className="text-title text-xl md:text-2xl font-bold mb-6 text-center">
+            你是否有这些疑问？
+          </h2>
+          <ul className="space-y-3 mb-6">
+            {QUESTIONS_HINT.map(q => (
+              <li key={q} className="flex items-start gap-2 text-body text-base leading-relaxed">
+                <span className="text-primary flex-shrink-0">·</span>
+                <span>{q}</span>
+              </li>
+            ))}
+          </ul>
+          <p className="text-center text-primary text-sm font-bold">
+            → 建议先做一次自查，3 分钟知道答案
+          </p>
+        </div>
+      </section>
+
+      {/* 模块 2：你将获得什么 */}
+      <section className="px-4 py-12 md:py-16">
+        <div className="max-w-md md:max-w-3xl mx-auto">
+          <h2 className="text-title text-xl md:text-2xl font-bold mb-6 text-center">
+            你将获得什么
+          </h2>
+          <div className="grid grid-cols-2 gap-3 md:gap-4">
+            {OUTPUTS.map(o => (
+              <div
+                key={o.title}
+                className="bg-card border border-line rounded-xl p-4 shadow-sm"
+              >
+                <div className="text-primary text-xs font-bold mb-1">{o.label}</div>
+                <div className="text-title text-sm font-bold leading-snug">{o.title}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 模块 3：实时数字 */}
+      <section className="bg-highlight px-4 py-10 md:py-14 text-center border-y border-line">
+        <p className="text-body text-sm md:text-base leading-relaxed">
+          已帮助{' '}
+          <span className="text-primary font-bold text-3xl md:text-4xl mx-1 inline-block align-middle">
+            {totalTests.toLocaleString()}
+          </span>{' '}
+          人完成签证风险自查
+        </p>
+      </section>
+
+      {/* 底部 CTA */}
+      <section className="px-4 py-12 md:py-16">
+        <div className="max-w-md mx-auto text-center">
           <Link
             href="/visa-select"
-            className="flex items-center justify-center w-full min-h-[60px] bg-amber-400 hover:bg-amber-300 text-slate-900 font-bold py-4 rounded-xl text-lg transition-all mt-8"
+            className="flex items-center justify-center w-full min-h-[60px] bg-primary hover:bg-primary-hover text-white font-bold py-4 rounded-xl text-lg transition-all shadow-sm"
           >
-            现在开始 →
+            开始免费自查 →
           </Link>
         </div>
       </section>
 
-      {/* 底部 */}
-      <footer className="bg-slate-950 px-4 py-6 pb-[max(1.5rem,env(safe-area-inset-bottom))] text-center border-t border-slate-800 mt-auto">
+      {/* Footer */}
+      <footer className="bg-card border-t border-line px-4 py-6 pb-[max(1.5rem,env(safe-area-inset-bottom))] text-center mt-auto">
         <Link
           href="/knowledge"
-          className="inline-block text-amber-400 hover:text-amber-300 text-sm font-bold mb-4 underline underline-offset-4"
+          className="inline-block text-primary hover:text-primary-hover text-sm font-bold mb-4 underline underline-offset-4"
         >
           了解签证基础知识 →
         </Link>
-        <p className="text-slate-500 text-xs leading-relaxed">
+        <p className="text-muted text-xs leading-relaxed">
           本工具由持牌行政书士团队提供支持
         </p>
-        <p className="text-slate-600 text-xs mt-1">© 2026 TEBIQ</p>
+        <p className="text-muted text-xs mt-1">© 2026 TEBIQ</p>
       </footer>
     </main>
   )
 }
 
-const VALUE_PROPS = [
-  {
-    title: '风险前置',
-    desc: '续签失败的真正原因，大多在材料准备前就已经埋下',
-    icon: (
-      <svg
-        width="22"
-        height="22"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-        <path d="M12 8v4" />
-        <path d="M12 16h.01" />
-      </svg>
-    ),
-  },
-  {
-    title: '基于真实',
-    desc: '不是通用建议，是基于 200+ 实际案例的判断规则',
-    icon: (
-      <svg
-        width="22"
-        height="22"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <line x1="6" y1="20" x2="6" y2="14" />
-        <line x1="12" y1="20" x2="12" y2="8" />
-        <line x1="18" y1="20" x2="18" y2="4" />
-      </svg>
-    ),
-  },
-  {
-    title: '完全免费',
-    desc: '帮你看清情况，你自己决定下一步',
-    icon: (
-      <svg
-        width="22"
-        height="22"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-        <polyline points="22 4 12 14.01 9 11.01" />
-      </svg>
-    ),
-  },
+function Check() {
+  return (
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="#16A34A"
+      strokeWidth="3"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="flex-shrink-0 mt-0.5"
+    >
+      <polyline points="20 6 9 17 4 12" />
+    </svg>
+  )
+}
+
+const TRUST_POINTS = [
+  '持牌行政书士提供判断逻辑',
+  '基于 200+ 真实案例整理',
+  '持续监控入管局政策更新',
 ]
 
 const STEPS = [
-  { n: '1', title: '选择签证类型', desc: '目前支持技人国，其他类型陆续上线' },
-  { n: '2', title: '回答 10 道问题', desc: '约 3 分钟，根据情况动态调整' },
-  { n: '3', title: '查看风险评估和行动建议', desc: '红/黄/绿判定 + 书士建议' },
+  { n: 'STEP 1', title: '选择签证类型', subtitle: '技人国 / 经营管理 / 配偶者等' },
+  { n: 'STEP 2', title: '回答 13 个问题', subtitle: '约 3 分钟，分支逻辑自动跳题' },
+  { n: 'STEP 3', title: '获得风险评估', subtitle: '红 / 黄 / 绿三色判决 + 材料清单' },
+]
+
+const QUESTIONS_HINT = [
+  '换工作后会影响续签吗？',
+  '收入下降有没有问题？',
+  '公司规模小会影响结果吗？',
+]
+
+const OUTPUTS = [
+  { label: '判定', title: '风险等级（红 / 黄 / 绿）' },
+  { label: '说明', title: '影响因素具体说明' },
+  { label: '材料', title: '技人国标准材料清单' },
+  { label: '行动', title: '行动时间建议' },
 ]

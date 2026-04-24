@@ -15,8 +15,8 @@ export default function LoginPage() {
 
 function LoadingShell() {
   return (
-    <main className="min-h-screen bg-slate-900 text-white flex items-center justify-center">
-      <div className="text-slate-400">载入中…</div>
+    <main className="min-h-screen bg-base text-title flex items-center justify-center">
+      <div className="text-muted">载入中…</div>
     </main>
   )
 }
@@ -87,13 +87,13 @@ function LoginInner() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-900 text-white flex flex-col">
-      <header className="sticky top-0 z-10 bg-slate-900/95 backdrop-blur border-b border-slate-800">
+    <main className="min-h-screen bg-base text-title flex flex-col">
+      <header className="sticky top-0 z-10 bg-card/95 backdrop-blur border-b border-line">
         <div className="max-w-md mx-auto px-4 h-14 flex items-center justify-between">
-          <Link href="/" className="font-bold tracking-wider text-amber-400 text-lg">
+          <Link href="/" className="font-bold tracking-wider text-primary text-lg">
             TEBIQ
           </Link>
-          <Link href="/" className="text-slate-400 hover:text-slate-200 text-sm">
+          <Link href="/" className="text-muted hover:text-body text-sm">
             ← 返回首页
           </Link>
         </div>
@@ -102,14 +102,14 @@ function LoginInner() {
       <div className="flex-1 flex items-center justify-center px-4 py-8">
         <div className="max-w-sm w-full">
           <h1 className="text-2xl font-bold mb-2">登录 TEBIQ</h1>
-          <p className="text-slate-400 text-sm mb-8 leading-relaxed">
+          <p className="text-muted text-sm mb-8 leading-relaxed">
             登录后可保存历次自查结果，方便对比变化
           </p>
 
           {step === 'phone' && (
             <div className="space-y-4">
               <label className="block">
-                <span className="text-slate-300 text-sm font-bold block mb-2">
+                <span className="text-body text-sm font-bold block mb-2">
                   手机号
                 </span>
                 <input
@@ -117,22 +117,22 @@ function LoginInner() {
                   value={phone}
                   onChange={e => setPhone(e.target.value)}
                   placeholder="例如 13800138000 或 +818012345678"
-                  className="w-full bg-slate-800 border-2 border-slate-700 focus:border-amber-400 rounded-xl px-4 py-3 text-white text-base outline-none transition-colors"
+                  className="w-full bg-card border-2 border-line focus:border-primary rounded-xl px-4 py-3 text-title text-base outline-none transition-colors"
                   autoFocus
                 />
               </label>
-              {error && <p className="text-red-400 text-sm">{error}</p>}
+              {error && <p className="text-[#DC2626] text-sm">{error}</p>}
               <button
                 onClick={handleSendOtp}
                 disabled={loading}
-                className="flex items-center justify-center w-full min-h-[60px] bg-amber-400 hover:bg-amber-300 disabled:opacity-50 text-slate-900 font-bold py-4 rounded-xl text-base transition-all"
+                className="flex items-center justify-center w-full min-h-[60px] bg-primary hover:bg-primary-hover disabled:opacity-50 text-slate-900 font-bold py-4 rounded-xl text-base transition-all"
               >
                 {loading ? '发送中…' : '获取验证码'}
               </button>
-              <p className="text-center text-slate-500 text-xs leading-relaxed">
+              <p className="text-center text-muted text-xs leading-relaxed">
                 短信验证码 5 分钟内有效
                 <br />
-                <span className="text-slate-600">
+                <span className="text-muted">
                   （框架阶段验证码会输出到服务器控制台）
                 </span>
               </p>
@@ -141,12 +141,12 @@ function LoginInner() {
 
           {step === 'otp' && (
             <div className="space-y-4">
-              <p className="text-slate-300 text-sm">
+              <p className="text-body text-sm">
                 验证码已发送至{' '}
-                <span className="text-amber-400 font-bold">{phone}</span>
+                <span className="text-primary font-bold">{phone}</span>
               </p>
               <label className="block">
-                <span className="text-slate-300 text-sm font-bold block mb-2">
+                <span className="text-body text-sm font-bold block mb-2">
                   6 位验证码
                 </span>
                 <input
@@ -157,15 +157,15 @@ function LoginInner() {
                   value={otp}
                   onChange={e => setOtp(e.target.value.replace(/\D/g, ''))}
                   placeholder="••••••"
-                  className="w-full bg-slate-800 border-2 border-slate-700 focus:border-amber-400 rounded-xl px-4 py-3 text-white text-center text-2xl tracking-[0.5em] outline-none transition-colors"
+                  className="w-full bg-card border-2 border-line focus:border-primary rounded-xl px-4 py-3 text-title text-center text-2xl tracking-[0.5em] outline-none transition-colors"
                   autoFocus
                 />
               </label>
-              {error && <p className="text-red-400 text-sm">{error}</p>}
+              {error && <p className="text-[#DC2626] text-sm">{error}</p>}
               <button
                 onClick={handleVerify}
                 disabled={loading}
-                className="flex items-center justify-center w-full min-h-[60px] bg-amber-400 hover:bg-amber-300 disabled:opacity-50 text-slate-900 font-bold py-4 rounded-xl text-base transition-all"
+                className="flex items-center justify-center w-full min-h-[60px] bg-primary hover:bg-primary-hover disabled:opacity-50 text-slate-900 font-bold py-4 rounded-xl text-base transition-all"
               >
                 {loading ? '验证中…' : '登录'}
               </button>
@@ -175,7 +175,7 @@ function LoginInner() {
                   setOtp('')
                   setError('')
                 }}
-                className="block w-full text-slate-400 hover:text-slate-200 text-sm"
+                className="block w-full text-muted hover:text-body text-sm"
               >
                 ← 换个手机号
               </button>

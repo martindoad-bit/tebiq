@@ -12,6 +12,7 @@ import {
 
 const STORAGE_KEY = 'tebiq_check_answers'
 const TRANSITION_MS = 300
+const SELECTION_HOLD_MS = 200 // 点击后高亮停留时间，再触发 exit 动画
 
 export default function CheckPage() {
   const router = useRouter()
@@ -47,39 +48,52 @@ export default function CheckPage() {
 
   const barColor =
     currentSeverity === 'red'
-      ? 'bg-red-500'
+      ? 'bg-[#DC2626]'
       : currentSeverity === 'yellow'
-        ? 'bg-amber-400'
-        : 'bg-emerald-500'
+        ? 'bg-primary'
+        : 'bg-[#16A34A]'
+
+  // 显示顺序：是/否 题强制「是」在左、「否」在右；其他多选题保持原顺序
+  const yesIdx = current.options.findIndex(o => o.label.startsWith('是'))
+  const noIdx = current.options.findIndex(o => o.label.startsWith('否'))
+  const isYesNo = current.options.length === 2 && yesIdx >= 0 && noIdx >= 0
+  const displayOptions: Array<{ label: string; originalIndex: number }> = isYesNo
+    ? [
+        { label: current.options[yesIdx].label, originalIndex: yesIdx },
+        { label: current.options[noIdx].label, originalIndex: noIdx },
+      ]
+    : current.options.map((o, i) => ({ label: o.label, originalIndex: i }))
 
   // 短标签两列网格，长标签纵向堆叠
   const totalLabelLen = current.options.reduce((sum, o) => sum + o.label.length, 0)
   const useGrid = current.options.length === 2 && totalLabelLen <= 8
 
-  function handleAnswer(i: number) {
-    if (isExiting) return
-    setSelectedOption(i)
-    setIsExiting(true)
+  function handleAnswer(originalIndex: number) {
+    if (isExiting || selectedOption !== null) return
+    setSelectedOption(originalIndex)
 
+    // 先停留 200ms 给视觉确认，再触发 exit 动画 + 跳转
     setTimeout(() => {
-      const opt = current.options[i]
-      const newHistory = [...history, { questionId: currentId, optionIndex: i }]
-      if (opt.next === null) {
-        sessionStorage.setItem(STORAGE_KEY, JSON.stringify(newHistory))
-        // 把 verdict 与触发数附在 URL 上，给 result 页 server-side OGP 用
-        const j = judge(newHistory)
-        const count =
-          j.verdict === 'red'
-            ? j.triggered.filter(t => t.severity === 'red').length
-            : j.triggered.length
-        router.push(`/check/result?v=${j.verdict}&n=${count}`)
-      } else {
-        setHistory(newHistory)
-        setCurrentId(opt.next)
-        setSelectedOption(null)
-        setIsExiting(false)
-      }
-    }, TRANSITION_MS)
+      setIsExiting(true)
+      setTimeout(() => {
+        const opt = current.options[originalIndex]
+        const newHistory = [...history, { questionId: currentId, optionIndex: originalIndex }]
+        if (opt.next === null) {
+          sessionStorage.setItem(STORAGE_KEY, JSON.stringify(newHistory))
+          const j = judge(newHistory)
+          const count =
+            j.verdict === 'red'
+              ? j.triggered.filter(t => t.severity === 'red').length
+              : j.triggered.length
+          router.push(`/check/result?v=${j.verdict}&n=${count}`)
+        } else {
+          setHistory(newHistory)
+          setCurrentId(opt.next)
+          setSelectedOption(null)
+          setIsExiting(false)
+        }
+      }, TRANSITION_MS)
+    }, SELECTION_HOLD_MS)
   }
 
   function handleBack() {
@@ -91,7 +105,7 @@ export default function CheckPage() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-900 text-white flex flex-col">
+    <main className="min-h-screen bg-base text-title flex flex-col">
       <style jsx>{`
         @keyframes slideInRight {
           from {
@@ -116,22 +130,23 @@ export default function CheckPage() {
       `}</style>
 
       {/* 顶部进度 + 颜色随严重度变化 */}
-      <div className="bg-blue-950 px-4 pt-6 pb-4">
+      <div className="bg-highlight px-4 pt-6 pb-4">
         <div className="max-w-md md:max-w-2xl mx-auto">
-          <div className="flex justify-between items-center mb-2">
-            <span className="text-slate-300 text-sm">
-              已回答{' '}
-              <span className="text-amber-400 font-bold text-base">{answeredCount}</span> 题
+          <div className="flex justify-between items-center mb-3">
+            <span className="text-body text-sm">
+              第{' '}
+              <span className="text-primary font-bold text-base">{answeredCount + 1}</span> 题 / 共{' '}
+              <span className="text-body font-bold">{totalEstimate}</span> 题
             </span>
             <button
               onClick={handleBack}
               disabled={history.length === 0 || isExiting}
-              className="text-slate-400 disabled:opacity-30 disabled:cursor-not-allowed text-sm"
+              className="text-body hover:text-title disabled:opacity-30 disabled:cursor-not-allowed text-sm font-bold transition-colors px-2 py-1 -mr-2"
             >
               ← 上一题
             </button>
           </div>
-          <div className="h-1.5 bg-slate-800 rounded-full overflow-hidden">
+          <div className="h-1.5 bg-card rounded-full overflow-hidden">
             <div
               className={`h-full ${barColor} transition-all duration-500 ease-out`}
               style={{ width: `${Math.max(progressPct, 4)}%` }}
@@ -147,26 +162,26 @@ export default function CheckPage() {
             key={currentId}
             className={isExiting ? 'anim-exit' : 'anim-enter'}
           >
-            <div className="bg-slate-800 rounded-2xl p-6 border border-slate-700 mb-3">
-              <div className="text-amber-400 text-xs font-bold mb-3">问题 {current.id}</div>
+            <div className="bg-card rounded-2xl p-6 border border-line mb-3">
+              <div className="text-primary text-xs font-bold mb-3">问题 {current.id}</div>
               <h2 className="text-xl font-bold leading-relaxed">{current.text}</h2>
             </div>
 
-            <p className="text-slate-500 text-xs px-2 leading-relaxed">
+            <p className="text-muted text-sm px-2 leading-relaxed">
               💡 为什么问这个：{current.why}
             </p>
 
             {current.learnMore && (
-              <div className="px-2 mb-5 mt-2">
+              <div className="px-2 mb-5 mt-3">
                 <button
                   type="button"
                   onClick={() => setLearnMoreOpen(o => !o)}
-                  className="text-amber-400/80 hover:text-amber-400 text-xs font-bold flex items-center gap-1 transition-colors"
+                  className="text-primary hover:text-primary-hover text-sm font-bold flex items-center gap-1 transition-colors py-1"
                   aria-expanded={learnMoreOpen}
                 >
                   了解更多
                   <span
-                    className={`inline-block transition-transform text-[10px] ${
+                    className={`inline-block transition-transform text-xs ${
                       learnMoreOpen ? 'rotate-180' : ''
                     }`}
                   >
@@ -174,11 +189,11 @@ export default function CheckPage() {
                   </span>
                 </button>
                 {learnMoreOpen && (
-                  <div className="mt-2 bg-blue-950/50 border-l-2 border-amber-400/60 px-3 py-2.5 rounded-r">
-                    <p className="text-slate-300 text-xs leading-relaxed whitespace-pre-line">
+                  <div className="mt-3 bg-highlight border-l-2 border-primary px-4 py-3 rounded-r">
+                    <p className="text-body text-sm leading-relaxed whitespace-pre-line">
                       {current.learnMore}
                     </p>
-                    <p className="text-slate-600 text-[10px] mt-2 italic">
+                    <p className="text-muted text-xs mt-3 italic">
                       本说明为系统初版，待书士审核完善
                     </p>
                   </div>
@@ -188,26 +203,26 @@ export default function CheckPage() {
             {!current.learnMore && <div className="mb-5" />}
 
             <div className={useGrid ? 'grid grid-cols-2 gap-3' : 'space-y-3'}>
-              {current.options.map((opt, i) => {
-                const isSelected = selectedOption === i
+              {displayOptions.map(({ label, originalIndex }) => {
+                const isSelected = selectedOption === originalIndex
                 return (
                   <button
-                    key={i}
-                    onClick={() => handleAnswer(i)}
-                    disabled={isExiting}
-                    className={`w-full min-h-[60px] border-2 text-white font-bold py-4 px-4 rounded-xl text-base leading-snug transition-all ${
+                    key={originalIndex}
+                    onClick={() => handleAnswer(originalIndex)}
+                    disabled={isExiting || (selectedOption !== null && selectedOption !== originalIndex)}
+                    className={`w-full min-h-[60px] border-2 font-bold py-4 px-4 rounded-xl text-base leading-snug transition-all ${
                       isSelected
-                        ? 'border-amber-400 bg-blue-950 scale-[0.98]'
-                        : 'border-slate-700 bg-slate-800 hover:border-amber-400 active:border-amber-400'
+                        ? 'border-primary bg-primary text-white scale-[0.98]'
+                        : 'border-line bg-card text-title hover:border-primary active:border-primary'
                     } disabled:cursor-not-allowed`}
                   >
-                    {opt.label}
+                    {label}
                   </button>
                 )
               })}
             </div>
 
-            <p className="text-center text-slate-500 text-xs mt-6">
+            <p className="text-center text-muted text-xs mt-6">
               如实回答才能得到准确判断 · 答案不会上传
             </p>
           </div>
