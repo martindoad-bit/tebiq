@@ -46,12 +46,9 @@ export default function CheckPage() {
   const progressPct =
     totalEstimate === 0 ? 0 : Math.min(100, Math.round((answeredCount / totalEstimate) * 100))
 
-  const barColor =
-    currentSeverity === 'red'
-      ? 'bg-[#DC2626]'
-      : currentSeverity === 'yellow'
-        ? 'bg-primary'
-        : 'bg-[#16A34A]'
+  // 进度条统一用主色（#D97706）
+  const barColor = 'bg-primary'
+  void currentSeverity
 
   // 显示顺序：是/否 题强制「是」在左、「否」在右；其他多选题保持原顺序
   const yesIdx = current.options.findIndex(o => o.label.startsWith('是'))
@@ -105,7 +102,7 @@ export default function CheckPage() {
   }
 
   return (
-    <main className="min-h-screen bg-base text-title flex flex-col">
+    <main className="min-h-screen bg-base text-title flex flex-col pb-16 md:pb-0">
       <style jsx>{`
         @keyframes slideInRight {
           from {
@@ -162,9 +159,9 @@ export default function CheckPage() {
             key={currentId}
             className={isExiting ? 'anim-exit' : 'anim-enter'}
           >
-            <div className="bg-card rounded-2xl p-6 border border-line mb-3">
+            <div className="bg-card rounded-2xl p-6 border border-line shadow-sm mb-3">
               <div className="text-primary text-xs font-bold mb-3">问题 {current.id}</div>
-              <h2 className="text-xl font-bold leading-relaxed">{current.text}</h2>
+              <h2 className="text-xl font-medium leading-relaxed text-title">{current.text}</h2>
             </div>
 
             <p className="text-muted text-sm px-2 leading-relaxed">
@@ -189,8 +186,8 @@ export default function CheckPage() {
                   </span>
                 </button>
                 {learnMoreOpen && (
-                  <div className="mt-3 bg-highlight border-l-2 border-primary px-4 py-3 rounded-r">
-                    <p className="text-body text-sm leading-relaxed whitespace-pre-line">
+                  <div className="mt-3 bg-highlight border-l-[3px] border-primary px-4 py-3 rounded-r">
+                    <p className="text-title text-sm leading-relaxed whitespace-pre-line">
                       {current.learnMore}
                     </p>
                     <p className="text-muted text-xs mt-3 italic">
@@ -210,10 +207,10 @@ export default function CheckPage() {
                     key={originalIndex}
                     onClick={() => handleAnswer(originalIndex)}
                     disabled={isExiting || (selectedOption !== null && selectedOption !== originalIndex)}
-                    className={`w-full min-h-[60px] border-2 font-bold py-4 px-4 rounded-xl text-base leading-snug transition-all ${
+                    className={`w-full min-h-[56px] border font-medium py-4 px-4 rounded-xl text-base leading-snug transition-all duration-150 ${
                       isSelected
-                        ? 'border-primary bg-primary text-white scale-[0.98]'
-                        : 'border-line bg-card text-title hover:border-primary active:border-primary'
+                        ? 'border-primary bg-primary text-white scale-[0.98] shadow-sm'
+                        : 'border-title/20 bg-card text-title hover:bg-highlight'
                     } disabled:cursor-not-allowed`}
                   >
                     {label}

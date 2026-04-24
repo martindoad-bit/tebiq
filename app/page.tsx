@@ -20,12 +20,12 @@ export default async function Home() {
   const totalTests = await getLiveCount()
 
   return (
-    <main className="min-h-screen bg-base text-body flex flex-col">
+    <main className="min-h-screen bg-base text-body flex flex-col pb-16 md:pb-0">
       {/* 顶部导航 */}
       <header className="sticky top-0 z-10 bg-card/95 backdrop-blur border-b border-line">
         <div className="max-w-md md:max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
-          <Link href="/" className="font-bold tracking-wider text-title text-lg">
-            TEBIQ
+          <Link href="/" className="flex items-center" aria-label="TEBIQ 首页">
+            <img src="/logo.svg" alt="TEBIQ" width={120} height={40} className="h-9 w-auto" />
           </Link>
           <Link
             href="/visa-select"
@@ -41,14 +41,15 @@ export default async function Home() {
         <div className="max-w-md md:max-w-6xl mx-auto md:grid md:grid-cols-2 md:gap-12 md:items-start">
           {/* 左：标题 + CTA + 信任点 */}
           <div>
-            <h1 className="text-4xl md:text-5xl font-bold mb-4 leading-tight text-title">
-              在日签证，<br />先查后办
+            <h1 className="text-3xl md:text-4xl font-medium mb-4 leading-tight text-title">
+              在日签证，<br />
+              先查后办，安心每一步
             </h1>
             <p className="text-body text-base md:text-lg leading-relaxed mb-2">
-              3 分钟了解你的续签风险
+              专业・安心・透明・200+ 真实案例经验
             </p>
             <p className="text-muted text-sm md:text-base leading-relaxed mb-8">
-              提前发现可能影响结果的隐患
+              3 分钟了解你的续签风险，提前发现可能影响结果的隐患
             </p>
 
             <Link
@@ -76,15 +77,13 @@ export default async function Home() {
             {STEPS.map(s => (
               <div
                 key={s.n}
-                className="flex gap-4 bg-card border border-line rounded-2xl p-5 shadow-sm"
+                className="bg-card border border-line rounded-2xl p-5 shadow-sm"
               >
-                <div className="flex-shrink-0 text-2xl font-bold text-primary leading-none w-12">
+                <div className="text-2xl font-bold text-primary leading-none mb-2">
                   {s.n}
                 </div>
-                <div className="flex-1 min-w-0">
-                  <div className="font-bold text-title text-base mb-1">{s.title}</div>
-                  <div className="text-muted text-sm leading-relaxed">{s.subtitle}</div>
-                </div>
+                <div className="text-base font-medium text-title mb-1">{s.title}</div>
+                <div className="text-sm text-muted leading-relaxed">{s.subtitle}</div>
               </div>
             ))}
           </div>

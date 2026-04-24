@@ -115,7 +115,7 @@ export default function ResultClient() {
 
   if (!result) {
     return (
-      <main className="min-h-screen bg-base text-title flex items-center justify-center">
+      <main className="min-h-screen bg-base text-title flex items-center justify-center pb-16 md:pb-0">
         <div className="text-muted">载入判断结果中…</div>
       </main>
     )
@@ -186,9 +186,7 @@ function TopBar() {
   return (
     <header className="no-capture sticky top-0 z-10 bg-card/95 backdrop-blur border-b border-line">
       <div className="max-w-md md:max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
-        <Link href="/" className="font-bold tracking-wider text-primary text-lg">
-          TEBIQ
-        </Link>
+        <Link href="/" className="flex items-center" aria-label="TEBIQ 首页"><img src="/logo.svg" alt="TEBIQ" width={120} height={40} className="h-9 w-auto" /></Link>
         <Link href="/visa-select" className="text-muted hover:text-body text-sm">
           重新选择签证
         </Link>
@@ -333,8 +331,8 @@ function GreenResult({ summary }: { summary: string }) {
             TEBIQ · 续签自查
           </div>
           <div className="text-5xl mb-3">✓</div>
-          <h1 className="text-2xl md:text-3xl font-bold mb-2">恭喜，你可以开始准备材料</h1>
-          <p className="text-title text-sm leading-relaxed px-4">
+          <h1 className="text-2xl md:text-3xl font-bold mb-2 text-white">恭喜，你可以开始准备材料</h1>
+          <p className="text-white/90 text-sm leading-relaxed px-4">
             前置条件全部通过，没有发现明显风险点
           </p>
         </div>
@@ -428,15 +426,17 @@ function CategoryGroup({
   group: { category: string; materials: MaterialDetail[] }
 }) {
   return (
-    <div className="bg-card border border-line rounded-2xl mb-4 overflow-hidden">
-      <h3 className="font-bold text-title text-base px-5 pt-5 pb-3">
+    <div className="mb-6">
+      <h3 className="text-sm font-medium text-muted px-1 pb-3 uppercase tracking-wide">
         {group.category}
       </h3>
+      <div className="bg-card border border-line rounded-2xl overflow-hidden">
       <ul>
         {group.materials.map(m => (
           <ExpandableMaterial key={m.id} material={m} />
         ))}
       </ul>
+      </div>
     </div>
   )
 }
@@ -461,27 +461,37 @@ function ExpandableMaterial({ material }: { material: MaterialDetail }) {
       <button
         type="button"
         onClick={() => setOpen(o => !o)}
-        className="w-full flex items-center gap-3 px-5 py-4 hover:bg-slate-700/30 active:bg-slate-700/50 transition-colors text-left"
+        className="w-full flex items-center gap-3 px-5 py-4 hover:bg-highlight/40 active:bg-highlight transition-colors text-left"
         aria-expanded={open}
       >
-        <span className="text-[#16A34A] flex-shrink-0">□</span>
+        <span
+          className={`flex-shrink-0 inline-flex items-center justify-center w-5 h-5 border rounded ${
+            open
+              ? 'bg-primary border-primary text-white'
+              : 'border-line bg-card text-transparent'
+          }`}
+        >
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+        </span>
         <span className="flex-1 text-title text-sm font-bold leading-snug">
           {material.name}
         </span>
         <Chevron open={open} />
       </button>
       {open && (
-        <div className="px-5 pb-5 pt-1 space-y-2.5">
+        <div className="px-5 pb-5 pt-1 space-y-3">
           <Detail label="去哪里开" value={where} />
           <Detail label="需要带" value={bring} />
           <Detail label="多久拿到" value={time} />
           <Detail label="大概费用" value={cost} />
           <Detail label="可在线办理" value={online} />
-          <div className="bg-highlight border-l-2 border-primary px-3 py-2 mt-3 rounded">
-            <div className="text-primary font-bold text-xs mb-1">
+          <div className="bg-highlight border-l-[3px] border-orange-500 px-3 py-2.5 mt-3 rounded">
+            <div className="text-[#92400E] font-bold text-xs mb-1">
               ⚠ 外国人常见踩坑
             </div>
-            <p className="text-body text-xs leading-relaxed">{tips}</p>
+            <p className="text-[#92400E] text-xs leading-relaxed">{tips}</p>
           </div>
         </div>
       )}
@@ -549,8 +559,8 @@ function YellowResult({ result, summary }: { result: JudgeResult; summary: strin
             TEBIQ · 续签自查
           </div>
           <div className="text-5xl mb-3">⚠</div>
-          <h1 className="text-2xl md:text-3xl font-bold mb-2">需要先解决几个问题</h1>
-          <p className="text-body text-sm leading-relaxed">
+          <h1 className="text-2xl md:text-3xl font-bold mb-2 text-white">需要先解决几个问题</h1>
+          <p className="text-white/90 text-sm leading-relaxed">
             发现 {result.triggered.length} 项需要注意，建议处理后再申请
           </p>
         </div>
@@ -619,12 +629,12 @@ function RedResult({ result, summary }: { result: JudgeResult; summary: string }
       captureRef={captureRef}
       banner={
         <div className="bg-gradient-to-b from-[#DC2626] to-[#B91C1C] text-white px-4 pt-12 pb-10 text-center">
-          <div className="inline-block bg-base text-title text-xs font-bold px-3 py-1 rounded-full mb-4">
+          <div className="inline-block bg-white/20 text-white text-xs font-bold px-3 py-1 rounded-full mb-4">
             TEBIQ · 续签自查
           </div>
           <div className="text-5xl mb-3">!</div>
-          <h1 className="text-2xl md:text-3xl font-bold mb-2">检测到高风险项</h1>
-          <p className="text-title text-sm leading-relaxed">
+          <h1 className="text-2xl md:text-3xl font-bold mb-2 text-white">检测到高风险项</h1>
+          <p className="text-white/90 text-sm leading-relaxed">
             发现 {reds.length} 项严重风险，请勿自行递签
           </p>
         </div>

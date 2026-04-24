@@ -3,12 +3,17 @@
 @tailwind utilities;
 
 :root {
-  --background: #FAFAF7;
-  --foreground: #374151;
+  --background: #FFF5E6;
+  --foreground: #1E3A5F;
 }
 
 html, body {
-  background: #FAFAF7;
-  color: #374151;
-  font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Kaku Gothic ProN', 'Noto Sans SC', 'Noto Sans JP', sans-serif;
+  background-color: #FFF5E6;
+  color: #1E3A5F;
+  font-family: 'Noto Sans SC', 'Noto Sans CJK SC', -apple-system, BlinkMacSystemFont, sans-serif;
 }
+
+h1 { font-size: 32px; line-height: 40px; font-weight: 700; }
+h2 { font-size: 24px; line-height: 32px; font-weight: 700; }
+h3 { font-size: 20px; line-height: 28px; font-weight: 500; }
+.caption { font-size: 12px; line-height: 16px; }

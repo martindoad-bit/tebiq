@@ -2,7 +2,7 @@ import Link from 'next/link'
 
 export default function NotFound() {
   return (
-    <main className="min-h-screen bg-base text-title flex flex-col items-center justify-center px-4 text-center pb-[env(safe-area-inset-bottom)]">
+    <main className="min-h-screen bg-base text-title flex flex-col items-center justify-center px-4 text-center pb-20 md:pb-0">
       <div className="text-7xl font-bold text-primary mb-6">404</div>
       <h1 className="text-2xl font-bold mb-2">页面不存在</h1>
       <p className="text-muted text-sm mb-10 max-w-xs leading-relaxed">

@@ -62,12 +62,10 @@ export default function MyPage() {
   }
 
   return (
-    <main className="min-h-screen bg-base text-title flex flex-col">
+    <main className="min-h-screen bg-base text-title flex flex-col pb-16 md:pb-0">
       <header className="sticky top-0 z-10 bg-card/95 backdrop-blur border-b border-line">
         <div className="max-w-md md:max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
-          <Link href="/" className="font-bold tracking-wider text-primary text-lg">
-            TEBIQ
-          </Link>
+          <Link href="/" className="flex items-center" aria-label="TEBIQ 首页"><img src="/logo.svg" alt="TEBIQ" width={120} height={40} className="h-9 w-auto" /></Link>
           <button
             onClick={handleLogout}
             className="text-body hover:text-title text-sm"

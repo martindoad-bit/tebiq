@@ -2,12 +2,10 @@ import Link from 'next/link'
 
 export default function EijushaPage() {
   return (
-    <main className="min-h-screen bg-base text-title flex flex-col">
+    <main className="min-h-screen bg-base text-title flex flex-col pb-16 md:pb-0">
       <header className="sticky top-0 z-10 bg-card/95 backdrop-blur border-b border-line">
         <div className="max-w-md md:max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
-          <Link href="/" className="font-bold tracking-wider text-primary text-lg">
-            TEBIQ
-          </Link>
+          <Link href="/" className="flex items-center" aria-label="TEBIQ 首页"><img src="/logo.svg" alt="TEBIQ" width={120} height={40} className="h-9 w-auto" /></Link>
           <Link href="/visa-select" className="text-muted hover:text-body text-sm">
             ← 选择其他签证
           </Link>
@@ -49,18 +47,26 @@ export default function EijushaPage() {
             <DraftMark />
           </Section>
 
-          <Section title="想申请永住的人">
-            <p className="text-body text-sm leading-relaxed mb-3">
-              技人国持有者申请永住的基本条件：
-            </p>
-            <ul className="space-y-2 mb-3">
-              <Bullet>在日本连续居住 10 年以上（其中就劳资格 5 年以上）</Bullet>
-              <Bullet>住民税、社保全部按时缴纳</Bullet>
-              <Bullet>无违规记录</Bullet>
-              <Bullet>现在留期间为 3 年或 5 年</Bullet>
+          <Section title="技人国申请永住的基本条件（2026 年最新）">
+            <ul className="space-y-3 mb-3">
+              <Bullet>
+                在日连续居住：原则 10 年（含就劳资格 5 年以上）
+                <br />
+                <span className="text-muted text-xs">
+                  ※ 注意：2025 年 10 月 16 日起经营管理签证过渡期政策可能影响高度专业人才计分
+                </span>
+              </Bullet>
+              <Bullet>税款：住民税、所得税全部无欠缴，有完整纳税记录</Bullet>
+              <Bullet>社保：健康保险、厚生年金全程缴纳，无断缴</Bullet>
+              <Bullet>在留期间：申请时持有 3 年或 5 年（1 年期的原则上无法申请）</Bullet>
+              <Bullet>违规记录：无刑事违规，无重大交通违规</Bullet>
             </ul>
-            <p className="text-primary-hover text-sm font-bold leading-relaxed">
-              详细条件复杂，强烈建议咨询书士。
+            <DraftMark />
+          </Section>
+
+          <Section title="申请费用变化（注意）">
+            <p className="text-body text-sm leading-relaxed">
+              永住申请费用提高法案已在讨论中（预计最高 ¥300,000），具体金额尚未确定，建议持续关注官方公告。
             </p>
             <DraftMark />
           </Section>

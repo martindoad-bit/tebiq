@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next'
 import './globals.css'
+import MobileNav from './_components/MobileNav'
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://tebiq.jp'),
@@ -32,7 +33,16 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="zh-CN">
-      <body>{children}</body>
+      <head>
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap"
+        />
+      </head>
+      <body>
+        {children}
+        <MobileNav />
+      </body>
     </html>
   )
 }
