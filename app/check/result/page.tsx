@@ -9,6 +9,7 @@ import {
   type TriggeredItem,
 } from '@/lib/check/questions'
 import { GIJINKOKU_MATERIALS, type MaterialDetail } from '@/lib/check/materials'
+import { materialDetails } from '@/lib/knowledge/materials'
 
 const STORAGE_KEY = 'tebiq_check_answers'
 const SAVED_FOR_KEY = 'tebiq_check_saved_for' // 去重：值 = 已保存过的 history JSON
@@ -230,6 +231,12 @@ function BottomActions() {
   return (
     <div className="no-capture mt-8 mb-12 flex flex-col items-center gap-3">
       <Link
+        href="/knowledge"
+        className="text-amber-400 hover:text-amber-300 text-sm font-bold underline underline-offset-4"
+      >
+        了解签证基础知识 →
+      </Link>
+      <Link
         href="/check"
         className="text-slate-400 text-sm hover:text-slate-200 underline underline-offset-4"
         onClick={() => {
@@ -447,6 +454,19 @@ function CategoryGroup({
 
 function ExpandableMaterial({ material }: { material: MaterialDetail }) {
   const [open, setOpen] = useState(false)
+  // 优先从知识库（lib/knowledge/materials.ts）按日文名查 detail，否则回落到 legacy 字段
+  const detail = material.nameJa ? materialDetails[material.nameJa] : null
+  const where = detail?.where ?? material.where
+  const bring = detail?.bring ?? material.whatToBring.join('、')
+  const time = detail?.timeRequired ?? material.duration
+  const cost = detail?.cost ?? material.cost
+  const online =
+    detail?.online ??
+    (material.online
+      ? `是${material.onlineNote ? ` · ${material.onlineNote}` : ''}`
+      : '否')
+  const tips = detail?.tips ?? material.pitfall
+
   return (
     <li className="border-t border-slate-700/60 first:border-t-0">
       <button
@@ -463,23 +483,16 @@ function ExpandableMaterial({ material }: { material: MaterialDetail }) {
       </button>
       {open && (
         <div className="px-5 pb-5 pt-1 space-y-2.5">
-          <Detail label="去哪里开" value={material.where} />
-          <Detail label="需要带" value={material.whatToBring.join('、')} />
-          <Detail label="多久拿到" value={material.duration} />
-          <Detail label="费用" value={material.cost} />
-          <Detail
-            label="可在线办理"
-            value={
-              material.online
-                ? `是${material.onlineNote ? ` · ${material.onlineNote}` : ''}`
-                : '否'
-            }
-          />
+          <Detail label="去哪里开" value={where} />
+          <Detail label="需要带" value={bring} />
+          <Detail label="多久拿到" value={time} />
+          <Detail label="大概费用" value={cost} />
+          <Detail label="可在线办理" value={online} />
           <div className="bg-amber-950/60 border-l-2 border-amber-400 px-3 py-2 mt-3 rounded">
             <div className="text-amber-400 font-bold text-xs mb-1">
               ⚠ 外国人常见踩坑
             </div>
-            <p className="text-amber-100 text-xs leading-relaxed">{material.pitfall}</p>
+            <p className="text-amber-100 text-xs leading-relaxed">{tips}</p>
           </div>
         </div>
       )}

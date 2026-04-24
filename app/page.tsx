@@ -109,6 +109,12 @@ export default function Home() {
 
       {/* 底部 */}
       <footer className="bg-slate-950 px-4 py-6 text-center border-t border-slate-800 mt-auto">
+        <Link
+          href="/knowledge"
+          className="inline-block text-amber-400 hover:text-amber-300 text-sm font-bold mb-4 underline underline-offset-4"
+        >
+          了解签证基础知识 →
+        </Link>
         <p className="text-slate-500 text-xs leading-relaxed">
           本工具由持牌行政书士团队提供支持
         </p>

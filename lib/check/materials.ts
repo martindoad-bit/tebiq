@@ -4,6 +4,8 @@
 export interface MaterialDetail {
   id: string
   name: string
+  /** 日文官方名称，用于在 lib/knowledge/materials.ts 中查找详细信息 */
+  nameJa?: string
   where: string
   whatToBring: string[]
   duration: string
@@ -25,6 +27,7 @@ export const GIJINKOKU_MATERIALS: MaterialCategory[] = [
       {
         id: 'application-form',
         name: '在留资格更新申请书',
+        nameJa: '在留資格更新許可申請書',
         where: '入管局窗口或官网下载',
         whatToBring: ['无（自己填写）'],
         duration: '即拿即用',
@@ -37,6 +40,7 @@ export const GIJINKOKU_MATERIALS: MaterialCategory[] = [
       {
         id: 'photo',
         name: '证件照 1 张',
+        nameJa: '証明写真',
         where: '证件照机（药妆店）或照相馆',
         whatToBring: ['仅本人'],
         duration: '即拍即取',
@@ -48,6 +52,7 @@ export const GIJINKOKU_MATERIALS: MaterialCategory[] = [
       {
         id: 'passport',
         name: '护照原件 + 复印件',
+        nameJa: 'パスポート',
         where: '自有',
         whatToBring: ['本人'],
         duration: '即用',
@@ -59,12 +64,25 @@ export const GIJINKOKU_MATERIALS: MaterialCategory[] = [
       {
         id: 'zairyu-card',
         name: '在留卡原件 + 复印件',
+        nameJa: '在留カード',
         where: '自有',
         whatToBring: ['本人'],
         duration: '即用',
         cost: '免费',
         online: false,
         pitfall: '必须复印正反两面（背面有住址变更记录），漏背面会被退',
+      },
+      {
+        id: 'juminhyo',
+        name: '住民票',
+        nameJa: '住民票',
+        where: '住所所在地市役所 / 区役所「住民課」窗口',
+        whatToBring: ['在留卡或护照'],
+        duration: '窗口当场出具',
+        cost: '约 ¥300',
+        online: true,
+        onlineNote: '部分自治体支持便利店自助打印（需 My Number Card）',
+        pitfall: '必须是 3 个月以内出具的；申请时说明是为了在留更新用',
       },
     ],
   },
@@ -74,6 +92,7 @@ export const GIJINKOKU_MATERIALS: MaterialCategory[] = [
       {
         id: 'employment-contract',
         name: '雇用合同书',
+        nameJa: '雇用契約書',
         where: '公司人事部',
         whatToBring: ['口头请求即可'],
         duration: '1 - 3 工作日',
@@ -85,6 +104,7 @@ export const GIJINKOKU_MATERIALS: MaterialCategory[] = [
       {
         id: 'employment-cert',
         name: '在职证明书（在職証明書）',
+        nameJa: '在職証明書',
         where: '公司人事部',
         whatToBring: ['口头请求即可'],
         duration: '1 - 3 工作日',
@@ -96,6 +116,7 @@ export const GIJINKOKU_MATERIALS: MaterialCategory[] = [
       {
         id: 'company-registry',
         name: '公司登记事项证明书（履歴事項全部証明書）',
+        nameJa: '履歴事項全部証明書',
         where: '法务局窗口或在线申请',
         whatToBring: ['公司商号、本店所在地'],
         duration: '窗口当场，邮寄约 1 周',
@@ -108,6 +129,7 @@ export const GIJINKOKU_MATERIALS: MaterialCategory[] = [
       {
         id: 'company-overview',
         name: '公司概要',
+        nameJa: '会社案内',
         where: '公司主页或人事部',
         whatToBring: ['无'],
         duration: '即拿',
@@ -119,6 +141,7 @@ export const GIJINKOKU_MATERIALS: MaterialCategory[] = [
       {
         id: 'financial-report',
         name: '决算报告书',
+        nameJa: '決算報告書',
         where: '公司财务部',
         whatToBring: ['正式申请（部分公司需上司批准）'],
         duration: '1 - 2 周',
@@ -185,6 +208,7 @@ export const GIJINKOKU_MATERIALS: MaterialCategory[] = [
       {
         id: 'tax-cert-paid',
         name: '住民税纳税证明书',
+        nameJa: '住民税納税証明書',
         where: '同课税证明书（市役所市民課）',
         whatToBring: ['在留卡', '本人确认书类'],
         duration: '窗口当场',
@@ -196,6 +220,7 @@ export const GIJINKOKU_MATERIALS: MaterialCategory[] = [
       {
         id: 'gensen',
         name: '源泉徴収票',
+        nameJa: '源泉徴収票',
         where: '公司提供（每年 1 月发给员工）',
         whatToBring: ['无（公司应已发给你）'],
         duration: '即拿',
