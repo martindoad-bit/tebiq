@@ -1,10 +1,7 @@
 'use client'
+import DownloadPackage from './DownloadPackage'
 
-export default function MaterialsPackage() {
-  function handleClick() {
-    alert('支付功能即将上线，敬请期待')
-  }
-
+export default function MaterialsPackage({ visaType = 'gijinkoku' }: { visaType?: string }) {
   return (
     <div className="no-capture bg-card border border-line border-l-4 border-l-primary rounded-2xl p-5 mb-6 shadow-sm">
       <h3 className="text-title text-base font-bold mb-3">📋 获取你的专属材料包</h3>
@@ -23,16 +20,9 @@ export default function MaterialsPackage() {
         <span className="text-primary text-3xl font-bold leading-none">¥380</span>
         <span className="text-muted text-sm line-through">¥480</span>
       </div>
-      <p className="text-muted text-xs mb-4">正式价 ¥480</p>
+      <p className="text-muted text-xs mb-4">正式价 ¥480 · 早鸟期内免费试用生成功能</p>
 
-      <button
-        type="button"
-        onClick={handleClick}
-        className="w-full min-h-[52px] bg-primary hover:bg-primary-hover text-title font-bold rounded-xl text-base transition-all"
-      >
-        立即获取
-      </button>
-      <p className="text-center text-muted text-xs mt-2">支付后即时下载，无需等待</p>
+      <DownloadPackage visaType={visaType} />
 
       <p className="text-muted text-[11px] leading-relaxed mt-4 pt-4 border-t border-line">
         本工具生成的申请书草稿仅供参考，请用户核对后自行修改提交，不构成法律服务。

@@ -88,6 +88,23 @@ export default async function Home() {
         </div>
       </section>
 
+      {/* 生活节点入口 */}
+      <section className="bg-highlight border-t border-line px-4 py-12 md:py-16">
+        <div className="max-w-md md:max-w-3xl mx-auto">
+          <h2 className="text-title text-xl md:text-2xl font-bold mb-2 text-center">
+            你正在经历哪种情况？
+          </h2>
+          <p className="text-muted text-sm text-center mb-6">
+            选择你当前的生活节点，直达相关手续清单
+          </p>
+          <div className="grid grid-cols-2 gap-3 md:gap-4">
+            {SCENARIOS.map(s => (
+              <ScenarioCard key={s.title} {...s} />
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* 模块 1：你是否有这些疑问 */}
       <section className="bg-card border-t border-line px-4 py-12 md:py-16">
         <div className="max-w-md md:max-w-3xl mx-auto">
@@ -168,6 +185,40 @@ export default async function Home() {
   )
 }
 
+function ScenarioCard({
+  title,
+  subtitle,
+  href,
+  emoji,
+  comingSoon,
+}: {
+  title: string
+  subtitle: string
+  href: string
+  emoji: string
+  comingSoon?: boolean
+}) {
+  if (comingSoon) {
+    return (
+      <div className="bg-card border border-dashed border-line rounded-2xl p-4 md:p-5 opacity-60">
+        <div className="text-2xl mb-2">{emoji}</div>
+        <div className="text-title text-sm md:text-base font-bold mb-1 leading-snug">{title}</div>
+        <div className="text-muted text-xs leading-relaxed">即将上线</div>
+      </div>
+    )
+  }
+  return (
+    <Link
+      href={href}
+      className="block bg-card border border-line hover:border-primary rounded-2xl p-4 md:p-5 shadow-sm transition-colors active:scale-[0.99]"
+    >
+      <div className="text-2xl mb-2">{emoji}</div>
+      <div className="text-title text-sm md:text-base font-bold mb-1 leading-snug">{title}</div>
+      <div className="text-muted text-xs leading-relaxed">{subtitle}</div>
+    </Link>
+  )
+}
+
 function Check() {
   return (
     <svg
@@ -196,6 +247,13 @@ const STEPS = [
   { n: 'STEP 1', title: '选择签证类型', subtitle: '技人国 / 经营管理 / 配偶者等' },
   { n: 'STEP 2', title: '回答 13 个问题', subtitle: '约 3 分钟，分支逻辑自动跳题' },
   { n: 'STEP 3', title: '获得风险评估', subtitle: '红 / 黄 / 绿三色判决 + 材料清单' },
+]
+
+const SCENARIOS: { title: string; subtitle: string; href: string; emoji: string; comingSoon?: boolean }[] = [
+  { emoji: '📋', title: '续签自查', subtitle: '3 分钟知道续签风险', href: '/visa-select' },
+  { emoji: '📦', title: '搬家了', subtitle: '14 天内必须完成的手续', href: '/life/moving' },
+  { emoji: '💼', title: '公司设立 / 经营管理', subtitle: '2025 年 10 月新规自查', href: '/check/keiei/quiz' },
+  { emoji: '📚', title: '签证基础知识', subtitle: '常见问题与材料获取指南', href: '/knowledge' },
 ]
 
 const QUESTIONS_HINT = [
