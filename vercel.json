@@ -1,0 +1,8 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron/check-immigration",
+      "schedule": "0 9 * * *"
+    }
+  ]
+}

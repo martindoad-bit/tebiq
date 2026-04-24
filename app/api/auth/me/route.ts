@@ -6,5 +6,5 @@ export const dynamic = 'force-dynamic'
 export async function GET() {
   const user = await getCurrentUser()
   if (!user) return NextResponse.json({ user: null })
-  return NextResponse.json({ user: { id: user.id, phone: user.phone } })
+  return NextResponse.json({ user: { phone: user.phone } })
 }

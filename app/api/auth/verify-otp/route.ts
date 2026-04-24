@@ -12,13 +12,13 @@ export async function POST(req: Request) {
     if (!phone || !otp) {
       return NextResponse.json({ error: '请输入手机号和验证码' }, { status: 400 })
     }
-    const ok = verifyOtp(phone, otp)
+    const ok = await verifyOtp(phone, otp)
     if (!ok) {
       return NextResponse.json({ error: '验证码错误或已过期' }, { status: 401 })
     }
-    const user = findOrCreateUserByPhone(phone)
-    await setUserSession(user.id)
-    return NextResponse.json({ user: { id: user.id, phone: user.phone } })
+    const user = await findOrCreateUserByPhone(phone)
+    await setUserSession(user.phone)
+    return NextResponse.json({ user: { phone: user.phone } })
   } catch {
     return NextResponse.json({ error: '请求格式错误' }, { status: 400 })
   }

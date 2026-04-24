@@ -2,19 +2,18 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import type { SavedResult } from '@/lib/auth/store'
+import type { HistoryRecord } from '@/lib/auth/store'
 
 const LS_USER_KEY = 'tebiq_user'
 
 interface ClientUser {
-  id: string
   phone: string
 }
 
 export default function MyPage() {
   const router = useRouter()
   const [user, setUser] = useState<ClientUser | null>(null)
-  const [results, setResults] = useState<SavedResult[]>([])
+  const [history, setHistory] = useState<HistoryRecord[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -32,7 +31,7 @@ export default function MyPage() {
 
         const listRes = await fetch('/api/results/list', { cache: 'no-store' })
         const listData = await listRes.json()
-        setResults(listData?.results ?? [])
+        setHistory(listData?.history ?? [])
       } finally {
         setLoading(false)
       }
@@ -49,7 +48,7 @@ export default function MyPage() {
   return (
     <main className="min-h-screen bg-slate-900 text-white flex flex-col">
       <header className="sticky top-0 z-10 bg-slate-900/95 backdrop-blur border-b border-slate-800">
-        <div className="max-w-md mx-auto px-4 h-14 flex items-center justify-between">
+        <div className="max-w-md md:max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
           <Link href="/" className="font-bold tracking-wider text-amber-400 text-lg">
             TEBIQ
           </Link>
@@ -63,7 +62,7 @@ export default function MyPage() {
       </header>
 
       <div className="flex-1 px-4 py-8">
-        <div className="max-w-md mx-auto">
+        <div className="max-w-md md:max-w-2xl mx-auto">
           <h1 className="text-2xl font-bold mb-2">我的测试记录</h1>
           {user && (
             <p className="text-slate-400 text-sm mb-8">
@@ -74,12 +73,12 @@ export default function MyPage() {
 
           {loading ? (
             <p className="text-slate-400">载入中…</p>
-          ) : results.length === 0 ? (
+          ) : history.length === 0 ? (
             <EmptyState />
           ) : (
             <div className="space-y-3">
-              {results.map(r => (
-                <ResultRow key={r.id} record={r} />
+              {history.map((r, i) => (
+                <HistoryRow key={`${r.date}-${i}`} record={r} />
               ))}
             </div>
           )}
@@ -108,14 +107,14 @@ function EmptyState() {
   )
 }
 
-function ResultRow({ record }: { record: SavedResult }) {
+function HistoryRow({ record }: { record: HistoryRecord }) {
   const verdictLabel = {
     red: { text: '高风险', cls: 'bg-red-500 text-white' },
     yellow: { text: '需注意', cls: 'bg-amber-400 text-slate-900' },
     green: { text: '可申请', cls: 'bg-emerald-500 text-white' },
-  }[record.verdict]
+  }[record.result]
 
-  const date = new Date(record.createdAt)
+  const date = new Date(record.date)
   const dateStr = `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(
     date.getDate(),
   ).padStart(2, '0')} ${String(date.getHours()).padStart(2, '0')}:${String(
@@ -123,21 +122,26 @@ function ResultRow({ record }: { record: SavedResult }) {
   ).padStart(2, '0')}`
 
   return (
-    <div className="bg-slate-800 border border-slate-700 rounded-2xl p-4 flex items-center gap-4">
-      <div
-        className={`flex-shrink-0 ${verdictLabel.cls} rounded-lg px-3 py-2 text-xs font-bold min-w-[64px] text-center`}
-      >
-        {verdictLabel.text}
+    <div className="bg-slate-800 border border-slate-700 rounded-2xl p-4">
+      <div className="flex items-start gap-4">
+        <div
+          className={`flex-shrink-0 ${verdictLabel.cls} rounded-lg px-3 py-2 text-xs font-bold min-w-[64px] text-center`}
+        >
+          {verdictLabel.text}
+        </div>
+        <div className="flex-1 min-w-0">
+          <div className="text-white text-sm font-bold">技人国续签自查</div>
+          <div className="text-slate-400 text-xs mt-1">{dateStr}</div>
+          {record.triggeredItems.length > 0 && (
+            <div className="text-slate-500 text-xs mt-1">
+              触发 {record.triggeredItems.length} 项风险
+            </div>
+          )}
+        </div>
       </div>
-      <div className="flex-1 min-w-0">
-        <div className="text-white text-sm font-bold">技人国续签自查</div>
-        <div className="text-slate-400 text-xs mt-1">{dateStr}</div>
-        {record.triggered.length > 0 && (
-          <div className="text-slate-500 text-xs mt-1">
-            触发 {record.triggered.length} 项风险
-          </div>
-        )}
-      </div>
+      <p className="text-slate-300 text-xs leading-relaxed mt-3 pt-3 border-t border-slate-700">
+        {record.summary}
+      </p>
     </div>
   )
 }

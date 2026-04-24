@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { CONCEPTS, type Concept } from '@/lib/knowledge/concepts'
 
@@ -50,7 +50,9 @@ export default function KnowledgePage() {
             </Link>
           </div>
 
-          <p className="text-center text-slate-500 text-xs mt-8 leading-relaxed">
+          <MonitorFooter />
+
+          <p className="text-center text-slate-500 text-xs mt-6 leading-relaxed">
             知识库内容由系统初版整理，标注[待书士审核]的条目
             <br />
             等待持牌行政书士确认后更新
@@ -58,6 +60,56 @@ export default function KnowledgePage() {
         </div>
       </div>
     </main>
+  )
+}
+
+interface MonitorTarget {
+  id: string
+  name: string
+  lastChecked: string | null
+}
+
+function MonitorFooter() {
+  const [primary, setPrimary] = useState<MonitorTarget | null>(null)
+
+  useEffect(() => {
+    fetch('/api/monitor/status', { cache: 'no-store' })
+      .then(r => r.json())
+      .then(data => {
+        const targets: MonitorTarget[] = data?.targets ?? []
+        setPrimary(targets.find(t => t.id === 'gijinkoku') ?? null)
+      })
+      .catch(() => {
+        /* 静默 */
+      })
+  }, [])
+
+  const lastStr = primary?.lastChecked
+    ? new Date(primary.lastChecked).toLocaleString('zh-CN', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+      })
+    : null
+
+  return (
+    <div className="mt-10 text-center">
+      <div className="text-slate-500 text-xs leading-relaxed">
+        {lastStr ? (
+          <>
+            最后核查入管局官网：
+            <span className="text-slate-300">{lastStr}</span>
+          </>
+        ) : (
+          '入管局官网监控待首次核查'
+        )}
+      </div>
+      <div className="text-slate-600 text-xs mt-2 leading-relaxed">
+        政策信息每日自动核查，如发现有误欢迎告知我们
+      </div>
+    </div>
   )
 }
 

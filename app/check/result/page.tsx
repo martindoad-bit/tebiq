@@ -8,6 +8,7 @@ import {
   type JudgeResult,
   type TriggeredItem,
 } from '@/lib/check/questions'
+import { buildSummary } from '@/lib/check/summary'
 import { GIJINKOKU_MATERIALS, type MaterialDetail } from '@/lib/check/materials'
 import { materialDetails } from '@/lib/knowledge/materials'
 
@@ -16,81 +17,6 @@ const SAVED_FOR_KEY = 'tebiq_check_saved_for' // 去重：值 = 已保存过的 
 const LS_USER_KEY = 'tebiq_user'
 const CTA_LINK = '#placeholder'
 const SHARE_TEXT = '我刚用 TEBIQ 查了续签前置条件，3 分钟就能发现隐藏风险，推荐给在日华人朋友。'
-
-// 入管审查重点优先级：数字越小越严重
-// 税款 / 不法残留 = 1（绝对硬伤）→ 申报变更 = 2 → 社保 = 3 → 其他按题号
-const SEVERITY_PRIORITY: Record<string, number> = {
-  '4': 1, // 住民税未按时申报
-  '5': 1, // 未缴税款 / 罚款
-  '7': 1, // 不法残留
-  '2': 2, // 换工作未在 14 天内申报
-  '6': 3, // 社保断缴
-}
-
-function severityWeight(t: TriggeredItem): number {
-  const base = SEVERITY_PRIORITY[t.id] ?? 99
-  return base * 10 + (t.severity === 'red' ? 0 : 1) // 同优先级内 red 优先
-}
-
-function sortBySeverityPriority(items: TriggeredItem[]): TriggeredItem[] {
-  return [...items].sort((a, b) => {
-    const wa = severityWeight(a)
-    const wb = severityWeight(b)
-    if (wa !== wb) return wa - wb
-    return a.id.localeCompare(b.id)
-  })
-}
-
-function answersByQuestion(history: AnsweredItem[]): Record<string, number> {
-  const out: Record<string, number> = {}
-  for (const item of history) out[item.questionId] = item.optionIndex
-  return out
-}
-
-// === 个性化情况摘要 ===
-
-function buildSummary(verdict: JudgeResult['verdict'], result: JudgeResult, history: AnsweredItem[]): string {
-  if (verdict === 'green') return greenSummary(history)
-  if (verdict === 'yellow') return yellowSummary(result.triggered)
-  return redSummary(result.triggered)
-}
-
-function greenSummary(history: AnsweredItem[]): string {
-  const a = answersByQuestion(history)
-  const points: string[] = []
-
-  // 工作连续性
-  if (a['1'] === 1) points.push('续签期间未换工作')
-  else if (a['2'] === 0 && a['3'] === 0) points.push('换工作已合规申报、空窗期短')
-
-  // 税款
-  if (a['4'] === 0 && a['5'] === 0) points.push('住民税按时缴纳、无欠款')
-
-  // 社保
-  if (a['6'] === 0) points.push('社保全程参保')
-
-  // 在留期限
-  if (a['7'] === 0) points.push('未出现不法残留')
-
-  // 兜底
-  if (points.length === 0) points.push('关键风险项均通过')
-
-  return `你的情况：${points.slice(0, 3).join('，')}。主要需要确认材料完整性即可。`
-}
-
-function yellowSummary(triggered: TriggeredItem[]): string {
-  const sorted = sortBySeverityPriority(triggered)
-  const top = sorted[0]
-  const pro = triggered.filter(t => !t.selfFix).length
-  const proPart = pro > 0 ? `，其中 ${pro} 项建议咨询书士` : ''
-  return `发现 ${triggered.length} 项需要处理：最关键是「${top.triggerLabel}」${proPart}。`
-}
-
-function redSummary(triggered: TriggeredItem[]): string {
-  const reds = triggered.filter(t => t.severity === 'red')
-  const top = sortBySeverityPriority(reds)[0]
-  return `发现 ${reds.length} 项严重风险，最优先要解决：「${top.triggerLabel}」。在这之前不建议自行递签。`
-}
 
 function SummaryCard({
   verdict,

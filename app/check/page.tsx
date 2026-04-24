@@ -168,7 +168,7 @@ export default function CheckPage() {
                 </button>
                 {learnMoreOpen && (
                   <div className="mt-2 bg-blue-950/50 border-l-2 border-amber-400/60 px-3 py-2.5 rounded-r">
-                    <p className="text-slate-300 text-xs leading-relaxed">
+                    <p className="text-slate-300 text-xs leading-relaxed whitespace-pre-line">
                       {current.learnMore}
                     </p>
                     <p className="text-slate-600 text-[10px] mt-2 italic">

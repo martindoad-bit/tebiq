@@ -10,8 +10,8 @@ export async function POST(req: Request) {
     if (!isValidPhone(phone)) {
       return NextResponse.json({ error: '手机号格式不正确' }, { status: 400 })
     }
-    const otp = generateOtp(phone)
-    // mock：实际上线时替换为短信服务（阿里云、Twilio 等）
+    const otp = await generateOtp(phone)
+    // mock：实际上线时替换为短信服务
     // eslint-disable-next-line no-console
     console.log(`[TEBIQ OTP MOCK] phone=${phone} otp=${otp}`)
     return NextResponse.json({ ok: true })
@@ -21,6 +21,5 @@ export async function POST(req: Request) {
 }
 
 function isValidPhone(phone: string): boolean {
-  // 兼容中国大陆 11 位 + 日本 10-11 位手机号
   return /^[+]?\d{10,15}$/.test(phone)
 }

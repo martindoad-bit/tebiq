@@ -1,148 +1,109 @@
-// 简易内存 store ——MLP 框架阶段，重启即丢失
-// 上线前必须替换为持久存储（Vercel KV / Postgres / Supabase 等）
+// 账号系统 - 走 lib/storage 统一存储层
 //
-// 替换方法：保持下面所有导出函数的签名不变，把 Map 操作改为对应数据库的 SDK 调用
+// Key 规范：
+//   user:{phone}        → User（含 history）
+//   otp:{phone}         → OtpRecord（5 分钟 TTL）
+//   session:{sessionId} → phone 字符串（30 天 TTL）
 
-import type { Verdict, TriggeredItem, AnsweredItem } from '@/lib/check/questions'
+import { storage } from '@/lib/storage'
+import type { Verdict } from '@/lib/check/questions'
+
+export interface HistoryRecord {
+  date: string
+  visaType: string
+  result: Verdict
+  summary: string
+  triggeredItems: string[]
+  /** key = questionId, value = true 表示选了带 severity 的危险答案 */
+  answers: Record<string, boolean>
+}
 
 export interface User {
-  id: string
   phone: string
   createdAt: string
+  history: HistoryRecord[]
 }
 
-export interface Session {
-  id: string
-  userId: string
-  createdAt: string
-  expiresAt: string
-}
-
-export interface OtpRecord {
-  phone: string
+interface OtpRecord {
   otp: string
-  expiresAt: number
-  attempts: number
-}
-
-export interface SavedResult {
-  id: string
-  userId: string
-  visaType: string
-  verdict: Verdict
-  triggered: TriggeredItem[]
-  history: AnsweredItem[]
   createdAt: string
 }
 
-// === in-memory storage ===
-const users = new Map<string, User>() // userId -> User
-const usersByPhone = new Map<string, string>() // phone -> userId
-const sessions = new Map<string, Session>() // sessionId -> Session
-const otps = new Map<string, OtpRecord>() // phone -> OtpRecord
-const results = new Map<string, SavedResult[]>() // userId -> SavedResult[]
+const OTP_TTL_SEC = 5 * 60 // 5 min
+const SESSION_TTL_SEC = 30 * 24 * 60 * 60 // 30 days
 
-const SESSION_TTL_MS = 1000 * 60 * 60 * 24 * 30 // 30 天
-const OTP_TTL_MS = 1000 * 60 * 5 // 5 分钟
-const OTP_MAX_ATTEMPTS = 5
-
-function id(prefix: string): string {
-  return `${prefix}_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`
+function sessionId(): string {
+  return `sess_${Date.now()}_${Math.random().toString(36).slice(2, 12)}`
 }
 
 // === OTP ===
-export function generateOtp(phone: string): string {
+export async function generateOtp(phone: string): Promise<string> {
   const otp = String(Math.floor(100000 + Math.random() * 900000))
-  otps.set(phone, {
-    phone,
-    otp,
-    expiresAt: Date.now() + OTP_TTL_MS,
-    attempts: 0,
-  })
+  await storage.set(
+    `otp:${phone}`,
+    { otp, createdAt: new Date().toISOString() } satisfies OtpRecord,
+    { ex: OTP_TTL_SEC },
+  )
   return otp
 }
 
-export function verifyOtp(phone: string, input: string): boolean {
-  const record = otps.get(phone)
+export async function verifyOtp(phone: string, input: string): Promise<boolean> {
+  const record = await storage.get<OtpRecord>(`otp:${phone}`)
   if (!record) return false
-  if (Date.now() > record.expiresAt) {
-    otps.delete(phone)
-    return false
-  }
-  if (record.attempts >= OTP_MAX_ATTEMPTS) {
-    otps.delete(phone)
-    return false
-  }
-  record.attempts += 1
   if (record.otp !== input) return false
-  otps.delete(phone)
+  await storage.del(`otp:${phone}`)
   return true
 }
 
 // === User ===
-export function findOrCreateUserByPhone(phone: string): User {
-  const existingId = usersByPhone.get(phone)
-  if (existingId) {
-    const u = users.get(existingId)
-    if (u) return u
-  }
+export async function findOrCreateUserByPhone(phone: string): Promise<User> {
+  const existing = await storage.get<User>(`user:${phone}`)
+  if (existing) return existing
   const user: User = {
-    id: id('user'),
     phone,
     createdAt: new Date().toISOString(),
+    history: [],
   }
-  users.set(user.id, user)
-  usersByPhone.set(phone, user.id)
+  await storage.set(`user:${phone}`, user)
   return user
 }
 
-export function getUser(userId: string): User | null {
-  return users.get(userId) ?? null
+export async function getUserByPhone(phone: string): Promise<User | null> {
+  return await storage.get<User>(`user:${phone}`)
 }
 
 // === Session ===
-export function createSession(userId: string): Session {
-  const session: Session = {
-    id: id('sess'),
-    userId,
-    createdAt: new Date().toISOString(),
-    expiresAt: new Date(Date.now() + SESSION_TTL_MS).toISOString(),
+export async function createSession(phone: string): Promise<string> {
+  const sid = sessionId()
+  await storage.set(`session:${sid}`, phone, { ex: SESSION_TTL_SEC })
+  return sid
+}
+
+export async function getSessionPhone(sid: string): Promise<string | null> {
+  return await storage.get<string>(`session:${sid}`)
+}
+
+export async function deleteSession(sid: string): Promise<void> {
+  await storage.del(`session:${sid}`)
+}
+
+// === History ===
+export async function appendHistory(phone: string, record: HistoryRecord): Promise<User> {
+  const user = (await getUserByPhone(phone)) ?? (await findOrCreateUserByPhone(phone))
+  // 最新的在前，且做轻量去重（同一日期 + 同一摘要视为重复）
+  const dedupKey = `${record.date}|${record.summary}`
+  const filtered = user.history.filter(
+    h => `${h.date}|${h.summary}` !== dedupKey,
+  )
+  const updated: User = {
+    ...user,
+    history: [record, ...filtered].slice(0, 100), // 最多保留 100 条
   }
-  sessions.set(session.id, session)
-  return session
+  await storage.set(`user:${phone}`, updated)
+  return updated
 }
 
-export function getSession(sessionId: string): Session | null {
-  const session = sessions.get(sessionId)
-  if (!session) return null
-  if (Date.now() > new Date(session.expiresAt).getTime()) {
-    sessions.delete(sessionId)
-    return null
-  }
-  return session
-}
-
-export function deleteSession(sessionId: string): void {
-  sessions.delete(sessionId)
-}
-
-// === Results ===
-export function saveResult(input: Omit<SavedResult, 'id' | 'createdAt'>): SavedResult {
-  const record: SavedResult = {
-    ...input,
-    id: id('res'),
-    createdAt: new Date().toISOString(),
-  }
-  const userResults = results.get(input.userId) ?? []
-  userResults.unshift(record) // 最新的在前
-  results.set(input.userId, userResults)
-  return record
-}
-
-export function listResults(userId: string): SavedResult[] {
-  return results.get(userId) ?? []
-}
-
-export function getResult(userId: string, resultId: string): SavedResult | null {
-  return (results.get(userId) ?? []).find(r => r.id === resultId) ?? null
+export async function listHistory(phone: string): Promise<HistoryRecord[]> {
+  const user = await getUserByPhone(phone)
+  return user?.history ?? []
 }

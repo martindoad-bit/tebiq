@@ -2,12 +2,14 @@
 import { useState } from 'react'
 import Link from 'next/link'
 
+type VisaState = 'ready' | 'info' | 'coming'
+
 interface Visa {
   id: string
   name: string
   nameZh: string
   audience: string
-  supported: boolean
+  state: VisaState
   href?: string
   icon: React.ReactNode
 }
@@ -86,14 +88,26 @@ function VisaCard({
   const cardBase =
     'flex gap-4 p-4 rounded-2xl border-2 transition-all w-full text-left'
 
-  if (visa.supported && visa.href) {
+  if (visa.state === 'ready' && visa.href) {
     return (
       <Link
         href={visa.href}
         className={`${cardBase} bg-slate-800 border-slate-700 hover:border-amber-400`}
       >
         <CardInner visa={visa} />
-        <Badge type="supported" />
+        <Badge type="ready" />
+      </Link>
+    )
+  }
+
+  if (visa.state === 'info' && visa.href) {
+    return (
+      <Link
+        href={visa.href}
+        className={`${cardBase} bg-slate-800 border-orange-500/40 hover:border-orange-500`}
+      >
+        <CardInner visa={visa} />
+        <Badge type="info" />
       </Link>
     )
   }
@@ -129,11 +143,18 @@ function CardInner({ visa }: { visa: Visa }) {
   )
 }
 
-function Badge({ type }: { type: 'supported' | 'coming' }) {
-  if (type === 'supported') {
+function Badge({ type }: { type: 'ready' | 'info' | 'coming' }) {
+  if (type === 'ready') {
     return (
       <div className="flex-shrink-0 self-start bg-amber-400 text-slate-900 text-[10px] font-bold px-2 py-1 rounded-full">
         已支持
+      </div>
+    )
+  }
+  if (type === 'info') {
+    return (
+      <div className="flex-shrink-0 self-start bg-orange-500 text-white text-[10px] font-bold px-2 py-1 rounded-full">
+        政策提醒
       </div>
     )
   }
@@ -197,7 +218,7 @@ const VISAS: Visa[] = [
     name: '技術・人文知識・国際業務',
     nameZh: '技人国',
     audience: '大学毕业的专业职：工程师、翻译、企划、海外业务等',
-    supported: true,
+    state: 'ready',
     href: '/check',
     icon: (
       <svg
@@ -219,8 +240,9 @@ const VISAS: Visa[] = [
     id: 'keiei-kanri',
     name: '経営・管理',
     nameZh: '经营管理',
-    audience: '在日本设立公司的经营者、管理职',
-    supported: false,
+    audience: '在日本设立公司的经营者、管理职 · 2025/10 政策大幅收紧',
+    state: 'info',
+    href: '/check/keiei',
     icon: (
       <svg
         width="22"
@@ -246,7 +268,7 @@ const VISAS: Visa[] = [
     name: '日本人の配偶者等',
     nameZh: '配偶者',
     audience: '日本人或永住者的配偶、子女',
-    supported: false,
+    state: 'coming',
     icon: (
       <svg
         width="22"
@@ -267,7 +289,7 @@ const VISAS: Visa[] = [
     name: '定住者',
     nameZh: '定住者',
     audience: '日系人、长期居留经法务大臣特别认可者',
-    supported: false,
+    state: 'coming',
     icon: (
       <svg
         width="22"
@@ -289,7 +311,7 @@ const VISAS: Visa[] = [
     name: '永住者',
     nameZh: '永住者',
     audience: '已取得日本永久居留权（在留卡更新）',
-    supported: false,
+    state: 'coming',
     icon: (
       <svg
         width="22"
@@ -311,7 +333,7 @@ const VISAS: Visa[] = [
     name: '特定技能',
     nameZh: '特定技能',
     audience: '介护、餐饮、农业等 14 个特定行业的劳动者',
-    supported: false,
+    state: 'coming',
     icon: (
       <svg
         width="22"
