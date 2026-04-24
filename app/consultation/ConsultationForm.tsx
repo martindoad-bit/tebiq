@@ -237,6 +237,24 @@ export default function ConsultationForm() {
             <p className="text-[#DC2626] text-sm font-bold">{error}</p>
           )}
 
+          <div className="bg-base border border-line rounded-xl px-4 py-3">
+            <p className="text-title text-xs font-bold mb-2">关于你的信息</p>
+            <ul className="text-muted text-xs leading-relaxed space-y-1">
+              <li>✓ 提交的信息仅用于本次咨询对接</li>
+              <li>✓ 不会用于其他营销用途</li>
+              <li>✓ 不会出售或共享给第三方</li>
+              <li>
+                ✓ 详见
+                <Link
+                  href="/privacy"
+                  className="text-primary hover:text-primary-hover underline underline-offset-2 mx-0.5"
+                >
+                  プライバシーポリシー
+                </Link>
+              </li>
+            </ul>
+          </div>
+
           <button
             type="submit"
             disabled={submitting}
@@ -247,7 +265,6 @@ export default function ConsultationForm() {
 
           <p className="text-muted text-[11px] leading-relaxed pt-2 border-t border-line">
             本平台聚合合作书士资源，根据您的情况匹配合适的专业人士。
-            您提交的信息仅用于咨询对接，不会用于其他用途。
           </p>
         </form>
       </section>

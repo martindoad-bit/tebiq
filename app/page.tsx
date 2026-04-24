@@ -245,7 +245,7 @@ const TRUST_POINTS = [
 
 const STEPS = [
   { n: 'STEP 1', title: '选择签证类型', subtitle: '技人国 / 经营管理 / 配偶者等' },
-  { n: 'STEP 2', title: '回答 13 个问题', subtitle: '约 3 分钟，分支逻辑自动跳题' },
+  { n: 'STEP 2', title: '回答约 12 个问题', subtitle: '约 3 分钟，分支逻辑自动跳题' },
   { n: 'STEP 3', title: '获得风险评估', subtitle: '红 / 黄 / 绿三色判决 + 材料清单' },
 ]
 

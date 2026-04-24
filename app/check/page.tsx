@@ -21,6 +21,17 @@ export default function CheckPage() {
   const [selectedOption, setSelectedOption] = useState<number | null>(null)
   const [isExiting, setIsExiting] = useState(false)
   const [learnMoreOpen, setLearnMoreOpen] = useState(false)
+  const [answeredOpen, setAnsweredOpen] = useState(false)
+
+  function handleEditAnswer(index: number) {
+    if (index < 0 || index >= history.length) return
+    const target = history[index]
+    setHistory(history.slice(0, index))
+    setCurrentId(target.questionId)
+    setSelectedOption(null)
+    setIsExiting(false)
+    setAnsweredOpen(false)
+  }
 
   // 切到下一题时折叠"了解更多"
   useEffect(() => {
@@ -135,13 +146,25 @@ export default function CheckPage() {
               <span className="text-primary font-bold text-base">{answeredCount + 1}</span> 题 / 共{' '}
               <span className="text-body font-bold">{totalEstimate}</span> 题
             </span>
-            <button
-              onClick={handleBack}
-              disabled={history.length === 0 || isExiting}
-              className="text-body hover:text-title disabled:opacity-30 disabled:cursor-not-allowed text-sm font-bold transition-colors px-2 py-1 -mr-2"
-            >
-              ← 上一题
-            </button>
+            <div className="flex items-center gap-1">
+              {history.length > 0 && (
+                <button
+                  onClick={() => setAnsweredOpen(true)}
+                  disabled={isExiting}
+                  className="text-muted hover:text-title disabled:opacity-30 text-xs font-bold transition-colors px-2 py-1"
+                  aria-label="查看已答问题"
+                >
+                  📋 已答 {history.length}
+                </button>
+              )}
+              <button
+                onClick={handleBack}
+                disabled={history.length === 0 || isExiting}
+                className="text-body hover:text-title disabled:opacity-30 disabled:cursor-not-allowed text-sm font-bold transition-colors px-2 py-1 -mr-2"
+              >
+                ← 上一题
+              </button>
+            </div>
           </div>
           <div className="h-1.5 bg-card rounded-full overflow-hidden">
             <div
@@ -225,6 +248,112 @@ export default function CheckPage() {
           </div>
         </div>
       </div>
+
+      {answeredOpen && (
+        <AnsweredDrawer
+          history={history}
+          onClose={() => setAnsweredOpen(false)}
+          onEdit={handleEditAnswer}
+        />
+      )}
     </main>
+  )
+}
+
+function AnsweredDrawer({
+  history,
+  onClose,
+  onEdit,
+}: {
+  history: AnsweredItem[]
+  onClose: () => void
+  onEdit: (index: number) => void
+}) {
+  return (
+    <div
+      className="fixed inset-0 z-50 bg-black/40 flex items-end md:items-center justify-center"
+      onClick={onClose}
+    >
+      <div
+        className="bg-card w-full md:max-w-xl md:rounded-2xl rounded-t-2xl shadow-xl max-h-[85vh] flex flex-col"
+        onClick={e => e.stopPropagation()}
+      >
+        <div className="flex items-center justify-between px-5 py-4 border-b border-line">
+          <div>
+            <h3 className="text-title font-bold text-base">你已回答的问题</h3>
+            <p className="text-muted text-xs mt-0.5">
+              点「修改」会清除该题之后的回答，从该题重新作答
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="关闭"
+            className="text-muted hover:text-title text-xl px-2 leading-none"
+          >
+            ×
+          </button>
+        </div>
+
+        <div className="flex-1 overflow-y-auto px-5 py-4 space-y-3">
+          {history.map((item, i) => {
+            const q = QUESTIONS[item.questionId]
+            const opt = q?.options[item.optionIndex]
+            if (!q || !opt) return null
+            const sev = opt.severity
+            const dotColor =
+              sev === 'red'
+                ? 'bg-[#DC2626]'
+                : sev === 'yellow'
+                  ? 'bg-primary'
+                  : 'bg-[#16A34A]'
+            const sevLabel =
+              sev === 'red' ? '高风险' : sev === 'yellow' ? '需注意' : '正常'
+            return (
+              <div
+                key={`${item.questionId}-${i}`}
+                className="bg-base border border-line rounded-xl p-4"
+              >
+                <div className="flex items-start gap-3 mb-2">
+                  <span className="text-muted text-xs font-mono mt-0.5 flex-shrink-0">
+                    {i + 1}.
+                  </span>
+                  <p className="text-title text-sm leading-snug font-bold flex-1">
+                    {q.text}
+                  </p>
+                </div>
+                <div className="flex items-center gap-2 mb-3 ml-7">
+                  <span
+                    className={`inline-block w-2 h-2 rounded-full ${dotColor} flex-shrink-0`}
+                    aria-hidden="true"
+                  />
+                  <span className="text-body text-sm">
+                    你的回答：<span className="font-bold">{opt.label}</span>
+                  </span>
+                  <span className="text-muted text-[10px] ml-1">· {sevLabel}</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => onEdit(i)}
+                  className="ml-7 text-primary hover:text-primary-hover text-xs font-bold underline underline-offset-2"
+                >
+                  修改 →
+                </button>
+              </div>
+            )
+          })}
+        </div>
+
+        <div className="px-5 py-3 border-t border-line">
+          <button
+            type="button"
+            onClick={onClose}
+            className="w-full min-h-[44px] bg-card border border-line text-title rounded-lg text-sm font-bold hover:bg-highlight"
+          >
+            继续答题
+          </button>
+        </div>
+      </div>
+    </div>
   )
 }

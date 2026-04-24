@@ -9,8 +9,7 @@ import type {
 } from './questions'
 
 export const SEVERITY_PRIORITY: Record<string, number> = {
-  '4': 1, // 住民税未按时申报
-  '5': 1, // 未缴税款
+  '4': 1, // 住民税
   '7': 1, // 不法残留
   '2': 2, // 换工作未申报
   '6': 3, // 社保断缴
@@ -50,12 +49,13 @@ function greenSummary(history: AnsweredItem[]): string {
   const a = answersByQuestion(history)
   const points: string[] = []
 
-  if (a['1'] === 1) points.push('续签期间未换工作')
+  if (a['1'] === 1) points.push('续签期间未换公司')
+  else if (a['1'] === 2) points.push('自营状态')
   else if (a['2'] === 0 && a['3'] === 0) points.push('换工作已合规申报、空窗期短')
 
-  if (a['4'] === 0 && a['5'] === 0) points.push('住民税按时缴纳、无欠款')
+  if (a['4'] === 0) points.push('住民税按时缴纳、无欠款')
   if (a['6'] === 0) points.push('社保全程参保')
-  if (a['7'] === 0) points.push('未出现不法残留')
+  if (a['7'] === 0 || a['7'] === 2) points.push('未出现不法残留')
 
   if (points.length === 0) points.push('关键风险项均通过')
 

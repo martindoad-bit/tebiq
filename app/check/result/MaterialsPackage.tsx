@@ -1,4 +1,5 @@
 'use client'
+import Link from 'next/link'
 import DownloadPackage from './DownloadPackage'
 
 export default function MaterialsPackage({ visaType = 'gijinkoku' }: { visaType?: string }) {
@@ -20,7 +21,8 @@ export default function MaterialsPackage({ visaType = 'gijinkoku' }: { visaType?
         <span className="text-primary text-3xl font-bold leading-none">¥380</span>
         <span className="text-muted text-sm line-through">¥480</span>
       </div>
-      <p className="text-muted text-xs mb-4">正式价 ¥480 · 早鸟期内免费试用生成功能</p>
+      <p className="text-muted text-xs mb-2">正式价 ¥480 · 早鸟期内免费试用生成功能</p>
+      <Link href="/sample-package" className="inline-block text-primary hover:text-primary-hover text-xs font-bold mb-4 underline underline-offset-2">查看样例 →</Link>
 
       <DownloadPackage visaType={visaType} />
 

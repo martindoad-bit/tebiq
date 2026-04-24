@@ -83,10 +83,12 @@ export default function DownloadPackage({ visaType = 'gijinkoku' }: { visaType?:
         disabled={busy}
         className="w-full min-h-[52px] bg-primary hover:bg-primary-hover disabled:opacity-60 text-title font-bold rounded-xl text-base transition-all"
       >
-        {busy ? '生成中…可能需要 5-10 秒' : '立即获取'}
+        {busy ? '生成中…可能需要 5-10 秒' : '¥380 獲取完整材料包'}
       </button>
       <p className="text-center text-muted text-xs mt-2">
-        {busy ? '正在为你定制材料包' : '生成后会自动打开打印窗口，可保存为 PDF'}
+        {busy
+          ? '正在为你定制材料包'
+          : '一次支付、立即下载 · 付款安全由 Stripe 保障'}
       </p>
       {error && (
         <p className="text-center text-[#DC2626] text-xs mt-2">{error}</p>
