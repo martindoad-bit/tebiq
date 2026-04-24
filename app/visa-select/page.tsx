@@ -40,7 +40,7 @@ export default function VisaSelectPage() {
         </div>
       </header>
 
-      <div className="px-4 py-8 md:py-12 flex-1">
+      <div className="px-4 py-8 md:py-12 pb-[max(2rem,env(safe-area-inset-bottom))] flex-1">
         <div className="max-w-md md:max-w-4xl mx-auto">
           <h1 className="text-2xl md:text-4xl font-bold mb-2 leading-tight">
             选择你要续签的<br className="md:hidden" />
@@ -267,8 +267,9 @@ const VISAS: Visa[] = [
     id: 'haigusha',
     name: '日本人の配偶者等',
     nameZh: '配偶者',
-    audience: '日本人或永住者的配偶、子女',
-    state: 'coming',
+    audience: '日本人或永住者的配偶、子女 · 取决于婚姻关系',
+    state: 'info',
+    href: '/check/haigusha',
     icon: (
       <svg
         width="22"
@@ -310,8 +311,9 @@ const VISAS: Visa[] = [
     id: 'eijusha',
     name: '永住者',
     nameZh: '永住者',
-    audience: '已取得日本永久居留权（在留卡更新）',
-    state: 'coming',
+    audience: '已取得日本永久居留权（在留卡更新流程说明）',
+    state: 'info',
+    href: '/check/eijusha',
     icon: (
       <svg
         width="22"

@@ -65,6 +65,9 @@ export async function findOrCreateUserByPhone(phone: string): Promise<User> {
     history: [],
   }
   await storage.set(`user:${phone}`, user)
+  // 维护用户总数计数（取代 SCAN 全表）
+  const count = (await storage.get<number>('stats:user_count')) ?? 0
+  await storage.set('stats:user_count', count + 1)
   return user
 }
 

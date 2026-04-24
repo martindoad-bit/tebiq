@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation'
 import {
   QUESTIONS,
   START_ID,
+  judge,
   longestPathFrom,
   type AnsweredItem,
   type Severity,
@@ -65,7 +66,13 @@ export default function CheckPage() {
       const newHistory = [...history, { questionId: currentId, optionIndex: i }]
       if (opt.next === null) {
         sessionStorage.setItem(STORAGE_KEY, JSON.stringify(newHistory))
-        router.push('/check/result')
+        // 把 verdict 与触发数附在 URL 上，给 result 页 server-side OGP 用
+        const j = judge(newHistory)
+        const count =
+          j.verdict === 'red'
+            ? j.triggered.filter(t => t.severity === 'red').length
+            : j.triggered.length
+        router.push(`/check/result?v=${j.verdict}&n=${count}`)
       } else {
         setHistory(newHistory)
         setCurrentId(opt.next)

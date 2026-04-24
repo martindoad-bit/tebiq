@@ -108,7 +108,7 @@ export default function Home() {
       </section>
 
       {/* 底部 */}
-      <footer className="bg-slate-950 px-4 py-6 text-center border-t border-slate-800 mt-auto">
+      <footer className="bg-slate-950 px-4 py-6 pb-[max(1.5rem,env(safe-area-inset-bottom))] text-center border-t border-slate-800 mt-auto">
         <Link
           href="/knowledge"
           className="inline-block text-amber-400 hover:text-amber-300 text-sm font-bold mb-4 underline underline-offset-4"

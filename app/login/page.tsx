@@ -117,7 +117,7 @@ function LoginInner() {
                   value={phone}
                   onChange={e => setPhone(e.target.value)}
                   placeholder="例如 13800138000 或 +818012345678"
-                  className="w-full bg-slate-800 border-2 border-slate-700 focus:border-amber-400 rounded-xl px-4 py-3 text-white outline-none transition-colors"
+                  className="w-full bg-slate-800 border-2 border-slate-700 focus:border-amber-400 rounded-xl px-4 py-3 text-white text-base outline-none transition-colors"
                   autoFocus
                 />
               </label>

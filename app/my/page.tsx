@@ -61,7 +61,7 @@ export default function MyPage() {
         </div>
       </header>
 
-      <div className="flex-1 px-4 py-8">
+      <div className="flex-1 px-4 py-8 pb-[max(2rem,env(safe-area-inset-bottom))]">
         <div className="max-w-md md:max-w-2xl mx-auto">
           <h1 className="text-2xl font-bold mb-2">我的测试记录</h1>
           {user && (

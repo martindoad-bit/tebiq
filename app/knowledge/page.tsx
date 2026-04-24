@@ -21,7 +21,7 @@ export default function KnowledgePage() {
         </div>
       </header>
 
-      <div className="px-4 py-8 md:py-12 flex-1">
+      <div className="px-4 py-8 md:py-12 pb-[max(2rem,env(safe-area-inset-bottom))] flex-1">
         <div className="max-w-md md:max-w-3xl mx-auto">
           <h1 className="text-2xl md:text-4xl font-bold mb-2 leading-tight">
             续签<span className="text-amber-400">知识库</span>
