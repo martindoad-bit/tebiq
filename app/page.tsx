@@ -39,13 +39,6 @@ export default async function Home() {
         <div className="max-w-md md:max-w-6xl mx-auto md:grid md:grid-cols-2 md:gap-12 md:items-start">
           {/* 左：标题 + CTA + 信任点 */}
           <div>
-            <div className="flex items-center gap-3 mb-6">
-              <img src="/logo-icon.png" alt="TEBIQ" className="h-16 w-16 rounded-2xl" />
-              <div>
-                <div className="text-2xl font-bold text-[#1E3A5F] leading-none">TEBIQ</div>
-                <div className="text-sm text-[#6B7280] mt-1">てびき</div>
-              </div>
-            </div>
             <h1 className="text-3xl md:text-4xl font-medium mb-4 leading-tight text-title">
               在日签证，<br />
               先查后办，安心每一步
