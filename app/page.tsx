@@ -24,7 +24,7 @@ export default async function Home() {
       {/* 顶部导航 */}
       <header className="sticky top-0 z-10 bg-card/95 backdrop-blur border-b border-line">
         <div className="max-w-md md:max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2" aria-label="TEBIQ 首页"><img src="/logo-icon.png" alt="" className="h-9 w-9 rounded-xl" /><img src="/logo-full.svg" alt="TEBIQ" className="h-9 w-auto" /></Link>
+          <Link href="/" className="flex items-center gap-3" aria-label="TEBIQ 首页"><img src="/logo-icon.png" alt="" className="h-12 w-12 rounded-xl" /><div><div className="text-xl font-bold text-title leading-none">TEBIQ</div><div className="text-xs text-muted leading-tight mt-0.5">てびき</div></div></Link>
           <Link
             href="/visa-select"
             className="bg-primary hover:bg-primary-hover text-title font-bold text-sm px-4 py-2 rounded-lg transition-all"
@@ -39,6 +39,13 @@ export default async function Home() {
         <div className="max-w-md md:max-w-6xl mx-auto md:grid md:grid-cols-2 md:gap-12 md:items-start">
           {/* 左：标题 + CTA + 信任点 */}
           <div>
+            <div className="flex items-center gap-3 mb-6">
+              <img src="/logo-icon.png" alt="TEBIQ" className="h-16 w-16 rounded-2xl" />
+              <div>
+                <div className="text-2xl font-bold text-[#1E3A5F] leading-none">TEBIQ</div>
+                <div className="text-sm text-[#6B7280] mt-1">てびき</div>
+              </div>
+            </div>
             <h1 className="text-3xl md:text-4xl font-medium mb-4 leading-tight text-title">
               在日签证，<br />
               先查后办，安心每一步
