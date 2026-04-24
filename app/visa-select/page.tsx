@@ -77,7 +77,7 @@ function VisaCard({ visa }: { visa: Visa }) {
 function Badge({ type }: { type: BadgeType }) {
   if (type === 'ready') {
     return (
-      <div className="flex-shrink-0 self-start bg-primary text-white text-[10px] font-bold px-2 py-1 rounded-full">
+      <div className="flex-shrink-0 self-start bg-primary text-title text-[10px] font-bold px-2 py-1 rounded-full">
         已支持
       </div>
     )

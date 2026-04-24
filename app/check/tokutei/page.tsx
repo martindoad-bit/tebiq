@@ -53,7 +53,7 @@ export default function TokuteiPage() {
 
           <a
             href="#placeholder"
-            className="flex items-center justify-center w-full min-h-[60px] bg-primary hover:bg-primary-hover text-white font-bold py-4 rounded-xl text-base transition-all mt-6"
+            className="flex items-center justify-center w-full min-h-[60px] bg-primary hover:bg-primary-hover text-title font-bold py-4 rounded-xl text-base transition-all mt-6"
           >
             咨询特定技能续签 →
           </a>

@@ -11,7 +11,7 @@ export default function NotFound() {
       <div className="flex flex-col gap-3 w-full max-w-xs">
         <Link
           href="/"
-          className="flex items-center justify-center min-h-[60px] bg-primary hover:bg-primary-hover text-white font-bold py-4 px-6 rounded-xl text-base transition-all"
+          className="flex items-center justify-center min-h-[60px] bg-primary hover:bg-primary-hover text-title font-bold py-4 px-6 rounded-xl text-base transition-all"
         >
           回到首页
         </Link>

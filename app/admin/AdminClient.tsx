@@ -231,7 +231,7 @@ function MonitorRow({ monitor }: { monitor: MonitorStatus }) {
 function RecentRow({ entry }: { entry: RecentEntry }) {
   const v = {
     red: { text: '红', cls: 'bg-[#DC2626] text-white' },
-    yellow: { text: '黄', cls: 'bg-primary text-white' },
+    yellow: { text: '黄', cls: 'bg-primary text-title' },
     green: { text: '绿', cls: 'bg-[#16A34A] text-white' },
   }[entry.result]
   const dateStr = new Date(entry.date).toLocaleString('zh-CN', {

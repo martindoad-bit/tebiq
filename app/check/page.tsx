@@ -46,7 +46,7 @@ export default function CheckPage() {
   const progressPct =
     totalEstimate === 0 ? 0 : Math.min(100, Math.round((answeredCount / totalEstimate) * 100))
 
-  // 进度条统一用主色（#D97706）
+  // 进度条统一用主色（#F6B133）
   const barColor = 'bg-primary'
   void currentSeverity
 
@@ -209,7 +209,7 @@ export default function CheckPage() {
                     disabled={isExiting || (selectedOption !== null && selectedOption !== originalIndex)}
                     className={`w-full min-h-[56px] border font-medium py-4 px-4 rounded-xl text-base leading-snug transition-all duration-150 ${
                       isSelected
-                        ? 'border-primary bg-primary text-white scale-[0.98] shadow-sm'
+                        ? 'border-primary bg-primary text-title scale-[0.98] shadow-sm'
                         : 'border-title/20 bg-card text-title hover:bg-highlight'
                     } disabled:cursor-not-allowed`}
                   >

@@ -21,7 +21,7 @@ export default function KnowledgePage() {
           <Link href="/" className="flex items-center gap-2" aria-label="TEBIQ 首页"><img src="/logo-icon.png" alt="" className="h-9 w-9 rounded-xl" /><img src="/logo-full.svg" alt="TEBIQ" className="h-9 w-auto" /></Link>
           <Link
             href="/visa-select"
-            className="bg-primary hover:bg-primary-hover text-white font-bold text-sm px-4 py-2 rounded-lg transition-all"
+            className="bg-primary hover:bg-primary-hover text-title font-bold text-sm px-4 py-2 rounded-lg transition-all"
           >
             开始自查
           </Link>
@@ -89,7 +89,7 @@ export default function KnowledgePage() {
             </p>
             <Link
               href="/visa-select"
-              className="flex items-center justify-center w-full min-h-[60px] bg-primary hover:bg-primary-hover text-white font-bold py-4 rounded-xl text-base transition-all"
+              className="flex items-center justify-center w-full min-h-[60px] bg-primary hover:bg-primary-hover text-title font-bold py-4 rounded-xl text-base transition-all"
             >
               开始免费自查 →
             </Link>

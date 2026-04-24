@@ -76,7 +76,7 @@ function SaveToAccountPrompt({ verdict, count }: { verdict: 'red' | 'yellow' | '
       </p>
       <Link
         href={`/login?next=${next}`}
-        className="flex items-center justify-center w-full min-h-[48px] bg-primary hover:bg-primary-hover text-white font-bold py-3 rounded-xl text-sm transition-all"
+        className="flex items-center justify-center w-full min-h-[48px] bg-primary hover:bg-primary-hover text-title font-bold py-3 rounded-xl text-sm transition-all"
       >
         登录 / 注册
       </Link>
@@ -303,7 +303,7 @@ function SaveResultButton({
     verdict === 'red'
       ? 'bg-[#DC2626] hover:bg-[#B91C1C] text-white'
       : verdict === 'yellow'
-        ? 'bg-primary hover:bg-primary-hover text-white'
+        ? 'bg-primary hover:bg-primary-hover text-title'
         : 'bg-[#16A34A] hover:bg-[#15803D] text-title'
 
   return (
@@ -606,7 +606,7 @@ function YellowResult({ result, summary }: { result: JudgeResult; summary: strin
         </p>
         <a
           href={CTA_LINK}
-          className="flex items-center justify-center w-full min-h-[60px] bg-primary hover:bg-primary-hover text-white font-bold py-4 rounded-xl transition-all"
+          className="flex items-center justify-center w-full min-h-[60px] bg-primary hover:bg-primary-hover text-title font-bold py-4 rounded-xl transition-all"
         >
           联系专业书士确认 →
         </a>

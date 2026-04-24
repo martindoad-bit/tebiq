@@ -27,7 +27,7 @@ export default async function Home() {
           <Link href="/" className="flex items-center gap-2" aria-label="TEBIQ 首页"><img src="/logo-icon.png" alt="" className="h-9 w-9 rounded-xl" /><img src="/logo-full.svg" alt="TEBIQ" className="h-9 w-auto" /></Link>
           <Link
             href="/visa-select"
-            className="bg-primary hover:bg-primary-hover text-white font-bold text-sm px-4 py-2 rounded-lg transition-all"
+            className="bg-primary hover:bg-primary-hover text-title font-bold text-sm px-4 py-2 rounded-lg transition-all"
           >
             开始自查
           </Link>
@@ -52,7 +52,7 @@ export default async function Home() {
 
             <Link
               href="/visa-select"
-              className="flex items-center justify-center w-full md:max-w-sm min-h-[60px] bg-primary hover:bg-primary-hover text-white font-bold py-4 rounded-xl text-lg transition-all shadow-sm"
+              className="flex items-center justify-center w-full md:max-w-sm min-h-[60px] bg-primary hover:bg-primary-hover text-title font-bold py-4 rounded-xl text-lg transition-all shadow-sm"
             >
               免费开始自查 →
             </Link>
@@ -75,9 +75,9 @@ export default async function Home() {
             {STEPS.map(s => (
               <div
                 key={s.n}
-                className="bg-card border border-line rounded-2xl p-5 shadow-sm"
+                className="bg-card border border-line border-l-4 border-l-[#F6B133] rounded-2xl p-5 shadow-sm"
               >
-                <div className="text-2xl font-bold text-primary leading-none mb-2">
+                <div className="text-2xl font-bold not-italic text-primary leading-none mb-2 tracking-wide">
                   {s.n}
                 </div>
                 <div className="text-base font-medium text-title mb-1">{s.title}</div>
@@ -144,7 +144,7 @@ export default async function Home() {
         <div className="max-w-md mx-auto text-center">
           <Link
             href="/visa-select"
-            className="flex items-center justify-center w-full min-h-[60px] bg-primary hover:bg-primary-hover text-white font-bold py-4 rounded-xl text-lg transition-all shadow-sm"
+            className="flex items-center justify-center w-full min-h-[60px] bg-primary hover:bg-primary-hover text-title font-bold py-4 rounded-xl text-lg transition-all shadow-sm"
           >
             开始免费自查 →
           </Link>

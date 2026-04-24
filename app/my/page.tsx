@@ -93,7 +93,7 @@ export default function MyPage() {
           {/* 重新自查按钮 */}
           <Link
             href="/visa-select"
-            className="flex items-center justify-center w-full min-h-[60px] bg-primary hover:bg-primary-hover text-white font-bold py-4 rounded-xl text-base transition-all mb-6"
+            className="flex items-center justify-center w-full min-h-[60px] bg-primary hover:bg-primary-hover text-title font-bold py-4 rounded-xl text-base transition-all mb-6"
           >
             开始新的自查 →
           </Link>
@@ -241,7 +241,7 @@ function HistoryRow({ record }: { record: HistoryRecord }) {
   const [open, setOpen] = useState(false)
   const verdictLabel = {
     red: { text: '高风险', cls: 'bg-[#DC2626] text-white' },
-    yellow: { text: '需注意', cls: 'bg-primary text-white' },
+    yellow: { text: '需注意', cls: 'bg-primary text-title' },
     green: { text: '可申请', cls: 'bg-[#16A34A] text-white' },
   }[record.result]
 
