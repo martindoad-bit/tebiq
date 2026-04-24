@@ -12,12 +12,18 @@ import { buildSummary } from '@/lib/check/summary'
 import { GIJINKOKU_MATERIALS, type MaterialDetail } from '@/lib/check/materials'
 import { materialDetails } from '@/lib/knowledge/materials'
 import MaterialsPackage from './MaterialsPackage'
+import SignupBanner from './SignupBanner'
+import ShareLinkButton from './ShareLinkButton'
 
 const STORAGE_KEY = 'tebiq_check_answers'
 const SAVED_FOR_KEY = 'tebiq_check_saved_for' // 去重：值 = 已保存过的 history JSON
 const TRACKED_FOR_KEY = 'tebiq_stats_tracked_for' // 匿名 stats 同款去重
 const LS_USER_KEY = 'tebiq_user'
-const CTA_LINK = '#placeholder'
+const CONSULTATION_CTX_KEY = 'tebiq_consultation_ctx'
+
+function consultationHref(verdict: 'red' | 'yellow' | 'green'): string {
+  return `/consultation?visa=gijinkoku&color=${verdict}`
+}
 const SHARE_TEXT = '我刚用 TEBIQ 查了续签前置条件，3 分钟就能发现隐藏风险，推荐给在日华人朋友。'
 
 function SummaryCard({
@@ -101,6 +107,19 @@ export default function ResultClient() {
       setHistory(parsed)
       const j = judge(parsed)
       setResult(j)
+      // 把咨询上下文写入 sessionStorage，以便 /consultation 页面读取触发项
+      try {
+        sessionStorage.setItem(
+          CONSULTATION_CTX_KEY,
+          JSON.stringify({
+            visaType: 'gijinkoku',
+            resultColor: j.verdict,
+            triggeredItems: j.triggered.map(t => t.triggerLabel),
+          }),
+        )
+      } catch {
+        /* sessionStorage 满或被禁用 */
+      }
       // 全用户匿名 stats（admin 看板）
       trackStats(parsed, j).catch(() => {
         /* 静默 */
@@ -164,15 +183,18 @@ async function autoSave(history: AnsweredItem[]) {
 function ResultShell({
   banner,
   captureRef,
+  signupBanner,
   children,
 }: {
   banner: React.ReactNode
   captureRef: React.RefObject<HTMLDivElement>
+  signupBanner?: React.ReactNode
   children: React.ReactNode
 }) {
   return (
-    <main className="min-h-screen bg-base text-title">
+    <main className="min-h-screen bg-base text-title pb-[env(safe-area-inset-bottom)]">
       <TopBar />
+      {signupBanner}
       <div ref={captureRef} id="result-capture">
         {banner}
         <div className="max-w-md md:max-w-3xl mx-auto px-4 py-6">{children}</div>
@@ -326,6 +348,7 @@ function GreenResult({ summary }: { summary: string }) {
   return (
     <ResultShell
       captureRef={captureRef}
+      signupBanner={<SignupBanner verdict="green" count={0} />}
       banner={
         <div className="bg-gradient-to-b from-[#16A34A] to-[#15803D] text-white px-4 pt-12 pb-10 text-center">
           <div className="inline-block bg-white/20 text-white text-xs font-bold px-3 py-1 rounded-full mb-4">
@@ -343,6 +366,7 @@ function GreenResult({ summary }: { summary: string }) {
 
       <div className="space-y-3 mb-6">
         <SaveResultButton captureRef={captureRef} verdict="green" />
+        <ShareLinkButton verdict="green" summary={summary} />
         <SaveToAccountPrompt verdict="green" count={0} />
         <PremiumCallout />
       </div>
@@ -365,12 +389,12 @@ function GreenResult({ summary }: { summary: string }) {
               材料齐全后即可前往最近的入管局递交。
               如果在准备过程中遇到任何不确定的地方，可以咨询持牌行政书士。
             </p>
-            <a
-              href={CTA_LINK}
+            <Link
+              href={consultationHref('green')}
               className="flex items-center justify-center w-full min-h-[56px] bg-slate-700 hover:bg-slate-600 text-title font-bold py-4 rounded-xl text-sm transition-all"
             >
               联系专业书士确认 →
-            </a>
+            </Link>
           </div>
         </div>
 
@@ -555,6 +579,7 @@ function YellowResult({ result, summary }: { result: JudgeResult; summary: strin
   return (
     <ResultShell
       captureRef={captureRef}
+      signupBanner={<SignupBanner verdict="yellow" count={result.triggered.length} />}
       banner={
         <div className="bg-gradient-to-b from-primary to-primary-hover text-white px-4 pt-12 pb-10 text-center">
           <div className="inline-block bg-white/20 text-white text-xs font-bold px-3 py-1 rounded-full mb-4">
@@ -572,6 +597,7 @@ function YellowResult({ result, summary }: { result: JudgeResult; summary: strin
 
       <div className="space-y-3 mb-6">
         <SaveResultButton captureRef={captureRef} verdict="yellow" />
+        <ShareLinkButton verdict="yellow" summary={summary} />
         <SaveToAccountPrompt verdict="yellow" count={result.triggered.length} />
       </div>
 
@@ -606,12 +632,12 @@ function YellowResult({ result, summary }: { result: JudgeResult; summary: strin
           这些问题不是绝对致命，但自行处理容易留下隐患。
           建议在递交申请前请书士过一遍材料和情况说明书。
         </p>
-        <a
-          href={CTA_LINK}
+        <Link
+          href={consultationHref('yellow')}
           className="flex items-center justify-center w-full min-h-[60px] bg-primary hover:bg-primary-hover text-title font-bold py-4 rounded-xl transition-all"
         >
           联系专业书士确认 →
-        </a>
+        </Link>
       </div>
 
       <MaterialsPackage />
@@ -630,6 +656,7 @@ function RedResult({ result, summary }: { result: JudgeResult; summary: string }
   return (
     <ResultShell
       captureRef={captureRef}
+      signupBanner={<SignupBanner verdict="red" count={reds.length} />}
       banner={
         <div className="bg-gradient-to-b from-[#DC2626] to-[#B91C1C] text-white px-4 pt-12 pb-10 text-center">
           <div className="inline-block bg-white/20 text-white text-xs font-bold px-3 py-1 rounded-full mb-4">
@@ -647,6 +674,7 @@ function RedResult({ result, summary }: { result: JudgeResult; summary: string }
 
       <div className="space-y-3 mb-6">
         <SaveResultButton captureRef={captureRef} verdict="red" />
+        <ShareLinkButton verdict="red" summary={summary} />
         <SaveToAccountPrompt
           verdict="red"
           count={result.triggered.filter(t => t.severity === 'red').length}
@@ -674,12 +702,12 @@ function RedResult({ result, summary }: { result: JudgeResult; summary: string }
           请务必在提交申请前联系持牌行政书士。
           每多拖一天，处理空间都会变小。
         </p>
-        <a
-          href={CTA_LINK}
+        <Link
+          href={consultationHref('red')}
           className="flex items-center justify-center w-full min-h-[60px] bg-[#DC2626] hover:bg-[#B91C1C] text-white font-bold py-4 rounded-xl transition-all"
         >
           立即联系专业书士 →
-        </a>
+        </Link>
       </div>
 
       <CollapsibleChecklist />

@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /api
+Disallow: /my
+Disallow: /login
+Disallow: /share
+
+Sitemap: https://tebiq.jp/sitemap.xml

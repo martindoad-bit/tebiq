@@ -11,6 +11,19 @@ html, body {
   background-color: #FFF5E6;
   color: #1E3A5F;
   font-family: 'Noto Sans SC', 'Noto Sans CJK SC', -apple-system, BlinkMacSystemFont, sans-serif;
+  /* 移动端最小 16px，防止 iOS 输入框自动缩放 */
+  -webkit-text-size-adjust: 100%;
+}
+
+/* iOS 安全区适配：所有 main 容器底部留出 home indicator 区域 */
+main {
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+/* iOS 输入框防自动缩放：最小 16px */
+input, select, textarea {
+  font-size: 16px;
 }
 
 h1 { font-size: 32px; line-height: 40px; font-weight: 700; }

@@ -1,6 +1,17 @@
 'use client'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import {
+  type ConsultationIndexEntry,
+  type Consultation,
+  type ConsultationStatus,
+  STATUS_LABEL,
+  URGENCY_LABEL,
+  CONTACT_LABEL,
+  COLOR_LABEL,
+  VISA_LABEL,
+  isStatus,
+} from '@/lib/consultation'
 
 interface MonitorStatus {
   id: string
@@ -163,6 +174,16 @@ export default function AdminClient({ adminKey }: { adminKey: string }) {
                   adminKey={adminKey}
                   onSaved={loadAll}
                 />
+              </Section>
+
+              {/* 内容统计 - 触发的风险项 Top */}
+              <Section title="内容统计 · 最常触发的风险项">
+                <TriggeredTopList recent={data.recent} totalTests={data.totalTests} />
+              </Section>
+
+              {/* 咨询请求 */}
+              <Section title="咨询请求">
+                <ConsultationsPanel adminKey={adminKey} />
               </Section>
             </>
           )}
@@ -456,6 +477,302 @@ function SystemStatusCard({ status }: { status: SystemStatus }) {
           <span className="text-muted">上次检查：{monitorStr}</span>
         </li>
       </ul>
+    </div>
+  )
+}
+
+function TriggeredTopList({
+  recent,
+  totalTests,
+}: {
+  recent: RecentEntry[]
+  totalTests: number
+}) {
+  const counts = new Map<string, number>()
+  for (const r of recent) {
+    for (const item of r.triggeredItems) {
+      counts.set(item, (counts.get(item) ?? 0) + 1)
+    }
+  }
+  const top = Array.from(counts.entries())
+    .sort(([, a], [, b]) => b - a)
+    .slice(0, 5)
+
+  if (top.length === 0) {
+    return (
+      <p className="bg-card border border-line rounded-2xl p-5 text-muted text-sm">
+        最近 50 次测试中暂未触发任何风险项
+      </p>
+    )
+  }
+  const max = top[0][1]
+
+  return (
+    <div className="bg-card border border-line rounded-2xl p-5 space-y-3">
+      <p className="text-muted text-xs">
+        基于最近 {recent.length} 次测试 · 总计 {totalTests.toLocaleString()} 次
+      </p>
+      {top.map(([label, count], i) => (
+        <div key={label}>
+          <div className="flex items-baseline justify-between mb-1">
+            <span className="text-title text-sm font-bold flex-1 pr-3 leading-snug">
+              <span className="text-muted text-xs mr-2 font-mono">#{i + 1}</span>
+              {label}
+            </span>
+            <span className="text-primary text-sm font-bold flex-shrink-0">{count} 次</span>
+          </div>
+          <div className="h-1.5 bg-base rounded-full overflow-hidden">
+            <div
+              className="h-full bg-primary"
+              style={{ width: `${Math.round((count / max) * 100)}%` }}
+            />
+          </div>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+function ConsultationsPanel({ adminKey }: { adminKey: string }) {
+  const keyParam = adminKey ? `?key=${encodeURIComponent(adminKey)}` : ''
+  const [items, setItems] = useState<ConsultationIndexEntry[] | null>(null)
+  const [statusFilter, setStatusFilter] = useState<'all' | ConsultationStatus>('all')
+  const [visaFilter, setVisaFilter] = useState<'all' | string>('all')
+  const [openId, setOpenId] = useState<string | null>(null)
+
+  function reload() {
+    fetch(`/api/admin/consultations${keyParam}`, { cache: 'no-store' })
+      .then(r => r.json())
+      .then(d => setItems(d?.items ?? []))
+      .catch(() => setItems([]))
+  }
+  useEffect(reload, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  if (!items) return <p className="text-muted text-sm">载入中…</p>
+  if (items.length === 0)
+    return <p className="text-muted text-sm">还没有咨询请求</p>
+
+  const filtered = items.filter(it => {
+    if (statusFilter !== 'all' && it.status !== statusFilter) return false
+    if (visaFilter !== 'all' && it.visaType !== visaFilter) return false
+    return true
+  })
+
+  const visaOptions = Array.from(new Set(items.map(i => i.visaType)))
+
+  return (
+    <div className="space-y-3">
+      <div className="flex flex-wrap gap-2 items-center">
+        <select
+          value={statusFilter}
+          onChange={e => setStatusFilter(e.target.value as 'all' | ConsultationStatus)}
+          className="bg-base border border-line rounded-lg px-3 py-2 text-title text-sm"
+        >
+          <option value="all">全部状态</option>
+          {(Object.keys(STATUS_LABEL) as ConsultationStatus[]).map(s => (
+            <option key={s} value={s}>{STATUS_LABEL[s]}</option>
+          ))}
+        </select>
+        <select
+          value={visaFilter}
+          onChange={e => setVisaFilter(e.target.value)}
+          className="bg-base border border-line rounded-lg px-3 py-2 text-title text-sm"
+        >
+          <option value="all">全部签证</option>
+          {visaOptions.map(v => (
+            <option key={v} value={v}>{VISA_LABEL[v] ?? v}</option>
+          ))}
+        </select>
+        <span className="text-muted text-xs ml-auto">{filtered.length} / {items.length}</span>
+      </div>
+      <div className="space-y-2">
+        {filtered.map(it => (
+          <ConsultationRow
+            key={it.id}
+            item={it}
+            adminKey={adminKey}
+            expanded={openId === it.id}
+            onToggle={() => setOpenId(o => (o === it.id ? null : it.id))}
+            onChanged={reload}
+          />
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function ConsultationRow({
+  item,
+  adminKey,
+  expanded,
+  onToggle,
+  onChanged,
+}: {
+  item: ConsultationIndexEntry
+  adminKey: string
+  expanded: boolean
+  onToggle: () => void
+  onChanged: () => void
+}) {
+  const dateStr = new Date(item.createdAt).toLocaleString('zh-CN', {
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+  })
+  const urgencyTone =
+    item.urgency === 'urgent'
+      ? 'bg-[#FEE2E2] text-[#B91C1C]'
+      : item.urgency === 'normal'
+        ? 'bg-highlight text-primary'
+        : 'bg-card text-muted border border-line'
+
+  return (
+    <div className="bg-card border border-line rounded-xl overflow-hidden">
+      <button
+        type="button"
+        onClick={onToggle}
+        className="w-full text-left p-3 flex items-center gap-3 hover:bg-highlight/40 transition-colors"
+      >
+        <span className={`text-[10px] font-bold px-2 py-1 rounded-full ${urgencyTone}`}>
+          {URGENCY_LABEL[item.urgency].split('（')[0]}
+        </span>
+        <div className="flex-1 min-w-0">
+          <div className="text-title text-sm font-bold truncate">
+            {item.userName ?? '（未填姓名）'} · {CONTACT_LABEL[item.preferredContact]}：{item.contactDetail}
+          </div>
+          <div className="text-muted text-xs mt-0.5 truncate">
+            {dateStr} · {VISA_LABEL[item.visaType] ?? item.visaType} · {COLOR_LABEL[item.resultColor]}
+          </div>
+        </div>
+        <span className="text-muted text-[10px] font-bold flex-shrink-0">{STATUS_LABEL[item.status]}</span>
+      </button>
+      {expanded && (
+        <ConsultationDetail
+          id={item.id}
+          adminKey={adminKey}
+          onChanged={onChanged}
+        />
+      )}
+    </div>
+  )
+}
+
+function ConsultationDetail({
+  id,
+  adminKey,
+  onChanged,
+}: {
+  id: string
+  adminKey: string
+  onChanged: () => void
+}) {
+  const keyParam = adminKey ? `?key=${encodeURIComponent(adminKey)}` : ''
+  const [data, setData] = useState<Consultation | null>(null)
+  const [status, setStatus] = useState<ConsultationStatus>('pending')
+  const [assignedTo, setAssignedTo] = useState('')
+  const [notes, setNotes] = useState('')
+  const [saving, setSaving] = useState(false)
+  const [msg, setMsg] = useState('')
+
+  useEffect(() => {
+    fetch(`/api/admin/consultations${keyParam}&id=${encodeURIComponent(id)}`, { cache: 'no-store' })
+      .then(r => r.json())
+      .then(d => {
+        const c = d?.consultation as Consultation | undefined
+        if (!c) return
+        setData(c)
+        setStatus(c.status)
+        setAssignedTo(c.assignedTo ?? '')
+        setNotes(c.internalNotes ?? '')
+      })
+  }, [id, keyParam])
+
+  async function save() {
+    setSaving(true)
+    setMsg('')
+    try {
+      const res = await fetch(`/api/admin/consultations${keyParam}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, status, assignedTo, internalNotes: notes }),
+      })
+      if (res.ok) {
+        setMsg('已保存')
+        onChanged()
+      } else {
+        const j = await res.json().catch(() => ({}))
+        setMsg(j?.error ?? '保存失败')
+      }
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  if (!data) return <div className="px-4 py-3 text-muted text-xs">载入中…</div>
+
+  return (
+    <div className="px-4 py-4 border-t border-line space-y-3 bg-base/40">
+      <dl className="text-xs leading-relaxed space-y-1">
+        <Row label="希望处理时间" value={URGENCY_LABEL[data.urgency]} />
+        <Row label="所在地域" value={data.location ?? '—'} />
+        <Row label="补充说明" value={data.additionalInfo ?? '—'} />
+        <Row label="触发的风险项" value={data.triggeredItems.length > 0 ? data.triggeredItems.join('； ') : '—'} />
+        <Row label="来源页面" value={data.sourcePage || '—'} />
+      </dl>
+      <div className="grid grid-cols-2 gap-2">
+        <label className="block">
+          <span className="text-body text-xs font-bold mb-1 block">状态</span>
+          <select
+            value={status}
+            onChange={e => isStatus(e.target.value) && setStatus(e.target.value)}
+            className="w-full bg-card border border-line rounded-lg px-2 py-1.5 text-title text-sm"
+          >
+            {(Object.keys(STATUS_LABEL) as ConsultationStatus[]).map(s => (
+              <option key={s} value={s}>{STATUS_LABEL[s]}</option>
+            ))}
+          </select>
+        </label>
+        <label className="block">
+          <span className="text-body text-xs font-bold mb-1 block">分配给（书士）</span>
+          <input
+            type="text"
+            value={assignedTo}
+            onChange={e => setAssignedTo(e.target.value)}
+            className="w-full bg-card border border-line rounded-lg px-2 py-1.5 text-title text-sm"
+            placeholder="书士姓名 / ID"
+          />
+        </label>
+      </div>
+      <label className="block">
+        <span className="text-body text-xs font-bold mb-1 block">内部备注</span>
+        <textarea
+          value={notes}
+          onChange={e => setNotes(e.target.value)}
+          rows={2}
+          className="w-full bg-card border border-line rounded-lg px-2 py-1.5 text-title text-sm resize-y"
+        />
+      </label>
+      <div className="flex items-center gap-2">
+        <button
+          type="button"
+          onClick={save}
+          disabled={saving}
+          className="px-4 py-1.5 bg-primary text-title font-bold rounded-lg text-sm disabled:opacity-50"
+        >
+          {saving ? '保存中…' : '保存'}
+        </button>
+        {msg && <span className="text-[#16A34A] text-xs">{msg}</span>}
+      </div>
+    </div>
+  )
+}
+
+function Row({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex gap-2">
+      <dt className="text-muted flex-shrink-0">{label}：</dt>
+      <dd className="text-body break-words flex-1">{value}</dd>
     </div>
   )
 }

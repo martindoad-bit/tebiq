@@ -77,12 +77,12 @@ export default function KeieiPage() {
           </div>
 
           {/* 强 CTA */}
-          <a
-            href="#placeholder"
+          <Link
+            href="/consultation?visa=keiei"
             className="flex items-center justify-center w-full min-h-[60px] bg-[#DC2626] hover:bg-[#B91C1C] text-white font-bold py-4 rounded-xl text-base transition-all"
           >
             预约书士咨询经营管理签证续签 →
-          </a>
+          </Link>
 
           {/* 来源 + 免责 */}
           <div className="mt-10 text-center space-y-1">

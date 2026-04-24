@@ -168,6 +168,10 @@ function renderHtml(data: GenerateResponse): string {
     )
     .join('')
 
+  const finalChecklistBlock = data.materials
+    .map(m => `<li><span class="ck">□</span><span>${esc(m.name)}</span></li>`)
+    .join('')
+
   return `<!doctype html>
 <html lang="zh-CN">
 <head>
@@ -176,13 +180,24 @@ function renderHtml(data: GenerateResponse): string {
 <style>
   *,*::before,*::after{box-sizing:border-box}
   body{margin:0;font-family:-apple-system,'Helvetica Neue','PingFang SC','Microsoft YaHei',sans-serif;color:#1E3A5F;background:#fff;line-height:1.7;font-size:14px}
-  .page{max-width:760px;margin:0 auto;padding:40px 32px}
-  header{border-bottom:2px solid #F6B133;padding-bottom:16px;margin-bottom:24px}
-  .brand{font-weight:bold;color:#F6B133;font-size:18px;letter-spacing:2px}
-  h1{font-size:24px;margin:8px 0 4px;color:#1E3A5F}
-  .meta{color:#6B7280;font-size:12px}
-  h2{font-size:18px;margin:32px 0 12px;padding-bottom:6px;border-bottom:1px solid #E5E7EB;color:#1E3A5F}
-  h3{font-size:15px;margin:20px 0 10px;color:#F6B133;text-transform:uppercase;letter-spacing:1px}
+  .page{max-width:780px;margin:0 auto;padding:36px 36px;position:relative}
+  .page::before{content:'仅限本人使用';position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-30deg);font-size:80px;color:rgba(246,177,51,0.07);font-weight:bold;z-index:0;pointer-events:none;letter-spacing:8px}
+  .page > *{position:relative;z-index:1}
+  /* Cover */
+  .cover{min-height:80vh;display:flex;flex-direction:column;justify-content:space-between;padding-top:80px;padding-bottom:60px;border-bottom:2px dashed #FFE9C4;margin-bottom:32px}
+  .cover-brand{font-size:32px;letter-spacing:8px;color:#F6B133;font-weight:bold;border-bottom:3px solid #F6B133;padding-bottom:12px;display:inline-block}
+  .cover h1{font-size:38px;margin:24px 0 4px;color:#1E3A5F;line-height:1.3}
+  .cover-sub{color:#4A5563;font-size:16px;margin:8px 0 36px}
+  .cover-meta{background:#FFF5E6;border-left:5px solid #F6B133;padding:16px 20px;border-radius:0 8px 8px 0}
+  .cover-meta dt{font-size:12px;color:#6B7280;margin-top:6px}
+  .cover-meta dd{font-size:15px;color:#1E3A5F;font-weight:600;margin:2px 0}
+  .cover-foot{font-size:11px;color:#6B7280;line-height:1.7}
+  /* Headers */
+  header.section-h{display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid #F6B133;padding-bottom:6px;margin:36px 0 16px}
+  header.section-h h2{margin:0;font-size:18px;color:#1E3A5F}
+  header.section-h .pill{font-size:11px;color:#6B7280}
+  .divider{border-top:1px dashed #E5E7EB;margin:28px 0}
+  h3{font-size:13px;margin:20px 0 10px;color:#F6B133;text-transform:uppercase;letter-spacing:1.5px}
   h4{font-size:14px;margin:0 0 8px;color:#1E3A5F}
   p{margin:6px 0}
   .muted{color:#6B7280;font-size:12px}
@@ -198,46 +213,91 @@ function renderHtml(data: GenerateResponse): string {
   .trig-label{font-weight:bold;font-size:13px;margin-bottom:4px;color:#1E3A5F}
   .trigger p{margin:0;font-size:13px;color:#4A5563}
   .cat{margin-bottom:16px}
-  .mat{border:1px solid #E5E7EB;border-radius:8px;padding:12px 14px;margin-bottom:10px;page-break-inside:avoid}
-  .mat dl{margin:0;display:grid;grid-template-columns:1fr;gap:3px}
+  .mat{border:1px solid #E5E7EB;border-left:4px solid #F6B133;border-radius:8px;padding:12px 14px;margin-bottom:10px;page-break-inside:avoid}
+  .mat-title{display:flex;align-items:flex-start;gap:8px}
+  .mat-check{flex-shrink:0;width:18px;height:18px;border:1.5px solid #6B7280;border-radius:3px;display:inline-block}
+  .mat dl{margin:8px 0 0;display:grid;grid-template-columns:1fr;gap:3px}
   .mat dl div{display:flex;gap:6px;font-size:12px;line-height:1.5}
   .mat dl dt{color:#6B7280;flex-shrink:0;min-width:64px}
   .mat dl dd{margin:0;color:#4A5563}
   .pitfall{background:#FEF3C7;border-left:3px solid #F59E0B;padding:6px 10px;font-size:12px;color:#92400E;margin-top:8px;border-radius:0 4px 4px 0}
+  /* Final checklist */
+  .final-page{page-break-before:always;padding-top:30px;border-top:3px double #F6B133}
+  .final-page h2{font-size:22px;color:#1E3A5F;margin:8px 0 6px}
+  .final-page .lead{color:#4A5563;font-size:13px;margin-bottom:16px}
+  .final-list{list-style:none;padding:0;margin:0;column-count:1}
+  .final-list li{display:flex;align-items:flex-start;gap:10px;padding:8px 12px;border:1px solid #E5E7EB;border-radius:6px;margin-bottom:8px;font-size:13px;page-break-inside:avoid}
+  .final-list .ck{display:inline-block;width:18px;height:18px;border:1.5px solid #1E3A5F;border-radius:3px;flex-shrink:0;margin-top:1px;text-align:center;line-height:14px;font-size:12px}
+  .final-action{background:#FFF5E6;border:1px solid #FFE9C4;padding:14px 16px;border-radius:8px;margin-top:24px;font-size:13px;line-height:1.7}
   footer{margin-top:40px;padding-top:16px;border-top:1px solid #E5E7EB;color:#6B7280;font-size:11px;line-height:1.6;text-align:center}
+  .running-foot{position:fixed;bottom:8px;left:0;right:0;text-align:center;color:#6B7280;font-size:10px}
   @media print{
     .no-print{display:none}
-    .page{padding:20px 16px}
-    h2{page-break-after:avoid}
+    .page{padding:18px 20px}
+    .cover{min-height:auto;padding-top:24px;padding-bottom:24px}
+    header.section-h{page-break-after:avoid}
     .mat{page-break-inside:avoid}
+    .final-page{page-break-before:always}
   }
-  .no-print{position:fixed;top:16px;right:16px;background:#1E3A5F;color:#fff;padding:8px 14px;border-radius:6px;font-size:12px;cursor:pointer;border:0}
+  .no-print{position:fixed;top:16px;right:16px;background:#1E3A5F;color:#fff;padding:10px 16px;border-radius:6px;font-size:13px;font-weight:bold;cursor:pointer;border:0;box-shadow:0 4px 12px rgba(0,0,0,0.15)}
 </style>
 </head>
 <body>
 <button class="no-print" onclick="window.print()">打印 / 保存为 PDF</button>
 <div class="page">
-  <header>
-    <div class="brand">TEBIQ</div>
-    <h1>专属材料包</h1>
-    <div class="meta">签证类型：${esc(visaLabel)} · 判定：${esc(verdictLabel)} · 生成日期：${dateStr}</div>
-  </header>
+  <!-- Cover -->
+  <section class="cover">
+    <div>
+      <div class="cover-brand">TEBIQ</div>
+      <h1>专属材料包</h1>
+      <div class="cover-sub">${esc(visaLabel)} · ${esc(verdictLabel)}</div>
+      <dl class="cover-meta">
+        <dt>生成日期</dt><dd>${dateStr}</dd>
+        <dt>签证类型</dt><dd>${esc(visaLabel)}</dd>
+        <dt>系统判定</dt><dd>${esc(verdictLabel)}</dd>
+        <dt>材料清单</dt><dd>共 ${data.materials.length} 项</dd>
+      </dl>
+    </div>
+    <div class="cover-foot">
+      本材料包仅限本人使用 · 不得转让或转售<br/>
+      本工具生成的内容仅供参考，请用户核对后自行修改提交，不构成法律服务<br/>
+      tebiq.jp · TEBIQ 由持牌行政书士团队提供内容支持
+    </div>
+  </section>
 
-  ${profileBlock ? `<h2>你的档案</h2>${profileBlock}` : ''}
+  ${profileBlock ? `<header class="section-h"><h2>你的档案</h2><span class="pill">来自你的账号资料</span></header>${profileBlock}` : ''}
 
-  <h2>你的情况摘要</h2>
+  <header class="section-h"><h2>你的情况摘要</h2><span class="pill">系统组合生成</span></header>
   <div class="summary">
     <strong>系统判定</strong>${esc(data.summary)}
   </div>
 
-  <h2>你需要特别注意的地方</h2>
+  <header class="section-h"><h2>你需要特别注意的地方</h2><span class="pill">AI 个性化建议</span></header>
   <div class="notes">${esc(data.personalizedNotes)}</div>
 
-  <h2>触发的风险项</h2>
+  <header class="section-h"><h2>触发的风险项</h2><span class="pill">${data.triggered.length} 项</span></header>
   ${triggeredBlock}
 
-  <h2>需要准备的材料清单</h2>
+  <header class="section-h"><h2>需要准备的材料清单</h2><span class="pill">${data.materials.length} 项</span></header>
   ${materialsBlock}
+
+  <!-- 最终 checklist 页 -->
+  <section class="final-page">
+    <header class="section-h"><h2>申请前最终 checklist</h2><span class="pill">递签当天最后核对</span></header>
+    <p class="lead">递签前对着此清单逐项打勾，确认无遗漏。</p>
+    <ul class="final-list">
+      ${finalChecklistBlock}
+      <li><span class="ck">□</span><span>所有材料按入管局指定顺序整理</span></li>
+      <li><span class="ck">□</span><span>护照、在留卡、印鑑（如需要）随身携带</span></li>
+      <li><span class="ck">□</span><span>申请料 4,000 日元（収入印紙，新在留卡时购买）</span></li>
+      <li><span class="ck">□</span><span>有空白页用于贴照片</span></li>
+      <li><span class="ck">□</span><span>预约入管局窗口或确认开门时间</span></li>
+    </ul>
+    <div class="final-action">
+      <strong>提交后：</strong> 入管局会发受理証明，审查期间（通常 1-3 个月）可凭此证明合法继续居住和工作。<br/>
+      <strong>如遇疑问：</strong> 联系 TEBIQ 平台合作书士，或致电入管インフォメーションセンター 0570-013904。
+    </div>
+  </section>
 
   <footer>
     本材料包由 TEBIQ 自动生成，仅供参考，请用户核对后自行修改提交。<br/>

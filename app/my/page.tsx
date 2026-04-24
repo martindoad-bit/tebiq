@@ -211,57 +211,85 @@ function ProfileForm({
     }
   }
 
+  const [showOptional, setShowOptional] = useState(!!initial)
+
+  const canSave = !!visaType && !!expiryDate
+
   return (
     <div className="bg-card border border-line rounded-2xl p-5 mb-6 shadow-sm">
-      <h3 className="text-title font-bold text-base mb-2">建立你的档案</h3>
+      <h3 className="text-title font-bold text-base mb-1">建立你的档案</h3>
       <p className="text-muted text-xs mb-4 leading-relaxed">
-        告诉我你的基本情况，我可以给你更准确的信息
+        先填 2 个必填项即可使用到期提醒，其余字段可以稍后完善。
       </p>
 
+      <div className="bg-highlight border-l-[3px] border-primary px-3 py-2 mb-4 rounded-r">
+        <p className="text-title text-xs font-bold">必填项（2 项）</p>
+      </div>
       <Field label="① 签证类型">
-        <select value={visaType} onChange={e => setVisaType(e.target.value)} className="w-full bg-base border border-line rounded-lg px-3 py-2 text-title text-base">
+        <select value={visaType} onChange={e => setVisaType(e.target.value)} className="w-full bg-base border border-line rounded-lg px-3 py-2 text-base">
           {['技人国', '经营管理', '配偶者', '永住者', '特定技能', '定住者'].map(v => (
             <option key={v} value={v}>{v}</option>
           ))}
         </select>
       </Field>
       <Field label="② 在留卡到期日">
-        <input type="date" value={expiryDate} onChange={e => setExpiryDate(e.target.value)} className="w-full bg-base border border-line rounded-lg px-3 py-2 text-title text-base" />
+        <input type="date" value={expiryDate} onChange={e => setExpiryDate(e.target.value)} className="w-full bg-base border border-line rounded-lg px-3 py-2 text-base" />
       </Field>
-      <Field label="③ 在日本生活了多久">
-        <select value={yearsInJapan} onChange={e => setYears(e.target.value as YearsInJapan)} className="w-full bg-base border border-line rounded-lg px-3 py-2 text-title text-base">
-          <option value="<1">不足 1 年</option>
-          <option value="1-3">1-3 年</option>
-          <option value="3-5">3-5 年</option>
-          <option value="5+">5 年以上</option>
-        </select>
-      </Field>
-      <Field label="④ 雇主公司类别">
-        <select value={companyType} onChange={e => setCompany(e.target.value as CompanyType)} className="w-full bg-base border border-line rounded-lg px-3 py-2 text-title text-base">
-          <option value="listed">上市 / 大企业</option>
-          <option value="normal">普通公司</option>
-          <option value="self">自营 / 经营管理</option>
-          <option value="unknown">不确定</option>
-        </select>
-      </Field>
-      <Field label="⑤ 最近一年内有什么变化（可多选）">
-        <div className="space-y-2">
-          {[
-            { v: 'changed-job', l: '换工作' },
-            { v: 'moved', l: '搬家' },
-            { v: 'married', l: '结婚 / 离婚' },
-            { v: 'none', l: '没有变化' },
-          ].map(c => (
-            <label key={c.v} className="flex items-center gap-2 text-body text-sm">
-              <input type="checkbox" checked={recentChanges.includes(c.v)} onChange={() => toggleChange(c.v)} />
-              {c.l}
-            </label>
-          ))}
-        </div>
-      </Field>
+
+      {!showOptional ? (
+        <button
+          type="button"
+          onClick={() => setShowOptional(true)}
+          className="w-full text-primary text-sm font-bold py-2 mb-3 hover:text-primary-hover"
+        >
+          + 完善档案可以获得更准确的建议（3 项选填）
+        </button>
+      ) : (
+        <>
+          <div className="bg-base border-l-[3px] border-line px-3 py-2 mt-4 mb-3 rounded-r">
+            <p className="text-muted text-xs font-bold">选填项 · 完善档案可获得更准确建议</p>
+          </div>
+          <Field label="③ 在日本生活了多久">
+            <select value={yearsInJapan} onChange={e => setYears(e.target.value as YearsInJapan)} className="w-full bg-base border border-line rounded-lg px-3 py-2 text-base">
+              <option value="<1">不足 1 年</option>
+              <option value="1-3">1-3 年</option>
+              <option value="3-5">3-5 年</option>
+              <option value="5+">5 年以上</option>
+            </select>
+          </Field>
+          <Field label="④ 雇主公司类别">
+            <select value={companyType} onChange={e => setCompany(e.target.value as CompanyType)} className="w-full bg-base border border-line rounded-lg px-3 py-2 text-base">
+              <option value="listed">上市 / 大企业</option>
+              <option value="normal">普通公司</option>
+              <option value="self">自营 / 经营管理</option>
+              <option value="unknown">不确定</option>
+            </select>
+          </Field>
+          <Field label="⑤ 最近一年内有什么变化（可多选）">
+            <div className="space-y-2">
+              {[
+                { v: 'changed-job', l: '换工作' },
+                { v: 'moved', l: '搬家' },
+                { v: 'married', l: '结婚 / 离婚' },
+                { v: 'none', l: '没有变化' },
+              ].map(c => (
+                <label key={c.v} className="flex items-center gap-2 text-body text-sm min-h-[28px]">
+                  <input type="checkbox" checked={recentChanges.includes(c.v)} onChange={() => toggleChange(c.v)} />
+                  {c.l}
+                </label>
+              ))}
+            </div>
+          </Field>
+        </>
+      )}
+
       {err && <p className="text-[#DC2626] text-sm mb-2">{err}</p>}
-      <button onClick={save} disabled={saving} className="w-full min-h-[48px] bg-primary hover:bg-primary-hover disabled:opacity-50 text-title font-bold rounded-xl mt-2">
-        {saving ? '保存中…' : '保存'}
+      <button
+        onClick={save}
+        disabled={saving || !canSave}
+        className="w-full min-h-[48px] bg-primary hover:bg-primary-hover disabled:opacity-50 text-title font-bold rounded-xl mt-2"
+      >
+        {saving ? '保存中…' : !canSave ? '请先填写必填项' : '保存档案'}
       </button>
     </div>
   )

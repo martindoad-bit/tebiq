@@ -202,6 +202,16 @@ export default function SimpleQuiz({ config }: { config: SimpleQuizConfig }) {
 
 // ============ Result ============
 
+function visaSlug(visaName: string): string {
+  if (visaName.includes('配偶')) return 'haigusha'
+  if (visaName.includes('特定')) return 'tokutei'
+  if (visaName.includes('定住')) return 'teijusha'
+  if (visaName.includes('经营')) return 'keiei'
+  if (visaName.includes('永住')) return 'eijusha'
+  if (visaName.includes('搬家')) return 'gijinkoku'
+  return 'gijinkoku'
+}
+
 function judge(config: SimpleQuizConfig, answers: AnsweredItem[]): {
   verdict: Verdict
   triggered: { question: QuizQuestion; severity: 'red' | 'yellow' }[]
@@ -228,6 +238,24 @@ function ResultView({
   answers: AnsweredItem[]
 }) {
   const { verdict, triggered } = judge(config, answers)
+
+  // 把咨询上下文写入 sessionStorage，让 /consultation 显示触发的风险项
+  if (typeof window !== 'undefined') {
+    try {
+      sessionStorage.setItem(
+        'tebiq_consultation_ctx',
+        JSON.stringify({
+          visaType: config.visaName,
+          resultColor: verdict,
+          triggeredItems: triggered.map(t => t.question.text),
+        }),
+      )
+    } catch {
+      /* ignore */
+    }
+  }
+
+  const consultHref = `/consultation?visa=${encodeURIComponent(visaSlug(config.visaName))}&color=${verdict}`
 
   const banner =
     verdict === 'green'
@@ -268,8 +296,8 @@ function ResultView({
         )}
 
         {/* CTA */}
-        <a
-          href={config.ctaHref ?? '#placeholder'}
+        <Link
+          href={config.ctaHref ?? consultHref}
           className={`mt-6 flex items-center justify-center w-full min-h-[60px] font-bold py-4 rounded-xl text-base transition-all ${
             verdict === 'red'
               ? 'bg-[#DC2626] hover:bg-[#B91C1C] text-white'
@@ -277,7 +305,7 @@ function ResultView({
           }`}
         >
           {config.ctaLabel ?? '联系书士咨询'} →
-        </a>
+        </Link>
 
         {config.infoHref && (
           <Link
