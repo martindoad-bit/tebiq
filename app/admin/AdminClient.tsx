@@ -42,9 +42,16 @@ interface CaseStats {
   }>
 }
 
+interface SystemStatus {
+  ai: { configured: boolean; provider: string; region: string }
+  kv: { ok: boolean; error: string | null }
+  monitor: { lastChecked: string | null }
+}
+
 export default function AdminClient({ adminKey }: { adminKey: string }) {
   const [data, setData] = useState<AdminStats | null>(null)
   const [caseStats, setCaseStats] = useState<CaseStats | null>(null)
+  const [sysStatus, setSysStatus] = useState<SystemStatus | null>(null)
   const [error, setError] = useState('')
 
   const keyParam = adminKey ? `?key=${encodeURIComponent(adminKey)}` : ''
@@ -57,6 +64,10 @@ export default function AdminClient({ adminKey }: { adminKey: string }) {
     fetch(`/api/admin/cases${keyParam}`, { cache: 'no-store' })
       .then(r => r.json())
       .then(setCaseStats)
+      .catch(() => {})
+    fetch(`/api/admin/system-status${keyParam}`, { cache: 'no-store' })
+      .then(r => r.json())
+      .then(setSysStatus)
       .catch(() => {})
   }
 
@@ -83,6 +94,8 @@ export default function AdminClient({ adminKey }: { adminKey: string }) {
 
           {error && <p className="text-[#DC2626] text-sm mb-4">{error}</p>}
           {!data && !error && <p className="text-muted">载入中…</p>}
+
+          {sysStatus && <SystemStatusCard status={sysStatus} />}
 
           {data && (
             <>
@@ -408,5 +421,41 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
       <span className="text-body text-xs font-bold mb-1 block">{label}</span>
       {children}
     </label>
+  )
+}
+
+function SystemStatusCard({ status }: { status: SystemStatus }) {
+  const aiOk = status.ai.configured
+  const kvOk = status.kv.ok
+  const monitorStr = status.monitor.lastChecked
+    ? new Date(status.monitor.lastChecked).toLocaleString('zh-CN')
+    : '从未检查'
+
+  return (
+    <div className="bg-card border border-line rounded-2xl p-5 mb-6 shadow-sm">
+      <h2 className="text-title font-bold text-sm mb-3">系统状态</h2>
+      <ul className="space-y-2">
+        <li className="text-body text-sm leading-relaxed">
+          <span className="font-bold text-title">AI 问答：</span>
+          {aiOk ? (
+            <span className="text-[#16A34A]">✅ AWS Bedrock 已配置（{status.ai.region}）</span>
+          ) : (
+            <span className="text-orange-600">⚠️ 未配置，当前为 Mock 模式</span>
+          )}
+        </li>
+        <li className="text-body text-sm leading-relaxed">
+          <span className="font-bold text-title">KV 数据库：</span>
+          {kvOk ? (
+            <span className="text-[#16A34A]">✅ 连接正常</span>
+          ) : (
+            <span className="text-[#DC2626]">⚠️ 连接异常 {status.kv.error ? `(${status.kv.error})` : ''}</span>
+          )}
+        </li>
+        <li className="text-body text-sm leading-relaxed">
+          <span className="font-bold text-title">政策监控：</span>
+          <span className="text-muted">上次检查：{monitorStr}</span>
+        </li>
+      </ul>
+    </div>
   )
 }

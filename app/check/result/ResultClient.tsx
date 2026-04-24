@@ -11,6 +11,7 @@ import {
 import { buildSummary } from '@/lib/check/summary'
 import { GIJINKOKU_MATERIALS, type MaterialDetail } from '@/lib/check/materials'
 import { materialDetails } from '@/lib/knowledge/materials'
+import MaterialsPackage from './MaterialsPackage'
 
 const STORAGE_KEY = 'tebiq_check_answers'
 const SAVED_FOR_KEY = 'tebiq_check_saved_for' // 去重：值 = 已保存过的 history JSON
@@ -374,6 +375,7 @@ function GreenResult({ summary }: { summary: string }) {
         </div>
 
         <div className="mt-4 md:mt-0">
+          <MaterialsPackage />
           <MaterialChecklist />
         </div>
       </div>
@@ -612,6 +614,7 @@ function YellowResult({ result, summary }: { result: JudgeResult; summary: strin
         </a>
       </div>
 
+      <MaterialsPackage />
       <CollapsibleChecklist />
     </ResultShell>
   )

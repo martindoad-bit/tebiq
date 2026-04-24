@@ -5,6 +5,7 @@ import { getProfile } from '@/lib/auth/profile'
 export const dynamic = 'force-dynamic'
 
 const DISCLAIMER = '本回答仅供参考，不构成法律意见'
+const MODEL_ID = 'anthropic.claude-haiku-4-5-20251001-v1:0'
 
 function buildSystemPrompt(profile: Awaited<ReturnType<typeof getProfile>>): string {
   if (!profile) {
@@ -45,19 +46,24 @@ export async function POST(req: Request) {
     const profile = await getProfile(user.phone)
     const systemPrompt = buildSystemPrompt(profile)
 
-    const apiKey = process.env.ANTHROPIC_API_KEY
-    if (!apiKey) {
-      // Mock fallback：未配 API key 时返回占位提示
+    const awsKey = process.env.AWS_ACCESS_KEY_ID
+    const awsSecret = process.env.AWS_SECRET_ACCESS_KEY
+    if (!awsKey || !awsSecret) {
+      // Mock fallback
       return NextResponse.json({
-        answer: `[Mock 回答] 你的问题已收到。这是一个待接入 Claude API 的演示回应。配置 ANTHROPIC_API_KEY 后会切换到真实回答。${DISCLAIMER}`,
+        answer: `[Mock 回答] 你的问题已收到。AI 功能配置中，请稍后再试。${DISCLAIMER}`,
         mock: true,
       })
     }
 
-    const Anthropic = (await import('@anthropic-ai/sdk')).default
-    const client = new Anthropic({ apiKey })
+    const AnthropicBedrock = (await import('@anthropic-ai/bedrock-sdk')).default
+    const client = new AnthropicBedrock({
+      awsAccessKey: awsKey,
+      awsSecretKey: awsSecret,
+      awsRegion: process.env.AWS_REGION ?? 'us-east-1',
+    })
     const result = await client.messages.create({
-      model: 'claude-haiku-4-5-20251001',
+      model: MODEL_ID,
       max_tokens: 400,
       system: systemPrompt,
       messages: [{ role: 'user', content: question }],
