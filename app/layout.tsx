@@ -34,6 +34,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="zh-CN">
       <head>
+        <link rel="icon" href="/logo-icon.png" />
+        <link rel="apple-touch-icon" href="/logo-icon.png" />
         <link
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap"

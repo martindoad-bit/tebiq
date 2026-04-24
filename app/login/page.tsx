@@ -90,7 +90,7 @@ function LoginInner() {
     <main className="min-h-screen bg-base text-title flex flex-col pb-16 md:pb-0">
       <header className="sticky top-0 z-10 bg-card/95 backdrop-blur border-b border-line">
         <div className="max-w-md mx-auto px-4 h-14 flex items-center justify-between">
-          <Link href="/" className="flex items-center" aria-label="TEBIQ 首页"><img src="/logo.svg" alt="TEBIQ" width={120} height={40} className="h-9 w-auto" /></Link>
+          <Link href="/" className="flex items-center gap-2" aria-label="TEBIQ 首页"><img src="/logo-icon.png" alt="" className="h-9 w-9 rounded-xl" /><img src="/logo-full.svg" alt="TEBIQ" className="h-9 w-auto" /></Link>
           <Link href="/" className="text-muted hover:text-body text-sm">
             ← 返回首页
           </Link>

@@ -186,7 +186,7 @@ function TopBar() {
   return (
     <header className="no-capture sticky top-0 z-10 bg-card/95 backdrop-blur border-b border-line">
       <div className="max-w-md md:max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
-        <Link href="/" className="flex items-center" aria-label="TEBIQ 首页"><img src="/logo.svg" alt="TEBIQ" width={120} height={40} className="h-9 w-auto" /></Link>
+        <Link href="/" className="flex items-center gap-2" aria-label="TEBIQ 首页"><img src="/logo-icon.png" alt="" className="h-9 w-9 rounded-xl" /><img src="/logo-full.svg" alt="TEBIQ" className="h-9 w-auto" /></Link>
         <Link href="/visa-select" className="text-muted hover:text-body text-sm">
           重新选择签证
         </Link>
