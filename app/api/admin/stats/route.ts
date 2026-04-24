@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { storage } from '@/lib/storage'
 import { watchList } from '@/lib/monitor/watch-list'
 
@@ -25,7 +25,12 @@ function todayKey(): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
 }
 
-export async function GET() {
+export async function GET(req: NextRequest) {
+  const adminKey = process.env.ADMIN_KEY
+  if (adminKey && req.nextUrl.searchParams.get('key') !== adminKey) {
+    return NextResponse.json({ error: 'Not Found' }, { status: 404 })
+  }
+
   const today = todayKey()
 
   const [
