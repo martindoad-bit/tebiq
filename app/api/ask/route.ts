@@ -1,14 +1,15 @@
 import { NextResponse } from 'next/server'
 import { getCurrentUser } from '@/lib/auth/session'
-import { getProfile } from '@/lib/auth/profile'
+import type { Member } from '@/lib/db/schema'
 
 export const dynamic = 'force-dynamic'
 
 const DISCLAIMER = '本回答仅供参考，不构成法律意见'
 const MODEL_ID = 'anthropic.claude-haiku-4-5-20251001-v1:0'
 
-function buildSystemPrompt(profile: Awaited<ReturnType<typeof getProfile>>): string {
-  if (!profile) {
+function buildSystemPrompt(member: Member): string {
+  const hasProfile = member.visaType || member.visaExpiry || member.nationality
+  if (!hasProfile) {
     return `你是 TEBIQ 的签证和生活手续助理。
 
 回答规则：
@@ -19,11 +20,14 @@ function buildSystemPrompt(profile: Awaited<ReturnType<typeof getProfile>>): str
   return `你是 TEBIQ 的签证和生活手续助理。
 
 用户档案：
-- 在留资格：${profile.visaType}
-- 在留期限：${profile.expiryDate}
-- 在日年数：${profile.yearsInJapan}
-- 公司类别：${profile.companyType}
-- 最近变化：${profile.recentChanges.join('、') || '无'}
+- 国籍：${member.nationality ?? '未填'}
+- 在留资格：${member.visaType ?? '未填'}
+- 在留期限：${member.visaExpiry ?? '未填'}
+- 来日时间：${member.arrivedAt ?? '未填'}
+- 公司类别：${member.companyType ?? '未填'}
+- 行业：${member.currentJobIndustry ?? '未填'}
+- 婚姻状态：${member.maritalStatus ?? '未填'}
+- 是否有子女：${member.hasChildren ? '是' : '否'}
 
 回答规则：
 1. 基于用户的具体情况回答，不要给泛泛的一般性建议
@@ -43,8 +47,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: '请输入问题' }, { status: 400 })
     }
 
-    const profile = await getProfile(user.phone)
-    const systemPrompt = buildSystemPrompt(profile)
+    const systemPrompt = buildSystemPrompt(user)
 
     const awsKey = process.env.AWS_ACCESS_KEY_ID
     const awsSecret = process.env.AWS_SECRET_ACCESS_KEY
