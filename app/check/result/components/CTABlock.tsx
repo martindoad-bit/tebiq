@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import type { Verdict } from '@/lib/check/questions'
+import type { Verdict } from '@/lib/check/questions/gijinkoku'
 
 function consultationHref(verdict: Verdict): string {
   return `/consultation?visa=gijinkoku&color=${verdict}`

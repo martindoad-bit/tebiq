@@ -1,4 +1,4 @@
-import type { Severity } from '@/lib/check/questions'
+import type { Severity } from '@/lib/check/questions/gijinkoku'
 
 const DOT_BG: Record<Severity, string> = {
   red: 'bg-[#DC2626]',

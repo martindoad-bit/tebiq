@@ -1,4 +1,4 @@
-import type { Verdict } from '@/lib/check/questions'
+import type { Verdict } from '@/lib/check/questions/gijinkoku'
 import ShareLinkButton from '../ShareLinkButton'
 
 export default function ShareBlock({

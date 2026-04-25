@@ -6,7 +6,7 @@ import {
   judge,
   type AnsweredItem,
   type JudgeResult,
-} from '@/lib/check/questions'
+} from '@/lib/check/questions/gijinkoku'
 import { buildSummary } from '@/lib/check/summary'
 import MaterialsPackage from './MaterialsPackage'
 import SignupBanner from './SignupBanner'

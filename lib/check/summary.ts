@@ -6,7 +6,7 @@ import type {
   JudgeResult,
   TriggeredItem,
   Verdict,
-} from './questions'
+} from './questions/gijinkoku'
 
 export const SEVERITY_PRIORITY: Record<string, number> = {
   '4': 1, // 住民税

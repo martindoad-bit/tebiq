@@ -1,4 +1,4 @@
-import type { Verdict } from '@/lib/check/questions'
+import type { Verdict } from '@/lib/check/questions/gijinkoku'
 
 export default function BreathCard({ verdict }: { verdict: Verdict }) {
   // Per spec: shown on red and yellow, hidden on green.

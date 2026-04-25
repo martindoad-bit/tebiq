@@ -1,4 +1,4 @@
-import type { TriggeredItem } from '@/lib/check/questions'
+import type { TriggeredItem } from '@/lib/check/questions/gijinkoku'
 
 function TriggerCard({
   item,
