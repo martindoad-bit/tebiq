@@ -76,3 +76,29 @@ export async function hasNotificationOfType(
     .limit(1)
   return rows.length > 0
 }
+
+/**
+ * Member-scoped variant — used by check-expiry cron so that a future
+ * multi-member family only fires e.g. visa_expiry_60d once per member.
+ */
+export async function hasNotificationOfTypeForMember(
+  memberId: string,
+  type: string,
+): Promise<boolean> {
+  const rows = await db
+    .select({ id: notifications.id })
+    .from(notifications)
+    .where(and(eq(notifications.memberId, memberId), eq(notifications.type, type)))
+    .limit(1)
+  return rows.length > 0
+}
+
+export async function markNotificationFailedWithReason(
+  id: string,
+  _reason: string,
+): Promise<Notification | null> {
+  // Schema has no `error` column; reason is dropped for now but accepted at
+  // the call site so callers can self-document. Add a column later if we
+  // need observability beyond status='failed'.
+  return await markNotificationFailed(id)
+}

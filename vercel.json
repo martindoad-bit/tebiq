@@ -3,6 +3,14 @@
     {
       "path": "/api/cron/check-immigration",
       "schedule": "0 9 * * *"
+    },
+    {
+      "path": "/api/cron/check-expiry",
+      "schedule": "0 0 * * *"
+    },
+    {
+      "path": "/api/cron/send-notifications",
+      "schedule": "*/30 * * * *"
     }
   ]
 }
