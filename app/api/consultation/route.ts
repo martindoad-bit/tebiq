@@ -1,16 +1,23 @@
+/**
+ * POST /api/consultation
+ *
+ * Submits a specialist consultation request. Migrated to Postgres DAL —
+ * the new `consultations` table has a slimmer shape than the legacy KV
+ * record (lib/consultation.ts kept for shared types used by admin UI),
+ * so we collapse legacy fields into the `content` text + email/lineId
+ * columns.
+ */
 import { NextResponse } from 'next/server'
-import { storage } from '@/lib/storage'
+import { createConsultation } from '@/lib/db/queries/consultations'
+import { getCurrentUser } from '@/lib/auth/session'
 import {
-  type Consultation,
-  type ConsultationIndexEntry,
-  INDEX_KEY,
-  INDEX_LIMIT,
-  consultationKey,
   isContactMethod,
   isResultColor,
   isUrgency,
+  URGENCY_LABEL,
+  type ContactMethod,
+  type ResultColor,
 } from '@/lib/consultation'
-import { getCurrentUser } from '@/lib/auth/session'
 
 export const dynamic = 'force-dynamic'
 
@@ -30,7 +37,6 @@ export async function POST(req: Request) {
   const contactDetail = trim(body.contactDetail, 200)
   const urgency = trim(body.urgency, 20)
   const visaType = trim(body.visaType, 50) || 'unknown'
-  const sourceVisa = trim(body.sourceVisa, 50) || visaType
   const sourcePage = trim(body.sourcePage, 200) || ''
   const resultColorRaw = trim(body.resultColor, 20)
   const userName = trim(body.userName, 80) || undefined
@@ -54,50 +60,63 @@ export async function POST(req: Request) {
         .slice(0, 20)
     : []
 
-  const resultColor: Consultation['resultColor'] = isResultColor(resultColorRaw)
+  const resultColor: ResultColor | 'unknown' = isResultColor(resultColorRaw)
     ? resultColorRaw
     : 'unknown'
 
   const sessionUser = await getCurrentUser()
-  const userPhone = sessionUser?.phone ?? (preferredContact === 'phone' ? contactDetail : '')
 
-  const id = `${Date.now()}_${Math.random().toString(36).slice(2, 8)}`
-  const createdAt = new Date().toISOString()
-  const record: Consultation = {
-    id,
-    createdAt,
-    userPhone,
-    userName,
+  // Compose a free-form `content` blob preserving all the structured
+  // metadata that was previously its own KV fields.
+  const content = composeContent({
     visaType,
     resultColor,
+    urgency: urgency as keyof typeof URGENCY_LABEL,
     triggeredItems,
-    urgency,
-    preferredContact,
-    contactDetail,
     location,
     additionalInfo,
-    status: 'pending',
-    sourceVisa,
     sourcePage,
+  })
+
+  const channelMap: Record<ContactMethod, { phone?: string; email?: string; lineId?: string }> = {
+    phone: { phone: contactDetail },
+    email: { email: contactDetail },
+    line: { lineId: contactDetail },
+    wechat: {}, // wechat goes into content, not its own column
   }
+  const channel = channelMap[preferredContact as ContactMethod] ?? {}
 
-  const index = (await storage.get<ConsultationIndexEntry[]>(INDEX_KEY)) ?? []
-  const indexEntry: ConsultationIndexEntry = {
-    id,
-    createdAt,
-    visaType,
-    resultColor,
-    urgency,
-    status: 'pending',
-    preferredContact,
-    userName,
-    contactDetail,
+  const consultation = await createConsultation({
+    familyId: sessionUser?.familyId ?? null,
+    name: userName ?? null,
+    phone: channel.phone ?? sessionUser?.phone ?? null,
+    email: channel.email ?? null,
+    lineId: channel.lineId ?? null,
+    content,
+    status: 'new',
+  })
+
+  return NextResponse.json({ ok: true, id: consultation.id })
+}
+
+function composeContent(parts: {
+  visaType: string
+  resultColor: string
+  urgency: keyof typeof URGENCY_LABEL
+  triggeredItems: string[]
+  location?: string
+  additionalInfo?: string
+  sourcePage?: string
+}): string {
+  const lines: string[] = []
+  lines.push(`签证：${parts.visaType}`)
+  lines.push(`自查结果：${parts.resultColor}`)
+  lines.push(`紧急度：${URGENCY_LABEL[parts.urgency]}`)
+  if (parts.location) lines.push(`地域：${parts.location}`)
+  if (parts.triggeredItems.length > 0) {
+    lines.push(`触发项：\n  · ${parts.triggeredItems.join('\n  · ')}`)
   }
-
-  await Promise.all([
-    storage.set(consultationKey(id), record),
-    storage.set(INDEX_KEY, [indexEntry, ...index].slice(0, INDEX_LIMIT)),
-  ])
-
-  return NextResponse.json({ ok: true, id })
+  if (parts.additionalInfo) lines.push(`补充：${parts.additionalInfo}`)
+  if (parts.sourcePage) lines.push(`来源：${parts.sourcePage}`)
+  return lines.join('\n')
 }
