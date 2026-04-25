@@ -8,6 +8,13 @@
       "when": 1777131903132,
       "tag": "0000_open_patriot",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1777134151184,
+      "tag": "0001_wooden_sprite",
+      "breakpoints": true
     }
   ]
 }

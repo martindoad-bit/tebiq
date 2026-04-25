@@ -5,7 +5,7 @@
  *   creates a fresh family + member if the phone is unseen.
  * - All other operations are member-scoped.
  */
-import { eq, asc } from 'drizzle-orm'
+import { eq, asc, isNotNull } from 'drizzle-orm'
 import { db } from '@/lib/db'
 import { families, members, type Member, type NewMember } from '@/lib/db/schema'
 
@@ -41,9 +41,30 @@ export async function getOrCreateMemberByPhone(phone: string): Promise<Member> {
   })
 }
 
+/**
+ * Profile fields editable from /my/profile.
+ * All optional; UI passes only the keys the user filled in.
+ */
+export type MemberProfilePatch = Partial<
+  Pick<
+    NewMember,
+    | 'name'
+    | 'visaType'
+    | 'visaExpiry'
+    | 'nationality'
+    | 'arrivedAt'
+    | 'maritalStatus'
+    | 'hasChildren'
+    | 'currentJobIndustry'
+    | 'lastVisaRenewalAt'
+    | 'companyType'
+    | 'recentChanges'
+  >
+>
+
 export async function updateMemberProfile(
   id: string,
-  patch: Partial<Pick<NewMember, 'name' | 'visaType' | 'visaExpiry'>>,
+  patch: MemberProfilePatch,
 ): Promise<Member | null> {
   const [row] = await db
     .update(members)
@@ -59,4 +80,16 @@ export async function listMembersByFamilyId(familyId: string): Promise<Member[]>
     .from(members)
     .where(eq(members.familyId, familyId))
     .orderBy(asc(members.createdAt))
+}
+
+/**
+ * All members who have a visa_expiry set — used by the check-expiry cron.
+ * Indexed via members_visa_expiry_idx so this is cheap even at scale.
+ */
+export async function listMembersWithVisaExpiry(): Promise<Member[]> {
+  return await db
+    .select()
+    .from(members)
+    .where(isNotNull(members.visaExpiry))
+    .orderBy(asc(members.visaExpiry))
 }

@@ -101,6 +101,22 @@ export const consultationStatusEnum = pgEnum('consultation_status', [
   'closed',
 ])
 
+// Member profile enums (added Block 2)
+export const maritalStatusEnum = pgEnum('marital_status', [
+  'single',
+  'married',
+  'divorced',
+  'widowed',
+])
+
+export const companyTypeEnum = pgEnum('company_type', [
+  'category_1',
+  'category_2',
+  'category_3',
+  'category_4',
+  'not_applicable',
+])
+
 // --- Helper: shared id + timestamps ---
 const idCol = () => varchar('id', { length: 24 }).primaryKey().$defaultFn(() => createId())
 const createdAt = () => timestamp('created_at', { withTimezone: true }).notNull().defaultNow()
@@ -118,6 +134,12 @@ export const families = pgTable('families', {
 })
 
 // --- members ---
+//
+// Profile fields (Block 2 additions): nationality / arrived_at /
+// marital_status / has_children / current_job_industry /
+// last_visa_renewal_at / company_type / recent_changes
+// All optional except has_children (defaults false). UI shows them as
+// optional sections under /my/profile.
 export const members = pgTable(
   'members',
   {
@@ -130,6 +152,17 @@ export const members = pgTable(
     phone: varchar('phone', { length: 20 }).notNull(),
     visaType: visaTypeEnum('visa_type'),
     visaExpiry: date('visa_expiry'),
+
+    // Block 2 profile fields
+    nationality: varchar('nationality', { length: 64 }),
+    arrivedAt: date('arrived_at'),
+    maritalStatus: maritalStatusEnum('marital_status'),
+    hasChildren: boolean('has_children').notNull().default(false),
+    currentJobIndustry: varchar('current_job_industry', { length: 128 }),
+    lastVisaRenewalAt: date('last_visa_renewal_at'),
+    companyType: companyTypeEnum('company_type'),
+    recentChanges: jsonb('recent_changes').$type<Record<string, unknown>>(),
+
     createdAt: createdAt(),
     updatedAt: updatedAt(),
   },
