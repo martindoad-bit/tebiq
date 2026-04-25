@@ -1,5 +1,5 @@
-import { NextResponse } from 'next/server'
 import { storage } from '@/lib/storage'
+import { ok } from '@/lib/api/response'
 
 export const dynamic = 'force-dynamic'
 
@@ -19,7 +19,7 @@ export async function POST(req: Request) {
   try {
     body = await req.json()
   } catch {
-    return NextResponse.json({ ok: true })
+    return ok({ logged: true })
   }
   const entry: ErrorLog = {
     ts: new Date().toISOString(),
@@ -30,5 +30,5 @@ export async function POST(req: Request) {
   }
   const list = (await storage.get<ErrorLog[]>(KEY)) ?? []
   await storage.set(KEY, [entry, ...list].slice(0, LIMIT))
-  return NextResponse.json({ ok: true })
+  return ok({ logged: true })
 }
