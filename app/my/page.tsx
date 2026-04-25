@@ -2,8 +2,38 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import type { HistoryRecord } from '@/lib/auth/store'
-import type { UserProfile, YearsInJapan, CompanyType } from '@/lib/auth/profile'
+
+// Local types — mirror what the API returns. Source of truth is lib/db/schema.
+interface HistoryRecord {
+  date: string
+  visaType: string
+  result: 'red' | 'yellow' | 'green'
+  summary: string
+  triggeredItems: string[]
+  answers: Record<string, boolean>
+}
+
+type VisaType =
+  | 'gijinkoku' | 'keiei' | 'haigusha' | 'eijusha'
+  | 'tokutei' | 'teijusha' | 'ryugaku' | 'other'
+type MaritalStatus = 'single' | 'married' | 'divorced' | 'widowed'
+type CompanyTypeNew =
+  | 'category_1' | 'category_2' | 'category_3' | 'category_4' | 'not_applicable'
+
+interface UserProfile {
+  name: string | null
+  visaType: VisaType | null
+  visaExpiry: string | null
+  nationality: string | null
+  arrivedAt: string | null
+  maritalStatus: MaritalStatus | null
+  hasChildren: boolean
+  currentJobIndustry: string | null
+  lastVisaRenewalAt: string | null
+  companyType: CompanyTypeNew | null
+  recentChanges: Record<string, unknown> | null
+  updatedAt: string
+}
 
 const LS_USER_KEY = 'tebiq_user'
 
@@ -69,7 +99,7 @@ export default function MyPage() {
 
       <div className="flex-1 px-4 py-8 pb-[max(2rem,env(safe-area-inset-bottom))]">
         <div className="max-w-md md:max-w-2xl mx-auto">
-          {profile && <ExpiryReminder expiryDate={profile.expiryDate} />}
+          {profile?.visaExpiry && <ExpiryReminder expiryDate={profile.visaExpiry} />}
 
           <h1 className="text-2xl font-bold mb-2">我的账号</h1>
           {user && (
@@ -142,6 +172,33 @@ function ExpiryReminder({ expiryDate }: { expiryDate: string }) {
   )
 }
 
+const VISA_OPTIONS: { v: VisaType; l: string }[] = [
+  { v: 'gijinkoku', l: '技人国（技術・人文知識・国際業務）' },
+  { v: 'keiei', l: '经营管理' },
+  { v: 'haigusha', l: '配偶者' },
+  { v: 'eijusha', l: '永住者' },
+  { v: 'tokutei', l: '特定技能' },
+  { v: 'teijusha', l: '定住者' },
+  { v: 'ryugaku', l: '留学' },
+  { v: 'other', l: '其他' },
+]
+const MARITAL_OPTIONS: { v: MaritalStatus; l: string }[] = [
+  { v: 'single', l: '未婚' },
+  { v: 'married', l: '已婚' },
+  { v: 'divorced', l: '离婚' },
+  { v: 'widowed', l: '丧偶' },
+]
+const COMPANY_OPTIONS: { v: CompanyTypeNew; l: string }[] = [
+  { v: 'category_1', l: '类别 1（上市公司等）' },
+  { v: 'category_2', l: '类别 2（前年纳税额 1500 万以上）' },
+  { v: 'category_3', l: '类别 3（前年纳税额 100 万以上）' },
+  { v: 'category_4', l: '类别 4（其他）' },
+  { v: 'not_applicable', l: '不适用（自营 / 非技人国 / 不确定）' },
+]
+const VISA_LABEL = Object.fromEntries(VISA_OPTIONS.map(o => [o.v, o.l])) as Record<VisaType, string>
+const MARITAL_LABEL = Object.fromEntries(MARITAL_OPTIONS.map(o => [o.v, o.l])) as Record<MaritalStatus, string>
+const COMPANY_LABEL = Object.fromEntries(COMPANY_OPTIONS.map(o => [o.v, o.l])) as Record<CompanyTypeNew, string>
+
 function ProfileSection({
   profile,
   onChange,
@@ -149,22 +206,27 @@ function ProfileSection({
   profile: UserProfile | null
   onChange: (p: UserProfile) => void
 }) {
-  const [editing, setEditing] = useState(!profile)
-  if (!editing && profile) {
+  const hasCore = !!(profile?.visaType && profile?.visaExpiry)
+  const [editing, setEditing] = useState(!hasCore)
+
+  if (!editing && profile && hasCore) {
     return (
       <div className="bg-card border border-line rounded-2xl p-5 mb-6 shadow-sm">
         <div className="flex items-center justify-between mb-3">
-          <h3 className="text-title font-bold text-base">我的情况</h3>
+          <h3 className="text-title font-bold text-base">我的档案</h3>
           <button onClick={() => setEditing(true)} className="text-primary text-sm font-bold">编辑</button>
         </div>
         <ul className="text-body text-sm space-y-1">
-          <li>签证：<span className="font-bold">{profile.visaType}</span></li>
-          <li>到期日：<span className="font-bold">{profile.expiryDate}</span></li>
-          <li>在日：<span className="font-bold">{profile.yearsInJapan}</span></li>
-          <li>公司类别：<span className="font-bold">{profile.companyType}</span></li>
-          {profile.recentChanges.length > 0 && (
-            <li>最近变化：<span className="font-bold">{profile.recentChanges.join('、')}</span></li>
-          )}
+          {profile.name && <li>姓名：<span className="font-bold">{profile.name}</span></li>}
+          {profile.visaType && <li>签证：<span className="font-bold">{VISA_LABEL[profile.visaType]}</span></li>}
+          {profile.visaExpiry && <li>到期日：<span className="font-bold">{profile.visaExpiry}</span></li>}
+          {profile.nationality && <li>国籍：<span className="font-bold">{profile.nationality}</span></li>}
+          {profile.arrivedAt && <li>来日年月：<span className="font-bold">{profile.arrivedAt}</span></li>}
+          {profile.maritalStatus && <li>婚姻状态：<span className="font-bold">{MARITAL_LABEL[profile.maritalStatus]}</span></li>}
+          <li>子女：<span className="font-bold">{profile.hasChildren ? '有' : '无'}</span></li>
+          {profile.currentJobIndustry && <li>行业：<span className="font-bold">{profile.currentJobIndustry}</span></li>}
+          {profile.lastVisaRenewalAt && <li>上次续签：<span className="font-bold">{profile.lastVisaRenewalAt}</span></li>}
+          {profile.companyType && <li>公司类别：<span className="font-bold">{COMPANY_LABEL[profile.companyType]}</span></li>}
         </ul>
       </div>
     )
@@ -179,17 +241,22 @@ function ProfileForm({
   initial: UserProfile | null
   onSaved: (p: UserProfile) => void
 }) {
-  const [visaType, setVisaType] = useState(initial?.visaType ?? '技人国')
-  const [expiryDate, setExpiryDate] = useState(initial?.expiryDate ?? '')
-  const [yearsInJapan, setYears] = useState<YearsInJapan>(initial?.yearsInJapan ?? '1-3')
-  const [companyType, setCompany] = useState<CompanyType>(initial?.companyType ?? 'normal')
-  const [recentChanges, setChanges] = useState<string[]>(initial?.recentChanges ?? [])
+  const [name, setName] = useState(initial?.name ?? '')
+  const [visaType, setVisaType] = useState<VisaType>(initial?.visaType ?? 'gijinkoku')
+  const [visaExpiry, setVisaExpiry] = useState(initial?.visaExpiry ?? '')
+  const [nationality, setNationality] = useState(initial?.nationality ?? '')
+  const [arrivedAt, setArrivedAt] = useState(initial?.arrivedAt ?? '')
+  const [maritalStatus, setMaritalStatus] = useState<MaritalStatus | ''>(initial?.maritalStatus ?? '')
+  const [hasChildren, setHasChildren] = useState<boolean>(initial?.hasChildren ?? false)
+  const [currentJobIndustry, setCurrentJobIndustry] = useState(initial?.currentJobIndustry ?? '')
+  const [lastVisaRenewalAt, setLastVisaRenewalAt] = useState(initial?.lastVisaRenewalAt ?? '')
+  const [companyType, setCompanyType] = useState<CompanyTypeNew | ''>(initial?.companyType ?? '')
+  const [showOptional, setShowOptional] = useState(!!initial)
+
   const [saving, setSaving] = useState(false)
   const [err, setErr] = useState('')
 
-  function toggleChange(c: string) {
-    setChanges(prev => (prev.includes(c) ? prev.filter(x => x !== c) : [...prev, c]))
-  }
+  const canSave = !!visaType && !!visaExpiry
 
   async function save() {
     setErr('')
@@ -198,7 +265,18 @@ function ProfileForm({
       const res = await fetch('/api/profile/save', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ visaType, expiryDate, yearsInJapan, companyType, recentChanges }),
+        body: JSON.stringify({
+          name: name || null,
+          visaType,
+          visaExpiry,
+          nationality: nationality || null,
+          arrivedAt: arrivedAt || null,
+          maritalStatus: maritalStatus || null,
+          hasChildren,
+          currentJobIndustry: currentJobIndustry || null,
+          lastVisaRenewalAt: lastVisaRenewalAt || null,
+          companyType: companyType || null,
+        }),
       })
       const data = await res.json()
       if (!res.ok) {
@@ -211,29 +289,26 @@ function ProfileForm({
     }
   }
 
-  const [showOptional, setShowOptional] = useState(!!initial)
-
-  const canSave = !!visaType && !!expiryDate
-
   return (
     <div className="bg-card border border-line rounded-2xl p-5 mb-6 shadow-sm">
       <h3 className="text-title font-bold text-base mb-1">建立你的档案</h3>
       <p className="text-muted text-xs mb-4 leading-relaxed">
-        先填 2 个必填项即可使用到期提醒，其余字段可以稍后完善。
+        先填 2 个必填项即可使用到期提醒。其余可以稍后完善——填得越全，提醒和建议越准。
       </p>
 
       <div className="bg-highlight border-l-[3px] border-primary px-3 py-2 mb-4 rounded-r">
         <p className="text-title text-xs font-bold">必填项（2 项）</p>
       </div>
+
       <Field label="① 签证类型">
-        <select value={visaType} onChange={e => setVisaType(e.target.value)} className="w-full bg-base border border-line rounded-lg px-3 py-2 text-base">
-          {['技人国', '经营管理', '配偶者', '永住者', '特定技能', '定住者'].map(v => (
-            <option key={v} value={v}>{v}</option>
+        <select value={visaType} onChange={e => setVisaType(e.target.value as VisaType)} className="w-full bg-base border border-line rounded-lg px-3 py-2 text-base">
+          {VISA_OPTIONS.map(o => (
+            <option key={o.v} value={o.v}>{o.l}</option>
           ))}
         </select>
       </Field>
       <Field label="② 在留卡到期日">
-        <input type="date" value={expiryDate} onChange={e => setExpiryDate(e.target.value)} className="w-full bg-base border border-line rounded-lg px-3 py-2 text-base" />
+        <input type="date" value={visaExpiry} onChange={e => setVisaExpiry(e.target.value)} className="w-full bg-base border border-line rounded-lg px-3 py-2 text-base" />
       </Field>
 
       {!showOptional ? (
@@ -242,43 +317,57 @@ function ProfileForm({
           onClick={() => setShowOptional(true)}
           className="w-full text-primary text-sm font-bold py-2 mb-3 hover:text-primary-hover"
         >
-          + 完善档案可以获得更准确的建议（3 项选填）
+          + 完善档案可以获得更准确的建议（8 项选填）
         </button>
       ) : (
         <>
           <div className="bg-base border-l-[3px] border-line px-3 py-2 mt-4 mb-3 rounded-r">
-            <p className="text-muted text-xs font-bold">选填项 · 完善档案可获得更准确建议</p>
+            <p className="text-muted text-xs font-bold">选填项 · 完善后系统能给出更针对性的建议</p>
           </div>
-          <Field label="③ 在日本生活了多久">
-            <select value={yearsInJapan} onChange={e => setYears(e.target.value as YearsInJapan)} className="w-full bg-base border border-line rounded-lg px-3 py-2 text-base">
-              <option value="<1">不足 1 年</option>
-              <option value="1-3">1-3 年</option>
-              <option value="3-5">3-5 年</option>
-              <option value="5+">5 年以上</option>
-            </select>
+
+          <Field label="③ 姓名（用于通信）">
+            <input type="text" value={name} onChange={e => setName(e.target.value)} maxLength={80} placeholder="李小明" className="w-full bg-base border border-line rounded-lg px-3 py-2 text-base" />
           </Field>
-          <Field label="④ 雇主公司类别">
-            <select value={companyType} onChange={e => setCompany(e.target.value as CompanyType)} className="w-full bg-base border border-line rounded-lg px-3 py-2 text-base">
-              <option value="listed">上市 / 大企业</option>
-              <option value="normal">普通公司</option>
-              <option value="self">自营 / 经营管理</option>
-              <option value="unknown">不确定</option>
-            </select>
+
+          <Field label="④ 国籍">
+            <input type="text" value={nationality} onChange={e => setNationality(e.target.value)} maxLength={64} placeholder="中国 / 越南 / 菲律宾 等" className="w-full bg-base border border-line rounded-lg px-3 py-2 text-base" />
           </Field>
-          <Field label="⑤ 最近一年内有什么变化（可多选）">
-            <div className="space-y-2">
-              {[
-                { v: 'changed-job', l: '换工作' },
-                { v: 'moved', l: '搬家' },
-                { v: 'married', l: '结婚 / 离婚' },
-                { v: 'none', l: '没有变化' },
-              ].map(c => (
-                <label key={c.v} className="flex items-center gap-2 text-body text-sm min-h-[28px]">
-                  <input type="checkbox" checked={recentChanges.includes(c.v)} onChange={() => toggleChange(c.v)} />
-                  {c.l}
-                </label>
+
+          <Field label="⑤ 来日年月">
+            <input type="date" value={arrivedAt} onChange={e => setArrivedAt(e.target.value)} className="w-full bg-base border border-line rounded-lg px-3 py-2 text-base" />
+          </Field>
+
+          <Field label="⑥ 婚姻状态">
+            <select value={maritalStatus} onChange={e => setMaritalStatus(e.target.value as MaritalStatus | '')} className="w-full bg-base border border-line rounded-lg px-3 py-2 text-base">
+              <option value="">不指定</option>
+              {MARITAL_OPTIONS.map(o => (
+                <option key={o.v} value={o.v}>{o.l}</option>
               ))}
-            </div>
+            </select>
+          </Field>
+
+          <Field label="⑦ 是否有子女">
+            <label className="flex items-center gap-2 text-body text-sm min-h-[28px]">
+              <input type="checkbox" checked={hasChildren} onChange={e => setHasChildren(e.target.checked)} />
+              有子女
+            </label>
+          </Field>
+
+          <Field label="⑧ 当前行业">
+            <input type="text" value={currentJobIndustry} onChange={e => setCurrentJobIndustry(e.target.value)} maxLength={128} placeholder="IT / 制造 / 餐饮 / 服务 等" className="w-full bg-base border border-line rounded-lg px-3 py-2 text-base" />
+          </Field>
+
+          <Field label="⑨ 上次续签日期">
+            <input type="date" value={lastVisaRenewalAt} onChange={e => setLastVisaRenewalAt(e.target.value)} className="w-full bg-base border border-line rounded-lg px-3 py-2 text-base" />
+          </Field>
+
+          <Field label="⑩ 雇主公司类别（仅技人国相关）">
+            <select value={companyType} onChange={e => setCompanyType(e.target.value as CompanyTypeNew | '')} className="w-full bg-base border border-line rounded-lg px-3 py-2 text-base">
+              <option value="">不指定</option>
+              {COMPANY_OPTIONS.map(o => (
+                <option key={o.v} value={o.v}>{o.l}</option>
+              ))}
+            </select>
           </Field>
         </>
       )}
