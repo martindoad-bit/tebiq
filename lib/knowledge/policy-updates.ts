@@ -1,15 +1,17 @@
 // 2025 年 10 月以后的入管重大政策变化
 // 数据基于出入国在留管理庁官网整理，标注 [待书士审核]
+import { z } from 'zod'
 
-export interface PolicyUpdate {
-  date: string // YYYY-MM-DD
-  type: 'gijinkoku' | 'keiei' | 'other'
-  title: string
-  summary: string
-  detail: string
-}
+export const PolicyUpdateSchema = z.object({
+  date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  type: z.enum(['gijinkoku', 'keiei', 'other']),
+  title: z.string().min(1),
+  summary: z.string().min(1),
+  detail: z.string().min(1),
+})
+export type PolicyUpdate = z.infer<typeof PolicyUpdateSchema>
 
-export const policyUpdates: PolicyUpdate[] = [
+const _data: PolicyUpdate[] = [
   {
     date: '2026-04-15',
     type: 'gijinkoku',
@@ -104,3 +106,6 @@ export const policyUpdates: PolicyUpdate[] = [
 来源：法務省（令和 8 年 3 月 27 日公表、4 月 1 日施行）[待书士审核]`,
   },
 ]
+
+/** Validated at module load — throws on invalid data shape. */
+export const policyUpdates: PolicyUpdate[] = z.array(PolicyUpdateSchema).parse(_data)

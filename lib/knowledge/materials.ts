@@ -1,16 +1,18 @@
 // 材料详情知识库 - 按日文官方名称索引
 // 结果页材料卡展开时优先从这里读取；找不到的回落到 lib/check/materials.ts 的 legacy 数据
+import { z } from 'zod'
 
-export interface MaterialDetailEntry {
-  where: string
-  bring: string
-  timeRequired: string
-  cost: string
-  online: string
-  tips: string
-}
+export const MaterialDetailSchema = z.object({
+  where: z.string().min(1),
+  bring: z.string().min(1),
+  timeRequired: z.string().min(1),
+  cost: z.string().min(1),
+  online: z.string().min(1),
+  tips: z.string().min(1),
+})
+export type MaterialDetailEntry = z.infer<typeof MaterialDetailSchema>
 
-export const materialDetails: Record<string, MaterialDetailEntry> = {
+const _data: Record<string, MaterialDetailEntry> = {
   '在留資格更新許可申請書': {
     where: '入管局官网免费下载打印，或在入管局窗口领取',
     bring: '无',
@@ -164,3 +166,8 @@ export const materialDetails: Record<string, MaterialDetailEntry> = {
     tips: '海外大学毕业证书需要附日文翻译。第一次申请技人国时必须，续签时通常不需要重新提交，但换工作后第一次续签可能需要。提前 1 个月申请以防万一',
   },
 }
+
+/** Validated at module load — throws on invalid data shape. */
+export const materialDetails: Record<string, MaterialDetailEntry> = z
+  .record(z.string(), MaterialDetailSchema)
+  .parse(_data)

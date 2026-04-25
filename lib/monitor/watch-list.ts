@@ -1,13 +1,15 @@
 // 入管局官网每日监控列表
 // 新增页面只需追加条目，cron 会自动覆盖
+import { z } from 'zod'
 
-export interface WatchTarget {
-  id: string
-  name: string
-  url: string
-}
+export const WatchTargetSchema = z.object({
+  id: z.string().min(1),
+  name: z.string().min(1),
+  url: z.string().url(),
+})
+export type WatchTarget = z.infer<typeof WatchTargetSchema>
 
-export const watchList: WatchTarget[] = [
+const _data: WatchTarget[] = [
   {
     id: 'gijinkoku',
     name: '技人国官方页面',
@@ -44,3 +46,6 @@ export const watchList: WatchTarget[] = [
     url: 'https://www.moj.go.jp/isa/applications/resources/shinsakikann.html',
   },
 ]
+
+/** Validated at module load — throws on invalid data shape. */
+export const watchList: WatchTarget[] = z.array(WatchTargetSchema).parse(_data)

@@ -1,13 +1,15 @@
 // 续签相关核心概念知识库
 // 内容基于 2025/10 - 2026/04 官方来源整理，标注 [待书士审核]
+import { z } from 'zod'
 
-export interface Concept {
-  id: string
-  title: string
-  content: string
-}
+export const ConceptSchema = z.object({
+  id: z.string().min(1),
+  title: z.string().min(1),
+  content: z.string().min(1),
+})
+export type Concept = z.infer<typeof ConceptSchema>
 
-export const CONCEPTS: Concept[] = [
+const _data: Concept[] = [
   {
     id: 'what-is-gijinkoku',
     title: '什么是技人国签证',
@@ -88,3 +90,6 @@ export const CONCEPTS: Concept[] = [
 重要：不许可 ≠ 永久禁止。大多数情况下可以通过补充材料或解决问题后重新申请。但时间窗口有限，不许可后应立刻咨询持牌行政书士。[待书士审核]`,
   },
 ]
+
+/** Validated at module load — throws on invalid data shape. */
+export const CONCEPTS: Concept[] = z.array(ConceptSchema).parse(_data)

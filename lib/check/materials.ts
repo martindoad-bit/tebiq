@@ -1,26 +1,29 @@
 // 技人国（技術・人文知識・国際業務）续签材料详细数据
 // 各字段如有不准确请直接修改本文件，UI 会自动渲染
+import { z } from 'zod'
 
-export interface MaterialDetail {
-  id: string
-  name: string
+export const MaterialItemSchema = z.object({
+  id: z.string().min(1),
+  name: z.string().min(1),
   /** 日文官方名称，用于在 lib/knowledge/materials.ts 中查找详细信息 */
-  nameJa?: string
-  where: string
-  whatToBring: string[]
-  duration: string
-  cost: string
-  online: boolean
-  onlineNote?: string
-  pitfall: string
-}
+  nameJa: z.string().optional(),
+  where: z.string().min(1),
+  whatToBring: z.array(z.string()),
+  duration: z.string().min(1),
+  cost: z.string().min(1),
+  online: z.boolean(),
+  onlineNote: z.string().optional(),
+  pitfall: z.string().min(1),
+})
+export type MaterialDetail = z.infer<typeof MaterialItemSchema>
 
-export interface MaterialCategory {
-  category: string
-  materials: MaterialDetail[]
-}
+export const MaterialCategorySchema = z.object({
+  category: z.string().min(1),
+  materials: z.array(MaterialItemSchema),
+})
+export type MaterialCategory = z.infer<typeof MaterialCategorySchema>
 
-export const GIJINKOKU_MATERIALS: MaterialCategory[] = [
+const _data: MaterialCategory[] = [
   {
     category: '本人身份材料',
     materials: [
@@ -283,3 +286,8 @@ export const GIJINKOKU_MATERIALS: MaterialCategory[] = [
     ],
   },
 ]
+
+/** Validated at module load — throws on invalid data shape. */
+export const GIJINKOKU_MATERIALS: MaterialCategory[] = z
+  .array(MaterialCategorySchema)
+  .parse(_data)
