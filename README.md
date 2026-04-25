@@ -1,36 +1,73 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# TEBIQ
 
-## Getting Started
+> 你的在日生活好帮手 / 在日生活のお守り
+> Next.js 14 + Drizzle + Postgres + Stripe + AWS Bedrock
 
-First, run the development server:
+Read [`PROJECT_MEMORY.md`](./PROJECT_MEMORY.md) before working in this repo.
+Architecture overview: [`docs/architecture.md`](./docs/architecture.md).
+
+## Quick start
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+cp .env.example .env.local   # then fill in values, see below
+npm run dev                  # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Environment variables
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| Var | Required | Purpose |
+|---|---|---|
+| `DATABASE_URL` | yes (for any DB-backed route) | Supabase Postgres connection string |
+| `tebiq_KV_REST_API_URL` | optional | Upstash Redis (legacy operational data + monitor cache) |
+| `tebiq_KV_REST_API_TOKEN` | optional | Upstash Redis token |
+| `ADMIN_KEY` | recommended in prod | Gates `/admin` and admin APIs |
+| `CRON_SECRET` | required in prod | Vercel Cron `Authorization: Bearer` token |
+| `AWS_ACCESS_KEY_ID` | required for AI features | AWS Bedrock |
+| `AWS_SECRET_ACCESS_KEY` | required for AI features | AWS Bedrock |
+| `AWS_REGION` | optional (default us-east-1) | AWS Bedrock region |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Database setup
 
-## Learn More
+Block 1 status: schema defined locally; migrations not yet applied to a
+live Supabase project. To wire up:
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+# 1. Provision Supabase Postgres in Tokyo region (apnortheast-1)
+# 2. Set DATABASE_URL in .env.local
+# 3. Generate the SQL migration files
+npm run db:generate
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# 4. Apply schema to the live DB
+npm run db:migrate     # applies committed migrations (production)
+# OR
+npm run db:push        # diff-and-push without migration files (dev only)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+# 5. Inspect via studio
+npm run db:studio
+```
 
-## Deploy on Vercel
+The DAL lives in `lib/db/queries/`. See `docs/architecture.md` for the
+"adding a new table" workflow.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Tests
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+npm test
+```
+
+Unit tests live next to the modules they cover (`*.test.ts`). Database
+tests **mock** `@/lib/db` and run without a live Postgres. Real
+integration tests against Supabase land in Block 2.
+
+## Project layout
+
+See `docs/architecture.md` for the full directory tree and design notes.
+
+## Deployment
+
+Vercel — push to `main` deploys. Cron is configured in `vercel.json`.
+
+## License
+
+Private. © 2026 hedgefox 合同会社.
