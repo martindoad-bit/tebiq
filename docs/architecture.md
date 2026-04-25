@@ -1,7 +1,7 @@
-# TEBIQ Architecture (post-Block 1)
+# TEBIQ Architecture (post-Block 2)
 
-> Snapshot: end of Sprint 1 / Block 1 (data layer + structural refactor).
-> Live database not yet provisioned; Supabase target lands in Block 2.
+> Snapshot: end of Sprint 1 / Block 2 (live Supabase + Stripe + notifications).
+> Live database **provisioned and verified** via `npm run db:smoke`.
 
 ## Stack
 
@@ -58,7 +58,7 @@ lib/
 
 ## Data layer
 
-### Schema overview (12 tables)
+### Schema overview (11 tables + 14 ENUMs)
 
 ```
 families ─── members ─── sessions
@@ -206,11 +206,114 @@ Run with `npm test` (uses `tsx --test`, no Jest dependency).
 Database tests **mock the entire `@/lib/db` module** so they run without
 a live Postgres. Integration tests against a real DB land in Block 2.
 
-## Block 2 entry conditions
+## Supabase connection topology (important — IPv6 gotcha)
 
-Before starting Block 2:
+Supabase exposes Postgres via 3 endpoints. Each one has different
+network and auth properties:
 
-- Supabase project provisioned (Tokyo region).
-- `DATABASE_URL` set in Vercel env + `.env.local`.
-- `npm run db:push` succeeds (schema applied).
-- One smoke test confirms read/write through the DAL.
+| Endpoint | Hostname | Port | IPv4? | Prepared stmts? | Use for |
+|---|---|---|---|---|---|
+| Direct | `db.{ref}.supabase.co` | 5432 | ❌ IPv6-only* | ✅ | (avoid — needs IPv4 add-on) |
+| Session pooler | `aws-X.pooler.supabase.com` | 5432 | ✅ | ✅ | drizzle-kit (`DIRECT_URL`) |
+| Transaction pooler | `aws-X.pooler.supabase.com` | 6543 | ✅ | ❌ | App runtime (`DATABASE_URL`) |
+
+*Without paying $4/mo for IPv4 add-on. Most local networks can't resolve.
+
+Both URLs in `.env.local` use the pooler hostname. The user portion
+must include the project ref: `postgres.{ref}` (the pooler routes
+based on this prefix). Password resets propagate to the **session
+pooler immediately** but the **transaction pooler caches up to a few
+minutes** — `db:push` works through DIRECT_URL right away, while app
+runtime queries to DATABASE_URL may transiently fail until the
+transaction pooler picks up the new password.
+
+## Stripe integration (Block 2)
+
+Webhook receives → DAL writes → consumers gate on read.
+
+```
+Browser ──POST /api/stripe/checkout──┐
+                                     ▼
+                            Stripe Checkout (hosted)
+                                     │
+                                     ▼ (user pays)
+                            Stripe ──webhook──> POST /api/stripe/webhook
+                                                  │ verify signature
+                                                  │ idempotent (natural keys)
+                                                  ▼
+                                          subscriptions / purchases (Postgres)
+                                                  │
+Browser back at /my ──GET /api/subscriptions/me──┘
+                  ──POST /api/generate-materials──> route checks `purchases.status='paid'`
+                                                    via family_id OR quizResultId metadata
+```
+
+Idempotency: webhook handler upserts by `stripeSubscriptionId` (subs)
+or `stripePaymentIntentId` (purchases). No separate `stripe_events`
+table needed — natural keys give us replay safety.
+
+¥1 first-month uses a Stripe **coupon** (env `STRIPE_COUPON_FIRST_MONTH`),
+not `trial_period_days`, because PROJECT_MEMORY explicitly wants the
+"already paid" psychology — a free trial breaks that.
+
+## Notification system (Block 2)
+
+Two crons, queue-based, single channel (email) for v1:
+
+```
+DAILY 09:00 JST  ──> /api/cron/check-expiry
+                       │ scan members.visa_expiry
+                       │ for each at exactly 60 / 30 / 7 days out:
+                       │   if no notification of that type for member yet:
+                       ▼
+                  notifications row (status=queued)
+
+EVERY 30 MIN     ──> /api/cron/send-notifications
+                       │ list queued (50 at a time)
+                       │ render template via lib/notifications/templates
+                       ▼
+                  Resend.emails.send → mark sent / failed
+```
+
+Both cron routes auth via `Authorization: Bearer ${CRON_SECRET}`.
+
+**Block 2 limitation**: members table has no `email` column yet, so
+the dispatcher logs every email as `failed: 'no email address on
+recipient'`. Block 3 will add email collection at signup.
+
+## API response envelope (transition state)
+
+`lib/api/response.ts` provides `ok(data)` / `err(code, msg, status?)`.
+`lib/api/client.ts` provides `apiFetch<T>(url, init)` that handles
+**both** the new envelope and the legacy un-enveloped shape — so we
+can migrate routes incrementally without breaking consumers.
+
+Block 2 status:
+- ✅ All NEW routes (Stripe, notifications, cron) use `ok()`/`err()`.
+- ⚠️ Many legacy routes still return raw `NextResponse.json(...)` for
+  backward compat with existing UI consumers. Block 3 finishes the
+  migration in lockstep with frontend updates.
+
+## What's still on KV (intentional, post-Block 2)
+
+Stats counters (`stats:*`) **removed** in Block 2 — replaced with
+runtime Drizzle COUNT() queries. Use
+`npm run cleanup-kv-stats` (with Upstash creds) to wipe leftover keys.
+
+Still on KV (operational, low value to migrate):
+- `monitor:{id}` / `monitor:alert:{id}` — cron rewrites daily
+- `processing-time:{visa}` — scraped 審査処理期間 cache
+- `admin:error_log` — rolling 100-entry list
+- `share:{id}` — 7-day TTL share-link payload (small, ephemeral)
+- `reminder:{phone}` — opt-in reminder config (small key-value)
+- `healthcheck:ping` — system-status probe
+
+## Block 3 entry conditions
+
+Before starting Block 3:
+
+- All Stripe products + coupon + webhook configured in Stripe Dashboard.
+- All Stripe env vars set in Vercel.
+- Resend account, domain verification (`tebiq.jp`), `RESEND_API_KEY` set.
+- Smoke-test from `/dev/stripe-test` with non-prod data confirms full
+  flow: checkout → webhook → DB row → paywall passes.
