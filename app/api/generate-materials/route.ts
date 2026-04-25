@@ -1,9 +1,13 @@
 import { NextResponse } from 'next/server'
-import { judge, type AnsweredItem, type JudgeResult } from '@/lib/check/questions'
+import { judge, type AnsweredItem, type JudgeResult } from '@/lib/check/questions/gijinkoku'
 import { buildSummary } from '@/lib/check/summary'
 import { GIJINKOKU_MATERIALS, type MaterialDetail } from '@/lib/check/materials'
 import { getCurrentUser } from '@/lib/auth/session'
-import { getProfile, type UserProfile } from '@/lib/auth/profile'
+import type { Member } from '@/lib/db/schema'
+import { err } from '@/lib/api/response'
+import { db } from '@/lib/db'
+import { purchases } from '@/lib/db/schema'
+import { and, eq } from 'drizzle-orm'
 
 export const dynamic = 'force-dynamic'
 
@@ -62,30 +66,31 @@ function toMaterialItem(category: string, m: MaterialDetail): MaterialItem {
   }
 }
 
-function profileSnapshot(p: UserProfile | null): ProfileSnapshot | null {
-  if (!p) return null
+function profileSnapshot(m: Member | null): ProfileSnapshot | null {
+  if (!m) return null
   return {
-    visaType: p.visaType,
-    expiryDate: p.expiryDate,
-    yearsInJapan: p.yearsInJapan,
-    companyType: p.companyType,
-    recentChanges: p.recentChanges,
+    visaType: m.visaType ?? '',
+    expiryDate: m.visaExpiry ?? '',
+    yearsInJapan: m.arrivedAt ?? '',
+    companyType: m.companyType ?? '',
+    recentChanges: m.recentChanges ? Object.keys(m.recentChanges) : [],
   }
 }
 
 function buildAiSystemPrompt(
   result: JudgeResult,
   summary: string,
-  profile: UserProfile | null,
+  member: Member | null,
 ): string {
   const trig = result.triggered.map(t => `- ${t.triggerLabel}（${t.severity}）`).join('\n') || '- 无触发风险项'
-  const profilePart = profile
+  const profilePart = member
     ? `\n用户档案：
-- 签证：${profile.visaType}
-- 在留期限：${profile.expiryDate}
-- 在日年数：${profile.yearsInJapan}
-- 公司类别：${profile.companyType}
-- 最近变化：${profile.recentChanges.join('、') || '无'}\n`
+- 国籍：${member.nationality ?? '未填'}
+- 签证：${member.visaType ?? '未填'}
+- 在留期限：${member.visaExpiry ?? '未填'}
+- 来日年月：${member.arrivedAt ?? '未填'}
+- 公司类别：${member.companyType ?? '未填'}
+- 行业：${member.currentJobIndustry ?? '未填'}\n`
     : ''
   return `你是 TEBIQ 的行政书士助理。基于用户的问卷答案，生成一段 200 字以内的「你需要特别注意的地方」。
 
@@ -131,7 +136,7 @@ async function callAi(systemPrompt: string): Promise<string> {
 }
 
 export async function POST(req: Request) {
-  let body: { history?: AnsweredItem[]; visaType?: string }
+  let body: { history?: AnsweredItem[]; visaType?: string; quizResultId?: string }
   try {
     body = await req.json()
   } catch {
@@ -139,17 +144,27 @@ export async function POST(req: Request) {
   }
   const history = Array.isArray(body.history) ? body.history : []
   const visaType = typeof body.visaType === 'string' ? body.visaType : 'gijinkoku'
+  const quizResultId = typeof body.quizResultId === 'string' ? body.quizResultId : undefined
   if (history.length === 0) {
     return NextResponse.json({ error: 'history required' }, { status: 400 })
+  }
+
+  // --- Paywall: require a paid material_package purchase. -----------------
+  // Accept either:
+  //   (a) the current member's family has any paid material_package, or
+  //   (b) the request carries a quizResultId that matches the metadata of
+  //       a paid material_package purchase (covers the anonymous → paid →
+  //       result-page flow before the user is logged in).
+  const user = await getCurrentUser()
+  const paid = await hasPaidMaterialPackage(user?.familyId ?? null, quizResultId)
+  if (!paid) {
+    return err('payment_required', '请先购买材料包', 402)
   }
 
   const result = judge(history)
   const summary = buildSummary(result.verdict, result, history)
 
-  const user = await getCurrentUser()
-  const profile = user ? await getProfile(user.phone) : null
-
-  const personalizedNotes = await callAi(buildAiSystemPrompt(result, summary, profile))
+  const personalizedNotes = await callAi(buildAiSystemPrompt(result, summary, user))
 
   const payload: GenerateResponse = {
     generatedAt: new Date().toISOString(),
@@ -164,8 +179,56 @@ export async function POST(req: Request) {
       selfFix: t.selfFix,
     })),
     materials: flattenMaterials(),
-    profileSnapshot: profileSnapshot(profile),
+    profileSnapshot: profileSnapshot(user),
   }
 
   return NextResponse.json(payload)
+}
+
+/**
+ * Returns true if the request can access the paid material package.
+ *
+ * - If a familyId is provided, any paid material_package row on that family
+ *   counts (membership-style access).
+ * - Else, if a quizResultId is provided, look for a paid material_package
+ *   row whose metadata.quizResultId matches (one-shot access for the result
+ *   page right after Stripe Checkout).
+ *
+ * Webhook (`checkout.session.completed`, mode=payment) is what creates the
+ * paid row; see `app/api/stripe/webhook/route.ts`.
+ */
+async function hasPaidMaterialPackage(
+  familyId: string | null,
+  quizResultId: string | undefined,
+): Promise<boolean> {
+  if (familyId) {
+    const rows = await db
+      .select({ id: purchases.id })
+      .from(purchases)
+      .where(
+        and(
+          eq(purchases.familyId, familyId),
+          eq(purchases.product, 'material_package'),
+          eq(purchases.status, 'paid'),
+        ),
+      )
+      .limit(1)
+    if (rows.length > 0) return true
+  }
+  if (quizResultId) {
+    const rows = await db
+      .select({ id: purchases.id, metadata: purchases.metadata })
+      .from(purchases)
+      .where(
+        and(
+          eq(purchases.product, 'material_package'),
+          eq(purchases.status, 'paid'),
+        ),
+      )
+    for (const r of rows) {
+      const m = r.metadata as { quizResultId?: string } | null
+      if (m?.quizResultId && m.quizResultId === quizResultId) return true
+    }
+  }
+  return false
 }
