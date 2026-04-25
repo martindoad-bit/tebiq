@@ -1,10 +1,22 @@
-import { NextResponse } from 'next/server'
 import crypto from 'crypto'
 import { storage } from '@/lib/storage'
 import { watchList } from '@/lib/monitor/watch-list'
+import { ok, errors } from '@/lib/api/response'
 
 export const dynamic = 'force-dynamic'
 export const maxDuration = 60 // Vercel Hobby 上限
+
+/**
+ * Authentication: Vercel Cron sends `Authorization: Bearer ${CRON_SECRET}`.
+ * If CRON_SECRET is unset, allow the call (dev fallback). In production
+ * the env var MUST be set so external traffic can't trigger scans.
+ */
+function checkCronAuth(req: Request): boolean {
+  const secret = process.env.CRON_SECRET
+  if (!secret) return true
+  const header = req.headers.get('authorization') ?? ''
+  return header === `Bearer ${secret}`
+}
 
 interface MonitorState {
   hash: string
@@ -16,7 +28,9 @@ interface MonitorAlert {
   date: string
 }
 
-export async function GET() {
+export async function GET(req: Request) {
+  if (!checkCronAuth(req)) return errors.unauthorized()
+
   const results: Array<{
     id: string
     changed: boolean
@@ -65,5 +79,5 @@ export async function GET() {
     }
   }
 
-  return NextResponse.json({ results, ranAt: new Date().toISOString() })
+  return ok({ results, ranAt: new Date().toISOString() })
 }
