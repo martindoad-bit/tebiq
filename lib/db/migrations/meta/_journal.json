@@ -1,0 +1,13 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1777131903132,
+      "tag": "0000_open_patriot",
+      "breakpoints": true
+    }
+  ]
+}
