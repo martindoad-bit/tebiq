@@ -1,17 +1,16 @@
 import { notFound } from 'next/navigation'
-import DashboardClient from './DashboardClient'
+import QuizResultsClient from './QuizResultsClient'
 
 export const dynamic = 'force-dynamic'
 
-export default async function AdminPage({
+export default async function AdminQuizResultsPage({
   searchParams,
 }: {
   searchParams: Promise<{ key?: string }>
 }) {
   const sp = await searchParams
-  // 设了 ADMIN_KEY 才校验；没设 = 本地 dev 不拦
   if (process.env.ADMIN_KEY && sp.key !== process.env.ADMIN_KEY) {
     notFound()
   }
-  return <DashboardClient adminKey={sp.key ?? ''} />
+  return <QuizResultsClient adminKey={sp.key ?? ''} />
 }
