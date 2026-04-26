@@ -346,9 +346,8 @@
 
 ### Vercel preview 状态
 
-- 已 push `codex/visual-polish`，HEAD 为 `eece2a5`。
+- 已 push `codex/visual-polish`。
 - GitHub commit status 显示 Vercel `success`，描述为 `Deployment has completed`。
-- Vercel dashboard deployment：`https://vercel.com/martindoad/tebiq/97nnfbvQ5ufXEJzxgswXgdkPjawS`。
 - 匿名 GitHub deployments API 未返回公开 app preview URL；Vercel dashboard HTML/API 也未暴露可直接截图的 `vercel.app` 地址。本轮未创建 PR，避免把“触发 preview”扩大成新的第三方变更。
 
 ### 已知 issue / 待 review
