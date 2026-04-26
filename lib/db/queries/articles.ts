@@ -1,17 +1,22 @@
-import { desc, eq } from 'drizzle-orm'
+import { desc, eq, or } from 'drizzle-orm'
 import { createId } from '@paralleldrive/cuid2'
 import { db } from '@/lib/db'
 import { articles, type Article, type NewArticle } from '@/lib/db/schema'
+import { normalizeArticleSlug, suggestArticleSlug } from '@/lib/knowledge/slug'
 
 export type ArticleStatus = Article['status']
 
 export interface ArticleInput {
   id?: string
   title: string
+  slug?: string | null
   bodyMarkdown: string
   category: string
   status: ArticleStatus
   requiresShoshiReview: boolean
+  lastReviewedAt?: string | Date | null
+  lastReviewedBy?: string | null
+  reviewNotes?: string | null
 }
 
 export async function listPublishedArticles(): Promise<Article[]> {
@@ -22,11 +27,11 @@ export async function listPublishedArticles(): Promise<Article[]> {
     .orderBy(desc(articles.updatedAt))
 }
 
-export async function getPublishedArticleById(id: string): Promise<Article | null> {
+export async function getPublishedArticleById(idOrSlug: string): Promise<Article | null> {
   const rows = await db
     .select()
     .from(articles)
-    .where(eq(articles.id, id))
+    .where(or(eq(articles.id, idOrSlug), eq(articles.slug, idOrSlug)))
     .limit(1)
   const article = rows[0] ?? null
   if (!article || article.status !== 'published') return null
@@ -38,13 +43,21 @@ export async function listArticlesForAdmin(): Promise<Article[]> {
 }
 
 export async function upsertArticle(input: ArticleInput): Promise<Article> {
+  const slug = normalizeArticleSlug(input.slug ?? '') ?? suggestArticleSlug(input.title)
+  const lastReviewedAt = input.lastReviewedAt
+    ? new Date(input.lastReviewedAt)
+    : null
   const patch: NewArticle = {
     id: input.id ?? createId(),
     title: input.title,
+    slug,
     bodyMarkdown: input.bodyMarkdown,
     category: input.category,
     status: input.status,
     requiresShoshiReview: input.requiresShoshiReview,
+    lastReviewedAt,
+    lastReviewedBy: input.lastReviewedBy?.trim() || null,
+    reviewNotes: input.reviewNotes?.trim() || null,
   }
 
   if (!input.id) {
@@ -56,10 +69,14 @@ export async function upsertArticle(input: ArticleInput): Promise<Article> {
     .update(articles)
     .set({
       title: input.title,
+      slug,
       bodyMarkdown: input.bodyMarkdown,
       category: input.category,
       status: input.status,
       requiresShoshiReview: input.requiresShoshiReview,
+      lastReviewedAt,
+      lastReviewedBy: input.lastReviewedBy?.trim() || null,
+      reviewNotes: input.reviewNotes?.trim() || null,
       updatedAt: new Date(),
     })
     .where(eq(articles.id, input.id))

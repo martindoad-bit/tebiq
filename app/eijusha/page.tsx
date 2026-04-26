@@ -187,10 +187,10 @@ export default function EijushaLandingPage() {
           </Section>
 
           <Link
-            href="/visa-select"
+            href="/consultation?from=eijusha&visa=eijusha"
             className="mt-5 flex min-h-[48px] w-full items-center justify-center rounded-btn bg-accent px-4 py-3 text-[13px] font-medium text-ink shadow-cta"
           >
-            选择我的签证类型，开始自查 →
+            永住申请情况复杂,建议直接咨询行政書士 →
           </Link>
 
           <p className="text-center text-ash text-[11px] mt-8 leading-relaxed">

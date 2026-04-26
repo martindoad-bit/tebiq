@@ -31,10 +31,12 @@ import { plainTextFromMarkdown } from '@/lib/knowledge/markdown'
 
 export interface KnowledgeArticleSummary {
   id: string
+  slug: string | null
   title: string
   bodyMarkdown: string
   category: string
   requiresShoshiReview: boolean
+  lastReviewedBy: string | null
   updatedAt: string
 }
 
@@ -156,7 +158,7 @@ export default function KnowledgeClient({
           {popular.map(c => (
             <li key={c.id}>
               <Link
-                href={`/knowledge/${c.id}`}
+                href={`/knowledge/${c.slug ?? c.id}`}
                 className="group flex items-start gap-3 rounded-card border border-hairline bg-surface px-3.5 py-3 shadow-card transition-colors hover:border-accent"
               >
                 <span className="mt-0.5 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-[10px] bg-canvas text-ink">
@@ -179,7 +181,7 @@ export default function KnowledgeClient({
                       </span>
                     ) : (
                       <span className="rounded-[8px] bg-[rgba(87,167,123,0.12)] px-1.5 py-1 text-[10px] font-medium leading-none text-success">
-                        已发布
+                        {c.lastReviewedBy ? `已审核 by ${c.lastReviewedBy}` : '已审核'}
                       </span>
                     )}
                   </div>

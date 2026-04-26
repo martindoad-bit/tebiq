@@ -29,6 +29,13 @@
       "when": 1777203600000,
       "tag": "0003_members_email",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1777209648585,
+      "tag": "0004_blue_stingray",
+      "breakpoints": true
     }
   ]
 }

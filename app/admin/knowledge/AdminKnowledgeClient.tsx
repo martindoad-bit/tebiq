@@ -4,25 +4,34 @@ import { useEffect, useMemo, useState } from 'react'
 import AdminNav from '@/app/admin/_components/AdminNav'
 import { Field, PageShell, Section } from '@/app/admin/_components/ui'
 import { parseMarkdownBlocks, plainTextFromMarkdown } from '@/lib/knowledge/markdown'
+import { suggestArticleSlug } from '@/lib/knowledge/slug'
 
 type ArticleStatus = 'draft' | 'reviewing' | 'published'
 
 interface AdminArticle {
   id: string
   title: string
+  slug: string | null
   bodyMarkdown: string
   category: string
   status: ArticleStatus
   requiresShoshiReview: boolean
+  lastReviewedAt: string | null
+  lastReviewedBy: string | null
+  reviewNotes: string | null
   updatedAt: string
 }
 
 const EMPTY: Omit<AdminArticle, 'id' | 'updatedAt'> & { id?: string; updatedAt?: string } = {
   title: '',
+  slug: '',
   bodyMarkdown: '## 小标题\n\n正文内容。\n\n- 要点一\n- 要点二',
   category: '签证相关',
   status: 'draft',
   requiresShoshiReview: true,
+  lastReviewedAt: null,
+  lastReviewedBy: '',
+  reviewNotes: '',
 }
 
 const STATUS_LABEL: Record<ArticleStatus, string> = {
@@ -81,6 +90,23 @@ export default function AdminKnowledgeClient({ adminKey }: { adminKey: string })
     }
   }
 
+  function fillSlugSuggestion() {
+    setForm(f => ({ ...f, slug: suggestArticleSlug(f.title) }))
+  }
+
+  function markReviewed() {
+    const reviewer = window.prompt('审核者标识（例如 行政書士姓名或 initials）')
+    if (!reviewer?.trim()) return
+    const notes = window.prompt('审核意见（可留空）') ?? ''
+    setForm(f => ({
+      ...f,
+      requiresShoshiReview: false,
+      lastReviewedAt: new Date().toISOString(),
+      lastReviewedBy: reviewer.trim(),
+      reviewNotes: notes.trim(),
+    }))
+  }
+
   return (
     <div className="min-h-screen bg-bg text-title">
       <AdminNav adminKey={adminKey} />
@@ -130,6 +156,23 @@ export default function AdminKnowledgeClient({ adminKey }: { adminKey: string })
                     className="w-full rounded-xl border border-line bg-white px-3 py-2 text-sm outline-none focus:border-primary"
                   />
                 </Field>
+                <Field label="Slug">
+                  <div className="flex gap-2">
+                    <input
+                      value={form.slug ?? ''}
+                      onChange={e => setForm(f => ({ ...f, slug: e.target.value }))}
+                      placeholder="lowercase-english-slug"
+                      className="min-w-0 flex-1 rounded-xl border border-line bg-white px-3 py-2 text-sm outline-none focus:border-primary"
+                    />
+                    <button
+                      type="button"
+                      onClick={fillSlugSuggestion}
+                      className="rounded-xl border border-line bg-white px-3 py-2 text-xs font-bold text-title"
+                    >
+                      生成建议
+                    </button>
+                  </div>
+                </Field>
                 <div className="grid grid-cols-2 gap-3">
                   <Field label="分类">
                     <input
@@ -164,6 +207,30 @@ export default function AdminKnowledgeClient({ adminKey }: { adminKey: string })
                   />
                   需要书士审核标记
                 </label>
+                <div className="rounded-xl border border-line bg-white p-3 text-xs text-body">
+                  <div className="flex items-center justify-between gap-2">
+                    <div>
+                      <div className="font-bold text-title">审核记录</div>
+                      <div className="mt-1 text-muted">
+                        {form.lastReviewedAt
+                          ? `${form.lastReviewedBy ?? '未填写'} · ${new Date(form.lastReviewedAt).toLocaleString('ja-JP')}`
+                          : '尚未标记审核'}
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={markReviewed}
+                      className="rounded-xl bg-highlight px-3 py-2 text-xs font-bold text-title"
+                    >
+                      标记已审核
+                    </button>
+                  </div>
+                  {form.reviewNotes && (
+                    <p className="mt-2 rounded-lg bg-bg px-2 py-1.5 text-muted">
+                      {form.reviewNotes}
+                    </p>
+                  )}
+                </div>
                 <Field label="正文 Markdown">
                   <textarea
                     value={form.bodyMarkdown}

@@ -57,7 +57,7 @@ export default async function KnowledgeDetailPage({ params }: Props) {
                 </span>
               ) : (
                 <span className="rounded-[8px] bg-[rgba(87,167,123,0.12)] px-2 py-1 text-[10px] font-medium leading-none text-success">
-                  已发布
+                  {article.lastReviewedBy ? `已审核 by ${article.lastReviewedBy}` : '已审核'}
                 </span>
               )}
             </div>

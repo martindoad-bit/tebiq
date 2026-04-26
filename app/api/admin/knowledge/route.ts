@@ -38,10 +38,14 @@ export async function POST(req: NextRequest) {
   const article = await upsertArticle({
     id: body?.id ? String(body.id) : undefined,
     title,
+    slug: body?.slug ? String(body.slug) : null,
     bodyMarkdown,
     category,
     status: parseStatus(body?.status),
     requiresShoshiReview: Boolean(body?.requiresShoshiReview),
+    lastReviewedAt: body?.lastReviewedAt ? String(body.lastReviewedAt) : null,
+    lastReviewedBy: body?.lastReviewedBy ? String(body.lastReviewedBy) : null,
+    reviewNotes: body?.reviewNotes ? String(body.reviewNotes) : null,
   })
 
   return NextResponse.json({ article })

@@ -323,6 +323,7 @@ export const invitations = pgTable(
   },
   t => ({
     codeUnique: uniqueIndex('invitations_code_unique').on(t.code),
+    inviteeUnique: uniqueIndex('invitations_invitee_member_unique').on(t.inviteeMemberId),
     inviterIdx: index('invitations_inviter_idx').on(t.inviterMemberId),
   }),
 )
@@ -355,14 +356,19 @@ export const articles = pgTable(
   {
     id: idCol(),
     title: varchar('title', { length: 160 }).notNull(),
+    slug: varchar('slug', { length: 200 }),
     bodyMarkdown: text('body_markdown').notNull(),
     category: varchar('category', { length: 64 }).notNull(),
     status: articleStatusEnum('status').notNull().default('draft'),
     requiresShoshiReview: boolean('requires_shoshi_review').notNull().default(true),
+    lastReviewedAt: timestamp('last_reviewed_at', { withTimezone: true }),
+    lastReviewedBy: varchar('last_reviewed_by', { length: 100 }),
+    reviewNotes: text('review_notes'),
     createdAt: createdAt(),
     updatedAt: updatedAt(),
   },
   t => ({
+    slugUnique: uniqueIndex('articles_slug_unique').on(t.slug),
     statusIdx: index('articles_status_idx').on(t.status),
     categoryIdx: index('articles_category_idx').on(t.category),
     updatedIdx: index('articles_updated_at_idx').on(t.updatedAt),

@@ -10,10 +10,12 @@ export default async function KnowledgePage() {
     <KnowledgeClient
       articles={articles.map(a => ({
         id: a.id,
+        slug: a.slug,
         title: a.title,
         bodyMarkdown: a.bodyMarkdown,
         category: a.category,
         requiresShoshiReview: a.requiresShoshiReview,
+        lastReviewedBy: a.lastReviewedBy,
         updatedAt: a.updatedAt.toISOString(),
       }))}
     />
