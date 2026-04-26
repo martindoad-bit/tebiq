@@ -19,12 +19,17 @@
 
 ![01 home after](docs/visual-report/screenshots/01-home-after.png)
 
+### 反馈后细修
+
+![01 home after v2](docs/visual-report/screenshots/01-home-after-v2.png)
+
 ### 本轮改动
 
 - 将首页副文案从空泛 slogan 改为具体功能描述：「拍照看懂日文文件，续签前先做风险自查。」
 - 增加「在日生活工具集」轻量标签，强化 1.0 工具集定位，避免 dashboard 感。
 - Action card 使用多层阴影：`shadow-cta` / `shadow-card`，保留日式克制但减少工程感。
 - 未登录空状态改为「档案预览 + 免费额度」模块，补足下半屏信息密度。
+- 根据创始人反馈，把三格指标面板改为更自然的「我的档案」文件预览，弱化工程感。
 - 修复 `AppShell`：外壳改为 `h-[100dvh]`，body 加 `min-h-0`，确保 TabBar 固定在视口底部，内容在 body 内滚动。
 - Logo 改用现有 `public/logo-icon.png`，提升品牌第一眼识别。
 

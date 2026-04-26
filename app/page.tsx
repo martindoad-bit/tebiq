@@ -21,7 +21,7 @@ import {
   Camera,
   ClipboardCheck,
   FileText,
-  Clock3,
+  BellRing,
   ShieldCheck,
 } from 'lucide-react'
 import AppShell from '@/app/_components/v5/AppShell'
@@ -43,12 +43,12 @@ export default async function HomePage() {
 
   return (
     <AppShell appBar={<HomeAppBar />} tabBar={<TabBar />}>
-      <section className="pt-4 pb-1 px-1">
+      <section className="pt-3 pb-1 px-1">
         <div className="inline-flex items-center gap-1.5 rounded-full bg-cool-blue/70 px-2.5 py-1 text-[10.5px] font-medium text-ink/80">
           <span className="h-1.5 w-1.5 rounded-full bg-success" />
           在日生活工具集
         </div>
-        <h1 className="mt-3 text-[23px] font-medium text-ink leading-[1.34] mb-2">
+        <h1 className="mt-2.5 text-[22px] font-medium text-ink leading-[1.32] mb-1.5">
           你的在日生活
           <br />
           好帮手
@@ -58,7 +58,7 @@ export default async function HomePage() {
         </p>
       </section>
 
-      <div className="mt-4 space-y-3">
+      <div className="mt-3.5 space-y-2.5">
         <ActionCard
           variant="primary"
           icon={<Camera size={20} strokeWidth={1.6} color="#1E3A5F" />}
@@ -225,8 +225,8 @@ function EmptyHomeState({
   actionLabel?: string
 }) {
   return (
-    <section className="mt-5 overflow-hidden rounded-card border border-hairline bg-surface shadow-card">
-      <div className="border-b border-hairline bg-[rgba(230,238,245,0.42)] px-4 py-3">
+    <section className="mt-4 overflow-hidden rounded-card border border-hairline bg-surface shadow-card">
+      <div className="border-b border-hairline bg-[rgba(230,238,245,0.42)] px-4 py-2.5">
         <div className="flex items-center justify-between gap-3">
           <div>
             <h2 className="text-[13px] font-medium leading-snug text-ink">{title}</h2>
@@ -238,29 +238,13 @@ function EmptyHomeState({
         </div>
       </div>
 
-      <div className="px-4 py-3.5">
-        <div className="grid grid-cols-3 gap-2">
-          <PreviewMetric
-            icon={<Camera size={15} strokeWidth={1.55} />}
-            label="拍照"
-            value="3 次/月"
-          />
-          <PreviewMetric
-            icon={<FileText size={15} strokeWidth={1.55} />}
-            label="自查"
-            value="免费"
-          />
-          <PreviewMetric
-            icon={<Clock3 size={15} strokeWidth={1.55} />}
-            label="提醒"
-            value="登录后"
-          />
-        </div>
+      <div className="px-4 py-3">
+        <ArchivePreview />
 
         {actionHref && actionLabel && (
           <Link
             href={actionHref}
-            className="mt-3 flex h-9 items-center justify-center rounded-btn border border-[rgba(30,58,95,0.14)] bg-white text-[13px] font-medium text-ink transition active:translate-y-px"
+            className="mt-2.5 flex h-9 items-center justify-center rounded-btn border border-[rgba(30,58,95,0.14)] bg-white text-[13px] font-medium text-ink shadow-soft transition active:translate-y-px"
           >
             {actionLabel}
             <ChevronRight size={14} strokeWidth={1.6} className="ml-0.5" />
@@ -271,22 +255,52 @@ function EmptyHomeState({
   )
 }
 
-function PreviewMetric({
-  icon,
-  label,
-  value,
-}: {
-  icon: ReactNode
-  label: string
-  value: string
-}) {
+function ArchivePreview() {
   return (
-    <div className="rounded-[11px] border border-hairline bg-canvas/55 px-2.5 py-2.5">
-      <div className="mb-1.5 flex h-6 w-6 items-center justify-center rounded-[8px] bg-white text-ink shadow-soft">
-        {icon}
+    <div className="relative overflow-hidden rounded-[13px] border border-hairline bg-canvas/50 px-3 py-2.5">
+      <div className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-[12px] bg-white/80 text-ink shadow-soft">
+        <BellRing size={17} strokeWidth={1.55} />
       </div>
-      <div className="text-[10px] leading-none text-ash">{label}</div>
-      <div className="mt-1 text-[11.5px] font-medium leading-none text-ink">{value}</div>
+
+      <div className="mb-2 flex items-center gap-2">
+        <span className="flex h-7 w-7 items-center justify-center rounded-[9px] bg-white text-ink shadow-soft">
+          <FileText size={15} strokeWidth={1.55} />
+        </span>
+        <div>
+          <div className="text-[11.5px] font-medium leading-none text-ink">我的档案</div>
+          <div className="mt-1 text-[10px] leading-none text-ash">拍照、自查、提醒会整理在这里</div>
+        </div>
+      </div>
+
+      <div className="space-y-1 pr-10">
+        <GhostRow title="住民税通知" meta="拍照识别后保存" tone="danger" />
+        <GhostRow title="在留期間更新" meta="自查结果与提醒" tone="accent" />
+      </div>
+    </div>
+  )
+}
+
+function GhostRow({
+  title,
+  meta,
+  tone,
+}: {
+  title: string
+  meta: string
+  tone: 'danger' | 'accent'
+}) {
+  const dot = tone === 'danger' ? 'bg-danger' : 'bg-accent'
+  return (
+    <div className="flex items-center gap-2 rounded-[10px] border border-white/70 bg-white/78 px-2.5 py-1.5 shadow-soft">
+      <span className={`h-1.5 w-1.5 rounded-full ${dot}`} />
+      <span className="min-w-0 flex-1">
+        <span className="block truncate text-[11.5px] font-medium leading-none text-ink">
+          {title}
+        </span>
+        <span className="mt-1 block truncate text-[9.5px] leading-none text-ash">
+          {meta}
+        </span>
+      </span>
     </div>
   )
 }
