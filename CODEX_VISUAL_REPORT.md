@@ -503,3 +503,15 @@
 ### 待 review
 
 - 这些 SEO 页仍是旧内容页视觉，只做了 header logo 收口。完整统一建议放 Block 4 内容系统一起做，避免 6 篇长文重复维护。
+
+## 追加收口：Lint 清洁
+
+### 本轮改动
+
+- 将 admin nav 的旧 `<img>` logo 替换为 `next/image`。
+- 这不改变后台路由、鉴权参数或业务行为，只消除最后一个 ESLint warning。
+
+### 验证
+
+- `npm run lint` 通过，当前无 warnings / errors。
+- `npm run build` 通过。
