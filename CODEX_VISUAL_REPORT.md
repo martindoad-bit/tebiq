@@ -57,3 +57,45 @@
 - 屏 09 邀请朋友：两个礼物盒双向箭头，单个 76 x 76 px，和屏 05 同一线条风格。
 - 首页/档案空状态：小型文件夹 + 提醒铃 + 文件纸张组合，约 160 x 100 px，可替换当前指标格模块但不要做大插画。
 - 知识中心空状态：书本 + 放大镜 + 市役所/税務署文件符号，约 160 x 100 px。
+
+## 屏 02 拍照入口
+
+### 改前
+
+![02 photo before](docs/visual-report/screenshots/02-photo-before.png)
+
+### 改后
+
+![02 photo after](docs/visual-report/screenshots/02-photo-after.png)
+
+### 本轮改动
+
+- 相机框从纯深蓝色块改为带内层虚线框、文書 OCR 标签和守护角标的识别区域。
+- 增加「金额 / 期限 / 行动」三枚轻量信息 chip，说明识别价值但不写营销口号。
+- 最近记录空状态从一行文字改为卡片式空态，和首页档案预览保持同一视觉语言。
+- 窄屏抗压：chip 文案使用 truncate，减少横向溢出风险。
+
+## 屏 03/04 拍照结果
+
+### 本轮改动
+
+- 文件信息从裸文本改为带 icon 的白色卡片，强化“识别结果”可信度。
+- 紧急度卡片提高数字层级，修正文案 typo：「請尽快处理」改为「需要尽快处理」。
+- QA 区块改为独立信息卡片，分别使用文件、确认、警示 icon，提升可扫读性。
+- 详情页新增顶部识别文件摘要卡，金额/截止日期卡加入图标和边框层级。
+
+## 屏 15 拍照配额弹窗
+
+### 改前
+
+![15 quota before](docs/visual-report/screenshots/15-quota-before.png)
+
+### 改后
+
+![15 quota after](docs/visual-report/screenshots/15-quota-after.png)
+
+### 本轮改动
+
+- bottom sheet 增加 handle、会员 icon 和多层 elevation，减少“白板弹窗”感。
+- 权益列表从圆点文字改为带 check icon 的卡片列表，信息更稳定。
+- 保持克制 CTA：主按钮仍是「立即开通会员」，二级动作保留「稍后再说」。

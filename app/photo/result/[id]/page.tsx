@@ -16,6 +16,8 @@
  */
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
+import type { ReactNode } from 'react'
+import { AlertCircle, CheckCircle2, FileText, RotateCcw } from 'lucide-react'
 import AppShell from '@/app/_components/v5/AppShell'
 import AppBar from '@/app/_components/v5/AppBar'
 import Button from '@/app/_components/v5/Button'
@@ -37,7 +39,7 @@ function urgencyDisplay(u: Urgency): UrgencyDisplay {
     case 'critical':
       return { label: '需要尽快处理', bg: '#E2574C', bang: '#E2574C' }
     case 'high':
-      return { label: '請尽快处理', bg: '#E2574C', bang: '#E2574C' }
+      return { label: '需要尽快处理', bg: '#E2574C', bang: '#E2574C' }
     case 'normal':
       return { label: '一般事项', bg: '#F6B133', bang: '#F6B133' }
     case 'ignorable':
@@ -63,7 +65,8 @@ export default async function PhotoResultPage({
           title="识别结果"
           back
           right={
-            <Link href="/photo" className="text-[12px] text-ash">
+            <Link href="/photo" className="flex items-center gap-1 text-[12px] text-ash">
+              <RotateCcw size={13} strokeWidth={1.55} />
               重新识别
             </Link>
           }
@@ -71,17 +74,24 @@ export default async function PhotoResultPage({
       }
     >
       {/* 文件类型 */}
-      <section className="mt-3">
-        <p className="text-[11px] text-ash mb-1">文件类型</p>
-        <h1 className="text-[17px] font-medium text-ink mb-1.5">
-          {result.docType}
-        </h1>
-        <p className="text-[11.5px] text-ink">来自：{result.issuer}</p>
+      <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-3.5 shadow-card">
+        <div className="flex items-start gap-3">
+          <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-[12px] bg-accent-2 text-ink">
+            <FileText size={18} strokeWidth={1.55} />
+          </span>
+          <div className="min-w-0 flex-1">
+            <p className="text-[11px] text-ash mb-1">文件类型</p>
+            <h1 className="text-[17px] font-medium leading-snug text-ink">
+              {result.docType}
+            </h1>
+            <p className="mt-1 text-[11.5px] text-slate">来自：{result.issuer}</p>
+          </div>
+        </div>
       </section>
 
       {/* 緊急度 */}
       <section
-        className="mt-2.5 rounded-[12px] border bg-accent-2 px-3.5 py-3.5 text-center"
+        className="mt-2.5 rounded-card border bg-accent-2 px-3.5 py-4 text-center shadow-card"
         style={{ borderColor: 'rgba(246, 177, 51, 0.4)', borderWidth: '0.5px' }}
       >
         <span
@@ -92,7 +102,7 @@ export default async function PhotoResultPage({
           {urg.label}
         </span>
         {result.deadlineRemainingDays !== null && (
-          <div className="mt-2 text-[16px] font-medium text-ink">
+          <div className="mt-2.5 text-[22px] font-medium leading-none text-ink">
             <span aria-hidden style={{ color: urg.bang }}>
               !
             </span>{' '}
@@ -102,26 +112,21 @@ export default async function PhotoResultPage({
       </section>
 
       {/* QA blocks */}
-      <section className="mt-3.5">
-        <p className="text-[13px] font-medium text-ink mb-1">这是做什么的？</p>
-        <p className="text-[12px] text-slate leading-[1.6]">{result.summary}</p>
-      </section>
+      <InfoBlock title="这是做什么的？">
+        <p>{result.summary}</p>
+      </InfoBlock>
 
-      <section className="mt-3.5">
-        <p className="text-[13px] font-medium text-ink mb-1">你需要做什么？</p>
-        <ol className="list-decimal pl-5 text-[12px] text-slate leading-[1.6] space-y-0.5">
+      <InfoBlock title="你需要做什么？" icon="check">
+        <ol className="list-decimal pl-4 space-y-0.5">
           {result.actions.map((a, i) => (
             <li key={i}>{a}</li>
           ))}
         </ol>
-      </section>
+      </InfoBlock>
 
-      <section className="mt-3.5">
-        <p className="text-[13px] font-medium text-ink mb-1">如果不做会怎样？</p>
-        <p className="text-[12px] text-slate leading-[1.6]">
-          {result.consequences}
-        </p>
-      </section>
+      <InfoBlock title="如果不做会怎样？" icon="alert">
+        <p>{result.consequences}</p>
+      </InfoBlock>
 
       {/* CTA */}
       <div className="mt-[18px] space-y-2">
@@ -131,5 +136,26 @@ export default async function PhotoResultPage({
         <SaveToArchiveButton />
       </div>
     </AppShell>
+  )
+}
+
+function InfoBlock({
+  title,
+  icon,
+  children,
+}: {
+  title: string
+  icon?: 'check' | 'alert'
+  children: ReactNode
+}) {
+  const Icon = icon === 'check' ? CheckCircle2 : icon === 'alert' ? AlertCircle : FileText
+  return (
+    <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-3 shadow-card">
+      <div className="mb-1.5 flex items-center gap-2">
+        <Icon size={15} strokeWidth={1.55} className="text-ink" />
+        <p className="text-[13px] font-medium text-ink">{title}</p>
+      </div>
+      <div className="text-[12px] leading-[1.62] text-slate">{children}</div>
+    </section>
   )
 }

@@ -14,7 +14,7 @@
 'use client'
 import { useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Camera, Loader } from 'lucide-react'
+import { Camera, FileText, Loader, ShieldCheck } from 'lucide-react'
 
 interface RecognizeData {
   documentId: string
@@ -83,12 +83,27 @@ export default function PhotoUploader() {
         onClick={onPick}
         disabled={busy}
         aria-label="拍照或上传图片"
-        className="flex-1 min-h-[280px] rounded-[16px] bg-ink flex flex-col items-center justify-center gap-[14px] mb-[14px] disabled:opacity-70 transition-opacity"
-        style={{ border: '1.5px dashed rgba(246, 177, 51, 0.35)' }}
+        className="relative w-full min-h-[264px] overflow-hidden rounded-[18px] bg-ink flex flex-col items-center justify-center gap-[14px] mb-3 disabled:opacity-70 shadow-raised transition active:translate-y-px"
       >
         <span
-          className="w-14 h-14 flex items-center justify-center rounded-[14px]"
-          style={{ background: 'rgba(246, 177, 51, 0.18)' }}
+          aria-hidden
+          className="absolute inset-3 rounded-[14px] border border-dashed border-accent/35"
+        />
+        <span
+          aria-hidden
+          className="absolute left-5 top-5 flex items-center gap-1.5 rounded-full bg-white/8 px-2.5 py-1 text-[10px] text-canvas/70"
+        >
+          <FileText size={12} strokeWidth={1.5} />
+          文書 OCR
+        </span>
+        <span
+          aria-hidden
+          className="absolute bottom-5 right-5 flex h-8 w-8 items-center justify-center rounded-[10px] bg-accent/15 text-accent"
+        >
+          <ShieldCheck size={16} strokeWidth={1.55} />
+        </span>
+        <span
+          className="relative z-10 w-[58px] h-[58px] flex items-center justify-center rounded-[17px] bg-white/10 text-accent shadow-soft"
         >
           {busy ? (
             <Loader size={28} color="#F6B133" className="animate-spin" />
@@ -96,15 +111,21 @@ export default function PhotoUploader() {
             <Camera size={28} color="#F6B133" strokeWidth={1.5} />
           )}
         </span>
-        <span className="text-center">
+        <span className="relative z-10 text-center">
           <span className="block text-[13px] font-medium text-canvas">
             {busy ? '识别中…' : '点击拍照'}
           </span>
-          <span className="block text-[11px] text-canvas/65 mt-1">
+          <span className="block text-[11px] text-canvas/68 mt-1">
             {busy ? '请稍候' : '或上传图片'}
           </span>
         </span>
       </button>
+
+      <div className="mb-3 grid grid-cols-3 gap-1.5">
+        <HintChip label="金额" value="自动提取" />
+        <HintChip label="期限" value="标出日期" />
+        <HintChip label="行动" value="列清楚" />
+      </div>
 
       <input
         ref={inputRef}
@@ -121,5 +142,16 @@ export default function PhotoUploader() {
         </p>
       )}
     </div>
+  )
+}
+
+function HintChip({ label, value }: { label: string; value: string }) {
+  return (
+    <span className="min-w-0 rounded-[11px] border border-hairline bg-surface/70 px-2 py-2 shadow-soft">
+      <span className="block truncate text-[10px] leading-none text-ash">{label}</span>
+      <span className="mt-1 block truncate text-[11px] font-medium leading-none text-ink">
+        {value}
+      </span>
+    </span>
   )
 }

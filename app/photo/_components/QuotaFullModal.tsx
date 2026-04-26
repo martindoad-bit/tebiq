@@ -10,6 +10,7 @@
  */
 'use client'
 import Link from 'next/link'
+import { Check, Crown } from 'lucide-react'
 import Button from '@/app/_components/v5/Button'
 
 interface Props {
@@ -42,13 +43,17 @@ export default function QuotaFullModal({ open, onClose }: Props) {
       />
       {/* sheet */}
       <div
-        className="bg-canvas px-[18px] pt-[22px] pb-6 flex-shrink-0 mx-auto w-full md:max-w-phone"
+        className="bg-canvas px-[18px] pt-3 pb-6 flex-shrink-0 mx-auto w-full shadow-raised md:max-w-phone"
         style={{
           borderTopLeftRadius: 18,
           borderTopRightRadius: 18,
           paddingBottom: 'calc(24px + env(safe-area-inset-bottom))',
         }}
       >
+        <div className="mx-auto mb-4 h-1 w-9 rounded-full bg-ink/12" />
+        <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-[13px] bg-accent-2 text-ink shadow-soft">
+          <Crown size={20} strokeWidth={1.55} />
+        </div>
         <h2
           id="quota-modal-title"
           className="text-[16px] font-medium text-ink text-center mb-1"
@@ -59,16 +64,18 @@ export default function QuotaFullModal({ open, onClose }: Props) {
           开通会员，享受无限次拍照即懂
         </p>
 
-        <ul className="mb-4 space-y-0">
+        <ul className="mb-4 space-y-1.5 rounded-card border border-hairline bg-surface/70 px-3.5 py-3 shadow-card">
           {FEATURES.map(f => (
             <li
               key={f}
-              className="relative pl-4 text-[12px] text-ink leading-[1.7]"
+              className="flex items-center gap-2 text-[12px] text-ink leading-[1.5]"
             >
               <span
                 aria-hidden
-                className="absolute left-0 top-[8px] w-1 h-1 rounded-full bg-accent"
-              />
+                className="flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full bg-accent text-ink"
+              >
+                <Check size={11} strokeWidth={2} />
+              </span>
               {f}
             </li>
           ))}
