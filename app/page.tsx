@@ -1,270 +1,208 @@
+/**
+ * Screen 01 — 首页
+ *
+ * v5 layout：
+ *   - AppBar: TEBIQ logo（左）+ 通知图标（右）
+ *   - Hero: 你的在日生活好帮手 / 安心在日本的每一步
+ *   - Action card primary: 拍照即懂 → /photo
+ *   - Action card secondary: 续签自查 → /check
+ *   - 「你有 N 个需要关注的事项」 + 待办列表（来自 documents 表）
+ *   - TabBar 在底部
+ *
+ * 已登录 vs 未登录差异：
+ *   - 未登录：待办 section 隐藏；登录 CTA 替代（轻提示 "登录解锁档案"）
+ *   - 已登录：从 documents 表读最近的 urgency=critical|important 行
+ */
 import Link from 'next/link'
-import { storage } from '@/lib/storage'
+import { Bell, ChevronRight, Camera, ClipboardCheck } from 'lucide-react'
+import AppShell from '@/app/_components/v5/AppShell'
+import TabBar from '@/app/_components/v5/TabBar'
+import Logo from '@/app/_components/v5/Logo'
+import { getCurrentUser } from '@/lib/auth/session'
+import { listDocumentsByFamilyId } from '@/lib/db/queries/documents'
+import type { Document } from '@/lib/db/schema'
 
-export const revalidate = 60
+export const dynamic = 'force-dynamic'
 
-async function getLiveCount(): Promise<number> {
-  try {
-    const [g, y, r] = await Promise.all([
-      storage.get<number>('stats:result:green'),
-      storage.get<number>('stats:result:yellow'),
-      storage.get<number>('stats:result:red'),
-    ])
-    return (g ?? 0) + (y ?? 0) + (r ?? 0)
-  } catch {
-    return 0
-  }
-}
-
-export default async function Home() {
-  const totalTests = await getLiveCount()
+export default async function HomePage() {
+  const user = await getCurrentUser()
+  const todos: Document[] = user
+    ? (await listDocumentsByFamilyId(user.familyId, 5)).filter(
+        d => d.urgency === 'critical' || d.urgency === 'important',
+      )
+    : []
 
   return (
-    <main className="min-h-screen bg-base text-body flex flex-col pb-16 md:pb-0">
-      {/* 顶部导航 */}
-      <header className="sticky top-0 z-10 bg-card/95 backdrop-blur border-b border-line">
-        <div className="max-w-md md:max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-3" aria-label="TEBIQ 首页"><img src="/logo-icon.png" alt="" className="h-12 w-12 rounded-xl" /><div><div className="text-xl font-bold text-title leading-none">TEBIQ</div><div className="text-xs text-muted leading-tight mt-0.5">てびき</div></div></Link>
-          <Link
-            href="/visa-select"
-            className="bg-primary hover:bg-primary-hover text-title font-bold text-sm px-4 py-2 rounded-lg transition-all"
-          >
-            开始自查
-          </Link>
-        </div>
-      </header>
-
-      {/* Hero - 左右分栏 PC / 上下堆叠 mobile */}
-      <section className="px-4 pt-10 md:pt-20 pb-12 md:pb-20">
-        <div className="max-w-md md:max-w-6xl mx-auto md:grid md:grid-cols-2 md:gap-12 md:items-start">
-          {/* 左：标题 + CTA + 信任点 */}
-          <div>
-            <h1 className="text-3xl md:text-4xl font-medium mb-4 leading-tight text-title">
-              在日签证，<br />
-              先查后办，安心每一步
-            </h1>
-            <p className="text-body text-base md:text-lg leading-relaxed mb-2">
-              专业・安心・透明・200+ 真实案例经验
-            </p>
-            <p className="text-muted text-sm md:text-base leading-relaxed mb-8">
-              3 分钟了解你的续签风险，提前发现可能影响结果的隐患
-            </p>
-
-            <Link
-              href="/visa-select"
-              className="flex items-center justify-center w-full md:max-w-sm min-h-[60px] bg-primary hover:bg-primary-hover text-title font-bold py-4 rounded-xl text-lg transition-all shadow-sm"
-            >
-              免费开始自查 →
-            </Link>
-            <p className="text-muted text-xs mt-3">
-              3 分钟完成 · 无需注册 · 答案不上传
-            </p>
-
-            <ul className="mt-8 space-y-3">
-              {TRUST_POINTS.map(t => (
-                <li key={t} className="flex items-start gap-2 text-body text-sm leading-relaxed">
-                  <Check />
-                  <span>{t}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* 右：三步流程卡 */}
-          <div className="mt-10 md:mt-0 space-y-3">
-            {STEPS.map(s => (
-              <div
-                key={s.n}
-                className="bg-card border border-line border-l-4 border-l-[#F6B133] rounded-2xl p-5 shadow-sm"
-              >
-                <div className="text-2xl font-bold not-italic text-primary leading-none mb-2 tracking-wide">
-                  {s.n}
-                </div>
-                <div className="text-base font-medium text-title mb-1">{s.title}</div>
-                <div className="text-sm text-muted leading-relaxed">{s.subtitle}</div>
-              </div>
-            ))}
-          </div>
-        </div>
+    <AppShell appBar={<HomeAppBar />} tabBar={<TabBar />}>
+      <section className="pt-3 pb-1 px-1">
+        <h1 className="text-[22px] font-medium text-ink leading-[1.3] mb-2">
+          你的在日生活
+          <br />
+          好帮手
+        </h1>
+        <p className="text-[12px] text-ash">安心在日本的每一步</p>
       </section>
 
-      {/* 生活节点入口 */}
-      <section className="bg-highlight border-t border-line px-4 py-12 md:py-16">
-        <div className="max-w-md md:max-w-3xl mx-auto">
-          <h2 className="text-title text-xl md:text-2xl font-bold mb-2 text-center">
-            你正在经历哪种情况？
-          </h2>
-          <p className="text-muted text-sm text-center mb-6">
-            选择你当前的生活节点，直达相关手续清单
-          </p>
-          <div className="grid grid-cols-2 gap-3 md:gap-4">
-            {SCENARIOS.map(s => (
-              <ScenarioCard key={s.title} {...s} />
-            ))}
-          </div>
-        </div>
-      </section>
+      <div className="mt-3.5 space-y-2.5">
+        <ActionCard
+          variant="primary"
+          icon={<Camera size={20} strokeWidth={1.6} color="#1E3A5F" />}
+          title="拍照即懂"
+          subtitle="拍一张，马上知道要不要处理"
+          href="/photo"
+        />
+        <ActionCard
+          variant="secondary"
+          icon={<ClipboardCheck size={20} strokeWidth={1.6} color="#F6B133" />}
+          title="续签自查"
+          subtitle="3 分钟了解你的签证风险"
+          href="/check"
+        />
+      </div>
 
-      {/* 模块 1：你是否有这些疑问 */}
-      <section className="bg-card border-t border-line px-4 py-12 md:py-16">
-        <div className="max-w-md md:max-w-3xl mx-auto">
-          <h2 className="text-title text-xl md:text-2xl font-bold mb-6 text-center">
-            你是否有这些疑问？
-          </h2>
-          <ul className="space-y-3 mb-6">
-            {QUESTIONS_HINT.map(q => (
-              <li key={q} className="flex items-start gap-2 text-body text-base leading-relaxed">
-                <span className="text-primary flex-shrink-0">·</span>
-                <span>{q}</span>
-              </li>
-            ))}
-          </ul>
-          <p className="text-center text-primary text-sm font-bold">
-            → 建议先做一次自查，3 分钟知道答案
-          </p>
-        </div>
-      </section>
-
-      {/* 模块 2：你将获得什么 */}
-      <section className="px-4 py-12 md:py-16">
-        <div className="max-w-md md:max-w-3xl mx-auto">
-          <h2 className="text-title text-xl md:text-2xl font-bold mb-6 text-center">
-            你将获得什么
-          </h2>
-          <div className="grid grid-cols-2 gap-3 md:gap-4">
-            {OUTPUTS.map(o => (
-              <div
-                key={o.title}
-                className="bg-card border border-line rounded-xl p-4 shadow-sm"
-              >
-                <div className="text-primary text-xs font-bold mb-1">{o.label}</div>
-                <div className="text-title text-sm font-bold leading-snug">{o.title}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 模块 3：实时数字 */}
-      <section className="bg-highlight px-4 py-10 md:py-14 text-center border-y border-line">
-        <p className="text-body text-sm md:text-base leading-relaxed">
-          已帮助{' '}
-          <span className="text-primary font-bold text-3xl md:text-4xl mx-1 inline-block align-middle">
-            {totalTests.toLocaleString()}
-          </span>{' '}
-          人完成签证风险自查
-        </p>
-      </section>
-
-      {/* 底部 CTA */}
-      <section className="px-4 py-12 md:py-16">
-        <div className="max-w-md mx-auto text-center">
-          <Link
-            href="/visa-select"
-            className="flex items-center justify-center w-full min-h-[60px] bg-primary hover:bg-primary-hover text-title font-bold py-4 rounded-xl text-lg transition-all shadow-sm"
-          >
-            开始免费自查 →
-          </Link>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="bg-card border-t border-line px-4 py-6 pb-[max(1.5rem,env(safe-area-inset-bottom))] text-center mt-auto">
-        <Link
-          href="/knowledge"
-          className="inline-block text-primary hover:text-primary-hover text-sm font-bold mb-4 underline underline-offset-4"
-        >
-          了解签证基础知识 →
-        </Link>
-        <p className="text-muted text-xs leading-relaxed">
-          本工具由持牌行政书士团队提供支持
-        </p>
-        <p className="text-muted text-xs mt-1">© 2026 TEBIQ</p>
-      </footer>
-    </main>
+      {user ? (
+        <TodoSection todos={todos} />
+      ) : (
+        <UnloggedHint />
+      )}
+    </AppShell>
   )
 }
 
-function ScenarioCard({
+function HomeAppBar() {
+  return (
+    <header className="flex-shrink-0 h-12 px-4 flex items-center justify-between bg-canvas">
+      <Logo />
+      <Link
+        href="/my/reminders"
+        aria-label="提醒中心"
+        className="w-8 h-8 flex items-center justify-center text-ink"
+      >
+        <Bell size={18} strokeWidth={1.6} />
+      </Link>
+    </header>
+  )
+}
+
+function ActionCard({
+  variant,
+  icon,
   title,
   subtitle,
   href,
-  emoji,
-  comingSoon,
 }: {
+  variant: 'primary' | 'secondary'
+  icon: React.ReactNode
   title: string
   subtitle: string
   href: string
-  emoji: string
-  comingSoon?: boolean
 }) {
-  if (comingSoon) {
-    return (
-      <div className="bg-card border border-dashed border-line rounded-2xl p-4 md:p-5 opacity-60">
-        <div className="text-2xl mb-2">{emoji}</div>
-        <div className="text-title text-sm md:text-base font-bold mb-1 leading-snug">{title}</div>
-        <div className="text-muted text-xs leading-relaxed">即将上线</div>
-      </div>
-    )
-  }
+  const wrap =
+    variant === 'primary'
+      ? 'bg-accent'
+      : 'bg-surface border border-hairline'
+  const iconBg =
+    variant === 'primary' ? 'bg-white' : 'bg-accent-2'
+  const titleColor = variant === 'primary' ? 'text-ink' : 'text-ink'
+  const subColor =
+    variant === 'primary' ? 'text-ink/70' : 'text-ash'
+
   return (
     <Link
       href={href}
-      className="block bg-card border border-line hover:border-primary rounded-2xl p-4 md:p-5 shadow-sm transition-colors active:scale-[0.99]"
+      className={`block ${wrap} rounded-card p-3.5 flex items-center gap-3 active:opacity-80 transition`}
     >
-      <div className="text-2xl mb-2">{emoji}</div>
-      <div className="text-title text-sm md:text-base font-bold mb-1 leading-snug">{title}</div>
-      <div className="text-muted text-xs leading-relaxed">{subtitle}</div>
+      <span
+        className={`${iconBg} w-[38px] h-[38px] rounded-[10px] flex items-center justify-center flex-shrink-0`}
+      >
+        {icon}
+      </span>
+      <span className="flex-1 min-w-0">
+        <span className={`block text-[14px] font-medium ${titleColor}`}>{title}</span>
+        <span className={`block text-[11px] ${subColor} mt-0.5`}>{subtitle}</span>
+      </span>
     </Link>
   )
 }
 
-function Check() {
+function TodoSection({ todos }: { todos: Document[] }) {
+  if (todos.length === 0) {
+    return (
+      <>
+        <h2 className="text-[13px] font-medium text-ink mt-4 mb-2.5 px-1">
+          目前没有需要关注的事项
+        </h2>
+        <p className="text-[11px] text-ash px-1">
+          扫到的文件、自查结果会出现在这里。
+        </p>
+      </>
+    )
+  }
   return (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="#16A34A"
-      strokeWidth="3"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className="flex-shrink-0 mt-0.5"
-    >
-      <polyline points="20 6 9 17 4 12" />
-    </svg>
+    <>
+      <h2 className="text-[13px] font-medium text-ink mt-4 mb-2.5 px-1">
+        你有 {todos.length} 个需要关注的事项
+      </h2>
+      <div className="space-y-2">
+        {todos.map(t => (
+          <TodoRow key={t.id} doc={t} />
+        ))}
+      </div>
+    </>
   )
 }
 
-const TRUST_POINTS = [
-  '持牌行政书士提供判断逻辑',
-  '基于 200+ 真实案例整理',
-  '持续监控入管局政策更新',
-]
+function TodoRow({ doc }: { doc: Document }) {
+  const dotColor =
+    doc.urgency === 'critical'
+      ? 'bg-danger'
+      : doc.urgency === 'important'
+        ? 'bg-accent'
+        : doc.urgency === 'normal'
+          ? 'bg-success'
+          : 'bg-haze'
+  const issuer =
+    typeof doc.aiResponse === 'object' && doc.aiResponse !== null && 'issuer' in doc.aiResponse
+      ? String((doc.aiResponse as { issuer?: unknown }).issuer ?? '')
+      : ''
+  const deadline =
+    typeof doc.aiResponse === 'object' && doc.aiResponse !== null && 'deadline' in doc.aiResponse
+      ? String((doc.aiResponse as { deadline?: unknown }).deadline ?? '')
+      : ''
 
-const STEPS = [
-  { n: 'STEP 1', title: '选择签证类型', subtitle: '技人国 / 经营管理 / 配偶者等' },
-  { n: 'STEP 2', title: '回答约 12 个问题', subtitle: '约 3 分钟，分支逻辑自动跳题' },
-  { n: 'STEP 3', title: '获得风险评估', subtitle: '红 / 黄 / 绿三色判决 + 材料清单' },
-]
+  return (
+    <Link
+      href={`/photo/result/${doc.id}`}
+      className="bg-surface border border-hairline rounded-chip px-3.5 py-3 flex items-center gap-2.5 active:opacity-80 transition"
+    >
+      <span className="w-7 h-7 rounded-[7px] bg-accent-2 flex items-center justify-center flex-shrink-0">
+        <span className="block w-3 h-4 bg-ink rounded-[2px]" />
+      </span>
+      <span className="flex-1 min-w-0">
+        <span className="flex items-center gap-1.5 text-[13px] font-medium text-ink">
+          <span className={`w-1.5 h-1.5 rounded-full ${dotColor}`} />
+          <span className="truncate">{doc.docType ?? '未识别文件'}</span>
+        </span>
+        {issuer && <span className="block text-[10.5px] text-ash mt-0.5">来自：{issuer}</span>}
+        {deadline && <span className="block text-[10.5px] text-ash">截止：{deadline}</span>}
+      </span>
+      <ChevronRight size={16} className="text-haze flex-shrink-0" />
+    </Link>
+  )
+}
 
-const SCENARIOS: { title: string; subtitle: string; href: string; emoji: string; comingSoon?: boolean }[] = [
-  { emoji: '📋', title: '续签自查', subtitle: '3 分钟知道续签风险', href: '/visa-select' },
-  { emoji: '📦', title: '搬家了', subtitle: '14 天内必须完成的手续', href: '/life/moving' },
-  { emoji: '💼', title: '公司设立 / 经营管理', subtitle: '2025 年 10 月新规自查', href: '/check/keiei/quiz' },
-  { emoji: '📚', title: '签证基础知识', subtitle: '常见问题与材料获取指南', href: '/knowledge' },
-]
-
-const QUESTIONS_HINT = [
-  '换工作后会影响续签吗？',
-  '收入下降有没有问题？',
-  '公司规模小会影响结果吗？',
-]
-
-const OUTPUTS = [
-  { label: '判定', title: '风险等级（红 / 黄 / 绿）' },
-  { label: '说明', title: '影响因素具体说明' },
-  { label: '材料', title: '技人国标准材料清单' },
-  { label: '行动', title: '行动时间建议' },
-]
+function UnloggedHint() {
+  return (
+    <div className="mt-5 bg-surface border border-hairline rounded-card px-4 py-3.5">
+      <p className="text-[12px] text-ash leading-relaxed">
+        登录后，拍照识别的文件、自查结果都会自动保存到「我的档案」，并提供到期提醒。
+      </p>
+      <Link
+        href="/login"
+        className="block mt-2 text-[13px] font-medium text-ink"
+      >
+        登录 / 注册 →
+      </Link>
+    </div>
+  )
+}
