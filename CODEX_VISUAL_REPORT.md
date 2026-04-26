@@ -299,3 +299,21 @@
 ### 待 review
 
 - 当前插画无可读文字，符合产品安全性；人物风格偏消费 App 友好，不走严肃政务风。创始人若希望更“行政书士/文件柜”方向，可作为第二版素材替换。
+
+## 视觉收口：知识详情页补齐
+
+### 屏 13 知识中心 → 详情
+
+![13 knowledge detail](docs/visual-report/screenshots/13-knowledge-detail.png)
+
+### 本轮改动
+
+- 新增 `/knowledge/[id]` 路由，承接知识中心列表点击，避免用户从 v5 主流程点进死链接。
+- 详情页使用 v5 `AppShell / AppBar / TabBar`，不沿用旧 SEO 内容页的大页面视觉。
+- 正文卡片按知识条目处理：标题、更新时间、「待书士审核」tag、主要内容、克制的免责声明和两个工具入口。
+- 中日混排长句加 `overflow-wrap:anywhere` 与 `word-break: break-all` 兜底，避免在窄屏或桌面手机壳中横向撑破。
+
+### 判断
+
+- `/knowledge/[id]` 属于 1.0 必修，因为它从 v5 知识中心直接可达。
+- 根级签证 SEO 页、admin、sample package 暂不纳入本轮：它们不是 v5 主流程路径，且 admin/sample 用户不可见；根级 SEO 页建议放 Block 4 统一内容系统时一起改。

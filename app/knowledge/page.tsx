@@ -7,12 +7,11 @@
  * 类别 grid 实质是 client 端的关键字过滤；点击任一格就把搜索框替换为该
  * 关键字，触发同一过滤逻辑。
  *
- * 文章详情页（/knowledge/[id]）尚未实装（block 4），此处先 stub 到 '#'。
- *
  * CN/JP 混排规则：年金 / 健康保険 等政府概念使用日文，但「签证 / 税务 /
  * 住房 / 育儿」等是产品分类，使用中文。
  */
 'use client'
+import Link from 'next/link'
 import { useMemo, useState } from 'react'
 import {
   BookOpenCheck,
@@ -155,8 +154,8 @@ export default function KnowledgePage() {
         <ul className="mt-3 flex flex-col gap-2.5">
           {popular.map(c => (
             <li key={c.id}>
-              <a
-                href="#"
+              <Link
+                href={`/knowledge/${c.id}`}
                 className="group flex items-start gap-3 rounded-card border border-hairline bg-surface px-3.5 py-3 shadow-card transition-colors hover:border-accent"
               >
                 <span className="mt-0.5 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-[10px] bg-canvas text-ink">
@@ -183,7 +182,7 @@ export default function KnowledgePage() {
                   strokeWidth={1.55}
                   className="mt-2 flex-shrink-0 text-haze transition-colors group-hover:text-ink"
                 />
-              </a>
+              </Link>
             </li>
           ))}
         </ul>
