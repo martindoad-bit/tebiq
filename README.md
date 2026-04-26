@@ -23,6 +23,9 @@ npm run dev                  # http://localhost:3000
 | `tebiq_KV_REST_API_TOKEN` | optional | Upstash Redis token |
 | `ADMIN_KEY` | recommended in prod | Gates `/admin` and admin APIs |
 | `CRON_SECRET` | required in prod | Vercel Cron `Authorization: Bearer` token |
+| `NOTIFICATION_EMAIL_CHANNEL` | optional | `mock` or `resend`; defaults to `resend` only when `RESEND_API_KEY` exists |
+| `MOCK_EMAIL_DIR` | optional | Local directory for mock `.eml` files (default `/tmp/tebiq-notification-emails`) |
+| `RESEND_API_KEY` | required for real email | Resend API key when `NOTIFICATION_EMAIL_CHANNEL=resend` |
 | `AWS_ACCESS_KEY_ID` | required for AI features | AWS Bedrock |
 | `AWS_SECRET_ACCESS_KEY` | required for AI features | AWS Bedrock |
 | `AWS_REGION` | optional (default us-east-1) | AWS Bedrock region |

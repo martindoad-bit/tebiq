@@ -84,3 +84,22 @@
 
 - `npm run lint` 通过。
 - `npm run build` 通过。
+
+## 2026-04-26 通知 mock email 通道
+
+### 已完成
+
+- 新增 `lib/notifications/email-channel.ts`，统一封装 mock / Resend 两种 email channel。
+- 默认策略：设置 `NOTIFICATION_EMAIL_CHANNEL=mock` 时强制 mock；设置为 `resend` 时走 Resend；未设置时有 `RESEND_API_KEY` 走 Resend，否则走 mock。
+- mock 模式会输出 console 摘要，并把 `.eml` 文件写到 `MOCK_EMAIL_DIR` 或默认 `/tmp/tebiq-notification-emails`。
+- `lib/notifications/sender.ts` 和 `/api/cron/send-notifications` 改为共用同一个 email channel，不再重复 Resend 分支。
+- README 增加 `NOTIFICATION_EMAIL_CHANNEL`、`MOCK_EMAIL_DIR`、`RESEND_API_KEY` 说明。
+
+### 待 review
+
+- Resend 域名和 API key 仍由创始人后续配置；本轮未触碰外部账号。
+
+### 验证
+
+- `npm run lint` 通过。
+- `npm run build` 通过。

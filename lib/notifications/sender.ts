@@ -1,15 +1,14 @@
 /**
  * Unified notification sender.
  *
- * Block 2 only implements `email` (via Resend). Other channels (sms /
+ * Block 4 implements `email` through a switchable channel. In local/dev
+ * the mock channel writes .eml files; in production it can use Resend. Other channels (sms /
  * app_push / line) record a `failed` row with a clear note so we have an
  * audit trail of what was attempted before those backends ship.
  *
- * The Resend client is instantiated lazily inside `send()` — importing
- * this module never requires `RESEND_API_KEY`, which keeps `next build`
- * green in environments where the key is not set.
+ * Importing this module never requires `RESEND_API_KEY`, which keeps
+ * `next build` green in environments where the key is not set.
  */
-import { Resend } from 'resend'
 import {
   scheduleNotification,
   markNotificationSent,
@@ -17,6 +16,7 @@ import {
 } from '@/lib/db/queries/notifications'
 import type { NewNotification } from '@/lib/db/schema'
 import { getTemplate } from './templates'
+import { sendEmail } from './email-channel'
 
 export type NotifChannel = 'email' | 'sms' | 'app_push' | 'line'
 
@@ -34,8 +34,6 @@ export interface SendInput {
 export type SendResult =
   | { ok: true; id: string }
   | { ok: false; error: string }
-
-const FROM = 'TEBIQ <noreply@tebiq.jp>'
 
 /**
  * Schedule (queue) a notification — write a row with status='queued' and
@@ -112,33 +110,12 @@ export async function send(input: SendInput): Promise<SendResult> {
     }
   }
 
-  // 2. Lazy-init Resend so module load doesn't require the env var.
-  const apiKey = process.env.RESEND_API_KEY
-  if (!apiKey) {
-    await markNotificationFailed(row.id)
-    return { ok: false, error: 'RESEND_API_KEY not set' }
-  }
-
-  try {
-    const resend = new Resend(apiKey)
-    const result = await resend.emails.send({
-      from: FROM,
-      to: input.to.email,
-      subject: rendered.subject,
-      html: rendered.html,
-      text: rendered.text,
-    })
-    if (result.error) {
-      await markNotificationFailed(row.id)
-      return { ok: false, error: result.error.message ?? 'resend error' }
-    }
+  const result = await sendEmail({ to: input.to.email, ...rendered })
+  if (result.ok) {
     await markNotificationSent(row.id)
     return { ok: true, id: row.id }
-  } catch (e) {
-    await markNotificationFailed(row.id)
-    return {
-      ok: false,
-      error: `resend send failed: ${e instanceof Error ? e.message : String(e)}`,
-    }
   }
+
+  await markNotificationFailed(row.id)
+  return { ok: false, error: `${result.provider} send failed: ${result.error}` }
 }
