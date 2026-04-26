@@ -1,21 +1,20 @@
 /**
  * POST /api/photo/recognize
  *
- * Block 3 mock：不真实调用 AI，返回固定 fixture，但走完整 DAL 流程：
+ * Block 5：使用 Bedrock Claude Vision 识别真实图片，并走完整 DAL 流程：
  *   1. 鉴权 → 获取 family
  *   2. 检查配额（免费 3/月）
- *   3. 写 documents 行（含 mock 识别结果）
+ *   3. 识别图片 → 写 documents 行
  *   4. 返回 documentId + result
  *
- * 输入：multipart/form-data with file（Block 3 不存图片，只接 metadata）
- *       OR application/json { skip: true } (dev 触发器)
+ * 输入：multipart/form-data with file
  * 输出：{ documentId, result }
  */
 import { ok, err, errors } from '@/lib/api/response'
 import { getCurrentUser } from '@/lib/auth/session'
 import { createDocument } from '@/lib/db/queries/documents'
+import { PhotoRecognitionError, recognizePhotoDocument } from '@/lib/photo/bedrock'
 import { getPhotoQuotaForFamily } from '@/lib/photo/quota'
-import { MOCK_RECOGNITION } from '@/lib/photo/mock'
 import type { Urgency } from '@/lib/photo/types'
 
 export const dynamic = 'force-dynamic'
@@ -41,27 +40,40 @@ export async function POST(req: Request) {
     })
   }
 
-  // 2. 接收图片（Block 3 不真实存储 — Block 5 接 S3 / Supabase Storage）
-  // 仅探测 content-type 来确定是 form-data 还是 JSON
+  // 2. 接收图片（当前不持久化原图，只记录 hash metadata）
   const contentType = req.headers.get('content-type') ?? ''
-  let imageUrl = '' // placeholder
-  if (contentType.includes('multipart/form-data')) {
-    try {
-      const form = await req.formData()
-      const file = form.get('file') as File | null
-      if (file) {
-        // Block 5 会替换为真实上传 + URL；现在只记录元信息以便调试
-        imageUrl = `mock://${file.name ?? 'untitled'}-${file.size ?? 0}b`
-      }
-    } catch {
-      /* swallow — 不影响 mock 流程 */
+  if (!contentType.includes('multipart/form-data')) {
+    return err('bad_request', '请上传文书图片', 400)
+  }
+
+  let recognition
+  let imageUrl = ''
+  try {
+    const form = await req.formData()
+    const file = form.get('file')
+    if (!(file instanceof File)) {
+      return err('missing_file', '请上传文书图片', 400)
     }
-  } else {
-    imageUrl = 'mock://no-upload'
+
+    const bytes = Buffer.from(await file.arrayBuffer())
+    recognition = await recognizePhotoDocument({
+      bytes,
+      mediaType: file.type,
+      filename: file.name,
+    })
+    imageUrl = `bedrock://${recognition.imageHash.slice(0, 24)}`
+  } catch (error) {
+    if (error instanceof PhotoRecognitionError) {
+      const status = error.code === 'too_large' ? 413
+        : error.code === 'unsupported_type' || error.code === 'bad_image' ? 400
+          : 503
+      return err(error.code, error.message, status)
+    }
+    return err('recognition_failed', '拍照识别服务暂时不可用，请稍后再试', 503)
   }
 
   // 3. 写 documents 行
-  const result = MOCK_RECOGNITION
+  const result = recognition.result
   const doc = await createDocument({
     familyId: user.familyId,
     memberId: user.id,
@@ -75,6 +87,9 @@ export async function POST(req: Request) {
   return ok({
     documentId: doc.id,
     result,
+    recognition: {
+      model: recognition.modelId,
+    },
     quota: await getPhotoQuotaForFamily(user.familyId),
     emailPrompt: shouldPromptEmail,
   })
