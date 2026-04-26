@@ -3,7 +3,7 @@
  */
 'use client'
 import { useState } from 'react'
-import { Bell, Clock } from 'lucide-react'
+import { Bell, CalendarClock, CheckCircle2, Clock, ShieldAlert } from 'lucide-react'
 
 export interface ReminderItem {
   id: string
@@ -28,10 +28,43 @@ export default function RemindersClient({ items }: { items: ReminderItem[] }) {
     tab === 'all'
       ? items
       : items.filter(i => (tab === 'important' ? i.urgent || i.kind === 'important' : i.kind === 'expiring'))
+  const urgentCount = items.filter(i => i.urgent).length
+  const expiringCount = items.filter(i => i.kind === 'expiring').length
 
   return (
     <>
-      <div className="mt-3 flex items-center gap-2">
+      <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-3.5 shadow-card">
+        <div className="flex items-center justify-between gap-3">
+          <div>
+            <p className="text-[13px] font-medium leading-snug text-ink">
+              {urgentCount > 0 ? `${urgentCount} 件需要留意` : '近期事项已整理'}
+            </p>
+            <p className="mt-1 text-[11px] leading-[1.5] text-ash">
+              在留、住民税、年金等事项会按紧急度排列。
+            </p>
+          </div>
+          <span
+            className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-[13px] ${
+              urgentCount > 0
+                ? 'bg-[rgba(226,87,76,0.10)] text-danger'
+                : 'bg-accent-2 text-ink'
+            }`}
+          >
+            {urgentCount > 0 ? (
+              <ShieldAlert size={19} strokeWidth={1.55} />
+            ) : (
+              <CalendarClock size={19} strokeWidth={1.55} />
+            )}
+          </span>
+        </div>
+        <div className="mt-3 grid grid-cols-3 gap-2">
+          <SummaryCell label="全部" value={items.length} />
+          <SummaryCell label="到期" value={expiringCount} />
+          <SummaryCell label="重要" value={urgentCount} />
+        </div>
+      </section>
+
+      <div className="mt-3 flex rounded-[14px] border border-hairline bg-surface/80 p-1 shadow-card">
         {TABS.map(t => {
           const on = t.id === tab
           return (
@@ -39,10 +72,10 @@ export default function RemindersClient({ items }: { items: ReminderItem[] }) {
               key={t.id}
               type="button"
               onClick={() => setTab(t.id)}
-              className={`px-3 py-[6px] rounded-[14px] text-[12px] border transition-colors ${
+              className={`flex-1 rounded-[10px] px-2 py-[7px] text-[11.5px] font-medium transition-colors ${
                 on
-                  ? 'bg-ink text-white border-ink'
-                  : 'bg-surface text-ash border-hairline'
+                  ? 'bg-ink text-white shadow-[0_3px_8px_rgba(30,58,95,0.18)]'
+                  : 'text-ash'
               }`}
             >
               {t.label}
@@ -52,16 +85,16 @@ export default function RemindersClient({ items }: { items: ReminderItem[] }) {
       </div>
 
       {filtered.length === 0 ? (
-        <p className="mt-6 text-center text-[12px] text-ash">暂无提醒</p>
+        <EmptyState />
       ) : (
-        <ul className="mt-3 flex flex-col gap-2">
+        <ul className="mt-3 flex flex-col gap-2.5">
           {filtered.map(item => (
             <li
               key={item.id}
-              className="bg-surface border border-hairline rounded-card px-[14px] py-3 flex items-center gap-3"
+              className="flex items-center gap-3 rounded-card border border-hairline bg-surface px-[14px] py-3 shadow-card"
             >
               <span
-                className={`flex-shrink-0 w-[30px] h-[30px] rounded-[8px] flex items-center justify-center ${
+                className={`flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-[10px] ${
                   item.urgent ? 'bg-[rgba(226,87,76,0.10)]' : 'bg-accent-2'
                 }`}
               >
@@ -71,24 +104,30 @@ export default function RemindersClient({ items }: { items: ReminderItem[] }) {
                   className={item.urgent ? 'text-danger' : 'text-accent'}
                 />
               </span>
-              <div className="flex-1 min-w-0 leading-tight">
+              <div className="min-w-0 flex-1 leading-tight">
                 <div
-                  className={`text-[13px] font-medium ${
+                  className={`text-[13px] font-medium leading-snug ${
                     item.urgent ? 'text-danger' : 'text-ink'
                   }`}
                 >
                   {item.title}
                 </div>
-                <div
-                  className={`text-[10.5px] mt-0.5 ${
-                    item.urgent ? 'text-danger' : 'text-ash'
-                  }`}
-                >
-                  {item.meta1}
+                <div className="mt-2 flex items-center gap-2">
+                  <span
+                    className={`rounded-[8px] px-1.5 py-1 text-[10px] font-medium leading-none ${
+                      item.urgent
+                        ? 'bg-[rgba(226,87,76,0.10)] text-danger'
+                        : 'bg-canvas text-ash'
+                    }`}
+                  >
+                    {item.meta1}
+                  </span>
+                  <span className="text-[10.5px] leading-none text-ash">
+                    {item.meta2}
+                  </span>
                 </div>
-                <div className="text-[10.5px] text-ash mt-0.5">{item.meta2}</div>
               </div>
-              <span className="flex-shrink-0 w-[30px] h-[30px] flex items-center justify-center">
+              <span className="flex h-[30px] w-[30px] flex-shrink-0 items-center justify-center">
                 <Bell
                   size={16}
                   strokeWidth={1.5}
@@ -100,5 +139,30 @@ export default function RemindersClient({ items }: { items: ReminderItem[] }) {
         </ul>
       )}
     </>
+  )
+}
+
+function SummaryCell({ label, value }: { label: string; value: number }) {
+  return (
+    <div className="rounded-[10px] bg-canvas px-2 py-2 text-center">
+      <div className="text-[15px] font-medium leading-none text-ink">{value}</div>
+      <div className="mt-1 text-[10px] leading-none text-ash">{label}</div>
+    </div>
+  )
+}
+
+function EmptyState() {
+  return (
+    <div className="mt-5 rounded-card border border-hairline bg-surface px-4 py-8 text-center shadow-card">
+      <span className="mx-auto flex h-11 w-11 items-center justify-center rounded-[14px] bg-[rgba(87,167,123,0.12)] text-success">
+        <CheckCircle2 size={21} strokeWidth={1.55} />
+      </span>
+      <p className="mt-3 text-[13px] font-medium leading-relaxed text-ink">
+        暂无需要处理的提醒
+      </p>
+      <p className="mt-1.5 text-[11px] leading-relaxed text-ash">
+        有新的到期事项时会出现在这里。
+      </p>
+    </div>
   )
 }

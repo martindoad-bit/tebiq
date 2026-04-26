@@ -11,6 +11,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { Check, CreditCard, ShieldCheck, Sparkles } from 'lucide-react'
 import AppShell from '@/app/_components/v5/AppShell'
 import AppBar from '@/app/_components/v5/AppBar'
 import Button from '@/app/_components/v5/Button'
@@ -25,6 +26,7 @@ interface Plan {
   price: string
   meta: string
   tag?: string
+  benefits: string[]
 }
 
 // 注：高级会员（¥19,800）走 Stripe 还需要单独 Product；目前用 expert_consultation 占位
@@ -37,6 +39,7 @@ const PLANS: Plan[] = [
     price: '¥980 / 月',
     meta: '享受所有会员权益',
     tag: '推荐',
+    benefits: ['无限次拍照识别', '重要事项提醒', '永久保存档案'],
   },
   {
     id: 'basic_yearly',
@@ -44,6 +47,7 @@ const PLANS: Plan[] = [
     name: '年度会员',
     price: '¥9,800 / 年',
     meta: '¥817 / 月，节省 16%',
+    benefits: ['包含月度全部权益', '年付更省', '适合长期在日生活'],
   },
   {
     id: 'premium_yearly',
@@ -51,6 +55,7 @@ const PLANS: Plan[] = [
     name: '高级会员',
     price: '¥19,800 / 年',
     meta: '含 1 次专家咨询（价值 ¥15,000）',
+    benefits: ['包含年度全部权益', '1 次专家咨询', '复杂情况优先处理'],
   },
 ]
 
@@ -92,7 +97,23 @@ export default function SubscribePage() {
 
   return (
     <AppShell appBar={<AppBar title="选择适合你的方案" back />}>
-      <div className="space-y-2.5 mt-3.5">
+      <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-3.5 shadow-card">
+        <div className="flex items-start gap-3">
+          <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-[12px] bg-accent-2 text-ink">
+            <Sparkles size={18} strokeWidth={1.55} />
+          </span>
+          <div>
+            <p className="text-[13px] font-medium leading-snug text-ink">
+              拍照即懂用完后，可按月开通
+            </p>
+            <p className="mt-1 text-[11px] leading-[1.55] text-ash">
+              会员主要解锁无限拍照、提醒和档案保存。续签自查仍可免费使用。
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <div className="space-y-2.5 mt-3">
         {PLANS.map(plan => (
           <PlanCard
             key={plan.id}
@@ -109,7 +130,7 @@ export default function SubscribePage() {
         </p>
       )}
 
-      <Button onClick={handleSubscribe} disabled={busy} className="mt-4.5">
+      <Button onClick={handleSubscribe} disabled={busy} className="mt-4">
         {busy ? '处理中…' : '立即订阅'}
       </Button>
 
@@ -119,11 +140,16 @@ export default function SubscribePage() {
         </Link>
       </p>
 
-      <p className="text-center text-[10px] text-haze mt-6 leading-relaxed px-4">
-        由 Stripe 安全处理付款 · 支持 Card / PayPay / 便利店
-        <br />
-        随时取消，自动续费
-      </p>
+      <div className="mt-5 rounded-card border border-hairline bg-surface/70 px-4 py-3 shadow-card">
+        <div className="flex items-center gap-2 text-[11px] text-ash">
+          <ShieldCheck size={14} strokeWidth={1.55} className="text-ink" />
+          由 Stripe 安全处理付款
+        </div>
+        <div className="mt-1.5 flex items-center gap-2 text-[11px] text-ash">
+          <CreditCard size={14} strokeWidth={1.55} className="text-ink" />
+          支持 Card / PayPay / 便利店，随时取消
+        </div>
+      </div>
     </AppShell>
   )
 }
@@ -141,9 +167,9 @@ function PlanCard({
     <button
       type="button"
       onClick={onSelect}
-      className={`w-full text-left bg-surface rounded-card relative transition-all ${
+      className={`w-full text-left bg-surface rounded-card relative shadow-card transition-all active:translate-y-px ${
         selected
-          ? 'border-[1.5px] border-accent p-[13px]'
+          ? 'border-[1.5px] border-accent p-[13px] bg-accent-2/35'
           : 'border border-hairline p-3.5'
       }`}
     >
@@ -155,7 +181,7 @@ function PlanCard({
       <div className="flex justify-between items-start gap-2">
         <div className="min-w-0">
           <div className="text-[14px] font-medium text-ink">{plan.name}</div>
-          <div className="text-[11px] text-ash mt-1.5">{plan.price}</div>
+          <div className="text-[17px] font-medium text-ink mt-1.5">{plan.price}</div>
           <div className="text-[11px] text-ash mt-0.5">{plan.meta}</div>
         </div>
         <span
@@ -166,6 +192,16 @@ function PlanCard({
           }`}
         />
       </div>
+      <ul className="mt-3 grid gap-1.5">
+        {plan.benefits.map(b => (
+          <li key={b} className="flex items-center gap-2 text-[11px] text-slate">
+            <span className="flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full bg-accent text-ink">
+              <Check size={10.5} strokeWidth={2} />
+            </span>
+            {b}
+          </li>
+        ))}
+      </ul>
     </button>
   )
 }
