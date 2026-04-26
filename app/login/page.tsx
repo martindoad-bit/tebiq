@@ -7,6 +7,7 @@
 import { Suspense, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
+import { KeyRound, MessageSquareText, Phone, RotateCcw, ShieldCheck } from 'lucide-react'
 import AppShell from '@/app/_components/v5/AppShell'
 import AppBar from '@/app/_components/v5/AppBar'
 import Button from '@/app/_components/v5/Button'
@@ -96,72 +97,83 @@ function LoginInner() {
 
   return (
     <AppShell appBar={<AppBar back="/" />}>
-      <section className="pt-3 pb-6 flex justify-center">
-        <Logo size="md" />
+      <section className="pt-2 pb-5 text-center">
+        <div className="flex justify-center">
+          <Logo size="md" />
+        </div>
+        <div className="mx-auto mt-5 inline-flex items-center gap-1.5 rounded-full border border-hairline bg-surface px-3 py-1.5 text-[11px] text-ash shadow-card">
+          <ShieldCheck size={13} strokeWidth={1.55} className="text-ink" />
+          手机号用于登录和保存档案
+        </div>
       </section>
 
-      <h1 className="text-[22px] font-medium text-ink leading-tight mb-1.5 text-center">
+      <h1 className="mb-1.5 text-center text-[22px] font-medium leading-tight text-ink">
         {step === 'phone' ? '登录 / 注册' : '输入验证码'}
       </h1>
-      <p className="text-[12px] text-ash text-center mb-8">
+      <p className="mb-5 text-center text-[12px] leading-relaxed text-ash">
         {step === 'phone'
           ? '使用手机号登录，没有账号会自动注册'
           : `验证码已发送至 ${phone}`}
       </p>
 
       {step === 'phone' && (
-        <div className="space-y-4">
+        <div className="rounded-card border border-hairline bg-surface p-4 shadow-card">
           <label className="block">
-            <span className="text-[13px] font-medium text-ink block mb-2">手机号</span>
-            <input
-              type="tel"
-              value={phone}
-              onChange={e => setPhone(e.target.value)}
-              placeholder="13800138000 或 +818012345678"
-              className="w-full bg-surface border border-hairline focus:border-accent rounded-btn px-4 py-3 text-[16px] text-ink outline-none transition-colors"
-              autoFocus
-            />
+            <span className="mb-2 block text-[13px] font-medium text-ink">手机号</span>
+            <span className="flex items-center gap-2 rounded-btn border border-hairline bg-canvas px-3.5 py-3 transition-colors focus-within:border-accent">
+              <Phone size={16} strokeWidth={1.55} className="flex-shrink-0 text-haze" />
+              <input
+                type="tel"
+                value={phone}
+                onChange={e => setPhone(e.target.value)}
+                placeholder="13800138000 或 +818012345678"
+                className="min-w-0 flex-1 bg-transparent text-[16px] text-ink outline-none placeholder:text-haze"
+                autoFocus
+              />
+            </span>
           </label>
           {error && (
-            <p className="text-danger text-[12px]" role="alert">
+            <p className="mt-3 text-[12px] text-danger" role="alert">
               {error}
             </p>
           )}
-          <Button onClick={handleSendOtp} disabled={loading}>
+          <Button onClick={handleSendOtp} disabled={loading} className="mt-4">
             {loading ? '发送中…' : '获取验证码'}
           </Button>
-          <p className="text-center text-[10.5px] text-ash leading-relaxed pt-1">
+          <div className="mt-3 flex items-center justify-center gap-1.5 text-[10.5px] leading-relaxed text-ash">
+            <MessageSquareText size={12} strokeWidth={1.55} />
             短信验证码 5 分钟内有效
-            <br />
-            （开发阶段：验证码输出到服务器控制台）
-          </p>
+          </div>
         </div>
       )}
 
       {step === 'otp' && (
-        <div className="space-y-4">
+        <div className="rounded-card border border-hairline bg-surface p-4 shadow-card">
           <label className="block">
-            <span className="text-[13px] font-medium text-ink block mb-2">
+            <span className="mb-2 block text-[13px] font-medium text-ink">
               6 位验证码
             </span>
-            <input
-              type="text"
-              inputMode="numeric"
-              pattern="\d{6}"
-              maxLength={6}
-              value={otp}
-              onChange={e => setOtp(e.target.value.replace(/\D/g, ''))}
-              placeholder="••••••"
-              className="w-full bg-surface border border-hairline focus:border-accent rounded-btn px-4 py-3 text-ink text-center text-2xl tracking-[0.5em] outline-none transition-colors"
-              autoFocus
-            />
+            <span className="flex items-center gap-2 rounded-btn border border-hairline bg-canvas px-3.5 py-3 transition-colors focus-within:border-accent">
+              <KeyRound size={16} strokeWidth={1.55} className="flex-shrink-0 text-haze" />
+              <input
+                type="text"
+                inputMode="numeric"
+                pattern="\d{6}"
+                maxLength={6}
+                value={otp}
+                onChange={e => setOtp(e.target.value.replace(/\D/g, ''))}
+                placeholder="000000"
+                className="min-w-0 flex-1 bg-transparent text-center text-[22px] tracking-[0.38em] text-ink outline-none placeholder:text-haze"
+                autoFocus
+              />
+            </span>
           </label>
           {error && (
-            <p className="text-danger text-[12px]" role="alert">
+            <p className="mt-3 text-[12px] text-danger" role="alert">
               {error}
             </p>
           )}
-          <Button onClick={handleVerify} disabled={loading}>
+          <Button onClick={handleVerify} disabled={loading} className="mt-4">
             {loading ? '验证中…' : '登录'}
           </Button>
           <button
@@ -171,14 +183,15 @@ function LoginInner() {
               setOtp('')
               setError('')
             }}
-            className="block w-full text-ash hover:text-ink text-[12px] text-center"
+            className="mt-3 flex w-full items-center justify-center gap-1.5 text-center text-[12px] text-ash hover:text-ink"
           >
-            ← 换个手机号
+            <RotateCcw size={13} strokeWidth={1.55} />
+            换个手机号
           </button>
         </div>
       )}
 
-      <p className="text-center text-[10px] text-haze mt-8 leading-relaxed">
+      <p className="mt-6 text-center text-[10px] leading-relaxed text-haze">
         登录即表示同意{' '}
         <Link href="/terms" className="underline">
           利用規約

@@ -203,3 +203,50 @@
 ### 截图说明
 
 - `/my/reminders` 当前未登录会重定向到登录页；真实提醒截图需登录态账号。
+
+## 屏 13 知识中心
+
+### 改前
+
+![13 knowledge before](docs/visual-report/screenshots/13-knowledge-before.png)
+
+### 改后
+
+![13 knowledge after](docs/visual-report/screenshots/13-knowledge-after.png)
+
+### 本轮改动
+
+- 顶部增加说明卡，明确知识中心是“先查关键词”的轻量工具，不做资讯流。
+- 搜索栏改为白色 shadow-card 输入区，和其它 v5 页面保持统一。
+- 分类 grid 改为 3x2 稳定卡片，加入选中态，避免图标散落。
+- 热门文章加入摘要、日期和「待书士审核」tag，提升信息密度与可信度。
+- 搜索无结果增加 icon 空状态和下一步引导。
+
+## 屏 14 我的账户
+
+### 本轮改动
+
+- 账户头部改为会员状态卡，展示头像、会员状态、服务期限和未开通 CTA。
+- 菜单列表按「资料 / 会员与支付 / 设置」分组，减少长列表的工程感。
+- 列表项加入说明文案、icon 容器和统一 hover/disabled 状态。
+
+### 截图说明
+
+- `/my/account` 当前未登录会重定向到登录页；本轮只做登录态组件 UI 打磨，真实账户截图需登录态账号。
+
+## 登录 / 注册
+
+### 改前
+
+![login before](docs/visual-report/screenshots/login-before.png)
+
+### 改后
+
+![login after](docs/visual-report/screenshots/login-after.png)
+
+### 本轮改动
+
+- 登录页加入手机号用途说明 chip，增强信任感。
+- 手机号和 OTP 输入区改为卡片式表单，icon、focus border、CTA 层级统一。
+- 去掉开发阶段提示文案，只保留用户可理解的验证码有效期。
+- OTP 第二步保留换手机号操作，但改成轻量按钮样式。
