@@ -24,6 +24,7 @@ import Button from '@/app/_components/v5/Button'
 import { getDocumentById } from '@/lib/db/queries/documents'
 import type { PhotoRecognitionResult, Urgency } from '@/lib/photo/types'
 import SaveToArchiveButton from './SaveToArchiveButton'
+import EmailReminderPrompt from './EmailReminderPrompt'
 
 export const dynamic = 'force-dynamic'
 
@@ -49,8 +50,10 @@ function urgencyDisplay(u: Urgency): UrgencyDisplay {
 
 export default async function PhotoResultPage({
   params,
+  searchParams,
 }: {
   params: { id: string }
+  searchParams?: { email?: string }
 }) {
   const doc = await getDocumentById(params.id)
   if (!doc || !doc.aiResponse) notFound()
@@ -127,6 +130,8 @@ export default async function PhotoResultPage({
       <InfoBlock title="如果不做会怎样？" icon="alert">
         <p>{result.consequences}</p>
       </InfoBlock>
+
+      {searchParams?.email === 'prompt' && <EmailReminderPrompt />}
 
       {/* CTA */}
       <div className="mt-[18px] space-y-2">

@@ -62,8 +62,7 @@ function payloadOf(row: Notification): QueuedPayload {
 async function resolveMemberEmail(memberId: string | null): Promise<string | undefined> {
   if (!memberId) return undefined
   const member = await getMemberById(memberId)
-  void member
-  return undefined
+  return member?.email ?? undefined
 }
 
 export async function GET(req: Request) {

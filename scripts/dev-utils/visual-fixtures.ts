@@ -76,6 +76,7 @@ async function createMember(scenario: Scenario) {
       familyId: family.id,
       isOwner: true,
       phone: phones[scenario],
+      email: scenario === 'empty' ? null : `${scenario}@visual.tebiq.local`,
       name:
         scenario === 'subscribed'
           ? '张先生'

@@ -156,6 +156,8 @@ export const members = pgTable(
     isOwner: boolean('is_owner').notNull().default(false),
     name: varchar('name', { length: 80 }),
     phone: varchar('phone', { length: 20 }).notNull(),
+    email: varchar('email', { length: 255 }),
+    emailVerifiedAt: timestamp('email_verified_at', { withTimezone: true }),
     visaType: visaTypeEnum('visa_type'),
     visaExpiry: date('visa_expiry'),
 

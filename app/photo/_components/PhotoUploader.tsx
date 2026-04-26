@@ -18,6 +18,7 @@ import { Camera, FileText, Loader, ShieldCheck } from 'lucide-react'
 
 interface RecognizeData {
   documentId: string
+  emailPrompt?: boolean
 }
 interface EnvelopeOk {
   ok: true
@@ -66,7 +67,8 @@ export default function PhotoUploader() {
         setErrMsg(msg)
         return
       }
-      router.push(`/photo/result/${json.data.documentId}`)
+      const suffix = json.data.emailPrompt ? '?email=prompt' : ''
+      router.push(`/photo/result/${json.data.documentId}${suffix}`)
     } catch (err) {
       setErrMsg(err instanceof Error ? err.message : '上传失败')
     } finally {

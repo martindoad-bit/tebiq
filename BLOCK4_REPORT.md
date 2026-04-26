@@ -103,3 +103,52 @@
 
 - `npm run lint` 通过。
 - `npm run build` 通过。
+
+## 2026-04-26 members email 与提醒引导
+
+### 已完成
+
+- 新增 members 字段 migration：`email varchar(255)`、`email_verified_at timestamptz`。
+- schema / DAL 支持保存提醒邮箱；修改邮箱时会重置 `email_verified_at`。
+- `/my/account` 新增「到期提醒邮箱」编辑卡片。
+- 新增 `/api/account/email`，供账户页和拍照结果页保存提醒邮箱。
+- `/api/cron/send-notifications` 的 member fallback 改为读取 `members.email`。
+- 用户首次拍照且账号无邮箱时，识别结果页显示「想收到到期提醒吗？」引导，可保存或跳过。
+- dev visual fixtures 为 data / subscribed 用户写入本地测试邮箱，empty 用户保持无邮箱状态，便于检查引导。
+
+### 待 review
+
+- 邮箱验证邮件流程未做；`email_verified_at` 字段已就位，实际验证可在 Resend 配好后补。
+- 邮箱引导文案为产品级轻提示，未做 A/B 或增长策略。
+
+### 验证
+
+- `npm run lint` 通过。
+- `npm run build` 通过。
+
+## Block 4 完结
+
+### 当前状态
+
+- 邀请功能、内容系统、真实登录态 fixture、根级 SEO 页、mock email 通道、members email 六项均已完成代码落地。
+- 全部分块提交前均执行 `git diff --staged` 敏感信息检查，未发现真实 `.env*` 内容、密钥或敏感变量值。
+- 最终验证：`npm run lint` 通过，`npm run build` 通过。
+
+### 自评分
+
+- 工程完成度：8.6 / 10。主链路代码已就位，mock 模式可演示；剩余主要是外部账号、真实 DB 迁移运行、审核流细化。
+- 产品完成度：8.2 / 10。增长入口和内容后台能支撑 Block 4 目标，但邀请去重、邀请码过期、邮箱验证仍需要创始人确认产品规则。
+
+### 创始人待操作
+
+- 在 Vercel 环境变量中按需设置 `INVITE_REWARD_DAYS=7`。
+- 运行 DB migration，把 `articles` 与 members email 字段同步到生产数据库。
+- 本地视觉 QA：运行 `npm run dev:visual-fixtures`，再打开脚本输出的 dev-session URL。
+- 如果要本地演示邮件：设置 `NOTIFICATION_EMAIL_CHANNEL=mock`，邮件会写入 `/tmp/tebiq-notification-emails`。
+- 如果要切真实邮件：完成 Resend 域名与 API key 配置后，设置 `NOTIFICATION_EMAIL_CHANNEL=resend` 与 `RESEND_API_KEY`。
+
+### 后续建议
+
+- 下一块建议优先做 Bedrock 真实拍照识别（Block 5），因为邀请与内容已经能带增长闭环，订阅核心还差真实识别质量。
+- 其次补邀请规则细节：同一 invitee 去重、邀请码过期、奖励发放失败补偿任务。
+- 内容系统下一步补审核记录和 slug/SEO 字段，避免后续文章 URL 依赖 cuid。

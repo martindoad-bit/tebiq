@@ -33,6 +33,7 @@ export async function POST(req: Request) {
 
   // 1. 配额检查
   const quota = await getPhotoQuotaForFamily(user.familyId)
+  const shouldPromptEmail = !user.email && quota.used === 0
   if (!quota.unlimited && quota.remaining <= 0) {
     return err('quota_exceeded', '本月免费拍照次数已用完', 402, {
       used: quota.used,
@@ -75,5 +76,6 @@ export async function POST(req: Request) {
     documentId: doc.id,
     result,
     quota: await getPhotoQuotaForFamily(user.familyId),
+    emailPrompt: shouldPromptEmail,
   })
 }
