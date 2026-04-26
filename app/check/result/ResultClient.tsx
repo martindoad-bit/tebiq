@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { AlertTriangle, CheckCircle2, CircleAlert, Download, LockKeyhole, RotateCcw } from 'lucide-react'
 import {
   judge,
   type AnsweredItem,
@@ -15,6 +16,7 @@ import RiskList from './components/RiskList'
 import MaterialChecklist, { CollapsibleChecklist } from './components/MaterialChecklist'
 import CTABlock from './components/CTABlock'
 import BreathCard from './components/BreathCard'
+import Logo from '@/app/_components/v5/Logo'
 
 const STORAGE_KEY = 'tebiq_check_answers'
 const SAVED_FOR_KEY = 'tebiq_check_saved_for' // 去重：值 = 已保存过的 history JSON
@@ -31,17 +33,17 @@ function SummaryCard({
   verdict: JudgeResult['verdict']
   summary: string
 }) {
-  const borderColor =
+  const tone =
     verdict === 'red'
-      ? 'border-[#DC2626]'
+      ? 'border-danger bg-[rgba(226,87,76,0.06)]'
       : verdict === 'yellow'
-        ? 'border-primary'
-        : 'border-[#16A34A]'
+        ? 'border-accent bg-accent-2/35'
+        : 'border-success bg-[rgba(87,167,123,0.08)]'
   return (
-    <div className={`bg-card border-l-4 ${borderColor} rounded-r-xl px-5 py-5 mb-4`}>
-      <div className="text-body text-xs font-bold mb-2 tracking-wide">你的情况</div>
-      <p className="text-title text-base leading-relaxed">{summary}</p>
-      <p className="text-muted text-xs mt-4 leading-relaxed">
+    <div className={`mb-4 rounded-card border px-4 py-4 shadow-card ${tone}`}>
+      <div className="mb-2 text-[11px] font-medium text-ash">你的情况</div>
+      <p className="text-[13px] leading-[1.65] text-ink">{summary}</p>
+      <p className="mt-4 text-[11px] leading-relaxed text-ash">
         本摘要由系统自动组合生成，不构成法律意见。具体方案请咨询持牌行政书士。
       </p>
     </div>
@@ -62,10 +64,10 @@ function SaveToAccountPrompt({ verdict, count }: { verdict: 'red' | 'yellow' | '
 
   if (authState === 'in') {
     return (
-      <div className="no-capture bg-[#DCFCE7] border border-[#16A34A] rounded-2xl px-4 py-3 text-title text-sm font-bold flex items-center gap-2">
-        <span>✅</span>
+      <div className="no-capture flex items-center gap-2 rounded-card border border-success bg-[rgba(87,167,123,0.10)] px-4 py-3 text-[12px] font-medium text-ink shadow-card">
+        <CheckCircle2 size={16} strokeWidth={1.6} className="text-success" />
         <span>已保存到你的账号</span>
-        <Link href="/my" className="ml-auto text-title hover:text-title underline underline-offset-4">
+        <Link href="/my/archive" className="ml-auto text-ink underline underline-offset-4">
           查看历史
         </Link>
       </div>
@@ -74,14 +76,23 @@ function SaveToAccountPrompt({ verdict, count }: { verdict: 'red' | 'yellow' | '
 
   const next = encodeURIComponent(`/check/result?v=${verdict}&n=${count}`)
   return (
-    <div className="no-capture bg-highlight border border-blue-800 rounded-2xl p-4">
-      <div className="text-primary font-bold text-sm mb-1">📋 保存这次自查结果</div>
-      <p className="text-body text-sm leading-relaxed mb-3">
-        登录后下次续签时，可以一键对比变化
-      </p>
+    <div className="no-capture rounded-card border border-hairline bg-surface p-4 shadow-card">
+      <div className="flex items-start gap-3">
+        <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-[12px] bg-accent-2 text-ink">
+          <LockKeyhole size={17} strokeWidth={1.55} />
+        </span>
+        <div>
+          <div className="text-[13px] font-medium leading-snug text-ink">
+            保存这次自查结果
+          </div>
+          <p className="mt-1 text-[11px] leading-[1.55] text-ash">
+            登录后下次续签时，可以一键对比变化。
+          </p>
+        </div>
+      </div>
       <Link
         href={`/login?next=${next}`}
-        className="flex items-center justify-center w-full min-h-[48px] bg-primary hover:bg-primary-hover text-title font-bold py-3 rounded-xl text-sm transition-all"
+        className="mt-3 flex min-h-[46px] w-full items-center justify-center rounded-btn bg-accent px-4 py-3 text-[13px] font-medium text-ink shadow-cta"
       >
         登录 / 注册
       </Link>
@@ -133,8 +144,10 @@ export default function ResultClient() {
 
   if (!result) {
     return (
-      <main className="min-h-screen bg-base text-title flex items-center justify-center pb-16 md:pb-0">
-        <div className="text-muted">载入判断结果中…</div>
+      <main className="flex min-h-screen items-center justify-center bg-canvas pb-16 text-ink md:pb-0">
+        <div className="rounded-card border border-hairline bg-surface px-5 py-4 text-[12px] text-ash shadow-card">
+          载入判断结果中…
+        </div>
       </main>
     )
   }
@@ -190,7 +203,7 @@ function ResultShell({
   children: React.ReactNode
 }) {
   return (
-    <main className="min-h-screen bg-base text-title pb-[env(safe-area-inset-bottom)]">
+    <main className="min-h-screen bg-canvas pb-[env(safe-area-inset-bottom)] text-ink">
       <TopBar />
       {signupBanner}
       <div ref={captureRef} id="result-capture">
@@ -205,10 +218,12 @@ function ResultShell({
 
 function TopBar() {
   return (
-    <header className="no-capture sticky top-0 z-10 bg-card/95 backdrop-blur border-b border-line">
-      <div className="max-w-md md:max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-3" aria-label="TEBIQ 首页"><img src="/logo-icon.png" alt="" className="h-12 w-12 rounded-xl" /><div><div className="text-xl font-bold text-title leading-none">TEBIQ</div><div className="text-xs text-muted leading-tight mt-0.5">てびき</div></div></Link>
-        <Link href="/visa-select" className="text-muted hover:text-body text-sm">
+    <header className="no-capture sticky top-0 z-10 border-b border-hairline bg-canvas/95 backdrop-blur">
+      <div className="mx-auto flex h-14 max-w-md items-center justify-between px-4 md:max-w-3xl">
+        <Link href="/" aria-label="TEBIQ 首页">
+          <Logo size="sm" />
+        </Link>
+        <Link href="/check/select" className="text-[12px] text-ash hover:text-ink">
           重新选择签证
         </Link>
       </div>
@@ -223,11 +238,11 @@ function CaptureFooter() {
     '0',
   )}.${String(date.getDate()).padStart(2, '0')}`
   return (
-    <div className="bg-base px-4 py-5 text-center border-t border-line">
-      <div className="max-w-md md:max-w-3xl mx-auto flex items-center justify-between text-xs">
-        <div className="text-primary font-bold tracking-wider">TEBIQ</div>
-        <div className="text-muted">测试日期 {dateStr}</div>
-        <div className="text-muted">tebiq.jp</div>
+    <div className="border-t border-hairline bg-canvas px-4 py-5 text-center">
+      <div className="mx-auto flex max-w-md items-center justify-between text-[10.5px] text-ash md:max-w-3xl">
+        <div className="font-medium text-ink tracking-[0.03em]">TEBIQ</div>
+        <div>测试日期 {dateStr}</div>
+        <div>tebiq.jp</div>
       </div>
     </div>
   )
@@ -238,22 +253,23 @@ function BottomActions() {
     <div className="no-capture mt-8 mb-12 flex flex-col items-center gap-3">
       <Link
         href="/knowledge"
-        className="text-primary hover:text-primary-hover text-sm font-bold underline underline-offset-4"
+        className="text-[13px] font-medium text-ink underline underline-offset-4"
       >
-        了解签证基础知识 →
+        了解签证基础知识
       </Link>
       <Link
         href="/check"
-        className="text-muted text-sm hover:text-body underline underline-offset-4"
+        className="inline-flex items-center gap-1.5 text-[12px] text-ash hover:text-ink"
         onClick={() => {
           sessionStorage.removeItem(STORAGE_KEY)
           sessionStorage.removeItem(SAVED_FOR_KEY)
           sessionStorage.removeItem(TRACKED_FOR_KEY)
         }}
       >
+        <RotateCcw size={13} strokeWidth={1.55} />
         重新测试
       </Link>
-      <Link href="/" className="text-muted text-xs hover:text-body">
+      <Link href="/" className="text-[11px] text-ash hover:text-ink">
         返回首页
       </Link>
     </div>
@@ -322,17 +338,18 @@ function SaveResultButton({
 
   const colorClass =
     verdict === 'red'
-      ? 'bg-[#DC2626] hover:bg-[#B91C1C] text-white'
+      ? 'bg-danger text-white hover:bg-[#C84B42]'
       : verdict === 'yellow'
-        ? 'bg-primary hover:bg-primary-hover text-title'
-        : 'bg-[#16A34A] hover:bg-[#15803D] text-title'
+        ? 'bg-accent text-ink hover:bg-[#E5A52E]'
+        : 'bg-success text-white hover:bg-[#4A9069]'
 
   return (
     <button
       onClick={handleSave}
       disabled={busy}
-      className={`no-capture flex items-center justify-center w-full min-h-[60px] ${colorClass} disabled:opacity-50 font-bold py-4 rounded-xl text-base transition-all`}
+      className={`no-capture flex min-h-[48px] w-full items-center justify-center gap-2 rounded-btn px-4 py-3 text-[13px] font-medium shadow-card transition-colors disabled:opacity-50 ${colorClass}`}
     >
+      <Download size={15} strokeWidth={1.6} />
       {busy ? '生成图片中…' : '保存结果为图片'}
     </button>
   )
@@ -345,11 +362,49 @@ function PremiumCallout() {
     <button
       type="button"
       disabled
-      className="w-full min-h-[56px] bg-card border-2 border-dashed border-line text-muted rounded-xl text-sm cursor-not-allowed"
+      className="min-h-[48px] w-full cursor-not-allowed rounded-btn border border-dashed border-hairline bg-surface px-4 py-3 text-[13px] text-ash"
       title="即将推出"
     >
       升级到完整服务（即将推出）
     </button>
+  )
+}
+
+function ResultHero({
+  verdict,
+  title,
+  description,
+}: {
+  verdict: 'green' | 'yellow' | 'red'
+  title: string
+  description: string
+}) {
+  const meta = {
+    green: {
+      icon: CheckCircle2,
+      tone: 'border-success bg-[rgba(87,167,123,0.12)] text-success',
+    },
+    yellow: {
+      icon: AlertTriangle,
+      tone: 'border-accent bg-accent-2/55 text-ink',
+    },
+    red: {
+      icon: CircleAlert,
+      tone: 'border-danger bg-[rgba(226,87,76,0.10)] text-danger',
+    },
+  }[verdict]
+  const Icon = meta.icon
+  return (
+    <section className={`mx-4 mt-4 rounded-card border px-4 py-5 text-center shadow-card ${meta.tone}`}>
+      <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-[15px] bg-surface/85">
+        <Icon size={26} strokeWidth={1.6} />
+      </div>
+      <div className="mt-3 text-[11px] font-medium leading-none text-ash">
+        TEBIQ · 续签自查
+      </div>
+      <h1 className="mt-2 text-[19px] font-medium leading-snug text-ink">{title}</h1>
+      <p className="mt-2 text-[12px] leading-relaxed text-ash">{description}</p>
+    </section>
   )
 }
 
@@ -363,16 +418,11 @@ function GreenResult({ summary }: { summary: string }) {
       captureRef={captureRef}
       signupBanner={<SignupBanner verdict="green" count={0} />}
       banner={
-        <div className="bg-gradient-to-b from-[#16A34A] to-[#15803D] text-white px-4 pt-12 pb-10 text-center">
-          <div className="inline-block bg-white/20 text-white text-xs font-bold px-3 py-1 rounded-full mb-4">
-            TEBIQ · 续签自查
-          </div>
-          <div className="text-5xl mb-3">✓</div>
-          <h1 className="text-2xl md:text-3xl font-bold mb-2 text-white">恭喜，你可以开始准备材料</h1>
-          <p className="text-white/90 text-sm leading-relaxed px-4">
-            前置条件全部通过，没有发现明显风险点
-          </p>
-        </div>
+        <ResultHero
+          verdict="green"
+          title="可以开始准备材料"
+          description="前置条件全部通过，没有发现明显风险点。"
+        />
       }
     >
       <BreathCard verdict="green" />
@@ -388,11 +438,11 @@ function GreenResult({ summary }: { summary: string }) {
       {/* PC 端左右分栏：左结论右清单；移动端纵向 */}
       <div className="md:grid md:grid-cols-2 md:gap-6">
         <div>
-          <div className="bg-card border border-line rounded-2xl p-5 mb-4">
-            <h2 className="text-primary font-bold mb-2 text-base">
+          <div className="mb-4 rounded-card border border-hairline bg-surface p-4 shadow-card">
+            <h2 className="mb-2 text-[13px] font-medium text-ink">
               技人国续签材料清单
             </h2>
-            <p className="text-body text-sm leading-relaxed">
+            <p className="text-[12px] leading-relaxed text-ash">
               以下是续签所需的标准材料。建议提前 2 个月开始准备，
               点击展开每项可查看详细办理信息。
             </p>
@@ -425,16 +475,11 @@ function YellowResult({ result, summary }: { result: JudgeResult; summary: strin
       captureRef={captureRef}
       signupBanner={<SignupBanner verdict="yellow" count={result.triggered.length} />}
       banner={
-        <div className="bg-gradient-to-b from-primary to-primary-hover text-white px-4 pt-12 pb-10 text-center">
-          <div className="inline-block bg-white/20 text-white text-xs font-bold px-3 py-1 rounded-full mb-4">
-            TEBIQ · 续签自查
-          </div>
-          <div className="text-5xl mb-3">⚠</div>
-          <h1 className="text-2xl md:text-3xl font-bold mb-2 text-white">需要先解决几个问题</h1>
-          <p className="text-white/90 text-sm leading-relaxed">
-            发现 {result.triggered.length} 项需要注意，建议处理后再申请
-          </p>
-        </div>
+        <ResultHero
+          verdict="yellow"
+          title="需要先解决几个问题"
+          description={`发现 ${result.triggered.length} 项需要注意，建议处理后再申请。`}
+        />
       }
     >
       <BreathCard verdict="yellow" />
@@ -482,16 +527,11 @@ function RedResult({ result, summary }: { result: JudgeResult; summary: string }
       captureRef={captureRef}
       signupBanner={<SignupBanner verdict="red" count={reds.length} />}
       banner={
-        <div className="bg-gradient-to-b from-[#DC2626] to-[#B91C1C] text-white px-4 pt-12 pb-10 text-center">
-          <div className="inline-block bg-white/20 text-white text-xs font-bold px-3 py-1 rounded-full mb-4">
-            TEBIQ · 续签自查
-          </div>
-          <div className="text-5xl mb-3">!</div>
-          <h1 className="text-2xl md:text-3xl font-bold mb-2 text-white">检测到高风险项</h1>
-          <p className="text-white/90 text-sm leading-relaxed">
-            发现 {reds.length} 项严重风险，请勿自行递签
-          </p>
-        </div>
+        <ResultHero
+          verdict="red"
+          title="检测到高风险项"
+          description={`发现 ${reds.length} 项严重风险，请先确认处理方案。`}
+        />
       }
     >
       <BreathCard verdict="red" />
@@ -504,8 +544,8 @@ function RedResult({ result, summary }: { result: JudgeResult; summary: string }
         <SaveToAccountPrompt verdict="red" count={reds.length} />
       </div>
 
-      <div className="bg-[#FEE2E2] border border-[#DC2626] rounded-2xl p-5 mb-6">
-        <p className="text-title text-sm leading-relaxed">
+      <div className="mb-6 rounded-card border border-danger bg-[rgba(226,87,76,0.08)] p-4 shadow-card">
+        <p className="text-[13px] leading-relaxed text-ink">
           下列任何一项都可能直接导致续签被拒，甚至影响今后在留资格。
           强烈建议先与持牌行政书士确认应对方案，再决定如何提交申请。
         </p>
