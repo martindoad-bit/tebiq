@@ -91,8 +91,14 @@ const config: Config = {
         chip: '10px',
       },
       boxShadow: {
-        // v5 没有强投影，仅 0.5px hairline + 极轻阴影
+        // 视觉精修：hairline + 2-3 层柔和 elevation，避免单层阴影的工程感。
         soft: '0 1px 0 rgba(30, 58, 95, 0.04)',
+        card:
+          '0 1px 0 rgba(30, 58, 95, 0.04), 0 10px 24px rgba(30, 58, 95, 0.055)',
+        raised:
+          '0 1px 0 rgba(30, 58, 95, 0.05), 0 12px 28px rgba(30, 58, 95, 0.07), 0 2px 8px rgba(30, 58, 95, 0.035)',
+        cta:
+          '0 1px 0 rgba(255, 255, 255, 0.42) inset, 0 10px 22px rgba(246, 177, 51, 0.24), 0 2px 7px rgba(30, 58, 95, 0.08)',
       },
       maxWidth: {
         // 桌面端居中显示「手机视觉」

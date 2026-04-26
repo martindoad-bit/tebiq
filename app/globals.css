@@ -16,6 +16,25 @@ html, body {
   -webkit-text-size-adjust: 100%;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: 'kern' 1, 'palt' 0;
+  letter-spacing: 0;
+  line-height: 1.6;
+}
+
+body:lang(ja),
+.jp-text {
+  letter-spacing: 0.02em;
+  line-height: 1.7;
+}
+
+::selection {
+  background: rgba(246, 177, 51, 0.32);
+  color: #1E3A5F;
+}
+
+a,
+button {
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* iOS 输入框防自动缩放：最小 16px */

@@ -29,11 +29,11 @@ export default function AppShell({
   shellClassName = 'bg-canvas',
 }: Props) {
   return (
-    <div className={`min-h-[100dvh] ${shellClassName}`}>
-      <div className="md:max-w-phone md:mx-auto md:min-h-[100dvh] md:shadow-soft md:border-x md:border-hairline flex flex-col min-h-[100dvh]">
+    <div className={`h-[100dvh] ${shellClassName}`}>
+      <div className="flex h-[100dvh] flex-col md:mx-auto md:max-w-phone md:border-x md:border-hairline md:shadow-soft">
         {appBar}
         <main
-          className={`flex-1 overflow-y-auto px-4 pb-6 ${bodyClassName}`}
+          className={`min-h-0 flex-1 overflow-y-auto px-4 pb-6 ${bodyClassName}`}
           style={{
             paddingBottom: tabBar ? 'calc(64px + env(safe-area-inset-bottom))' : 'env(safe-area-inset-bottom)',
           }}

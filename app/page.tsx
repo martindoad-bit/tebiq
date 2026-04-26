@@ -14,7 +14,16 @@
  *   - 已登录：从 documents 表读最近的 urgency=critical|important 行
  */
 import Link from 'next/link'
-import { Bell, ChevronRight, Camera, ClipboardCheck } from 'lucide-react'
+import type { ReactNode } from 'react'
+import {
+  Bell,
+  ChevronRight,
+  Camera,
+  ClipboardCheck,
+  FileText,
+  Clock3,
+  ShieldCheck,
+} from 'lucide-react'
 import AppShell from '@/app/_components/v5/AppShell'
 import TabBar from '@/app/_components/v5/TabBar'
 import Logo from '@/app/_components/v5/Logo'
@@ -34,16 +43,22 @@ export default async function HomePage() {
 
   return (
     <AppShell appBar={<HomeAppBar />} tabBar={<TabBar />}>
-      <section className="pt-3 pb-1 px-1">
-        <h1 className="text-[22px] font-medium text-ink leading-[1.3] mb-2">
+      <section className="pt-4 pb-1 px-1">
+        <div className="inline-flex items-center gap-1.5 rounded-full bg-cool-blue/70 px-2.5 py-1 text-[10.5px] font-medium text-ink/80">
+          <span className="h-1.5 w-1.5 rounded-full bg-success" />
+          在日生活工具集
+        </div>
+        <h1 className="mt-3 text-[23px] font-medium text-ink leading-[1.34] mb-2">
           你的在日生活
           <br />
           好帮手
         </h1>
-        <p className="text-[12px] text-ash">安心在日本的每一步</p>
+        <p className="max-w-[260px] text-[12.5px] leading-[1.65] text-slate/80">
+          拍照看懂日文文件，续签前先做风险自查。
+        </p>
       </section>
 
-      <div className="mt-3.5 space-y-2.5">
+      <div className="mt-4 space-y-3">
         <ActionCard
           variant="primary"
           icon={<Camera size={20} strokeWidth={1.6} color="#1E3A5F" />}
@@ -92,15 +107,15 @@ function ActionCard({
   href,
 }: {
   variant: 'primary' | 'secondary'
-  icon: React.ReactNode
+  icon: ReactNode
   title: string
   subtitle: string
   href: string
 }) {
   const wrap =
     variant === 'primary'
-      ? 'bg-accent'
-      : 'bg-surface border border-hairline'
+      ? 'bg-accent shadow-cta'
+      : 'bg-surface border border-hairline shadow-card'
   const iconBg =
     variant === 'primary' ? 'bg-white' : 'bg-accent-2'
   const titleColor = variant === 'primary' ? 'text-ink' : 'text-ink'
@@ -110,7 +125,7 @@ function ActionCard({
   return (
     <Link
       href={href}
-      className={`block ${wrap} rounded-card p-3.5 flex items-center gap-3 active:opacity-80 transition`}
+      className={`block ${wrap} rounded-card p-3.5 flex items-center gap-3 active:translate-y-px active:opacity-90 transition`}
     >
       <span
         className={`${iconBg} w-[38px] h-[38px] rounded-[10px] flex items-center justify-center flex-shrink-0`}
@@ -128,14 +143,10 @@ function ActionCard({
 function TodoSection({ todos }: { todos: Document[] }) {
   if (todos.length === 0) {
     return (
-      <>
-        <h2 className="text-[13px] font-medium text-ink mt-4 mb-2.5 px-1">
-          目前没有需要关注的事项
-        </h2>
-        <p className="text-[11px] text-ash px-1">
-          扫到的文件、自查结果会出现在这里。
-        </p>
-      </>
+      <EmptyHomeState
+        title="目前没有需要关注的事项"
+        description="扫到的文件、自查结果和到期提醒会出现在这里。"
+      />
     )
   }
   return (
@@ -193,16 +204,89 @@ function TodoRow({ doc }: { doc: Document }) {
 
 function UnloggedHint() {
   return (
-    <div className="mt-5 bg-surface border border-hairline rounded-card px-4 py-3.5">
-      <p className="text-[12px] text-ash leading-relaxed">
-        登录后，拍照识别的文件、自查结果都会自动保存到「我的档案」，并提供到期提醒。
-      </p>
-      <Link
-        href="/login"
-        className="block mt-2 text-[13px] font-medium text-ink"
-      >
-        登录 / 注册 →
-      </Link>
+    <EmptyHomeState
+      title="登录后建立你的生活档案"
+      description="拍照识别的文件、自查结果和到期提醒，会自动归入「我的档案」。"
+      actionHref="/login"
+      actionLabel="登录 / 注册"
+    />
+  )
+}
+
+function EmptyHomeState({
+  title,
+  description,
+  actionHref,
+  actionLabel,
+}: {
+  title: string
+  description: string
+  actionHref?: string
+  actionLabel?: string
+}) {
+  return (
+    <section className="mt-5 overflow-hidden rounded-card border border-hairline bg-surface shadow-card">
+      <div className="border-b border-hairline bg-[rgba(230,238,245,0.42)] px-4 py-3">
+        <div className="flex items-center justify-between gap-3">
+          <div>
+            <h2 className="text-[13px] font-medium leading-snug text-ink">{title}</h2>
+            <p className="mt-1 text-[11px] leading-[1.65] text-ash">{description}</p>
+          </div>
+          <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-[10px] bg-accent-2 text-ink">
+            <ShieldCheck size={17} strokeWidth={1.55} />
+          </span>
+        </div>
+      </div>
+
+      <div className="px-4 py-3.5">
+        <div className="grid grid-cols-3 gap-2">
+          <PreviewMetric
+            icon={<Camera size={15} strokeWidth={1.55} />}
+            label="拍照"
+            value="3 次/月"
+          />
+          <PreviewMetric
+            icon={<FileText size={15} strokeWidth={1.55} />}
+            label="自查"
+            value="免费"
+          />
+          <PreviewMetric
+            icon={<Clock3 size={15} strokeWidth={1.55} />}
+            label="提醒"
+            value="登录后"
+          />
+        </div>
+
+        {actionHref && actionLabel && (
+          <Link
+            href={actionHref}
+            className="mt-3 flex h-9 items-center justify-center rounded-btn border border-[rgba(30,58,95,0.14)] bg-white text-[13px] font-medium text-ink transition active:translate-y-px"
+          >
+            {actionLabel}
+            <ChevronRight size={14} strokeWidth={1.6} className="ml-0.5" />
+          </Link>
+        )}
+      </div>
+    </section>
+  )
+}
+
+function PreviewMetric({
+  icon,
+  label,
+  value,
+}: {
+  icon: ReactNode
+  label: string
+  value: string
+}) {
+  return (
+    <div className="rounded-[11px] border border-hairline bg-canvas/55 px-2.5 py-2.5">
+      <div className="mb-1.5 flex h-6 w-6 items-center justify-center rounded-[8px] bg-white text-ink shadow-soft">
+        {icon}
+      </div>
+      <div className="text-[10px] leading-none text-ash">{label}</div>
+      <div className="mt-1 text-[11.5px] font-medium leading-none text-ink">{value}</div>
     </div>
   )
 }
