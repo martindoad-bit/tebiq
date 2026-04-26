@@ -1,5 +1,6 @@
 'use client'
 import { useState } from 'react'
+import { Check, Copy, Link2 } from 'lucide-react'
 
 export default function ShareLinkButton({
   verdict,
@@ -64,8 +65,17 @@ export default function ShareLinkButton({
         type="button"
         onClick={handleClick}
         disabled={busy}
-        className="w-full min-h-[52px] bg-card border border-primary text-primary hover:bg-highlight disabled:opacity-50 font-bold rounded-xl text-sm transition-all"
+        className="flex min-h-[48px] w-full items-center justify-center gap-2 rounded-btn border border-[rgba(30,58,95,0.18)] bg-surface px-4 py-3 text-[13px] font-medium text-ink shadow-card transition-colors hover:bg-canvas disabled:opacity-50"
       >
+        {shareUrl ? (
+          copied ? (
+            <Check size={15} strokeWidth={1.7} />
+          ) : (
+            <Copy size={15} strokeWidth={1.6} />
+          )
+        ) : (
+          <Link2 size={15} strokeWidth={1.6} />
+        )}
         {busy
           ? '生成分享链接中…'
           : shareUrl
@@ -75,11 +85,11 @@ export default function ShareLinkButton({
             : '生成分享链接'}
       </button>
       {shareUrl && (
-        <p className="text-muted text-[11px] mt-2 break-all">
+        <p className="mt-2 break-all text-[11px] leading-relaxed text-ash">
           {shareUrl} · 7 天内有效
         </p>
       )}
-      {error && <p className="text-[#DC2626] text-xs mt-2">{error}</p>}
+      {error && <p className="mt-2 text-[12px] text-danger">{error}</p>}
     </div>
   )
 }

@@ -1,4 +1,5 @@
 import type { Verdict } from '@/lib/check/questions/gijinkoku'
+import { Gift } from 'lucide-react'
 import ShareLinkButton from '../ShareLinkButton'
 
 export default function ShareBlock({
@@ -13,10 +14,21 @@ export default function ShareBlock({
   description?: string
 }) {
   return (
-    <div className="no-capture bg-card border border-line rounded-2xl p-4">
-      <div className="text-title font-bold text-sm mb-1">{heading}</div>
-      <p className="text-muted text-xs leading-relaxed mb-3">{description}</p>
+    <div className="no-capture rounded-card border border-hairline bg-surface p-4 shadow-card">
+      <div className="flex items-start gap-3">
+        <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-[12px] bg-accent-2 text-ink">
+          <Gift size={17} strokeWidth={1.55} />
+        </span>
+        <div className="min-w-0 flex-1">
+          <div className="text-[13px] font-medium leading-snug text-ink">
+            {heading}
+          </div>
+          <p className="mt-1 text-[11px] leading-[1.55] text-ash">{description}</p>
+        </div>
+      </div>
+      <div className="mt-3">
       <ShareLinkButton verdict={verdict} summary={summary} />
+      </div>
     </div>
   )
 }

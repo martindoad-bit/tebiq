@@ -1,5 +1,8 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import { AlertTriangle, CheckCircle2, CircleAlert, Clock3, Lock, ShieldCheck } from 'lucide-react'
+import type { LucideIcon } from 'lucide-react'
+import Logo from '@/app/_components/v5/Logo'
 import { storage } from '@/lib/storage'
 import type { ShareRecord } from '@/app/api/share/create/route'
 
@@ -10,22 +13,34 @@ const VERDICT_META = {
   red: {
     label: '红色',
     sub: '存在高风险项',
-    bg: 'from-[#DC2626] to-[#B91C1C]',
-    icon: '!',
+    hero: 'bg-[rgba(226,87,76,0.10)] border-danger text-danger',
+    chip: 'bg-[rgba(226,87,76,0.10)] text-danger',
+    icon: CircleAlert,
   },
   yellow: {
     label: '黄色',
     sub: '需要先解决几个问题',
-    bg: 'from-primary to-primary-hover',
-    icon: '⚠',
+    hero: 'bg-accent-2/55 border-accent text-ink',
+    chip: 'bg-accent-2 text-ink',
+    icon: AlertTriangle,
   },
   green: {
     label: '绿色',
     sub: '前置条件均通过',
-    bg: 'from-[#16A34A] to-[#15803D]',
-    icon: '✓',
+    hero: 'bg-[rgba(87,167,123,0.12)] border-success text-success',
+    chip: 'bg-[rgba(87,167,123,0.12)] text-success',
+    icon: CheckCircle2,
   },
-} as const
+} satisfies Record<
+  ShareRecord['verdict'],
+  {
+    label: string
+    sub: string
+    hero: string
+    chip: string
+    icon: LucideIcon
+  }
+>
 
 interface PageProps {
   params: { id: string }
@@ -47,58 +62,80 @@ export default async function SharePage({ params }: PageProps) {
   const record = await storage.get<ShareRecord>(`share:${params.id}`)
   if (!record) notFound()
   const meta = VERDICT_META[record.verdict]
+  const Icon = meta.icon
 
   return (
-    <main className="min-h-screen bg-base text-title pb-[env(safe-area-inset-bottom)]">
-      <header className="sticky top-0 z-10 bg-card/95 backdrop-blur border-b border-line">
-        <div className="max-w-md md:max-w-3xl mx-auto px-4 h-14 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-3" aria-label="TEBIQ 首页">
-            <img src="/logo-icon.png" alt="" className="h-12 w-12 rounded-xl" />
-            <div>
-              <div className="text-xl font-bold text-title leading-none">TEBIQ</div>
-              <div className="text-xs text-muted leading-tight mt-0.5">てびき</div>
-            </div>
+    <main className="min-h-screen bg-canvas pb-[env(safe-area-inset-bottom)] text-ink">
+      <header className="sticky top-0 z-10 border-b border-hairline bg-canvas/95 backdrop-blur">
+        <div className="mx-auto flex h-14 max-w-phone items-center justify-between px-4">
+          <Link href="/" aria-label="TEBIQ 首页">
+            <Logo size="sm" />
           </Link>
+          <span className="rounded-full bg-surface px-2.5 py-1 text-[10.5px] text-ash shadow-card">
+            分享结果
+          </span>
         </div>
       </header>
 
-      <div className={`bg-gradient-to-b ${meta.bg} text-white px-4 pt-12 pb-10 text-center`}>
-        <div className="inline-block bg-white/20 text-white text-xs font-bold px-3 py-1 rounded-full mb-4">
-          朋友分享 · TEBIQ 自查
-        </div>
-        <div className="text-5xl mb-3">{meta.icon}</div>
-        <h1 className="text-2xl md:text-3xl font-bold mb-2 text-white">
-          你的朋友刚做了一次签证自查
-        </h1>
-        <p className="text-white/90 text-sm leading-relaxed px-4">
-          结果：{meta.label}（{meta.sub}）
-        </p>
-      </div>
-
-      <div className="max-w-md md:max-w-3xl mx-auto px-4 py-8 space-y-5">
-        <div className="bg-card border border-line rounded-2xl p-5 shadow-sm">
-          <div className="text-muted text-xs font-bold mb-2">摘要</div>
-          <p className="text-title text-base leading-relaxed">{record.summary}</p>
-          <p className="text-muted text-xs mt-4 leading-relaxed">
-            为保护朋友隐私，这里不显示具体回答内容。
+      <div className="mx-auto max-w-phone px-4 py-5">
+        <section className={`rounded-card border px-4 py-5 text-center shadow-card ${meta.hero}`}>
+          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-[15px] bg-surface/80">
+            <Icon size={26} strokeWidth={1.6} />
+          </div>
+          <div className="mt-3 text-[11px] font-medium leading-none text-ash">
+            朋友分享 · TEBIQ 自查
+          </div>
+          <h1 className="mt-2 text-[19px] font-medium leading-snug text-ink">
+            你的朋友刚做了一次签证自查
+          </h1>
+          <p className="mt-2 text-[12px] leading-relaxed text-ash">
+            结果：{meta.label}（{meta.sub}）
           </p>
-        </div>
+        </section>
 
-        <div className="bg-highlight border border-primary/30 rounded-2xl p-5">
-          <h2 className="text-title font-bold text-base mb-2">你也来查查自己的情况</h2>
-          <p className="text-body text-sm leading-relaxed mb-4">
-            3 分钟自查，3 色判决，看看你的续签或申请前有没有需要先处理的隐患。
+        <section className="mt-4 rounded-card border border-hairline bg-surface p-4 shadow-card">
+          <div className="flex items-center justify-between gap-3">
+            <h2 className="text-[13px] font-medium text-ink">结果摘要</h2>
+            <span className={`rounded-[8px] px-2 py-1 text-[10px] font-medium leading-none ${meta.chip}`}>
+              {meta.label}
+            </span>
+          </div>
+          <p className="mt-3 text-[13px] leading-[1.65] text-slate">
+            {record.summary}
           </p>
+          <div className="mt-4 flex items-start gap-2 rounded-[11px] bg-canvas px-3 py-2.5">
+            <Lock size={14} strokeWidth={1.55} className="mt-0.5 flex-shrink-0 text-ash" />
+            <p className="text-[11px] leading-[1.55] text-ash">
+              为保护朋友隐私，这里不显示具体回答内容。
+            </p>
+          </div>
+        </section>
+
+        <section className="mt-4 rounded-card border border-hairline bg-surface p-4 shadow-card">
+          <div className="flex items-start gap-3">
+            <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-[12px] bg-accent-2 text-ink">
+              <ShieldCheck size={17} strokeWidth={1.55} />
+            </span>
+            <div>
+              <h2 className="text-[13px] font-medium leading-snug text-ink">
+                你也来查查自己的情况
+              </h2>
+              <p className="mt-1 text-[11px] leading-[1.55] text-ash">
+                3 分钟自查，先确认续签前有没有需要处理的事项。
+              </p>
+            </div>
+          </div>
           <Link
             href="/visa-select"
-            className="flex items-center justify-center w-full min-h-[56px] bg-primary hover:bg-primary-hover text-title font-bold rounded-xl text-base transition-all"
+            className="mt-4 flex min-h-[46px] w-full items-center justify-center rounded-btn bg-accent px-4 py-3 text-[13px] font-medium text-ink shadow-cta"
           >
-            开始我的自查 →
+            开始我的自查
           </Link>
-        </div>
+        </section>
 
-        <p className="text-center text-muted text-xs">
-          分享链接 7 天内有效 · 不暴露具体答案
+        <p className="mt-4 flex items-center justify-center gap-1.5 text-center text-[11px] text-ash">
+          <Clock3 size={13} strokeWidth={1.55} />
+          分享链接 7 天内有效
         </p>
       </div>
     </main>
