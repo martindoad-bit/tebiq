@@ -447,3 +447,23 @@
 ### 待 review
 
 - `/life/moving` 的正文信息仍保留原有内容，标注 [待书士审核] 的条目仍需要后续专业复核。
+
+## 追加收口：旧签证选择入口
+
+![visa select polish](docs/visual-report/screenshots/visa-select-v5-polish.png)
+
+### 本轮改动
+
+- 将旧 `/visa-select` 入口并入 v5 `AppShell / AppBar`，避免分享页或旧 SEO 页跳转后回到旧视觉。
+- 替换手写 SVG 为 lucide icon，统一 1.55 stroke、卡片圆角、tag、hairline 和 shadow。
+- 保留原有链接目标，不改变自查路由与业务流程。
+
+### 验证
+
+- `npm run lint` 通过；`/visa-select` 自身 `<img>` warning 已消失。
+- `npm run build` 通过。
+- 已用 Chrome headless 在 `480 x 820` v5 phone viewport 截图 `/visa-select`。
+
+### 待 review
+
+- `/visa-select` 与 `/check/select` 未来可考虑合并或 redirect，避免两个入口长期并存；本轮不改路由结构。
