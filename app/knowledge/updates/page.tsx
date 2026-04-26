@@ -1,6 +1,9 @@
 'use client'
 import { useMemo, useState } from 'react'
-import Link from 'next/link'
+import { ChevronDown, ChevronUp, ListFilter, Newspaper } from 'lucide-react'
+import type { ReactNode } from 'react'
+import AppBar from '@/app/_components/v5/AppBar'
+import AppShell from '@/app/_components/v5/AppShell'
 import { policyUpdates, type PolicyUpdate } from '@/lib/knowledge/policy-updates'
 
 type YearFilter = 'all' | '2026' | '2025'
@@ -26,58 +29,45 @@ export default function UpdatesPage() {
   )
 
   return (
-    <main className="min-h-screen bg-base text-title flex flex-col pb-16 md:pb-0">
-      <header className="sticky top-0 z-10 bg-card/95 backdrop-blur border-b border-line">
-        <div className="max-w-md md:max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-3" aria-label="TEBIQ 首页">
-            <img src="/logo-icon.png" alt="" className="h-12 w-12 rounded-xl" />
-            <div>
-              <div className="text-xl font-bold text-title leading-none">TEBIQ</div>
-              <div className="text-xs text-muted leading-tight mt-0.5">てびき</div>
-            </div>
-          </Link>
-          <Link href="/knowledge" className="text-body hover:text-title text-sm">
-            ← 知识库
-          </Link>
+    <AppShell appBar={<AppBar title="政策动态" back="/knowledge" />}>
+      <div className="py-5">
+        <div className="inline-flex items-center gap-1.5 rounded-chip bg-accent-2 px-3 py-1.5 text-[11px] font-medium text-ink">
+          <Newspaper size={13} strokeWidth={1.55} />
+          最新政策动态
         </div>
-      </header>
+        <h1 className="mt-3 text-[25px] font-medium leading-tight text-ink">
+          入管局政策变化记录
+        </h1>
+        <p className="mt-3 text-[13px] leading-[1.7] text-slate">
+          2025 年 10 月以后入管局发布的重大政策变化，按时间倒序整理。
+        </p>
 
-      <div className="px-4 py-8 md:py-12 pb-[max(2rem,env(safe-area-inset-bottom))] flex-1">
-        <div className="max-w-md md:max-w-3xl mx-auto">
-          <h1 className="text-2xl md:text-4xl font-bold mb-2 leading-tight text-title">
-            最新政策动态
-          </h1>
-          <p className="text-body text-sm md:text-base leading-relaxed mb-6">
-            2025 年 10 月以后入管局发布的重大政策变化（按时间倒序）
+        <FilterBar
+          yearFilter={yearFilter}
+          setYearFilter={setYearFilter}
+          typeFilter={typeFilter}
+          setTypeFilter={setTypeFilter}
+          shown={filtered.length}
+          total={sorted.length}
+        />
+
+        {filtered.length === 0 ? (
+          <p className="rounded-card border border-hairline bg-surface px-4 py-8 text-center text-[13px] text-ash shadow-card">
+            当前筛选下没有匹配的政策。
           </p>
+        ) : (
+          <ol className="space-y-3">
+            {filtered.map(p => (
+              <UpdateCard key={p.date + p.title} update={p} />
+            ))}
+          </ol>
+        )}
 
-          <FilterBar
-            yearFilter={yearFilter}
-            setYearFilter={setYearFilter}
-            typeFilter={typeFilter}
-            setTypeFilter={setTypeFilter}
-            shown={filtered.length}
-            total={sorted.length}
-          />
-
-          {filtered.length === 0 ? (
-            <p className="bg-card border border-line rounded-2xl p-8 text-center text-body text-sm">
-              当前筛选下没有匹配的政策。
-            </p>
-          ) : (
-            <ol className="space-y-4">
-              {filtered.map(p => (
-                <UpdateCard key={p.date + p.title} update={p} />
-              ))}
-            </ol>
-          )}
-
-          <p className="text-center text-muted text-xs mt-10 leading-relaxed">
-            信息来源以入管局官网为准；本页内容不构成法律意见，标注[待书士审核]条目正在审核更新中
-          </p>
-        </div>
+        <p className="mt-8 text-center text-[11px] leading-relaxed text-ash">
+          信息来源以入管局官网为准；本页内容不构成法律意见，标注 [待书士审核] 的条目正在审核更新中。
+        </p>
       </div>
-    </main>
+    </AppShell>
   )
 }
 
@@ -108,7 +98,11 @@ function FilterBar({
     { v: 'other', label: '共通 / 其他' },
   ]
   return (
-    <div className="bg-card border border-line rounded-2xl p-4 mb-6 space-y-3 shadow-sm">
+    <div className="my-5 rounded-card border border-hairline bg-surface px-4 py-4 shadow-card">
+      <div className="mb-3 flex items-center gap-2 text-[13px] font-medium text-ink">
+        <ListFilter size={16} strokeWidth={1.55} />
+        筛选
+      </div>
       <FilterRow label="年份">
         {years.map(y => (
           <FilterButton
@@ -131,17 +125,17 @@ function FilterBar({
           </FilterButton>
         ))}
       </FilterRow>
-      <p className="text-muted text-xs">
+      <p className="text-[11px] text-ash">
         显示 {shown} / {total} 条
       </p>
     </div>
   )
 }
 
-function FilterRow({ label, children }: { label: string; children: React.ReactNode }) {
+function FilterRow({ label, children }: { label: string; children: ReactNode }) {
   return (
-    <div className="flex flex-wrap items-center gap-2">
-      <span className="text-muted text-xs font-bold mr-1">{label}：</span>
+    <div className="mb-3 flex flex-wrap items-center gap-2 last:mb-0">
+      <span className="mr-1 text-[11px] font-medium text-ash">{label}：</span>
       {children}
     </div>
   )
@@ -154,16 +148,16 @@ function FilterButton({
 }: {
   active: boolean
   onClick: () => void
-  children: React.ReactNode
+  children: ReactNode
 }) {
   return (
     <button
       type="button"
       onClick={onClick}
-      className={`min-h-[36px] px-3 rounded-lg text-sm font-bold border transition-colors ${
+      className={`min-h-[34px] rounded-[10px] border px-3 text-[12px] font-medium transition-colors ${
         active
-          ? 'bg-primary border-primary text-title'
-          : 'bg-card border-line text-body hover:border-primary'
+          ? 'border-accent bg-accent text-ink shadow-soft'
+          : 'border-hairline bg-surface text-ash hover:border-accent'
       }`}
     >
       {children}
@@ -177,30 +171,31 @@ function UpdateCard({ update }: { update: PolicyUpdate }) {
     update.type === 'gijinkoku' ? '技人国' : update.type === 'keiei' ? '经营管理' : '其他'
 
   return (
-    <li className="bg-card border border-line rounded-2xl overflow-hidden shadow-sm">
-      <div className="px-5 pt-5 pb-3 flex items-start gap-3">
-        <div className="flex-shrink-0 bg-brand-orange text-white text-xs font-bold px-2 py-1 rounded-full">
+    <li className="overflow-hidden rounded-card border border-hairline bg-surface shadow-card">
+      <div className="flex items-start gap-3 px-4 pb-2 pt-4">
+        <div className="flex-shrink-0 rounded-[9px] bg-accent px-2 py-1 text-[11px] font-medium text-ink">
           {update.date}
         </div>
-        <div className="text-xs text-muted">{typeLabel}</div>
+        <div className="pt-1 text-[11px] text-ash">{typeLabel}</div>
       </div>
-      <div className="px-5 pb-3">
-        <h2 className="text-title text-base md:text-lg font-bold leading-snug mb-2">
+      <div className="px-4 pb-3">
+        <h2 className="mb-2 text-[14px] font-medium leading-snug text-ink">
           {update.title}
         </h2>
-        <p className="text-body text-sm leading-relaxed">{update.summary}</p>
+        <p className="text-[12px] leading-[1.7] text-slate">{update.summary}</p>
       </div>
       <button
         type="button"
         onClick={() => setOpen(o => !o)}
-        className="w-full text-left px-5 py-3 border-t border-line hover:bg-highlight/40 transition-colors text-primary text-sm font-bold"
+        className="flex w-full items-center gap-1 border-t border-hairline px-4 py-3 text-left text-[12px] font-medium text-ink transition-colors hover:bg-canvas"
         aria-expanded={open}
       >
-        {open ? '收起详情 ▴' : '查看详情 ▾'}
+        {open ? <ChevronUp size={14} strokeWidth={1.55} /> : <ChevronDown size={14} strokeWidth={1.55} />}
+        {open ? '收起详情' : '查看详情'}
       </button>
       {open && (
-        <div className="px-5 py-4 bg-base/40 border-t border-line">
-          <p className="text-body text-sm leading-relaxed whitespace-pre-line">
+        <div className="border-t border-hairline bg-canvas px-4 py-4">
+          <p className="whitespace-pre-line text-[12px] leading-[1.75] text-slate">
             {update.detail}
           </p>
         </div>

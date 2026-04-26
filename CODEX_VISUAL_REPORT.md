@@ -425,3 +425,25 @@
 ### 待 review
 
 - 法务内容本身仍建议由创始人/法律顾问复核；本轮只处理视觉，不判断条款内容是否完备。
+
+## 追加收口：内容工具页
+
+![knowledge updates polish](docs/visual-report/screenshots/knowledge-updates-v5-polish.png)
+
+![life moving polish](docs/visual-report/screenshots/life-moving-v5-polish.png)
+
+### 本轮改动
+
+- 将 `/knowledge/updates` 从旧知识库网页改成 v5 政策动态列表，筛选、更新卡片、展开详情都统一为产品内列表样式。
+- 将 `/life/moving` 改成 v5 生活手续工具页，保留自查入口和时间线结构，弱化旧营销页感。
+- 两页均移除旧 logo header / footer，接入 `AppShell / AppBar`，并消除自身 `<img>` lint warning。
+
+### 验证
+
+- `npm run lint` 通过；两页自己的 `<img>` warning 已消失。
+- `npm run build` 通过。
+- 已用 Chrome headless 在 `480 x 820` v5 phone viewport 截图 `/knowledge/updates` 与 `/life/moving`。
+
+### 待 review
+
+- `/life/moving` 的正文信息仍保留原有内容，标注 [待书士审核] 的条目仍需要后续专业复核。

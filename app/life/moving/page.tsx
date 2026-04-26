@@ -1,5 +1,8 @@
 import Link from 'next/link'
 import type { Metadata } from 'next'
+import { ArrowRight, CalendarClock, CheckSquare, Home, Info, MapPin } from 'lucide-react'
+import AppBar from '@/app/_components/v5/AppBar'
+import AppShell from '@/app/_components/v5/AppShell'
 
 export const metadata: Metadata = {
   title: '搬家了？这些手续 14 天内必须完成 | TEBIQ',
@@ -99,9 +102,9 @@ const TIMELINE: TimelinePhase[] = [
 ]
 
 const BADGE_STYLE: Record<TimelinePhase['badge'], string> = {
-  urgent: 'bg-highlight text-primary border-primary',
-  must: 'bg-[#FEE2E2] text-[#B91C1C] border-[#DC2626]',
-  soft: 'bg-card text-body border-line',
+  urgent: 'bg-accent-2 text-ink border-accent',
+  must: 'bg-[#FDECEA] text-danger border-danger/35',
+  soft: 'bg-surface text-ash border-hairline',
 }
 
 const BADGE_LABEL: Record<TimelinePhase['badge'], string> = {
@@ -112,116 +115,98 @@ const BADGE_LABEL: Record<TimelinePhase['badge'], string> = {
 
 export default function MovingHubPage() {
   return (
-    <main className="min-h-screen bg-base text-body pb-16 md:pb-0">
-      <header className="sticky top-0 z-10 bg-card/95 backdrop-blur border-b border-line">
-        <div className="max-w-md md:max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-3" aria-label="TEBIQ 首页">
-            <img src="/logo-icon.png" alt="" className="h-12 w-12 rounded-xl" />
-            <div>
-              <div className="text-xl font-bold text-title leading-none">TEBIQ</div>
-              <div className="text-xs text-muted leading-tight mt-0.5">てびき</div>
-            </div>
-          </Link>
-          <Link href="/" className="text-body hover:text-title text-sm">← 首页</Link>
-        </div>
-      </header>
-
+    <AppShell appBar={<AppBar title="生活手续" back="/" />}>
       {/* 标题区 */}
-      <section className="px-4 pt-10 md:pt-14 pb-6">
-        <div className="max-w-md md:max-w-3xl mx-auto">
-          <div className="inline-block bg-highlight text-primary text-xs font-bold px-3 py-1 rounded-full mb-4">
-            生活节点 · 搬家
-          </div>
-          <h1 className="text-2xl md:text-3xl font-bold text-title leading-tight mb-3">
-            搬家了？这些手续 14 天内必须完成
-          </h1>
-          <p className="text-body text-sm md:text-base leading-relaxed">
-            搬家后有多项法定申报义务，外国人尤其需要注意在留卡地址更新。
-            漏掉任何一项都可能影响今后的续签或永住申请。
-          </p>
+      <section className="py-5">
+        <div className="inline-flex items-center gap-1.5 rounded-chip bg-accent-2 px-3 py-1.5 text-[11px] font-medium text-ink">
+          <Home size={13} strokeWidth={1.55} />
+          生活节点 · 搬家
         </div>
+        <h1 className="mt-3 text-[25px] font-medium leading-tight text-ink">
+          搬家后 14 天内要完成的手续
+        </h1>
+        <p className="mt-3 text-[13px] leading-[1.7] text-slate">
+          搬家后有多项法定申报义务，外国人尤其需要注意在留卡地址更新。
+        </p>
       </section>
 
       {/* 风险自查入口 */}
-      <section className="px-4 mb-8">
-        <div className="max-w-md md:max-w-3xl mx-auto">
-          <div className="bg-card border border-line border-l-4 border-l-primary rounded-2xl p-5 shadow-sm">
-            <div className="text-primary text-xs font-bold mb-2">2 分钟自查</div>
-            <h2 className="text-title text-base font-bold mb-2">你的搬家情况有没有特殊风险？</h2>
-            <p className="text-body text-sm leading-relaxed mb-4">
-              6 个问题，帮你确认是否漏掉了关键申报，特别是涉及在留卡和入管局的部分。
-            </p>
-            <Link
-              href="/life/moving/quiz"
-              className="flex items-center justify-center w-full min-h-[52px] bg-primary hover:bg-primary-hover text-title font-bold rounded-xl text-base transition-all"
-            >
-              开始自查 →
-            </Link>
-          </div>
+      <section className="rounded-card border border-hairline bg-surface px-4 py-4 shadow-card">
+        <div className="mb-2 flex items-center gap-2 text-[13px] font-medium text-ink">
+          <CheckSquare size={16} strokeWidth={1.55} />
+          2 分钟自查
         </div>
+        <h2 className="text-[15px] font-medium leading-snug text-ink">你的搬家情况有没有特殊风险？</h2>
+        <p className="mt-2 text-[12px] leading-[1.7] text-slate">
+          6 个问题，确认是否漏掉关键申报，特别是涉及在留卡和入管局的部分。
+        </p>
+        <Link
+          href="/life/moving/quiz"
+          className="mt-4 flex min-h-[48px] w-full items-center justify-center gap-2 rounded-btn bg-accent px-4 text-[14px] font-medium text-ink shadow-cta transition-transform active:translate-y-px"
+        >
+          开始自查
+          <ArrowRight size={16} strokeWidth={1.55} />
+        </Link>
       </section>
 
       {/* 时间线 */}
-      <section className="px-4 pb-12">
-        <div className="max-w-md md:max-w-3xl mx-auto">
-          <h2 className="text-title text-lg md:text-xl font-bold mb-4">手续时间线</h2>
-          <div className="space-y-6">
-            {TIMELINE.map(phase => (
-              <div key={phase.phase}>
-                <div className={`inline-block text-xs font-bold px-3 py-1 rounded-full border mb-3 ${BADGE_STYLE[phase.badge]}`}>
-                  【{phase.phase}】
-                  <span className="ml-2 opacity-70">· {BADGE_LABEL[phase.badge]}</span>
-                </div>
-                <div className="space-y-3">
-                  {phase.items.map(item => (
-                    <article
-                      key={item.title}
-                      className="bg-card border border-line rounded-2xl p-5 shadow-sm"
-                    >
-                      <h3 className="text-title text-base font-bold mb-3 flex items-start gap-2">
-                        <span className="inline-block w-5 h-5 mt-0.5 border border-line rounded flex-shrink-0" />
-                        <span>{item.title}</span>
-                      </h3>
-                      <dl className="space-y-1.5 mb-2">
-                        {item.details.map(d => (
-                          <div key={d.label} className="text-sm leading-relaxed">
-                            <span className="text-muted">{d.label}：</span>
-                            <span className="text-body">{d.value}</span>
-                          </div>
-                        ))}
-                      </dl>
-                      {item.notice && (
-                        <p className="text-body text-xs leading-relaxed mt-3 bg-highlight border-l-[3px] border-primary px-3 py-2 rounded-r">
-                          {item.notice}
-                        </p>
-                      )}
-                      {item.needsReview && (
-                        <p className="text-muted text-[11px] mt-2">[待书士审核]</p>
-                      )}
-                    </article>
-                  ))}
-                </div>
+      <section className="mt-5 pb-4">
+        <h2 className="mb-4 flex items-center gap-2 px-1 text-[13px] font-medium text-ink">
+          <CalendarClock size={16} strokeWidth={1.55} />
+          手续时间线
+        </h2>
+        <div className="space-y-5">
+          {TIMELINE.map(phase => (
+            <div key={phase.phase}>
+              <div className={`mb-3 inline-flex rounded-chip border px-3 py-1.5 text-[11px] font-medium ${BADGE_STYLE[phase.badge]}`}>
+                {phase.phase}
+                <span className="ml-2 opacity-70">· {BADGE_LABEL[phase.badge]}</span>
               </div>
-            ))}
-          </div>
+              <div className="space-y-3">
+                {phase.items.map(item => (
+                  <article
+                    key={item.title}
+                    className="rounded-card border border-hairline bg-surface px-4 py-4 shadow-card"
+                  >
+                    <h3 className="mb-3 flex items-start gap-2 text-[14px] font-medium leading-snug text-ink">
+                      <MapPin size={16} strokeWidth={1.55} className="mt-0.5 flex-shrink-0 text-accent" />
+                      <span>{item.title}</span>
+                    </h3>
+                    <dl className="mb-2 space-y-1.5">
+                      {item.details.map(d => (
+                        <div key={d.label} className="text-[12px] leading-[1.7]">
+                          <span className="text-ash">{d.label}：</span>
+                          <span className="text-slate">{d.value}</span>
+                        </div>
+                      ))}
+                    </dl>
+                    {item.notice && (
+                      <p className="mt-3 rounded-[11px] bg-accent-2 px-3 py-2 text-[11px] leading-[1.65] text-slate">
+                        {item.notice}
+                      </p>
+                    )}
+                    {item.needsReview && (
+                      <p className="mt-2 text-[11px] text-ash">[待书士审核]</p>
+                    )}
+                  </article>
+                ))}
+              </div>
+            </div>
+          ))}
         </div>
       </section>
 
       {/* 底部说明 */}
-      <section className="px-4 pb-12">
-        <div className="max-w-md md:max-w-3xl mx-auto">
-          <div className="bg-card border border-line rounded-2xl p-5 text-center">
-            <p className="text-muted text-xs leading-relaxed">
-              本页信息来源：各市区町村官网、出入国在留管理庁。
-              如有特殊情况请咨询持牌行政书士。
-            </p>
-          </div>
+      <section className="pb-6">
+        <div className="rounded-card border border-hairline bg-surface px-4 py-4 shadow-card">
+          <p className="flex gap-2 text-[11px] leading-[1.7] text-ash">
+            <Info size={14} strokeWidth={1.55} className="mt-0.5 flex-shrink-0" />
+            <span>
+              本页信息来源：各市区町村官网、出入国在留管理庁。如有特殊情况请咨询持牌行政书士。
+            </span>
+          </p>
         </div>
       </section>
-
-      <footer className="bg-card border-t border-line px-4 py-6 pb-[max(1.5rem,env(safe-area-inset-bottom))] text-center">
-        <p className="text-muted text-xs">© 2026 TEBIQ</p>
-      </footer>
-    </main>
+    </AppShell>
   )
 }
