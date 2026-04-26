@@ -317,3 +317,21 @@
 
 - `/knowledge/[id]` 属于 1.0 必修，因为它从 v5 知识中心直接可达。
 - 根级签证 SEO 页、admin、sample package 暂不纳入本轮：它们不是 v5 主流程路径，且 admin/sample 用户不可见；根级 SEO 页建议放 Block 4 统一内容系统时一起改。
+
+## 视觉收口：登录态验证工具
+
+### 本轮改动
+
+- 新增 `scripts/dev-utils/visual-fixtures.ts`，用于创建 synthetic member/session、文件识别记录、自查结果和一个 active subscription。
+- 脚本只在本地手动执行，不被 app import，不进入 production runtime。
+- 场景覆盖：空档案用户、有文件和自查记录用户、已订阅用户。
+
+### 当前状态
+
+- 当前 workspace 未暴露数据库连接环境变量，seed 未执行成功；本轮没有写入真实数据库。
+- 因此 `/my/archive`、`/my/reminders`、`/my/account` 的真实登录态截图仍标记为待 review。
+- 已验证脚本失败时不输出真实环境变量值；只提示缺少连接配置。
+
+### 待 review
+
+- 在拥有本地数据库配置的机器上运行 `npx tsx scripts/dev-utils/visual-fixtures.ts seed` 后，再用输出的 synthetic session 做三页截图复核。
