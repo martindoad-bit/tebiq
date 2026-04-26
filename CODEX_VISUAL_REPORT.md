@@ -335,3 +335,29 @@
 ### 待 review
 
 - 在拥有本地数据库配置的机器上运行 `npx tsx scripts/dev-utils/visual-fixtures.ts seed` 后，再用输出的 synthetic session 做三页截图复核。
+
+## 视觉收口完结
+
+### 当前自评
+
+- 视觉精度：8.4/10。
+- 13 屏主流程已经从“工程实现”提升到更完整的产品视觉：阴影、间距、icon stroke、状态卡片、空状态、登录/订阅/分享/知识详情都进入统一 v5 语言。
+- 真正剩余的提升不再主要靠 CSS，而是靠真实数据态、品牌插画组、内容质量和真机滚动手感。
+
+### Vercel preview 状态
+
+- 已 push `codex/visual-polish`，HEAD 为 `eece2a5`。
+- GitHub commit status 显示 Vercel `success`，描述为 `Deployment has completed`。
+- Vercel dashboard deployment：`https://vercel.com/martindoad/tebiq/97nnfbvQ5ufXEJzxgswXgdkPjawS`。
+- 匿名 GitHub deployments API 未返回公开 app preview URL；Vercel dashboard HTML/API 也未暴露可直接截图的 `vercel.app` 地址。本轮未创建 PR，避免把“触发 preview”扩大成新的第三方变更。
+
+### 已知 issue / 待 review
+
+- `/my/archive`、`/my/reminders`、`/my/account` 的真实登录态截图仍待有本地 DB 配置后复核。
+- 根级签证 SEO 页、admin、sample package 仍有旧视觉和历史 `<img>` lint warning；它们不在 v5 主流程里，建议 Block 4 统一内容系统时处理。
+- 插画目前只接入续签自查入口；空状态、邀请礼物盒可在下一轮以同一风格补齐。
+
+### 建议下一个 Block
+
+- 产品视角优先做 Block 4：真实登录态数据、通知/邀请链路、知识详情内容审核与 SEO 内容统一。
+- Block 5 再接 Bedrock 真实拍照；当前视觉已经足够支撑真实识别结果接入，不建议继续在纯 CSS 上打磨太久。
