@@ -1,5 +1,7 @@
-import Link from 'next/link'
 import type { Metadata } from 'next'
+import type { ReactNode } from 'react'
+import AppBar from '@/app/_components/v5/AppBar'
+import AppShell from '@/app/_components/v5/AppShell'
 
 export const metadata: Metadata = {
   title: '利用規約 | TEBIQ',
@@ -8,32 +10,19 @@ export const metadata: Metadata = {
 
 export default function TermsPage() {
   return (
-    <main className="min-h-screen bg-base text-body pb-16 md:pb-0">
-      <header className="sticky top-0 z-10 bg-card/95 backdrop-blur border-b border-line">
-        <div className="max-w-md md:max-w-3xl mx-auto px-4 h-14 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-3" aria-label="TEBIQ 首页">
-            <img src="/logo-icon.png" alt="" className="h-12 w-12 rounded-xl" />
-            <div>
-              <div className="text-xl font-bold text-title leading-none">TEBIQ</div>
-              <div className="text-xs text-muted leading-tight mt-0.5">てびき</div>
-            </div>
-          </Link>
-          <Link href="/" className="text-body hover:text-title text-sm">← 首页</Link>
-        </div>
-      </header>
-
-      <article className="max-w-md md:max-w-3xl mx-auto px-4 py-10 md:py-14">
-        <h1 className="text-2xl md:text-3xl font-bold text-title mb-3 leading-tight">
+    <AppShell appBar={<AppBar title="法务信息" back="/" />}>
+      <article className="jp-text py-5">
+        <h1 className="text-[25px] font-medium leading-tight text-ink">
           利用規約
         </h1>
-        <p className="text-muted text-xs mb-6">最終更新日：2026年4月24日</p>
+        <p className="mt-3 text-[11px] text-ash">最終更新日：2026年4月24日</p>
 
-        <p className="text-body text-sm leading-relaxed mb-8">
+        <p className="mt-6 text-[13px] leading-[1.8] text-slate">
           本規約は、hedgefox合同会社（以下「当社」といいます）が提供する
           TEBIQ（以下「本サービス」といいます）の利用条件を定めるものです。
         </p>
 
-        <div className="space-y-5">
+        <div className="mt-6 space-y-3">
           {ARTICLES.map((a, i) => (
             <Article key={a.heading} index={i + 1} heading={a.heading}>
               {a.body}
@@ -41,7 +30,7 @@ export default function TermsPage() {
           ))}
         </div>
       </article>
-    </main>
+    </AppShell>
   )
 }
 
@@ -52,14 +41,14 @@ function Article({
 }: {
   index: number
   heading: string
-  children: React.ReactNode
+  children: ReactNode
 }) {
   return (
-    <section className="bg-card border border-line rounded-2xl p-5">
-      <h2 className="text-title text-sm font-bold mb-2">
+    <section className="rounded-card border border-hairline bg-surface px-4 py-4 shadow-card">
+      <h2 className="mb-2 text-[13px] font-medium leading-snug text-ink">
         第{index}条（{heading}）
       </h2>
-      <div className="text-body text-sm leading-relaxed space-y-2">{children}</div>
+      <div className="space-y-2 text-[12px] leading-[1.75] text-slate">{children}</div>
     </section>
   )
 }

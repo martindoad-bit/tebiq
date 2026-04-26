@@ -1,5 +1,7 @@
-import Link from 'next/link'
 import type { Metadata } from 'next'
+import type { ReactNode } from 'react'
+import AppBar from '@/app/_components/v5/AppBar'
+import AppShell from '@/app/_components/v5/AppShell'
 
 export const metadata: Metadata = {
   title: '特定商取引法に基づく表記 | TEBIQ',
@@ -8,27 +10,14 @@ export const metadata: Metadata = {
 
 export default function TokushoPage() {
   return (
-    <main className="min-h-screen bg-base text-body pb-16 md:pb-0">
-      <header className="sticky top-0 z-10 bg-card/95 backdrop-blur border-b border-line">
-        <div className="max-w-md md:max-w-3xl mx-auto px-4 h-14 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-3" aria-label="TEBIQ 首页">
-            <img src="/logo-icon.png" alt="" className="h-12 w-12 rounded-xl" />
-            <div>
-              <div className="text-xl font-bold text-title leading-none">TEBIQ</div>
-              <div className="text-xs text-muted leading-tight mt-0.5">てびき</div>
-            </div>
-          </Link>
-          <Link href="/" className="text-body hover:text-title text-sm">← 首页</Link>
-        </div>
-      </header>
-
-      <article className="max-w-md md:max-w-3xl mx-auto px-4 py-10 md:py-14">
-        <h1 className="text-2xl md:text-3xl font-bold text-title mb-3 leading-tight">
+    <AppShell appBar={<AppBar title="法务信息" back="/" />}>
+      <article className="jp-text py-5">
+        <h1 className="text-[25px] font-medium leading-tight text-ink">
           特定商取引法に基づく表記
         </h1>
-        <p className="text-muted text-xs mb-8">最終更新日：2026年4月24日</p>
+        <p className="mt-3 text-[11px] text-ash">最終更新日：2026年4月24日</p>
 
-        <div className="bg-card border border-line rounded-2xl shadow-sm divide-y divide-line">
+        <div className="mt-6 divide-y divide-hairline overflow-hidden rounded-card border border-hairline bg-surface shadow-card">
           {SECTIONS.map(s => (
             <Section key={s.label} label={s.label}>
               {s.lines.map((l, i) => (
@@ -40,23 +29,23 @@ export default function TokushoPage() {
           ))}
         </div>
 
-        <p className="text-muted text-xs mt-8 leading-relaxed">
+        <p className="mt-6 text-[11px] leading-[1.75] text-ash">
           本ページの内容についてご不明な点がございましたら、
-          <a href="mailto:contact@tebiq.jp" className="text-primary hover:text-primary-hover underline">
+          <a href="mailto:contact@tebiq.jp" className="text-ink underline underline-offset-2">
             contact@tebiq.jp
           </a>{' '}
           までお問い合わせください。
         </p>
       </article>
-    </main>
+    </AppShell>
   )
 }
 
-function Section({ label, children }: { label: string; children: React.ReactNode }) {
+function Section({ label, children }: { label: string; children: ReactNode }) {
   return (
-    <div className="px-5 py-4 md:px-6 md:py-5">
-      <h2 className="text-title text-sm font-bold mb-2">【{label}】</h2>
-      <div className="text-body text-sm space-y-1">{children}</div>
+    <div className="px-4 py-4">
+      <h2 className="mb-2 text-[12px] font-medium leading-snug text-ink">【{label}】</h2>
+      <div className="space-y-1 text-[12px] leading-[1.75] text-slate">{children}</div>
     </div>
   )
 }

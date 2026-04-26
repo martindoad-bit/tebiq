@@ -404,3 +404,24 @@
 ### 待 review
 
 - `399px` headless 在当前 macOS/Chrome 环境会裁切 480px 手机壳左侧视图，报告截图改用 v5 设计基准宽度 `480px`。真机 Safari/Chrome 仍建议最后复核一次滚动手感。
+
+## 追加收口：法务信息页
+
+![privacy polish](docs/visual-report/screenshots/legal-privacy-v5-polish.png)
+
+![tokusho polish](docs/visual-report/screenshots/legal-tokusho-v5-polish.png)
+
+### 本轮改动
+
+- 统一 `/privacy`、`/terms`、`/tokusho` 到 v5 `AppShell / AppBar`，移除旧 logo header。
+- 保留法务正文原文，不改写法律含义；只调整容器、行高、字重、卡片、分隔线和链接状态。
+- 日文长文使用 `jp-text` 的 0.02em letter-spacing 与更松行高，提升阅读感但不做营销化包装。
+
+### 验证
+
+- `npm run lint` 通过；三页自己的 `<img>` warning 已消失。
+- 已用 Chrome headless 在 `480 x 820` v5 phone viewport 截图 `/privacy`、`/terms`、`/tokusho`。
+
+### 待 review
+
+- 法务内容本身仍建议由创始人/法律顾问复核；本轮只处理视觉，不判断条款内容是否完备。

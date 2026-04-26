@@ -1,5 +1,7 @@
-import Link from 'next/link'
 import type { Metadata } from 'next'
+import type { ReactNode } from 'react'
+import AppBar from '@/app/_components/v5/AppBar'
+import AppShell from '@/app/_components/v5/AppShell'
 
 export const metadata: Metadata = {
   title: 'プライバシーポリシー | TEBIQ',
@@ -8,33 +10,20 @@ export const metadata: Metadata = {
 
 export default function PrivacyPage() {
   return (
-    <main className="min-h-screen bg-base text-body pb-16 md:pb-0">
-      <header className="sticky top-0 z-10 bg-card/95 backdrop-blur border-b border-line">
-        <div className="max-w-md md:max-w-3xl mx-auto px-4 h-14 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-3" aria-label="TEBIQ 首页">
-            <img src="/logo-icon.png" alt="" className="h-12 w-12 rounded-xl" />
-            <div>
-              <div className="text-xl font-bold text-title leading-none">TEBIQ</div>
-              <div className="text-xs text-muted leading-tight mt-0.5">てびき</div>
-            </div>
-          </Link>
-          <Link href="/" className="text-body hover:text-title text-sm">← 首页</Link>
-        </div>
-      </header>
-
-      <article className="max-w-md md:max-w-3xl mx-auto px-4 py-10 md:py-14">
-        <h1 className="text-2xl md:text-3xl font-bold text-title mb-3 leading-tight">
+    <AppShell appBar={<AppBar title="法务信息" back="/" />}>
+      <article className="jp-text py-5">
+        <h1 className="text-[25px] font-medium leading-tight text-ink">
           プライバシーポリシー
-          <span className="block text-base text-muted font-normal mt-1">（個人情報保護方針）</span>
+          <span className="mt-1 block text-[13px] font-normal text-ash">（個人情報保護方針）</span>
         </h1>
-        <p className="text-muted text-xs mb-6">最終更新日：2026年4月24日</p>
+        <p className="mt-3 text-[11px] text-ash">最終更新日：2026年4月24日</p>
 
-        <p className="text-body text-sm leading-relaxed mb-8">
+        <p className="mt-6 text-[13px] leading-[1.8] text-slate">
           hedgefox合同会社（以下「当社」といいます）は、お客様の個人情報の重要性を認識し、
           以下の方針に基づき適切に取り扱います。
         </p>
 
-        <div className="space-y-6">
+        <div className="mt-6 space-y-3">
           {SECTIONS.map((s, i) => (
             <Section key={s.heading} index={i + 1} heading={s.heading}>
               {s.body}
@@ -42,25 +31,25 @@ export default function PrivacyPage() {
           ))}
         </div>
 
-        <div className="mt-10 bg-card border border-line rounded-2xl p-5">
-          <h3 className="text-title text-sm font-bold mb-2">8. お問い合わせ窓口</h3>
-          <p className="text-body text-sm leading-relaxed">
+        <div className="mt-4 rounded-card border border-hairline bg-surface px-4 py-4 shadow-card">
+          <h3 className="mb-2 text-[13px] font-medium text-ink">8. お問い合わせ窓口</h3>
+          <p className="text-[12px] leading-[1.75] text-slate">
             個人情報の取扱いに関するお問い合わせは、以下までお願いいたします：
           </p>
-          <p className="text-body text-sm leading-relaxed mt-2">
+          <p className="mt-2 text-[12px] leading-[1.75] text-slate">
             hedgefox合同会社
             <br />
             メール：
             <a
               href="mailto:contact@tebiq.jp"
-              className="text-primary hover:text-primary-hover underline"
+              className="text-ink underline underline-offset-2"
             >
               contact@tebiq.jp
             </a>
           </p>
         </div>
       </article>
-    </main>
+    </AppShell>
   )
 }
 
@@ -71,14 +60,14 @@ function Section({
 }: {
   index: number
   heading: string
-  children: React.ReactNode
+  children: ReactNode
 }) {
   return (
-    <section className="bg-card border border-line rounded-2xl p-5">
-      <h2 className="text-title text-sm font-bold mb-2">
+    <section className="rounded-card border border-hairline bg-surface px-4 py-4 shadow-card">
+      <h2 className="mb-2 text-[13px] font-medium leading-snug text-ink">
         {index}. {heading}
       </h2>
-      <div className="text-body text-sm leading-relaxed space-y-2">{children}</div>
+      <div className="space-y-2 text-[12px] leading-[1.75] text-slate">{children}</div>
     </section>
   )
 }
