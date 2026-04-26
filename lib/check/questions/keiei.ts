@@ -199,10 +199,10 @@ const Q: Record<string, QuizQuestion> = {
 
 export const keieiBank: QuizBank = {
   visa: 'keiei',
-  visaName: '经营管理',
+  visaName: '経営・管理',
   startId: 'q1',
   questions: Q,
-  infoHref: '/check/keiei',
+  infoHref: '/keiei',
   infoLabel: '查看 2025 年 10 月新规完整说明',
   ctaLabel: '预约书士咨询经营管理签证续签',
   materials: [

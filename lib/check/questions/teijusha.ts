@@ -131,7 +131,7 @@ export const teijushaBank: QuizBank = {
   visaName: '定住者',
   startId: 'q1',
   questions: Q,
-  infoHref: '/check/teijusha',
+  infoHref: '/teijusha',
   infoLabel: '查看定住者完整说明',
   materials: [
     '在留资格更新许可申请书',

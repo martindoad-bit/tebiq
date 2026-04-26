@@ -378,7 +378,7 @@ const GIJINKOKU_MATERIALS_SUMMARY: string[] = [
 
 export const gijinkokuBank: QuizBank = {
   visa: 'gijinkoku',
-  visaName: '技人国',
+  visaName: '技術・人文知識・国際業務',
   startId: START_ID,
   // QUESTIONS 类型与 QuizQuestion 在结构上兼容
   questions: QUESTIONS as unknown as Record<string, QuizQuestion>,

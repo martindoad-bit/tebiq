@@ -170,7 +170,7 @@ export const tokuteiBank: QuizBank = {
   visaName: '特定技能',
   startId: 'q1',
   questions: Q,
-  infoHref: '/check/tokutei',
+  infoHref: '/tokutei',
   infoLabel: '查看特定技能完整说明',
   materials: [
     '在留资格更新许可申请书',

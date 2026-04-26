@@ -152,10 +152,10 @@ const Q: Record<string, QuizQuestion> = {
 
 export const haigushaBank: QuizBank = {
   visa: 'haigusha',
-  visaName: '配偶者',
+  visaName: '日本人/永住者の配偶者等',
   startId: 'q1',
   questions: Q,
-  infoHref: '/check/haigusha',
+  infoHref: '/haigusha',
   infoLabel: '查看配偶者签证完整说明',
   materials: [
     '在留资格更新许可申请书',

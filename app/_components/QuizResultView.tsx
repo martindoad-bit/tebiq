@@ -1,6 +1,15 @@
 'use client'
+/**
+ * QuizResultView — 自查结果（v5 screen 08）
+ *
+ * 用于「非 gijinkoku」签证的内联结果（gijinkoku 走 /check/result）。
+ * 视觉源 docs/prototype/v5-mockup.html 1597-1635。
+ */
 import { useState } from 'react'
 import Link from 'next/link'
+import AppShell from './v5/AppShell'
+import AppBar from './v5/AppBar'
+import Button from './v5/Button'
 import type {
   AnsweredItem,
   JudgeResult,
@@ -13,17 +22,52 @@ interface QuizResultViewProps {
   bank: QuizBank
   history: AnsweredItem[]
   result: JudgeResult
-  /** 顶部返回链接（默认 /visa-select） */
+  /** 顶部返回链接（默认 /check/select） */
   backHref?: string
   backLabel?: string
+}
+
+interface SeverityVisual {
+  bg: string // tailwind bg-* for hero circle
+  text: string // tailwind text-* for severity title
+  symbol: string
+  label: string
+  desc: string
+}
+
+function severityVisual(verdict: Verdict, riskCount: number): SeverityVisual {
+  if (verdict === 'green') {
+    return {
+      bg: 'bg-success',
+      text: 'text-success',
+      symbol: '✓',
+      label: '低风险',
+      desc: '当前未发现明显风险点，按常规材料准备即可',
+    }
+  }
+  if (verdict === 'yellow') {
+    return {
+      bg: 'bg-accent',
+      text: 'text-accent',
+      symbol: '!',
+      label: '中风险',
+      desc: `你的情况存在一些需要注意的风险点（${riskCount} 项）`,
+    }
+  }
+  return {
+    bg: 'bg-danger',
+    text: 'text-danger',
+    symbol: '✕',
+    label: '高风险',
+    desc: `检测到 ${riskCount} 项严重风险，建议立即咨询书士`,
+  }
 }
 
 export default function QuizResultView({
   bank,
   history,
   result,
-  backHref = '/visa-select',
-  backLabel = '重新选择签证',
+  backHref = '/check/select',
 }: QuizResultViewProps) {
   const { verdict, triggered } = result
 
@@ -43,262 +87,157 @@ export default function QuizResultView({
     }
   }
 
-  const consultHref = `/consultation?visa=${encodeURIComponent(
-    bank.visa,
-  )}&color=${verdict}`
+  void history // 暂未在此视图内使用，保留供未来扩展
 
-  void history // history 暂未在此视图内使用，但保留以便未来扩展
+  const reds = triggered.filter(t => t.severity === 'red')
+  const yellows = triggered.filter(t => t.severity === 'yellow')
+  const riskCount = verdict === 'red' ? reds.length : triggered.length
+  const sv = severityVisual(verdict, riskCount)
 
-  const banner =
-    verdict === 'green'
-      ? {
-          bg: 'from-[#16A34A] to-[#15803D]',
-          icon: '✓',
-          title: '可以开始准备材料',
-          sub: '前置条件均通过',
-        }
-      : verdict === 'yellow'
-        ? {
-            bg: 'from-primary to-primary-hover',
-            icon: '⚠',
-            title: '需要先解决几个问题',
-            sub: `发现 ${triggered.length} 项需注意`,
-          }
-        : {
-            bg: 'from-[#DC2626] to-[#B91C1C]',
-            icon: '!',
-            title: '检测到高风险项',
-            sub: `发现 ${triggered.filter(t => t.severity === 'red').length} 项严重风险`,
-          }
+  // 「主要风险点」按 severity 排序
+  const riskItems = [...reds, ...yellows].map(t => t.triggerLabel)
+  // 「建议行动」从 triggered 取 fixHint
+  const advices = [...reds, ...yellows]
+    .map(t => t.fixHint)
+    .filter((s): s is string => !!s)
 
   return (
-    <main className="min-h-screen bg-base text-title pb-16 md:pb-0">
-      <header className="sticky top-0 z-10 bg-card/95 backdrop-blur border-b border-line">
-        <div className="max-w-md md:max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
-          <Link
-            href="/"
-            className="flex items-center gap-3"
-            aria-label="TEBIQ 首页"
-          >
-            <img src="/logo-icon.png" alt="" className="h-12 w-12 rounded-xl" />
-            <div>
-              <div className="text-xl font-bold text-title leading-none">
-                TEBIQ
-              </div>
-              <div className="text-xs text-muted leading-tight mt-0.5">
-                てびき
-              </div>
-            </div>
-          </Link>
-          <Link href={backHref} className="text-body hover:text-title text-sm">
-            {backLabel}
-          </Link>
-        </div>
-      </header>
-
-      <div
-        className={`bg-gradient-to-b ${banner.bg} text-white px-4 pt-12 pb-10 text-center`}
-      >
-        <div className="inline-block bg-white/20 text-white text-xs font-bold px-3 py-1 rounded-full mb-4">
-          TEBIQ · {bank.visaName}自查
-        </div>
-        <div className="text-5xl mb-3">{banner.icon}</div>
-        <h1 className="text-2xl md:text-3xl font-bold mb-2 text-white">
-          {banner.title}
-        </h1>
-        <p className="text-white/90 text-sm leading-relaxed px-4">{banner.sub}</p>
-      </div>
-
-      <div className="max-w-md md:max-w-3xl mx-auto px-4 py-6">
-        {verdict === 'green' ? (
-          <GreenContent bank={bank} />
-        ) : (
-          <RiskContent bank={bank} triggered={triggered} verdict={verdict} />
-        )}
-
-        <Link
-          href={bank.ctaHref ?? consultHref}
-          className={`mt-6 flex items-center justify-center w-full min-h-[60px] font-bold py-4 rounded-xl text-base transition-all ${
-            verdict === 'red'
-              ? 'bg-[#DC2626] hover:bg-[#B91C1C] text-white'
-              : 'bg-primary hover:bg-primary-hover text-title'
-          }`}
+    <AppShell appBar={<AppBar title="自查结果" back={backHref} />}>
+      <div className="bg-accent-2 rounded-card px-4 py-[18px] text-center mt-3">
+        <div
+          className={`mx-auto w-[38px] h-[38px] rounded-full ${sv.bg} text-white text-[22px] font-medium flex items-center justify-center mb-3`}
+          aria-hidden="true"
         >
-          {bank.ctaLabel ?? '联系书士咨询'} →
-        </Link>
-
-        {bank.infoHref && (
-          <Link
-            href={bank.infoHref}
-            className="mt-4 block text-center text-primary hover:text-primary-hover text-sm font-bold underline underline-offset-4"
-          >
-            {bank.infoLabel ?? '查看更详细的说明'} →
-          </Link>
-        )}
-
-        <div className="mt-8 mb-12 flex flex-col items-center gap-3">
-          <Link
-            href="/knowledge"
-            className="text-primary hover:text-primary-hover text-sm font-bold underline underline-offset-4"
-          >
-            了解签证基础知识 →
-          </Link>
-          <button
-            onClick={() => window.location.reload()}
-            className="text-muted text-sm hover:text-body underline underline-offset-4"
-          >
-            重新自查
-          </button>
+          {sv.symbol}
+        </div>
+        <div className={`${sv.text} text-[22px] font-medium leading-tight`}>
+          {sv.label}
+        </div>
+        <p className="text-ash text-[11.5px] mt-2 leading-relaxed">{sv.desc}</p>
+        <div className="text-ash text-[10px] mt-2">
+          {bank.visaName} · 自查
         </div>
       </div>
-    </main>
+
+      {verdict === 'green' ? (
+        <GreenContent bank={bank} />
+      ) : (
+        <>
+          {riskItems.length > 0 && (
+            <ResultBlock title="主要风险点" items={riskItems} />
+          )}
+          {advices.length > 0 && (
+            <ResultBlock title="建议行动" items={advices} />
+          )}
+          <CollapsibleMaterials bank={bank} />
+        </>
+      )}
+
+      <div className="mt-5">
+        <Button onClick={() => alert('保存到「我的档案」功能即将开放')}>
+          保存结果到我的档案
+        </Button>
+      </div>
+      <Link href="/my/account" className="block mt-2">
+        <Button variant="secondary">分享给朋友，解锁更多功能</Button>
+      </Link>
+
+      <div className="mt-6 mb-6 flex flex-col items-center gap-3">
+        <Link
+          href="/knowledge"
+          className="text-[12px] text-ink hover:text-accent underline underline-offset-2"
+        >
+          了解签证基础知识 →
+        </Link>
+      </div>
+    </AppShell>
+  )
+}
+
+function ResultBlock({ title, items }: { title: string; items: string[] }) {
+  return (
+    <section className="mt-5">
+      <h3 className="text-[13px] font-medium text-ink mb-2">{title}</h3>
+      <ul className="space-y-1">
+        {items.map((line, i) => (
+          <li
+            key={i}
+            className="flex items-start text-[12px] text-slate leading-[1.6] pl-3 relative"
+          >
+            <span
+              className="absolute left-0 top-[10px] w-1.5 h-1.5 rounded-full bg-accent"
+              aria-hidden="true"
+            />
+            <span className="ml-2">{line}</span>
+          </li>
+        ))}
+      </ul>
+    </section>
   )
 }
 
 function GreenContent({ bank }: { bank: QuizBank }) {
   return (
-    <>
-      <div className="bg-card border border-line rounded-2xl p-5 mb-4 shadow-sm">
-        <h2 className="text-primary font-bold text-base mb-2">
-          {bank.visaName}续签材料清单
-        </h2>
-        <p className="text-body text-sm leading-relaxed">
-          以下是续签所需的标准材料。建议提前 2 个月开始准备。
-        </p>
-      </div>
-
-      <div className="bg-card border border-line rounded-2xl shadow-sm overflow-hidden">
-        <ul>
-          {bank.materials.map((m, i) => (
-            <li
-              key={i}
-              className="flex items-center gap-3 px-5 py-3 border-t border-line first:border-t-0"
-            >
-              <span className="inline-flex items-center justify-center w-5 h-5 border border-line rounded text-transparent">
-                <svg
-                  width="12"
-                  height="12"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="3"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <polyline points="20 6 9 17 4 12" />
-                </svg>
-              </span>
-              <span className="text-title text-sm">{m}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </>
-  )
-}
-
-function RiskContent({
-  bank,
-  triggered,
-  verdict,
-}: {
-  bank: QuizBank
-  triggered: TriggeredItem[]
-  verdict: Verdict
-}) {
-  const reds = triggered.filter(t => t.severity === 'red')
-  const yellows = triggered.filter(t => t.severity === 'yellow')
-
-  return (
-    <>
-      {verdict === 'red' && (
-        <div className="bg-[#FEE2E2] border border-[#DC2626] rounded-2xl p-5 mb-6">
-          <p className="text-[#92400E] text-sm leading-relaxed font-bold">
-            下列任何一项都可能直接导致续签被拒。强烈建议先咨询持牌行政书士。
-          </p>
-        </div>
-      )}
-
-      <div className="space-y-3 mb-6">
-        {reds.map(t => (
-          <RiskCard key={t.id} item={t} accent="red" />
+    <section className="mt-5 bg-surface border border-hairline rounded-card p-4">
+      <h3 className="text-[13px] font-medium text-ink mb-2">
+        {bank.visaName} 续签材料清单
+      </h3>
+      <p className="text-ash text-[11.5px] mb-3">
+        以下是续签所需的标准材料，建议提前 2 个月开始准备。
+      </p>
+      <ul className="space-y-1.5">
+        {bank.materials.map((m, i) => (
+          <li key={i} className="flex items-start gap-2 text-[12px] text-slate leading-[1.6]">
+            <span className="text-success flex-shrink-0 mt-[2px]">✓</span>
+            <span>{m}</span>
+          </li>
         ))}
-        {yellows.map(t => (
-          <RiskCard key={t.id} item={t} accent="yellow" />
-        ))}
-      </div>
-
-      <CollapsibleMaterials bank={bank} />
-    </>
-  )
-}
-
-function RiskCard({
-  item,
-  accent,
-}: {
-  item: TriggeredItem
-  accent: 'red' | 'yellow'
-}) {
-  const cls = accent === 'red' ? 'border-[#DC2626]' : 'border-primary'
-  const label = accent === 'red' ? '高风险' : '需注意'
-  const labelCls = accent === 'red' ? 'text-[#DC2626]' : 'text-primary'
-  return (
-    <div
-      className={`bg-card border-l-4 ${cls} border-y border-r border-line rounded-r-xl p-4 shadow-sm`}
-    >
-      <div className={`text-xs font-bold mb-1 ${labelCls}`}>{label}</div>
-      <div className="text-title text-base font-bold leading-snug mb-2">
-        {item.triggerLabel}
-      </div>
-      {item.fixHint && (
-        <p className="text-body text-sm leading-relaxed whitespace-pre-line">
-          {item.fixHint}
-        </p>
-      )}
-    </div>
+      </ul>
+    </section>
   )
 }
 
 function CollapsibleMaterials({ bank }: { bank: QuizBank }) {
   const [open, setOpen] = useState(false)
   return (
-    <div className="mt-6">
+    <div className="mt-5">
       <button
         type="button"
         onClick={() => setOpen(o => !o)}
-        className="w-full flex items-center justify-between bg-card border border-line hover:border-primary rounded-2xl px-5 py-4 text-left transition-colors shadow-sm"
+        className="w-full flex items-center justify-between bg-surface border border-hairline hover:border-accent rounded-chip px-[14px] py-[12px] text-left transition-colors"
         aria-expanded={open}
       >
         <div>
-          <div className="text-primary font-bold text-base">
+          <div className="text-[13px] text-ink font-medium">
             无论结果如何，以下材料都需要准备
           </div>
-          <div className="text-muted text-xs mt-1">
-            {bank.visaName}续签所需的标准材料 · 共 {bank.materials.length} 项
+          <div className="text-ash text-[10.5px] mt-0.5">
+            {bank.visaName} 续签所需 · 共 {bank.materials.length} 项
           </div>
         </div>
         <span
-          className={`text-muted transition-transform ${open ? 'rotate-180' : ''}`}
+          className={`text-haze transition-transform text-[12px] ${
+            open ? 'rotate-180' : ''
+          }`}
         >
           ▾
         </span>
       </button>
       {open && (
-        <div className="mt-3 bg-card border border-line rounded-2xl shadow-sm overflow-hidden">
-          <ul>
-            {bank.materials.map((m, i) => (
-              <li
-                key={i}
-                className="flex items-center gap-3 px-5 py-3 border-t border-line first:border-t-0"
-              >
-                <span className="inline-flex items-center justify-center w-5 h-5 border border-line rounded" />
-                <span className="text-title text-sm">{m}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
+        <ul className="mt-2 bg-surface border border-hairline rounded-chip overflow-hidden">
+          {bank.materials.map((m, i) => (
+            <li
+              key={i}
+              className="flex items-start gap-2 px-4 py-2 border-t border-hairline first:border-t-0 text-[12px] text-slate leading-[1.6]"
+            >
+              <span className="text-haze flex-shrink-0 mt-[2px]">·</span>
+              <span>{m}</span>
+            </li>
+          ))}
+        </ul>
       )}
     </div>
   )
 }
+
+export type { TriggeredItem }

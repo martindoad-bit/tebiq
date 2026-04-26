@@ -1,31 +1,6 @@
-'use client'
-import { useState } from 'react'
-import QuizEngine from '@/app/_components/QuizEngine'
-import QuizResultView from '@/app/_components/QuizResultView'
-import { teijushaBank } from '@/lib/check/questions/teijusha'
-import type { AnsweredItem, JudgeResult } from '@/lib/check/types'
+// 旧 /check/teijusha/quiz 路由 → 新 /check/teijusha
+import { redirect } from 'next/navigation'
 
-export default function TeijushaQuizPage() {
-  const [done, setDone] = useState<{
-    history: AnsweredItem[]
-    result: JudgeResult
-  } | null>(null)
-
-  if (done) {
-    return (
-      <QuizResultView
-        bank={teijushaBank}
-        history={done.history}
-        result={done.result}
-      />
-    )
-  }
-
-  return (
-    <QuizEngine
-      bank={teijushaBank}
-      showVisaLabel
-      onComplete={(history, result) => setDone({ history, result })}
-    />
-  )
+export default function TeijushaQuizRedirect() {
+  redirect('/check/teijusha')
 }
