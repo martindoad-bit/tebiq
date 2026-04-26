@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import Logo from '@/app/_components/v5/Logo'
 
 export const metadata: Metadata = {
   title: '配偶者签证续签指南 2026 | TEBIQ',
@@ -48,12 +49,8 @@ export default function HaigushaLandingPage() {
 
       <header className="sticky top-0 z-10 bg-card/95 backdrop-blur border-b border-line">
         <div className="max-w-md md:max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-3" aria-label="TEBIQ 首页">
-            <img src="/logo-icon.png" alt="" className="h-12 w-12 rounded-xl" />
-            <div>
-              <div className="text-xl font-bold text-title leading-none">TEBIQ</div>
-              <div className="text-xs text-muted leading-tight mt-0.5">てびき</div>
-            </div>
+          <Link href="/" aria-label="TEBIQ 首页">
+            <Logo size="sm" />
           </Link>
           <Link
             href="/visa-select"

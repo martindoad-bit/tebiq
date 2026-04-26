@@ -487,3 +487,19 @@
 ### 待 review
 
 - 购买 CTA 仍链接到 `/consultation?visa=gijinkoku`，这属于现有业务链路；如果后续改为 Stripe checkout，应在 Block 4/5 单独处理。
+
+## 追加收口：根级签证 SEO 页
+
+### 本轮改动
+
+- 对 `/gijinkoku`、`/keiei`、`/haigusha`、`/tokutei`、`/teijusha`、`/eijusha` 做低风险机械收口：旧 header 里的 `<img>` logo 替换为现有 v5 `Logo` 组件。
+- 不重写正文、不调整 SEO schema、不改 CTA 和自查链接，避免在长文 SEO 页里误改内容语义。
+
+### 验证
+
+- `npm run lint` 通过；6 个根级签证页的 `<img>` warning 已消失。
+- `npm run build` 通过。
+
+### 待 review
+
+- 这些 SEO 页仍是旧内容页视觉，只做了 header logo 收口。完整统一建议放 Block 4 内容系统一起做，避免 6 篇长文重复维护。
