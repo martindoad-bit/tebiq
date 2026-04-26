@@ -360,3 +360,24 @@
 
 - 产品视角优先做 Block 4：真实登录态数据、通知/邀请链路、知识详情内容审核与 SEO 内容统一。
 - Block 5 再接 Bedrock 真实拍照；当前视觉已经足够支撑真实识别结果接入，不建议继续在纯 CSS 上打磨太久。
+
+## 追加收口：我的信息页
+
+![my profile polish](docs/visual-report/screenshots/my-profile-v5-polish.png)
+
+### 本轮改动
+
+- 将 `/my/profile` 从旧 Block 1/2 视觉切到 v5 手机壳结构：`AppBar`、底部 `TabBar`、米色 canvas、白色卡片和统一 hairline。
+- 个人档案、档案编辑、自查历史、直接问我模块统一到 v5 卡片、按钮、tag、icon stroke 和 13px 信息密度。
+- 去掉页面内旧 `<img>` logo，改用系统 icon，避免继续增加 Next.js `<img>` lint warning。
+- UI 文案里移除具体环境变量名展示，保留“Mock 模式”提示，不暴露真实配置键名。
+
+### 验证
+
+- `npm run lint` 通过；仅剩既有旧页面 `<img>` warning。
+- `npm run build` 通过。
+- 已用 Chrome headless 在 `399 x 671` 移动视口截图 `/my/profile`。
+
+### 待 review
+
+- 当前截图是未连接真实登录态数据的本地渲染；用户头像、手机号、真实历史条目的视觉仍建议在有本地 DB/session 后复核。
