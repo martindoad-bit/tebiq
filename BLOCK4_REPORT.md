@@ -66,3 +66,21 @@
 
 - `npm run lint` 通过。
 - `npm run build` 通过。
+
+## 2026-04-26 根级 SEO 页统一
+
+### 已完成
+
+- 新增共享 `SeoVisaArticleShell`、`SeoSection`、`SeoBullet`，6 个根级签证 SEO 页共用同一套 v5 外壳和正文块。
+- `/gijinkoku`、`/keiei`、`/haigusha`、`/tokutei`、`/teijusha`、`/eijusha` 移除旧 header/footer 壳，保留原有长正文、metadata、JSON-LD。
+- 旧 token 已替换为 v5 视觉 token：`bg-canvas`、`bg-surface`、`border-hairline`、`text-ink`、`text-ash`、`rounded-card`、`shadow-card`。
+- 底部 CTA 保留：有现成自查题库的 5 个签证页继续进入对应自查；永住页暂时保留到签证选择页，避免链接到未实装 quiz。
+
+### 待 review
+
+- `/eijusha` 目前没有对应 quiz bank，未强行改为 `/check/eijusha`，否则会形成死链。建议 Block 4 后确认永住自查是否进入 1.0。
+
+### 验证
+
+- `npm run lint` 通过。
+- `npm run build` 通过。
