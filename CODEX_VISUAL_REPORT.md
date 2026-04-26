@@ -467,3 +467,23 @@
 ### 待 review
 
 - `/visa-select` 与 `/check/select` 未来可考虑合并或 redirect，避免两个入口长期并存；本轮不改路由结构。
+
+## 追加收口：材料包样例页
+
+![sample package polish](docs/visual-report/screenshots/sample-package-v5-polish.png)
+
+### 本轮改动
+
+- 将 `/sample-package` 接入 v5 `AppShell / AppBar`，移除旧 logo header 和 footer。
+- 首屏、锁定提示、底部购买 CTA 调整为 v5 card、accent CTA、lucide icon 和更克制的付费转化表达。
+- 内容预览内部结构保留，避免改变材料包展示逻辑和用户对付费内容的预期。
+
+### 验证
+
+- `npm run lint` 通过；`/sample-package` 自身 `<img>` warning 已消失。
+- `npm run build` 通过。
+- 已用 Chrome headless 在 `480 x 820` v5 phone viewport 截图 `/sample-package`。
+
+### 待 review
+
+- 购买 CTA 仍链接到 `/consultation?visa=gijinkoku`，这属于现有业务链路；如果后续改为 Stripe checkout，应在 Block 4/5 单独处理。

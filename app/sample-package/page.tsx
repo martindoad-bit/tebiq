@@ -1,4 +1,7 @@
 import Link from 'next/link'
+import { ArrowRight, FileText, Lock, ShieldCheck } from 'lucide-react'
+import AppBar from '@/app/_components/v5/AppBar'
+import AppShell from '@/app/_components/v5/AppShell'
 import { GIJINKOKU_MATERIALS } from '@/lib/check/materials'
 
 export const metadata = {
@@ -28,44 +31,26 @@ const PREFILLED_FIELDS = [
 
 export default function SamplePackagePage() {
   return (
-    <main className="min-h-screen bg-base text-body flex flex-col">
-      {/* 顶部导航 */}
-      <header className="sticky top-0 z-10 bg-card/95 backdrop-blur border-b border-line">
-        <div className="max-w-md md:max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-3" aria-label="TEBIQ 首页">
-            <img src="/logo-icon.png" alt="" className="h-12 w-12 rounded-xl" />
-            <div>
-              <div className="text-xl font-bold text-title leading-none">TEBIQ</div>
-              <div className="text-xs text-muted leading-tight mt-0.5">てびき</div>
-            </div>
-          </Link>
-          <Link
-            href="/visa-select"
-            className="bg-primary hover:bg-primary-hover text-title font-bold text-sm px-4 py-2 rounded-lg transition-all"
-          >
-            开始自查
-          </Link>
-        </div>
-      </header>
-
+    <AppShell appBar={<AppBar title="材料包样例" back />}>
       {/* Title region */}
-      <section className="px-4 pt-10 md:pt-16 pb-6 md:pb-10">
-        <div className="max-w-3xl mx-auto text-center">
-          <span className="inline-block bg-primary text-title text-xs font-bold px-3 py-1 rounded-full mb-4">
+      <section className="py-5 text-center">
+        <div className="mx-auto max-w-[360px]">
+          <span className="inline-flex items-center gap-1.5 rounded-chip bg-accent-2 px-3 py-1.5 text-[11px] font-medium text-ink">
+            <FileText size={13} strokeWidth={1.55} />
             サンプル · プレビュー
           </span>
-          <h1 className="text-3xl md:text-4xl font-medium mb-3 leading-tight text-title">
+          <h1 className="mt-3 text-[25px] font-medium leading-tight text-ink">
             TEBIQ 専属材料パッケージ
           </h1>
-          <p className="text-muted text-sm md:text-base">
+          <p className="mt-2 text-[12px] leading-[1.65] text-ash">
             サンプルプレビュー · 購入後に完全版をダウンロード
           </p>
         </div>
       </section>
 
       {/* Sample preview area */}
-      <section className="px-4 pb-10">
-        <div className="max-w-3xl mx-auto relative">
+      <section className="pb-5">
+        <div className="relative">
           {/* SAMPLE diagonal watermark */}
           <div
             aria-hidden
@@ -85,7 +70,7 @@ export default function SamplePackagePage() {
           </div>
 
           {/* Inner paper-style card */}
-          <div className="relative bg-card border border-line rounded-2xl p-6 md:p-10 shadow-sm">
+          <div className="relative rounded-card border border-hairline bg-surface p-5 shadow-raised">
             {/* Cover section */}
             <div className="pb-8 mb-8 border-b-2 border-dashed border-highlight">
               <div
@@ -191,11 +176,12 @@ export default function SamplePackagePage() {
                 ))}
               </div>
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="bg-card border-2 border-primary rounded-xl px-6 py-4 shadow-lg text-center">
-                  <div className="text-title font-bold text-base md:text-lg mb-1">
-                    🔒 购买后完整解锁
+                <div className="rounded-card border border-accent bg-surface px-5 py-4 text-center shadow-raised">
+                  <div className="mb-1 flex items-center justify-center gap-1.5 text-[14px] font-medium text-ink">
+                    <Lock size={15} strokeWidth={1.55} />
+                    购买后完整解锁
                   </div>
-                  <div className="text-muted text-xs md:text-sm">
+                  <div className="text-[12px] text-ash">
                     还有 16 项材料详情
                   </div>
                 </div>
@@ -247,11 +233,12 @@ export default function SamplePackagePage() {
                 <div className="h-3 bg-line/70 rounded w-3/4" />
               </div>
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="bg-card border-2 border-primary rounded-xl px-6 py-4 shadow-lg text-center max-w-sm">
-                  <div className="text-title font-bold text-sm md:text-base mb-1">
-                    🔒 购买后查看
+                <div className="max-w-sm rounded-card border border-accent bg-surface px-5 py-4 text-center shadow-raised">
+                  <div className="mb-1 flex items-center justify-center gap-1.5 text-[14px] font-medium text-ink">
+                    <Lock size={15} strokeWidth={1.55} />
+                    购买后查看
                   </div>
-                  <div className="text-muted text-xs md:text-sm">
+                  <div className="text-[12px] text-ash">
                     针对你具体情况的 AI 个性化建议（约 200 字）
                   </div>
                 </div>
@@ -262,49 +249,35 @@ export default function SamplePackagePage() {
       </section>
 
       {/* Bottom CTA */}
-      <section className="px-4 pb-12 md:pb-16">
-        <div className="max-w-3xl mx-auto">
-          <div className="bg-card border border-line border-l-4 border-l-primary rounded-2xl p-6 md:p-8 shadow-lg">
-            <div className="flex items-baseline gap-3 mb-1">
-              <span className="bg-primary text-title text-xs font-bold px-2 py-0.5 rounded">
+      <section className="pb-6">
+        <div className="rounded-card border border-hairline bg-surface px-5 py-5 shadow-raised">
+            <div className="mb-1 flex items-baseline gap-3">
+              <span className="rounded-[8px] bg-accent px-2 py-1 text-[11px] font-medium text-ink">
                 早鸟价
               </span>
-              <span className="text-primary text-4xl md:text-5xl font-bold leading-none">
+              <span className="text-[34px] font-medium leading-none text-ink">
                 ¥380
               </span>
-              <span className="text-muted text-base line-through">¥480</span>
+              <span className="text-[14px] text-ash line-through">¥480</span>
             </div>
-            <p className="text-muted text-xs mb-5">
+            <p className="mb-5 text-[11px] text-ash">
               正式价 ¥480 · 早鸟期内享专属折扣
             </p>
 
             <Link
               href="/consultation?visa=gijinkoku"
-              className="flex items-center justify-center w-full min-h-[60px] bg-primary hover:bg-primary-hover text-title font-bold py-4 rounded-xl text-lg transition-all shadow-sm"
+              className="flex min-h-[52px] w-full items-center justify-center gap-2 rounded-btn bg-accent px-4 text-[14px] font-medium text-ink shadow-cta transition-transform active:translate-y-px"
             >
               購入して完全版をダウンロード
+              <ArrowRight size={16} strokeWidth={1.55} />
             </Link>
-            <p className="text-muted text-xs text-center mt-3">
+            <p className="mt-3 flex items-center justify-center gap-1.5 text-center text-[11px] text-ash">
+              <ShieldCheck size={13} strokeWidth={1.55} />
               支払いはStripeにて安全に処理されます · 即時ダウンロード
             </p>
-          </div>
         </div>
       </section>
-
-      {/* Footer */}
-      <footer className="bg-card border-t border-line px-4 py-6 pb-[max(1.5rem,env(safe-area-inset-bottom))] text-center mt-auto">
-        <Link
-          href="/knowledge"
-          className="inline-block text-primary hover:text-primary-hover text-sm font-bold mb-4 underline underline-offset-4"
-        >
-          了解签证基础知识 →
-        </Link>
-        <p className="text-muted text-xs leading-relaxed">
-          本工具由持牌行政书士团队提供支持
-        </p>
-        <p className="text-muted text-xs mt-1">© 2026 TEBIQ</p>
-      </footer>
-    </main>
+    </AppShell>
   )
 }
 
