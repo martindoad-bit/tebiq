@@ -20,7 +20,7 @@ export default function CheckLandingPage() {
           <Clock3 size={12} strokeWidth={1.55} />
           约 3 分钟
         </div>
-        <p className="text-[12px] leading-[1.6] text-ash">
+        <p className="mx-auto max-w-[300px] text-[12px] leading-[1.65] text-ash">
           根据你的在留資格和当前情况，先看续签前要注意的风险。
         </p>
       </div>

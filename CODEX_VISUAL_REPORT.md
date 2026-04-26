@@ -277,3 +277,25 @@
 
 - `npm run lint` 通过；仍有历史页面 `<img>` warning，但已移除 `/check/result` 与 `/share/[id]` 的旧 logo warning。
 - `npm run build` 通过。
+
+## 视觉收口：插画资产接入
+
+### 屏 05 续签自查入口
+
+![05 check illustration](docs/visual-report/screenshots/05-check-entry-illustration.png)
+
+### 本轮改动
+
+- 使用 GPT Image 2 生成续签自查入口插画，最终接入 `public/illustrations/renewal-check.png`。
+- 原 CSS 占位插画替换为真实 PNG 资产，保留圆角、hairline border 和白色内描边，避免图片像贴上去的外部素材。
+- 入口说明文案限制到 `max-width: 300px`，窄视口下自然换行，避免中文长句贴边。
+
+### GPT Image 2 记录
+
+- 调用次数：1 次。
+- 最终选择：第 1 版，理由是主色、米底、文件清单、在留卡形状和陪伴人物都贴合 TEBIQ 的“温暖但克制”的工具气质。
+- 接入尺寸：原图压缩到 `900 x 675` PNG，当前约 `647KB`。后续如要进一步优化首屏性能，可转 WebP/AVIF。
+
+### 待 review
+
+- 当前插画无可读文字，符合产品安全性；人物风格偏消费 App 友好，不走严肃政务风。创始人若希望更“行政书士/文件柜”方向，可作为第二版素材替换。
