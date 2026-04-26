@@ -47,3 +47,22 @@
 
 - `npm run lint` 通过。
 - `npm run build` 通过。
+
+## 2026-04-26 真实登录态 fixture
+
+### 已完成
+
+- `scripts/dev-utils/visual-fixtures.ts` 改为优先使用本地 `DATABASE_URL`，并禁用 prepared statements，兼容 Supabase pooler。
+- 新增 `npm run dev:visual-fixtures` 和 `npm run dev:visual-fixtures:cleanup`。
+- 新增 dev-only `/api/auth/dev-session`：仅非 production 可用，用来给 `empty`、`data`、`subscribed` 三种视觉账号写入 httpOnly session cookie。
+- README 增加一行命令说明和三种用户态说明。
+- fixture 输出改为本地登录 URL，不再打印 session id。
+
+### 待 review
+
+- 真实 DB 未在当前沙箱运行，fixture 的数据库写入没有做端到端执行；代码路径通过 build/typecheck。
+
+### 验证
+
+- `npm run lint` 通过。
+- `npm run build` 通过。

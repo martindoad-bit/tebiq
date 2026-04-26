@@ -6,8 +6,8 @@
  * realistic data. It is not imported by the app and does not run in production.
  *
  * Usage:
- *   npx tsx scripts/dev-utils/visual-fixtures.ts seed
- *   npx tsx scripts/dev-utils/visual-fixtures.ts cleanup
+ *   npm run dev:visual-fixtures
+ *   npm run dev:visual-fixtures:cleanup
  */
 import { config as loadEnv } from 'dotenv'
 const localEnvPath = ['', 'env', 'local'].join('.')
@@ -31,13 +31,18 @@ const COOKIE_NAME = 'tebiq_user_session'
 const DIRECT_URL_KEY = 'DIRECT_URL'
 const DATABASE_URL_KEY = 'DATABASE_URL'
 
-const url = process.env[DIRECT_URL_KEY] ?? process.env[DATABASE_URL_KEY]
+const url = process.env[DATABASE_URL_KEY] ?? process.env[DIRECT_URL_KEY]
 if (!url) {
   console.error('Missing database connection URL in local environment.')
   process.exit(1)
 }
 
-const client = postgres(url, { max: 1, connect_timeout: 10, idle_timeout: 5 })
+const client = postgres(url, {
+  max: 1,
+  connect_timeout: 10,
+  idle_timeout: 5,
+  prepare: false,
+})
 const db = drizzle(client, { schema })
 
 type Scenario = 'empty' | 'data' | 'subscribed'
@@ -172,13 +177,13 @@ async function seed() {
   await seedDataScenario(subscribed.family.id, subscribed.member.id)
   await seedSubscribedScenario(subscribed.family.id)
 
-  const fixtures = { empty, data, subscribed }
+  void empty.session.id
+  void data.session.id
+  void subscribed.session.id
   console.log('Visual fixtures seeded.')
   console.log(`Cookie name: ${COOKIE_NAME}`)
-  for (const scenario of Object.keys(fixtures) as Scenario[]) {
-    console.log(
-      `${scenario}: phone=${phones[scenario]} session=${fixtures[scenario].session.id}`,
-    )
+  for (const scenario of Object.keys(phones) as Scenario[]) {
+    console.log(`${scenario}: http://localhost:3000/api/auth/dev-session?scenario=${scenario}`)
   }
 }
 

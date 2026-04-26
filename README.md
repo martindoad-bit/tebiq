@@ -60,6 +60,28 @@ Unit tests live next to the modules they cover (`*.test.ts`). Database
 tests **mock** `@/lib/db` and run without a live Postgres. Real
 integration tests against Supabase land in Block 2.
 
+## Dev visual fixtures
+
+For local visual QA of logged-in states, seed three synthetic users:
+
+```bash
+npm run dev:visual-fixtures
+```
+
+Then start the dev server and open one of the printed dev-session URLs:
+
+- `empty` → empty archive / free account
+- `data` → archive and reminders with sample records
+- `subscribed` → active paid-like account state
+
+The helper reads local DB connection variables through `.env.local`, does not print their values, and the `/api/auth/dev-session` route returns 404 in production.
+
+Cleanup:
+
+```bash
+npm run dev:visual-fixtures:cleanup
+```
+
 ## Project layout
 
 See `docs/architecture.md` for the full directory tree and design notes.
