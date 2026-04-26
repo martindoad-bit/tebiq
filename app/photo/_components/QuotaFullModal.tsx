@@ -10,7 +10,7 @@
  */
 'use client'
 import Link from 'next/link'
-import { Check, Crown } from 'lucide-react'
+import { Check, Crown, Gift } from 'lucide-react'
 import Button from '@/app/_components/v5/Button'
 
 interface Props {
@@ -83,6 +83,13 @@ export default function QuotaFullModal({ open, onClose }: Props) {
 
         <Link href="/subscribe" className="block">
           <Button>立即开通会员</Button>
+        </Link>
+        <Link
+          href="/invite"
+          className="mt-2 flex min-h-[44px] w-full items-center justify-center gap-1.5 rounded-btn border border-[rgba(30,58,95,0.18)] bg-surface px-4 py-3 text-center text-[13px] font-medium text-ink transition-colors hover:bg-[rgba(30,58,95,0.04)]"
+        >
+          <Gift size={15} strokeWidth={1.55} />
+          邀请朋友 = 免费 7 天
         </Link>
         <button
           type="button"

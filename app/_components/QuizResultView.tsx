@@ -7,7 +7,7 @@
  */
 import { useState } from 'react'
 import Link from 'next/link'
-import { AlertTriangle, CheckCircle2, ClipboardList, ListChecks } from 'lucide-react'
+import { AlertTriangle, CheckCircle2, ClipboardList, Gift, ListChecks } from 'lucide-react'
 import AppShell from './v5/AppShell'
 import AppBar from './v5/AppBar'
 import Button from './v5/Button'
@@ -139,8 +139,21 @@ export default function QuizResultView({
           保存结果到我的档案
         </Button>
       </div>
-      <Link href="/my/account" className="block mt-2">
-        <Button variant="secondary">分享给朋友，解锁更多功能</Button>
+      <Link
+        href="/invite"
+        className="mt-2 flex items-start gap-3 rounded-card border border-accent/35 bg-accent-2/70 px-4 py-3 shadow-card transition-colors hover:bg-accent-2"
+      >
+        <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-[12px] bg-surface text-ink shadow-soft">
+          <Gift size={17} strokeWidth={1.55} />
+        </span>
+        <span className="min-w-0 flex-1">
+          <span className="block text-[13px] font-medium leading-snug text-ink">
+            邀请朋友一起做自查
+          </span>
+          <span className="mt-1 block text-[11px] leading-[1.55] text-ash">
+            朋友注册后，双方各得 7 天 basic 会员体验。
+          </span>
+        </span>
       </Link>
 
       <div className="mt-6 mb-6 flex flex-col items-center gap-3">

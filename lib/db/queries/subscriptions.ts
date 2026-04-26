@@ -71,3 +71,43 @@ export async function isSubscriptionActive(familyId: string): Promise<boolean> {
   if (sub.status !== 'active' && sub.status !== 'trialing') return false
   return sub.currentPeriodEnd.getTime() > Date.now()
 }
+
+/**
+ * Grants a local trial extension without touching Stripe.
+ * Used by invitation rewards and dev fixtures.
+ */
+export async function grantBasicTrialDaysToFamily(
+  familyId: string,
+  days: number,
+): Promise<Subscription> {
+  const now = new Date()
+  const sub = await getSubscriptionByFamilyId(familyId)
+  const base =
+    sub && sub.currentPeriodEnd.getTime() > now.getTime()
+      ? sub.currentPeriodEnd
+      : now
+  const currentPeriodEnd = new Date(base.getTime() + days * 24 * 60 * 60 * 1000)
+
+  if (!sub) {
+    return await createSubscription({
+      familyId,
+      tier: 'basic',
+      status: 'trialing',
+      currentPeriodStart: now,
+      currentPeriodEnd,
+      billingCycle: 'monthly',
+    })
+  }
+
+  const [row] = await db
+    .update(subscriptions)
+    .set({
+      tier: sub.tier,
+      status: 'trialing',
+      currentPeriodEnd,
+      canceledAt: null,
+    })
+    .where(eq(subscriptions.id, sub.id))
+    .returning()
+  return row
+}

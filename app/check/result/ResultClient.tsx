@@ -2,7 +2,15 @@
 import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { AlertTriangle, CheckCircle2, CircleAlert, Download, LockKeyhole, RotateCcw } from 'lucide-react'
+import {
+  AlertTriangle,
+  CheckCircle2,
+  CircleAlert,
+  Download,
+  Gift,
+  LockKeyhole,
+  RotateCcw,
+} from 'lucide-react'
 import {
   judge,
   type AnsweredItem,
@@ -97,6 +105,27 @@ function SaveToAccountPrompt({ verdict, count }: { verdict: 'red' | 'yellow' | '
         登录 / 注册
       </Link>
     </div>
+  )
+}
+
+function InviteRewardCallout() {
+  return (
+    <Link
+      href="/invite"
+      className="no-capture flex items-start gap-3 rounded-card border border-accent/35 bg-accent-2/70 px-4 py-3 shadow-card transition-colors hover:bg-accent-2"
+    >
+      <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-[12px] bg-surface text-ink shadow-soft">
+        <Gift size={17} strokeWidth={1.55} />
+      </span>
+      <span className="min-w-0 flex-1">
+        <span className="block text-[13px] font-medium leading-snug text-ink">
+          邀请朋友一起做自查
+        </span>
+        <span className="mt-1 block text-[11px] leading-[1.55] text-ash">
+          朋友注册后，双方各得 7 天 basic 会员体验。
+        </span>
+      </span>
+    </Link>
   )
 }
 
@@ -431,6 +460,7 @@ function GreenResult({ summary }: { summary: string }) {
       <div className="space-y-3 mb-6">
         <SaveResultButton captureRef={captureRef} verdict="green" />
         <ShareLinkButton verdict="green" summary={summary} />
+        <InviteRewardCallout />
         <SaveToAccountPrompt verdict="green" count={0} />
         <PremiumCallout />
       </div>
@@ -488,6 +518,7 @@ function YellowResult({ result, summary }: { result: JudgeResult; summary: strin
       <div className="space-y-3 mb-6">
         <SaveResultButton captureRef={captureRef} verdict="yellow" />
         <ShareLinkButton verdict="yellow" summary={summary} />
+        <InviteRewardCallout />
         <SaveToAccountPrompt verdict="yellow" count={result.triggered.length} />
       </div>
 
@@ -541,6 +572,7 @@ function RedResult({ result, summary }: { result: JudgeResult; summary: string }
       <div className="space-y-3 mb-6">
         <SaveResultButton captureRef={captureRef} verdict="red" />
         <ShareLinkButton verdict="red" summary={summary} />
+        <InviteRewardCallout />
         <SaveToAccountPrompt verdict="red" count={reds.length} />
       </div>
 
