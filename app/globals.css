@@ -10,23 +10,26 @@
 html, body {
   background-color: #FFF5E6;
   color: #1E3A5F;
-  font-family: 'Noto Sans SC', 'Noto Sans CJK SC', -apple-system, BlinkMacSystemFont, sans-serif;
-  /* 移动端最小 16px，防止 iOS 输入框自动缩放 */
+  /* v5：系统字体优先，与原型一致 */
+  font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans',
+    'Noto Sans SC', 'Noto Sans CJK SC', sans-serif;
   -webkit-text-size-adjust: 100%;
-}
-
-/* iOS 安全区适配：所有 main 容器底部留出 home indicator 区域 */
-main {
-  min-height: 100vh;
-  min-height: 100dvh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /* iOS 输入框防自动缩放：最小 16px */
-input, select, textarea {
+input:not([type='checkbox']):not([type='radio']),
+select,
+textarea {
   font-size: 16px;
 }
 
-h1 { font-size: 32px; line-height: 40px; font-weight: 700; }
-h2 { font-size: 24px; line-height: 32px; font-weight: 700; }
-h3 { font-size: 20px; line-height: 28px; font-weight: 500; }
-.caption { font-size: 12px; line-height: 16px; }
+/*
+ * Block 3 起：headings 不再设全局尺寸 — v5 视觉系统按场景给具体 size。
+ * 旧 .caption 保留以兼容 Block 1/2 代码。
+ */
+.caption {
+  font-size: 12px;
+  line-height: 16px;
+}

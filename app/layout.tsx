@@ -1,16 +1,22 @@
 import type { Metadata, Viewport } from 'next'
 import './globals.css'
-import MobileNav from './_components/MobileNav'
-import LegalFooter from './_components/LegalFooter'
 
+/**
+ * Root layout — Block 3 streamlined.
+ *
+ * v5 visual system uses per-page <AppShell> which owns its own <TabBar>
+ * and footer affordances. Layout no longer mounts a global MobileNav or
+ * LegalFooter — pages opt-in (legal pages can mount LegalFooter
+ * themselves; admin / login skip the tab bar).
+ */
 export const metadata: Metadata = {
   metadataBase: new URL('https://tebiq.jp'),
-  title: 'TEBIQ - 在日签证续签风险自查',
+  title: 'TEBIQ — 你的在日生活好帮手',
   description:
-    '3 分钟发现续签隐藏风险。200+ 真实案例经验，帮你避开续签雷区。完全免费，答案不上传。',
+    '在日生活のお守り。拍照即懂日文文件、续签自查、到期提醒，一个 App 帮你管好在日生活的麻烦事。',
   openGraph: {
-    title: 'TEBIQ - 在日签证续签风险自查',
-    description: '3 分钟发现续签隐藏风险。完全免费。',
+    title: 'TEBIQ — 你的在日生活好帮手',
+    description: '拍照即懂、续签自查、到期提醒。在日生活のお守り。',
     url: 'https://tebiq.jp',
     siteName: 'TEBIQ',
     locale: 'zh_CN',
@@ -18,8 +24,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'TEBIQ - 在日签证续签风险自查',
-    description: '3 分钟发现续签隐藏风险。完全免费。',
+    title: 'TEBIQ — 你的在日生活好帮手',
+    description: '拍照即懂、续签自查、到期提醒。',
   },
 }
 
@@ -38,16 +44,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <link rel="icon" href="/logo-icon.png" />
         <link rel="apple-touch-icon" href="/logo-icon.png" />
-        <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap"
-        />
       </head>
-      <body>
-        {children}
-        <LegalFooter />
-        <MobileNav />
-      </body>
+      <body className="bg-canvas text-ink antialiased">{children}</body>
     </html>
   )
 }

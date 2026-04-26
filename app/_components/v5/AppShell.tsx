@@ -1,0 +1,47 @@
+/**
+ * AppShell — v5 视觉系统的页面外壳。
+ *
+ * 桌面端 max-w-phone 居中（保持手机视觉），mobile 全宽。
+ * 提供 statusbar 占位、appbar slot、滚动 body、可选的底部 TabBar slot。
+ *
+ * 用法：
+ *   <AppShell appBar={<AppBar title="拍照即懂" back />} tabBar={<TabBar active="home" />}>
+ *     ...page body...
+ *   </AppShell>
+ */
+import type { ReactNode } from 'react'
+
+interface Props {
+  appBar?: ReactNode
+  tabBar?: ReactNode
+  children: ReactNode
+  /** 让 body 背景跟外壳不一样（如拍照页用深色） */
+  bodyClassName?: string
+  /** 整个外壳背景（默认 canvas 米色） */
+  shellClassName?: string
+}
+
+export default function AppShell({
+  appBar,
+  tabBar,
+  children,
+  bodyClassName = '',
+  shellClassName = 'bg-canvas',
+}: Props) {
+  return (
+    <div className={`min-h-[100dvh] ${shellClassName}`}>
+      <div className="md:max-w-phone md:mx-auto md:min-h-[100dvh] md:shadow-soft md:border-x md:border-hairline flex flex-col min-h-[100dvh]">
+        {appBar}
+        <main
+          className={`flex-1 overflow-y-auto px-4 pb-6 ${bodyClassName}`}
+          style={{
+            paddingBottom: tabBar ? 'calc(64px + env(safe-area-inset-bottom))' : 'env(safe-area-inset-bottom)',
+          }}
+        >
+          {children}
+        </main>
+        {tabBar}
+      </div>
+    </div>
+  )
+}
