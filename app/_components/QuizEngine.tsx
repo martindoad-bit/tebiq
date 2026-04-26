@@ -7,6 +7,7 @@
  * 视觉源 docs/prototype/v5-mockup.html screen 07 (1558-1594)。
  */
 import { useEffect, useState } from 'react'
+import { ChevronDown, ListChecks } from 'lucide-react'
 import {
   judge,
   longestPathFrom,
@@ -151,16 +152,14 @@ export default function QuizEngine({
       <style jsx>{`
         @keyframes slideInRight {
           from {
-            transform: translateX(40px);
-            opacity: 0;
+            transform: translateX(12px);
           }
           to {
             transform: translateX(0);
-            opacity: 1;
           }
         }
         .anim-enter {
-          animation: slideInRight ${TRANSITION_MS}ms ease-out;
+          animation: slideInRight 180ms ease-out;
         }
         .anim-exit {
           transform: translateX(-32px);
@@ -171,42 +170,53 @@ export default function QuizEngine({
         }
       `}</style>
 
-      <div className="text-center mt-2 text-[11px] text-ash">
-        {stageNum}/{totalEstimate}
+      <div className="mt-2">
+        <div className="mb-2 flex items-center justify-between text-[11px] text-ash">
+          <span>第 {stageNum} 题</span>
+          <span>{stageNum}/{totalEstimate}</span>
+        </div>
+        <div className="h-1.5 overflow-hidden rounded-full bg-cool-blue">
+          <div
+            className="h-full rounded-full bg-accent transition-all"
+            style={{ width: `${Math.max(8, (stageNum / totalEstimate) * 100)}%` }}
+          />
+        </div>
       </div>
 
       <div key={currentId} className={isExiting ? 'anim-exit' : 'anim-enter'}>
-        <h2 className="mt-3 text-[16px] font-medium text-ink leading-snug">
-          {stageNum}. {current.text}
-        </h2>
+        <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-3.5 shadow-card">
+          <h2 className="text-[16px] font-medium text-ink leading-[1.48]">
+            {current.text}
+          </h2>
 
-        <p className="mt-2 text-[11.5px] text-ash leading-relaxed">
-          为什么问这个：{current.why}
-        </p>
+          <p className="mt-2 rounded-[11px] bg-canvas/70 px-3 py-2 text-[11.5px] text-ash leading-relaxed">
+            为什么问这个：{current.why}
+          </p>
+        </section>
 
         {current.learnMore && (
-          <div className="mt-2">
+          <div className="mt-3">
             <button
               type="button"
               onClick={() => setLearnMoreOpen(o => !o)}
-              className="text-[11.5px] text-ink hover:text-accent font-medium flex items-center gap-1 transition-colors"
+              className="flex items-center gap-1 text-[11.5px] font-medium text-ink transition-colors hover:text-accent"
               aria-expanded={learnMoreOpen}
             >
               了解更多
-              <span
-                className={`inline-block transition-transform text-[10px] ${
+              <ChevronDown
+                size={13}
+                strokeWidth={1.55}
+                className={`transition-transform ${
                   learnMoreOpen ? 'rotate-180' : ''
                 }`}
-              >
-                ▾
-              </span>
+              />
             </button>
             {learnMoreOpen && (
-              <div className="mt-2 bg-accent-2 border-l-[3px] border-accent rounded-r-chip px-3 py-2.5">
+              <div className="mt-2 rounded-card border border-accent/25 bg-accent-2 px-3 py-2.5 shadow-card">
                 <p className="text-ink text-[12px] leading-relaxed whitespace-pre-line">
                   {current.learnMore}
                 </p>
-                <p className="text-ash text-[10px] mt-2 italic">
+                <p className="text-ash text-[10px] mt-2">
                   本说明为系统初版，待书士审核完善
                 </p>
               </div>
@@ -226,7 +236,7 @@ export default function QuizEngine({
                   type="button"
                   onClick={() => handleAnswer(originalIndex)}
                   disabled={disabled}
-                  className={`w-full flex items-center gap-3 text-left rounded-chip border py-[11px] px-[13px] transition-colors disabled:cursor-not-allowed ${
+                  className={`w-full flex items-center gap-3 text-left rounded-[12px] border py-[12px] px-[13px] shadow-card transition disabled:cursor-not-allowed ${
                     isSelected
                       ? 'border-accent bg-[#FFFCEE]'
                       : 'border-hairline bg-surface hover:border-accent'
@@ -266,8 +276,9 @@ export default function QuizEngine({
           </Button>
         </div>
 
-        <div className="mt-3 text-center text-[11px] text-ash">
-          {stageNum}/{totalEstimate}
+        <div className="mt-3 flex items-center justify-center gap-1.5 text-[11px] text-ash">
+          <ListChecks size={13} strokeWidth={1.55} />
+          已答 {history.length} 题
         </div>
       </div>
 

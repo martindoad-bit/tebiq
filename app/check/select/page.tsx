@@ -7,7 +7,7 @@
  * CN/JP 混排规则：签证名用日文原文。
  */
 import Link from 'next/link'
-import { ChevronRight } from 'lucide-react'
+import { ChevronRight, IdCard } from 'lucide-react'
 import AppShell from '@/app/_components/v5/AppShell'
 import AppBar from '@/app/_components/v5/AppBar'
 
@@ -34,15 +34,31 @@ const VISA_LIST: VisaEntry[] = [
 export default function CheckSelectPage() {
   return (
     <AppShell appBar={<AppBar title="选择你的签证类型" back="/check" />}>
+      <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-3.5 shadow-card">
+        <div className="flex items-start gap-3">
+          <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-[12px] bg-accent-2 text-ink">
+            <IdCard size={18} strokeWidth={1.55} />
+          </span>
+          <div>
+            <p className="text-[13px] font-medium leading-snug text-ink">
+              请按在留カード上的「在留資格」选择
+            </p>
+            <p className="mt-1 text-[11px] leading-[1.55] text-ash">
+              名称保留日文原文，和政府文件上的写法一致。
+            </p>
+          </div>
+        </div>
+      </section>
+
       <ul className="mt-3 flex flex-col gap-2">
         {VISA_LIST.map(v => (
           <li key={v.name}>
             {v.disabled ? (
               <div
-                className="flex items-center justify-between bg-surface border border-hairline rounded-chip px-[14px] py-[13px] opacity-60"
+                className="flex items-center justify-between bg-surface/70 border border-hairline rounded-[12px] px-[14px] py-[13px] opacity-65 shadow-soft"
                 aria-disabled="true"
               >
-                <span className="text-[13px] text-ink">{v.name}</span>
+                <span className="text-[13px] text-ink jp-text">{v.name}</span>
                 <span className="text-[10.5px] text-ash bg-accent-2 rounded-full px-2 py-0.5">
                   即将开放
                 </span>
@@ -50,9 +66,9 @@ export default function CheckSelectPage() {
             ) : (
               <Link
                 href={v.href}
-                className="flex items-center justify-between bg-surface border border-hairline rounded-chip px-[14px] py-[13px] hover:border-accent transition-colors"
+                className="flex items-center justify-between bg-surface border border-hairline rounded-[12px] px-[14px] py-[13px] shadow-card hover:border-accent transition-colors active:translate-y-px"
               >
-                <span className="text-[13px] text-ink">{v.name}</span>
+                <span className="text-[13px] text-ink jp-text">{v.name}</span>
                 <ChevronRight size={16} className="text-haze" strokeWidth={1.6} />
               </Link>
             )}
@@ -60,7 +76,9 @@ export default function CheckSelectPage() {
         ))}
       </ul>
 
-      <div className="text-center mt-5 text-[11px] text-ash">1/12</div>
+      <div className="text-center mt-5 text-[11px] text-ash">
+        之后会进入约 12 题的自查问卷
+      </div>
     </AppShell>
   )
 }

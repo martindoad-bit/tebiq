@@ -7,6 +7,7 @@
  */
 import { useState } from 'react'
 import Link from 'next/link'
+import { AlertTriangle, CheckCircle2, ClipboardList, ListChecks } from 'lucide-react'
 import AppShell from './v5/AppShell'
 import AppBar from './v5/AppBar'
 import Button from './v5/Button'
@@ -103,7 +104,7 @@ export default function QuizResultView({
 
   return (
     <AppShell appBar={<AppBar title="自查结果" back={backHref} />}>
-      <div className="bg-accent-2 rounded-card px-4 py-[18px] text-center mt-3">
+      <div className="bg-accent-2 rounded-card border border-accent/25 px-4 py-[18px] text-center mt-3 shadow-card">
         <div
           className={`mx-auto w-[38px] h-[38px] rounded-full ${sv.bg} text-white text-[22px] font-medium flex items-center justify-center mb-3`}
           aria-hidden="true"
@@ -155,14 +156,18 @@ export default function QuizResultView({
 }
 
 function ResultBlock({ title, items }: { title: string; items: string[] }) {
+  const Icon = title.includes('建议') ? ListChecks : AlertTriangle
   return (
-    <section className="mt-5">
-      <h3 className="text-[13px] font-medium text-ink mb-2">{title}</h3>
-      <ul className="space-y-1">
+    <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-3 shadow-card">
+      <h3 className="mb-2 flex items-center gap-2 text-[13px] font-medium text-ink">
+        <Icon size={15} strokeWidth={1.55} />
+        {title}
+      </h3>
+      <ul className="space-y-1.5">
         {items.map((line, i) => (
           <li
             key={i}
-            className="flex items-start text-[12px] text-slate leading-[1.6] pl-3 relative"
+            className="relative flex items-start pl-3 text-[12px] leading-[1.6] text-slate"
           >
             <span
               className="absolute left-0 top-[10px] w-1.5 h-1.5 rounded-full bg-accent"
@@ -178,8 +183,9 @@ function ResultBlock({ title, items }: { title: string; items: string[] }) {
 
 function GreenContent({ bank }: { bank: QuizBank }) {
   return (
-    <section className="mt-5 bg-surface border border-hairline rounded-card p-4">
-      <h3 className="text-[13px] font-medium text-ink mb-2">
+    <section className="mt-3 bg-surface border border-hairline rounded-card p-4 shadow-card">
+      <h3 className="mb-2 flex items-center gap-2 text-[13px] font-medium text-ink">
+        <CheckCircle2 size={15} strokeWidth={1.55} />
         {bank.visaName} 续签材料清单
       </h3>
       <p className="text-ash text-[11.5px] mb-3">
@@ -188,7 +194,7 @@ function GreenContent({ bank }: { bank: QuizBank }) {
       <ul className="space-y-1.5">
         {bank.materials.map((m, i) => (
           <li key={i} className="flex items-start gap-2 text-[12px] text-slate leading-[1.6]">
-            <span className="text-success flex-shrink-0 mt-[2px]">✓</span>
+            <CheckCircle2 size={13} strokeWidth={1.55} className="mt-[3px] flex-shrink-0 text-success" />
             <span>{m}</span>
           </li>
         ))}
@@ -200,19 +206,24 @@ function GreenContent({ bank }: { bank: QuizBank }) {
 function CollapsibleMaterials({ bank }: { bank: QuizBank }) {
   const [open, setOpen] = useState(false)
   return (
-    <div className="mt-5">
+    <div className="mt-3">
       <button
         type="button"
         onClick={() => setOpen(o => !o)}
-        className="w-full flex items-center justify-between bg-surface border border-hairline hover:border-accent rounded-chip px-[14px] py-[12px] text-left transition-colors"
+        className="w-full flex items-center justify-between bg-surface border border-hairline hover:border-accent rounded-card px-[14px] py-[12px] text-left shadow-card transition-colors"
         aria-expanded={open}
       >
-        <div>
-          <div className="text-[13px] text-ink font-medium">
+        <div className="flex items-start gap-3">
+          <span className="mt-0.5 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-[10px] bg-accent-2 text-ink">
+            <ClipboardList size={16} strokeWidth={1.55} />
+          </span>
+          <div>
+          <div className="text-[13px] text-ink font-medium leading-snug">
             无论结果如何，以下材料都需要准备
           </div>
           <div className="text-ash text-[10.5px] mt-0.5">
             {bank.visaName} 续签所需 · 共 {bank.materials.length} 项
+          </div>
           </div>
         </div>
         <span
@@ -224,7 +235,7 @@ function CollapsibleMaterials({ bank }: { bank: QuizBank }) {
         </span>
       </button>
       {open && (
-        <ul className="mt-2 bg-surface border border-hairline rounded-chip overflow-hidden">
+        <ul className="mt-2 bg-surface border border-hairline rounded-card overflow-hidden shadow-card">
           {bank.materials.map((m, i) => (
             <li
               key={i}

@@ -99,3 +99,64 @@
 - bottom sheet 增加 handle、会员 icon 和多层 elevation，减少“白板弹窗”感。
 - 权益列表从圆点文字改为带 check icon 的卡片列表，信息更稳定。
 - 保持克制 CTA：主按钮仍是「立即开通会员」，二级动作保留「稍后再说」。
+
+## 屏 05 续签自查入口
+
+### 改前
+
+![05 check before](docs/visual-report/screenshots/05-check-before.png)
+
+### 改后
+
+![05 check after](docs/visual-report/screenshots/05-check-after.png)
+
+### 本轮改动
+
+- 插画占位从文字框改为 CSS 文件/清单/人物占位图，方便后续替换为 GPT Image 2 素材。
+- 顶部增加「约 3 分钟」轻量标签，副文案改为具体用途说明。
+- 三个功能点保留原结构，但 icon 容器、文案和阴影更接近首页/拍照页视觉语言。
+
+## 屏 06 选择签证类型
+
+### 改前
+
+![06 check select before](docs/visual-report/screenshots/06-check-select-before.png)
+
+### 改后
+
+![06 check select after](docs/visual-report/screenshots/06-check-select-after.png)
+
+### 本轮改动
+
+- 增加在留カード说明卡，明确用户应按「在留資格」选择。
+- 签证名称使用 `.jp-text` 微调日文排版，保持日文原文。
+- 列表卡片加入 shadow stack，禁用项降低透明度并保留「即将开放」状态。
+
+## 屏 07 自查问题
+
+### 改前
+
+![07 check quiz before](docs/visual-report/screenshots/07-check-quiz-before.png)
+
+### 改后
+
+![07 check quiz after](docs/visual-report/screenshots/07-check-quiz-after.png)
+
+### 本轮改动
+
+- 顶部从纯数字改为「第 N 题 + 进度条」，进度感更稳定。
+- 问题和解释放入白色卡片，选项使用一致的 12px 圆角与 shadow-card。
+- 修复进入动画截图时半透明的问题：进入动画只做轻微位移，不再改变 opacity。
+- 底部显示已答题数，替代重复的页码信息。
+
+## 屏 08 自查结果
+
+### 改后
+
+![08 check result after](docs/visual-report/screenshots/08-check-result-after.png)
+
+### 本轮改动
+
+- 内联结果页的主要风险点、建议行动、材料清单改为独立卡片。
+- 结果 hero 加边框和 shadow-card，和拍照结果页保持统一层级。
+- 材料折叠卡增加 icon，避免像普通文本列表。

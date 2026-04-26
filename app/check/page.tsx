@@ -5,7 +5,7 @@
  * 视觉跟 docs/prototype/v5-mockup.html 1444-1517。
  */
 import Link from 'next/link'
-import { AlignLeft, CheckCircle, Shield } from 'lucide-react'
+import { AlignLeft, CheckCircle, Clock3, Shield } from 'lucide-react'
 import AppShell from '@/app/_components/v5/AppShell'
 import AppBar from '@/app/_components/v5/AppBar'
 import Illustration from '@/app/_components/v5/Illustration'
@@ -16,7 +16,13 @@ export default function CheckLandingPage() {
   return (
     <AppShell appBar={<AppBar title="续签自查" back="/" />}>
       <div className="text-center mt-2 mb-1">
-        <p className="text-[12px] text-ash">3 分钟了解你的签证风险</p>
+        <div className="mx-auto mb-2 inline-flex items-center gap-1.5 rounded-full bg-cool-blue/70 px-2.5 py-1 text-[10.5px] font-medium text-ink/80">
+          <Clock3 size={12} strokeWidth={1.55} />
+          约 3 分钟
+        </div>
+        <p className="text-[12px] leading-[1.6] text-ash">
+          根据你的在留資格和当前情况，先看续签前要注意的风险。
+        </p>
       </div>
 
       <Illustration
@@ -24,16 +30,16 @@ export default function CheckLandingPage() {
         subject="签证文件 + 检查清单 + 守护人物"
       />
 
-      <ul className="space-y-3 mt-2 mb-6">
+      <ul className="space-y-2.5 mt-2 mb-6">
         <FeatureRow
           icon={<CheckCircle size={14} strokeWidth={1.5} className="text-ink" />}
           title="完整的风险评估"
-          sub="不局限所有风险"
+          sub="覆盖工作、收入、材料等常见风险"
         />
         <FeatureRow
           icon={<AlignLeft size={14} strokeWidth={1.5} className="text-ink" />}
           title="个性化建议"
-          sub="针对你的情况给出建议"
+          sub="按你的回答整理下一步行动"
         />
         <FeatureRow
           icon={<Shield size={14} strokeWidth={1.5} className="text-ink" />}
@@ -69,7 +75,7 @@ function FeatureRow({
 }) {
   return (
     <li className="flex items-start gap-3">
-      <span className="flex-shrink-0 w-7 h-7 rounded-full bg-accent-2 flex items-center justify-center mt-0.5">
+      <span className="flex-shrink-0 w-8 h-8 rounded-[10px] bg-accent-2 flex items-center justify-center mt-0.5 shadow-soft">
         {icon}
       </span>
       <div className="flex-1 min-w-0 leading-tight">
