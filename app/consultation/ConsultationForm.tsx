@@ -3,6 +3,15 @@ import { useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import {
+  AlertCircle,
+  ClipboardList,
+  MessageSquareText,
+  Send,
+  ShieldCheck,
+} from 'lucide-react'
+import AppBar from '@/app/_components/v5/AppBar'
+import AppShell from '@/app/_components/v5/AppShell'
+import {
   COLOR_LABEL,
   CONTACT_LABEL,
   URGENCY_LABEL,
@@ -104,68 +113,57 @@ export default function ConsultationForm() {
   }
 
   return (
-    <main className="min-h-screen bg-base text-body pb-16 md:pb-0">
-      <header className="sticky top-0 z-10 bg-card/95 backdrop-blur border-b border-line">
-        <div className="max-w-md md:max-w-3xl mx-auto px-4 h-14 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-3" aria-label="TEBIQ 首页">
-            <img src="/logo-icon.png" alt="" className="h-12 w-12 rounded-xl" />
-            <div>
-              <div className="text-xl font-bold text-title leading-none">TEBIQ</div>
-              <div className="text-xs text-muted leading-tight mt-0.5">てびき</div>
-            </div>
-          </Link>
-          <Link href="/" className="text-body hover:text-title text-sm">← 首页</Link>
-        </div>
-      </header>
-
-      <section className="px-4 pt-10 pb-6">
-        <div className="max-w-md md:max-w-3xl mx-auto">
-          <div className="inline-block bg-highlight text-primary text-xs font-bold px-3 py-1 rounded-full mb-3">
+    <AppShell appBar={<AppBar title="预约咨询" back="/" />}>
+      <section className="pt-4">
+        <div className="inline-flex items-center gap-1.5 rounded-chip bg-accent-2 px-3 py-1.5 text-[11px] font-medium text-ink">
+          <ClipboardList size={13} strokeWidth={1.55} />
             预约咨询
-          </div>
-          <h1 className="text-2xl md:text-3xl font-bold text-title leading-tight mb-3">
-            预约专业书士咨询
-          </h1>
-          <p className="text-body text-sm md:text-base leading-relaxed">
-            提交后我们会在 24 小时内联系您，根据您的情况匹配合适的持牌行政书士。
-          </p>
         </div>
+        <h1 className="mt-3 max-w-full text-[26px] font-medium leading-[1.18] text-ink">
+          预约专业书士咨询
+        </h1>
+        <p className="mt-3 max-w-full break-words text-[13px] leading-[1.7] text-slate">
+          提交后我们会在 24 小时内联系你，根据你的情况匹配合适的持牌行政书士。
+        </p>
       </section>
 
       {/* 用户情况摘要 */}
-      <section className="px-4 mb-8">
-        <div className="max-w-md md:max-w-3xl mx-auto">
-          <ContextCard ctx={ctx} />
-        </div>
+      <section className="mt-5">
+        <ContextCard ctx={ctx} />
       </section>
 
-      <section className="px-4 pb-12">
+      <section className="mt-4 pb-4">
         <form
           onSubmit={handleSubmit}
-          className="max-w-md md:max-w-3xl mx-auto bg-card border border-line rounded-2xl p-5 shadow-sm space-y-5"
+          className="rounded-card border border-hairline bg-surface px-4 py-4 shadow-card"
         >
-          <Field label="姓名" hint="选填，方便我们称呼您">
+          <div className="mb-4 flex items-center gap-2 text-[13px] font-medium text-ink">
+            <MessageSquareText size={16} strokeWidth={1.55} />
+            联系信息
+          </div>
+
+          <Field label="姓名" hint="选填，方便我们称呼你">
             <input
               type="text"
               value={userName}
               onChange={e => setUserName(e.target.value)}
               maxLength={40}
               placeholder="王先生 / 李女士"
-              className="w-full bg-base border border-line rounded-lg px-3 py-2.5 text-title text-base focus:border-primary outline-none"
+              className={controlClass}
             />
           </Field>
 
           <Field label="希望的联系方式" required>
-            <div className="grid grid-cols-4 gap-2">
+            <div className="grid grid-cols-2 gap-2">
               {(Object.keys(CONTACT_LABEL) as ContactMethod[]).map(m => (
                 <button
                   type="button"
                   key={m}
                   onClick={() => setPreferredContact(m)}
-                  className={`min-h-[44px] rounded-lg border text-sm font-bold transition-colors ${
+                  className={`min-h-[40px] rounded-[11px] border text-[12px] font-medium transition-colors ${
                     preferredContact === m
-                      ? 'bg-primary border-primary text-title'
-                      : 'bg-card border-line text-body hover:border-primary'
+                      ? 'border-accent bg-accent text-ink shadow-soft'
+                      : 'border-hairline bg-surface text-ash hover:border-accent'
                   }`}
                 >
                   {CONTACT_LABEL[m]}
@@ -182,7 +180,7 @@ export default function ConsultationForm() {
               required
               maxLength={120}
               placeholder={contactPlaceholder(preferredContact)}
-              className="w-full bg-base border border-line rounded-lg px-3 py-2.5 text-title text-base focus:border-primary outline-none"
+              className={controlClass}
             />
           </Field>
 
@@ -190,7 +188,7 @@ export default function ConsultationForm() {
             <select
               value={location}
               onChange={e => setLocation(e.target.value)}
-              className="w-full bg-base border border-line rounded-lg px-3 py-2.5 text-title text-base focus:border-primary outline-none"
+              className={controlClass}
             >
               <option value="">不指定</option>
               {LOCATIONS.map(loc => (
@@ -206,8 +204,8 @@ export default function ConsultationForm() {
               {(Object.keys(URGENCY_LABEL) as Urgency[]).map(u => (
                 <label
                   key={u}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-lg border cursor-pointer transition-colors ${
-                    urgency === u ? 'border-primary bg-highlight' : 'border-line bg-card hover:border-primary'
+                  className={`flex min-h-[44px] cursor-pointer items-center gap-3 rounded-[11px] border px-3 py-2.5 transition-colors ${
+                    urgency === u ? 'border-accent bg-accent-2' : 'border-hairline bg-surface hover:border-accent'
                   }`}
                 >
                   <input
@@ -215,9 +213,9 @@ export default function ConsultationForm() {
                     name="urgency"
                     checked={urgency === u}
                     onChange={() => setUrgency(u)}
-                    className="accent-primary"
+                    className="accent-[#F6B133]"
                   />
-                  <span className="text-title text-sm">{URGENCY_LABEL[u]}</span>
+                  <span className="text-[13px] text-ink">{URGENCY_LABEL[u]}</span>
                 </label>
               ))}
             </div>
@@ -229,25 +227,31 @@ export default function ConsultationForm() {
               onChange={e => setAdditionalInfo(e.target.value)}
               rows={4}
               maxLength={1000}
-              className="w-full bg-base border border-line rounded-lg px-3 py-2.5 text-title text-sm resize-y focus:border-primary outline-none"
+              className={`${controlClass} resize-y text-[13px]`}
             />
           </Field>
 
           {error && (
-            <p className="text-[#DC2626] text-sm font-bold">{error}</p>
+            <p className="flex items-start gap-1.5 text-[12px] font-medium leading-relaxed text-danger">
+              <AlertCircle size={14} strokeWidth={1.55} className="mt-0.5 flex-shrink-0" />
+              {error}
+            </p>
           )}
 
-          <div className="bg-base border border-line rounded-xl px-4 py-3">
-            <p className="text-title text-xs font-bold mb-2">关于你的信息</p>
-            <ul className="text-muted text-xs leading-relaxed space-y-1">
-              <li>✓ 提交的信息仅用于本次咨询对接</li>
-              <li>✓ 不会用于其他营销用途</li>
-              <li>✓ 不会出售或共享给第三方</li>
+          <div className="mt-4 rounded-[12px] bg-canvas px-3 py-3">
+            <p className="mb-2 flex items-center gap-1.5 text-[11px] font-medium text-ink">
+              <ShieldCheck size={13} strokeWidth={1.55} />
+              关于你的信息
+            </p>
+            <ul className="space-y-1 text-[11px] leading-relaxed text-ash">
+              <li>提交的信息仅用于本次咨询对接</li>
+              <li>不会用于其他营销用途</li>
+              <li>不会出售或共享给第三方</li>
               <li>
-                ✓ 详见
+                详见
                 <Link
                   href="/privacy"
-                  className="text-primary hover:text-primary-hover underline underline-offset-2 mx-0.5"
+                  className="mx-0.5 text-ink underline underline-offset-2"
                 >
                   プライバシーポリシー
                 </Link>
@@ -258,47 +262,54 @@ export default function ConsultationForm() {
           <button
             type="submit"
             disabled={submitting}
-            className="w-full min-h-[56px] bg-primary hover:bg-primary-hover disabled:opacity-60 text-title font-bold rounded-xl text-base transition-all"
+            className="mt-4 flex min-h-[50px] w-full items-center justify-center gap-2 rounded-btn bg-accent px-4 text-[14px] font-medium text-ink shadow-cta transition-transform active:translate-y-px disabled:opacity-60"
           >
-            {submitting ? '提交中…' : '提交咨询请求 →'}
+            {submitting ? '提交中...' : (
+              <>
+                <Send size={16} strokeWidth={1.55} />
+                提交咨询请求
+              </>
+            )}
           </button>
 
-          <p className="text-muted text-[11px] leading-relaxed pt-2 border-t border-line">
+          <p className="mt-4 border-t border-hairline pt-3 text-[11px] leading-relaxed text-ash">
             本平台聚合合作书士资源，根据您的情况匹配合适的专业人士。
           </p>
         </form>
       </section>
-
-      <footer className="bg-card border-t border-line px-4 py-6 pb-[max(1.5rem,env(safe-area-inset-bottom))] text-center">
-        <p className="text-muted text-xs">© 2026 TEBIQ</p>
-      </footer>
-    </main>
+    </AppShell>
   )
 }
 
 function ContextCard({ ctx }: { ctx: PageContext }) {
   const visaLabel = VISA_LABEL[ctx.visaType] ?? ctx.visaType
   return (
-    <div className="bg-card border border-line border-l-4 border-l-primary rounded-2xl p-5 shadow-sm">
-      <div className="text-primary text-xs font-bold mb-2">你的自查情况</div>
-      <dl className="text-sm leading-relaxed space-y-1">
-        <div>
-          <span className="text-muted">签证类型：</span>
-          <span className="text-title font-bold">{visaLabel}</span>
+    <div className="rounded-card border border-hairline bg-surface px-4 py-4 shadow-card">
+      <div className="mb-3 flex items-center gap-2 text-[13px] font-medium text-ink">
+        <ClipboardList size={16} strokeWidth={1.55} />
+        你的自查情况
+      </div>
+      <dl className="space-y-2 text-[12px] leading-relaxed">
+        <div className="flex gap-3">
+          <span className="w-[68px] flex-shrink-0 text-ash">签证类型</span>
+          <span className="min-w-0 flex-1 break-words font-medium text-ink">{visaLabel}</span>
         </div>
-        <div>
-          <span className="text-muted">自查结果：</span>
+        <div className="flex items-center gap-3">
+          <span className="w-[68px] flex-shrink-0 text-ash">自查结果</span>
           <ColorBadge color={ctx.resultColor} />
         </div>
         {ctx.triggeredItems.length > 0 && (
-          <div>
-            <span className="text-muted block mb-1">触发的主要风险：</span>
-            <ul className="ml-3 list-disc text-body text-sm space-y-0.5">
+          <div className="rounded-[11px] bg-canvas px-3 py-2.5">
+            <span className="mb-1.5 block text-[11px] font-medium text-ash">触发的主要风险</span>
+            <ul className="space-y-1 text-[12px] leading-relaxed text-slate">
               {ctx.triggeredItems.slice(0, 5).map((it, i) => (
-                <li key={i}>{it}</li>
+                <li key={i} className="flex gap-1.5">
+                  <AlertCircle size={13} strokeWidth={1.55} className="mt-0.5 flex-shrink-0 text-accent" />
+                  <span>{it}</span>
+                </li>
               ))}
               {ctx.triggeredItems.length > 5 && (
-                <li className="text-muted">等 {ctx.triggeredItems.length} 项</li>
+                <li className="text-ash">等 {ctx.triggeredItems.length} 项</li>
               )}
             </ul>
           </div>
@@ -311,26 +322,26 @@ function ContextCard({ ctx }: { ctx: PageContext }) {
 function ColorBadge({ color }: { color: PageContext['resultColor'] }) {
   if (color === 'red') {
     return (
-      <span className="bg-[#FEE2E2] text-[#B91C1C] text-xs font-bold px-2 py-0.5 rounded">
+      <span className="rounded-[8px] bg-[#FDECEA] px-2 py-1 text-[11px] font-medium text-danger">
         {COLOR_LABEL.red}
       </span>
     )
   }
   if (color === 'yellow') {
     return (
-      <span className="bg-highlight text-primary text-xs font-bold px-2 py-0.5 rounded">
+      <span className="rounded-[8px] bg-accent-2 px-2 py-1 text-[11px] font-medium text-ink">
         {COLOR_LABEL.yellow}
       </span>
     )
   }
   if (color === 'green') {
     return (
-      <span className="bg-[#DCFCE7] text-[#15803D] text-xs font-bold px-2 py-0.5 rounded">
+      <span className="rounded-[8px] bg-[#E7F4ED] px-2 py-1 text-[11px] font-medium text-success">
         {COLOR_LABEL.green}
       </span>
     )
   }
-  return <span className="text-muted text-xs">{COLOR_LABEL.unknown}</span>
+  return <span className="text-[11px] text-ash">{COLOR_LABEL.unknown}</span>
 }
 
 function Field({
@@ -345,16 +356,19 @@ function Field({
   children: React.ReactNode
 }) {
   return (
-    <label className="block">
-      <span className="text-title text-sm font-bold mb-1.5 block">
+    <label className="mb-4 block">
+      <span className="mb-1.5 block text-[12px] font-medium text-ink">
         {label}
-        {required && <span className="text-[#DC2626] ml-1">*</span>}
-        {hint && <span className="text-muted text-xs font-normal ml-2">{hint}</span>}
+        {required && <span className="ml-1 text-danger">*</span>}
+        {hint && <span className="ml-2 text-[11px] font-normal text-ash">{hint}</span>}
       </span>
       {children}
     </label>
   )
 }
+
+const controlClass =
+  'w-full rounded-[11px] border border-hairline bg-canvas px-3 py-2.5 text-[16px] text-ink outline-none placeholder:text-haze transition-colors focus:border-accent'
 
 function contactPlaceholder(m: ContactMethod): string {
   if (m === 'phone') return '例：090-1234-5678'

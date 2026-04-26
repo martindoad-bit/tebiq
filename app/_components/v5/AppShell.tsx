@@ -30,10 +30,10 @@ export default function AppShell({
 }: Props) {
   return (
     <div className={`h-[100dvh] ${shellClassName}`}>
-      <div className="flex h-[100dvh] flex-col md:mx-auto md:max-w-phone md:border-x md:border-hairline md:shadow-soft">
+      <div className="flex h-[100dvh] w-full max-w-full flex-col overflow-hidden md:mx-auto md:max-w-phone md:border-x md:border-hairline md:shadow-soft">
         {appBar}
         <main
-          className={`min-h-0 flex-1 overflow-y-auto px-4 pb-6 ${bodyClassName}`}
+          className={`min-h-0 flex-1 overflow-x-hidden overflow-y-auto px-4 pb-6 ${bodyClassName}`}
           style={{
             paddingBottom: tabBar ? 'calc(64px + env(safe-area-inset-bottom))' : 'env(safe-area-inset-bottom)',
           }}

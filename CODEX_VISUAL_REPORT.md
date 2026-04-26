@@ -381,3 +381,26 @@
 ### 待 review
 
 - 当前截图是未连接真实登录态数据的本地渲染；用户头像、手机号、真实历史条目的视觉仍建议在有本地 DB/session 后复核。
+
+## 追加收口：咨询提交流程
+
+![consultation polish](docs/visual-report/screenshots/consultation-v5-polish.png)
+
+![consultation success polish](docs/visual-report/screenshots/consultation-success-v5-polish.png)
+
+### 本轮改动
+
+- 将 `/consultation` 和 `/consultation/success` 从旧大页面视觉切到 v5 手机壳结构，移除旧 logo header 和页面级 footer。
+- 表单控件、联系方式选择、风险摘要、隐私说明和提交成功卡片统一使用 v5 的 13px 信息密度、hairline、浅橙状态底和 `shadow-card / shadow-cta`。
+- 联系方式选项从 4 列改为 2 列，窄屏下更稳，不会把表单横向撑开。
+- `AppShell` 增加 `w-full max-w-full overflow-hidden` 与 `overflow-x-hidden`，为所有 v5 页面提供横向溢出兜底。
+
+### 验证
+
+- `npm run lint` 通过；仅剩既有旧页面 `<img>` warning。
+- `npm run build` 通过。
+- 已用 Chrome headless 在 `480 x 820` v5 phone viewport 截图 `/consultation` 与 `/consultation/success`。
+
+### 待 review
+
+- `399px` headless 在当前 macOS/Chrome 环境会裁切 480px 手机壳左侧视图，报告截图改用 v5 设计基准宽度 `480px`。真机 Safari/Chrome 仍建议最后复核一次滚动手感。
