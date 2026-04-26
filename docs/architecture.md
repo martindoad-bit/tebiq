@@ -1,3 +1,37 @@
+# TEBIQ Architecture (post-Block 3)
+
+## Block 3 highlights — UI 重做（v5 视觉系统）
+
+- 全站按 `docs/prototype/v5-mockup.html` 重做 UI（13 屏 + 登录注册 + 配额弹窗）
+- 共享 shell 在 `app/_components/v5/`：AppShell / AppBar / TabBar / Logo / Button / Illustration
+- Tailwind 增加 v5 token：`ink / accent / accent-2 / canvas / surface / hairline / ash / haze / chip / cool-blue / success / danger / slate` + `rounded-{card,btn,chip}` + `max-w-phone`
+- 移除全局 MobileNav 和 LegalFooter；每页用 AppShell 自带 TabBar
+- 路由调整：
+  - `/photo` 拍照入口（屏 02）
+  - `/photo/result/[id]` 识别结果（屏 03）
+  - `/photo/result/[id]/detail` 详细说明（屏 04）
+  - `/check` 续签自查入口（屏 05）— 之前直接跳 gijinkoku quiz，现改为 landing
+  - `/check/select` 签证类型选择（屏 06）
+  - `/check/[visa]` 动态 quiz（屏 07-08）— 替换原 `/check/{visa}/quiz`
+  - `/my` → 重定向到 `/my/archive`
+  - `/my/archive` 我的档案（屏 11）
+  - `/my/reminders` 提醒中心（屏 12）
+  - `/my/account` 我的账户（屏 14）
+  - `/my/profile` 资料编辑（迁自旧 `/my`）
+  - `/subscribe` 订阅方案（屏 10）
+- 拍照 mock：`/api/photo/recognize`（POST，写 documents 表，返回 fixture）+ `/api/photo/quota`（GET）+ `/api/photo/recent`（GET）。Block 5 用 Bedrock vision 替换 fixture
+- 拍照配额：免费 3/月，逻辑在 `lib/photo/quota.ts`（基于 documents.created_at + family_id 计数 + 检查 subscriptions）
+- 安装 `lucide-react` 替代之前的内联 SVG（统一 stroke 描边风格）
+
+## Block 3 删除项
+
+- `app/_components/MobileNav.tsx` — 由 v5/TabBar 取代
+- `app/_components/LegalFooter.tsx` — 不再全局挂载（法律页自行引用）
+- `app/check/{eijusha,keiei,haigusha,tokutei,teijusha}/page.tsx` — 旧静态 info 页，根级 `/{visa}` SEO 页继续提供同内容
+- `app/check/{visa}/quiz/page.tsx` × 4 — 都改为 redirect 到 `/check/{visa}`
+
+---
+
 # TEBIQ Architecture (post-Block 2)
 
 > Snapshot: end of Sprint 1 / Block 2 (live Supabase + Stripe + notifications).
