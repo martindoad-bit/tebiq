@@ -101,6 +101,12 @@ export const consultationStatusEnum = pgEnum('consultation_status', [
   'closed',
 ])
 
+export const articleStatusEnum = pgEnum('article_status', [
+  'draft',
+  'reviewing',
+  'published',
+])
+
 // Member profile enums (added Block 2)
 export const maritalStatusEnum = pgEnum('marital_status', [
   'single',
@@ -341,6 +347,26 @@ export const consultations = pgTable(
   }),
 )
 
+// --- articles (knowledge content CMS) ---
+export const articles = pgTable(
+  'articles',
+  {
+    id: idCol(),
+    title: varchar('title', { length: 160 }).notNull(),
+    bodyMarkdown: text('body_markdown').notNull(),
+    category: varchar('category', { length: 64 }).notNull(),
+    status: articleStatusEnum('status').notNull().default('draft'),
+    requiresShoshiReview: boolean('requires_shoshi_review').notNull().default(true),
+    createdAt: createdAt(),
+    updatedAt: updatedAt(),
+  },
+  t => ({
+    statusIdx: index('articles_status_idx').on(t.status),
+    categoryIdx: index('articles_category_idx').on(t.category),
+    updatedIdx: index('articles_updated_at_idx').on(t.updatedAt),
+  }),
+)
+
 // --- sessions (取代 KV session) ---
 export const sessions = pgTable(
   'sessions',
@@ -393,6 +419,8 @@ export type Invitation = typeof invitations.$inferSelect
 export type NewInvitation = typeof invitations.$inferInsert
 export type Consultation = typeof consultations.$inferSelect
 export type NewConsultation = typeof consultations.$inferInsert
+export type Article = typeof articles.$inferSelect
+export type NewArticle = typeof articles.$inferInsert
 export type Session = typeof sessions.$inferSelect
 export type NewSession = typeof sessions.$inferInsert
 export type OtpCode = typeof otpCodes.$inferSelect

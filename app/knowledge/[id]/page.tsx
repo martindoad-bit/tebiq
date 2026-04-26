@@ -1,8 +1,5 @@
 /**
- * /knowledge/[id] — 知识详情页。
- *
- * 1.0 先承接知识中心列表点击，内容仍使用本地概念库，并保留
- *「待书士审核」标记。
+ * /knowledge/[id] — published article detail.
  */
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
@@ -17,14 +14,13 @@ import {
 import AppShell from '@/app/_components/v5/AppShell'
 import AppBar from '@/app/_components/v5/AppBar'
 import TabBar from '@/app/_components/v5/TabBar'
-import { CONCEPTS } from '@/lib/knowledge/concepts'
+import { getPublishedArticleById } from '@/lib/db/queries/articles'
+import { parseMarkdownBlocks } from '@/lib/knowledge/markdown'
+
+export const dynamic = 'force-dynamic'
 
 interface Props {
   params: { id: string }
-}
-
-export function generateStaticParams() {
-  return CONCEPTS.map(c => ({ id: c.id }))
 }
 
 function fmtDate(d: Date): string {
@@ -34,27 +30,11 @@ function fmtDate(d: Date): string {
   return `${y}/${m}/${day}`
 }
 
-function placeholderDate(id: string): string {
-  let seed = 0
-  for (let i = 0; i < id.length; i++) seed += id.charCodeAt(i)
-  const today = new Date()
-  today.setDate(today.getDate() - (seed % 60))
-  return fmtDate(today)
-}
+export default async function KnowledgeDetailPage({ params }: Props) {
+  const article = await getPublishedArticleById(params.id)
+  if (!article) notFound()
 
-function cleanParagraphs(content: string): string[] {
-  return content
-    .replace('[待书士审核]', '')
-    .split(/\n{2,}/)
-    .map(p => p.trim())
-    .filter(Boolean)
-}
-
-export default function KnowledgeDetailPage({ params }: Props) {
-  const concept = CONCEPTS.find(c => c.id === params.id)
-  if (!concept) notFound()
-
-  const paragraphs = cleanParagraphs(concept.content)
+  const blocks = parseMarkdownBlocks(article.bodyMarkdown)
 
   return (
     <AppShell
@@ -69,18 +49,24 @@ export default function KnowledgeDetailPage({ params }: Props) {
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2">
               <span className="rounded-[8px] bg-canvas px-2 py-1 text-[10px] font-medium leading-none text-ash">
-                知识条目
+                {article.category}
               </span>
-              <span className="rounded-[8px] bg-accent-2 px-2 py-1 text-[10px] font-medium leading-none text-ink">
-                待书士审核
-              </span>
+              {article.requiresShoshiReview ? (
+                <span className="rounded-[8px] bg-accent-2 px-2 py-1 text-[10px] font-medium leading-none text-ink">
+                  待书士审核
+                </span>
+              ) : (
+                <span className="rounded-[8px] bg-[rgba(87,167,123,0.12)] px-2 py-1 text-[10px] font-medium leading-none text-success">
+                  已发布
+                </span>
+              )}
             </div>
             <h1 className="mt-3 text-[18px] font-medium leading-[1.45] text-ink">
-              {concept.title}
+              {article.title}
             </h1>
             <div className="mt-3 flex items-center gap-1.5 text-[11px] leading-none text-ash">
               <CalendarDays size={12} strokeWidth={1.55} />
-              更新于 {placeholderDate(concept.id)}
+              更新于 {fmtDate(article.updatedAt)}
             </div>
           </div>
         </div>
@@ -88,50 +74,77 @@ export default function KnowledgeDetailPage({ params }: Props) {
 
       <article className="mt-3 max-w-full overflow-hidden rounded-card border border-hairline bg-surface px-4 py-4 shadow-card">
         <div className="mb-3 flex items-center gap-2 text-[12px] font-medium text-ink">
-          <FileText size={15} strokeWidth={1.55} />
-          主要内容
+          <FileText size={14} strokeWidth={1.55} />
+          正文
         </div>
-        <div className="space-y-4">
-          {paragraphs.map((p, index) => (
-            <p
-              key={index}
-              className="whitespace-pre-line break-words text-[13px] leading-[1.75] text-ink/88 [overflow-wrap:anywhere]"
-              style={{ overflowWrap: 'anywhere', wordBreak: 'break-all' }}
-            >
-              {p}
-            </p>
-          ))}
+        <div className="space-y-3">
+          {blocks.map((block, idx) => {
+            if (block.type === 'heading') {
+              const Tag = block.level === 2 ? 'h2' : 'h3'
+              return (
+                <Tag
+                  key={idx}
+                  className="pt-1 text-[14px] font-medium leading-[1.55] text-ink"
+                >
+                  {block.text}
+                </Tag>
+              )
+            }
+            if (block.type === 'list') {
+              return (
+                <ul key={idx} className="space-y-1.5">
+                  {block.items.map(item => (
+                    <li
+                      key={item}
+                      className="relative pl-4 text-[13px] leading-[1.75] text-slate"
+                    >
+                      <span className="absolute left-0 top-[0.72em] h-1.5 w-1.5 rounded-full bg-accent" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              )
+            }
+            return (
+              <p key={idx} className="text-[13px] leading-[1.75] text-slate">
+                {block.text}
+              </p>
+            )
+          })}
         </div>
       </article>
 
-      <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-3.5 shadow-card">
+      <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-4 shadow-card">
         <div className="flex items-start gap-3">
-          <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-[10px] bg-canvas text-ink">
-            <AlertCircle size={15} strokeWidth={1.55} />
+          <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-[12px] bg-accent-2 text-ink">
+            <AlertCircle size={17} strokeWidth={1.55} />
           </span>
-          <p className="text-[11.5px] leading-[1.65] text-ash">
-            本页用于理解常见概念，不替代行政书士或官方窗口判断。遇到拒签、
-            超期、换工作未申报等情况，建议先咨询专业人士。
-          </p>
+          <div>
+            <h2 className="text-[13px] font-medium leading-snug text-ink">
+              仍然不确定时
+            </h2>
+            <p className="mt-1 text-[11.5px] leading-[1.6] text-ash">
+              如果这篇内容和你的实际情况不完全一致，建议先做一次续签自查，再决定是否咨询书士。
+            </p>
+          </div>
+        </div>
+        <div className="mt-3 grid grid-cols-2 gap-2">
+          <Link
+            href="/check"
+            className="flex min-h-[42px] items-center justify-center gap-1.5 rounded-btn bg-accent px-3 py-2 text-[12px] font-medium text-ink shadow-cta"
+          >
+            <ClipboardCheck size={14} strokeWidth={1.55} />
+            做续签自查
+          </Link>
+          <Link
+            href="/photo"
+            className="flex min-h-[42px] items-center justify-center gap-1.5 rounded-btn border border-hairline bg-canvas px-3 py-2 text-[12px] font-medium text-ink"
+          >
+            <Camera size={14} strokeWidth={1.55} />
+            拍文件确认
+          </Link>
         </div>
       </section>
-
-      <div className="mt-4 grid grid-cols-2 gap-2.5">
-        <Link
-          href="/check"
-          className="flex min-h-[48px] items-center justify-center gap-2 rounded-btn bg-accent px-3 text-[13px] font-medium text-ink shadow-cta active:translate-y-px"
-        >
-          <ClipboardCheck size={15} strokeWidth={1.55} />
-          续签自查
-        </Link>
-        <Link
-          href="/photo"
-          className="flex min-h-[48px] items-center justify-center gap-2 rounded-btn border border-hairline bg-surface px-3 text-[13px] font-medium text-ink shadow-card active:translate-y-px"
-        >
-          <Camera size={15} strokeWidth={1.55} />
-          拍照即懂
-        </Link>
-      </div>
     </AppShell>
   )
 }

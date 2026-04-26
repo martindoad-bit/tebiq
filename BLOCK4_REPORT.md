@@ -26,3 +26,24 @@
 
 - `npm run lint` 通过。
 - `npm run build` 通过。
+
+## 2026-04-26 知识内容系统
+
+### 已完成
+
+- 新增 `articles` 表 migration，字段包含 `title`、`body_markdown`、`category`、`status`、`requires_shoshi_review`、`updated_at`。
+- 新增 `lib/db/queries/articles.ts`，公开侧只读取 `status='published'` 的文章，admin 侧可读取和保存全量文章。
+- 新增 `/admin/knowledge` 列表 + Markdown 编辑器 + preview，并接入后台导航。
+- 新增 `/api/admin/knowledge`，沿用 `ADMIN_KEY` 保护规则。
+- 将 `/knowledge` 和 `/knowledge/[id]` 改为读取 articles 表；详情页继续使用 v5 AppShell 视觉，不再从本地 concept stub 渲染公开内容。
+- migration 内置 2 篇 published 初始文章，带 `requires_shoshi_review=true`，保证部署后知识中心不是空白。
+
+### 待 review
+
+- 内容审核流目前只有状态字段，没有实现「谁审核 / 审核意见 / 审核记录」。这属于产品流程决策，先保留字段能力。
+- migration snapshot 没有通过 drizzle-kit 自动生成，因为本轮不读取 `.env.local`；当前 runtime migration SQL 和 schema 已同步。
+
+### 验证
+
+- `npm run lint` 通过。
+- `npm run build` 通过。

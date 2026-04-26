@@ -15,6 +15,13 @@
       "when": 1777134151184,
       "tag": "0001_wooden_sprite",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1777200000000,
+      "tag": "0002_articles",
+      "breakpoints": true
     }
   ]
 }
