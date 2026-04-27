@@ -17,6 +17,7 @@ import AppBar from '@/app/_components/v5/AppBar'
 import { getDocumentById } from '@/lib/db/queries/documents'
 import type { PhotoRecognitionResult } from '@/lib/photo/types'
 import SaveToArchiveButton from '../SaveToArchiveButton'
+import ComplianceFooter from '@/app/_components/v5/ComplianceFooter'
 
 export const dynamic = 'force-dynamic'
 
@@ -117,6 +118,8 @@ export default async function PhotoResultDetailPage({
       <div className="mt-[18px]">
         <SaveToArchiveButton />
       </div>
+
+      <ComplianceFooter />
     </AppShell>
   )
 }

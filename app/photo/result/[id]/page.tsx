@@ -25,6 +25,7 @@ import { getDocumentById } from '@/lib/db/queries/documents'
 import type { PhotoRecognitionResult, Urgency } from '@/lib/photo/types'
 import SaveToArchiveButton from './SaveToArchiveButton'
 import EmailReminderPrompt from './EmailReminderPrompt'
+import ComplianceFooter from '@/app/_components/v5/ComplianceFooter'
 
 export const dynamic = 'force-dynamic'
 
@@ -140,6 +141,8 @@ export default async function PhotoResultPage({
         </Link>
         <SaveToArchiveButton />
       </div>
+
+      <ComplianceFooter />
     </AppShell>
   )
 }
