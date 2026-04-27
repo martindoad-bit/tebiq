@@ -6,10 +6,17 @@
  *
  * CN/JP 混排规则：签证名用日文原文。
  */
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import { ChevronRight, IdCard } from 'lucide-react'
 import AppShell from '@/app/_components/v5/AppShell'
 import AppBar from '@/app/_components/v5/AppBar'
+
+export const metadata: Metadata = {
+  title: '选择签证类型 | TEBIQ 自查',
+  description: '选择你的在留资格类型开始自查：技人国、特定技能、経営管理、配偶者、定住者等。',
+  alternates: { canonical: '/check/select' },
+}
 
 interface VisaEntry {
   name: string

@@ -4,6 +4,7 @@
  * 三步式入口：landing → /check/select（签证选择）→ /check/[visa]（quiz）→ result。
  * 视觉跟 docs/prototype/v5-mockup.html 1444-1517。
  */
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import { AlignLeft, CheckCircle, Clock3, Shield } from 'lucide-react'
 import AppShell from '@/app/_components/v5/AppShell'
@@ -13,6 +14,19 @@ import Button from '@/app/_components/v5/Button'
 import TrackOnMount from '@/app/_components/v5/TrackOnMount'
 import { EVENT } from '@/lib/analytics/events'
 import type { ReactNode } from 'react'
+
+export const metadata: Metadata = {
+  title: '续签自查 | TEBIQ',
+  description: '3 分钟自查在留资格更新风险：覆盖工作、收入、社保、税款、出入国记录等关键维度。',
+  alternates: { canonical: '/check' },
+  openGraph: {
+    title: '续签自查 | TEBIQ',
+    description: '3 分钟自查在留资格更新风险',
+    url: 'https://tebiq.jp/check',
+    siteName: 'TEBIQ',
+    locale: 'zh_CN',
+  },
+}
 
 export default function CheckLandingPage() {
   return (

@@ -6,6 +6,7 @@
  *  - gijinkoku → 跳转旧 /check/result?...（沿用现有 ResultClient）
  *  - 其他签证 → 内联展示 QuizResultView
  */
+import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import VisaQuizClient from './VisaQuizClient'
 import TrackOnMount from '@/app/_components/v5/TrackOnMount'
@@ -31,6 +32,27 @@ const SUPPORTED: Record<string, QuizBank> = {
 
 export function generateStaticParams() {
   return Object.keys(SUPPORTED).map(visa => ({ visa }))
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { visa: string }
+}): Promise<Metadata> {
+  const bank = SUPPORTED[params.visa]
+  if (!bank) return { title: '未知签证 | TEBIQ', robots: { index: false } }
+  return {
+    title: `${bank.visaName} 续签自查 | TEBIQ`,
+    description: `${bank.visaName} 续签自查：覆盖税款、社保、出入国记录、违规记录等关键维度。`,
+    alternates: { canonical: `/check/${params.visa}` },
+    openGraph: {
+      title: `${bank.visaName} 续签自查`,
+      description: `${bank.visaName} 续签自查 — 在 TEBIQ 3 分钟看完自己的风险点。`,
+      url: `https://tebiq.jp/check/${params.visa}`,
+      siteName: 'TEBIQ',
+      locale: 'zh_CN',
+    },
+  }
 }
 
 export default function CheckVisaPage({
