@@ -167,6 +167,60 @@ async function seedSubscribedScenario(familyId: string) {
   })
 }
 
+async function writeUrlsDoc(): Promise<void> {
+  const { writeFile, mkdir } = await import('node:fs/promises')
+  const path = await import('node:path')
+  const base = process.env.AUDIT_BASE_URL ?? 'http://localhost:3000'
+
+  const surfaces = [
+    '/my/archive',
+    '/my/reminders',
+    '/my/account',
+    '/knowledge',
+    '/photo',
+    '/check',
+    '/',
+  ]
+
+  const lines: string[] = []
+  lines.push(`# Dev fixture URLs`)
+  lines.push('')
+  lines.push(`生成时间：${new Date().toISOString()}`)
+  lines.push('')
+  lines.push(`先 \`npm run dev:visual-fixtures\` 写入 fixture，然后用以下 URL 直接登录三个场景。`)
+  lines.push(`URL 自动 set 一个 30 天 session cookie，可以在浏览器里直接打开。`)
+  lines.push('')
+  lines.push(`Cookie 名：\`${COOKIE_NAME}\` · Base：\`${base}\``)
+  lines.push('')
+  for (const scenario of Object.keys(phones) as Scenario[]) {
+    lines.push(`## ${scenario}`)
+    lines.push('')
+    const sessionUrl = `${base}/api/auth/dev-session?scenario=${scenario}`
+    lines.push(`首次激活（自动 set cookie + 跳到默认页）：`)
+    lines.push(``)
+    lines.push(`\`\`\``)
+    lines.push(sessionUrl)
+    lines.push(`\`\`\``)
+    lines.push('')
+    lines.push(`激活后可访问的 surface：`)
+    lines.push('')
+    for (const surface of surfaces) {
+      lines.push(`- ${base}/api/auth/dev-session?scenario=${scenario}&next=${encodeURIComponent(surface)}`)
+    }
+    lines.push('')
+  }
+  lines.push('## 清理')
+  lines.push('')
+  lines.push('```')
+  lines.push('npm run dev:visual-fixtures:cleanup')
+  lines.push('```')
+
+  const out = path.join(process.cwd(), 'docs/dev-fixtures-urls.md')
+  await mkdir(path.dirname(out), { recursive: true })
+  await writeFile(out, lines.join('\n'), 'utf8')
+  console.log(`URL 列表已写到 ${out}`)
+}
+
 async function seed() {
   await cleanup()
 
@@ -186,6 +240,7 @@ async function seed() {
   for (const scenario of Object.keys(phones) as Scenario[]) {
     console.log(`${scenario}: http://localhost:3000/api/auth/dev-session?scenario=${scenario}`)
   }
+  await writeUrlsDoc()
 }
 
 async function main() {
