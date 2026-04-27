@@ -64,7 +64,7 @@ export default async function InviteLandingPage({
               fill
               priority
               sizes="(max-width: 420px) 90vw, 360px"
-              className="object-contain"
+              className="object-cover"
             />
             <div className="pointer-events-none absolute inset-0 rounded-card ring-1 ring-white/70" />
           </div>

@@ -181,11 +181,11 @@ export default function PhotoUploader() {
         disabled={busy}
         aria-label="拍照或上传图片"
         aria-busy={busy}
-        className="relative w-full min-h-[264px] overflow-hidden rounded-[18px] bg-ink flex flex-col items-center justify-center gap-[14px] mb-3 disabled:opacity-95 shadow-raised transition active:translate-y-px"
+        className="relative w-full max-w-full min-h-[258px] overflow-hidden rounded-card bg-ink flex flex-col items-center justify-center gap-[14px] mb-3 disabled:opacity-95 shadow-raised transition active:translate-y-px"
       >
         <span
           aria-hidden
-          className="absolute inset-3 rounded-[14px] border border-dashed border-accent/35"
+          className="absolute inset-3 rounded-[8px] border border-dashed border-accent/40"
         />
         <span
           aria-hidden
@@ -204,9 +204,9 @@ export default function PhotoUploader() {
           className="relative z-10 w-[58px] h-[58px] flex items-center justify-center rounded-[17px] bg-white/10 text-accent shadow-soft"
         >
           {busy ? (
-            <Loader size={28} color="#F6B133" className="animate-spin" />
+            <Loader size={28} color="#C49A5A" className="animate-spin" />
           ) : (
-            <Camera size={28} color="#F6B133" strokeWidth={1.5} />
+            <Camera size={28} color="#C49A5A" strokeWidth={1.5} />
           )}
         </span>
         <span className="relative z-10 text-center px-6">

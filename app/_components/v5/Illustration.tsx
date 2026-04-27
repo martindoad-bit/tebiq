@@ -29,7 +29,7 @@ export default function Illustration({
         alt=""
         fill
         sizes="(max-width: 420px) 90vw, 360px"
-        className="object-contain"
+        className="object-cover"
         priority
       />
       <div className="pointer-events-none absolute inset-0 rounded-card ring-1 ring-white/70" />
