@@ -1,10 +1,20 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import AdminNav from '@/app/admin/_components/AdminNav'
 import { Field, PageShell, Section } from '@/app/admin/_components/ui'
 import { parseMarkdownBlocks, plainTextFromMarkdown } from '@/lib/knowledge/markdown'
 import { suggestArticleSlug } from '@/lib/knowledge/slug'
+
+interface HistoryEntry {
+  savedAt: string
+  title: string
+  bodyMarkdown: string
+  category: string
+  status: 'draft' | 'reviewing' | 'published'
+}
+
+const AUTOSAVE_MS = 30_000
 
 type ArticleStatus = 'draft' | 'reviewing' | 'published'
 
@@ -52,6 +62,12 @@ export default function AdminKnowledgeClient({ adminKey }: { adminKey: string })
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [message, setMessage] = useState('')
+  const [lastAutosavedAt, setLastAutosavedAt] = useState<Date | null>(null)
+  const [history, setHistory] = useState<HistoryEntry[] | null>(null)
+  const [historyOpen, setHistoryOpen] = useState(false)
+  const [previewMode, setPreviewMode] = useState<'split' | 'preview'>('split')
+  // 跟踪 form 自上次保存以来是否变了
+  const lastSavedRef = useRef<string>('')
 
   async function load() {
     setLoading(true)
@@ -69,7 +85,46 @@ export default function AdminKnowledgeClient({ adminKey }: { adminKey: string })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [keyParam])
 
+  // 切换文章 → 重置 dirty 跟踪 + 清空 history 缓存
+  useEffect(() => {
+    lastSavedRef.current = JSON.stringify(form)
+    setHistory(null)
+    setHistoryOpen(false)
+    setLastAutosavedAt(null)
+  // 故意只依赖 form.id，避免每次输入都 reset
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [form.id])
+
   const preview = useMemo(() => parseMarkdownBlocks(form.bodyMarkdown), [form.bodyMarkdown])
+
+  const autosave = useCallback(async () => {
+    // 没有 id → 是新建状态，不 autosave（避免每 30 秒新建 1 篇）
+    if (!form.id) return
+    if (!form.title.trim() || !form.bodyMarkdown.trim() || !form.category.trim()) return
+    const snapshot = JSON.stringify(form)
+    if (snapshot === lastSavedRef.current) return
+    try {
+      const res = await fetch(`/api/admin/knowledge${keyParam}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...form, autosave: true }),
+      })
+      if (!res.ok) return
+      const data = await res.json()
+      lastSavedRef.current = JSON.stringify(data.article)
+      setLastAutosavedAt(new Date())
+    } catch {
+      /* 静默失败，下个 tick 再试 */
+    }
+  }, [form, keyParam])
+
+  // 30 秒一次的 autosave
+  useEffect(() => {
+    const id = window.setInterval(() => {
+      autosave().catch(() => {})
+    }, AUTOSAVE_MS)
+    return () => window.clearInterval(id)
+  }, [autosave])
 
   async function save() {
     setSaving(true)
@@ -87,12 +142,47 @@ export default function AdminKnowledgeClient({ adminKey }: { adminKey: string })
       }
       setMessage('已保存')
       setForm(data.article)
+      lastSavedRef.current = JSON.stringify(data.article)
+      setLastAutosavedAt(null) // 手动保存覆盖 autosave 时间显示
       await load()
     } catch {
       setMessage('网络异常')
     } finally {
       setSaving(false)
     }
+  }
+
+  async function openHistory() {
+    if (!form.id) {
+      setMessage('新建文章尚无历史版本')
+      return
+    }
+    try {
+      const res = await fetch(
+        `/api/admin/knowledge/${form.id}/history${keyParam}`,
+        { cache: 'no-store' },
+      )
+      const data = await res.json()
+      setHistory(data?.history ?? [])
+      setHistoryOpen(true)
+    } catch {
+      setMessage('历史记录加载失败')
+    }
+  }
+
+  function restoreFromHistory(entry: HistoryEntry) {
+    if (!window.confirm(`恢复到 ${new Date(entry.savedAt).toLocaleString('ja-JP')} 的版本？\n\n当前未保存的内容会丢失。`)) {
+      return
+    }
+    setForm(f => ({
+      ...f,
+      title: entry.title,
+      bodyMarkdown: entry.bodyMarkdown,
+      category: entry.category,
+      status: entry.status,
+    }))
+    setHistoryOpen(false)
+    setMessage('已恢复历史版本（请点「保存」确认）')
   }
 
   function fillSlugSuggestion() {
@@ -159,8 +249,8 @@ export default function AdminKnowledgeClient({ adminKey }: { adminKey: string })
           </Section>
 
           <Section title="编辑器">
-            <div className="grid gap-4 lg:grid-cols-2">
-              <div className="space-y-3 rounded-2xl border border-line bg-card p-4">
+            <div className={`grid gap-4 ${previewMode === 'split' ? 'lg:grid-cols-2' : 'lg:grid-cols-1'}`}>
+              <div className={`space-y-3 rounded-2xl border border-line bg-card p-4 ${previewMode === 'preview' ? 'hidden' : ''}`}>
                 <Field label="标题">
                   <input
                     value={form.title}
@@ -290,7 +380,7 @@ export default function AdminKnowledgeClient({ adminKey }: { adminKey: string })
                     className="w-full rounded-xl border border-line bg-white px-3 py-2 font-mono text-xs leading-relaxed outline-none focus:border-primary"
                   />
                 </Field>
-                <div className="flex items-center gap-3">
+                <div className="flex flex-wrap items-center gap-3">
                   <button
                     type="button"
                     onClick={save}
@@ -299,6 +389,26 @@ export default function AdminKnowledgeClient({ adminKey }: { adminKey: string })
                   >
                     {saving ? '保存中…' : '保存'}
                   </button>
+                  <button
+                    type="button"
+                    onClick={openHistory}
+                    disabled={!form.id}
+                    className="rounded-xl border border-line bg-white px-3 py-2 text-xs font-bold text-title disabled:opacity-50"
+                  >
+                    历史版本
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setPreviewMode(m => (m === 'split' ? 'preview' : 'split'))}
+                    className="rounded-xl border border-line bg-white px-3 py-2 text-xs font-bold text-title"
+                  >
+                    {previewMode === 'split' ? '全屏预览' : '回到编辑'}
+                  </button>
+                  {lastAutosavedAt && (
+                    <span className="text-[10px] text-muted">
+                      已自动保存于 {lastAutosavedAt.toLocaleTimeString('ja-JP')}
+                    </span>
+                  )}
                   {message && <span className="text-xs text-muted">{message}</span>}
                 </div>
               </div>
@@ -339,6 +449,88 @@ export default function AdminKnowledgeClient({ adminKey }: { adminKey: string })
           </Section>
         </div>
       </PageShell>
+
+      {historyOpen && history && (
+        <HistoryModal
+          history={history}
+          onClose={() => setHistoryOpen(false)}
+          onRestore={restoreFromHistory}
+        />
+      )}
+    </div>
+  )
+}
+
+function HistoryModal({
+  history,
+  onClose,
+  onRestore,
+}: {
+  history: HistoryEntry[]
+  onClose: () => void
+  onRestore: (entry: HistoryEntry) => void
+}) {
+  // 倒序展示：最新在最上面（数据库中最新在数组末尾）
+  const reversed = [...history].reverse()
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4"
+      onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+    >
+      <div
+        className="w-full max-w-xl max-h-[80vh] overflow-y-auto rounded-2xl bg-card p-5 shadow-xl"
+        onClick={e => e.stopPropagation()}
+      >
+        <div className="flex items-center justify-between border-b border-line pb-3">
+          <h3 className="text-base font-bold text-title">历史版本</h3>
+          <button
+            type="button"
+            onClick={onClose}
+            className="text-xl text-muted hover:text-title"
+            aria-label="关闭"
+          >
+            ×
+          </button>
+        </div>
+        {reversed.length === 0 ? (
+          <p className="mt-4 text-sm text-muted">还没有历史版本（手动保存才会记录）。</p>
+        ) : (
+          <ul className="mt-3 space-y-2">
+            {reversed.map((entry, i) => (
+              <li
+                key={`${entry.savedAt}-${i}`}
+                className="rounded-xl border border-line bg-white p-3"
+              >
+                <div className="flex items-baseline justify-between gap-2">
+                  <div className="min-w-0">
+                    <div className="truncate text-sm font-bold text-title">
+                      {entry.title}
+                    </div>
+                    <div className="mt-0.5 text-[11px] text-muted">
+                      {new Date(entry.savedAt).toLocaleString('ja-JP')} · {entry.category} · {entry.status}
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => onRestore(entry)}
+                    className="flex-shrink-0 rounded-lg bg-highlight px-3 py-1.5 text-xs font-bold text-title"
+                  >
+                    恢复
+                  </button>
+                </div>
+                <p className="mt-2 line-clamp-2 text-[11px] text-body">
+                  {plainTextFromMarkdown(entry.bodyMarkdown).slice(0, 160)}
+                </p>
+              </li>
+            ))}
+          </ul>
+        )}
+        <p className="mt-3 text-[10px] text-muted">
+          每次手动保存会记录一个版本，最多保留 10 条。autosave 不计入。
+        </p>
+      </div>
     </div>
   )
 }

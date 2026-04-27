@@ -1,8 +1,15 @@
 import { and, desc, eq, ne, or } from 'drizzle-orm'
 import { createId } from '@paralleldrive/cuid2'
 import { db } from '@/lib/db'
-import { articles, type Article, type NewArticle } from '@/lib/db/schema'
+import {
+  articles,
+  type Article,
+  type ArticleHistoryEntry,
+  type NewArticle,
+} from '@/lib/db/schema'
 import { normalizeArticleSlug, suggestArticleSlug } from '@/lib/knowledge/slug'
+
+const HISTORY_LIMIT = 10
 
 export type ArticleStatus = Article['status']
 
@@ -67,7 +74,15 @@ export async function listArticlesForAdmin(): Promise<Article[]> {
   return await db.select().from(articles).orderBy(desc(articles.updatedAt))
 }
 
-export async function upsertArticle(input: ArticleInput): Promise<Article> {
+/**
+ * upsertArticle 第二个参数：是否记录到 history。
+ *  - 普通保存（手动「保存」按钮）→ recordHistory=true
+ *  - 30 秒 autosave → recordHistory=false（避免 history 被 autosave 噪音填满）
+ */
+export async function upsertArticle(
+  input: ArticleInput,
+  opts: { recordHistory?: boolean } = {},
+): Promise<Article> {
   const slug = normalizeArticleSlug(input.slug ?? '') ?? suggestArticleSlug(input.title)
   const lastReviewedAt = input.lastReviewedAt
     ? new Date(input.lastReviewedAt)
@@ -92,6 +107,33 @@ export async function upsertArticle(input: ArticleInput): Promise<Article> {
     return row
   }
 
+  // 读取当前 history，决定是否 push 一个新版本
+  let nextHistory: ArticleHistoryEntry[] | undefined = undefined
+  if (opts.recordHistory) {
+    const [existing] = await db
+      .select({
+        history: articles.history,
+        title: articles.title,
+        bodyMarkdown: articles.bodyMarkdown,
+        category: articles.category,
+        status: articles.status,
+      })
+      .from(articles)
+      .where(eq(articles.id, input.id))
+      .limit(1)
+    if (existing) {
+      const prev = existing.history ?? []
+      const snapshot: ArticleHistoryEntry = {
+        savedAt: new Date().toISOString(),
+        title: existing.title,
+        bodyMarkdown: existing.bodyMarkdown,
+        category: existing.category,
+        status: existing.status,
+      }
+      nextHistory = [...prev, snapshot].slice(-HISTORY_LIMIT)
+    }
+  }
+
   const [row] = await db
     .update(articles)
     .set({
@@ -106,6 +148,7 @@ export async function upsertArticle(input: ArticleInput): Promise<Article> {
       lastReviewedByName: input.lastReviewedByName?.trim() || null,
       lastReviewedByRegistration: input.lastReviewedByRegistration?.trim() || null,
       reviewNotes: input.reviewNotes?.trim() || null,
+      ...(nextHistory ? { history: nextHistory } : {}),
       updatedAt: new Date(),
     })
     .where(eq(articles.id, input.id))
@@ -115,4 +158,14 @@ export async function upsertArticle(input: ArticleInput): Promise<Article> {
 
   const [created] = await db.insert(articles).values(patch).returning()
   return created
+}
+
+/** 读取一篇文章的 history（最新在末尾）。 */
+export async function getArticleHistory(id: string): Promise<ArticleHistoryEntry[]> {
+  const [row] = await db
+    .select({ history: articles.history })
+    .from(articles)
+    .where(eq(articles.id, id))
+    .limit(1)
+  return row?.history ?? []
 }

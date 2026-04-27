@@ -396,6 +396,19 @@ export const errorLogs = pgTable(
 )
 
 // --- articles (knowledge content CMS) ---
+//
+// `history` jsonb (Block 7 T12)：保存最近 10 个版本快照，admin 编辑器
+// 可以「历史版本」+「一键恢复」。结构：
+//   [{ savedAt: ISO, title, bodyMarkdown, category, status }, ...]
+// 最新版本在数组末尾。超过 10 条由 DAL 截断。
+export interface ArticleHistoryEntry {
+  savedAt: string
+  title: string
+  bodyMarkdown: string
+  category: string
+  status: 'draft' | 'reviewing' | 'published'
+}
+
 export const articles = pgTable(
   'articles',
   {
@@ -413,6 +426,7 @@ export const articles = pgTable(
     lastReviewedByName: varchar('last_reviewed_by_name', { length: 100 }),
     lastReviewedByRegistration: varchar('last_reviewed_by_registration', { length: 50 }),
     reviewNotes: text('review_notes'),
+    history: jsonb('history').$type<ArticleHistoryEntry[]>(),
     createdAt: createdAt(),
     updatedAt: updatedAt(),
   },

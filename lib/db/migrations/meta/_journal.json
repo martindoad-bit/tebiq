@@ -57,6 +57,13 @@
       "when": 1777274020557,
       "tag": "0007_faithful_colossus",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1777274730760,
+      "tag": "0008_jittery_black_tom",
+      "breakpoints": true
     }
   ]
 }

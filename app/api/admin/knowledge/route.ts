@@ -35,22 +35,28 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: '请填写标题、正文和分类' }, { status: 400 })
   }
 
-  const article = await upsertArticle({
-    id: body?.id ? String(body.id) : undefined,
-    title,
-    slug: body?.slug ? String(body.slug) : null,
-    bodyMarkdown,
-    category,
-    status: parseStatus(body?.status),
-    requiresShoshiReview: Boolean(body?.requiresShoshiReview),
-    lastReviewedAt: body?.lastReviewedAt ? String(body.lastReviewedAt) : null,
-    lastReviewedBy: body?.lastReviewedBy ? String(body.lastReviewedBy) : null,
-    lastReviewedByName: body?.lastReviewedByName ? String(body.lastReviewedByName) : null,
-    lastReviewedByRegistration: body?.lastReviewedByRegistration
-      ? String(body.lastReviewedByRegistration)
-      : null,
-    reviewNotes: body?.reviewNotes ? String(body.reviewNotes) : null,
-  })
+  // autosave 模式不写 history（每 30s 触发，否则 history 会被噪音填满）
+  const isAutosave = body?.autosave === true
 
-  return NextResponse.json({ article })
+  const article = await upsertArticle(
+    {
+      id: body?.id ? String(body.id) : undefined,
+      title,
+      slug: body?.slug ? String(body.slug) : null,
+      bodyMarkdown,
+      category,
+      status: parseStatus(body?.status),
+      requiresShoshiReview: Boolean(body?.requiresShoshiReview),
+      lastReviewedAt: body?.lastReviewedAt ? String(body.lastReviewedAt) : null,
+      lastReviewedBy: body?.lastReviewedBy ? String(body.lastReviewedBy) : null,
+      lastReviewedByName: body?.lastReviewedByName ? String(body.lastReviewedByName) : null,
+      lastReviewedByRegistration: body?.lastReviewedByRegistration
+        ? String(body.lastReviewedByRegistration)
+        : null,
+      reviewNotes: body?.reviewNotes ? String(body.reviewNotes) : null,
+    },
+    { recordHistory: !isAutosave },
+  )
+
+  return NextResponse.json({ article, autosaved: isAutosave })
 }
