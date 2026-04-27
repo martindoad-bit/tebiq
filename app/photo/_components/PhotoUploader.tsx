@@ -1,20 +1,25 @@
 /**
  * PhotoUploader — 屏 02 拍照入口的核心交互组件。
  *
- * 视觉：深蓝大块 + 黄色虚线边 + 居中相机 icon + 提示文案。
+ * Block 7 升级：
+ *   - T10a: 客户端 canvas 压缩到 ≤2048px / JPEG q=0.85
+ *   - T10b: XMLHttpRequest 上传，监听 progress
+ *   - T9b: 「正在识别中...」期间每 1 秒切一句进度提示
+ *
+ * 状态机：idle → compressing → uploading(%) → recognizing(rotating msg) → done/error
+ *
  * 行为：
  *   1. 点击整块 → 触发隐藏 file input（capture=environment 直接调摄像头）
- *   2. 选中文件 → POST FormData 到 /api/photo/recognize
+ *   2. 选中文件 → 客户端压缩 → XHR 上传 → 等待识别 → 跳转
  *   3. 200 OK → router.push('/photo/result/' + documentId)
  *   4. 402 quota_exceeded → router.push('/photo?quota=full')
  *   5. 其他错误 → 显示 inline 错误文案
- *
- * 注：apiPost 序列化 JSON，这里需要 multipart，用裸 fetch + 自己解 envelope。
  */
 'use client'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Camera, FileText, Loader, ShieldCheck } from 'lucide-react'
+import { compressImageClient, formatBytes } from '@/lib/photo/clientCompress'
 
 interface RecognizeData {
   documentId: string
@@ -29,11 +34,63 @@ interface EnvelopeErr {
   error: { code: string; message: string }
 }
 
+type Stage =
+  | { kind: 'idle' }
+  | { kind: 'compressing' }
+  | { kind: 'uploading'; pct: number }
+  | { kind: 'recognizing'; messageIdx: number }
+
+const RECOGNIZE_MESSAGES = [
+  '识别文书类型…',
+  '提取关键信息…',
+  '整理给你…',
+] as const
+
+function postWithProgress(
+  fd: FormData,
+  onProgress: (pct: number) => void,
+): Promise<{ status: number; text: string }> {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest()
+    xhr.open('POST', '/api/photo/recognize', true)
+    xhr.upload.onprogress = e => {
+      if (!e.lengthComputable) return
+      onProgress(Math.round((e.loaded / e.total) * 100))
+    }
+    xhr.onload = () => {
+      onProgress(100)
+      resolve({ status: xhr.status, text: xhr.responseText ?? '' })
+    }
+    xhr.onerror = () => reject(new Error('network error'))
+    xhr.ontimeout = () => reject(new Error('network timeout'))
+    xhr.send(fd)
+  })
+}
+
 export default function PhotoUploader() {
   const router = useRouter()
   const inputRef = useRef<HTMLInputElement | null>(null)
-  const [busy, setBusy] = useState(false)
+  const [stage, setStage] = useState<Stage>({ kind: 'idle' })
   const [errMsg, setErrMsg] = useState<string | null>(null)
+  const [compressInfo, setCompressInfo] = useState<{
+    before: number
+    after: number
+  } | null>(null)
+
+  // 「正在识别中…」每 1s 切一句话
+  useEffect(() => {
+    if (stage.kind !== 'recognizing') return
+    const id = window.setInterval(() => {
+      setStage(s =>
+        s.kind === 'recognizing'
+          ? { kind: 'recognizing', messageIdx: (s.messageIdx + 1) % RECOGNIZE_MESSAGES.length }
+          : s,
+      )
+    }, 1100)
+    return () => window.clearInterval(id)
+  }, [stage.kind])
+
+  const busy = stage.kind !== 'idle'
 
   const onPick = () => {
     if (busy) return
@@ -44,38 +101,76 @@ export default function PhotoUploader() {
     const file = e.target.files?.[0]
     if (!file) return
     setErrMsg(null)
-    setBusy(true)
+    setCompressInfo(null)
+
     try {
-      const fd = new FormData()
-      fd.append('file', file)
-      const res = await fetch('/api/photo/recognize', {
-        method: 'POST',
-        body: fd,
+      // 1. 客户端压缩
+      setStage({ kind: 'compressing' })
+      const compressed = await compressImageClient(file)
+      setCompressInfo({
+        before: compressed.beforeBytes,
+        after: compressed.afterBytes,
       })
-      // 解 envelope
-      const json = (await res.json().catch(() => null)) as
-        | EnvelopeOk
-        | EnvelopeErr
-        | null
-      if (res.status === 402) {
+
+      // 2. XHR 上传 + 监听进度
+      const fd = new FormData()
+      fd.append('file', compressed.blob, compressed.filename)
+      setStage({ kind: 'uploading', pct: 0 })
+      const { status, text } = await postWithProgress(fd, pct => {
+        setStage(s => (s.kind === 'uploading' ? { kind: 'uploading', pct } : s))
+      })
+
+      // 3. 上传完成 → 服务器还在识别
+      setStage({ kind: 'recognizing', messageIdx: 0 })
+
+      // 4. 解响应
+      let json: EnvelopeOk | EnvelopeErr | null = null
+      try {
+        json = JSON.parse(text)
+      } catch {
+        json = null
+      }
+      if (status === 402) {
         router.push('/photo?quota=full')
         return
       }
-      if (!res.ok || !json || json.ok !== true) {
+      if (status < 200 || status >= 300 || !json || json.ok !== true) {
         const msg =
-          json && json.ok === false ? json.error.message : `识别失败（${res.status}）`
+          json && json.ok === false ? json.error.message : `识别失败（${status}）`
         setErrMsg(msg)
+        setStage({ kind: 'idle' })
         return
       }
       const suffix = json.data.emailPrompt ? '?email=prompt' : ''
       router.push(`/photo/result/${json.data.documentId}${suffix}`)
     } catch (err) {
       setErrMsg(err instanceof Error ? err.message : '上传失败')
+      setStage({ kind: 'idle' })
     } finally {
-      setBusy(false)
       // 允许重选同一张
       if (inputRef.current) inputRef.current.value = ''
     }
+  }
+
+  // 顶部主标签 + 副标签按 stage 切换
+  let mainLabel: string
+  let subLabel: string
+  if (stage.kind === 'compressing') {
+    mainLabel = '正在压缩…'
+    subLabel = compressInfo
+      ? `${formatBytes(compressInfo.before)} → 优化中`
+      : '让上传更快一点'
+  } else if (stage.kind === 'uploading') {
+    mainLabel = `上传中 ${stage.pct}%`
+    subLabel = compressInfo
+      ? `${formatBytes(compressInfo.before)} → ${formatBytes(compressInfo.after)}`
+      : '请稍候'
+  } else if (stage.kind === 'recognizing') {
+    mainLabel = '正在识别中…'
+    subLabel = RECOGNIZE_MESSAGES[stage.messageIdx]
+  } else {
+    mainLabel = '点击拍照'
+    subLabel = '或上传图片'
   }
 
   return (
@@ -85,7 +180,8 @@ export default function PhotoUploader() {
         onClick={onPick}
         disabled={busy}
         aria-label="拍照或上传图片"
-        className="relative w-full min-h-[264px] overflow-hidden rounded-[18px] bg-ink flex flex-col items-center justify-center gap-[14px] mb-3 disabled:opacity-70 shadow-raised transition active:translate-y-px"
+        aria-busy={busy}
+        className="relative w-full min-h-[264px] overflow-hidden rounded-[18px] bg-ink flex flex-col items-center justify-center gap-[14px] mb-3 disabled:opacity-95 shadow-raised transition active:translate-y-px"
       >
         <span
           aria-hidden
@@ -113,14 +209,24 @@ export default function PhotoUploader() {
             <Camera size={28} color="#F6B133" strokeWidth={1.5} />
           )}
         </span>
-        <span className="relative z-10 text-center">
+        <span className="relative z-10 text-center px-6">
           <span className="block text-[13px] font-medium text-canvas">
-            {busy ? '识别中…' : '点击拍照'}
+            {mainLabel}
           </span>
-          <span className="block text-[11px] text-canvas/68 mt-1">
-            {busy ? '请稍候' : '或上传图片'}
+          <span className="mt-1 block text-[11px] text-canvas/68 transition-opacity duration-200">
+            {subLabel}
           </span>
         </span>
+
+        {/* 上传进度条 */}
+        {stage.kind === 'uploading' && (
+          <div className="absolute bottom-3 left-3 right-3 h-1 overflow-hidden rounded-full bg-white/10">
+            <div
+              className="h-full rounded-full bg-accent transition-all"
+              style={{ width: `${stage.pct}%` }}
+            />
+          </div>
+        )}
       </button>
 
       <div className="mb-3 grid grid-cols-3 gap-1.5">
@@ -137,6 +243,12 @@ export default function PhotoUploader() {
         className="sr-only"
         onChange={onFile}
       />
+
+      {compressInfo && stage.kind === 'idle' && compressInfo.after < compressInfo.before && (
+        <p className="mb-2 text-center text-[10.5px] text-ash">
+          已为你压缩 {formatBytes(compressInfo.before)} → {formatBytes(compressInfo.after)}，上传更快
+        </p>
+      )}
 
       {errMsg && (
         <p className="text-[12px] text-danger mb-2 text-center" role="alert">
