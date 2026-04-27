@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation'
 
 const TABS: Array<{ href: string; label: string }> = [
   { href: '/admin', label: '概览' },
+  { href: '/admin/analytics', label: 'KPI' },
   { href: '/admin/users', label: '用户' },
   { href: '/admin/consultations', label: '咨询' },
   { href: '/admin/knowledge', label: '知识' },
