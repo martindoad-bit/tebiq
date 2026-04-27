@@ -20,7 +20,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: '日期格式应为 YYYY-MM-DD' }, { status: 400 })
     }
     const record: ReminderRecord = { date, setAt: new Date().toISOString() }
-    await storage.set(`reminder:${user.phone}`, record)
+    await storage.set(`reminder:${user.id}`, record)
     return NextResponse.json({ ok: true, reminder: record })
   } catch {
     return NextResponse.json({ error: '请求格式错误' }, { status: 400 })
@@ -30,6 +30,6 @@ export async function POST(req: Request) {
 export async function DELETE() {
   const user = await getCurrentUser()
   if (!user) return NextResponse.json({ error: '未登录' }, { status: 401 })
-  await storage.del(`reminder:${user.phone}`)
+  await storage.del(`reminder:${user.id}`)
   return NextResponse.json({ ok: true })
 }

@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { getOrCreateAnonymousSessionId } from '@/lib/auth/anonymous-session'
 import { getCurrentUser } from '@/lib/auth/session'
 import { judge, QUESTIONS, type AnsweredItem } from '@/lib/check/questions/gijinkoku'
 import { buildSummary } from '@/lib/check/summary'
@@ -16,7 +17,7 @@ function coerceVisa(v: string): VisaTypeEnum {
 
 export async function POST(req: Request) {
   const user = await getCurrentUser()
-  if (!user) return NextResponse.json({ error: '未登录' }, { status: 401 })
+  const sessionId = user ? null : await getOrCreateAnonymousSessionId()
 
   try {
     const body = await req.json()
@@ -35,8 +36,8 @@ export async function POST(req: Request) {
     }
 
     const record = await createQuizResult({
-      memberId: user.id,
-      sessionId: null,
+      memberId: user?.id ?? null,
+      sessionId,
       visaType: coerceVisa(visaTypeRaw),
       answers,
       resultColor: judgeResult.verdict,

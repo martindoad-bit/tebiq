@@ -102,6 +102,14 @@ export default async function InviteLandingPage({
           >
             <Button>{isAvailable ? '领取并注册' : '直接注册'}</Button>
           </Link>
+          {isAvailable && (
+            <Link
+              href={`/api/invite/remember?code=${ref}&next=${encodeURIComponent('/photo')}`}
+              className="mt-2 block"
+            >
+              <Button variant="secondary">先体验拍照</Button>
+            </Link>
+          )}
         </section>
 
         <section className="mt-4 rounded-card border border-hairline bg-surface p-4 shadow-card">
