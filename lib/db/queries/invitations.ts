@@ -74,11 +74,25 @@ async function getMonthlyRewardDays(inviterMemberId: string): Promise<number> {
   return Number(row?.rewarded ?? 0) * INVITE_REWARD_DAYS
 }
 
+/**
+ * 月度封顶检查 — 只在「本月已经发满 30 天」时拒绝；
+ * 允许部分发放（最后一次只发剩余天数，比如已发 28 → 还能发 2）。
+ *
+ * 实际授予的天数由 `monthlyRewardRemaining()` 在 acceptInvitationAndGrantReward
+ * 时计算，这里只决定能不能创建新的邀请。
+ */
 async function assertMonthlyRewardAvailable(inviterMemberId: string): Promise<void> {
   const earnedDays = await getMonthlyRewardDays(inviterMemberId)
-  if (earnedDays + INVITE_REWARD_DAYS > INVITE_MONTHLY_REWARD_CAP_DAYS) {
+  if (earnedDays >= INVITE_MONTHLY_REWARD_CAP_DAYS) {
     throw new InvitationLimitError()
   }
+}
+
+/** 该 inviter 当月还能发多少天（封顶到 INVITE_REWARD_DAYS）。 */
+export async function monthlyRewardRemaining(inviterMemberId: string): Promise<number> {
+  const earnedDays = await getMonthlyRewardDays(inviterMemberId)
+  const remainingThisMonth = Math.max(0, INVITE_MONTHLY_REWARD_CAP_DAYS - earnedDays)
+  return Math.min(INVITE_REWARD_DAYS, remainingThisMonth)
 }
 
 export async function createInvitation(
@@ -244,7 +258,12 @@ export async function acceptInvitationAndGrantReward(
   }
   if (!accepted || accepted.rewardGranted) return accepted
 
-  await grantBasicTrialDaysToFamily(inviter.familyId, INVITE_REWARD_DAYS)
+  // Inviter 受月度封顶约束（最后一笔可能只发剩余天数）；
+  // invitee 是首次注册奖励，不受封顶约束。
+  const inviterDays = await monthlyRewardRemaining(inviter.id)
+  if (inviterDays > 0) {
+    await grantBasicTrialDaysToFamily(inviter.familyId, inviterDays)
+  }
   await grantBasicTrialDaysToFamily(invitee.familyId, INVITE_REWARD_DAYS)
   await markRewardGranted(invitation.id)
 
