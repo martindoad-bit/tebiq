@@ -369,7 +369,7 @@ function SaveResultButton({
     verdict === 'red'
       ? 'bg-danger text-white hover:bg-[#C84B42]'
       : verdict === 'yellow'
-        ? 'bg-accent text-ink hover:bg-[#E5A52E]'
+        ? 'bg-accent text-ink hover:bg-[#B88E50]'
         : 'bg-success text-white hover:bg-[#4A9069]'
 
   return (

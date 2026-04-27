@@ -188,7 +188,7 @@ function PlanCard({
           className={`flex-shrink-0 w-[18px] h-[18px] rounded-full transition-all ${
             selected
               ? 'bg-accent border-[1.5px] border-accent shadow-[inset_0_0_0_3px_#FFFFFF]'
-              : 'border-[1.5px] border-[rgba(30,58,95,0.2)]'
+              : 'border-[1.5px] border-hairline'
           }`}
         />
       </div>

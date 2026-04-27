@@ -141,7 +141,7 @@ export default function EmailEditClient({ initialEmail, initialVerifiedAt }: Pro
             type="button"
             onClick={sendVerification}
             disabled={verifyBusy}
-            className="flex min-h-[40px] items-center gap-1.5 rounded-btn border border-[rgba(30,58,95,0.18)] bg-surface px-3 py-2 text-[12.5px] font-medium text-ink transition-colors hover:bg-[rgba(30,58,95,0.04)] disabled:opacity-60"
+            className="flex min-h-[40px] items-center gap-1.5 rounded-btn border border-hairline bg-surface px-3 py-2 text-[12.5px] font-medium text-ink transition-colors hover:bg-canvas disabled:opacity-60"
           >
             <Send size={13} strokeWidth={1.55} />
             {verifyBusy ? '发送中…' : '发送验证邮件'}

@@ -213,7 +213,7 @@ export default function ConsultationForm() {
                     name="urgency"
                     checked={urgency === u}
                     onChange={() => setUrgency(u)}
-                    className="accent-[#F6B133]"
+                    className="accent-[#C49A5A]"
                   />
                   <span className="text-[13px] text-ink">{URGENCY_LABEL[u]}</span>
                 </label>

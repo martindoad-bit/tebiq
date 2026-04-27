@@ -109,7 +109,7 @@ export default function QuotaFullModal({ open, onClose, daysUntilReset }: Props)
         <Link
           href="/invite"
           onClick={() => trackClient(EVENT.QUOTA_MODAL_INVITE_CLICK, {})}
-          className="mt-2 flex min-h-[44px] w-full items-center justify-center gap-1.5 rounded-btn border border-[rgba(30,58,95,0.18)] bg-surface px-4 py-3 text-center text-[13px] font-medium text-ink transition-colors hover:bg-[rgba(30,58,95,0.04)]"
+          className="mt-2 flex min-h-[44px] w-full items-center justify-center gap-1.5 rounded-btn border border-hairline bg-surface px-4 py-3 text-center text-[13px] font-medium text-ink transition-colors hover:bg-canvas"
         >
           <Gift size={15} strokeWidth={1.55} />
           邀请朋友 = 免费 7 天

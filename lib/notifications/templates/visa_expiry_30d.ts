@@ -11,12 +11,12 @@ export interface VisaExpiry30dData {
 const ARCHIVE_URL = 'https://tebiq.jp/my'
 
 const COLORS = {
-  brand: '#1E3A5F',
-  accent: '#F6B133',
-  bg: '#FFF5E6',
-  body: '#4A5563',
-  card: '#FFFFFF',
-  warn: '#F6B133',
+  brand: '#233B37',
+  accent: '#C49A5A',
+  bg: '#F6F4EF',
+  body: '#46534F',
+  card: '#FFFEFA',
+  warn: '#C49A5A',
 } as const
 
 function greet(name?: string): string {
@@ -32,11 +32,11 @@ export const template = {
 
     const html = `<!doctype html>
 <html lang="zh-CN">
-  <body style="margin:0;padding:0;background:${COLORS.bg};font-family:'Noto Sans CJK SC','Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif;color:${COLORS.body};">
+  <body style="margin:0;padding:0;background:${COLORS.bg};font-family:'PingFang SC','Hiragino Sans','Yu Gothic','Noto Sans CJK SC','Noto Sans SC','Microsoft YaHei',sans-serif;color:${COLORS.body};">
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:${COLORS.bg};padding:32px 16px;">
       <tr>
         <td align="center">
-          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:560px;background:${COLORS.card};border-radius:12px;padding:32px;box-shadow:0 2px 8px rgba(30,58,95,0.06);">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:560px;background:${COLORS.card};border-radius:10px;padding:32px;box-shadow:0 1px 0 rgba(30,28,22,0.035),0 12px 24px rgba(34,42,38,0.06);">
             <tr>
               <td style="font-size:20px;font-weight:600;color:${COLORS.brand};padding-bottom:8px;">
                 在留期间还剩 ${daysLeft} 天
@@ -64,7 +64,7 @@ export const template = {
               </td>
             </tr>
             <tr>
-              <td style="border-top:1px solid #E6EEF5;padding-top:16px;font-size:13px;color:#6B7280;line-height:1.6;">
+              <td style="border-top:1px solid #DDE3DE;padding-top:16px;font-size:13px;color:#707A75;line-height:1.6;">
                 <p style="margin:0 0 4px;">TEBIQ 在日生活のお守り</p>
                 <p style="margin:0 0 4px;">陪您稳稳走完每一次更新。</p>
                 <p style="margin:8px 0 0;font-size:11px;color:#9CA3AF;">[文案待书士审核]</p>

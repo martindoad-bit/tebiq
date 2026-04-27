@@ -42,19 +42,19 @@ export default function MobileNav() {
 }
 
 function Icon({ name, active }: { name: string; active: boolean }) {
-  const stroke = active ? '#F6B133' : '#4A5563'
-  const fill = active ? '#F6B133' : 'none'
+  const stroke = active ? '#C49A5A' : '#46534F'
+  const fill = active ? '#C49A5A' : 'none'
   if (name === '/') {
     return (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill={fill} stroke={stroke} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill={fill} stroke={stroke} strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
         <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-        <polyline points="9 22 9 12 15 12 15 22" stroke={active ? '#FFFFFF' : '#4A5563'} fill="none" />
+        <polyline points="9 22 9 12 15 12 15 22" stroke={active ? '#FFFEFA' : '#46534F'} fill="none" />
       </svg>
     )
   }
   if (name === '/visa-select') {
     return (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={stroke} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={stroke} strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
         <path d="M9 11l3 3 7-7" />
         <path d="M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h11" />
       </svg>
@@ -62,14 +62,14 @@ function Icon({ name, active }: { name: string; active: boolean }) {
   }
   if (name === '/knowledge') {
     return (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={stroke} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={stroke} strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
         <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
         <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
       </svg>
     )
   }
   return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={stroke} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={stroke} strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
       <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
       <circle cx="12" cy="7" r="4" />
     </svg>

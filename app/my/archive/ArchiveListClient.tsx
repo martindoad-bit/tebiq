@@ -86,7 +86,7 @@ export default function ArchiveListClient({ items }: { items: ArchiveItem[] }) {
               onClick={() => setTab(t.id)}
               className={`flex-1 rounded-[10px] px-2 py-[7px] text-[11.5px] font-medium transition-colors ${
                 on
-                  ? 'bg-ink text-white shadow-[0_3px_8px_rgba(30,58,95,0.18)]'
+                  ? 'bg-ink text-white shadow-[0_3px_8px_rgba(34,42,38,0.14)]'
                   : 'text-ash'
               }`}
             >

@@ -116,7 +116,7 @@ export default function RecentList() {
                 aria-hidden
                 className="w-[26px] h-[26px] flex-shrink-0 rounded-md bg-chip flex items-center justify-center"
               >
-                <FileText size={13} color="#1E3A5F" strokeWidth={1.6} />
+                <FileText size={13} color="#233B37" strokeWidth={1.6} />
               </span>
               <span className="flex-1 min-w-0">
                 <span className="block text-[12px] font-medium text-ink truncate">
