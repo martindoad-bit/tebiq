@@ -3,33 +3,41 @@
 @tailwind utilities;
 
 :root {
-  --background: #FFF5E6;
-  --foreground: #1E3A5F;
+  --background: #F6F4EF;
+  --foreground: #233B37;
 }
 
 html, body {
-  background-color: #FFF5E6;
-  color: #1E3A5F;
-  /* v5：系统字体优先，与原型一致 */
+  background-color: #F6F4EF;
+  color: #233B37;
   font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans',
-    'Noto Sans SC', 'Noto Sans CJK SC', sans-serif;
+    'Yu Gothic', YuGothic, 'Noto Sans SC', 'Noto Sans CJK SC', sans-serif;
   -webkit-text-size-adjust: 100%;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-feature-settings: 'kern' 1, 'palt' 0;
+  font-feature-settings: 'kern' 1, 'palt' 1, 'pkna' 1;
   letter-spacing: 0;
-  line-height: 1.6;
+  line-height: 1.62;
 }
 
 body:lang(ja),
 .jp-text {
-  letter-spacing: 0.02em;
-  line-height: 1.7;
+  letter-spacing: 0.015em;
+  line-height: 1.72;
+}
+
+.numeric,
+.money,
+.date-text {
+  font-family: 'SF Mono', 'SFMono-Regular', 'Roboto Mono', 'Noto Sans Mono CJK SC',
+    ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
 }
 
 ::selection {
-  background: rgba(246, 177, 51, 0.32);
-  color: #1E3A5F;
+  background: rgba(196, 154, 90, 0.26);
+  color: #233B37;
 }
 
 a,

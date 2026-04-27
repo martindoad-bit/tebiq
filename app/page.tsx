@@ -63,7 +63,7 @@ export default async function HomePage() {
       <div className="mt-3.5 space-y-2.5">
         <ActionCard
           variant="primary"
-          icon={<Camera size={20} strokeWidth={1.6} color="#1E3A5F" />}
+          icon={<Camera size={20} strokeWidth={1.6} color="#233B37" />}
           title="拍照即懂"
           subtitle="拍一张，马上知道要不要处理"
           href="/photo"
@@ -71,7 +71,7 @@ export default async function HomePage() {
         />
         <ActionCard
           variant="secondary"
-          icon={<ClipboardCheck size={20} strokeWidth={1.6} color="#F6B133" />}
+          icon={<ClipboardCheck size={20} strokeWidth={1.6} color="#C49A5A" />}
           title="续签自查"
           subtitle="3 分钟了解你的签证风险"
           href="/check"
@@ -251,7 +251,7 @@ function EmptyHomeState({
         {actionHref && actionLabel && (
           <Link
             href={actionHref}
-            className="mt-2.5 flex h-9 items-center justify-center rounded-btn border border-[rgba(30,58,95,0.14)] bg-white text-[13px] font-medium text-ink shadow-soft transition active:translate-y-px"
+            className="mt-2.5 flex h-9 items-center justify-center rounded-btn border border-hairline bg-surface text-[13px] font-medium text-ink shadow-soft transition active:translate-y-px"
           >
             {actionLabel}
             <ChevronRight size={14} strokeWidth={1.6} className="ml-0.5" />

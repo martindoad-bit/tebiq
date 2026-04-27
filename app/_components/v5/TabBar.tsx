@@ -63,7 +63,7 @@ export default function TabBar() {
                 <Icon
                   size={19}
                   strokeWidth={1.7}
-                  color={active ? '#F6B133' : '#B5B0A4'}
+                  color={active ? '#C49A5A' : '#B7B1A7'}
                 />
                 <span className="text-[9.5px] font-normal">{label}</span>
               </Link>

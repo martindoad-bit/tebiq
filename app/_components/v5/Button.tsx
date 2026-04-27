@@ -1,5 +1,5 @@
 /**
- * Button — v5 按钮（橙底 / 描边）
+ * Button — restrained product buttons.
  *
  * variant=primary: 橙底 + 深蓝字（主 CTA）
  * variant=secondary: 透明 + 描边
@@ -14,11 +14,11 @@ interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const STYLES = {
   primary:
-    'bg-accent text-ink hover:bg-[#E5A52E] active:bg-[#E5A52E] disabled:opacity-50',
+    'bg-accent text-ink hover:bg-primary-hover active:bg-primary-hover disabled:opacity-50 shadow-cta',
   secondary:
-    'bg-transparent text-ink border border-[rgba(30,58,95,0.18)] hover:bg-[rgba(30,58,95,0.04)] disabled:opacity-50',
+    'bg-surface text-ink border border-hairline hover:bg-chip disabled:opacity-50 shadow-soft',
   success:
-    'bg-success text-white hover:bg-[#4A9069] disabled:opacity-50',
+    'bg-success text-white hover:bg-[#486F58] disabled:opacity-50 shadow-soft',
 } as const
 
 export default function Button({
@@ -30,7 +30,7 @@ export default function Button({
   return (
     <button
       {...rest}
-      className={`w-full min-h-[44px] rounded-btn px-4 py-3 text-[14px] font-medium text-center transition-colors ${STYLES[variant]} ${className}`}
+      className={`w-full min-h-[44px] rounded-btn px-4 py-3 text-[14px] font-medium text-center transition-colors active:translate-y-px ${STYLES[variant]} ${className}`}
     >
       {children}
     </button>
