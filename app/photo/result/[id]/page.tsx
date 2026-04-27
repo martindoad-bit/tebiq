@@ -14,7 +14,7 @@
  *   - 查看详细说明 → /photo/result/[id]/detail
  *   - 保存到我的档案（client toast 后 router.back()）
  */
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 import Link from 'next/link'
 import type { ReactNode } from 'react'
 import { AlertCircle, CheckCircle2, FileText, RotateCcw } from 'lucide-react'
@@ -62,6 +62,10 @@ export default async function PhotoResultPage({
   if (!doc || !doc.aiResponse) notFound()
 
   const result = doc.aiResponse as unknown as PhotoRecognitionResult
+  // 兜底：识别失败的文档跳到专门的 fallback 页（T5）
+  if (result.docType === '无法确认的文书') {
+    redirect(`/photo/result/${doc.id}/fallback`)
+  }
   const urg = urgencyDisplay(result.urgency)
 
   return (
