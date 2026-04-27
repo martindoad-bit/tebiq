@@ -88,7 +88,13 @@ function LoginInner() {
         return
       }
       localStorage.setItem(LS_USER_KEY, JSON.stringify(data.user))
-      router.push(next)
+      // T13: 邀请兑换成功 → 强制跳 /welcome（无视 next 参数）
+      // 失败的话沿用 next（用户走普通登录路径）
+      if (inviteCode && data.invitationAccepted) {
+        router.push('/welcome')
+      } else {
+        router.push(next)
+      }
     } catch {
       setError('网络错误，请重试')
     } finally {
