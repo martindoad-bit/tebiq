@@ -15,7 +15,12 @@ export interface ArticleInput {
   status: ArticleStatus
   requiresShoshiReview: boolean
   lastReviewedAt?: string | Date | null
+  /** Legacy short identifier — kept for back-compat; new entries should fill name + registration. */
   lastReviewedBy?: string | null
+  /** Reviewer 实名（行政書士法要求公开标识） */
+  lastReviewedByName?: string | null
+  /** Reviewer 行政書士登録番号 */
+  lastReviewedByRegistration?: string | null
   reviewNotes?: string | null
 }
 
@@ -57,6 +62,8 @@ export async function upsertArticle(input: ArticleInput): Promise<Article> {
     requiresShoshiReview: input.requiresShoshiReview,
     lastReviewedAt,
     lastReviewedBy: input.lastReviewedBy?.trim() || null,
+    lastReviewedByName: input.lastReviewedByName?.trim() || null,
+    lastReviewedByRegistration: input.lastReviewedByRegistration?.trim() || null,
     reviewNotes: input.reviewNotes?.trim() || null,
   }
 
@@ -76,6 +83,8 @@ export async function upsertArticle(input: ArticleInput): Promise<Article> {
       requiresShoshiReview: input.requiresShoshiReview,
       lastReviewedAt,
       lastReviewedBy: input.lastReviewedBy?.trim() || null,
+      lastReviewedByName: input.lastReviewedByName?.trim() || null,
+      lastReviewedByRegistration: input.lastReviewedByRegistration?.trim() || null,
       reviewNotes: input.reviewNotes?.trim() || null,
       updatedAt: new Date(),
     })
