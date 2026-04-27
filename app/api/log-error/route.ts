@@ -1,34 +1,31 @@
-import { storage } from '@/lib/storage'
 import { ok } from '@/lib/api/response'
+import { captureError, type ErrorSeverity } from '@/lib/analytics/errors'
 
 export const dynamic = 'force-dynamic'
 
-interface ErrorLog {
-  ts: string
-  message: string
+interface LogPayload {
+  message?: string
+  code?: string
   digest?: string
   stack?: string
   path?: string
+  severity?: ErrorSeverity
 }
 
-const KEY = 'admin:error_log'
-const LIMIT = 100
-
 export async function POST(req: Request) {
-  let body: Partial<ErrorLog>
+  let body: LogPayload = {}
   try {
-    body = await req.json()
+    body = (await req.json()) as LogPayload
   } catch {
-    return ok({ logged: true })
+    return ok({ logged: false })
   }
-  const entry: ErrorLog = {
-    ts: new Date().toISOString(),
-    message: String(body.message ?? '').slice(0, 500),
-    digest: body.digest ? String(body.digest).slice(0, 40) : undefined,
-    stack: body.stack ? String(body.stack).slice(0, 1000) : undefined,
-    path: body.path ? String(body.path).slice(0, 200) : undefined,
-  }
-  const list = (await storage.get<ErrorLog[]>(KEY)) ?? []
-  await storage.set(KEY, [entry, ...list].slice(0, LIMIT))
+  await captureError({
+    code: body.code,
+    message: body.message ?? 'unknown',
+    stack: body.stack,
+    path: body.path,
+    digest: body.digest,
+    severity: body.severity ?? 'error',
+  })
   return ok({ logged: true })
 }
