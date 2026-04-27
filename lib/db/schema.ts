@@ -350,6 +350,51 @@ export const consultations = pgTable(
   }),
 )
 
+// --- events (Block 6: minimal product analytics) ---
+//
+// Self-hosted, low-cardinality event log. PostHog / Vercel Analytics 都
+// 不引入 — 这张表负责支撑 admin KPI 看板和漏斗分析就够了。
+// 高 cardinality 的属性放 payload jsonb，不要新增列。
+export const events = pgTable(
+  'events',
+  {
+    id: idCol(),
+    eventName: varchar('event_name', { length: 64 }).notNull(),
+    familyId: varchar('family_id', { length: 24 }),
+    memberId: varchar('member_id', { length: 24 }),
+    sessionId: varchar('session_id', { length: 64 }),
+    payload: jsonb('payload').$type<Record<string, unknown>>(),
+    createdAt: createdAt(),
+  },
+  t => ({
+    nameCreatedIdx: index('events_name_created_idx').on(t.eventName, t.createdAt),
+    familyIdx: index('events_family_idx').on(t.familyId),
+    createdIdx: index('events_created_at_idx').on(t.createdAt),
+  }),
+)
+
+// --- error_logs (Block 6: server-side error capture) ---
+// 替换之前 KV 的 admin:error_log；让 /admin 可以做趋势 + 阈值告警。
+export const errorLogs = pgTable(
+  'error_logs',
+  {
+    id: idCol(),
+    code: varchar('code', { length: 64 }).notNull().default('unknown'),
+    message: text('message').notNull(),
+    stack: text('stack'),
+    path: varchar('path', { length: 200 }),
+    digest: varchar('digest', { length: 40 }),
+    /** 'warn' | 'error' | 'critical' — 高于阈值时 admin 看板高亮 */
+    severity: varchar('severity', { length: 16 }).notNull().default('error'),
+    payload: jsonb('payload').$type<Record<string, unknown>>(),
+    createdAt: createdAt(),
+  },
+  t => ({
+    createdIdx: index('error_logs_created_at_idx').on(t.createdAt),
+    severityIdx: index('error_logs_severity_idx').on(t.severity),
+  }),
+)
+
 // --- articles (knowledge content CMS) ---
 export const articles = pgTable(
   'articles',
@@ -363,6 +408,10 @@ export const articles = pgTable(
     requiresShoshiReview: boolean('requires_shoshi_review').notNull().default(true),
     lastReviewedAt: timestamp('last_reviewed_at', { withTimezone: true }),
     lastReviewedBy: varchar('last_reviewed_by', { length: 100 }),
+    // 行政書士法第 2 条要求审核人公开实名 + 登録番号。
+    // last_reviewed_by 留作内部短标识，公开侧用 _name + _registration 显示。
+    lastReviewedByName: varchar('last_reviewed_by_name', { length: 100 }),
+    lastReviewedByRegistration: varchar('last_reviewed_by_registration', { length: 50 }),
     reviewNotes: text('review_notes'),
     createdAt: createdAt(),
     updatedAt: updatedAt(),
@@ -427,6 +476,10 @@ export type Invitation = typeof invitations.$inferSelect
 export type NewInvitation = typeof invitations.$inferInsert
 export type Consultation = typeof consultations.$inferSelect
 export type NewConsultation = typeof consultations.$inferInsert
+export type EventRow = typeof events.$inferSelect
+export type NewEventRow = typeof events.$inferInsert
+export type ErrorLog = typeof errorLogs.$inferSelect
+export type NewErrorLog = typeof errorLogs.$inferInsert
 export type Article = typeof articles.$inferSelect
 export type NewArticle = typeof articles.$inferInsert
 export type Session = typeof sessions.$inferSelect

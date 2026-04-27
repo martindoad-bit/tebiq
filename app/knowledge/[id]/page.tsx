@@ -57,7 +57,7 @@ export default async function KnowledgeDetailPage({ params }: Props) {
                 </span>
               ) : (
                 <span className="rounded-[8px] bg-[rgba(87,167,123,0.12)] px-2 py-1 text-[10px] font-medium leading-none text-success">
-                  {article.lastReviewedBy ? `已审核 by ${article.lastReviewedBy}` : '已审核'}
+                  已由行政書士审核
                 </span>
               )}
             </div>
@@ -114,6 +114,8 @@ export default async function KnowledgeDetailPage({ params }: Props) {
         </div>
       </article>
 
+      <ReviewerAttribution article={article} />
+
       <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-4 shadow-card">
         <div className="flex items-start gap-3">
           <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-[12px] bg-accent-2 text-ink">
@@ -146,5 +148,78 @@ export default async function KnowledgeDetailPage({ params }: Props) {
         </div>
       </section>
     </AppShell>
+  )
+}
+
+/**
+ * 公开标注审核行政書士的实名 + 登録番号 + 审核日期。
+ * 行政書士法要求公开渠道呈现的法律相关信息标注资格审核人身份。
+ *
+ * 三态：
+ *  - 待审核（requiresShoshiReview=true）：橙色 chip，"本文待审核中" 提示
+ *  - 已审核且有 name + registration：完整署名
+ *  - 已审核但缺名/番号（旧数据）：保守显示「已由行政書士审核」+ 日期，不伪造身份
+ */
+function ReviewerAttribution({
+  article,
+}: {
+  article: {
+    requiresShoshiReview: boolean
+    lastReviewedAt: Date | null
+    lastReviewedByName: string | null
+    lastReviewedByRegistration: string | null
+  }
+}) {
+  if (article.requiresShoshiReview) {
+    return (
+      <section className="mt-3 rounded-card border border-accent/40 bg-accent-2 px-4 py-3.5">
+        <p className="text-[12px] leading-[1.7] text-ink">
+          本文当前 <strong>待行政書士审核</strong>。请把它当作初稿信息阅读，正式办理时以官方窗口或持牌专家说明为准。
+        </p>
+      </section>
+    )
+  }
+
+  const reviewedAt = article.lastReviewedAt ? fmtDate(article.lastReviewedAt) : null
+  const hasFull = !!(article.lastReviewedByName && article.lastReviewedByRegistration)
+
+  return (
+    <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-3.5 shadow-card">
+      <div className="flex items-start gap-2.5">
+        <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-[rgba(87,167,123,0.12)] text-success">
+          <BookOpenCheck size={14} strokeWidth={1.7} />
+        </span>
+        <div className="min-w-0 text-[12px] leading-[1.7] text-slate">
+          {hasFull ? (
+            <>
+              已由行政書士{' '}
+              <strong className="text-ink">{article.lastReviewedByName}</strong>
+              （登録番号 {article.lastReviewedByRegistration}）审核
+              {reviewedAt && (
+                <>
+                  {' '}
+                  / 审核日期 <span className="text-ink">{reviewedAt}</span>
+                </>
+              )}
+              。
+            </>
+          ) : (
+            <>
+              已由行政書士审核
+              {reviewedAt && (
+                <>
+                  {' '}
+                  / 审核日期 <span className="text-ink">{reviewedAt}</span>
+                </>
+              )}
+              。<span className="text-ash"> 审核人姓名与登録番号正在补录中。</span>
+            </>
+          )}
+          <p className="mt-2 text-[11px] text-ash">
+            以上内容为参考信息，不构成法律意见。复杂或个别情况请咨询持牌行政書士。
+          </p>
+        </div>
+      </div>
+    </section>
   )
 }

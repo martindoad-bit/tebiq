@@ -18,6 +18,9 @@ interface AdminArticle {
   requiresShoshiReview: boolean
   lastReviewedAt: string | null
   lastReviewedBy: string | null
+  /** 行政書士法要求的实名 + 登録番号（公开侧显示用） */
+  lastReviewedByName: string | null
+  lastReviewedByRegistration: string | null
   reviewNotes: string | null
   updatedAt: string
 }
@@ -31,6 +34,8 @@ const EMPTY: Omit<AdminArticle, 'id' | 'updatedAt'> & { id?: string; updatedAt?:
   requiresShoshiReview: true,
   lastReviewedAt: null,
   lastReviewedBy: '',
+  lastReviewedByName: '',
+  lastReviewedByRegistration: '',
   reviewNotes: '',
 }
 
@@ -95,14 +100,21 @@ export default function AdminKnowledgeClient({ adminKey }: { adminKey: string })
   }
 
   function markReviewed() {
-    const reviewer = window.prompt('审核者标识（例如 行政書士姓名或 initials）')
-    if (!reviewer?.trim()) return
-    const notes = window.prompt('审核意见（可留空）') ?? ''
+    const reviewerName = window.prompt('行政書士姓名（公开显示，必填）')
+    if (!reviewerName?.trim()) return
+    const reviewerRegistration = window.prompt(
+      '行政書士登録番号（公开显示，例如 12345678，必填）',
+    )
+    if (!reviewerRegistration?.trim()) return
+    const notes = window.prompt('审核意见（仅内部，可留空）') ?? ''
     setForm(f => ({
       ...f,
       requiresShoshiReview: false,
       lastReviewedAt: new Date().toISOString(),
-      lastReviewedBy: reviewer.trim(),
+      // 内部短标识保留向后兼容（用 name 填充）
+      lastReviewedBy: reviewerName.trim(),
+      lastReviewedByName: reviewerName.trim(),
+      lastReviewedByRegistration: reviewerRegistration.trim(),
       reviewNotes: notes.trim(),
     }))
   }
@@ -212,9 +224,17 @@ export default function AdminKnowledgeClient({ adminKey }: { adminKey: string })
                     <div>
                       <div className="font-bold text-title">审核记录</div>
                       <div className="mt-1 text-muted">
-                        {form.lastReviewedAt
-                          ? `${form.lastReviewedBy ?? '未填写'} · ${new Date(form.lastReviewedAt).toLocaleString('ja-JP')}`
-                          : '尚未标记审核'}
+                        {form.lastReviewedAt ? (
+                          <>
+                            {form.lastReviewedByName ?? form.lastReviewedBy ?? '未填写'}
+                            {form.lastReviewedByRegistration && (
+                              <>（登録番号 {form.lastReviewedByRegistration}）</>
+                            )}{' '}
+                            · {new Date(form.lastReviewedAt).toLocaleString('ja-JP')}
+                          </>
+                        ) : (
+                          '尚未标记审核'
+                        )}
                       </div>
                     </div>
                     <button
@@ -225,9 +245,40 @@ export default function AdminKnowledgeClient({ adminKey }: { adminKey: string })
                       标记已审核
                     </button>
                   </div>
+                  {/* 直接编辑入口（不走 prompt）— 让创始人也能修正既有数据 */}
+                  <div className="mt-3 grid grid-cols-2 gap-2">
+                    <Field label="行政書士姓名">
+                      <input
+                        value={form.lastReviewedByName ?? ''}
+                        onChange={e =>
+                          setForm(f => ({ ...f, lastReviewedByName: e.target.value }))
+                        }
+                        placeholder="山田 太郎"
+                        className="w-full rounded-lg border border-line bg-white px-2 py-1.5 text-xs outline-none focus:border-primary"
+                      />
+                    </Field>
+                    <Field label="登録番号">
+                      <input
+                        value={form.lastReviewedByRegistration ?? ''}
+                        onChange={e =>
+                          setForm(f => ({
+                            ...f,
+                            lastReviewedByRegistration: e.target.value,
+                          }))
+                        }
+                        placeholder="12345678"
+                        className="w-full rounded-lg border border-line bg-white px-2 py-1.5 text-xs outline-none focus:border-primary"
+                      />
+                    </Field>
+                  </div>
                   {form.reviewNotes && (
                     <p className="mt-2 rounded-lg bg-bg px-2 py-1.5 text-muted">
                       {form.reviewNotes}
+                    </p>
+                  )}
+                  {!form.requiresShoshiReview && (!form.lastReviewedByName || !form.lastReviewedByRegistration) && (
+                    <p className="mt-2 rounded-lg bg-[#FDECEA] px-2 py-1.5 text-[#92400E]">
+                      ⚠ 行政書士法要求：发布前必须填写审核人姓名和登録番号。
                     </p>
                   )}
                 </div>

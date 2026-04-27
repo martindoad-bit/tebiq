@@ -45,6 +45,10 @@ export async function POST(req: NextRequest) {
     requiresShoshiReview: Boolean(body?.requiresShoshiReview),
     lastReviewedAt: body?.lastReviewedAt ? String(body.lastReviewedAt) : null,
     lastReviewedBy: body?.lastReviewedBy ? String(body.lastReviewedBy) : null,
+    lastReviewedByName: body?.lastReviewedByName ? String(body.lastReviewedByName) : null,
+    lastReviewedByRegistration: body?.lastReviewedByRegistration
+      ? String(body.lastReviewedByRegistration)
+      : null,
     reviewNotes: body?.reviewNotes ? String(body.reviewNotes) : null,
   })
 

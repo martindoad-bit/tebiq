@@ -36,6 +36,20 @@
       "when": 1777209648585,
       "tag": "0004_blue_stingray",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1777267335183,
+      "tag": "0005_black_scourge",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1777267921946,
+      "tag": "0006_typical_thaddeus_ross",
+      "breakpoints": true
     }
   ]
 }
