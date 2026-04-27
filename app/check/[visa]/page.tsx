@@ -8,6 +8,8 @@
  */
 import { notFound } from 'next/navigation'
 import VisaQuizClient from './VisaQuizClient'
+import TrackOnMount from '@/app/_components/v5/TrackOnMount'
+import { EVENT } from '@/lib/analytics/events'
 import {
   gijinkokuBank,
   haigushaBank,
@@ -38,5 +40,13 @@ export default function CheckVisaPage({
 }) {
   const bank = SUPPORTED[params.visa]
   if (!bank) notFound()
-  return <VisaQuizClient visa={params.visa as VisaSlug} />
+  return (
+    <>
+      <TrackOnMount
+        event={EVENT.QUIZ_VISA_SELECTED}
+        payload={{ visa: params.visa }}
+      />
+      <VisaQuizClient visa={params.visa as VisaSlug} />
+    </>
+  )
 }

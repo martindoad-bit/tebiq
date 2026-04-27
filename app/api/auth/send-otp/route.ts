@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server'
 import { createOtpCode } from '@/lib/db/queries/otpCodes'
+import { track } from '@/lib/analytics/track'
+import { EVENT } from '@/lib/analytics/events'
 
 export const dynamic = 'force-dynamic'
 
@@ -14,6 +16,7 @@ export async function POST(req: Request) {
     // mock: 实际上线时替换为 SMS 发送服务
     // eslint-disable-next-line no-console
     console.log(`[TEBIQ OTP MOCK] phone=${phone} otp=${code}`)
+    await track(EVENT.AUTH_OTP_SENT, { phonePrefix: phone.slice(0, 4) })
     return NextResponse.json({ ok: true })
   } catch {
     return NextResponse.json({ error: '请求格式错误' }, { status: 400 })

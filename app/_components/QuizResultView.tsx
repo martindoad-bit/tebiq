@@ -11,6 +11,9 @@ import { AlertTriangle, CheckCircle2, ClipboardList, Gift, ListChecks } from 'lu
 import AppShell from './v5/AppShell'
 import AppBar from './v5/AppBar'
 import Button from './v5/Button'
+import ComplianceFooter from './v5/ComplianceFooter'
+import TrackOnMount from './v5/TrackOnMount'
+import { EVENT } from '@/lib/analytics/events'
 import type {
   AnsweredItem,
   JudgeResult,
@@ -104,6 +107,14 @@ export default function QuizResultView({
 
   return (
     <AppShell appBar={<AppBar title="自查结果" back={backHref} />}>
+      <TrackOnMount
+        event={EVENT.QUIZ_COMPLETED}
+        payload={{
+          visa: bank.visa,
+          verdict: result.verdict,
+          triggeredCount: result.triggered.length,
+        }}
+      />
       <div className="bg-accent-2 rounded-card border border-accent/25 px-4 py-[18px] text-center mt-3 shadow-card">
         <div
           className={`mx-auto w-[38px] h-[38px] rounded-full ${sv.bg} text-white text-[22px] font-medium flex items-center justify-center mb-3`}
@@ -155,6 +166,8 @@ export default function QuizResultView({
           </span>
         </span>
       </Link>
+
+      <ComplianceFooter />
 
       <div className="mt-6 mb-6 flex flex-col items-center gap-3">
         <Link

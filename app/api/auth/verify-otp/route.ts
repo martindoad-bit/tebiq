@@ -3,6 +3,8 @@ import { consumeOtpCode } from '@/lib/db/queries/otpCodes'
 import { setUserSession } from '@/lib/auth/session'
 import { getMemberByPhone } from '@/lib/db/queries/members'
 import { acceptInvitationAndGrantReward } from '@/lib/db/queries/invitations'
+import { track } from '@/lib/analytics/track'
+import { EVENT } from '@/lib/analytics/events'
 
 export const dynamic = 'force-dynamic'
 
@@ -17,10 +19,16 @@ export async function POST(req: Request) {
     }
     const valid = await consumeOtpCode(phone, otp)
     if (!valid) {
+      await track(EVENT.AUTH_LOGIN_FAIL, { reason: 'invalid_otp' })
       return NextResponse.json({ error: '验证码错误或已过期' }, { status: 401 })
     }
     const existingMember = await getMemberByPhone(phone)
     const member = await setUserSession(phone)
+    await track(
+      EVENT.AUTH_LOGIN_SUCCESS,
+      { firstLogin: !existingMember, hasInvite: !!inviteCode },
+      { user: member },
+    )
     let invitationAccepted = false
     if (inviteCode && !existingMember) {
       try {

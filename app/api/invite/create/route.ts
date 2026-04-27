@@ -6,6 +6,8 @@ import {
   InvitationLimitError,
   INVITE_REWARD_DAYS,
 } from '@/lib/db/queries/invitations'
+import { track } from '@/lib/analytics/track'
+import { EVENT } from '@/lib/analytics/events'
 
 export const dynamic = 'force-dynamic'
 
@@ -19,6 +21,8 @@ export async function POST(req: Request) {
     const invitation = await getOrCreatePendingInvitation(user.id)
     const stats = await getInvitationStats(user.id)
     const origin = new URL(req.url).origin
+
+    await track(EVENT.INVITE_LINK_GENERATED, {}, { user })
 
     return NextResponse.json({
       code: invitation.code,

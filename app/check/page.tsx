@@ -10,11 +10,14 @@ import AppShell from '@/app/_components/v5/AppShell'
 import AppBar from '@/app/_components/v5/AppBar'
 import Illustration from '@/app/_components/v5/Illustration'
 import Button from '@/app/_components/v5/Button'
+import TrackOnMount from '@/app/_components/v5/TrackOnMount'
+import { EVENT } from '@/lib/analytics/events'
 import type { ReactNode } from 'react'
 
 export default function CheckLandingPage() {
   return (
     <AppShell appBar={<AppBar title="续签自查" back="/" />}>
+      <TrackOnMount event={EVENT.QUIZ_START} />
       <div className="text-center mt-2 mb-1">
         <div className="mx-auto mb-2 inline-flex items-center gap-1.5 rounded-full bg-cool-blue/70 px-2.5 py-1 text-[10.5px] font-medium text-ink/80">
           <Clock3 size={12} strokeWidth={1.55} />
