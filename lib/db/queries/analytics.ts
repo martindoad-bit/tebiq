@@ -117,3 +117,113 @@ export async function recentErrors(limit = 10) {
     .orderBy(desc(errorLogs.createdAt))
     .limit(limit)
 }
+
+/** 按 path 聚合错误数量，TOP N 最容易出错的路径。 */
+export async function errorsByPath(
+  windowHours: number,
+  limit = 8,
+): Promise<Array<{ path: string; n: number }>> {
+  const since = hoursAgo(windowHours)
+  const rows = await db
+    .select({
+      path: errorLogs.path,
+      n: sql<number>`count(*)::int`,
+    })
+    .from(errorLogs)
+    .where(gte(errorLogs.createdAt, since))
+    .groupBy(errorLogs.path)
+    .orderBy(desc(sql`count(*)`))
+    .limit(limit)
+  return rows.map(r => ({ path: r.path ?? '(unknown)', n: Number(r.n) }))
+}
+
+// === Time series (sparkline) ===
+
+/** 24h 内每小时事件数（UTC 桶）。返回 24 个点。 */
+export async function eventsPerHour(): Promise<Array<{ t: string; n: number }>> {
+  const since = hoursAgo(24)
+  const rows = await db
+    .select({
+      hour: sql<string>`date_trunc('hour', ${events.createdAt})::text`,
+      n: sql<number>`count(*)::int`,
+    })
+    .from(events)
+    .where(gte(events.createdAt, since))
+    .groupBy(sql`date_trunc('hour', ${events.createdAt})`)
+    .orderBy(sql`date_trunc('hour', ${events.createdAt})`)
+  return rows.map(r => ({ t: String(r.hour), n: Number(r.n) }))
+}
+
+/** 7d 内每天事件数（UTC 桶）。返回 7 个点。 */
+export async function eventsPerDay(): Promise<Array<{ t: string; n: number }>> {
+  const since = hoursAgo(7 * 24)
+  const rows = await db
+    .select({
+      day: sql<string>`date_trunc('day', ${events.createdAt})::text`,
+      n: sql<number>`count(*)::int`,
+    })
+    .from(events)
+    .where(gte(events.createdAt, since))
+    .groupBy(sql`date_trunc('day', ${events.createdAt})`)
+    .orderBy(sql`date_trunc('day', ${events.createdAt})`)
+  return rows.map(r => ({ t: String(r.day), n: Number(r.n) }))
+}
+
+/** 最近 N 条事件（实时事件流）。 */
+export async function recentEvents(limit = 50) {
+  return await db
+    .select()
+    .from(events)
+    .orderBy(desc(events.createdAt))
+    .limit(limit)
+}
+
+// === 转化漏斗（distinct member 计数） ===
+
+/** 在窗口期内触达过 eventName 的不重复 member id 集合。 */
+async function distinctMemberSet(
+  eventName: EventName,
+  windowHours: number,
+): Promise<Set<string>> {
+  const since = hoursAgo(windowHours)
+  const rows = await db
+    .select({ memberId: events.memberId })
+    .from(events)
+    .where(and(eq(events.eventName, eventName), gte(events.createdAt, since)))
+  const set = new Set<string>()
+  for (const r of rows) {
+    if (r.memberId) set.add(r.memberId)
+  }
+  return set
+}
+
+/**
+ * 用户路径转化率 — 各漏斗节点：登录 → 自查完成 → 拍照尝试 →
+ * 订阅 checkout 启动 → checkout 完成。每一步用 distinct memberId 算。
+ *
+ * 注意：基于 events 表的 memberId 字段。匿名访问没有 memberId 的事件
+ * 不进入分母（属于「漏斗外」流量）。
+ */
+export async function memberConversionFunnel(windowHours: number): Promise<{
+  signedIn: number
+  quizCompleted: number
+  photoAttempted: number
+  checkoutStarted: number
+  checkoutCompleted: number
+}> {
+  const [signedIn, quizCompleted, photoAttempted, checkoutStarted, checkoutCompleted] =
+    await Promise.all([
+      distinctMemberSet('auth.login_success', windowHours),
+      distinctMemberSet('quiz.completed', windowHours),
+      distinctMemberSet('photo.recognize.attempt', windowHours),
+      distinctMemberSet('subscribe.checkout_started', windowHours),
+      distinctMemberSet('subscribe.checkout_completed', windowHours),
+    ])
+  return {
+    signedIn: signedIn.size,
+    quizCompleted: quizCompleted.size,
+    photoAttempted: photoAttempted.size,
+    checkoutStarted: checkoutStarted.size,
+    checkoutCompleted: checkoutCompleted.size,
+  }
+}
