@@ -210,12 +210,12 @@ function SparklineCard({
         preserveAspectRatio="none"
       >
         <path d={area} fill="rgba(246,177,51,0.18)" />
-        <path d={path} stroke="#233B37" strokeWidth="1.5" fill="none" />
+        <path d={path} stroke="#18324A" strokeWidth="1.5" fill="none" />
         {data.map((p, i) => {
           const x = i * stepX
           const y = H - (p.n / max) * (H - 8) - 4
           return (
-            <circle key={i} cx={x} cy={y} r="2" fill="#233B37" />
+            <circle key={i} cx={x} cy={y} r="2" fill="#18324A" />
           )
         })}
       </svg>

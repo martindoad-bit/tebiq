@@ -60,7 +60,7 @@ export default function SamplePackagePage() {
             <span
               className="font-bold text-7xl md:text-8xl select-none"
               style={{
-                color: '#C49A5A',
+                color: '#E56F4F',
                 opacity: 0.07,
                 transform: 'rotate(-25deg)',
                 letterSpacing: '0.3em',

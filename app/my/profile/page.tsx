@@ -404,7 +404,7 @@ function ProfileForm({
 
           <Field label="⑦ 是否有子女">
             <label className="flex min-h-[36px] items-center gap-2 rounded-[11px] bg-canvas px-3 text-[13px] text-ink">
-              <input type="checkbox" checked={hasChildren} onChange={e => setHasChildren(e.target.checked)} className="h-4 w-4 accent-[#C49A5A]" />
+              <input type="checkbox" checked={hasChildren} onChange={e => setHasChildren(e.target.checked)} className="h-4 w-4 accent-[#E56F4F]" />
               有子女
             </label>
           </Field>
@@ -524,7 +524,7 @@ function AskAssistant({ hasProfile }: { hasProfile: boolean }) {
           onClick={ask}
           disabled={loading || !q.trim()}
           aria-label="发送"
-          className="flex h-[42px] w-[42px] flex-shrink-0 items-center justify-center rounded-btn bg-accent text-ink shadow-cta disabled:opacity-50"
+          className="flex h-[42px] w-[42px] flex-shrink-0 items-center justify-center rounded-btn bg-accent text-white shadow-cta disabled:opacity-50"
         >
           {loading ? '...' : <Send size={16} strokeWidth={1.55} />}
         </button>
@@ -577,7 +577,7 @@ function HistoryRow({ record }: { record: HistoryRecord }) {
   const [open, setOpen] = useState(false)
   const verdictLabel = {
     red: { text: '高风险', cls: 'bg-danger text-white' },
-    yellow: { text: '需注意', cls: 'bg-accent text-ink' },
+    yellow: { text: '需注意', cls: 'bg-accent text-white' },
     green: { text: '可申请', cls: 'bg-success text-white' },
   }[record.result]
 

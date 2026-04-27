@@ -156,7 +156,7 @@ function FilterButton({
       onClick={onClick}
       className={`min-h-[34px] rounded-[10px] border px-3 text-[12px] font-medium transition-colors ${
         active
-          ? 'border-accent bg-accent text-ink shadow-soft'
+          ? 'border-accent bg-accent text-white shadow-soft'
           : 'border-hairline bg-surface text-ash hover:border-accent'
       }`}
     >

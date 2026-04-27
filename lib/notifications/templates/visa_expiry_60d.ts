@@ -14,11 +14,11 @@ export interface VisaExpiry60dData {
 const ARCHIVE_URL = 'https://tebiq.jp/my'
 
 const COLORS = {
-  brand: '#233B37',
-  accent: '#C49A5A',
-  bg: '#F6F4EF',
+  brand: '#18324A',
+  accent: '#E56F4F',
+  bg: '#FAF7F1',
   body: '#46534F',
-  card: '#FFFEFA',
+  card: '#FFFFFF',
 } as const
 
 function greet(name?: string): string {
@@ -38,7 +38,7 @@ export const template = {
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:${COLORS.bg};padding:32px 16px;">
       <tr>
         <td align="center">
-          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:560px;background:${COLORS.card};border-radius:10px;padding:32px;box-shadow:0 1px 0 rgba(30,28,22,0.035),0 12px 24px rgba(34,42,38,0.06);">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:560px;background:${COLORS.card};border-radius:10px;padding:32px;box-shadow:0 1px 0 rgba(30,28,22,0.035),0 12px 24px rgba(24,50,74,0.08);">
             <tr>
               <td style="font-size:20px;font-weight:600;color:${COLORS.brand};padding-bottom:16px;">
                 在留期间还剩 ${daysLeft} 天

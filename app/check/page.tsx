@@ -32,22 +32,23 @@ export default function CheckLandingPage() {
   return (
     <AppShell appBar={<AppBar title="续签自查" back="/" />}>
       <TrackOnMount event={EVENT.QUIZ_START} />
-      <div className="text-center mt-2 mb-1">
-        <div className="mx-auto mb-2 inline-flex items-center gap-1.5 rounded-full bg-cool-blue/70 px-2.5 py-1 text-[10.5px] font-medium text-ink/80">
-          <Clock3 size={12} strokeWidth={1.55} />
+      <div className="mb-2 mt-4 text-center">
+        <div className="mx-auto mb-3 inline-flex items-center gap-2 rounded-full bg-cool-blue px-3 py-1.5 text-[clamp(12px,3.3vw,14px)] font-semibold text-ink/85">
+          <Clock3 size={14} strokeWidth={1.65} />
           约 3 分钟
         </div>
-        <p className="mx-auto max-w-[300px] text-[12px] leading-[1.65] text-ash">
+        <p className="mx-auto max-w-[340px] text-[clamp(15px,4.2vw,18px)] leading-[1.65] text-slate/78">
           根据你的在留資格和当前情况，先看续签前要注意的风险。
         </p>
       </div>
 
       <Illustration
-        height={130}
-        subject="签证文件 + 检查清单 + 守护人物"
+        height={220}
+        src="/illustrations/renewal-check-image2.png"
+        subject="日文文件、日历和护照的桌面静物"
       />
 
-      <ul className="space-y-2.5 mt-2 mb-6">
+      <ul className="mb-7 mt-3 space-y-3.5">
         <FeatureRow
           icon={<CheckCircle size={14} strokeWidth={1.5} className="text-ink" />}
           title="完整的风险评估"
@@ -92,12 +93,12 @@ function FeatureRow({
 }) {
   return (
     <li className="flex items-start gap-3">
-      <span className="flex-shrink-0 w-8 h-8 rounded-[10px] bg-accent-2 flex items-center justify-center mt-0.5 shadow-soft">
+      <span className="mt-0.5 flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-[14px] bg-accent-2 shadow-soft">
         {icon}
       </span>
-      <div className="flex-1 min-w-0 leading-tight">
-        <div className="text-[13px] text-ink font-medium">{title}</div>
-        <div className="text-[10.5px] text-ash mt-0.5">{sub}</div>
+      <div className="min-w-0 flex-1 leading-tight">
+        <div className="text-[clamp(16px,4.5vw,18px)] font-semibold text-ink">{title}</div>
+        <div className="mt-1 text-[clamp(12.5px,3.6vw,14px)] text-ash">{sub}</div>
       </div>
     </li>
   )

@@ -75,7 +75,7 @@ export default function RemindersClient({ items }: { items: ReminderItem[] }) {
               onClick={() => setTab(t.id)}
               className={`flex-1 rounded-[10px] px-2 py-[7px] text-[11.5px] font-medium transition-colors ${
                 on
-                  ? 'bg-ink text-white shadow-[0_3px_8px_rgba(34,42,38,0.14)]'
+                  ? 'bg-ink text-white shadow-[0_3px_8px_rgba(24,50,74,0.16)]'
                   : 'text-ash'
               }`}
             >
@@ -155,7 +155,7 @@ function SummaryCell({ label, value }: { label: string; value: number }) {
 function EmptyState() {
   return (
     <div className="mt-5 rounded-card border border-hairline bg-surface px-4 py-8 text-center shadow-card">
-      <EmptyVisual src="/illustrations/empty-reminders.svg" alt="暂无提醒事项" />
+      <EmptyVisual src="/illustrations/empty-state-image2.png" alt="暂无提醒事项" />
       <p className="mt-3 text-[13px] font-medium leading-relaxed text-ink">
         暂无需要处理的提醒
       </p>

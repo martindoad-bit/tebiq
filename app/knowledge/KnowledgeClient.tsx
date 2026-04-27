@@ -239,7 +239,7 @@ function previewContent(markdown: string): string {
 function EmptyState() {
   return (
     <div className="mt-3 rounded-card border border-hairline bg-surface px-4 py-8 text-center shadow-card">
-      <EmptyVisual src="/illustrations/empty-knowledge.svg" alt="没有找到知识内容" />
+      <EmptyVisual src="/illustrations/empty-state-image2.png" alt="没有找到知识内容" />
       <p className="mt-3 text-[13px] font-medium leading-relaxed text-ink">
         没有找到相关内容
       </p>

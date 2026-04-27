@@ -42,10 +42,10 @@ export default function TabBar() {
 
   return (
     <nav
-      className="flex-shrink-0 h-14 bg-surface border-t border-hairline"
+      className="flex-shrink-0 h-16 bg-surface border-t border-hairline"
       style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
     >
-      <ul className="grid grid-cols-4 h-14">
+      <ul className="grid h-16 grid-cols-4">
         {TABS.map(({ href, label, Icon, match }) => {
           const active = match(pathname)
           return (
@@ -56,16 +56,16 @@ export default function TabBar() {
                   if (active) return
                   trackClient(EVENT.TAB_SWITCH, { from: pathname, to: href, label })
                 }}
-                className={`h-full flex flex-col items-center justify-center gap-[3px] transition-colors ${
+                className={`flex h-full flex-col items-center justify-center gap-1 transition-colors ${
                   active ? 'text-ink' : 'text-haze'
                 }`}
               >
                 <Icon
                   size={19}
-                  strokeWidth={1.7}
-                  color={active ? '#C49A5A' : '#B7B1A7'}
+                  strokeWidth={1.75}
+                  color={active ? '#E56F4F' : '#B7C0C7'}
                 />
-                <span className="text-[9.5px] font-normal">{label}</span>
+                <span className="text-[10.5px] font-medium">{label}</span>
               </Link>
             </li>
           )

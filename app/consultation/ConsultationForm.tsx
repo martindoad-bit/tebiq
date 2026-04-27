@@ -162,7 +162,7 @@ export default function ConsultationForm() {
                   onClick={() => setPreferredContact(m)}
                   className={`min-h-[40px] rounded-[11px] border text-[12px] font-medium transition-colors ${
                     preferredContact === m
-                      ? 'border-accent bg-accent text-ink shadow-soft'
+                      ? 'border-accent bg-accent text-white shadow-soft'
                       : 'border-hairline bg-surface text-ash hover:border-accent'
                   }`}
                 >
@@ -213,7 +213,7 @@ export default function ConsultationForm() {
                     name="urgency"
                     checked={urgency === u}
                     onChange={() => setUrgency(u)}
-                    className="accent-[#C49A5A]"
+                    className="accent-[#E56F4F]"
                   />
                   <span className="text-[13px] text-ink">{URGENCY_LABEL[u]}</span>
                 </label>

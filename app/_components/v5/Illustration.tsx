@@ -15,11 +15,11 @@ interface Props {
 export default function Illustration({
   height = 130,
   subject,
-  src = '/illustrations/renewal-check.svg',
+  src = '/illustrations/renewal-check-image2.png',
 }: Props) {
   return (
     <div
-      className="relative my-4 w-full overflow-hidden rounded-card border border-hairline bg-surface shadow-card"
+      className="relative my-5 w-full overflow-hidden rounded-card border border-white/80 bg-surface shadow-raised"
       style={{ height }}
       role="img"
       aria-label={subject}

@@ -204,9 +204,9 @@ export default function PhotoUploader() {
           className="relative z-10 w-[58px] h-[58px] flex items-center justify-center rounded-[17px] bg-white/10 text-accent shadow-soft"
         >
           {busy ? (
-            <Loader size={28} color="#C49A5A" className="animate-spin" />
+            <Loader size={28} color="#E56F4F" className="animate-spin" />
           ) : (
-            <Camera size={28} color="#C49A5A" strokeWidth={1.5} />
+            <Camera size={28} color="#E56F4F" strokeWidth={1.5} />
           )}
         </span>
         <span className="relative z-10 text-center px-6">

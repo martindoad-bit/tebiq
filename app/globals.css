@@ -3,13 +3,13 @@
 @tailwind utilities;
 
 :root {
-  --background: #F6F4EF;
-  --foreground: #233B37;
+  --background: #FAF7F1;
+  --foreground: #18324A;
 }
 
 html, body {
-  background-color: #F6F4EF;
-  color: #233B37;
+  background-color: #FAF7F1;
+  color: #18324A;
   font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans',
     'Yu Gothic', YuGothic, 'Noto Sans SC', 'Noto Sans CJK SC', sans-serif;
   -webkit-text-size-adjust: 100%;
@@ -36,8 +36,8 @@ body:lang(ja),
 }
 
 ::selection {
-  background: rgba(196, 154, 90, 0.26);
-  color: #233B37;
+  background: rgba(229, 111, 79, 0.22);
+  color: #18324A;
 }
 
 a,

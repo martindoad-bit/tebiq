@@ -45,7 +45,7 @@ function urgencyDisplay(u: Urgency): UrgencyDisplay {
     case 'high':
       return { label: '需要尽快处理', bg: '#B45A4E', bang: '#B45A4E' }
     case 'normal':
-      return { label: '一般事项', bg: '#C49A5A', bang: '#C49A5A' }
+      return { label: '一般事项', bg: '#E56F4F', bang: '#E56F4F' }
     case 'ignorable':
       return { label: '可暂缓', bg: '#707A75', bang: '#707A75' }
   }

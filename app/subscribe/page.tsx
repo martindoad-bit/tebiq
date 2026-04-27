@@ -174,7 +174,7 @@ function PlanCard({
       }`}
     >
       {plan.tag && (
-        <span className="absolute -top-2 right-3 bg-accent text-ink text-[10px] font-medium px-2 py-0.5 rounded-[8px]">
+        <span className="absolute -top-2 right-3 bg-accent text-white text-[10px] font-medium px-2 py-0.5 rounded-[8px]">
           {plan.tag}
         </span>
       )}
@@ -195,7 +195,7 @@ function PlanCard({
       <ul className="mt-3 grid gap-1.5">
         {plan.benefits.map(b => (
           <li key={b} className="flex items-center gap-2 text-[11px] text-slate">
-            <span className="flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full bg-accent text-ink">
+            <span className="flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full bg-accent text-white">
               <Check size={10.5} strokeWidth={2} />
             </span>
             {b}

@@ -90,7 +90,7 @@ export default function QuotaFullModal({ open, onClose, daysUntilReset }: Props)
             >
               <span
                 aria-hidden
-                className="flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full bg-accent text-ink"
+                className="flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full bg-accent text-white"
               >
                 <Check size={11} strokeWidth={2} />
               </span>

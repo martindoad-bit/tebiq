@@ -28,7 +28,7 @@ export default function AppBar({ title, back, right, transparent }: Props) {
   }
   return (
     <header
-      className={`flex-shrink-0 h-12 px-4 flex items-center justify-between ${
+      className={`flex-shrink-0 h-[56px] px-5 flex items-center justify-between ${
         transparent ? '' : 'bg-canvas'
       }`}
       style={{ paddingTop: 'env(safe-area-inset-top, 0)' }}
@@ -38,15 +38,17 @@ export default function AppBar({ title, back, right, transparent }: Props) {
           type="button"
           onClick={onBack}
           aria-label="返回"
-          className="-ml-2 w-8 h-8 flex items-center justify-center text-ink"
+          className="-ml-2 flex h-10 w-10 items-center justify-center text-ink"
         >
-          <ChevronLeft size={22} strokeWidth={1.6} />
+          <ChevronLeft size={26} strokeWidth={1.65} />
         </button>
       ) : (
-        <span className="w-8" />
+        <span className="w-10" />
       )}
-      <h1 className="text-[14px] font-medium text-ink truncate">{title}</h1>
-      <div className="w-8 flex items-center justify-end">{right}</div>
+      <h1 className="truncate text-[clamp(17px,4.9vw,22px)] font-semibold leading-none text-ink">
+        {title}
+      </h1>
+      <div className="flex w-10 items-center justify-end">{right}</div>
     </header>
   )
 }
