@@ -1,6 +1,11 @@
 'use client'
+/**
+ * 全局 error boundary — v5 视觉。
+ * 自动 POST /api/log-error 落 error_logs 表（lib/analytics/errors.ts captureError）。
+ */
 import { useEffect } from 'react'
 import Link from 'next/link'
+import { AlertTriangle, RefreshCcw } from 'lucide-react'
 
 export default function GlobalError({
   error,
@@ -18,6 +23,8 @@ export default function GlobalError({
         digest: error.digest,
         stack: error.stack?.slice(0, 1000),
         path: typeof window !== 'undefined' ? window.location.pathname : '',
+        severity: 'error',
+        code: 'global_boundary',
       }),
     }).catch(() => {
       /* 静默 */
@@ -25,31 +32,32 @@ export default function GlobalError({
   }, [error])
 
   return (
-    <main className="min-h-screen bg-base text-body flex items-center justify-center px-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
-      <div className="max-w-md w-full bg-card border border-line rounded-2xl p-8 shadow-sm text-center">
-        <div className="w-16 h-16 mx-auto mb-5 rounded-full bg-[#FEE2E2] text-[#DC2626] text-3xl font-bold flex items-center justify-center">
-          !
+    <main className="min-h-[100dvh] bg-canvas px-4 py-12 flex items-center justify-center">
+      <div className="mx-auto w-full max-w-phone rounded-card border border-hairline bg-surface px-5 py-8 text-center shadow-card">
+        <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-[14px] bg-[rgba(226,87,76,0.12)] text-danger">
+          <AlertTriangle size={22} strokeWidth={1.55} />
         </div>
-        <h1 className="text-2xl font-bold text-title mb-3">出错了</h1>
-        <p className="text-body text-base leading-relaxed mb-6">
-          页面加载时发生异常。可以尝试重新加载，或返回首页继续浏览。
+        <h1 className="text-[18px] font-medium leading-snug text-ink">出了点问题</h1>
+        <p className="mx-auto mt-2 max-w-[290px] text-[12px] leading-[1.65] text-ash">
+          页面加载时发生异常。我们已经记录了这个错误，可以先重试一次或返回首页。
         </p>
         {error.digest && (
-          <p className="text-muted text-xs mb-4 font-mono break-all">
-            错误编号：{error.digest}
+          <p className="mt-3 break-all rounded-[10px] bg-canvas px-3 py-2 font-mono text-[10px] text-ash">
+            错误编号 {error.digest}
           </p>
         )}
-        <div className="flex flex-col gap-3">
+        <div className="mt-6 space-y-2">
           <button
             type="button"
             onClick={() => reset()}
-            className="w-full min-h-[52px] bg-primary hover:bg-primary-hover text-title font-bold rounded-xl text-base transition-all"
+            className="flex min-h-[44px] w-full items-center justify-center gap-1.5 rounded-btn bg-accent px-4 py-3 text-[13px] font-medium text-ink shadow-cta active:translate-y-px"
           >
-            重新加载
+            <RefreshCcw size={14} strokeWidth={1.55} />
+            刷新重试
           </button>
           <Link
             href="/"
-            className="w-full min-h-[44px] flex items-center justify-center text-primary hover:text-primary-hover text-sm font-bold underline underline-offset-4"
+            className="flex min-h-[42px] w-full items-center justify-center rounded-btn border border-hairline bg-surface px-4 py-2.5 text-[12.5px] font-medium text-ink"
           >
             返回首页
           </Link>
