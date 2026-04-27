@@ -1,6 +1,12 @@
 /**
  * /knowledge/[id] — published article detail.
+ *
+ * SEO:
+ *  - generateMetadata: title / description / openGraph / canonical
+ *  - JSON-LD Article schema injected via <script type="application/ld+json">
+ *  - 相关文章（同 category，最多 3 篇，按 updated_at 排序）展示在底部
  */
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import {
@@ -8,19 +14,92 @@ import {
   BookOpenCheck,
   CalendarDays,
   Camera,
+  ChevronRight,
   ClipboardCheck,
   FileText,
 } from 'lucide-react'
 import AppShell from '@/app/_components/v5/AppShell'
 import AppBar from '@/app/_components/v5/AppBar'
 import TabBar from '@/app/_components/v5/TabBar'
-import { getPublishedArticleById } from '@/lib/db/queries/articles'
-import { parseMarkdownBlocks } from '@/lib/knowledge/markdown'
+import {
+  getPublishedArticleById,
+  listRelatedPublishedArticles,
+} from '@/lib/db/queries/articles'
+import { parseMarkdownBlocks, plainTextFromMarkdown } from '@/lib/knowledge/markdown'
+import type { Article } from '@/lib/db/schema'
 
 export const dynamic = 'force-dynamic'
 
+const SITE_ORIGIN = process.env.NEXT_PUBLIC_SITE_ORIGIN ?? 'https://tebiq.jp'
+
 interface Props {
   params: { id: string }
+}
+
+function summaryFromBody(markdown: string, max = 160): string {
+  const plain = plainTextFromMarkdown(markdown)
+  if (plain.length <= max) return plain
+  return plain.slice(0, max - 1).trimEnd() + '…'
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const article = await getPublishedArticleById(params.id)
+  if (!article) {
+    return { title: '文章未找到 | TEBIQ', description: '该知识文章不存在或已下线。' }
+  }
+  const description = summaryFromBody(article.bodyMarkdown)
+  const canonical = `${SITE_ORIGIN}/knowledge/${article.slug ?? article.id}`
+  return {
+    title: `${article.title} | TEBIQ 知识中心`,
+    description,
+    alternates: { canonical },
+    openGraph: {
+      title: article.title,
+      description,
+      url: canonical,
+      siteName: 'TEBIQ',
+      locale: 'zh_CN',
+      type: 'article',
+      publishedTime: article.createdAt.toISOString(),
+      modifiedTime: article.updatedAt.toISOString(),
+    },
+    twitter: { card: 'summary', title: article.title, description },
+  }
+}
+
+function articleJsonLd(article: Article): string {
+  const author = article.lastReviewedByName
+    ? {
+        '@type': 'Person' as const,
+        name: article.lastReviewedByName,
+        ...(article.lastReviewedByRegistration
+          ? {
+              identifier: `行政書士登録番号 ${article.lastReviewedByRegistration}`,
+            }
+          : {}),
+      }
+    : { '@type': 'Organization' as const, name: 'TEBIQ' }
+  const url = `${SITE_ORIGIN}/knowledge/${article.slug ?? article.id}`
+  const data: Record<string, unknown> = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: article.title,
+    description: summaryFromBody(article.bodyMarkdown),
+    datePublished: article.createdAt.toISOString(),
+    dateModified: article.updatedAt.toISOString(),
+    inLanguage: 'zh-CN',
+    mainEntityOfPage: { '@type': 'WebPage', '@id': url },
+    author,
+    publisher: {
+      '@type': 'Organization',
+      name: 'TEBIQ',
+      url: SITE_ORIGIN,
+    },
+  }
+  if (article.lastReviewedAt) {
+    data.reviewedDate = article.lastReviewedAt.toISOString()
+  }
+  return JSON.stringify(data)
 }
 
 function fmtDate(d: Date): string {
@@ -35,12 +114,18 @@ export default async function KnowledgeDetailPage({ params }: Props) {
   if (!article) notFound()
 
   const blocks = parseMarkdownBlocks(article.bodyMarkdown)
+  const related = await listRelatedPublishedArticles(article.category, article.id, 3)
 
   return (
     <AppShell
       appBar={<AppBar title="知识详情" back="/knowledge" />}
       tabBar={<TabBar />}
     >
+      <script
+        type="application/ld+json"
+        // eslint-disable-next-line react/no-danger
+        dangerouslySetInnerHTML={{ __html: articleJsonLd(article) }}
+      />
       <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-4 shadow-card">
         <div className="flex items-start gap-3">
           <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-[13px] bg-accent-2 text-ink">
@@ -116,6 +201,8 @@ export default async function KnowledgeDetailPage({ params }: Props) {
 
       <ReviewerAttribution article={article} />
 
+      <RelatedArticles items={related} />
+
       <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-4 shadow-card">
         <div className="flex items-start gap-3">
           <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-[12px] bg-accent-2 text-ink">
@@ -148,6 +235,45 @@ export default async function KnowledgeDetailPage({ params }: Props) {
         </div>
       </section>
     </AppShell>
+  )
+}
+
+function RelatedArticles({ items }: { items: Article[] }) {
+  if (items.length === 0) return null
+  return (
+    <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-4 shadow-card">
+      <div className="mb-3 flex items-center gap-2 text-[12px] font-medium text-ink">
+        <FileText size={14} strokeWidth={1.55} />
+        相关文章
+      </div>
+      <ul className="space-y-2">
+        {items.map(it => (
+          <li key={it.id}>
+            <Link
+              href={`/knowledge/${it.slug ?? it.id}`}
+              className="group flex items-start gap-2.5 rounded-[12px] border border-hairline bg-canvas/40 px-3 py-2.5 transition-colors hover:border-accent"
+            >
+              <span className="mt-0.5 flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-[9px] bg-accent-2 text-ink">
+                <FileText size={13} strokeWidth={1.55} />
+              </span>
+              <div className="min-w-0 flex-1">
+                <div className="text-[12.5px] font-medium leading-snug text-ink">
+                  {it.title}
+                </div>
+                <p className="mt-1 line-clamp-2 text-[10.5px] leading-[1.55] text-ash">
+                  {summaryFromBody(it.bodyMarkdown, 90)}
+                </p>
+              </div>
+              <ChevronRight
+                size={14}
+                strokeWidth={1.55}
+                className="mt-2 flex-shrink-0 text-haze transition-colors group-hover:text-ink"
+              />
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </section>
   )
 }
 

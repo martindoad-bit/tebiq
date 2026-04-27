@@ -1,4 +1,4 @@
-import { desc, eq, or } from 'drizzle-orm'
+import { and, desc, eq, ne, or } from 'drizzle-orm'
 import { createId } from '@paralleldrive/cuid2'
 import { db } from '@/lib/db'
 import { articles, type Article, type NewArticle } from '@/lib/db/schema'
@@ -30,6 +30,26 @@ export async function listPublishedArticles(): Promise<Article[]> {
     .from(articles)
     .where(eq(articles.status, 'published'))
     .orderBy(desc(articles.updatedAt))
+}
+
+/** 同 category 下的其他 published 文章，按最近 updated_at 排序，最多 limit 条。 */
+export async function listRelatedPublishedArticles(
+  category: string,
+  excludeId: string,
+  limit = 3,
+): Promise<Article[]> {
+  return await db
+    .select()
+    .from(articles)
+    .where(
+      and(
+        eq(articles.status, 'published'),
+        eq(articles.category, category),
+        ne(articles.id, excludeId),
+      ),
+    )
+    .orderBy(desc(articles.updatedAt))
+    .limit(limit)
 }
 
 export async function getPublishedArticleById(idOrSlug: string): Promise<Article | null> {
