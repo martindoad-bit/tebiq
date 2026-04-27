@@ -41,13 +41,13 @@ interface UrgencyDisplay {
 function urgencyDisplay(u: Urgency): UrgencyDisplay {
   switch (u) {
     case 'critical':
-      return { label: '需要尽快处理', bg: '#E2574C', bang: '#E2574C' }
+      return { label: '需要尽快处理', bg: '#B45A4E', bang: '#B45A4E' }
     case 'high':
-      return { label: '需要尽快处理', bg: '#E2574C', bang: '#E2574C' }
+      return { label: '需要尽快处理', bg: '#B45A4E', bang: '#B45A4E' }
     case 'normal':
-      return { label: '一般事项', bg: '#F6B133', bang: '#F6B133' }
+      return { label: '一般事项', bg: '#C49A5A', bang: '#C49A5A' }
     case 'ignorable':
-      return { label: '可暂缓', bg: '#6E7A85', bang: '#6E7A85' }
+      return { label: '可暂缓', bg: '#707A75', bang: '#707A75' }
   }
 }
 
@@ -107,7 +107,7 @@ export default async function PhotoResultPage({
       {/* 緊急度 */}
       <section
         className="mt-2.5 rounded-card border bg-accent-2 px-3.5 py-4 text-center shadow-card"
-        style={{ borderColor: 'rgba(246, 177, 51, 0.4)', borderWidth: '0.5px' }}
+        style={{ borderColor: 'rgba(196, 154, 90, 0.36)', borderWidth: '0.5px' }}
       >
         <span
           className="inline-flex items-center gap-1 px-2.5 py-1 rounded-[12px] text-[11px] font-medium text-white"
