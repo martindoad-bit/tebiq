@@ -27,6 +27,8 @@ import {
 import AppShell from '@/app/_components/v5/AppShell'
 import TabBar from '@/app/_components/v5/TabBar'
 import Logo from '@/app/_components/v5/Logo'
+import TrackedLink from '@/app/_components/v5/TrackedLink'
+import { EVENT, type EventName } from '@/lib/analytics/events'
 import { getCurrentUser } from '@/lib/auth/session'
 import { listDocumentsByFamilyId } from '@/lib/db/queries/documents'
 import type { Document } from '@/lib/db/schema'
@@ -65,6 +67,7 @@ export default async function HomePage() {
           title="拍照即懂"
           subtitle="拍一张，马上知道要不要处理"
           href="/photo"
+          eventName={EVENT.HOME_PHOTO_CARD_CLICK}
         />
         <ActionCard
           variant="secondary"
@@ -72,6 +75,7 @@ export default async function HomePage() {
           title="续签自查"
           subtitle="3 分钟了解你的签证风险"
           href="/check"
+          eventName={EVENT.HOME_CHECK_CARD_CLICK}
         />
       </div>
 
@@ -105,12 +109,14 @@ function ActionCard({
   title,
   subtitle,
   href,
+  eventName,
 }: {
   variant: 'primary' | 'secondary'
   icon: ReactNode
   title: string
   subtitle: string
   href: string
+  eventName: EventName
 }) {
   const wrap =
     variant === 'primary'
@@ -123,8 +129,9 @@ function ActionCard({
     variant === 'primary' ? 'text-ink/70' : 'text-ash'
 
   return (
-    <Link
+    <TrackedLink
       href={href}
+      eventName={eventName}
       className={`block ${wrap} rounded-card p-3.5 flex items-center gap-3 active:translate-y-px active:opacity-90 transition`}
     >
       <span
@@ -136,7 +143,7 @@ function ActionCard({
         <span className={`block text-[14px] font-medium ${titleColor}`}>{title}</span>
         <span className={`block text-[11px] ${subColor} mt-0.5`}>{subtitle}</span>
       </span>
-    </Link>
+    </TrackedLink>
   )
 }
 

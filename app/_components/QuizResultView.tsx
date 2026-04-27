@@ -13,6 +13,7 @@ import AppBar from './v5/AppBar'
 import Button from './v5/Button'
 import ComplianceFooter from './v5/ComplianceFooter'
 import TrackOnMount from './v5/TrackOnMount'
+import { trackClient } from '@/lib/analytics/client'
 import { EVENT } from '@/lib/analytics/events'
 import type {
   AnsweredItem,
@@ -152,6 +153,13 @@ export default function QuizResultView({
       </div>
       <Link
         href="/invite"
+        onClick={() =>
+          trackClient(EVENT.INVITE_CTA_CLICK, {
+            source: 'quiz_result',
+            visa: bank.visa,
+            verdict: result.verdict,
+          })
+        }
         className="mt-2 flex items-start gap-3 rounded-card border border-accent/35 bg-accent-2/70 px-4 py-3 shadow-card transition-colors hover:bg-accent-2"
       >
         <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-[12px] bg-surface text-ink shadow-soft">

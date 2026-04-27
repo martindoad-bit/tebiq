@@ -24,6 +24,12 @@ import QuotaFullModal from './_components/QuotaFullModal'
  * useSearchParams 必须在 Suspense 边界内（Next.js 14 静态生成约束）。
  * 把 modal 部分单独抽成子组件即可。
  */
+function daysUntilNextMonthUtc(): number {
+  const now = new Date()
+  const next = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() + 1, 1))
+  return Math.ceil((next.getTime() - now.getTime()) / (24 * 60 * 60 * 1000))
+}
+
 function QuotaModalFromQuery() {
   const router = useRouter()
   const sp = useSearchParams()
@@ -32,6 +38,7 @@ function QuotaModalFromQuery() {
     <QuotaFullModal
       open={quotaFull}
       onClose={() => router.replace('/photo')}
+      daysUntilReset={daysUntilNextMonthUtc()}
     />
   )
 }

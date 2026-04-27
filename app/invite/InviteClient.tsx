@@ -5,6 +5,8 @@ import Link from 'next/link'
 import { useEffect, useMemo, useState } from 'react'
 import { Check, Copy, Gift, Share2 } from 'lucide-react'
 import Button from '@/app/_components/v5/Button'
+import { trackClient } from '@/lib/analytics/client'
+import { EVENT } from '@/lib/analytics/events'
 
 interface InviteData {
   code: string
@@ -41,19 +43,27 @@ export default function InviteClient() {
 
   async function copyLink() {
     if (!data) return
+    trackClient(EVENT.SHARE_CLICK, { method: 'copy', source: 'invite_page' })
     await navigator.clipboard.writeText(data.url)
     setCopied(true)
+    trackClient(EVENT.SHARE_COMPLETED, { method: 'copy' })
     window.setTimeout(() => setCopied(false), 1800)
   }
 
   async function shareLink() {
     if (!data) return
+    trackClient(EVENT.SHARE_CLICK, { method: 'navigator', source: 'invite_page' })
     if (navigator.share) {
-      await navigator.share({
-        title: 'TEBIQ 邀请',
-        text: shareText,
-        url: data.url,
-      })
+      try {
+        await navigator.share({
+          title: 'TEBIQ 邀请',
+          text: shareText,
+          url: data.url,
+        })
+        trackClient(EVENT.SHARE_COMPLETED, { method: 'navigator' })
+      } catch {
+        /* 用户取消分享 — 不计完成 */
+      }
       return
     }
     await copyLink()

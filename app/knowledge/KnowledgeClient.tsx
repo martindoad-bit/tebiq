@@ -28,6 +28,8 @@ import AppShell from '@/app/_components/v5/AppShell'
 import AppBar from '@/app/_components/v5/AppBar'
 import TabBar from '@/app/_components/v5/TabBar'
 import { plainTextFromMarkdown } from '@/lib/knowledge/markdown'
+import { trackClient } from '@/lib/analytics/client'
+import { EVENT } from '@/lib/analytics/events'
 
 export interface KnowledgeArticleSummary {
   id: string
@@ -40,22 +42,30 @@ export interface KnowledgeArticleSummary {
   updatedAt: string
 }
 
+export type KnowledgeCategoryId =
+  | 'visa'
+  | 'tax'
+  | 'pension'
+  | 'life'
+  | 'kids'
+  | 'house'
+
 interface Category {
-  id: string
+  id: KnowledgeCategoryId
   label: string
   icon: LucideIcon
   /** 关键字（match concept.title 或 concept.content 任意一个） */
   keywords: string[]
 }
 
-const CATEGORIES: Category[] = [
+export const KNOWLEDGE_CATEGORIES: readonly Category[] = [
   { id: 'visa', label: '签证相关', icon: FileText, keywords: ['签证', '在留', '续签', '申请'] },
   { id: 'tax', label: '税务相关', icon: Receipt, keywords: ['住民税', '所得税', '税', '納税'] },
   { id: 'pension', label: '年金保険', icon: Clock, keywords: ['年金', '健康保険', '社保'] },
   { id: 'life', label: '生活手续', icon: Home, keywords: ['住所', '搬家', '手续'] },
   { id: 'kids', label: '育儿教育', icon: Users, keywords: ['子女', '育儿', '学校'] },
   { id: 'house', label: '住房相关', icon: Building2, keywords: ['住房', '敷金', '礼金', '契約'] },
-]
+] as const
 
 function fmtDate(d: Date): string {
   const y = d.getFullYear()
@@ -66,9 +76,13 @@ function fmtDate(d: Date): string {
 
 export default function KnowledgeClient({
   articles,
+  activeCategory,
 }: {
   articles: KnowledgeArticleSummary[]
+  /** 当前 URL ?category= 选中的分类（服务端已过滤后传入），null 表示「全部」 */
+  activeCategory?: KnowledgeCategoryId | null
 }) {
+  // q = 搜索框文本，仅在「当前分类内」做前端二级过滤
   const [q, setQ] = useState('')
   const norm = q.trim().toLowerCase()
 
@@ -80,7 +94,7 @@ export default function KnowledgeClient({
     })
   }, [articles, norm])
 
-  const popular = filtered.slice(0, 3)
+  const popular = filtered.slice(0, articles.length)
 
   return (
     <AppShell appBar={<AppBar title="知识中心" />} tabBar={<TabBar />}>
@@ -112,15 +126,20 @@ export default function KnowledgeClient({
       </div>
 
       <div className="mt-4 grid grid-cols-3 gap-2.5">
-        {CATEGORIES.map(cat => {
+        {KNOWLEDGE_CATEGORIES.map(cat => {
           const Icon = cat.icon
-          const onClick = () => setQ(cat.keywords[0])
-          const active = norm === cat.keywords[0].toLowerCase()
+          const active = activeCategory === cat.id
+          const href = active ? '/knowledge' : `/knowledge?category=${cat.id}`
           return (
-            <button
+            <Link
               key={cat.id}
-              type="button"
-              onClick={onClick}
+              href={href}
+              onClick={() =>
+                trackClient(EVENT.KNOWLEDGE_CATEGORY_CLICK, {
+                  categoryId: cat.id,
+                  toggled: active ? 'off' : 'on',
+                })
+              }
               className={`flex min-h-[76px] flex-col items-center justify-center gap-2 rounded-card border px-[6px] py-3 shadow-card transition-colors ${
                 active
                   ? 'border-accent bg-accent-2/35'
@@ -131,23 +150,29 @@ export default function KnowledgeClient({
                 <Icon size={15} strokeWidth={1.55} />
               </span>
               <span className="text-[11px] leading-tight text-ink">{cat.label}</span>
-            </button>
+            </Link>
           )
         })}
       </div>
 
       <div className="mt-5 flex items-center justify-between">
         <h3 className="text-[12px] font-medium text-ink">
-          {norm ? `搜索结果（${filtered.length}）` : '热门文章'}
+          {activeCategory
+            ? `${
+                KNOWLEDGE_CATEGORIES.find(c => c.id === activeCategory)?.label
+              }（${filtered.length}）`
+            : norm
+              ? `搜索结果（${filtered.length}）`
+              : '热门文章'}
         </h3>
-        {norm && (
-          <button
-            type="button"
+        {(norm || activeCategory) && (
+          <Link
+            href="/knowledge"
             onClick={() => setQ('')}
             className="text-[11px] text-ash hover:text-ink"
           >
-            清除
-          </button>
+            清除筛选
+          </Link>
         )}
       </div>
 
@@ -159,6 +184,13 @@ export default function KnowledgeClient({
             <li key={c.id}>
               <Link
                 href={`/knowledge/${c.slug ?? c.id}`}
+                onClick={() =>
+                  trackClient(EVENT.KNOWLEDGE_ARTICLE_CLICK, {
+                    articleId: c.id,
+                    slug: c.slug,
+                    category: c.category,
+                  })
+                }
                 className="group flex items-start gap-3 rounded-card border border-hairline bg-surface px-3.5 py-3 shadow-card transition-colors hover:border-accent"
               >
                 <span className="mt-0.5 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-[10px] bg-canvas text-ink">

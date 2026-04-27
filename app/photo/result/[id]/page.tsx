@@ -21,6 +21,8 @@ import { AlertCircle, CheckCircle2, FileText, RotateCcw } from 'lucide-react'
 import AppShell from '@/app/_components/v5/AppShell'
 import AppBar from '@/app/_components/v5/AppBar'
 import Button from '@/app/_components/v5/Button'
+import TrackedLink from '@/app/_components/v5/TrackedLink'
+import { EVENT } from '@/lib/analytics/events'
 import { getDocumentById } from '@/lib/db/queries/documents'
 import type { PhotoRecognitionResult, Urgency } from '@/lib/photo/types'
 import SaveToArchiveButton from './SaveToArchiveButton'
@@ -69,10 +71,15 @@ export default async function PhotoResultPage({
           title="识别结果"
           back
           right={
-            <Link href="/photo" className="flex items-center gap-1 text-[12px] text-ash">
+            <TrackedLink
+              href="/photo"
+              eventName={EVENT.PHOTO_RETAKE_CLICK}
+              payload={{ source: 'result_appbar', docId: doc.id }}
+              className="flex items-center gap-1 text-[12px] text-ash"
+            >
               <RotateCcw size={13} strokeWidth={1.55} />
               重新识别
-            </Link>
+            </TrackedLink>
           }
         />
       }

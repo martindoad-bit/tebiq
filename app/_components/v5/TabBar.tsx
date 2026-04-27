@@ -12,6 +12,8 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Home, FileText, BookOpen, User } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
+import { trackClient } from '@/lib/analytics/client'
+import { EVENT } from '@/lib/analytics/events'
 
 const TABS: { href: string; label: string; Icon: LucideIcon; match: (p: string) => boolean }[] = [
   { href: '/', label: '首页', Icon: Home, match: p => p === '/' },
@@ -50,6 +52,10 @@ export default function TabBar() {
             <li key={href}>
               <Link
                 href={href}
+                onClick={() => {
+                  if (active) return
+                  trackClient(EVENT.TAB_SWITCH, { from: pathname, to: href, label })
+                }}
                 className={`h-full flex flex-col items-center justify-center gap-[3px] transition-colors ${
                   active ? 'text-ink' : 'text-haze'
                 }`}

@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { SeoBullet as Bullet, SeoSection as Section, SeoVisaArticleShell } from '@/app/_components/v5/SeoVisaArticleShell'
+import TrackedLink from '@/app/_components/v5/TrackedLink'
+import { EVENT } from '@/lib/analytics/events'
 
 export const metadata: Metadata = {
   title: '永住者申请完整攻略 2026 | TEBIQ',
@@ -186,12 +188,14 @@ export default function EijushaLandingPage() {
             </p>
           </Section>
 
-          <Link
+          <TrackedLink
             href="/consultation?from=eijusha&visa=eijusha"
+            eventName={EVENT.CONSULTATION_CTA_CLICK}
+            payload={{ source: 'eijusha_page', visa: 'eijusha' }}
             className="mt-5 flex min-h-[48px] w-full items-center justify-center rounded-btn bg-accent px-4 py-3 text-[13px] font-medium text-ink shadow-cta"
           >
             永住申请情况复杂,建议直接咨询行政書士 →
-          </Link>
+          </TrackedLink>
 
           <p className="text-center text-ash text-[11px] mt-8 leading-relaxed">
             本页面内容不构成法律意见，具体情况请咨询持牌行政书士。
