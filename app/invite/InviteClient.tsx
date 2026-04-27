@@ -72,16 +72,16 @@ export default function InviteClient() {
   return (
     <div className="pt-2 pb-4">
       <section className="rounded-card border border-hairline bg-surface px-4 pt-4 pb-5 text-center shadow-card">
-        <div className="relative mx-auto h-[150px] w-full overflow-hidden rounded-[14px] bg-accent-2">
+        <div className="relative mx-auto h-[150px] w-full overflow-hidden rounded-card border border-hairline bg-surface">
           <Image
-            src="/illustrations/invite-gift.png"
+            src="/illustrations/invite-gift.svg"
             alt=""
             fill
             priority
             sizes="(max-width: 420px) 90vw, 360px"
-            className="object-cover"
+            className="object-contain"
           />
-          <div className="pointer-events-none absolute inset-0 rounded-[14px] ring-1 ring-white/65" />
+          <div className="pointer-events-none absolute inset-0 rounded-card ring-1 ring-white/70" />
         </div>
         <div className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-accent/35 bg-accent-2 px-3 py-1 text-[11px] font-medium text-ink">
           <Gift size={13} strokeWidth={1.55} />

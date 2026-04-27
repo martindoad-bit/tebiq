@@ -6,7 +6,8 @@
 'use client'
 import Link from 'next/link'
 import { useState } from 'react'
-import { Camera, ClipboardCheck, FileText, Search } from 'lucide-react'
+import { Camera, ClipboardCheck, FileText } from 'lucide-react'
+import EmptyVisual from '@/app/_components/v5/EmptyVisual'
 
 export interface ArchiveItem {
   id: string
@@ -158,9 +159,7 @@ function SummaryCell({ label, value }: { label: string; value: number }) {
 function EmptyState() {
   return (
     <div className="mt-5 rounded-card border border-hairline bg-surface px-4 py-8 text-center shadow-card">
-      <span className="mx-auto flex h-11 w-11 items-center justify-center rounded-[14px] bg-accent-2 text-ink">
-        <Search size={20} strokeWidth={1.55} />
-      </span>
+      <EmptyVisual src="/illustrations/empty-archive.svg" alt="档案暂无记录" />
       <p className="mt-3 text-[13px] font-medium leading-relaxed text-ink">
         你还没有任何记录
       </p>

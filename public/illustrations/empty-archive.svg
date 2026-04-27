@@ -1,0 +1,10 @@
+<svg width="180" height="140" viewBox="0 0 180 140" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="空档案插画">
+  <rect x="33" y="25" width="86" height="92" rx="10" fill="#FFFEFA" stroke="#233B37" stroke-width="3.5"/>
+  <path d="M51 51H92" stroke="#C8CEC7" stroke-width="4" stroke-linecap="round"/>
+  <path d="M51 70H101" stroke="#C8CEC7" stroke-width="4" stroke-linecap="round"/>
+  <path d="M51 89H83" stroke="#C8CEC7" stroke-width="4" stroke-linecap="round"/>
+  <rect x="100" y="47" width="48" height="58" rx="8" fill="#E7EEE9" stroke="#233B37" stroke-width="3.5"/>
+  <path d="M113 66H135" stroke="#233B37" stroke-width="3.5" stroke-linecap="round"/>
+  <path d="M113 82H130" stroke="#9DAAA3" stroke-width="3.5" stroke-linecap="round"/>
+  <circle cx="124" cy="105" r="12" fill="#C49A5A"/>
+</svg>

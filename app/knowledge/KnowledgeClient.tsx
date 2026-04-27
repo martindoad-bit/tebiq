@@ -20,13 +20,13 @@ import {
   Home,
   Users,
   Building2,
-  FileSearch,
   Search as SearchIcon,
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import AppShell from '@/app/_components/v5/AppShell'
 import AppBar from '@/app/_components/v5/AppBar'
 import TabBar from '@/app/_components/v5/TabBar'
+import EmptyVisual from '@/app/_components/v5/EmptyVisual'
 import { plainTextFromMarkdown } from '@/lib/knowledge/markdown'
 import { trackClient } from '@/lib/analytics/client'
 import { EVENT } from '@/lib/analytics/events'
@@ -239,9 +239,7 @@ function previewContent(markdown: string): string {
 function EmptyState() {
   return (
     <div className="mt-3 rounded-card border border-hairline bg-surface px-4 py-8 text-center shadow-card">
-      <span className="mx-auto flex h-11 w-11 items-center justify-center rounded-[14px] bg-accent-2 text-ink">
-        <FileSearch size={20} strokeWidth={1.55} />
-      </span>
+      <EmptyVisual src="/illustrations/empty-knowledge.svg" alt="没有找到知识内容" />
       <p className="mt-3 text-[13px] font-medium leading-relaxed text-ink">
         没有找到相关内容
       </p>

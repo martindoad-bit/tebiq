@@ -3,7 +3,8 @@
  */
 'use client'
 import { useState } from 'react'
-import { Bell, CalendarClock, CheckCircle2, Clock, ShieldAlert } from 'lucide-react'
+import { Bell, CalendarClock, Clock, ShieldAlert } from 'lucide-react'
+import EmptyVisual from '@/app/_components/v5/EmptyVisual'
 
 export interface ReminderItem {
   id: string
@@ -154,9 +155,7 @@ function SummaryCell({ label, value }: { label: string; value: number }) {
 function EmptyState() {
   return (
     <div className="mt-5 rounded-card border border-hairline bg-surface px-4 py-8 text-center shadow-card">
-      <span className="mx-auto flex h-11 w-11 items-center justify-center rounded-[14px] bg-[rgba(87,167,123,0.12)] text-success">
-        <CheckCircle2 size={21} strokeWidth={1.55} />
-      </span>
+      <EmptyVisual src="/illustrations/empty-reminders.svg" alt="暂无提醒事项" />
       <p className="mt-3 text-[13px] font-medium leading-relaxed text-ink">
         暂无需要处理的提醒
       </p>
