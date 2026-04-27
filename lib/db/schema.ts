@@ -457,6 +457,31 @@ export const otpCodes = pgTable(
   }),
 )
 
+// --- email_verification_tokens (Block 7: 双重邮箱验证) ---
+//
+// 用于在 members.email_verified_at 之前确认邮箱真实可达。
+// token 是单次使用：consumedAt 写入后不可重复使用。
+// expiresAt 默认 24h（API 创建时设置）。
+export const emailVerificationTokens = pgTable(
+  'email_verification_tokens',
+  {
+    id: idCol(),
+    memberId: varchar('member_id', { length: 24 })
+      .notNull()
+      .references(() => members.id, { onDelete: 'cascade' }),
+    token: varchar('token', { length: 64 }).notNull(),
+    email: varchar('email', { length: 255 }).notNull(),
+    expiresAt: timestamp('expires_at', { withTimezone: true }).notNull(),
+    consumedAt: timestamp('consumed_at', { withTimezone: true }),
+    createdAt: createdAt(),
+  },
+  t => ({
+    tokenUnique: uniqueIndex('email_verification_tokens_token_unique').on(t.token),
+    memberIdx: index('email_verification_tokens_member_idx').on(t.memberId),
+    expiresIdx: index('email_verification_tokens_expires_idx').on(t.expiresAt),
+  }),
+)
+
 // --- 类型导出（DAL/前端用） ---
 export type Family = typeof families.$inferSelect
 export type NewFamily = typeof families.$inferInsert
@@ -486,6 +511,8 @@ export type Session = typeof sessions.$inferSelect
 export type NewSession = typeof sessions.$inferInsert
 export type OtpCode = typeof otpCodes.$inferSelect
 export type NewOtpCode = typeof otpCodes.$inferInsert
+export type EmailVerificationToken = typeof emailVerificationTokens.$inferSelect
+export type NewEmailVerificationToken = typeof emailVerificationTokens.$inferInsert
 
 // re-export sql for callers that want raw helpers without importing drizzle
 export { sql }

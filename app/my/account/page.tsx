@@ -109,7 +109,10 @@ export default async function AccountPage() {
         )}
       </section>
 
-      <EmailEditClient initialEmail={user.email} />
+      <EmailEditClient
+        initialEmail={user.email}
+        initialVerifiedAt={user.emailVerifiedAt ? user.emailVerifiedAt.toISOString() : null}
+      />
 
       <div className="mt-4">
         <AccountListClient hasSubscription={!!sub} />

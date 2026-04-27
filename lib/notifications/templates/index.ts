@@ -12,6 +12,7 @@
 import { template as visaExpiry60d } from './visa_expiry_60d'
 import { template as visaExpiry30d } from './visa_expiry_30d'
 import { template as visaExpiry7d } from './visa_expiry_7d'
+import { template as emailVerification } from './email_verification'
 
 export type NotifChannel = 'email' | 'sms' | 'app_push' | 'line'
 
@@ -33,6 +34,7 @@ export const templates: Record<string, Template> = {
   [visaExpiry60d.id]: visaExpiry60d as unknown as Template,
   [visaExpiry30d.id]: visaExpiry30d as unknown as Template,
   [visaExpiry7d.id]: visaExpiry7d as unknown as Template,
+  [emailVerification.id]: emailVerification as unknown as Template,
 }
 
 export function getTemplate(id: string): Template | null {

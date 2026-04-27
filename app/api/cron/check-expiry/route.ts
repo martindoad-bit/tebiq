@@ -77,6 +77,11 @@ export async function GET(req: Request) {
     const hit = TARGETS.find(t => t.days === daysLeft)
     if (!hit) continue
 
+    // 邮箱必须已验证才发送（防止假邮箱噪音 + 误投真实人）。
+    // 这是 channel='email' 通知，未验证邮箱直接跳过 — 后续会有 LINE / 短信
+    // 等其他通道，到时再扩展条件。
+    if (!m.email || !m.emailVerifiedAt) continue
+
     // Dedup per member — if they already got this exact reminder, skip.
     if (await hasNotificationOfTypeForMember(m.id, hit.type)) continue
 
