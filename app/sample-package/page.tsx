@@ -1,4 +1,3 @@
-import Link from 'next/link'
 import { ArrowRight, FileText, Lock, ShieldCheck } from 'lucide-react'
 import AppBar from '@/app/_components/v5/AppBar'
 import AppShell from '@/app/_components/v5/AppShell'
