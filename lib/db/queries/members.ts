@@ -9,6 +9,8 @@ import { eq, asc, isNotNull, inArray } from 'drizzle-orm'
 import { db } from '@/lib/db'
 import { families, members, type Member, type NewMember } from '@/lib/db/schema'
 
+const TRIAL_DAYS = 7
+
 export async function getMemberByPhone(phone: string): Promise<Member | null> {
   const rows = await db.select().from(members).where(eq(members.phone, phone)).limit(1)
   return rows[0] ?? null
@@ -42,6 +44,8 @@ export async function getOrCreateMemberByPhone(phone: string): Promise<Member> {
         phone,
         isOwner: true,
         archiveRetentionUntil: archiveDateFromNow(30),
+        trialStartedAt: new Date(),
+        trialUsed: true,
       })
       .returning()
     return member
@@ -63,6 +67,8 @@ export async function getOrCreateMemberByEmail(email: string): Promise<Member> {
         emailVerifiedAt: new Date(),
         isOwner: true,
         archiveRetentionUntil: archiveDateFromNow(30),
+        trialStartedAt: new Date(),
+        trialUsed: true,
       })
       .returning()
     return member
@@ -90,6 +96,10 @@ export type MemberProfilePatch = Partial<
     | 'companyType'
     | 'recentChanges'
     | 'archiveRetentionUntil'
+    | 'trialStartedAt'
+    | 'trialUsed'
+    | 'deletionRequestedAt'
+    | 'deletionScheduledAt'
   >
 >
 
@@ -177,6 +187,36 @@ export async function setArchiveRetentionForMembers(
     .where(inArray(members.id, memberIds))
     .returning({ id: members.id })
   return rows.length
+}
+
+export async function requestMemberDeletion(id: string): Promise<Member | null> {
+  const now = new Date()
+  const scheduled = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000)
+  const [row] = await db
+    .update(members)
+    .set({
+      deletionRequestedAt: now,
+      deletionScheduledAt: scheduled,
+    })
+    .where(eq(members.id, id))
+    .returning()
+  return row ?? null
+}
+
+export function trialEndsAt(member: Pick<Member, 'trialStartedAt'>): Date | null {
+  if (!member.trialStartedAt) return null
+  return new Date(member.trialStartedAt.getTime() + TRIAL_DAYS * 24 * 60 * 60 * 1000)
+}
+
+export function trialDaysRemaining(member: Pick<Member, 'trialStartedAt'>): number | null {
+  const endsAt = trialEndsAt(member)
+  if (!endsAt) return null
+  return Math.max(0, Math.ceil((endsAt.getTime() - Date.now()) / 86_400_000))
+}
+
+export function isMemberTrialActive(member: Pick<Member, 'trialStartedAt'>): boolean {
+  const endsAt = trialEndsAt(member)
+  return !!endsAt && endsAt.getTime() > Date.now()
 }
 
 /**

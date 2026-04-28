@@ -43,12 +43,14 @@ export function getStripe(): Stripe {
  * Stripe price IDs at build time.
  */
 export type StripeProduct =
-  | 'archive_yearly'
+  | 'basic_monthly'
+  | 'basic_yearly'
   | 'material_package'
   | 'expert_consultation'
 
 export const STRIPE_PRICE_IDS: Record<StripeProduct, string> = {
-  archive_yearly: 'STRIPE_PRICE_ARCHIVE_YEARLY',
+  basic_monthly: 'STRIPE_PRICE_BASIC_MONTHLY',
+  basic_yearly: 'STRIPE_PRICE_BASIC_YEARLY',
   material_package: 'STRIPE_PRICE_MATERIAL_PACKAGE',
   expert_consultation: 'STRIPE_PRICE_EXPERT_CONSULTATION',
 }
@@ -67,7 +69,7 @@ export function getStripePriceId(product: StripeProduct): string {
 
 /** Subscription products map to mode='subscription'; one-time to mode='payment'. */
 export function isSubscriptionProduct(product: StripeProduct): boolean {
-  return product === 'archive_yearly'
+  return product === 'basic_monthly' || product === 'basic_yearly'
 }
 
 /**

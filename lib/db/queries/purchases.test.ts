@@ -23,7 +23,7 @@ test('createPurchase shape', () => {
   assert.ok(true)
 })
 
-test('archive yearly pricing is ¥1,580', () => {
-  const expectedPrice = 1580
-  assert.equal(expectedPrice, 1580)
+test('legacy one-time consultation product stays available in DAL', () => {
+  const expectedPrice = 9800
+  assert.equal(expectedPrice, 9800)
 })

@@ -4,7 +4,6 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import {
   AlertCircle,
-  BotMessageSquare,
   CalendarClock,
   CheckCircle2,
   ChevronDown,
@@ -13,7 +12,6 @@ import {
   History,
   LogOut,
   Pencil,
-  Send,
   Sparkles,
   UserRound,
 } from 'lucide-react'
@@ -140,8 +138,6 @@ export default function MyPage() {
           </section>
 
           {!loading && <ProfileSection profile={profile} onChange={setProfile} />}
-          <AskAssistant hasProfile={!!profile} />
-
           <Link
             href="/check"
             className="my-4 flex min-h-[48px] w-full items-center justify-center gap-2 rounded-btn bg-accent px-4 text-[14px] font-medium text-white shadow-cta active:translate-y-px"
@@ -470,74 +466,6 @@ function TextInput({
       placeholder={placeholder}
       className="w-full rounded-[11px] border border-hairline bg-canvas px-3 py-2.5 text-[13px] text-ink outline-none placeholder:text-haze focus:border-accent"
     />
-  )
-}
-
-function AskAssistant({ hasProfile }: { hasProfile: boolean }) {
-  const [q, setQ] = useState('')
-  const [answer, setAnswer] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [mock, setMock] = useState(false)
-  const [err, setErr] = useState('')
-
-  async function ask() {
-    if (!q.trim()) return
-    setErr('')
-    setAnswer('')
-    setLoading(true)
-    try {
-      const res = await fetch('/api/ask', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ question: q }),
-      })
-      const data = await res.json()
-      if (!res.ok) {
-        setErr(data?.error ?? '请求失败')
-        return
-      }
-      setAnswer(data.answer)
-      setMock(!!data.mock)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  return (
-    <div className="mt-3 rounded-card border border-hairline bg-surface px-4 py-4 shadow-card">
-      <div className="flex items-center gap-2 text-[13px] font-medium text-ink">
-        <BotMessageSquare size={16} strokeWidth={1.55} />
-        直接问我
-      </div>
-      <p className="mt-1 text-[11px] leading-[1.55] text-ash">
-        {hasProfile ? '基于你的档案给出针对性回答' : '建议先填写上方档案，回答会更准确'}
-      </p>
-      <div className="mt-3 flex gap-2">
-        <input
-          type="text"
-          value={q}
-          onChange={e => setQ(e.target.value)}
-          placeholder="有什么不确定的，直接问"
-          onKeyDown={e => e.key === 'Enter' && ask()}
-          className="min-w-0 flex-1 rounded-[11px] border border-hairline bg-canvas px-3 py-2.5 text-[13px] text-ink outline-none placeholder:text-haze focus:border-accent"
-        />
-        <button
-          onClick={ask}
-          disabled={loading || !q.trim()}
-          aria-label="发送"
-          className="flex h-[42px] w-[42px] flex-shrink-0 items-center justify-center rounded-btn bg-accent text-white shadow-cta disabled:opacity-50"
-        >
-          {loading ? '...' : <Send size={16} strokeWidth={1.55} />}
-        </button>
-      </div>
-      {err && <p className="mt-3 text-[12px] text-danger">{err}</p>}
-      {answer && (
-        <div className="mt-4 rounded-[12px] bg-accent-2 px-3 py-3">
-          {mock && <div className="mb-2 text-[10px] text-ash">Mock 模式</div>}
-          <p className="whitespace-pre-line text-[12px] leading-[1.7] text-ink">{answer}</p>
-        </div>
-      )}
-    </div>
   )
 }
 

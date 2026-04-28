@@ -1,5 +1,7 @@
 import { and, desc, eq, gte, ilike, isNull, lte, ne, or, sql } from 'drizzle-orm'
 import { db } from '@/lib/db'
+import { isMemberTrialActive } from '@/lib/db/queries/members'
+import { isSubscriptionActive } from '@/lib/db/queries/subscriptions'
 import {
   members,
   timelineEvents,
@@ -175,6 +177,8 @@ export async function getTimelineSummary(owner: TimelineOwner): Promise<Timeline
 }
 
 export async function archiveExpiredTimelineEventsForMember(member: Member): Promise<number> {
+  if (await isSubscriptionActive(member.familyId)) return 0
+  if (isMemberTrialActive(member)) return 0
   if (!member.archiveRetentionUntil) return 0
   const until = new Date(`${member.archiveRetentionUntil}T00:00:00+09:00`)
   if (Number.isNaN(until.getTime()) || until.getTime() >= Date.now()) return 0

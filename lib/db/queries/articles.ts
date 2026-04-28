@@ -53,7 +53,7 @@ export async function listLatestPolicyArticles(limit = 3): Promise<Article[]> {
     .where(and(
       eq(articles.status, 'published'),
       eq(articles.visibility, 'public'),
-      eq(articles.category, 'policy-update'),
+      eq(articles.category, 'policy'),
     ))
     .orderBy(desc(articles.updatedAt))
     .limit(limit)

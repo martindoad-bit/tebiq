@@ -189,12 +189,12 @@ export default function EijushaLandingPage() {
           </Section>
 
           <TrackedLink
-            href="/consultation?from=eijusha&visa=eijusha"
-            eventName={EVENT.CONSULTATION_CTA_CLICK}
+            href="/check"
+            eventName={EVENT.HOME_CHECK_CARD_CLICK}
             payload={{ source: 'eijusha_page', visa: 'eijusha' }}
             className="mt-5 flex min-h-[48px] w-full items-center justify-center rounded-btn bg-accent px-4 py-3 text-[13px] font-medium text-white shadow-cta"
           >
-            永住申请情况复杂,建议直接咨询专家 →
+            先做续签自查 →
           </TrackedLink>
 
           <p className="text-center text-ash text-[11px] mt-8 leading-relaxed">

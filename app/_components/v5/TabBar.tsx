@@ -14,7 +14,7 @@ const TABS: { href: string; label: string; Icon: LucideIcon; match: (p: string) 
     href: '/tools',
     label: '工具',
     Icon: Wrench,
-    match: p => p.startsWith('/tools') || p.startsWith('/photo') || p.startsWith('/ask') || p.startsWith('/check'),
+    match: p => p.startsWith('/tools') || p.startsWith('/photo') || p.startsWith('/check'),
   },
   {
     href: '/my/reminders',

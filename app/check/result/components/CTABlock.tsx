@@ -1,10 +1,4 @@
-import TrackedLink from '@/app/_components/v5/TrackedLink'
-import { EVENT } from '@/lib/analytics/events'
 import type { Verdict } from '@/lib/check/questions/gijinkoku'
-
-function consultationHref(verdict: Verdict): string {
-  return `/consultation?visa=gijinkoku&color=${verdict}`
-}
 
 const WRAPPER_CLASS: Record<Verdict, string> = {
   red: 'bg-[#FEE2E2] border border-[#DC2626] rounded-2xl p-5',
@@ -49,14 +43,11 @@ export default function CTABlock({
   return (
     <div className={WRAPPER_CLASS[verdict]}>
       <p className={descClass}>{description}</p>
-      <TrackedLink
-        href={consultationHref(verdict)}
-        eventName={EVENT.CONSULTATION_CTA_CLICK}
-        payload={{ source: 'check_result', verdict }}
-        className={`flex items-center justify-center w-full ${BUTTON_HEIGHT[verdict]} ${BUTTON_CLASS[verdict]} font-bold py-4 rounded-xl text-sm transition-all`}
+      <div
+        className={`flex items-center justify-center w-full ${BUTTON_HEIGHT[verdict]} ${BUTTON_CLASS[verdict]} font-bold py-4 rounded-xl text-sm`}
       >
         {ctaLabel ?? DEFAULT_CTA_LABEL[verdict]}
-      </TrackedLink>
+      </div>
     </div>
   )
 }

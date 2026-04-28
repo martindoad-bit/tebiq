@@ -24,7 +24,6 @@ import {
   getSubscriptionByStripeSubId,
   updateSubscriptionStatus,
 } from '@/lib/db/queries/subscriptions'
-import { setArchiveRetentionForFamily } from '@/lib/db/queries/members'
 import { unarchiveTimelineEventsForFamily } from '@/lib/db/queries/timeline'
 import {
   createPurchase,
@@ -70,10 +69,6 @@ function billingCycleFromInterval(interval: string | undefined): NewSubscription
 function toDate(unixSeconds: number | null | undefined): Date {
   if (!unixSeconds) return new Date()
   return new Date(unixSeconds * 1000)
-}
-
-function toIsoDate(d: Date): string {
-  return d.toISOString().slice(0, 10)
 }
 
 // --- Event handlers -------------------------------------------------------
@@ -185,7 +180,6 @@ async function upsertSubscriptionFromStripe(
       stripeSubscriptionId: sub.id,
       canceledAt: sub.canceled_at ? toDate(sub.canceled_at) : null,
     })
-    await setArchiveRetentionForFamily(familyId, toIsoDate(toDate(periodEnd)))
     await unarchiveTimelineEventsForFamily(familyId)
     return
   }
@@ -201,7 +195,6 @@ async function upsertSubscriptionFromStripe(
       stripeSubscriptionId: sub.id,
       canceledAt: sub.canceled_at ? toDate(sub.canceled_at) : null,
     })
-    await setArchiveRetentionForFamily(familyId, toIsoDate(toDate(periodEnd)))
     await unarchiveTimelineEventsForFamily(familyId)
     return
   }
@@ -216,7 +209,6 @@ async function upsertSubscriptionFromStripe(
     stripeCustomerId: customerId ?? undefined,
     stripeSubscriptionId: sub.id,
   })
-  await setArchiveRetentionForFamily(familyId, toIsoDate(toDate(periodEnd)))
   await unarchiveTimelineEventsForFamily(familyId)
 }
 

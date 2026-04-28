@@ -185,6 +185,10 @@ export const members = pgTable(
     archiveRetentionUntil: date('archive_retention_until').default(
       sql`(CURRENT_DATE + INTERVAL '30 days')`,
     ),
+    trialStartedAt: timestamp('trial_started_at', { withTimezone: true }),
+    trialUsed: boolean('trial_used').notNull().default(false),
+    deletionRequestedAt: timestamp('deletion_requested_at', { withTimezone: true }),
+    deletionScheduledAt: timestamp('deletion_scheduled_at', { withTimezone: true }),
 
     createdAt: createdAt(),
     updatedAt: updatedAt(),

@@ -54,6 +54,21 @@ export async function countDocumentsThisPeriod(
   return rows.length
 }
 
+export async function countSessionDocumentsThisPeriod(
+  sessionId: string,
+  since: Date,
+): Promise<number> {
+  const rows = await db
+    .select({ id: documents.id })
+    .from(documents)
+    .where(and(
+      eq(documents.sessionId, sessionId),
+      isNull(documents.familyId),
+      gte(documents.createdAt, since),
+    ))
+  return rows.length
+}
+
 export async function attachSessionDocumentsToFamily(
   sessionId: string,
   familyId: string,

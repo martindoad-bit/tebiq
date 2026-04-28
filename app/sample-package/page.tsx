@@ -266,12 +266,12 @@ export default function SamplePackagePage() {
             </p>
 
             <TrackedLink
-              href="/consultation?visa=gijinkoku"
-              eventName={EVENT.CONSULTATION_CTA_CLICK}
+              href="/subscribe"
+              eventName={EVENT.CTA_CLICK}
               payload={{ source: 'sample_package', visa: 'gijinkoku' }}
               className="flex min-h-[52px] w-full items-center justify-center gap-2 rounded-btn bg-accent px-4 text-[14px] font-medium text-white shadow-cta transition-transform active:translate-y-px"
             >
-              購入して完全版をダウンロード
+              会员方案を見る
               <ArrowRight size={16} strokeWidth={1.55} />
             </TrackedLink>
             <p className="mt-3 flex items-center justify-center gap-1.5 text-center text-[11px] text-ash">

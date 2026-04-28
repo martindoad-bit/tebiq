@@ -2,7 +2,7 @@
  * POST /api/stripe/checkout
  *
  * Body: { product, quizResultId? }
- *   product = 'archive_yearly' | 'expert_consultation'
+ *   product = 'basic_monthly' | 'basic_yearly' | 'expert_consultation'
  *
  * Subscription products require login (we attach family_id to metadata).
  * One-time products do not require login — Stripe collects email at checkout.
@@ -25,7 +25,8 @@ export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
 
 const VALID_PRODUCTS: ReadonlySet<StripeProduct> = new Set<StripeProduct>([
-  'archive_yearly',
+  'basic_monthly',
+  'basic_yearly',
   'expert_consultation',
 ])
 

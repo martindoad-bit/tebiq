@@ -177,9 +177,9 @@ export default async function PhotoResultPage({
           <Button>查看详细说明</Button>
         </Link>
         {result.needsExpertAdvice && (
-          <Link href={`/consultation?from=photo_result&doc_id=${doc.id}`} className="block">
-            <Button variant="secondary">建议咨询专家 ¥9,800</Button>
-          </Link>
+          <div className="rounded-btn border border-hairline bg-surface px-4 py-3 text-center text-[13px] font-medium text-ink">
+            涉及法律 / 税务 / 签证决策时，建议咨询专家
+          </div>
         )}
         {user ? <SaveToArchiveButton /> : <RegisterAfterPhotoCard docId={doc.id} />}
       </div>

@@ -4,7 +4,7 @@ import { usePathname } from 'next/navigation'
 
 const ITEMS = [
   { href: '/', label: '首页', match: (p: string) => p === '/' },
-  { href: '/tools', label: '工具', match: (p: string) => p.startsWith('/tools') || p.startsWith('/photo') || p.startsWith('/ask') || p.startsWith('/check') },
+  { href: '/tools', label: '工具', match: (p: string) => p.startsWith('/tools') || p.startsWith('/photo') || p.startsWith('/check') },
   { href: '/my/reminders', label: '提醒', match: (p: string) => p.startsWith('/my/reminders') },
   { href: '/my', label: '我的', match: (p: string) => p.startsWith('/my') || p.startsWith('/timeline') || p === '/login' },
 ] as const

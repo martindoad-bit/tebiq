@@ -3,7 +3,8 @@
 import { useState } from 'react'
 
 type Product =
-  | 'archive_yearly'
+  | 'basic_monthly'
+  | 'basic_yearly'
   | 'expert_consultation'
 
 interface ApiSuccess {
@@ -16,7 +17,8 @@ interface ApiError {
 }
 
 const PRODUCTS: { id: Product; label: string; sub: string }[] = [
-  { id: 'archive_yearly', label: '档案保留（年）', sub: '¥1,580/年（需先登录）' },
+  { id: 'basic_monthly', label: '月度会员', sub: '¥980/月（需先登录）' },
+  { id: 'basic_yearly', label: '年度会员', sub: '¥8,800/年（需先登录）' },
   { id: 'expert_consultation', label: '专家咨询', sub: '¥9,800 · 一次性（无需登录）' },
 ]
 

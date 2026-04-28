@@ -51,7 +51,7 @@ export async function POST(req: Request) {
       { used: quota.used, limit: quota.limit },
       { user, sessionId },
     )
-    return err('quota_exceeded', '本月免费拍照次数已用完', 402, {
+    return err('quota_exceeded', '今日免费拍照次数已用完', 402, {
       used: quota.used,
       limit: quota.limit,
     })

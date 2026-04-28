@@ -1,6 +1,6 @@
 'use client'
 import Link from 'next/link'
-import { Archive, Camera, ClipboardCheck, Languages } from 'lucide-react'
+import { Camera, ClipboardCheck, TimerReset } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
 const TOOLS: Array<{
@@ -10,9 +10,8 @@ const TOOLS: Array<{
   Icon: LucideIcon
 }> = [
   { title: '拍照即懂', desc: '拍日文文件，看重点和处理步骤', href: '/photo', Icon: Camera },
-  { title: '文字即懂', desc: '粘贴日文通知、邮件或网页', href: '/ask', Icon: Languages },
   { title: '续签自查', desc: '3 分钟看续签前置风险', href: '/check', Icon: ClipboardCheck },
-  { title: '我的时间线', desc: '查看已归档记录和历史关联', href: '/timeline', Icon: Archive },
+  { title: '我的提醒', desc: '查看期限、记录和历史关联', href: '/timeline', Icon: TimerReset },
 ]
 
 export default function ToolsClient() {
@@ -21,10 +20,10 @@ export default function ToolsClient() {
       <section className="rounded-card border border-hairline bg-surface px-4 py-4 shadow-card">
         <h1 className="text-[17px] font-medium leading-snug text-ink">工具入口</h1>
         <p className="mt-1 text-[12px] leading-[1.65] text-ash">
-          工具产生记录，记录进入时间线。
+          拍照、自查、提醒。
         </p>
       </section>
-      <div className="mt-3 grid grid-cols-2 gap-3">
+      <div className="mt-3 grid grid-cols-1 gap-3">
         {TOOLS.map(tool => (
           <ToolCard key={tool.title} {...tool} />
         ))}

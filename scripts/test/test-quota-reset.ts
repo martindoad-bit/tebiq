@@ -1,9 +1,9 @@
 /**
  * test-quota-reset.ts
  *
- * 验证拍照配额按 UTC 自然月重置：
- *  - 上月最后一天创建的 documents 不计入本月用量
- *  - 本月创建的 documents 计入本月用量
+ * 验证拍照配额按 JST 自然日重置：
+ *  - 昨天创建的 documents 不计入今日用量
+ *  - 今日创建的 documents 计入今日用量
  *
  * 不调用 Bedrock，只插入 documents 记录然后调 getPhotoQuotaForFamily()。
  *
@@ -16,16 +16,20 @@ import { db } from '../../lib/db'
 import { families, documents } from '../../lib/db/schema'
 import { eq } from 'drizzle-orm'
 import { createId } from '@paralleldrive/cuid2'
-import { getPhotoQuotaForFamily, FREE_QUOTA_PER_MONTH } from '../../lib/photo/quota'
+import { getPhotoQuotaForFamily, FREE_QUOTA_PER_DAY } from '../../lib/photo/quota'
 
-function startOfThisMonthUtc(): Date {
-  const now = new Date()
-  return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1, 0, 0, 0, 0))
+function startOfTodayJst(): Date {
+  const today = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Asia/Tokyo',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(new Date())
+  return new Date(`${today}T00:00:00+09:00`)
 }
 
-function lastDayOfPrevMonthUtc(): Date {
-  const start = startOfThisMonthUtc()
-  return new Date(start.getTime() - 1000) // 上月 23:59:59.000 UTC
+function lastSecondOfYesterdayJst(): Date {
+  return new Date(startOfTodayJst().getTime() - 1000)
 }
 
 interface Result {
@@ -41,45 +45,45 @@ async function run(): Promise<Result[]> {
   await db.insert(families).values({ id: familyId })
 
   try {
-    // 2. 插入 1 条「上月最后一秒」的 document — 不应计入
+    // 2. 插入 1 条「昨天最后一秒」的 document — 不应计入
     await db.insert(documents).values({
       id: createId(),
       familyId,
-      imageUrl: 'mock://prev-month',
-      createdAt: lastDayOfPrevMonthUtc(),
+      imageUrl: 'mock://yesterday',
+      createdAt: lastSecondOfYesterdayJst(),
     })
     const a = await getPhotoQuotaForFamily(familyId)
     results.push({
-      ok: a.used === 0 && a.remaining === FREE_QUOTA_PER_MONTH,
-      msg: `上月 doc 不计入本月: used=${a.used}, remaining=${a.remaining} (期望 used=0, remaining=${FREE_QUOTA_PER_MONTH})`,
+      ok: a.used === 0 && a.remaining === FREE_QUOTA_PER_DAY,
+      msg: `昨天 doc 不计入今日: used=${a.used}, remaining=${a.remaining} (期望 used=0, remaining=${FREE_QUOTA_PER_DAY})`,
     })
 
-    // 3. 插入 1 条「本月开始第一秒」的 document — 应计入
+    // 3. 插入 1 条「今日开始第一秒」的 document — 应计入
     await db.insert(documents).values({
       id: createId(),
       familyId,
-      imageUrl: 'mock://this-month-start',
-      createdAt: startOfThisMonthUtc(),
+      imageUrl: 'mock://today-start',
+      createdAt: startOfTodayJst(),
     })
     const b = await getPhotoQuotaForFamily(familyId)
     results.push({
-      ok: b.used === 1 && b.remaining === FREE_QUOTA_PER_MONTH - 1,
-      msg: `本月 doc 计入: used=${b.used}, remaining=${b.remaining} (期望 used=1, remaining=${FREE_QUOTA_PER_MONTH - 1})`,
+      ok: b.used === 1 && b.remaining === FREE_QUOTA_PER_DAY - 1,
+      msg: `今日 doc 计入: used=${b.used}, remaining=${b.remaining} (期望 used=1, remaining=${FREE_QUOTA_PER_DAY - 1})`,
     })
 
     // 4. 再插入 N 条把额度填满
-    const fillNeeded = FREE_QUOTA_PER_MONTH - 1
+    const fillNeeded = FREE_QUOTA_PER_DAY - 1
     for (let i = 0; i < fillNeeded; i++) {
       await db.insert(documents).values({
         id: createId(),
         familyId,
-        imageUrl: `mock://this-month-${i}`,
+        imageUrl: `mock://today-${i}`,
       })
     }
     const c = await getPhotoQuotaForFamily(familyId)
     results.push({
-      ok: c.used === FREE_QUOTA_PER_MONTH && c.remaining === 0,
-      msg: `配额刚好用完: used=${c.used}, remaining=${c.remaining} (期望 used=${FREE_QUOTA_PER_MONTH}, remaining=0)`,
+      ok: c.used === FREE_QUOTA_PER_DAY && c.remaining === 0,
+      msg: `配额刚好用完: used=${c.used}, remaining=${c.remaining} (期望 used=${FREE_QUOTA_PER_DAY}, remaining=0)`,
     })
   } finally {
     // 清理（cascade 删 documents）

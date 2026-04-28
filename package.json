@@ -13,6 +13,7 @@
     "db:push": "drizzle-kit push",
     "db:smoke": "tsx --env-file=.env.local scripts/db-smoke.ts",
     "import-knowledge": "tsx scripts/dev-utils/import-knowledge.ts",
+    "sync-production-db": "tsx scripts/dev-utils/sync-production-db.ts",
     "dev:visual-fixtures": "tsx --env-file=.env.local scripts/dev-utils/visual-fixtures.ts seed",
     "dev:visual-fixtures:cleanup": "tsx --env-file=.env.local scripts/dev-utils/visual-fixtures.ts cleanup",
     "cleanup-kv-stats": "tsx --env-file=.env.local scripts/cleanup-kv-stats.ts",

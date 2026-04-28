@@ -1,9 +1,16 @@
+import {
+  countDocumentsThisPeriod,
+  countSessionDocumentsThisPeriod,
+} from '@/lib/db/queries/documents'
+import { familyHasUnlimitedPhoto, FREE_PHOTO_QUOTA_PER_DAY } from '@/lib/billing/access'
+
 /**
  * 拍照配额逻辑。
- * - Block 11：所有工具不限次数。
- * - 付费只影响档案保留 / 时间线查询 / 政策推送，不再限制拍照入口。
+ * - free: 每天 1 次
+ * - 7 天试用 / 付费: 不限次数
  */
-export const FREE_QUOTA_PER_MONTH = Infinity
+export const FREE_QUOTA_PER_MONTH = FREE_PHOTO_QUOTA_PER_DAY
+export const FREE_QUOTA_PER_DAY = FREE_PHOTO_QUOTA_PER_DAY
 
 export interface QuotaStatus {
   unlimited: boolean
@@ -12,15 +19,37 @@ export interface QuotaStatus {
   remaining: number
 }
 
-/**
- * 查询当前 family 的本月拍照配额状态。
- */
 export async function getPhotoQuotaForFamily(familyId: string): Promise<QuotaStatus> {
-  void familyId
-  return { unlimited: true, used: 0, limit: Infinity, remaining: Infinity }
+  if (await familyHasUnlimitedPhoto(familyId)) {
+    return { unlimited: true, used: 0, limit: Infinity, remaining: Infinity }
+  }
+  const since = startOfJstDay()
+  const used = await countDocumentsThisPeriod(familyId, since)
+  return limitedQuota(used)
 }
 
 export async function getPhotoQuotaForSession(sessionId: string): Promise<QuotaStatus> {
-  void sessionId
-  return { unlimited: true, used: 0, limit: Infinity, remaining: Infinity }
+  const since = startOfJstDay()
+  const used = await countSessionDocumentsThisPeriod(sessionId, since)
+  return limitedQuota(used)
+}
+
+function limitedQuota(used: number): QuotaStatus {
+  const remaining = Math.max(0, FREE_QUOTA_PER_DAY - used)
+  return {
+    unlimited: false,
+    used,
+    limit: FREE_QUOTA_PER_DAY,
+    remaining,
+  }
+}
+
+function startOfJstDay(): Date {
+  const today = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Asia/Tokyo',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(new Date())
+  return new Date(`${today}T00:00:00+09:00`)
 }

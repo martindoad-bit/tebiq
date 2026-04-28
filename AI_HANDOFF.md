@@ -1,13 +1,13 @@
 # AI Handoff Log
 
-最后更新: 2026-04-28T11:48:17Z
+最后更新: 2026-04-28T12:58:00Z
 
 ## CCA(代码)状态
-- 当前任务: Block 11 - 产品哲学 v1 + 档案中心化重构
+- 当前任务: Block 11 final adjustment - 首页回到 Block 10 框架 + 试用/定价 + production DB sync
 - 当前分支: codex/block-11
 - 状态: awaiting_merge
-- 最近一次 push: 待 `codex/block-11` push 后更新
-- 给其他 AI 的通知: CCA 完成 Block 11 代码层。已新增 `timeline_events`、三条工具自动归档、`/timeline`、首页档案中心化、年度档案保留定价。codexUI 可以基于 `codex/block-11` 或等 CCA merge 后基于最新 main 做 visual-polish-3。注意: production DB 仍需先补历史 migrations。
+- 最近一次 push: 待 `codex/block-11` final push 后更新
+- 给其他 AI 的通知: CCA 已按创始人最新方向调整 Block 11。首页不再强调“档案”，文字即懂入口隐藏，定价改为 ¥980/月 + ¥8,800/年，注册自动 7 天试用，新增隐私政策和设置页。production DB 只读检查确认 0005-0014 未应用，不能在未 review 前执行 `db:push` / `db:migrate`。
 
 ## CCB(内容)状态
 - 当前任务: knowledge batch-02
@@ -30,3 +30,4 @@
 - 本轮已按创始人新指令继续：production `/ask` 在 merge 前返回 `404`；Block 10 merge/push 成功；knowledge batch-02 merge/push 成功。
 - `import-knowledge` 异常：生产数据库报错 `column "visibility" of relation "articles" does not exist`。这表示 articles schema 未包含 Block 9/10 的 `visibility` 字段。CCA 没有擅自执行 `db:migrate` 或其它 DDL，任务 5 production 验证已暂停。
 - Block 11 已生成 migration `0013_hard_kate_bishop.sql`。合并/部署前应先确认 production 能按顺序跑 0011/0012/0013，否则 `/timeline` 和 import 都会因 schema 缺列失败。
+- Block 11 final 只读检查结果：production `drizzle.__drizzle_migrations` 只有 5 条记录，本地共有 15 个 migration；未应用 `0005` - `0014`。关键缺失：`articles.visibility`、article tag columns、`members.archive_retention_until`、trial/delete columns、`timeline_events`。CCA 未执行任何 production DDL。
