@@ -5,6 +5,8 @@ const BASE = 'https://tebiq.jp'
 const routes = [
   '',
   '/visa-select',
+  '/tools',
+  '/ask',
   '/check',
   '/check/select',
   '/check/gijinkoku',

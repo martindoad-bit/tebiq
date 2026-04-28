@@ -33,11 +33,11 @@ interface TodayCard {
 }
 
 export default async function HomePage() {
-  const user = await getCurrentUser()
+  const user = await safeGetCurrentUser()
   const [policyArticles, userContext, docs] = await Promise.all([
-    listLatestPolicyArticles(3),
-    user ? buildUserContext({ memberId: user.id }) : Promise.resolve(null),
-    user ? listDocumentsByFamilyId(user.familyId, 8) : Promise.resolve([]),
+    safeListLatestPolicyArticles(),
+    user ? safeBuildUserContext(user.id) : Promise.resolve(null),
+    user ? safeListDocumentsByFamilyId(user.familyId) : Promise.resolve([]),
   ])
 
   const todayCards = user && userContext
@@ -133,6 +133,38 @@ export default async function HomePage() {
       <TrustStrip />
     </AppShell>
   )
+}
+
+async function safeGetCurrentUser() {
+  try {
+    return await getCurrentUser()
+  } catch {
+    return null
+  }
+}
+
+async function safeListLatestPolicyArticles() {
+  try {
+    return await listLatestPolicyArticles(3)
+  } catch {
+    return []
+  }
+}
+
+async function safeBuildUserContext(memberId: string) {
+  try {
+    return await buildUserContext({ memberId })
+  } catch {
+    return null
+  }
+}
+
+async function safeListDocumentsByFamilyId(familyId: string) {
+  try {
+    return await listDocumentsByFamilyId(familyId, 8)
+  } catch {
+    return []
+  }
 }
 
 function HomeAppBar() {
