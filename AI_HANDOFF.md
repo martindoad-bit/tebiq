@@ -1,6 +1,6 @@
 # AI Handoff Log
 
-最后更新: 2026-04-28T11:30:00Z（CCB 增量更新）
+最后更新: 2026-04-28T13:00:00Z（CCB Block 11 batch-03 完成）
 
 ## CCA(代码)状态
 - 当前任务: 第二轮任务 0 - 验证 main 是否包含 Block 10
@@ -10,15 +10,24 @@
 - 给其他 AI 的通知: 已执行第二轮任务 0。`origin/codex/block-10` 不是 `origin/main` 的 ancestor，确认 Block 10 未合并到 main。按创始人指令，CCA 未执行 knowledge batch-02 merge / import，等待创始人确认是否先 merge Block 10。
 
 ## CCB(内容)状态
-- 当前任务: 第二轮任务 1（迁移到 cc-b worktree）+ 任务 4（等创始人下一轮 brief 决定 P1）
+- 当前任务: Block 11 知识 batch-03（B1 哲学沉淀 + B2 30 篇 P1 档案中心化内容）
 - 当前分支: content/knowledge-batch-03
 - 当前 worktree: /Users/martin/Documents/tebiq/.claude/worktrees/cc-b
-- 状态: idle（已迁移完成，等任务）
-- 最近一次 push: 本次 handoff 更新（content/knowledge-batch-03 首 push）
-- 给 CCA 的待办:
-  - **不需要 merge batch-03**：本分支当前只含 AI_HANDOFF.md 的 CCB 段更新，无内容交付。CCB 状态为 idle，不是 awaiting_merge。
-  - 关于 `content/knowledge-batch-02`（50 篇内容）：已确认 CCA 第二轮任务 1 按创始人指令**暂停**，等创始人决定是否先 merge Block 10。CCB 不催促，等创始人裁决。
-  - 旧 worktree `quizzical-turing-84919f`（分支 content/knowledge-batch-02）按创始人指令保留，未删除。
+- 状态: **awaiting_merge**
+- 最近一次 push: 本次 commit（30 篇 + 报告 + handoff）→ 内容交付完毕
+- 给 CCA 的待办（按 brief §A1）:
+  - **batch-03（30 篇 P1）等待 merge**：内容已 push 到 origin/content/knowledge-batch-03。30 篇 frontmatter 含新字段（scenario_tags / applies_to / urgency_level / estimated_read_time_minutes），需 articles 表 schema 已含对应 column。
+  - **关于 merge 顺序的提议**：
+    1. 先 Block 10（schema + 文字即懂）→ main
+    2. 再 batch-02（50 篇旧结构）→ main（旧 frontmatter，requires_shoshi_review=true）
+    3. 再 batch-03（30 篇新结构）→ main（新 frontmatter，requires_shoshi_review=null）
+    4. 最后 visual-polish-3 → main
+    5. CCA 跑 `npm run import-knowledge`（按 brief §A2 + §A3）
+  - 如果 schema 还没含新 frontmatter 字段（scenario_tags 等），merge 前需 CCA 在 codex/block-11 内补 schema 迁移
+  - 旧 worktree `quizzical-turing-84919f`（分支 content/knowledge-batch-02）按创始人指令保留，未删除
+- B1（哲学沉淀）：已完成。skill 本地（不在 git）：~/.claude/skills/tebiq-knowledge-base/product-philosophy.md + voice.md/templates.md 顶部摘录
+- B3（既有 75 篇风格统一审视）：未做。原因：batch-02 还未合并到 main，先不动旧批次。等 batch-02 + batch-03 都到 main 后，下批次做统一审视更稳。
+- B4 输出：BLOCK11_KNOWLEDGE_REPORT.md 已写入 docs/knowledge-seed/
 
 ## codexUI(视觉)状态
 - 当前任务: 未从本 brief 获得具体 codexUI 任务
