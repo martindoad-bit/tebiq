@@ -41,7 +41,7 @@ const articleSchema = {
 
 export default function HaigushaLandingPage() {
   return (
-    <SeoVisaArticleShell articleSchema={articleSchema} title={"配偶者签证续签指南 2026"} updated={"最新更新：2026-04-24 · 适用「日本人配偶者等」「永住者配偶者等」 [待书士审核]"}>
+    <SeoVisaArticleShell articleSchema={articleSchema} title={"配偶者签证续签指南 2026"} updated={"最新更新：2026-04-24 · 适用「日本人配偶者等」「永住者配偶者等」"}>
 
           <nav
             aria-label="目录"
@@ -85,7 +85,7 @@ export default function HaigushaLandingPage() {
               这是日本最自由的在留资格之一：没有职业限制，可以正职、兼职、创业、不工作；活动范围与日本人基本相同。但「自由」对应的是入管局对婚姻真实性的反复确认，续签时审查重点不在工作，而在「这段婚姻是否实质存续」。
             </p>
             <p>
-              在留期间通常为 5 年、3 年、1 年或 6 个月，初婚常先给 1 年。[待书士审核]
+              在留期间通常为 5 年、3 年、1 年或 6 个月，初婚常先给 1 年。
             </p>
           </Section>
 
@@ -107,7 +107,7 @@ export default function HaigushaLandingPage() {
                 <strong>身份事项申报：</strong>结婚、离婚、住所变更等 14 天内向入管局或市役所申报。
               </Bullet>
               <Bullet>
-                <strong>无重大违规：</strong>无刑事记录，无严重交通违规。[待书士审核]
+                <strong>无重大违规：</strong>无刑事记录，无严重交通违规。
               </Bullet>
             </ul>
           </Section>
@@ -128,7 +128,7 @@ export default function HaigushaLandingPage() {
               </Bullet>
             </ul>
             <p className="text-ash text-[11px] mt-3">
-              来源：法務省（令和 8 年 4 月 1 日施行运用变更）/ 出入国在留管理庁公开资料 [待书士审核]
+              来源：法務省（令和 8 年 4 月 1 日施行运用变更）/ 出入国在留管理庁公开资料
             </p>
           </Section>
 
@@ -147,7 +147,7 @@ export default function HaigushaLandingPage() {
                 <strong>配偶税款 / 社保未缴：</strong>审查会同时查看配偶（日本人）一方的纳税与社保情况，配偶欠税也可能影响审查印象。
               </Bullet>
               <Bullet>
-                <strong>反复短期出国：</strong>频繁长期不在日本，可能被认为婚姻共同生活实质性不足。[待书士审核]
+                <strong>反复短期出国：</strong>频繁长期不在日本，可能被认为婚姻共同生活实质性不足。
               </Bullet>
             </ul>
           </Section>
@@ -167,7 +167,7 @@ export default function HaigushaLandingPage() {
                 <strong>申报无遗漏：</strong>住所、姓氏、联系方式变更全部 14 天内办理。
               </Bullet>
               <Bullet>
-                <strong>有变化早咨询：</strong>分居、离婚、配偶死亡等情况下，请尽快约书士确认下一步签证安排。
+                <strong>有变化早咨询：</strong>分居、离婚、配偶死亡等情况下，请尽快约专家确认下一步签证安排。
               </Bullet>
             </ul>
             <p className="mt-4">
@@ -191,7 +191,7 @@ export default function HaigushaLandingPage() {
           </Link>
 
           <p className="text-center text-ash text-[11px] mt-8 leading-relaxed">
-            本页面内容不构成法律意见，具体情况请咨询持牌行政书士。
+            本页面内容不构成法律意见，具体情况请咨询专家。
           </p>
     </SeoVisaArticleShell>
   )

@@ -2,7 +2,7 @@
  * 60 天到期提醒 — 平稳口吻，提示"现在开始时间充裕"。
  *
  * 全部样式 inline（邮件客户端不支持 <style> 表）。中文为主，关键日文术语保留汉字括注。
- * 文末标注「[文案待书士审核]」，正式上线前由书士替换。
+ * 文末标注「」，正式上线前由专家替换。
  */
 export interface VisaExpiry60dData {
   name?: string
@@ -66,7 +66,7 @@ export const template = {
               <td style="border-top:1px solid #DDE3DE;padding-top:16px;font-size:13px;color:#707A75;line-height:1.6;">
                 <p style="margin:0 0 4px;">TEBIQ 在日生活のお守り</p>
                 <p style="margin:0 0 4px;">陪您稳稳走完每一次更新。</p>
-                <p style="margin:8px 0 0;font-size:11px;color:#9CA3AF;">[文案待书士审核]</p>
+                <p style="margin:8px 0 0;font-size:11px;color:#9CA3AF;"></p>
               </td>
             </tr>
           </table>
@@ -92,8 +92,6 @@ export const template = {
 —
 TEBIQ 在日生活のお守り
 陪您稳稳走完每一次更新。
-
-[文案待书士审核]
 `
 
     return { subject, html, text }

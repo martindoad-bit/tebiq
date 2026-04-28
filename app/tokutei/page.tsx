@@ -41,7 +41,7 @@ const articleSchema = {
 
 export default function TokuteiLandingPage() {
   return (
-    <SeoVisaArticleShell articleSchema={articleSchema} title={"特定技能签证指南 2026"} updated={"最新更新：2026-04-24 · 涵盖特定技能 1 号 / 2 号 [待书士审核]"}>
+    <SeoVisaArticleShell articleSchema={articleSchema} title={"特定技能签证指南 2026"} updated={"最新更新：2026-04-24 · 涵盖特定技能 1 号 / 2 号"}>
 
           <nav
             aria-label="目录"
@@ -90,7 +90,7 @@ export default function TokuteiLandingPage() {
               </Bullet>
             </ul>
             <p>
-              对象行业目前包括建设、造船、汽车维修、航空、宿泊、农业、渔业、饮食料品制造、外食、护理、清扫、铁道、林业、木材等多个领域。[待书士审核]
+              对象行业目前包括建设、造船、汽车维修、航空、宿泊、农业、渔业、饮食料品制造、外食、护理、清扫、铁道、林业、木材等多个领域。
             </p>
           </Section>
 
@@ -112,7 +112,7 @@ export default function TokuteiLandingPage() {
                 <strong>纳税与社保：</strong>住民税、所得税无欠缴；健康保险、年金按月加入。
               </Bullet>
               <Bullet>
-                <strong>申报义务：</strong>住所、契約機関变更等 14 天内向入管局申报。[待书士审核]
+                <strong>申报义务：</strong>住所、契約機関变更等 14 天内向入管局申报。
               </Bullet>
             </ul>
           </Section>
@@ -133,7 +133,7 @@ export default function TokuteiLandingPage() {
               </Bullet>
             </ul>
             <p className="text-ash text-[11px] mt-3">
-              来源：出入国在留管理庁公开资料 / 法務省 [待书士审核]
+              来源：出入国在留管理庁公开资料 / 法務省
             </p>
           </Section>
 
@@ -152,7 +152,7 @@ export default function TokuteiLandingPage() {
                 <strong>派遣形态范围限制：</strong>特定技能原则要求直接雇用，部分行业例外。
               </Bullet>
               <Bullet>
-                <strong>技能测试合格但行业匹配错位：</strong>技能测试合格的行业必须与雇主业务一致，跨行业不能直接通用。[待书士审核]
+                <strong>技能测试合格但行业匹配错位：</strong>技能测试合格的行业必须与雇主业务一致，跨行业不能直接通用。
               </Bullet>
             </ul>
           </Section>
@@ -196,7 +196,7 @@ export default function TokuteiLandingPage() {
           </Link>
 
           <p className="text-center text-ash text-[11px] mt-8 leading-relaxed">
-            本页面内容不构成法律意见，具体情况请咨询持牌行政书士。
+            本页面内容不构成法律意见，具体情况请咨询专家。
           </p>
     </SeoVisaArticleShell>
   )

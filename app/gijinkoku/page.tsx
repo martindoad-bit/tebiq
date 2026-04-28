@@ -41,7 +41,7 @@ const articleSchema = {
 
 export default function GijinkokuLandingPage() {
   return (
-    <SeoVisaArticleShell articleSchema={articleSchema} title={"技人国签证续签完整指南 2026"} updated={"最新更新：2026-04-24 · 基于出入国在留管理庁公开资料整理 [待书士审核]"}>
+    <SeoVisaArticleShell articleSchema={articleSchema} title={"技人国签证续签完整指南 2026"} updated={"最新更新：2026-04-24 · 基于出入国在留管理庁公开资料整理"}>
 
           {/* 目录 */}
           <nav
@@ -86,7 +86,7 @@ export default function GijinkokuLandingPage() {
               它覆盖三大业务方向：①技术系（系统工程师、机械设计、研发等自然科学领域）；②人文知识系（法务、财务、人事、市场营销、企划等人文社会科学领域）；③国际业务系（翻译通译、海外营业、设计、语言教学等需要外国文化背景的工作）。
             </p>
             <p>
-              在留期间根据公司类别和个人情况发给 5 年、3 年、1 年或 3 个月，其中以 1 年和 3 年最为常见。[待书士审核]
+              在留期间根据公司类别和个人情况发给 5 年、3 年、1 年或 3 个月，其中以 1 年和 3 年最为常见。
             </p>
           </Section>
 
@@ -109,7 +109,7 @@ export default function GijinkokuLandingPage() {
                 <strong>报酬水平：</strong>月薪不低于从事同等业务的日本人，新规下基准更趋严格。
               </Bullet>
               <Bullet>
-                <strong>身份事项申报：</strong>住所、公司变更等 14 天内申报无遗漏。[待书士审核]
+                <strong>身份事项申报：</strong>住所、公司变更等 14 天内申报无遗漏。
               </Bullet>
             </ul>
           </Section>
@@ -132,7 +132,7 @@ export default function GijinkokuLandingPage() {
               </Bullet>
             </ul>
             <p className="text-ash text-[11px] mt-3">
-              来源：出入国在留管理庁官网（令和 8 年 4 月 15 日 / 令和 8 年 2 月 24 日掲載）[待书士审核]
+              来源：出入国在留管理庁官网（令和 8 年 4 月 15 日 / 令和 8 年 2 月 24 日掲載）
             </p>
           </Section>
 
@@ -151,7 +151,7 @@ export default function GijinkokuLandingPage() {
                 <strong>用「技人国」做对人服务但语言能力无法证明：</strong>2026 年 4 月起，前台、翻译、营业等岗位需准备 N2 / BJT 等证书。
               </Bullet>
               <Bullet>
-                <strong>派遣形态准备不足：</strong>没有派遣先誓约书、合同期短、台账缺漏，是 2026 年 3 月新规下被拒的高发原因。[待书士审核]
+                <strong>派遣形态准备不足：</strong>没有派遣先誓约书、合同期短、台账缺漏，是 2026 年 3 月新规下被拒的高发原因。
               </Bullet>
             </ul>
           </Section>
@@ -171,7 +171,7 @@ export default function GijinkokuLandingPage() {
                 <strong>受理票务必保管：</strong>提交申请后，受理票就是你在「特例期间」合法居住和工作的唯一凭证。
               </Bullet>
               <Bullet>
-                <strong>有疑问及早咨询：</strong>不许可后再补救成本更高，提前找持牌行政书士判断 1 次比事后修正更省时间。
+                <strong>有疑问及早咨询：</strong>不许可后再补救成本更高，提前找专家判断 1 次比事后修正更省时间。
               </Bullet>
             </ul>
             <p className="mt-4">
@@ -195,7 +195,7 @@ export default function GijinkokuLandingPage() {
           </Link>
 
           <p className="text-center text-ash text-[11px] mt-8 leading-relaxed">
-            本页面内容不构成法律意见，具体情况请咨询持牌行政书士。
+            本页面内容不构成法律意见，具体情况请咨询专家。
           </p>
     </SeoVisaArticleShell>
   )

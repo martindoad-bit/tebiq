@@ -15,7 +15,7 @@ function buildSystemPrompt(member: Member): string {
 回答规则：
 1. 陈述事实，不做法律判断
 2. 150 字以内，末尾加"${DISCLAIMER}"
-3. 复杂情况建议联系书士`
+3. 复杂情况建议咨询专家`
   }
   return `你是 TEBIQ 的签证和生活手续助理。
 
@@ -33,7 +33,7 @@ function buildSystemPrompt(member: Member): string {
 1. 基于用户的具体情况回答，不要给泛泛的一般性建议
 2. 陈述事实，不做法律判断
 3. 150 字以内，末尾加"${DISCLAIMER}"
-4. 复杂情况建议联系书士`
+4. 复杂情况建议咨询专家`
 }
 
 export async function POST(req: Request) {

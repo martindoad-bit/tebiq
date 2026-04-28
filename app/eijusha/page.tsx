@@ -43,7 +43,7 @@ const articleSchema = {
 
 export default function EijushaLandingPage() {
   return (
-    <SeoVisaArticleShell articleSchema={articleSchema} title={"永住者申请完整攻略 2026"} updated={"最新更新：2026-04-24 · 含 2026 年归化运用变更对比 [待书士审核]"}>
+    <SeoVisaArticleShell articleSchema={articleSchema} title={"永住者申请完整攻略 2026"} updated={"最新更新：2026-04-24 · 含 2026 年归化运用变更对比"}>
 
           <nav
             aria-label="目录"
@@ -87,7 +87,7 @@ export default function EijushaLandingPage() {
               和归化最大的区别在于「国籍不变」——你依然是中国国籍，可以使用中国护照，但获得在日本长期稳定居住与工作的资格。
             </p>
             <p>
-              一旦获得永住，多数日常手续与日本人几乎相同，但仍需遵守住所变更申报、长期出国前申请再入国许可等规则。[待书士审核]
+              一旦获得永住，多数日常手续与日本人几乎相同，但仍需遵守住所变更申报、长期出国前申请再入国许可等规则。
             </p>
           </Section>
 
@@ -112,7 +112,7 @@ export default function EijushaLandingPage() {
                 <strong>在留期间：</strong>申请时持有的在留资格期间为 3 年或 5 年（1 年原则上无法申请）。
               </Bullet>
               <Bullet>
-                <strong>身元保证人：</strong>需要日本人或永住者作为身元保证人。[待书士审核]
+                <strong>身元保证人：</strong>需要日本人或永住者作为身元保证人。
               </Bullet>
             </ul>
           </Section>
@@ -133,7 +133,7 @@ export default function EijushaLandingPage() {
               </Bullet>
             </ul>
             <p className="text-ash text-[11px] mt-3">
-              来源：法務省（令和 8 年 4 月 1 日施行）/ 出入国在留管理庁公开资料 [待书士审核]
+              来源：法務省（令和 8 年 4 月 1 日施行）/ 出入国在留管理庁公开资料
             </p>
           </Section>
 
@@ -152,7 +152,7 @@ export default function EijushaLandingPage() {
                 <strong>长期出国导致连续居住中断：</strong>原则单次离境 90 天以上、合计离境 150 天以上有可能被认为居住中断。
               </Bullet>
               <Bullet>
-                <strong>身元保证人变化：</strong>身元保证人需要稳定收入与日本居住身份，临时找熟人可能资料不足。[待书士审核]
+                <strong>身元保证人变化：</strong>身元保证人需要稳定收入与日本居住身份，临时找熟人可能资料不足。
               </Bullet>
             </ul>
           </Section>
@@ -194,11 +194,11 @@ export default function EijushaLandingPage() {
             payload={{ source: 'eijusha_page', visa: 'eijusha' }}
             className="mt-5 flex min-h-[48px] w-full items-center justify-center rounded-btn bg-accent px-4 py-3 text-[13px] font-medium text-white shadow-cta"
           >
-            永住申请情况复杂,建议直接咨询行政書士 →
+            永住申请情况复杂,建议直接咨询专家 →
           </TrackedLink>
 
           <p className="text-center text-ash text-[11px] mt-8 leading-relaxed">
-            本页面内容不构成法律意见，具体情况请咨询持牌行政书士。
+            本页面内容不构成法律意见，具体情况请咨询专家。
           </p>
     </SeoVisaArticleShell>
   )

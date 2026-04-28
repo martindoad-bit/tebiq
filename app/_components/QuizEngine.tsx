@@ -216,9 +216,6 @@ export default function QuizEngine({
                 <p className="text-ink text-[12px] leading-relaxed whitespace-pre-line">
                   {current.learnMore}
                 </p>
-                <p className="text-ash text-[10px] mt-2">
-                  本说明为系统初版，待书士审核完善
-                </p>
               </div>
             )}
           </div>

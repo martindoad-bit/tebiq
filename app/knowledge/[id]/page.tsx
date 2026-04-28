@@ -26,6 +26,9 @@ import {
   listRelatedPublishedArticles,
 } from '@/lib/db/queries/articles'
 import { parseMarkdownBlocks, plainTextFromMarkdown } from '@/lib/knowledge/markdown'
+import { getCurrentUser } from '@/lib/auth/session'
+import { buildUserContext } from '@/lib/photo/user-context'
+import { sanitizePublicKnowledgeText } from '@/lib/knowledge/public-text'
 import type { Article } from '@/lib/db/schema'
 
 export const dynamic = 'force-dynamic'
@@ -37,7 +40,7 @@ interface Props {
 }
 
 function summaryFromBody(markdown: string, max = 160): string {
-  const plain = plainTextFromMarkdown(markdown)
+  const plain = sanitizePublicKnowledgeText(plainTextFromMarkdown(markdown))
   if (plain.length <= max) return plain
   return plain.slice(0, max - 1).trimEnd() + '…'
 }
@@ -48,13 +51,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return { title: '文章未找到 | TEBIQ', description: '该知识文章不存在或已下线。' }
   }
   const description = summaryFromBody(article.bodyMarkdown)
+  const title = sanitizePublicKnowledgeText(article.title)
   const canonical = `${SITE_ORIGIN}/knowledge/${article.slug ?? article.id}`
   return {
-    title: `${article.title} | TEBIQ 知识中心`,
+    title: `${title} | TEBIQ 知识中心`,
     description,
     alternates: { canonical },
     openGraph: {
-      title: article.title,
+      title,
       description,
       url: canonical,
       siteName: 'TEBIQ',
@@ -68,28 +72,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 function articleJsonLd(article: Article): string {
-  const author = article.lastReviewedByName
-    ? {
-        '@type': 'Person' as const,
-        name: article.lastReviewedByName,
-        ...(article.lastReviewedByRegistration
-          ? {
-              identifier: `行政書士登録番号 ${article.lastReviewedByRegistration}`,
-            }
-          : {}),
-      }
-    : { '@type': 'Organization' as const, name: 'TEBIQ' }
   const url = `${SITE_ORIGIN}/knowledge/${article.slug ?? article.id}`
   const data: Record<string, unknown> = {
     '@context': 'https://schema.org',
     '@type': 'Article',
-    headline: article.title,
+    headline: sanitizePublicKnowledgeText(article.title),
     description: summaryFromBody(article.bodyMarkdown),
     datePublished: article.createdAt.toISOString(),
     dateModified: article.updatedAt.toISOString(),
     inLanguage: 'zh-CN',
     mainEntityOfPage: { '@type': 'WebPage', '@id': url },
-    author,
+    author: { '@type': 'Organization' as const, name: 'TEBIQ' },
     publisher: {
       '@type': 'Organization',
       name: 'TEBIQ',
@@ -113,8 +106,14 @@ export default async function KnowledgeDetailPage({ params }: Props) {
   const article = await getPublishedArticleById(params.id)
   if (!article) notFound()
 
-  const blocks = parseMarkdownBlocks(article.bodyMarkdown)
-  const related = await listRelatedPublishedArticles(article.category, article.id, 3)
+  const user = await getCurrentUser()
+  const [related, userContext] = await Promise.all([
+    listRelatedPublishedArticles(article.category, article.id, 3),
+    user ? buildUserContext({ memberId: user.id }) : Promise.resolve(null),
+  ])
+  const publicTitle = sanitizePublicKnowledgeText(article.title)
+  const publicBody = sanitizePublicKnowledgeText(article.bodyMarkdown)
+  const blocks = parseMarkdownBlocks(publicBody)
 
   return (
     <AppShell
@@ -136,14 +135,9 @@ export default async function KnowledgeDetailPage({ params }: Props) {
               <span className="rounded-[8px] bg-canvas px-2 py-1 text-[10px] font-medium leading-none text-ash">
                 {article.category}
               </span>
-              {!article.requiresShoshiReview && (
-                <span className="rounded-[8px] bg-[rgba(46,125,101,0.12)] px-2 py-1 text-[10px] font-medium leading-none text-success">
-                  已由行政書士审核
-                </span>
-              )}
             </div>
             <h1 className="mt-3 text-[18px] font-medium leading-[1.45] text-ink">
-              {article.title}
+              {publicTitle}
             </h1>
             <div className="mt-3 flex items-center gap-1.5 text-[11px] leading-none text-ash">
               <CalendarDays size={12} strokeWidth={1.55} />
@@ -195,7 +189,9 @@ export default async function KnowledgeDetailPage({ params }: Props) {
         </div>
       </article>
 
-      <ReviewerAttribution article={article} />
+      {article.category === 'policy-update' && (
+        <PolicyImpact article={article} visaType={userContext?.visaType ?? null} />
+      )}
 
       <RelatedArticles items={related} />
 
@@ -209,7 +205,7 @@ export default async function KnowledgeDetailPage({ params }: Props) {
               仍然不确定时
             </h2>
             <p className="mt-1 text-[11.5px] leading-[1.6] text-ash">
-              如果这篇内容和你的实际情况不完全一致，建议先做一次续签自查，再决定是否咨询书士。
+              如果这篇内容和你的实际情况不完全一致，建议先做一次续签自查，再决定是否咨询专家。
             </p>
           </div>
         </div>
@@ -254,7 +250,7 @@ function RelatedArticles({ items }: { items: Article[] }) {
               </span>
               <div className="min-w-0 flex-1">
                 <div className="text-[12.5px] font-medium leading-snug text-ink">
-                  {it.title}
+                  {sanitizePublicKnowledgeText(it.title)}
                 </div>
                 <p className="mt-1 line-clamp-2 text-[10.5px] leading-[1.55] text-ash">
                   {summaryFromBody(it.bodyMarkdown, 90)}
@@ -273,65 +269,39 @@ function RelatedArticles({ items }: { items: Article[] }) {
   )
 }
 
-/**
- * 公开标注审核行政書士的实名 + 登録番号 + 审核日期。
- * 行政書士法要求公开渠道呈现的法律相关信息标注资格审核人身份。
- *
- * 公开侧不显示「待审核」tag。未审核文章默认 private，不应进入公开列表；
- * 如果数据误设为 public，也不向用户展示橙色待审核提示。
- */
-function ReviewerAttribution({
+function PolicyImpact({
   article,
+  visaType,
 }: {
   article: {
-    requiresShoshiReview: boolean
-    lastReviewedAt: Date | null
-    lastReviewedByName: string | null
-    lastReviewedByRegistration: string | null
+    appliesTo: string[] | null
+    scenarioTags: string[] | null
   }
+  visaType: string | null
 }) {
-  if (article.requiresShoshiReview) {
-    return null
-  }
-
-  const reviewedAt = article.lastReviewedAt ? fmtDate(article.lastReviewedAt) : null
-  const hasFull = !!(article.lastReviewedByName && article.lastReviewedByRegistration)
+  const appliesTo = article.appliesTo ?? []
+  const possible = Boolean(
+    visaType && appliesTo.some(item => item.toLowerCase() === visaType.toLowerCase()),
+  )
+  const label = possible ? '可能相关' : '暂未明显相关'
+  const typeLabel = visaType ?? '未填写在留类型'
 
   return (
     <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-3.5 shadow-card">
       <div className="flex items-start gap-2.5">
-        <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-[rgba(46,125,101,0.12)] text-success">
-          <BookOpenCheck size={14} strokeWidth={1.7} />
+        <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-[11px] bg-accent-2 text-ink">
+          <AlertCircle size={15} strokeWidth={1.55} />
         </span>
-        <div className="min-w-0 text-[12px] leading-[1.7] text-slate">
-          {hasFull ? (
-            <>
-              已由行政書士{' '}
-              <strong className="text-ink">{article.lastReviewedByName}</strong>
-              （登録番号 {article.lastReviewedByRegistration}）审核
-              {reviewedAt && (
-                <>
-                  {' '}
-                  / 审核日期 <span className="text-ink">{reviewedAt}</span>
-                </>
-              )}
-              。
-            </>
-          ) : (
-            <>
-              已由行政書士审核
-              {reviewedAt && (
-                <>
-                  {' '}
-                  / 审核日期 <span className="text-ink">{reviewedAt}</span>
-                </>
-              )}
-              。<span className="text-ash"> 审核人姓名与登録番号正在补录中。</span>
-            </>
-          )}
-          <p className="mt-2 text-[11px] text-ash">
-            以上内容为参考信息，不构成法律意见。复杂或个别情况请咨询持牌行政書士。
+        <div className="min-w-0">
+          <h2 className="text-[13px] font-medium leading-snug text-ink">对你的影响</h2>
+          <p className="mt-1 text-[11.5px] leading-[1.65] text-slate">
+            你当前是 {typeLabel} 用户，这条政策与你 <strong className="text-ink">{label}</strong>。
           </p>
+          {article.scenarioTags && article.scenarioTags.length > 0 && (
+            <p className="mt-1 text-[10.5px] leading-[1.55] text-ash">
+              相关场景：{article.scenarioTags.slice(0, 4).join(' / ')}
+            </p>
+          )}
         </div>
       </div>
     </section>

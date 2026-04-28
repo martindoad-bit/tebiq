@@ -4,8 +4,8 @@ import { usePathname } from 'next/navigation'
 
 const ITEMS = [
   { href: '/', label: '首页', match: (p: string) => p === '/' },
-  { href: '/visa-select', label: '自查', match: (p: string) => p.startsWith('/visa-select') || p.startsWith('/check') },
-  { href: '/knowledge', label: '知识', match: (p: string) => p.startsWith('/knowledge') },
+  { href: '/tools', label: '工具', match: (p: string) => p.startsWith('/tools') || p.startsWith('/photo') || p.startsWith('/ask') || p.startsWith('/check') },
+  { href: '/my/reminders', label: '提醒', match: (p: string) => p.startsWith('/my/reminders') },
   { href: '/my', label: '我的', match: (p: string) => p.startsWith('/my') || p === '/login' },
 ] as const
 
@@ -52,19 +52,18 @@ function Icon({ name, active }: { name: string; active: boolean }) {
       </svg>
     )
   }
-  if (name === '/visa-select') {
+  if (name === '/tools') {
     return (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={stroke} strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M9 11l3 3 7-7" />
-        <path d="M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h11" />
+        <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.1-3.1a6 6 0 0 1-7.9 7.9l-6.4 6.4a2 2 0 0 1-2.8-2.8l6.4-6.4a6 6 0 0 1 7.9-7.9z" />
       </svg>
     )
   }
-  if (name === '/knowledge') {
+  if (name === '/my/reminders') {
     return (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={stroke} strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
-        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+        <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 7h18s-3 0-3-7" />
+        <path d="M13.73 21a2 2 0 0 1-3.46 0" />
       </svg>
     )
   }

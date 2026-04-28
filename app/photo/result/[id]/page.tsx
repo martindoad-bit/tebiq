@@ -28,6 +28,7 @@ import type { PhotoRecognitionResult } from '@/lib/photo/types'
 import SaveToArchiveButton from './SaveToArchiveButton'
 import EmailReminderPrompt from './EmailReminderPrompt'
 import ComplianceFooter from '@/app/_components/v5/ComplianceFooter'
+import RelatedKnowledge from '@/app/_components/v5/RelatedKnowledge'
 
 export const dynamic = 'force-dynamic'
 
@@ -177,11 +178,20 @@ export default async function PhotoResultPage({
         </Link>
         {result.needsExpertAdvice && (
           <Link href={`/consultation?from=photo_result&doc_id=${doc.id}`} className="block">
-            <Button variant="secondary">建议咨询行政書士 ¥9,800</Button>
+            <Button variant="secondary">建议咨询专家 ¥9,800</Button>
           </Link>
         )}
         {user ? <SaveToArchiveButton /> : <RegisterAfterPhotoCard docId={doc.id} />}
       </div>
+
+      <RelatedKnowledge
+        tags={[
+          result.docType ?? '',
+          result.issuer ?? '',
+          result.isEnvelope ? '信封' : '',
+          result.needsExpertAdvice ? '在留' : '',
+        ]}
+      />
 
       <ComplianceFooter />
     </AppShell>

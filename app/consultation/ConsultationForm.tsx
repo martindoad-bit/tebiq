@@ -120,10 +120,10 @@ export default function ConsultationForm() {
             预约咨询
         </div>
         <h1 className="mt-3 max-w-full text-[26px] font-medium leading-[1.18] text-ink">
-          预约专业书士咨询
+          预约专家咨询
         </h1>
         <p className="mt-3 max-w-full break-words text-[13px] leading-[1.7] text-slate">
-          提交后我们会在 24 小时内联系你，根据你的情况匹配合适的持牌行政书士。
+          提交后我们会在 24 小时内联系你，根据你的情况匹配合适的专家。
         </p>
       </section>
 
@@ -273,7 +273,7 @@ export default function ConsultationForm() {
           </button>
 
           <p className="mt-4 border-t border-hairline pt-3 text-[11px] leading-relaxed text-ash">
-            本平台聚合合作书士资源，根据您的情况匹配合适的专业人士。
+            本平台聚合合作专家资源，根据您的情况匹配合适的专业人士。
           </p>
         </form>
       </section>

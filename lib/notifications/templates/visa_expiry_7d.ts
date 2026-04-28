@@ -58,7 +58,7 @@ export const template = {
                   <li style="margin-bottom:6px;">就近预约入管局窗口或当日整理券</li>
                 </ul>
                 <p style="margin:0 0 12px;">如确实来不及递交：在到期日前提交即可，受理后会拿到<strong>受理証明書</strong>，自动延长 <strong>2 个月特例期間</strong>，期间在日身份合法、可正常工作生活。请勿担心。</p>
-                <p style="margin:0 0 12px;">若材料缺失或案情复杂，建议立刻联系书士。</p>
+                <p style="margin:0 0 12px;">若材料缺失或案情复杂，建议立刻联系专家。</p>
               </td>
             </tr>
             <tr>
@@ -70,7 +70,7 @@ export const template = {
               <td style="border-top:1px solid #DDE3DE;padding-top:16px;font-size:13px;color:#707A75;line-height:1.6;">
                 <p style="margin:0 0 4px;">TEBIQ 在日生活のお守り</p>
                 <p style="margin:0 0 4px;">陪您稳稳走完每一次更新。</p>
-                <p style="margin:8px 0 0;font-size:11px;color:#9CA3AF;">[文案待书士审核]</p>
+                <p style="margin:8px 0 0;font-size:11px;color:#9CA3AF;"></p>
               </td>
             </tr>
           </table>
@@ -93,15 +93,13 @@ ${greet(name)}
 
 如确实来不及递交：在到期日前提交即可，受理后会拿到受理証明書，自动延长 2 个月特例期間，期间在日身份合法、可正常工作生活。请勿担心。
 
-若材料缺失或案情复杂，建议立刻联系书士。
+若材料缺失或案情复杂，建议立刻联系专家。
 
 查看我的档案：${ARCHIVE_URL}
 
 —
 TEBIQ 在日生活のお守り
 陪您稳稳走完每一次更新。
-
-[文案待书士审核]
 `
 
     return { subject, html, text }

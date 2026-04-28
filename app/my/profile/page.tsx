@@ -185,7 +185,7 @@ function ExpiryReminder({ expiryDate }: { expiryDate: string }) {
   if (days < 30) {
     bg = 'bg-danger'
     title = `非常紧急：剩余 ${days} 天`
-    sub = '请立刻联系书士开始办理'
+    sub = '请立刻确认材料并咨询专家'
   } else if (days < 60) {
     bg = 'bg-accent'
     title = `需要尽快提交：剩余 ${days} 天`

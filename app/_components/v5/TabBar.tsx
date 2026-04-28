@@ -1,16 +1,9 @@
 /**
- * TabBar — v5 底部 4-tab 导航。
- *
- * Tabs (per PROJECT_MEMORY): 首页 / 我的档案 / 知识 / 我的
- *  - /         → home
- *  - /my/archive → archive (default child of /my)
- *  - /knowledge → knowledge
- *  - /my/account → account
  */
 'use client'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Home, FileText, BookOpen, User } from 'lucide-react'
+import { Bell, Home, User, Wrench } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import { trackClient } from '@/lib/analytics/client'
 import { EVENT } from '@/lib/analytics/events'
@@ -18,22 +11,22 @@ import { EVENT } from '@/lib/analytics/events'
 const TABS: { href: string; label: string; Icon: LucideIcon; match: (p: string) => boolean }[] = [
   { href: '/', label: '首页', Icon: Home, match: p => p === '/' },
   {
-    href: '/my/archive',
-    label: '我的档案',
-    Icon: FileText,
-    match: p => p.startsWith('/my/archive') || p.startsWith('/my/reminders') || p === '/my',
+    href: '/tools',
+    label: '工具',
+    Icon: Wrench,
+    match: p => p.startsWith('/tools') || p.startsWith('/photo') || p.startsWith('/ask') || p.startsWith('/check'),
   },
   {
-    href: '/knowledge',
-    label: '知识',
-    Icon: BookOpen,
-    match: p => p.startsWith('/knowledge'),
+    href: '/my/reminders',
+    label: '提醒',
+    Icon: Bell,
+    match: p => p.startsWith('/my/reminders'),
   },
   {
     href: '/my/account',
     label: '我的',
     Icon: User,
-    match: p => p.startsWith('/my/account') || p === '/login',
+    match: p => p.startsWith('/my/account') || p.startsWith('/my/archive') || p === '/my' || p === '/login',
   },
 ]
 

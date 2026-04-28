@@ -55,7 +55,7 @@ export const template = {
                   <li style="margin-bottom:6px;">在便民店或市役所拿到住民票、纳税证明</li>
                   <li style="margin-bottom:6px;">填写申请书草稿，确认照片、护照、在留卡复印件齐全</li>
                 </ul>
-                <p style="margin:0 0 12px;">如有材料不齐或案情复杂，建议尽早预约书士咨询，避免临近到期才奔波。</p>
+                <p style="margin:0 0 12px;">如有材料不齐或案情复杂，建议尽早预约专家咨询，避免临近到期才奔波。</p>
               </td>
             </tr>
             <tr>
@@ -67,7 +67,7 @@ export const template = {
               <td style="border-top:1px solid #DDE3DE;padding-top:16px;font-size:13px;color:#707A75;line-height:1.6;">
                 <p style="margin:0 0 4px;">TEBIQ 在日生活のお守り</p>
                 <p style="margin:0 0 4px;">陪您稳稳走完每一次更新。</p>
-                <p style="margin:8px 0 0;font-size:11px;color:#9CA3AF;">[文案待书士审核]</p>
+                <p style="margin:8px 0 0;font-size:11px;color:#9CA3AF;"></p>
               </td>
             </tr>
           </table>
@@ -86,15 +86,13 @@ export const template = {
 - 在便民店或市役所拿到住民票、纳税证明
 - 填写申请书草稿，确认照片、护照、在留卡复印件齐全
 
-如有材料不齐或案情复杂，建议尽早预约书士咨询，避免临近到期才奔波。
+如有材料不齐或案情复杂，建议尽早预约专家咨询，避免临近到期才奔波。
 
 查看我的档案：${ARCHIVE_URL}
 
 —
 TEBIQ 在日生活のお守り
 陪您稳稳走完每一次更新。
-
-[文案待书士审核]
 `
 
     return { subject, html, text }

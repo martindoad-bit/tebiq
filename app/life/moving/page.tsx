@@ -186,7 +186,7 @@ export default function MovingHubPage() {
                       </p>
                     )}
                     {item.needsReview && (
-                      <p className="mt-2 text-[11px] text-ash">[待书士审核]</p>
+                      <p className="mt-2 text-[11px] text-ash"></p>
                     )}
                   </article>
                 ))}
@@ -202,7 +202,7 @@ export default function MovingHubPage() {
           <p className="flex gap-2 text-[11px] leading-[1.7] text-ash">
             <Info size={14} strokeWidth={1.55} className="mt-0.5 flex-shrink-0" />
             <span>
-              本页信息来源：各市区町村官网、出入国在留管理庁。如有特殊情况请咨询持牌行政书士。
+              本页信息来源：各市区町村官网、出入国在留管理庁。如有特殊情况请咨询专家。
             </span>
           </p>
         </div>
