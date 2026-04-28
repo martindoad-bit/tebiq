@@ -17,6 +17,7 @@ interface HistoryEntry {
 const AUTOSAVE_MS = 30_000
 
 type ArticleStatus = 'draft' | 'reviewing' | 'published'
+type ArticleVisibility = 'public' | 'private'
 
 interface AdminArticle {
   id: string
@@ -25,6 +26,7 @@ interface AdminArticle {
   bodyMarkdown: string
   category: string
   status: ArticleStatus
+  visibility: ArticleVisibility
   requiresShoshiReview: boolean
   lastReviewedAt: string | null
   lastReviewedBy: string | null
@@ -41,6 +43,7 @@ const EMPTY: Omit<AdminArticle, 'id' | 'updatedAt'> & { id?: string; updatedAt?:
   bodyMarkdown: '## 小标题\n\n正文内容。\n\n- 要点一\n- 要点二',
   category: '签证相关',
   status: 'draft',
+  visibility: 'private',
   requiresShoshiReview: true,
   lastReviewedAt: null,
   lastReviewedBy: '',
@@ -53,6 +56,11 @@ const STATUS_LABEL: Record<ArticleStatus, string> = {
   draft: '草稿',
   reviewing: '审核中',
   published: '已发布',
+}
+
+const VISIBILITY_LABEL: Record<ArticleVisibility, string> = {
+  private: '私密',
+  public: '公开',
 }
 
 export default function AdminKnowledgeClient({ adminKey }: { adminKey: string }) {
@@ -239,6 +247,7 @@ export default function AdminKnowledgeClient({ adminKey }: { adminKey: string })
                       <div className="truncate text-sm font-bold text-title">{article.title}</div>
                       <div className="mt-1 flex items-center gap-2 text-[10px] text-muted">
                         <span>{STATUS_LABEL[article.status]}</span>
+                        <span>{VISIBILITY_LABEL[article.visibility]}</span>
                         <span>{article.category}</span>
                       </div>
                     </button>
@@ -292,6 +301,24 @@ export default function AdminKnowledgeClient({ adminKey }: { adminKey: string })
                       className="w-full rounded-xl border border-line bg-white px-3 py-2 text-sm outline-none focus:border-primary"
                     >
                       {Object.entries(STATUS_LABEL).map(([value, label]) => (
+                        <option key={value} value={value}>
+                          {label}
+                        </option>
+                      ))}
+                    </select>
+                  </Field>
+                  <Field label="公开范围">
+                    <select
+                      value={form.visibility}
+                      onChange={e =>
+                        setForm(f => ({
+                          ...f,
+                          visibility: e.target.value as ArticleVisibility,
+                        }))
+                      }
+                      className="w-full rounded-xl border border-line bg-white px-3 py-2 text-sm outline-none focus:border-primary"
+                    >
+                      {Object.entries(VISIBILITY_LABEL).map(([value, label]) => (
                         <option key={value} value={value}>
                           {label}
                         </option>

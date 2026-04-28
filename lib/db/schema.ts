@@ -108,6 +108,8 @@ export const articleStatusEnum = pgEnum('article_status', [
   'published',
 ])
 
+export const articleVisibilityEnum = pgEnum('article_visibility', ['public', 'private'])
+
 // Member profile enums (added Block 2)
 export const maritalStatusEnum = pgEnum('marital_status', [
   'single',
@@ -429,6 +431,7 @@ export const articles = pgTable(
     bodyMarkdown: text('body_markdown').notNull(),
     category: varchar('category', { length: 64 }).notNull(),
     status: articleStatusEnum('status').notNull().default('draft'),
+    visibility: articleVisibilityEnum('visibility').notNull().default('private'),
     requiresShoshiReview: boolean('requires_shoshi_review').notNull().default(true),
     lastReviewedAt: timestamp('last_reviewed_at', { withTimezone: true }),
     lastReviewedBy: varchar('last_reviewed_by', { length: 100 }),
@@ -446,6 +449,7 @@ export const articles = pgTable(
   t => ({
     slugUnique: uniqueIndex('articles_slug_unique').on(t.slug),
     statusIdx: index('articles_status_idx').on(t.status),
+    visibilityIdx: index('articles_visibility_idx').on(t.visibility),
     categoryIdx: index('articles_category_idx').on(t.category),
     updatedIdx: index('articles_updated_at_idx').on(t.updatedAt),
   }),

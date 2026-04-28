@@ -12,6 +12,7 @@ import { normalizeArticleSlug, suggestArticleSlug } from '@/lib/knowledge/slug'
 const HISTORY_LIMIT = 10
 
 export type ArticleStatus = Article['status']
+export type ArticleVisibility = Article['visibility']
 
 export interface ArticleInput {
   id?: string
@@ -20,6 +21,7 @@ export interface ArticleInput {
   bodyMarkdown: string
   category: string
   status: ArticleStatus
+  visibility: ArticleVisibility
   requiresShoshiReview: boolean
   lastReviewedAt?: string | Date | null
   /** Legacy short identifier — kept for back-compat; new entries should fill name + registration. */
@@ -35,7 +37,7 @@ export async function listPublishedArticles(): Promise<Article[]> {
   return await db
     .select()
     .from(articles)
-    .where(eq(articles.status, 'published'))
+    .where(and(eq(articles.status, 'published'), eq(articles.visibility, 'public')))
     .orderBy(desc(articles.updatedAt))
 }
 
@@ -51,6 +53,7 @@ export async function listRelatedPublishedArticles(
     .where(
       and(
         eq(articles.status, 'published'),
+        eq(articles.visibility, 'public'),
         eq(articles.category, category),
         ne(articles.id, excludeId),
       ),
@@ -66,7 +69,7 @@ export async function getPublishedArticleById(idOrSlug: string): Promise<Article
     .where(or(eq(articles.id, idOrSlug), eq(articles.slug, idOrSlug)))
     .limit(1)
   const article = rows[0] ?? null
-  if (!article || article.status !== 'published') return null
+  if (!article || article.status !== 'published' || article.visibility !== 'public') return null
   return article
 }
 
@@ -94,6 +97,7 @@ export async function upsertArticle(
     bodyMarkdown: input.bodyMarkdown,
     category: input.category,
     status: input.status,
+    visibility: input.visibility,
     requiresShoshiReview: input.requiresShoshiReview,
     lastReviewedAt,
     lastReviewedBy: input.lastReviewedBy?.trim() || null,
@@ -142,6 +146,7 @@ export async function upsertArticle(
       bodyMarkdown: input.bodyMarkdown,
       category: input.category,
       status: input.status,
+      visibility: input.visibility,
       requiresShoshiReview: input.requiresShoshiReview,
       lastReviewedAt,
       lastReviewedBy: input.lastReviewedBy?.trim() || null,

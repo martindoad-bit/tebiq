@@ -78,6 +78,13 @@
       "when": 1777360489858,
       "tag": "0010_high_swordsman",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1777360873081,
+      "tag": "0011_crazy_shaman",
+      "breakpoints": true
     }
   ]
 }

@@ -79,8 +79,7 @@ export default async function KnowledgePage({
         title: a.title,
         bodyMarkdown: a.bodyMarkdown,
         category: a.category,
-        requiresShoshiReview: a.requiresShoshiReview,
-        lastReviewedBy: a.lastReviewedBy,
+        lastReviewedBy: a.lastReviewedByName ?? a.lastReviewedBy,
         updatedAt: a.updatedAt.toISOString(),
       }))}
     />
