@@ -1,12 +1,12 @@
 # AI Handoff Log
 
-最后更新: 2026-04-28T12:58:00Z
+最后更新: 2026-04-28T13:06:00Z
 
 ## CCA(代码)状态
 - 当前任务: Block 11 final adjustment - 首页回到 Block 10 框架 + 试用/定价 + production DB sync
 - 当前分支: codex/block-11
 - 状态: awaiting_merge
-- 最近一次 push: 待 `codex/block-11` final push 后更新
+- 最近一次 push: `84d8a19`（Block 11 final adjustment code commit；另有 handoff 更新 commit）
 - 给其他 AI 的通知: CCA 已按创始人最新方向调整 Block 11。首页不再强调“档案”，文字即懂入口隐藏，定价改为 ¥980/月 + ¥8,800/年，注册自动 7 天试用，新增隐私政策和设置页。production DB 只读检查确认 0005-0014 未应用，不能在未 review 前执行 `db:push` / `db:migrate`。
 
 ## CCB(内容)状态
