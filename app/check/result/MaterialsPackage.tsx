@@ -5,7 +5,7 @@ import DownloadPackage from './DownloadPackage'
 export default function MaterialsPackage({ visaType = 'gijinkoku' }: { visaType?: string }) {
   return (
     <div className="no-capture bg-card border border-line border-l-4 border-l-primary rounded-2xl p-5 mb-6 shadow-sm">
-      <h3 className="text-title text-base font-bold mb-3">📋 获取你的专属材料包</h3>
+      <h3 className="text-title text-base font-bold mb-3">生成材料清单</h3>
 
       <ul className="space-y-2 mb-5">
         {BENEFITS.map(b => (
@@ -17,11 +17,11 @@ export default function MaterialsPackage({ visaType = 'gijinkoku' }: { visaType?
       </ul>
 
       <div className="flex items-baseline gap-3 mb-1">
-        <span className="text-muted text-xs">早鸟价</span>
-        <span className="text-primary text-3xl font-bold leading-none">¥380</span>
-        <span className="text-muted text-sm line-through">¥480</span>
+        <span className="text-muted text-xs">年度档案保留</span>
+        <span className="text-primary text-3xl font-bold leading-none">¥1,580</span>
+        <span className="text-muted text-sm">/ 年</span>
       </div>
-      <p className="text-muted text-xs mb-2">正式价 ¥480 · 早鸟期内免费试用生成功能</p>
+      <p className="text-muted text-xs mb-2">材料清单作为档案保留的派生功能提供。</p>
       <Link href="/sample-package" className="inline-block text-primary hover:text-primary-hover text-xs font-bold mb-4 underline underline-offset-2">查看样例 →</Link>
 
       <DownloadPackage visaType={visaType} />

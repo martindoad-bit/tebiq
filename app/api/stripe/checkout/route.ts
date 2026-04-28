@@ -2,7 +2,7 @@
  * POST /api/stripe/checkout
  *
  * Body: { product, quizResultId? }
- *   product = 'basic_monthly' | 'basic_yearly' | 'material_package' | 'expert_consultation'
+ *   product = 'archive_yearly' | 'expert_consultation'
  *
  * Subscription products require login (we attach family_id to metadata).
  * One-time products do not require login — Stripe collects email at checkout.
@@ -25,9 +25,7 @@ export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
 
 const VALID_PRODUCTS: ReadonlySet<StripeProduct> = new Set<StripeProduct>([
-  'basic_monthly',
-  'basic_yearly',
-  'material_package',
+  'archive_yearly',
   'expert_consultation',
 ])
 
@@ -79,12 +77,6 @@ export async function POST(req: Request) {
       const existingSub = await getSubscriptionByFamilyId(member.familyId)
       const existingCustomerId = existingSub?.stripeCustomerId ?? undefined
 
-      // First-month ¥1 only applies to basic_monthly. We use a Stripe coupon
-      // (preferred over trial_period_days because Stripe still charges ¥1 —
-      // a trial would charge nothing, breaking the "已付费" psychology).
-      const discountCoupon =
-        product === 'basic_monthly' ? process.env.STRIPE_COUPON_FIRST_MONTH : undefined
-
       const session = await stripe.checkout.sessions.create({
         mode: 'subscription',
         line_items: [{ price: priceId, quantity: 1 }],
@@ -97,9 +89,6 @@ export async function POST(req: Request) {
               // Stripe can still dedupe customers per-member.
               customer_email: member.email ?? `${member.id}@tebiq-placeholder.local`,
             }),
-        ...(discountCoupon
-          ? { discounts: [{ coupon: discountCoupon }] }
-          : {}),
         metadata: {
           family_id: member.familyId,
           member_id: member.id,

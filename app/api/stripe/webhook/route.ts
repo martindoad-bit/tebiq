@@ -24,6 +24,8 @@ import {
   getSubscriptionByStripeSubId,
   updateSubscriptionStatus,
 } from '@/lib/db/queries/subscriptions'
+import { setArchiveRetentionForFamily } from '@/lib/db/queries/members'
+import { unarchiveTimelineEventsForFamily } from '@/lib/db/queries/timeline'
 import {
   createPurchase,
   markPurchasePaid,
@@ -38,9 +40,7 @@ export const dynamic = 'force-dynamic'
 // --- Helpers --------------------------------------------------------------
 
 const PRODUCT_AMOUNTS: Record<string, number> = {
-  material_package: 980,
   expert_consultation: 9800,
-  photo_credit_pack: 0, // reserved for future
 }
 
 function statusFromStripe(s: Stripe.Subscription.Status): NewSubscription['status'] {
@@ -70,6 +70,10 @@ function billingCycleFromInterval(interval: string | undefined): NewSubscription
 function toDate(unixSeconds: number | null | undefined): Date {
   if (!unixSeconds) return new Date()
   return new Date(unixSeconds * 1000)
+}
+
+function toIsoDate(d: Date): string {
+  return d.toISOString().slice(0, 10)
 }
 
 // --- Event handlers -------------------------------------------------------
@@ -181,6 +185,8 @@ async function upsertSubscriptionFromStripe(
       stripeSubscriptionId: sub.id,
       canceledAt: sub.canceled_at ? toDate(sub.canceled_at) : null,
     })
+    await setArchiveRetentionForFamily(familyId, toIsoDate(toDate(periodEnd)))
+    await unarchiveTimelineEventsForFamily(familyId)
     return
   }
 
@@ -195,6 +201,8 @@ async function upsertSubscriptionFromStripe(
       stripeSubscriptionId: sub.id,
       canceledAt: sub.canceled_at ? toDate(sub.canceled_at) : null,
     })
+    await setArchiveRetentionForFamily(familyId, toIsoDate(toDate(periodEnd)))
+    await unarchiveTimelineEventsForFamily(familyId)
     return
   }
 
@@ -208,6 +216,8 @@ async function upsertSubscriptionFromStripe(
     stripeCustomerId: customerId ?? undefined,
     stripeSubscriptionId: sub.id,
   })
+  await setArchiveRetentionForFamily(familyId, toIsoDate(toDate(periodEnd)))
+  await unarchiveTimelineEventsForFamily(familyId)
 }
 
 async function handleSubscriptionUpdated(sub: Stripe.Subscription): Promise<void> {

@@ -148,7 +148,7 @@ export default function SamplePackagePage() {
                     </div>
                   </dl>
                   <p className="bg-[#FEF3C7] border-l-[3px] border-[#F59E0B] text-[#92400E] text-xs md:text-sm mt-3 px-3 py-2 rounded-r">
-                    ⚠ 常见踩坑：{m.pitfall}
+                    常见问题：{m.pitfall}
                   </p>
                 </article>
               ))}

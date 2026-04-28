@@ -21,13 +21,13 @@ export async function generateMetadata({
   let description = '在日签证续签风险自查 · 3 分钟看清你的情况'
 
   if (v === 'green') {
-    title = '✅ 我的续签前置条件全部通过 - TEBIQ'
-    description = '我刚做完续签风险自查，前置条件全部通过！3 分钟你也来测一测。'
+    title = '续签前置条件通过 - TEBIQ'
+    description = '续签风险自查结果为通过。'
   } else if (v === 'yellow') {
-    title = `⚠️ 发现 ${n} 项需要注意的问题 - TEBIQ`
+    title = `发现 ${n} 项需要注意的问题 - TEBIQ`
     description = `续签自查发现 ${n} 项需要处理。完整结果与处理建议请查看。`
   } else if (v === 'red') {
-    title = `🚨 发现 ${n} 项严重风险，续签前必须处理 - TEBIQ`
+    title = `发现 ${n} 项严重风险，续签前必须处理 - TEBIQ`
     description = `续签自查检测到 ${n} 项严重风险。在递签前必须先解决。`
   }
 

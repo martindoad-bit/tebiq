@@ -1,6 +1,7 @@
 'use client'
 import { useMemo, useState } from 'react'
-import { AlertTriangle, ChevronDown, FileText, Languages, Loader2, ShieldCheck } from 'lucide-react'
+import Link from 'next/link'
+import { AlertTriangle, Archive, ChevronDown, FileText, Languages, Loader2, ShieldCheck } from 'lucide-react'
 import Button from '@/app/_components/v5/Button'
 import ComplianceFooter from '@/app/_components/v5/ComplianceFooter'
 import RelatedKnowledge from '@/app/_components/v5/RelatedKnowledge'
@@ -11,6 +12,7 @@ interface ApiResponse {
   data?: {
     result: TextUnderstandResult
     quota: { unlimited: boolean; used: number; limit: number | null; remaining: number | null }
+    timeline?: { eventId: string }
   }
   error?: { code: string; message: string }
 }
@@ -22,6 +24,7 @@ export default function AskClient() {
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [result, setResult] = useState<TextUnderstandResult | null>(null)
+  const [timelineEventId, setTimelineEventId] = useState<string | null>(null)
 
   const chars = text.trim().length
   const canSubmit = chars > 0 && chars <= 2000 && !busy
@@ -50,6 +53,7 @@ export default function AskClient() {
         return
       }
       setResult(data.data.result)
+      setTimelineEventId(data.data.timeline?.eventId ?? null)
     } catch {
       setError('网络异常，请稍后再试')
     } finally {
@@ -129,6 +133,15 @@ export default function AskClient() {
 
       {result && (
         <>
+          {timelineEventId && (
+            <Link
+              href={`/timeline/${timelineEventId}`}
+              className="mt-3 flex items-center gap-2 rounded-card border border-hairline bg-surface px-4 py-3 text-[11.5px] font-medium text-ash shadow-card"
+            >
+              <Archive size={14} strokeWidth={1.55} />
+              已归档到时间线
+            </Link>
+          )}
           <ResultSection icon={<Languages size={15} strokeWidth={1.55} />} title="这段日文什么意思">
             {result.meaning}
           </ResultSection>

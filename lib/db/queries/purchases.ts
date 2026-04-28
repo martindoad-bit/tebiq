@@ -1,5 +1,5 @@
 /**
- * Purchases DAL — one-time orders (材料包 / 拍照包 / 专家咨询).
+ * Purchases DAL — one-time orders (专家咨询; legacy product values retained).
  */
 import { desc, eq } from 'drizzle-orm'
 import { db } from '@/lib/db'

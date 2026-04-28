@@ -1,141 +1,147 @@
 import Link from 'next/link'
 import type { ReactNode } from 'react'
 import {
+  Archive,
   Bell,
-  BookOpenCheck,
   Camera,
-  CheckSquare,
   ChevronRight,
   ClipboardCheck,
-  Database,
   Languages,
-  ShieldCheck,
 } from 'lucide-react'
 import AppShell from '@/app/_components/v5/AppShell'
 import TabBar from '@/app/_components/v5/TabBar'
 import Logo from '@/app/_components/v5/Logo'
 import TrackedLink from '@/app/_components/v5/TrackedLink'
-import SoonToolCard from '@/app/_components/v5/SoonToolCard'
 import { EVENT, type EventName } from '@/lib/analytics/events'
+import { getAnonymousSessionId } from '@/lib/auth/anonymous-session'
 import { getCurrentUser } from '@/lib/auth/session'
-import { listLatestPolicyArticles } from '@/lib/db/queries/articles'
-import { listDocumentsByFamilyId } from '@/lib/db/queries/documents'
-import { buildUserContext } from '@/lib/photo/user-context'
-import { sanitizePublicKnowledgeText } from '@/lib/knowledge/public-text'
+import {
+  archiveExpiredTimelineEventsForMember,
+  getTimelineSummary,
+  listTimelineEvents,
+  type TimelineSummary,
+} from '@/lib/db/queries/timeline'
+import type { Member, TimelineEvent } from '@/lib/db/schema'
+import { eventSubline, eventTitle, eventTypeLabel, formatDateTime } from '@/lib/timeline/display'
 
 export const dynamic = 'force-dynamic'
 
-interface TodayCard {
+interface FocusCard {
   title: string
-  desc: string
   href: string
-  icon: ReactNode
+  cta: string
+}
+
+const EMPTY_SUMMARY: TimelineSummary = {
+  total: 0,
+  archived: 0,
+  active: 0,
+  selfChecks: 0,
+  documents: 0,
+  textUnderstands: 0,
+  monthsCovered: 0,
+  issuerCount: 0,
+  docTypeCount: 0,
+  latestDeadline: null,
 }
 
 export default async function HomePage() {
   const user = await safeGetCurrentUser()
-  const [policyArticles, userContext, docs] = await Promise.all([
-    safeListLatestPolicyArticles(),
-    user ? safeBuildUserContext(user.id) : Promise.resolve(null),
-    user ? safeListDocumentsByFamilyId(user.familyId) : Promise.resolve([]),
-  ])
+  const sessionId = user ? null : await getAnonymousSessionId()
+  if (user) await safeArchiveExpired(user)
 
-  const todayCards = user && userContext
-    ? buildLoggedInTodayCards(userContext, docs.length)
-    : buildDefaultTodayCards()
+  const owner = { memberId: user?.id ?? null, sessionId }
+  const [summary, recentEvents] = await Promise.all([
+    safeTimelineSummary(owner),
+    safeTimelineEvents(owner, 5),
+  ])
+  const daysToExpiry = daysUntilJst(user?.visaExpiry)
+  const focusCards = buildFocusCards(user, summary, recentEvents, daysToExpiry)
 
   return (
     <AppShell appBar={<HomeAppBar />} tabBar={<TabBar />}>
-      <section className="px-0.5 pb-1 pt-4">
-        <div className="inline-flex items-center gap-2 rounded-full bg-cool-blue px-3 py-1.5 text-[clamp(12px,3.4vw,14px)] font-semibold text-ink/85">
-          <span className="h-1.5 w-1.5 rounded-full bg-success" />
-          在日生活好帮手
+      <section className="pt-3">
+        <div className="flex items-center gap-2 px-0.5 text-[12px] font-medium text-slate">
+          <Logo size="sm" />
+          <span>在日生活好帮手</span>
         </div>
-        <h1 className="mb-3 mt-4 text-[clamp(34px,10.4vw,50px)] font-semibold leading-[1.12] text-ink">
-          今天要处理的事
-          <br />
-          先看这里
-        </h1>
-        <p className="max-w-[360px] text-[clamp(15px,4.2vw,18px)] leading-[1.62] text-slate/82">
-          拍文件、粘贴日文、做续签自查，把在日生活的麻烦事拆小。
-        </p>
       </section>
 
-      <SectionTitle title="今日相关" actionHref="/tools" actionLabel="全部工具" />
-      <div className="mt-2.5 flex snap-x gap-3 overflow-x-auto pb-1">
-        {todayCards.map(card => (
-          <TodayCard key={card.title} {...card} />
+      <ArchiveStatusCard user={user} summary={summary} daysToExpiry={daysToExpiry} />
+
+      <SectionTitle title="当前关注" />
+      <div className="mt-2.5 grid gap-2.5">
+        {focusCards.map(card => (
+          <FocusCard key={card.title} {...card} />
         ))}
       </div>
 
-      <SectionTitle title="核心工具" />
+      <SectionTitle title="工具入口" />
       <div className="mt-2.5 grid grid-cols-2 gap-3">
         <ToolCard
           title="拍照即懂"
-          desc="拍日文文件"
+          desc="文件归档"
           href="/photo"
-          icon={<Camera size={19} strokeWidth={1.55} />}
+          icon={<Camera size={18} strokeWidth={1.55} />}
           eventName={EVENT.HOME_PHOTO_CARD_CLICK}
         />
         <ToolCard
           title="文字即懂"
-          desc="粘贴日文求助"
+          desc="文本归档"
           href="/ask"
-          icon={<Languages size={19} strokeWidth={1.55} />}
+          icon={<Languages size={18} strokeWidth={1.55} />}
         />
         <ToolCard
           title="续签自查"
-          desc="3 分钟看风险"
+          desc="风险记录"
           href="/check"
-          icon={<ClipboardCheck size={19} strokeWidth={1.55} />}
+          icon={<ClipboardCheck size={18} strokeWidth={1.55} />}
           eventName={EVENT.HOME_CHECK_CARD_CLICK}
         />
-        <SoonToolCard
-          title="任务清单"
-          desc="即将开放"
-          icon={<CheckSquare size={19} strokeWidth={1.55} />}
+        <ToolCard
+          title="我的时间线"
+          desc="完整档案"
+          href="/timeline"
+          icon={<Archive size={18} strokeWidth={1.55} />}
         />
       </div>
 
-      <SectionTitle title="最新政策" actionHref="/knowledge" actionLabel="更多" />
+      <SectionTitle title="最近活动" actionHref="/timeline" actionLabel="完整档案" />
       <section className="mt-2.5 rounded-card border border-hairline bg-surface px-4 py-3 shadow-card">
-        {policyArticles.length > 0 ? (
+        {recentEvents.length > 0 ? (
           <ul className="divide-y divide-hairline">
-            {policyArticles.map(article => (
-              <li key={article.id} className="py-2.5 first:pt-0 last:pb-0">
-                <Link
-                  href={`/knowledge/${article.slug ?? article.id}`}
-                  className="group flex items-center gap-2.5"
-                >
-                  <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-[10px] bg-accent-2 text-ink">
-                    <BookOpenCheck size={15} strokeWidth={1.55} />
+            {recentEvents.map(event => (
+              <li key={event.id} className="py-2.5 first:pt-0 last:pb-0">
+                <Link href={`/timeline/${event.id}`} className="group flex items-center gap-3">
+                  <span className="w-[72px] flex-shrink-0 text-[10.5px] text-ash">
+                    {formatDateTime(event.createdAt)}
                   </span>
                   <span className="min-w-0 flex-1">
                     <span className="block truncate text-[12.5px] font-medium text-ink">
-                      {sanitizePublicKnowledgeText(article.title)}
+                      {eventTitle(event)}
                     </span>
-                    <span className="mt-1 block text-[10.5px] text-ash">
-                      更新于 {formatDate(article.updatedAt)}
+                    <span className="mt-1 block truncate text-[10.5px] text-ash">
+                      {eventSubline(event)}
                     </span>
                   </span>
-                  <ChevronRight size={14} className="text-haze group-hover:text-ink" />
+                  <span className="rounded-[8px] bg-cool-blue px-2 py-1 text-[10px] font-medium text-ink">
+                    {event.archived ? '已归档' : eventTypeLabel(event.eventType)}
+                  </span>
                 </Link>
               </li>
             ))}
           </ul>
         ) : (
           <p className="text-[12px] leading-[1.65] text-ash">
-            暂无公开政策更新。后续会在这里显示与你相关的新变化。
+            暂无档案记录。使用任一工具后自动生成时间线。
           </p>
         )}
       </section>
-
-      <TrustStrip />
     </AppShell>
   )
 }
 
-async function safeGetCurrentUser() {
+async function safeGetCurrentUser(): Promise<Member | null> {
   try {
     return await getCurrentUser()
   } catch {
@@ -143,119 +149,168 @@ async function safeGetCurrentUser() {
   }
 }
 
-async function safeListLatestPolicyArticles() {
+async function safeArchiveExpired(user: Member) {
   try {
-    return await listLatestPolicyArticles(3)
+    await archiveExpiredTimelineEventsForMember(user)
+  } catch {
+    // 首页不能因归档任务失败而不可用。
+  }
+}
+
+async function safeTimelineSummary(owner: { memberId: string | null; sessionId: string | null }) {
+  try {
+    if (!owner.memberId && !owner.sessionId) return EMPTY_SUMMARY
+    return await getTimelineSummary(owner)
+  } catch {
+    return EMPTY_SUMMARY
+  }
+}
+
+async function safeTimelineEvents(owner: { memberId: string | null; sessionId: string | null }, limit: number) {
+  try {
+    if (!owner.memberId && !owner.sessionId) return []
+    return await listTimelineEvents(owner, { limit })
   } catch {
     return []
   }
 }
 
-async function safeBuildUserContext(memberId: string) {
-  try {
-    return await buildUserContext({ memberId })
-  } catch {
-    return null
-  }
+function daysUntilJst(dateValue: string | Date | null | undefined): number | null {
+  if (!dateValue) return null
+  const iso = typeof dateValue === 'string' ? dateValue : dateValue.toISOString().slice(0, 10)
+  const target = new Date(`${iso.slice(0, 10)}T00:00:00+09:00`).getTime()
+  if (Number.isNaN(target)) return null
+  const today = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Asia/Tokyo',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(new Date())
+  const now = new Date(`${today}T00:00:00+09:00`).getTime()
+  return Math.ceil((target - now) / 86_400_000)
 }
 
-async function safeListDocumentsByFamilyId(familyId: string) {
-  try {
-    return await listDocumentsByFamilyId(familyId, 8)
-  } catch {
-    return []
+function buildFocusCards(
+  user: Member | null,
+  summary: TimelineSummary,
+  events: TimelineEvent[],
+  daysToExpiry: number | null,
+): FocusCard[] {
+  if (!user && summary.total === 0) {
+    return [
+      { title: '收到信件: 先拍照归档', href: '/photo', cta: '拍照' },
+      { title: '日文原文: 粘贴后归档', href: '/ask', cta: '解析' },
+      { title: '续签前: 做一次自查记录', href: '/check', cta: '自查' },
+    ]
   }
+
+  const cards: FocusCard[] = []
+  if (daysToExpiry !== null) {
+    cards.push({
+      title: `在留期限: ${daysToExpiry} 天后`,
+      href: daysToExpiry <= 90 ? '/check' : '/my/profile',
+      cta: daysToExpiry <= 90 ? '自查' : '档案',
+    })
+  }
+  if (summary.latestDeadline) {
+    cards.push({
+      title: `最近期限: ${summary.latestDeadline}`,
+      href: '/timeline',
+      cta: '查看',
+    })
+  }
+  const latest = events[0]
+  if (latest) {
+    cards.push({
+      title: `第 ${summary.total} 件记录: ${eventTitle(latest)}`,
+      href: `/timeline/${latest.id}`,
+      cta: '详情',
+    })
+  }
+  while (cards.length < 3) {
+    const fallback = [
+      { title: '收到信件: 先拍照归档', href: '/photo', cta: '拍照' },
+      { title: '日文原文: 粘贴后归档', href: '/ask', cta: '解析' },
+      { title: '续签前: 做一次自查记录', href: '/check', cta: '自查' },
+    ][cards.length]
+    cards.push(fallback)
+  }
+  return cards.slice(0, 3)
 }
 
 function HomeAppBar() {
   return (
-    <header className="flex h-[72px] flex-shrink-0 items-center justify-between bg-canvas px-5">
-      <Logo size="lg" />
+    <header className="flex h-[58px] flex-shrink-0 items-center justify-between bg-canvas px-5">
+      <span className="text-[12px] font-medium text-ash">TEBIQ</span>
       <Link
         href="/my/reminders"
         aria-label="提醒中心"
-        className="flex h-11 w-11 items-center justify-center rounded-full border border-hairline bg-surface text-ink shadow-soft"
+        className="flex h-10 w-10 items-center justify-center rounded-full border border-hairline bg-surface text-ink shadow-soft"
       >
-        <Bell size={22} strokeWidth={1.7} />
+        <Bell size={20} strokeWidth={1.7} />
       </Link>
     </header>
   )
 }
 
-function buildLoggedInTodayCards(
-  context: NonNullable<Awaited<ReturnType<typeof buildUserContext>>>,
-  documentCount: number,
-): TodayCard[] {
-  const expiry = context.daysToVisaExpiry
-  const expiryText = expiry === null
-    ? '先补一下在留期限，提醒会更准。'
-    : expiry <= 30
-      ? `在留期限还剩 ${expiry} 天，先检查材料和日期。`
-      : `在留期限还剩 ${expiry} 天，可以提前整理材料。`
-  return [
-    {
-      title: '在留期限',
-      desc: expiryText,
-      href: '/my/profile',
-      icon: <ShieldCheck size={18} strokeWidth={1.55} />,
-    },
-    {
-      title: context.hasRecentQuizResult ? '自查已做过' : '先做一次自查',
-      desc: context.hasRecentQuizResult
-        ? '可以根据最近结果继续看材料和提醒。'
-        : '3 分钟先知道哪些地方要留意。',
-      href: '/check',
-      icon: <ClipboardCheck size={18} strokeWidth={1.55} />,
-    },
-    {
-      title: documentCount > 0 ? '最近文件' : '遇到日文文件',
-      desc: documentCount > 0
-        ? `你的档案里已有 ${documentCount} 份识别记录。`
-        : '拍一张或粘贴文字，先看懂重点。',
-      href: documentCount > 0 ? '/my/archive' : '/photo',
-      icon: <Camera size={18} strokeWidth={1.55} />,
-    },
-  ]
+function ArchiveStatusCard({
+  user,
+  summary,
+  daysToExpiry,
+}: {
+  user: Member | null
+  summary: TimelineSummary
+  daysToExpiry: number | null
+}) {
+  const retention = user?.archiveRetentionUntil ?? null
+  const retentionDays = daysUntilJst(retention)
+  return (
+    <section className="mt-4 rounded-card border border-hairline bg-surface px-4 py-4 shadow-card">
+      <div className="flex items-center justify-between gap-3">
+        <div>
+          <h1 className="text-[17px] font-semibold leading-snug text-ink">档案状态</h1>
+          <p className="mt-1 text-[11.5px] leading-[1.6] text-ash">
+            {user
+              ? `签证 ${user.visaType ?? '未填'} / 续签 ${daysToExpiry === null ? '未填' : `${daysToExpiry} 天后`}`
+              : '匿名档案保留 30 天 / 注册后永久保留'}
+          </p>
+        </div>
+        <Link href="/timeline" className="flex items-center text-[11px] font-medium text-ink">
+          时间线 <ChevronRight size={13} strokeWidth={1.55} />
+        </Link>
+      </div>
+      <div className="mt-4 grid grid-cols-3 gap-2">
+        <Metric label="文书" value={summary.documents} />
+        <Metric label="自查" value={summary.selfChecks} />
+        <Metric label="记录" value={summary.total} />
+      </div>
+      {retentionDays !== null && retentionDays <= 7 && (
+        <p className="mt-3 rounded-[10px] bg-cool-blue px-3 py-2 text-[11.5px] leading-[1.6] text-ink">
+          档案保留还剩 {Math.max(0, retentionDays)} 天。开通年度保留后恢复完整时间线。
+        </p>
+      )}
+    </section>
+  )
 }
 
-function buildDefaultTodayCards(): TodayCard[] {
-  return [
-    {
-      title: '收到市役所信件？',
-      desc: '拍一张，先看懂期限、金额和处理步骤。',
-      href: '/photo',
-      icon: <Camera size={18} strokeWidth={1.55} />,
-    },
-    {
-      title: '日文邮件看不懂？',
-      desc: '粘贴原文，用中文拆出重点。',
-      href: '/ask',
-      icon: <Languages size={18} strokeWidth={1.55} />,
-    },
-    {
-      title: '准备续签？',
-      desc: '先做一次自查，知道哪里要留意。',
-      href: '/check',
-      icon: <ClipboardCheck size={18} strokeWidth={1.55} />,
-    },
-  ]
+function Metric({ label, value }: { label: string; value: number }) {
+  return (
+    <div className="rounded-[12px] border border-hairline bg-canvas px-3 py-2.5">
+      <div className="text-[22px] font-semibold leading-none text-ink">{value}</div>
+      <div className="mt-1 text-[10.5px] text-ash">{label}</div>
+    </div>
+  )
 }
 
-function TodayCard({ title, desc, href, icon }: TodayCard) {
+function FocusCard({ title, href, cta }: FocusCard) {
   return (
     <Link
       href={href}
-      className="flex min-h-[142px] w-[78%] max-w-[290px] flex-shrink-0 snap-start flex-col rounded-card border border-hairline bg-surface px-4 py-3.5 shadow-card transition active:translate-y-px"
+      className="flex min-h-[52px] items-center gap-3 rounded-card border border-hairline bg-surface px-4 py-3 shadow-card active:translate-y-px"
     >
-      <span className="flex items-center gap-2">
-        <span className="flex h-9 w-9 items-center justify-center rounded-[12px] bg-accent-2 text-ink">
-          {icon}
-        </span>
-        <span className="text-[14px] font-medium leading-snug text-ink">{title}</span>
-      </span>
-      <span className="mt-3 block flex-1 text-[12px] leading-[1.65] text-slate">{desc}</span>
-      <span className="mt-3 flex justify-end text-[11.5px] font-medium text-ink">
-        查看 <ChevronRight size={13} strokeWidth={1.55} />
+      <span className="min-w-0 flex-1 truncate text-[13px] font-medium text-ink">{title}</span>
+      <span className="flex items-center text-[11px] text-ash">
+        {cta}<ChevronRight size={13} strokeWidth={1.55} />
       </span>
     </Link>
   )
@@ -274,29 +329,20 @@ function ToolCard({
   icon: ReactNode
   eventName?: EventName
 }) {
-  const className =
-    'min-h-[124px] rounded-card border border-hairline bg-surface px-3.5 py-3.5 shadow-card transition active:translate-y-px'
+  const className = 'min-h-[104px] rounded-card border border-hairline bg-surface px-3.5 py-3.5 shadow-card transition active:translate-y-px'
   const inner = (
     <>
-      <span className="flex h-10 w-10 items-center justify-center rounded-[13px] bg-accent-2 text-ink">
+      <span className="flex h-9 w-9 items-center justify-center rounded-[12px] bg-accent-2 text-ink">
         {icon}
       </span>
-      <span className="mt-3 block text-[14px] font-medium leading-snug text-ink">{title}</span>
-      <span className="mt-1 block text-[11px] leading-[1.55] text-ash">{desc}</span>
+      <span className="mt-3 block text-[13.5px] font-medium leading-snug text-ink">{title}</span>
+      <span className="mt-1 block text-[10.5px] leading-[1.55] text-ash">{desc}</span>
     </>
   )
   if (eventName) {
-    return (
-      <TrackedLink href={href} eventName={eventName} className={className}>
-        {inner}
-      </TrackedLink>
-    )
+    return <TrackedLink href={href} eventName={eventName} className={className}>{inner}</TrackedLink>
   }
-  return (
-    <Link href={href} className={className}>
-      {inner}
-    </Link>
-  )
+  return <Link href={href} className={className}>{inner}</Link>
 }
 
 function SectionTitle({
@@ -319,31 +365,4 @@ function SectionTitle({
       )}
     </div>
   )
-}
-
-function TrustStrip() {
-  return (
-    <section className="mt-4 grid grid-cols-2 gap-2">
-      <TrustChip icon={<Database size={15} strokeWidth={1.55} />} title="数据在日本境内" />
-      <TrustChip icon={<ShieldCheck size={15} strokeWidth={1.55} />} title="信息仅供参考" />
-    </section>
-  )
-}
-
-function TrustChip({ icon, title }: { icon: ReactNode; title: string }) {
-  return (
-    <div className="flex items-center gap-2 rounded-[14px] border border-hairline bg-surface/76 px-3 py-2.5 shadow-soft">
-      <span className="flex h-7 w-7 items-center justify-center rounded-[9px] bg-cool-blue text-ink">
-        {icon}
-      </span>
-      <span className="text-[11.5px] font-medium leading-snug text-ink">{title}</span>
-    </div>
-  )
-}
-
-function formatDate(date: Date): string {
-  const y = date.getFullYear()
-  const m = String(date.getMonth() + 1).padStart(2, '0')
-  const d = String(date.getDate()).padStart(2, '0')
-  return `${y}/${m}/${d}`
 }

@@ -7,6 +7,8 @@ const routes = [
   '/visa-select',
   '/tools',
   '/ask',
+  '/timeline',
+  '/pricing',
   '/check',
   '/check/select',
   '/check/gijinkoku',

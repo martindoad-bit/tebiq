@@ -1,11 +1,12 @@
 import { and, eq, isNull } from 'drizzle-orm'
 import { db } from '@/lib/db'
-import { documents, events, members, quizResults } from '@/lib/db/schema'
+import { documents, events, members, quizResults, timelineEvents } from '@/lib/db/schema'
 
 export interface SessionDataMigrationResult {
   documents: number
   quizResults: number
   events: number
+  timelineEvents: number
 }
 
 async function getOwnerMemberId(familyId: string): Promise<string | null> {
@@ -21,7 +22,7 @@ export async function migrateSessionDataToFamily(
   sessionId: string | null | undefined,
   familyId: string,
 ): Promise<SessionDataMigrationResult> {
-  if (!sessionId) return { documents: 0, quizResults: 0, events: 0 }
+  if (!sessionId) return { documents: 0, quizResults: 0, events: 0, timelineEvents: 0 }
 
   const memberId = await getOwnerMemberId(familyId)
   const migratedDocuments = await db
@@ -44,9 +45,18 @@ export async function migrateSessionDataToFamily(
     .where(and(eq(events.sessionId, sessionId), isNull(events.familyId)))
     .returning({ id: events.id })
 
+  const migratedTimelineEvents = memberId
+    ? await db
+        .update(timelineEvents)
+        .set({ memberId })
+        .where(and(eq(timelineEvents.sessionId, sessionId), isNull(timelineEvents.memberId)))
+        .returning({ id: timelineEvents.id })
+    : []
+
   return {
     documents: migratedDocuments.length,
     quizResults: migratedQuizResults.length,
     events: migratedEvents.length,
+    timelineEvents: migratedTimelineEvents.length,
   }
 }

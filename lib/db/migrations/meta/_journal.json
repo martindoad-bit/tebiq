@@ -92,6 +92,13 @@
       "when": 1777370469171,
       "tag": "0012_green_reavers",
       "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1777376573208,
+      "tag": "0013_hard_kate_bishop",
+      "breakpoints": true
     }
   ]
 }

@@ -4,7 +4,9 @@ import { getCurrentUser } from '@/lib/auth/session'
 import { judge, QUESTIONS, type AnsweredItem } from '@/lib/check/questions/gijinkoku'
 import { buildSummary } from '@/lib/check/summary'
 import { createQuizResult } from '@/lib/db/queries/quizResults'
+import { createTimelineEvent, findRelatedTimelineEvents } from '@/lib/db/queries/timeline'
 import { visaTypeEnum } from '@/lib/db/schema'
+import { buildSelfCheckTimelineEvent, formatTimelineAssociation } from '@/lib/timeline/builders'
 
 export const dynamic = 'force-dynamic'
 
@@ -51,6 +53,20 @@ export async function POST(req: Request) {
         notes: summary,
       },
     })
+    const timelineEvent = await createTimelineEvent(buildSelfCheckTimelineEvent({
+      memberId: user?.id ?? null,
+      sessionId,
+      quizResultId: record.id,
+      visaType: record.visaType,
+      resultColor: record.resultColor,
+      summary: record.summary as unknown as Record<string, unknown>,
+    }))
+    const relatedEvents = await findRelatedTimelineEvents({
+      owner: { memberId: user?.id ?? null, sessionId },
+      docType: `${record.visaType} 续签自查`,
+      excludeId: timelineEvent.id,
+      limit: 3,
+    })
 
     // Avoid lint warning for unused QUESTIONS import (used in older summary path)
     void QUESTIONS
@@ -67,6 +83,10 @@ export async function POST(req: Request) {
         answers: Object.fromEntries(
           Object.entries(answers).map(([k, v]) => [k, v > 0]),
         ),
+      },
+      timeline: {
+        eventId: timelineEvent.id,
+        relatedEvents: relatedEvents.map(formatTimelineAssociation),
       },
     })
   } catch {

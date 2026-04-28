@@ -83,12 +83,12 @@ export default function DownloadPackage({ visaType = 'gijinkoku' }: { visaType?:
         disabled={busy}
         className="w-full min-h-[52px] bg-primary hover:bg-primary-hover disabled:opacity-60 text-title font-bold rounded-xl text-base transition-all"
       >
-        {busy ? '生成中…可能需要 5-10 秒' : '¥380 獲取完整材料包'}
+        {busy ? '生成中' : '生成完整材料清单'}
       </button>
       <p className="text-center text-muted text-xs mt-2">
         {busy
-          ? '正在为你定制材料包'
-          : '一次支付、立即下载 · 付款安全由 Stripe 保障'}
+          ? '正在生成'
+          : '需要年度档案保留权限'}
       </p>
       {error && (
         <p className="text-center text-[#DC2626] text-xs mt-2">{error}</p>
@@ -162,7 +162,7 @@ function renderHtml(data: GenerateResponse): string {
                 <div><dt>大概费用</dt><dd>${esc(m.cost)}</dd></div>
                 <div><dt>可在线办理</dt><dd>${esc(m.online)}</dd></div>
               </dl>
-              <p class="pitfall">⚠ 常见踩坑：${esc(m.pitfall)}</p>
+              <p class="pitfall">常见问题：${esc(m.pitfall)}</p>
             </article>`,
           )
           .join('')}
