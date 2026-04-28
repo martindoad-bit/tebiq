@@ -1,36 +1,54 @@
 import { createHash } from 'crypto'
 import { z } from 'zod'
-import type { PhotoRecognitionResult, Urgency } from './types'
+import type { PhotoRecognitionResult } from './types'
+import type { PhotoUserContext } from './user-context'
 
 export const MAX_PHOTO_BYTES = 10 * 1024 * 1024
 
-const DEFAULT_MODEL_ID = 'anthropic.claude-sonnet-4-5-20250929-v1:0'
+const DEFAULT_MODEL_ID = 'jp.anthropic.claude-sonnet-4-6'
 const DEFAULT_REGION = 'ap-northeast-1'
 
-const ACCEPTED_MEDIA_TYPES = new Set([
-  'image/jpeg',
-  'image/png',
-  'image/heic',
-  'image/heif',
-])
+const GENERAL_ACTIONS = [
+  '在期限内打开并阅读完整内容',
+  '若有金额,在期限内缴纳',
+  '不明白时建议咨询行政書士',
+  '持本通知前往居住地市役所窗口办理(以市役所公式为准)',
+  '保留原件备查',
+  '若是信封,请打开后再次拍摄获取详细信息',
+] as const
+
+type GeneralAction = (typeof GENERAL_ACTIONS)[number]
+
+type BedrockImageMediaType = 'image/jpeg' | 'image/png' | 'image/gif' | 'image/webp'
+
+type DetectedImage =
+  | { kind: 'jpeg'; mediaType: 'image/jpeg' }
+  | { kind: 'png'; mediaType: 'image/png' }
+  | { kind: 'webp'; mediaType: 'image/webp' }
+  | { kind: 'heic'; mediaType: 'image/heic' }
+  | { kind: 'heif'; mediaType: 'image/heif' }
+  | { kind: 'unknown'; mediaType: 'application/octet-stream' }
+
+const nullableTrimmed = z.preprocess(value => {
+  if (value === null || value === undefined) return null
+  const text = String(value).trim()
+  return text ? text : null
+}, z.string().max(120).nullable())
 
 const recognitionSchema = z.object({
-  docType: z.string().trim().min(1).max(80),
-  issuer: z.string().trim().min(1).max(80),
-  urgency: z.enum(['critical', 'high', 'normal', 'ignorable']),
-  deadline: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).nullable(),
-  deadlineRemainingDays: z.number().int().nullable().optional(),
-  amount: z.number().int().nonnegative().nullable(),
-  summary: z.string().trim().min(1).max(180),
-  actions: z.array(z.string().trim().min(1).max(80)).min(1).max(5),
-  consequences: z.string().trim().min(1).max(240),
-  detail: z.object({
-    sections: z.array(z.object({
-      heading: z.string().trim().min(1).max(40),
-      body: z.string().trim().min(1).max(260),
-      bullets: z.array(z.string().trim().min(1).max(120)).max(5).optional(),
-    })).min(1).max(5),
-  }),
+  docType: nullableTrimmed,
+  issuer: nullableTrimmed,
+  isEnvelope: z.boolean(),
+  recognitionConfidence: z.enum(['high', 'medium', 'low', 'envelope_only']),
+  deadline: z.preprocess(value => {
+    if (value === null || value === undefined || value === '') return null
+    return String(value).trim()
+  }, z.string().regex(/^\d{4}-\d{2}-\d{2}$/).nullable()),
+  amount: nullableTrimmed,
+  summary: z.string().trim().min(1).max(260),
+  generalActions: z.array(z.string().trim().min(1).max(80)).min(1).max(6),
+  isUrgent: z.boolean(),
+  needsExpertAdvice: z.boolean(),
 })
 
 export class PhotoRecognitionError extends Error {
@@ -47,85 +65,145 @@ export interface PhotoRecognitionInput {
   bytes: Buffer
   mediaType: string
   filename?: string
+  userContext?: PhotoUserContext | null
 }
 
 export interface PhotoRecognitionOutput {
   result: PhotoRecognitionResult
   imageHash: string
   modelId: string
+  mediaType: BedrockImageMediaType
+  userContextInjected: boolean
 }
 
-type BedrockImageMediaType = 'image/jpeg' | 'image/png' | 'image/gif' | 'image/webp'
-
-function buildSystemPrompt() {
-  // 第 6 天专业人士（行政書士 + 入管出身）反馈后重写：
-  // 行政書士法第 21 条要求无资格者不得提供「对在留资格的影响」判断。
-  // Prompt 严格约束模型只描述文书自身，不做签证 / 金额 / 审查时间的预测。
-  return `你是 TEBIQ 的日本生活手续文书识别助手。只处理日本生活、税金、年金、入管、保险、银行、不动产相关文书图片。
-
-输出规则：
-1. 只输出 JSON，不要 Markdown，不要解释。
-2. 字段必须完全符合：docType, issuer, urgency, deadline, deadlineRemainingDays, amount, summary, actions, consequences, detail.sections。
-3. 用户母语是中文；UI 操作和说明用简体中文。现实窗口、政府文件、专业概念保留日文原文，例如 在留カード、市役所、住民税、年金、確定申告、入国管理局。
-4. 文案克制、具体、信息密度高。不要夸张，不要恐吓，不要使用"看不懂怕出事"一类戏剧化表达。
-
-5. urgency **仅基于文书自身记载的期限到今天的天数**判断，不要基于「对在留资格的影响」或「会不会影响续签」判断：
-   - critical：已过期、或文书要求今天/3 天内处理。
-   - high：4-30 天内有明确期限或金额需要处理。
-   - normal：有信息价值但无明确截止。
-   - ignorable：广告、通知副本、无需行动。
-   如果文书没有写期限，默认 normal，不要假设紧急程度。
-
-6. deadline 用 YYYY-MM-DD；看不出具体日期填 null。amount 用日元整数（**只抄文书上写的数字**，不要做换算或估算）；看不出填 null。
-
-7. actions **只能写文书自身要求的具体行动**（缴纳、提交、回信、携带证件去某窗口）。**禁止**输出以下内容：
-   - "建议联系行政書士 / 律师 / 书士确认" 之类主动转介
-   - "对你续签的影响" / "会不会影响审查" / "续签时需要" 之类的签证判断
-   - 任何金额计算结论（住民税、年金额度各区差异大，只抄文书写的数字）
-   - 任何入管审查时间预测（具体审查多久完全因案而异）
-   - 任何法律意见或资格判断
-   写 2-4 条具体下一步即可。
-
-8. consequences 只描述文书自身写的后果（滞纳金、催告、停止给付）。**不要扩展**到「会影响续签 / 永住 / 归化」。如果文书没写后果，简短中性表达即可。
-
-9. 如果文书内容里提到了在留资格 / 签证：直接抄文书原文（例如在 detail 里），**不要做任何评价或建议**。
-
-10. detail.sections 写 2-4 段，适合手机阅读。每段如实复述文书原文要点；不加未在文书出现的引申。
-
-11. **市役所相关行动**：行政手续在各市区町村存在差异。涉及市役所的 actions 措辞用「持本通知前往**居住地**市役所窗口办理（具体流程以市役所公式为准）」，不要写「去 XX 市役所办」。
-
-12. 如果图片模糊、不是文书或无法可靠识别，也必须返回同一 JSON 结构：docType 写"无法确认的文书"，issuer 写"不明"，urgency 写 normal，并给出重新拍摄 / 确认来源的行动建议。`
+interface PreparedPhotoInput extends PhotoRecognitionInput {
+  mediaType: BedrockImageMediaType
 }
 
-function buildUserPrompt(filename?: string) {
-  const name = filename ? `文件名：${filename}\n` : ''
-  return `${name}请识别这张图片里的日本文书，按系统要求返回 JSON。今天按服务器当前日期理解。`
+export function detectImageFormat(bytes: Buffer): DetectedImage {
+  if (bytes.length >= 2 && bytes[0] === 0xff && bytes[1] === 0xd8) {
+    return { kind: 'jpeg', mediaType: 'image/jpeg' }
+  }
+  if (
+    bytes.length >= 8 &&
+    bytes[0] === 0x89 &&
+    bytes[1] === 0x50 &&
+    bytes[2] === 0x4e &&
+    bytes[3] === 0x47 &&
+    bytes[4] === 0x0d &&
+    bytes[5] === 0x0a &&
+    bytes[6] === 0x1a &&
+    bytes[7] === 0x0a
+  ) {
+    return { kind: 'png', mediaType: 'image/png' }
+  }
+  if (
+    bytes.length >= 12 &&
+    bytes.subarray(0, 4).toString('ascii') === 'RIFF' &&
+    bytes.subarray(8, 12).toString('ascii') === 'WEBP'
+  ) {
+    return { kind: 'webp', mediaType: 'image/webp' }
+  }
+  if (bytes.length >= 12 && bytes.subarray(4, 8).toString('ascii') === 'ftyp') {
+    const brand = bytes.subarray(8, 12).toString('ascii').toLowerCase()
+    if (brand === 'heic' || brand === 'mif1' || brand === 'msf1') {
+      return { kind: 'heic', mediaType: 'image/heic' }
+    }
+    if (brand === 'heif') return { kind: 'heif', mediaType: 'image/heif' }
+  }
+  return { kind: 'unknown', mediaType: 'application/octet-stream' }
 }
 
-function normalizeMediaType(mediaType: string, filename?: string) {
-  const lower = mediaType.toLowerCase().split(';')[0]?.trim()
-  if (lower && ACCEPTED_MEDIA_TYPES.has(lower)) return lower
-
-  const ext = filename?.toLowerCase().split('.').pop()
-  if (ext === 'jpg' || ext === 'jpeg') return 'image/jpeg'
-  if (ext === 'png') return 'image/png'
-  if (ext === 'heic') return 'image/heic'
-  if (ext === 'heif') return 'image/heif'
-  return lower || 'application/octet-stream'
+async function convertHeicToJpeg(bytes: Buffer): Promise<Buffer> {
+  try {
+    const mod = await import('heic-convert')
+    const output = await mod.default({
+      buffer: bytes,
+      format: 'JPEG',
+      quality: 0.9,
+    })
+    return Buffer.from(output)
+  } catch {
+    throw new PhotoRecognitionError(
+      'unsupported_type',
+      '图片格式暂时不支持。若是微信里的图片，请尝试导出原图或重新截图后上传。',
+    )
+  }
 }
 
-export function validatePhotoInput(input: PhotoRecognitionInput): PhotoRecognitionInput {
+export async function validatePhotoInput(input: PhotoRecognitionInput): Promise<PreparedPhotoInput> {
   if (!input.bytes.length) {
     throw new PhotoRecognitionError('bad_image', '请上传清晰的文书图片')
   }
   if (input.bytes.byteLength > MAX_PHOTO_BYTES) {
     throw new PhotoRecognitionError('too_large', '图片超过 10MB，请压缩后再上传')
   }
-  const mediaType = normalizeMediaType(input.mediaType, input.filename)
-  if (!ACCEPTED_MEDIA_TYPES.has(mediaType)) {
-    throw new PhotoRecognitionError('unsupported_type', '请上传 JPEG、PNG 或 HEIC 图片')
+
+  const detected = detectImageFormat(input.bytes)
+  if (detected.kind === 'jpeg' || detected.kind === 'png' || detected.kind === 'webp') {
+    return { ...input, mediaType: detected.mediaType }
   }
-  return { ...input, mediaType }
+  if (detected.kind === 'heic' || detected.kind === 'heif') {
+    const converted = await convertHeicToJpeg(input.bytes)
+    return { ...input, bytes: converted, mediaType: 'image/jpeg' }
+  }
+
+  throw new PhotoRecognitionError(
+    'unsupported_type',
+    '图片格式不支持。很少见的格式或微信转发图片请尝试导出原图后重新上传。',
+  )
+}
+
+function buildSystemPrompt() {
+  return `你是 TEBIQ 的日本生活手续文书识别助手。你只做文书识别和客观整理，不提供行政指导、法律意见或资格判断。
+
+识别范围：日本政府、行政机关、税务、社会保险、年金、入管、市区町村、公共服务、银行、不动产、学校、雇主发出的日本生活相关文书。不要因为文书类型不在常见白名单内就返回无法识别；只要能读到标题、机构、金额、日期或正文，就按客观内容识别。
+
+输出规则：
+1. 只输出 JSON，不要 Markdown，不要解释。
+2. 字段必须完全符合：docType, issuer, isEnvelope, recognitionConfidence, deadline, amount, summary, generalActions, isUrgent, needsExpertAdvice。
+3. docType / issuer / deadline / amount 必须严格基于图片中文字。看不出就填 null。deadline 只在文书内有明确日期时填 YYYY-MM-DD。amount 只抄文书内明确金额，保留原文格式，不换算、不估算。
+4. isEnvelope=true 仅用于只看到信封外面、没有正文内容的情况。信封可以识别 issuer/docType，但 recognitionConfidence 必须是 envelope_only，generalActions 必须包含「若是信封,请打开后再次拍摄获取详细信息」。
+5. recognitionConfidence：high=标题/机构/正文清楚；medium=主要信息可读但部分不清；low=只能读出少量信息；envelope_only=只拍到信封。
+6. summary 用简体中文一句话描述客观事实，例如「这是 X 发出的 Y 文书」。不要评价风险，不要说对用户有什么影响。
+7. generalActions 只能从以下列表选择，逐字输出，不要自创：
+   - 在期限内打开并阅读完整内容
+   - 若有金额,在期限内缴纳
+   - 不明白时建议咨询行政書士
+   - 持本通知前往居住地市役所窗口办理(以市役所公式为准)
+   - 保留原件备查
+   - 若是信封,请打开后再次拍摄获取详细信息
+8. isUrgent 只做简单判断：deadline 存在且距离今天 <= 7 天时为 true；其他都是 false。
+9. needsExpertAdvice 只做简单分类：涉及法律、税务、签证/在留、行政决定或必须判断个人资格时为 true；日常账单、普通通知可为 false。
+10. 严禁输出「对你续签/永住/在留資格的影响」。严禁输出具体金额预测、审查时间预测、办理成败判断。严禁输出「建议你 X 月 X 日做 Y」这类行政指导。
+11. 如果图片模糊或不是日本生活相关文书，也仍返回 JSON：docType=null, issuer=null, isEnvelope=false, recognitionConfidence=low, deadline=null, amount=null, summary 说明无法可靠识别，generalActions 选择「保留原件备查」。`
+}
+
+function formatUserContext(userContext?: PhotoUserContext | null): string {
+  if (!userContext) return ''
+  const recentDocs = userContext.recentDocuments
+    .map(doc => `${doc.issuer ?? '机构不明'} / ${doc.docType}`)
+    .join('；') || '无'
+  return `
+
+用户基础上下文（仅用于相关性判断，不能用于行政建议）：
+- 在留资格：${userContext.visaType ?? '未填写'}
+- 在留期限剩余天数：${userContext.daysToVisaExpiry ?? '未填写'}
+- 最近是否做过自查：${userContext.hasRecentQuizResult ? '是' : '否'}
+- 过去 6 个月拍过的文书类型：${userContext.recentDocumentTypes.join('、') || '无'}
+- 过去 6 个月同类文书线索：${recentDocs}
+
+严格限制：
+以下上下文仅用于判断本文书是否与用户相关。
+- 如果用户最近 6 个月拍过同机构的同类文书，在 summary 中提示「你之前已收到同机构的类似文书，请检查是否为同一事项的后续」。
+- 绝对不能基于用户上下文给出「对你续签/永住/在留資格的影响」判断。
+- 绝对不能基于用户上下文输出「你应该 / 你需要 / 建议你」等行政指导。
+只做相关性判断，不做行政建议。`
+}
+
+function buildUserPrompt(filename?: string, userContext?: PhotoUserContext | null) {
+  const name = filename ? `文件名：${filename}\n` : ''
+  return `${name}请识别这张图片里的日本生活相关文书，按系统要求返回 JSON。今天按服务器当前日期理解。${formatUserContext(userContext)}`
 }
 
 function textFromAnthropicContent(content: unknown): string {
@@ -168,56 +246,87 @@ function daysUntil(deadline: string | null) {
   return Math.ceil((target - todayJst) / 86_400_000)
 }
 
-function normalizeResult(parsed: z.infer<typeof recognitionSchema>): PhotoRecognitionResult {
+function normalizeAction(value: string): GeneralAction | null {
+  const normalized = value.trim().replace(/，/g, ',').replace(/（/g, '(').replace(/）/g, ')')
+  return GENERAL_ACTIONS.find(action => action === normalized) ?? null
+}
+
+function inferExpertAdvice(parsed: z.infer<typeof recognitionSchema>): boolean {
+  if (parsed.needsExpertAdvice) return true
+  const text = `${parsed.docType ?? ''} ${parsed.issuer ?? ''} ${parsed.summary}`
+  return /在留|入管|税|年金|保険|申告|市役所|区役所|行政|法律|許可|更新|永住|資格/.test(text)
+}
+
+function relatedContextHints(
+  parsed: z.infer<typeof recognitionSchema>,
+  userContext?: PhotoUserContext | null,
+): string[] {
+  if (!userContext || !parsed.docType || !parsed.issuer) return []
+  const compact = (value: string) => value.replace(/\s/g, '')
+  const docType = compact(parsed.docType)
+  const issuer = compact(parsed.issuer)
+  const hasSame = userContext.recentDocuments.some(doc => {
+    if (!doc.issuer) return false
+    return compact(doc.docType) === docType && compact(doc.issuer) === issuer
+  })
+  return hasSame
+    ? ['你之前已收到同机构的类似文书，请检查是否为同一事项的后续']
+    : []
+}
+
+function normalizeResult(
+  parsed: z.infer<typeof recognitionSchema>,
+  userContext?: PhotoUserContext | null,
+): PhotoRecognitionResult {
   const deadlineRemainingDays = daysUntil(parsed.deadline)
+  const actions = parsed.generalActions
+    .map(normalizeAction)
+    .filter((action): action is GeneralAction => Boolean(action))
+  const contextHints = relatedContextHints(parsed, userContext)
+  const summary = contextHints.length > 0 && !parsed.summary.includes(contextHints[0])
+    ? `${parsed.summary} ${contextHints[0]}。`
+    : parsed.summary
+
   return {
-    ...parsed,
-    urgency: parsed.urgency as Urgency,
+    docType: parsed.docType,
+    issuer: parsed.issuer,
+    isEnvelope: parsed.isEnvelope,
+    recognitionConfidence: parsed.isEnvelope ? 'envelope_only' : parsed.recognitionConfidence,
+    deadline: parsed.deadline,
     deadlineRemainingDays,
-    actions: parsed.actions.slice(0, 5),
-    detail: {
-      sections: parsed.detail.sections.map(section => ({
-        ...section,
-        bullets: section.bullets?.length ? section.bullets : undefined,
-      })),
-    },
+    amount: parsed.amount,
+    summary,
+    generalActions: actions.length > 0 ? actions.slice(0, 6) : ['保留原件备查'],
+    isUrgent: deadlineRemainingDays !== null && deadlineRemainingDays <= 7,
+    needsExpertAdvice: inferExpertAdvice(parsed),
+    ...(contextHints.length > 0 ? { contextHints } : {}),
   }
 }
 
 function fallbackRecognition(): PhotoRecognitionResult {
   return {
-    docType: '无法确认的文书',
-    issuer: '不明',
-    urgency: 'normal',
+    docType: null,
+    issuer: null,
+    isEnvelope: false,
+    recognitionConfidence: 'low',
     deadline: null,
     deadlineRemainingDays: null,
     amount: null,
     summary: '这张图片里的关键信息暂时无法可靠识别。',
-    actions: [
-      '重新拍摄整页，保持文字清晰且不要裁掉边角',
-      '确认是否有背面或第二页需要一起查看',
-      '如涉及在留期限或缴费期限，先按纸面日期自行确认',
-    ],
-    consequences: '识别不清时不建议直接按结果行动，避免漏看期限、金额或提交窗口。',
-    detail: {
-      sections: [
-        {
-          heading: '为什么没有识别出来',
-          body: '图片可能过暗、反光、文字太小，或不是 TEBIQ 当前支持的日本生活手续文书。',
-        },
-        {
-          heading: '建议怎么拍',
-          body: '把整张纸平放在明亮处，尽量让标题、发行机构、日期和金额都进入画面。',
-        },
-      ],
-    },
+    generalActions: ['保留原件备查'],
+    isUrgent: false,
+    needsExpertAdvice: false,
   }
+}
+
+export function shouldUseFallbackPage(result: PhotoRecognitionResult): boolean {
+  return !result.docType && !result.issuer && !result.isEnvelope
 }
 
 export async function recognizePhotoDocument(
   rawInput: PhotoRecognitionInput,
 ): Promise<PhotoRecognitionOutput> {
-  const input = validatePhotoInput(rawInput)
+  const input = await validatePhotoInput(rawInput)
   const imageHash = createHash('sha256').update(input.bytes).digest('hex')
 
   const awsKey = process.env.AWS_ACCESS_KEY_ID
@@ -237,7 +346,7 @@ export async function recognizePhotoDocument(
   try {
     const response = await client.messages.create({
       model: modelId,
-      max_tokens: 1800,
+      max_tokens: 1200,
       temperature: 0,
       system: buildSystemPrompt(),
       messages: [
@@ -248,14 +357,11 @@ export async function recognizePhotoDocument(
               type: 'image',
               source: {
                 type: 'base64',
-                // The Bedrock SDK type list currently omits HEIC/HEIF. Product accepts
-                // HEIC uploads and lets the service decide whether that region/model can
-                // process it; failures are mapped to the friendly fallback below.
-                media_type: input.mediaType as BedrockImageMediaType,
+                media_type: input.mediaType,
                 data: input.bytes.toString('base64'),
               },
             },
-            { type: 'text', text: buildUserPrompt(input.filename) },
+            { type: 'text', text: buildUserPrompt(input.filename, input.userContext) },
           ],
         },
       ],
@@ -265,9 +371,11 @@ export async function recognizePhotoDocument(
     const json = JSON.parse(extractJson(text)) as unknown
     const parsed = recognitionSchema.parse(json)
     return {
-      result: normalizeResult(parsed),
+      result: normalizeResult(parsed, input.userContext),
       imageHash,
       modelId,
+      mediaType: input.mediaType,
+      userContextInjected: Boolean(input.userContext),
     }
   } catch (error) {
     if (error instanceof z.ZodError || error instanceof SyntaxError) {
@@ -275,6 +383,8 @@ export async function recognizePhotoDocument(
         result: fallbackRecognition(),
         imageHash,
         modelId,
+        mediaType: input.mediaType,
+        userContextInjected: Boolean(input.userContext),
       }
     }
     throw new PhotoRecognitionError('service_unavailable', '拍照识别服务暂时不可用，请稍后再试')
