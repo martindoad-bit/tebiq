@@ -29,7 +29,33 @@ import type { LucideIcon } from 'lucide-react'
 import AppShell from '@/app/_components/v5/AppShell'
 import AppBar from '@/app/_components/v5/AppBar'
 import TabBar from '@/app/_components/v5/TabBar'
-import { CONCEPTS, type Concept } from '@/lib/knowledge/concepts'
+import { CONCEPTS } from '@/lib/knowledge/concepts'
+import { SEED_ARTICLES } from '@/lib/knowledge/seed-articles'
+
+interface Item {
+  id: string
+  title: string
+  content: string
+  reviewed: boolean
+  reviewerName: string | null
+}
+
+const ALL_ITEMS: Item[] = [
+  ...CONCEPTS.map((c) => ({
+    id: c.id,
+    title: c.title,
+    content: c.content,
+    reviewed: false,
+    reviewerName: null,
+  })),
+  ...SEED_ARTICLES.map((a) => ({
+    id: a.slug,
+    title: a.title,
+    content: a.body,
+    reviewed: !a.requires_shoshi_review && !!a.last_reviewed_by_name,
+    reviewerName: a.last_reviewed_by_name,
+  })),
+]
 
 interface Category {
   id: string
@@ -68,16 +94,16 @@ export default function KnowledgePage() {
   const [q, setQ] = useState('')
   const norm = q.trim().toLowerCase()
 
-  const filtered = useMemo<Concept[]>(() => {
-    if (!norm) return CONCEPTS
-    return CONCEPTS.filter(
-      c =>
-        c.title.toLowerCase().includes(norm) ||
-        c.content.toLowerCase().includes(norm),
+  const filtered = useMemo<Item[]>(() => {
+    if (!norm) return ALL_ITEMS
+    return ALL_ITEMS.filter(
+      it =>
+        it.title.toLowerCase().includes(norm) ||
+        it.content.toLowerCase().includes(norm),
     )
   }, [norm])
 
-  const popular = filtered.slice(0, 3)
+  const popular = filtered
 
   return (
     <AppShell appBar={<AppBar title="知识中心" />} tabBar={<TabBar />}>
@@ -135,7 +161,7 @@ export default function KnowledgePage() {
 
       <div className="mt-5 flex items-center justify-between">
         <h3 className="text-[12px] font-medium text-ink">
-          {norm ? `搜索结果（${filtered.length}）` : '热门文章'}
+          {norm ? `搜索结果（${filtered.length}）` : `全部文章（${ALL_ITEMS.length}）`}
         </h3>
         {norm && (
           <button
@@ -152,10 +178,10 @@ export default function KnowledgePage() {
         <EmptyState />
       ) : (
         <ul className="mt-3 flex flex-col gap-2.5">
-          {popular.map(c => (
-            <li key={c.id}>
+          {popular.map(it => (
+            <li key={it.id}>
               <Link
-                href={`/knowledge/${c.id}`}
+                href={`/knowledge/${it.id}`}
                 className="group flex items-start gap-3 rounded-card border border-hairline bg-surface px-3.5 py-3 shadow-card transition-colors hover:border-accent"
               >
                 <span className="mt-0.5 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-[10px] bg-canvas text-ink">
@@ -163,18 +189,24 @@ export default function KnowledgePage() {
                 </span>
                 <div className="min-w-0 flex-1">
                   <div className="text-[12.5px] font-medium leading-snug text-ink">
-                    {c.title}
+                    {it.title}
                   </div>
                   <p className="mt-1 line-clamp-2 text-[10.5px] leading-[1.55] text-ash">
-                    {previewContent(c.content)}
+                    {previewContent(it.content)}
                   </p>
                   <div className="mt-2 flex items-center gap-2">
                     <span className="text-[10px] leading-none text-ash">
-                      {placeholderDate(c.id)}
+                      {placeholderDate(it.id)}
                     </span>
-                    <span className="rounded-[8px] bg-accent-2 px-1.5 py-1 text-[10px] font-medium leading-none text-ink">
-                      待书士审核
-                    </span>
+                    {it.reviewed ? (
+                      <span className="rounded-[8px] bg-emerald-50 px-1.5 py-1 text-[10px] font-medium leading-none text-emerald-700">
+                        书士已审 · {it.reviewerName}
+                      </span>
+                    ) : (
+                      <span className="rounded-[8px] bg-accent-2 px-1.5 py-1 text-[10px] font-medium leading-none text-ink">
+                        待书士审核
+                      </span>
+                    )}
                   </div>
                 </div>
                 <ChevronRight
