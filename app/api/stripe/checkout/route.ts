@@ -10,6 +10,8 @@
  * Returns: { checkout_url }
  */
 import { ok, err, errors } from '@/lib/api/response'
+import { track } from '@/lib/analytics/track'
+import { EVENT } from '@/lib/analytics/events'
 import { getCurrentUser } from '@/lib/auth/session'
 import {
   getStripe,
@@ -62,6 +64,9 @@ export async function POST(req: Request) {
   const base = siteUrl()
   const success_url = `${base}/my?stripe=success&session_id={CHECKOUT_SESSION_ID}`
   const cancel_url = `${base}/?stripe=canceled`
+
+  // 埋点：客户启动结账（不论是否成功），admin 漏斗按 product 分桶
+  await track(EVENT.SUBSCRIBE_CHECKOUT_STARTED, { product, hasQuizResult: !!quizResultId })
 
   try {
     if (isSubscriptionProduct(product)) {

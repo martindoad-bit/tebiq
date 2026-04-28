@@ -1,244 +1,88 @@
+import type { Metadata } from 'next'
+import KnowledgeClient, {
+  KNOWLEDGE_CATEGORIES,
+  type KnowledgeCategoryId,
+} from './KnowledgeClient'
+import { listPublishedArticles } from '@/lib/db/queries/articles'
+import { plainTextFromMarkdown } from '@/lib/knowledge/markdown'
+import type { Article } from '@/lib/db/schema'
+
+export const dynamic = 'force-dynamic'
+
+interface SearchParams {
+  category?: string
+}
+
+function isValidCategory(id: string): id is KnowledgeCategoryId {
+  return KNOWLEDGE_CATEGORIES.some(c => c.id === id)
+}
+
 /**
- * /knowledge — 知识中心（v5 screen 13）
+ * 服务端按 category 过滤：检查 article.category 是否匹配任一 keyword 或
+ * 文本（title + body 前 1000 字）是否包含 keyword。
  *
- * 视觉跟 docs/prototype/v5-mockup.html 1921-1992。
- *
- * 当前知识源（lib/knowledge/concepts.ts）共 6 条续签相关条目。
- * 类别 grid 实质是 client 端的关键字过滤；点击任一格就把搜索框替换为该
- * 关键字，触发同一过滤逻辑。
- *
- * CN/JP 混排规则：年金 / 健康保険 等政府概念使用日文，但「签证 / 税务 /
- * 住房 / 育儿」等是产品分类，使用中文。
+ * 优先匹配 articles.category 字段；找不到时退回到全文搜索（兼容 Block 5
+ * 之前没有强制分类对齐的旧文章）。
  */
-'use client'
-import Link from 'next/link'
-import { useMemo, useState } from 'react'
-import {
-  BookOpenCheck,
-  ChevronRight,
-  FileText,
-  Receipt,
-  Clock,
-  Home,
-  Users,
-  Building2,
-  FileSearch,
-  Search as SearchIcon,
-} from 'lucide-react'
-import type { LucideIcon } from 'lucide-react'
-import AppShell from '@/app/_components/v5/AppShell'
-import AppBar from '@/app/_components/v5/AppBar'
-import TabBar from '@/app/_components/v5/TabBar'
-import { CONCEPTS } from '@/lib/knowledge/concepts'
-import { SEED_ARTICLES } from '@/lib/knowledge/seed-articles'
-
-interface Item {
-  id: string
-  title: string
-  content: string
-  reviewed: boolean
-  reviewerName: string | null
+function articlesForCategory(
+  articles: Article[],
+  categoryId: KnowledgeCategoryId,
+): Article[] {
+  const cat = KNOWLEDGE_CATEGORIES.find(c => c.id === categoryId)
+  if (!cat) return articles
+  const keywordsLower = cat.keywords.map(k => k.toLowerCase())
+  return articles.filter(a => {
+    const catLower = a.category.toLowerCase()
+    if (keywordsLower.some(k => catLower.includes(k))) return true
+    const text = `${a.title} ${plainTextFromMarkdown(a.bodyMarkdown).slice(0, 1000)}`.toLowerCase()
+    return keywordsLower.some(k => text.includes(k))
+  })
 }
 
-const ALL_ITEMS: Item[] = [
-  ...CONCEPTS.map((c) => ({
-    id: c.id,
-    title: c.title,
-    content: c.content,
-    reviewed: false,
-    reviewerName: null,
-  })),
-  ...SEED_ARTICLES.map((a) => ({
-    id: a.slug,
-    title: a.title,
-    content: a.body,
-    reviewed: !a.requires_shoshi_review && !!a.last_reviewed_by_name,
-    reviewerName: a.last_reviewed_by_name,
-  })),
-]
-
-interface Category {
-  id: string
-  label: string
-  icon: LucideIcon
-  /** 关键字（match concept.title 或 concept.content 任意一个） */
-  keywords: string[]
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams?: SearchParams
+}): Promise<Metadata> {
+  const cat = searchParams?.category
+  if (cat && isValidCategory(cat)) {
+    const c = KNOWLEDGE_CATEGORIES.find(x => x.id === cat)!
+    return {
+      title: `${c.label} - TEBIQ 知识中心`,
+      description: `TEBIQ 知识中心 ${c.label} 分类：${c.keywords.join(' / ')}。覆盖在日生活常见手续、政策与避坑指南。`,
+      alternates: { canonical: `/knowledge?category=${c.id}` },
+    }
+  }
+  return {
+    title: 'TEBIQ 知识中心',
+    description: 'TEBIQ 知识中心：在日签证、税务、年金、生活手续等常见概念的中文解释，按分类查询。',
+    alternates: { canonical: '/knowledge' },
+  }
 }
 
-const CATEGORIES: Category[] = [
-  { id: 'visa', label: '签证相关', icon: FileText, keywords: ['签证', '在留', '续签', '申请'] },
-  { id: 'tax', label: '税务相关', icon: Receipt, keywords: ['住民税', '所得税', '税', '納税'] },
-  { id: 'pension', label: '年金保険', icon: Clock, keywords: ['年金', '健康保険', '社保'] },
-  { id: 'life', label: '生活手续', icon: Home, keywords: ['住所', '搬家', '手续'] },
-  { id: 'kids', label: '育儿教育', icon: Users, keywords: ['子女', '育儿', '学校'] },
-  { id: 'house', label: '住房相关', icon: Building2, keywords: ['住房', '敷金', '礼金', '契約'] },
-]
-
-function fmtDate(d: Date): string {
-  const y = d.getFullYear()
-  const m = String(d.getMonth() + 1).padStart(2, '0')
-  const day = String(d.getDate()).padStart(2, '0')
-  return `${y}/${m}/${day}`
-}
-
-// 知识库条目本身没有日期字段，UI 上用一个稳定的占位日期（按 id hash 散布）
-function placeholderDate(id: string): string {
-  let seed = 0
-  for (let i = 0; i < id.length; i++) seed += id.charCodeAt(i)
-  const today = new Date()
-  today.setDate(today.getDate() - (seed % 60))
-  return fmtDate(today)
-}
-
-export default function KnowledgePage() {
-  const [q, setQ] = useState('')
-  const norm = q.trim().toLowerCase()
-
-  const filtered = useMemo<Item[]>(() => {
-    if (!norm) return ALL_ITEMS
-    return ALL_ITEMS.filter(
-      it =>
-        it.title.toLowerCase().includes(norm) ||
-        it.content.toLowerCase().includes(norm),
-    )
-  }, [norm])
-
-  const popular = filtered
+export default async function KnowledgePage({
+  searchParams,
+}: {
+  searchParams?: SearchParams
+}) {
+  const all = await listPublishedArticles()
+  const cat = searchParams?.category
+  const filtered = cat && isValidCategory(cat) ? articlesForCategory(all, cat) : all
+  const activeCategory = cat && isValidCategory(cat) ? cat : null
 
   return (
-    <AppShell appBar={<AppBar title="知识中心" />} tabBar={<TabBar />}>
-      <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-3.5 shadow-card">
-        <div className="flex items-start gap-3">
-          <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-[13px] bg-accent-2 text-ink">
-            <BookOpenCheck size={19} strokeWidth={1.55} />
-          </span>
-          <div>
-            <p className="text-[13px] font-medium leading-snug text-ink">
-              常见手续和在留概念
-            </p>
-            <p className="mt-1 text-[11px] leading-[1.55] text-ash">
-              先查清楚关键词，再决定是否需要进一步咨询。
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <div className="mt-3 flex items-center gap-2 rounded-[13px] border border-hairline bg-surface px-[14px] py-[10px] shadow-card">
-        <SearchIcon size={14} strokeWidth={1.55} className="text-haze flex-shrink-0" />
-        <input
-          type="search"
-          value={q}
-          onChange={e => setQ(e.target.value)}
-          placeholder="搜索你想了解的内容"
-          className="flex-1 bg-transparent text-[12px] text-ink outline-none placeholder:text-haze"
-        />
-      </div>
-
-      <div className="mt-4 grid grid-cols-3 gap-2.5">
-        {CATEGORIES.map(cat => {
-          const Icon = cat.icon
-          const onClick = () => setQ(cat.keywords[0])
-          const active = norm === cat.keywords[0].toLowerCase()
-          return (
-            <button
-              key={cat.id}
-              type="button"
-              onClick={onClick}
-              className={`flex min-h-[76px] flex-col items-center justify-center gap-2 rounded-card border px-[6px] py-3 shadow-card transition-colors ${
-                active
-                  ? 'border-accent bg-accent-2/35'
-                  : 'border-hairline bg-surface hover:border-accent'
-              }`}
-            >
-              <span className="flex h-8 w-8 items-center justify-center rounded-[11px] bg-accent-2 text-ink">
-                <Icon size={15} strokeWidth={1.55} />
-              </span>
-              <span className="text-[11px] leading-tight text-ink">{cat.label}</span>
-            </button>
-          )
-        })}
-      </div>
-
-      <div className="mt-5 flex items-center justify-between">
-        <h3 className="text-[12px] font-medium text-ink">
-          {norm ? `搜索结果（${filtered.length}）` : `全部文章（${ALL_ITEMS.length}）`}
-        </h3>
-        {norm && (
-          <button
-            type="button"
-            onClick={() => setQ('')}
-            className="text-[11px] text-ash hover:text-ink"
-          >
-            清除
-          </button>
-        )}
-      </div>
-
-      {popular.length === 0 ? (
-        <EmptyState />
-      ) : (
-        <ul className="mt-3 flex flex-col gap-2.5">
-          {popular.map(it => (
-            <li key={it.id}>
-              <Link
-                href={`/knowledge/${it.id}`}
-                className="group flex items-start gap-3 rounded-card border border-hairline bg-surface px-3.5 py-3 shadow-card transition-colors hover:border-accent"
-              >
-                <span className="mt-0.5 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-[10px] bg-canvas text-ink">
-                  <FileText size={15} strokeWidth={1.55} />
-                </span>
-                <div className="min-w-0 flex-1">
-                  <div className="text-[12.5px] font-medium leading-snug text-ink">
-                    {it.title}
-                  </div>
-                  <p className="mt-1 line-clamp-2 text-[10.5px] leading-[1.55] text-ash">
-                    {previewContent(it.content)}
-                  </p>
-                  <div className="mt-2 flex items-center gap-2">
-                    <span className="text-[10px] leading-none text-ash">
-                      {placeholderDate(it.id)}
-                    </span>
-                    {it.reviewed ? (
-                      <span className="rounded-[8px] bg-emerald-50 px-1.5 py-1 text-[10px] font-medium leading-none text-emerald-700">
-                        书士已审 · {it.reviewerName}
-                      </span>
-                    ) : (
-                      <span className="rounded-[8px] bg-accent-2 px-1.5 py-1 text-[10px] font-medium leading-none text-ink">
-                        待书士审核
-                      </span>
-                    )}
-                  </div>
-                </div>
-                <ChevronRight
-                  size={15}
-                  strokeWidth={1.55}
-                  className="mt-2 flex-shrink-0 text-haze transition-colors group-hover:text-ink"
-                />
-              </Link>
-            </li>
-          ))}
-        </ul>
-      )}
-    </AppShell>
-  )
-}
-
-function previewContent(content: string): string {
-  return content.replace(/\s+/g, ' ').replace('[待书士审核]', '').trim()
-}
-
-function EmptyState() {
-  return (
-    <div className="mt-3 rounded-card border border-hairline bg-surface px-4 py-8 text-center shadow-card">
-      <span className="mx-auto flex h-11 w-11 items-center justify-center rounded-[14px] bg-accent-2 text-ink">
-        <FileSearch size={20} strokeWidth={1.55} />
-      </span>
-      <p className="mt-3 text-[13px] font-medium leading-relaxed text-ink">
-        没有找到相关内容
-      </p>
-      <p className="mt-1.5 text-[11px] leading-relaxed text-ash">
-        换一个关键词，或从上方分类继续查找。
-      </p>
-    </div>
+    <KnowledgeClient
+      activeCategory={activeCategory}
+      articles={filtered.map(a => ({
+        id: a.id,
+        slug: a.slug,
+        title: a.title,
+        bodyMarkdown: a.bodyMarkdown,
+        category: a.category,
+        requiresShoshiReview: a.requiresShoshiReview,
+        lastReviewedBy: a.lastReviewedBy,
+        updatedAt: a.updatedAt.toISOString(),
+      }))}
+    />
   )
 }

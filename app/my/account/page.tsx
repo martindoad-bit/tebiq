@@ -19,6 +19,7 @@ import TabBar from '@/app/_components/v5/TabBar'
 import { getCurrentUser } from '@/lib/auth/session'
 import { getSubscriptionByFamilyId } from '@/lib/db/queries/subscriptions'
 import AccountListClient from './AccountListClient'
+import EmailEditClient from './EmailEditClient'
 
 export const dynamic = 'force-dynamic'
 
@@ -107,6 +108,11 @@ export default async function AccountPage() {
           </Link>
         )}
       </section>
+
+      <EmailEditClient
+        initialEmail={user.email}
+        initialVerifiedAt={user.emailVerifiedAt ? user.emailVerifiedAt.toISOString() : null}
+      />
 
       <div className="mt-4">
         <AccountListClient hasSubscription={!!sub} />

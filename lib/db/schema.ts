@@ -101,6 +101,12 @@ export const consultationStatusEnum = pgEnum('consultation_status', [
   'closed',
 ])
 
+export const articleStatusEnum = pgEnum('article_status', [
+  'draft',
+  'reviewing',
+  'published',
+])
+
 // Member profile enums (added Block 2)
 export const maritalStatusEnum = pgEnum('marital_status', [
   'single',
@@ -150,6 +156,8 @@ export const members = pgTable(
     isOwner: boolean('is_owner').notNull().default(false),
     name: varchar('name', { length: 80 }),
     phone: varchar('phone', { length: 20 }).notNull(),
+    email: varchar('email', { length: 255 }),
+    emailVerifiedAt: timestamp('email_verified_at', { withTimezone: true }),
     visaType: visaTypeEnum('visa_type'),
     visaExpiry: date('visa_expiry'),
 
@@ -315,6 +323,7 @@ export const invitations = pgTable(
   },
   t => ({
     codeUnique: uniqueIndex('invitations_code_unique').on(t.code),
+    inviteeUnique: uniqueIndex('invitations_invitee_member_unique').on(t.inviteeMemberId),
     inviterIdx: index('invitations_inviter_idx').on(t.inviterMemberId),
   }),
 )
@@ -338,6 +347,94 @@ export const consultations = pgTable(
   t => ({
     statusIdx: index('consultations_status_idx').on(t.status),
     createdIdx: index('consultations_created_at_idx').on(t.createdAt),
+  }),
+)
+
+// --- events (Block 6: minimal product analytics) ---
+//
+// Self-hosted, low-cardinality event log. PostHog / Vercel Analytics 都
+// 不引入 — 这张表负责支撑 admin KPI 看板和漏斗分析就够了。
+// 高 cardinality 的属性放 payload jsonb，不要新增列。
+export const events = pgTable(
+  'events',
+  {
+    id: idCol(),
+    eventName: varchar('event_name', { length: 64 }).notNull(),
+    familyId: varchar('family_id', { length: 24 }),
+    memberId: varchar('member_id', { length: 24 }),
+    sessionId: varchar('session_id', { length: 64 }),
+    payload: jsonb('payload').$type<Record<string, unknown>>(),
+    createdAt: createdAt(),
+  },
+  t => ({
+    nameCreatedIdx: index('events_name_created_idx').on(t.eventName, t.createdAt),
+    familyIdx: index('events_family_idx').on(t.familyId),
+    createdIdx: index('events_created_at_idx').on(t.createdAt),
+  }),
+)
+
+// --- error_logs (Block 6: server-side error capture) ---
+// 替换之前 KV 的 admin:error_log；让 /admin 可以做趋势 + 阈值告警。
+export const errorLogs = pgTable(
+  'error_logs',
+  {
+    id: idCol(),
+    code: varchar('code', { length: 64 }).notNull().default('unknown'),
+    message: text('message').notNull(),
+    stack: text('stack'),
+    path: varchar('path', { length: 200 }),
+    digest: varchar('digest', { length: 40 }),
+    /** 'warn' | 'error' | 'critical' — 高于阈值时 admin 看板高亮 */
+    severity: varchar('severity', { length: 16 }).notNull().default('error'),
+    payload: jsonb('payload').$type<Record<string, unknown>>(),
+    createdAt: createdAt(),
+  },
+  t => ({
+    createdIdx: index('error_logs_created_at_idx').on(t.createdAt),
+    severityIdx: index('error_logs_severity_idx').on(t.severity),
+  }),
+)
+
+// --- articles (knowledge content CMS) ---
+//
+// `history` jsonb (Block 7 T12)：保存最近 10 个版本快照，admin 编辑器
+// 可以「历史版本」+「一键恢复」。结构：
+//   [{ savedAt: ISO, title, bodyMarkdown, category, status }, ...]
+// 最新版本在数组末尾。超过 10 条由 DAL 截断。
+export interface ArticleHistoryEntry {
+  savedAt: string
+  title: string
+  bodyMarkdown: string
+  category: string
+  status: 'draft' | 'reviewing' | 'published'
+}
+
+export const articles = pgTable(
+  'articles',
+  {
+    id: idCol(),
+    title: varchar('title', { length: 160 }).notNull(),
+    slug: varchar('slug', { length: 200 }),
+    bodyMarkdown: text('body_markdown').notNull(),
+    category: varchar('category', { length: 64 }).notNull(),
+    status: articleStatusEnum('status').notNull().default('draft'),
+    requiresShoshiReview: boolean('requires_shoshi_review').notNull().default(true),
+    lastReviewedAt: timestamp('last_reviewed_at', { withTimezone: true }),
+    lastReviewedBy: varchar('last_reviewed_by', { length: 100 }),
+    // 行政書士法第 2 条要求审核人公开实名 + 登録番号。
+    // last_reviewed_by 留作内部短标识，公开侧用 _name + _registration 显示。
+    lastReviewedByName: varchar('last_reviewed_by_name', { length: 100 }),
+    lastReviewedByRegistration: varchar('last_reviewed_by_registration', { length: 50 }),
+    reviewNotes: text('review_notes'),
+    history: jsonb('history').$type<ArticleHistoryEntry[]>(),
+    createdAt: createdAt(),
+    updatedAt: updatedAt(),
+  },
+  t => ({
+    slugUnique: uniqueIndex('articles_slug_unique').on(t.slug),
+    statusIdx: index('articles_status_idx').on(t.status),
+    categoryIdx: index('articles_category_idx').on(t.category),
+    updatedIdx: index('articles_updated_at_idx').on(t.updatedAt),
   }),
 )
 
@@ -374,6 +471,31 @@ export const otpCodes = pgTable(
   }),
 )
 
+// --- email_verification_tokens (Block 7: 双重邮箱验证) ---
+//
+// 用于在 members.email_verified_at 之前确认邮箱真实可达。
+// token 是单次使用：consumedAt 写入后不可重复使用。
+// expiresAt 默认 24h（API 创建时设置）。
+export const emailVerificationTokens = pgTable(
+  'email_verification_tokens',
+  {
+    id: idCol(),
+    memberId: varchar('member_id', { length: 24 })
+      .notNull()
+      .references(() => members.id, { onDelete: 'cascade' }),
+    token: varchar('token', { length: 64 }).notNull(),
+    email: varchar('email', { length: 255 }).notNull(),
+    expiresAt: timestamp('expires_at', { withTimezone: true }).notNull(),
+    consumedAt: timestamp('consumed_at', { withTimezone: true }),
+    createdAt: createdAt(),
+  },
+  t => ({
+    tokenUnique: uniqueIndex('email_verification_tokens_token_unique').on(t.token),
+    memberIdx: index('email_verification_tokens_member_idx').on(t.memberId),
+    expiresIdx: index('email_verification_tokens_expires_idx').on(t.expiresAt),
+  }),
+)
+
 // --- 类型导出（DAL/前端用） ---
 export type Family = typeof families.$inferSelect
 export type NewFamily = typeof families.$inferInsert
@@ -393,10 +515,18 @@ export type Invitation = typeof invitations.$inferSelect
 export type NewInvitation = typeof invitations.$inferInsert
 export type Consultation = typeof consultations.$inferSelect
 export type NewConsultation = typeof consultations.$inferInsert
+export type EventRow = typeof events.$inferSelect
+export type NewEventRow = typeof events.$inferInsert
+export type ErrorLog = typeof errorLogs.$inferSelect
+export type NewErrorLog = typeof errorLogs.$inferInsert
+export type Article = typeof articles.$inferSelect
+export type NewArticle = typeof articles.$inferInsert
 export type Session = typeof sessions.$inferSelect
 export type NewSession = typeof sessions.$inferInsert
 export type OtpCode = typeof otpCodes.$inferSelect
 export type NewOtpCode = typeof otpCodes.$inferInsert
+export type EmailVerificationToken = typeof emailVerificationTokens.$inferSelect
+export type NewEmailVerificationToken = typeof emailVerificationTokens.$inferInsert
 
 // re-export sql for callers that want raw helpers without importing drizzle
 export { sql }

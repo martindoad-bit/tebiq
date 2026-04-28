@@ -13,6 +13,8 @@ export async function GET() {
   return NextResponse.json({
     profile: {
       name: user.name,
+      email: user.email,
+      emailVerifiedAt: user.emailVerifiedAt,
       visaType: user.visaType,
       visaExpiry: user.visaExpiry,
       nationality: user.nationality,

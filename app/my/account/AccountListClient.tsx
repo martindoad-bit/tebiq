@@ -63,10 +63,11 @@ const ROWS: Row[] = [
   },
   {
     id: 'invitations',
-    label: '邀请记录',
-    desc: '查看邀请和奖励状态',
+    label: '邀请朋友',
+    desc: '分享链接，双方各得 7 天体验',
     icon: CheckCircle,
-    kind: 'disabled',
+    kind: 'link',
+    href: '/invite',
     group: 'billing',
   },
   {

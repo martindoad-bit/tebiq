@@ -49,6 +49,8 @@ export type MemberProfilePatch = Partial<
   Pick<
     NewMember,
     | 'name'
+    | 'email'
+    | 'emailVerifiedAt'
     | 'visaType'
     | 'visaExpiry'
     | 'nationality'
@@ -69,6 +71,21 @@ export async function updateMemberProfile(
   const [row] = await db
     .update(members)
     .set(patch)
+    .where(eq(members.id, id))
+    .returning()
+  return row ?? null
+}
+
+export async function updateMemberEmail(
+  id: string,
+  email: string | null,
+): Promise<Member | null> {
+  const [row] = await db
+    .update(members)
+    .set({
+      email,
+      emailVerifiedAt: null,
+    })
     .where(eq(members.id, id))
     .returning()
   return row ?? null

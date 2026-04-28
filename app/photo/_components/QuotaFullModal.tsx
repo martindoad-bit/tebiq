@@ -9,13 +9,18 @@
  *  - onClose: 关闭回调（清除 query / 刷新 router）
  */
 'use client'
+import { useEffect } from 'react'
 import Link from 'next/link'
-import { Check, Crown } from 'lucide-react'
+import { Check, Crown, Gift } from 'lucide-react'
 import Button from '@/app/_components/v5/Button'
+import { trackClient } from '@/lib/analytics/client'
+import { EVENT } from '@/lib/analytics/events'
 
 interface Props {
   open: boolean
   onClose: () => void
+  /** 距下个月初剩余天数（用于提示用户配额重置） */
+  daysUntilReset?: number
 }
 
 const FEATURES = [
@@ -25,7 +30,15 @@ const FEATURES = [
   '家人共用账户',
 ] as const
 
-export default function QuotaFullModal({ open, onClose }: Props) {
+export default function QuotaFullModal({ open, onClose, daysUntilReset }: Props) {
+  useEffect(() => {
+    if (open) {
+      trackClient(EVENT.QUOTA_MODAL_VIEW, {
+        daysUntilReset: daysUntilReset ?? null,
+      })
+    }
+  }, [open, daysUntilReset])
+
   if (!open) return null
   return (
     <div
@@ -63,6 +76,11 @@ export default function QuotaFullModal({ open, onClose }: Props) {
         <p className="text-[11.5px] text-ash text-center mb-[14px]">
           开通会员，享受无限次拍照即懂
         </p>
+        {typeof daysUntilReset === 'number' && daysUntilReset > 0 && (
+          <p className="-mt-2.5 mb-3 text-center text-[10.5px] text-haze">
+            距下个月免费额度重置还有 {daysUntilReset} 天
+          </p>
+        )}
 
         <ul className="mb-4 space-y-1.5 rounded-card border border-hairline bg-surface/70 px-3.5 py-3 shadow-card">
           {FEATURES.map(f => (
@@ -81,12 +99,27 @@ export default function QuotaFullModal({ open, onClose }: Props) {
           ))}
         </ul>
 
-        <Link href="/subscribe" className="block">
+        <Link
+          href="/subscribe"
+          className="block"
+          onClick={() => trackClient(EVENT.QUOTA_MODAL_SUBSCRIBE_CLICK, {})}
+        >
           <Button>立即开通会员</Button>
+        </Link>
+        <Link
+          href="/invite"
+          onClick={() => trackClient(EVENT.QUOTA_MODAL_INVITE_CLICK, {})}
+          className="mt-2 flex min-h-[44px] w-full items-center justify-center gap-1.5 rounded-btn border border-[rgba(30,58,95,0.18)] bg-surface px-4 py-3 text-center text-[13px] font-medium text-ink transition-colors hover:bg-[rgba(30,58,95,0.04)]"
+        >
+          <Gift size={15} strokeWidth={1.55} />
+          邀请朋友 = 免费 7 天
         </Link>
         <button
           type="button"
-          onClick={onClose}
+          onClick={() => {
+            trackClient(EVENT.QUOTA_MODAL_DISMISS, {})
+            onClose()
+          }}
           className="block w-full text-center text-[12px] text-ash mt-3"
         >
           稍后再说

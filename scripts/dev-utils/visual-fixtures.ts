@@ -6,8 +6,8 @@
  * realistic data. It is not imported by the app and does not run in production.
  *
  * Usage:
- *   npx tsx scripts/dev-utils/visual-fixtures.ts seed
- *   npx tsx scripts/dev-utils/visual-fixtures.ts cleanup
+ *   npm run dev:visual-fixtures
+ *   npm run dev:visual-fixtures:cleanup
  */
 import { config as loadEnv } from 'dotenv'
 const localEnvPath = ['', 'env', 'local'].join('.')
@@ -31,13 +31,18 @@ const COOKIE_NAME = 'tebiq_user_session'
 const DIRECT_URL_KEY = 'DIRECT_URL'
 const DATABASE_URL_KEY = 'DATABASE_URL'
 
-const url = process.env[DIRECT_URL_KEY] ?? process.env[DATABASE_URL_KEY]
+const url = process.env[DATABASE_URL_KEY] ?? process.env[DIRECT_URL_KEY]
 if (!url) {
   console.error('Missing database connection URL in local environment.')
   process.exit(1)
 }
 
-const client = postgres(url, { max: 1, connect_timeout: 10, idle_timeout: 5 })
+const client = postgres(url, {
+  max: 1,
+  connect_timeout: 10,
+  idle_timeout: 5,
+  prepare: false,
+})
 const db = drizzle(client, { schema })
 
 type Scenario = 'empty' | 'data' | 'subscribed'
@@ -71,6 +76,7 @@ async function createMember(scenario: Scenario) {
       familyId: family.id,
       isOwner: true,
       phone: phones[scenario],
+      email: scenario === 'empty' ? null : `${scenario}@visual.tebiq.local`,
       name:
         scenario === 'subscribed'
           ? '张先生'
@@ -161,6 +167,60 @@ async function seedSubscribedScenario(familyId: string) {
   })
 }
 
+async function writeUrlsDoc(): Promise<void> {
+  const { writeFile, mkdir } = await import('node:fs/promises')
+  const path = await import('node:path')
+  const base = process.env.AUDIT_BASE_URL ?? 'http://localhost:3000'
+
+  const surfaces = [
+    '/my/archive',
+    '/my/reminders',
+    '/my/account',
+    '/knowledge',
+    '/photo',
+    '/check',
+    '/',
+  ]
+
+  const lines: string[] = []
+  lines.push(`# Dev fixture URLs`)
+  lines.push('')
+  lines.push(`生成时间：${new Date().toISOString()}`)
+  lines.push('')
+  lines.push(`先 \`npm run dev:visual-fixtures\` 写入 fixture，然后用以下 URL 直接登录三个场景。`)
+  lines.push(`URL 自动 set 一个 30 天 session cookie，可以在浏览器里直接打开。`)
+  lines.push('')
+  lines.push(`Cookie 名：\`${COOKIE_NAME}\` · Base：\`${base}\``)
+  lines.push('')
+  for (const scenario of Object.keys(phones) as Scenario[]) {
+    lines.push(`## ${scenario}`)
+    lines.push('')
+    const sessionUrl = `${base}/api/auth/dev-session?scenario=${scenario}`
+    lines.push(`首次激活（自动 set cookie + 跳到默认页）：`)
+    lines.push(``)
+    lines.push(`\`\`\``)
+    lines.push(sessionUrl)
+    lines.push(`\`\`\``)
+    lines.push('')
+    lines.push(`激活后可访问的 surface：`)
+    lines.push('')
+    for (const surface of surfaces) {
+      lines.push(`- ${base}/api/auth/dev-session?scenario=${scenario}&next=${encodeURIComponent(surface)}`)
+    }
+    lines.push('')
+  }
+  lines.push('## 清理')
+  lines.push('')
+  lines.push('```')
+  lines.push('npm run dev:visual-fixtures:cleanup')
+  lines.push('```')
+
+  const out = path.join(process.cwd(), 'docs/dev-fixtures-urls.md')
+  await mkdir(path.dirname(out), { recursive: true })
+  await writeFile(out, lines.join('\n'), 'utf8')
+  console.log(`URL 列表已写到 ${out}`)
+}
+
 async function seed() {
   await cleanup()
 
@@ -172,14 +232,15 @@ async function seed() {
   await seedDataScenario(subscribed.family.id, subscribed.member.id)
   await seedSubscribedScenario(subscribed.family.id)
 
-  const fixtures = { empty, data, subscribed }
+  void empty.session.id
+  void data.session.id
+  void subscribed.session.id
   console.log('Visual fixtures seeded.')
   console.log(`Cookie name: ${COOKIE_NAME}`)
-  for (const scenario of Object.keys(fixtures) as Scenario[]) {
-    console.log(
-      `${scenario}: phone=${phones[scenario]} session=${fixtures[scenario].session.id}`,
-    )
+  for (const scenario of Object.keys(phones) as Scenario[]) {
+    console.log(`${scenario}: http://localhost:3000/api/auth/dev-session?scenario=${scenario}`)
   }
+  await writeUrlsDoc()
 }
 
 async function main() {

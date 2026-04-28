@@ -1,4 +1,5 @@
-import Link from 'next/link'
+import TrackedLink from '@/app/_components/v5/TrackedLink'
+import { EVENT } from '@/lib/analytics/events'
 import type { Verdict } from '@/lib/check/questions/gijinkoku'
 
 function consultationHref(verdict: Verdict): string {
@@ -48,12 +49,14 @@ export default function CTABlock({
   return (
     <div className={WRAPPER_CLASS[verdict]}>
       <p className={descClass}>{description}</p>
-      <Link
+      <TrackedLink
         href={consultationHref(verdict)}
+        eventName={EVENT.CONSULTATION_CTA_CLICK}
+        payload={{ source: 'check_result', verdict }}
         className={`flex items-center justify-center w-full ${BUTTON_HEIGHT[verdict]} ${BUTTON_CLASS[verdict]} font-bold py-4 rounded-xl text-sm transition-all`}
       >
         {ctaLabel ?? DEFAULT_CTA_LABEL[verdict]}
-      </Link>
+      </TrackedLink>
     </div>
   )
 }

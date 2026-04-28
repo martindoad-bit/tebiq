@@ -36,6 +36,12 @@ function strOrNull(v: unknown, max: number): string | null {
   return s ? s.slice(0, max) : null
 }
 
+function emailOrNull(v: unknown): string | null {
+  const s = strOrNull(v, 255)
+  if (!s) return null
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s) ? s : null
+}
+
 function enumOrNull<T extends string>(v: unknown, allowed: readonly T[]): T | null {
   if (typeof v !== 'string') return null
   return (allowed as readonly string[]).includes(v) ? (v as T) : null
@@ -57,6 +63,10 @@ export async function POST(req: Request) {
   const patch: MemberProfilePatch = {}
 
   if ('name' in body) patch.name = strOrNull(body.name, 80)
+  if ('email' in body) {
+    patch.email = emailOrNull(body.email)
+    patch.emailVerifiedAt = null
+  }
   if ('visaType' in body) {
     const v = enumOrNull(body.visaType, VISA_TYPES)
     if (v !== null) patch.visaType = v

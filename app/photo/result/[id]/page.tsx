@@ -14,16 +14,20 @@
  *   - 查看详细说明 → /photo/result/[id]/detail
  *   - 保存到我的档案（client toast 后 router.back()）
  */
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 import Link from 'next/link'
 import type { ReactNode } from 'react'
 import { AlertCircle, CheckCircle2, FileText, RotateCcw } from 'lucide-react'
 import AppShell from '@/app/_components/v5/AppShell'
 import AppBar from '@/app/_components/v5/AppBar'
 import Button from '@/app/_components/v5/Button'
+import TrackedLink from '@/app/_components/v5/TrackedLink'
+import { EVENT } from '@/lib/analytics/events'
 import { getDocumentById } from '@/lib/db/queries/documents'
 import type { PhotoRecognitionResult, Urgency } from '@/lib/photo/types'
 import SaveToArchiveButton from './SaveToArchiveButton'
+import EmailReminderPrompt from './EmailReminderPrompt'
+import ComplianceFooter from '@/app/_components/v5/ComplianceFooter'
 
 export const dynamic = 'force-dynamic'
 
@@ -49,13 +53,19 @@ function urgencyDisplay(u: Urgency): UrgencyDisplay {
 
 export default async function PhotoResultPage({
   params,
+  searchParams,
 }: {
   params: { id: string }
+  searchParams?: { email?: string }
 }) {
   const doc = await getDocumentById(params.id)
   if (!doc || !doc.aiResponse) notFound()
 
   const result = doc.aiResponse as unknown as PhotoRecognitionResult
+  // 兜底：识别失败的文档跳到专门的 fallback 页（T5）
+  if (result.docType === '无法确认的文书') {
+    redirect(`/photo/result/${doc.id}/fallback`)
+  }
   const urg = urgencyDisplay(result.urgency)
 
   return (
@@ -65,10 +75,15 @@ export default async function PhotoResultPage({
           title="识别结果"
           back
           right={
-            <Link href="/photo" className="flex items-center gap-1 text-[12px] text-ash">
+            <TrackedLink
+              href="/photo"
+              eventName={EVENT.PHOTO_RETAKE_CLICK}
+              payload={{ source: 'result_appbar', docId: doc.id }}
+              className="flex items-center gap-1 text-[12px] text-ash"
+            >
               <RotateCcw size={13} strokeWidth={1.55} />
               重新识别
-            </Link>
+            </TrackedLink>
           }
         />
       }
@@ -128,6 +143,8 @@ export default async function PhotoResultPage({
         <p>{result.consequences}</p>
       </InfoBlock>
 
+      {searchParams?.email === 'prompt' && <EmailReminderPrompt />}
+
       {/* CTA */}
       <div className="mt-[18px] space-y-2">
         <Link href={`/photo/result/${doc.id}/detail`} className="block">
@@ -135,6 +152,8 @@ export default async function PhotoResultPage({
         </Link>
         <SaveToArchiveButton />
       </div>
+
+      <ComplianceFooter />
     </AppShell>
   )
 }

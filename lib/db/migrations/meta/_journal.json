@@ -15,6 +15,55 @@
       "when": 1777134151184,
       "tag": "0001_wooden_sprite",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1777200000000,
+      "tag": "0002_articles",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1777203600000,
+      "tag": "0003_members_email",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1777209648585,
+      "tag": "0004_blue_stingray",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1777267335183,
+      "tag": "0005_black_scourge",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1777267921946,
+      "tag": "0006_typical_thaddeus_ross",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1777274020557,
+      "tag": "0007_faithful_colossus",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1777274730760,
+      "tag": "0008_jittery_black_tom",
+      "breakpoints": true
     }
   ]
 }

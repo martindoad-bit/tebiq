@@ -23,6 +23,9 @@ npm run dev                  # http://localhost:3000
 | `tebiq_KV_REST_API_TOKEN` | optional | Upstash Redis token |
 | `ADMIN_KEY` | recommended in prod | Gates `/admin` and admin APIs |
 | `CRON_SECRET` | required in prod | Vercel Cron `Authorization: Bearer` token |
+| `NOTIFICATION_EMAIL_CHANNEL` | optional | `mock` or `resend`; defaults to `resend` only when `RESEND_API_KEY` exists |
+| `MOCK_EMAIL_DIR` | optional | Local directory for mock `.eml` files (default `/tmp/tebiq-notification-emails`) |
+| `RESEND_API_KEY` | required for real email | Resend API key when `NOTIFICATION_EMAIL_CHANNEL=resend` |
 | `AWS_ACCESS_KEY_ID` | required for AI features | AWS Bedrock |
 | `AWS_SECRET_ACCESS_KEY` | required for AI features | AWS Bedrock |
 | `AWS_REGION` | optional (default us-east-1) | AWS Bedrock region |
@@ -59,6 +62,28 @@ npm test
 Unit tests live next to the modules they cover (`*.test.ts`). Database
 tests **mock** `@/lib/db` and run without a live Postgres. Real
 integration tests against Supabase land in Block 2.
+
+## Dev visual fixtures
+
+For local visual QA of logged-in states, seed three synthetic users:
+
+```bash
+npm run dev:visual-fixtures
+```
+
+Then start the dev server and open one of the printed dev-session URLs:
+
+- `empty` → empty archive / free account
+- `data` → archive and reminders with sample records
+- `subscribed` → active paid-like account state
+
+The helper reads local DB connection variables through `.env.local`, does not print their values, and the `/api/auth/dev-session` route returns 404 in production.
+
+Cleanup:
+
+```bash
+npm run dev:visual-fixtures:cleanup
+```
 
 ## Project layout
 

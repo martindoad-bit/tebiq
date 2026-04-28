@@ -14,8 +14,8 @@ import {
 import { getMemberById, getOrCreateMemberByPhone } from '@/lib/db/queries/members'
 import type { Member } from '@/lib/db/schema'
 
-const COOKIE_NAME = 'tebiq_user_session'
-const COOKIE_MAX_AGE = 60 * 60 * 24 * 30 // 30 天
+export const COOKIE_NAME = 'tebiq_user_session'
+export const COOKIE_MAX_AGE = 60 * 60 * 24 * 30 // 30 天
 
 /**
  * Returns the currently logged-in member, or null.

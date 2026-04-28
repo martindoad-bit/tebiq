@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import Logo from '@/app/_components/v5/Logo'
+import { SeoBullet as Bullet, SeoSection as Section, SeoVisaArticleShell } from '@/app/_components/v5/SeoVisaArticleShell'
+import TrackedLink from '@/app/_components/v5/TrackedLink'
+import { EVENT } from '@/lib/analytics/events'
 
 export const metadata: Metadata = {
   title: '永住者申请完整攻略 2026 | TEBIQ',
@@ -41,63 +43,36 @@ const articleSchema = {
 
 export default function EijushaLandingPage() {
   return (
-    <main className="min-h-screen bg-base text-body flex flex-col pb-16 md:pb-0">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
-      />
-
-      <header className="sticky top-0 z-10 bg-card/95 backdrop-blur border-b border-line">
-        <div className="max-w-md md:max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
-          <Link href="/" aria-label="TEBIQ 首页">
-            <Logo size="sm" />
-          </Link>
-          <Link
-            href="/visa-select"
-            className="bg-primary hover:bg-primary-hover text-title font-bold text-sm px-4 py-2 rounded-lg transition-all"
-          >
-            开始自查
-          </Link>
-        </div>
-      </header>
-
-      <article className="flex-1 px-4 py-8 md:py-12">
-        <div className="max-w-md md:max-w-3xl mx-auto">
-          <h1 className="text-2xl md:text-4xl font-bold mb-4 leading-tight text-title">
-            永住者申请完整攻略 2026
-          </h1>
-          <p className="text-muted text-sm mb-8">
-            最新更新：2026-04-24 · 含 2026 年归化运用变更对比 [待书士审核]
-          </p>
+    <SeoVisaArticleShell articleSchema={articleSchema} title={"永住者申请完整攻略 2026"} updated={"最新更新：2026-04-24 · 含 2026 年归化运用变更对比 [待书士审核]"}>
 
           <nav
             aria-label="目录"
-            className="bg-card border border-line rounded-2xl p-5 mb-8"
+            className="bg-surface border border-hairline rounded-card p-5 mb-8"
           >
-            <h2 className="text-title font-bold text-base mb-3">本文目录</h2>
-            <ol className="space-y-2 text-sm text-body list-decimal list-inside">
+            <h2 className="text-ink font-medium text-[13px] mb-3">本文目录</h2>
+            <ol className="space-y-2 text-[12px] text-slate list-decimal list-inside">
               <li>
-                <a href="#what-is" className="text-primary hover:underline">
+                <a href="#what-is" className="text-ink underline underline-offset-4">
                   永住者是什么
                 </a>
               </li>
               <li>
-                <a href="#core-conditions" className="text-primary hover:underline">
+                <a href="#core-conditions" className="text-ink underline underline-offset-4">
                   申请的核心条件
                 </a>
               </li>
               <li>
-                <a href="#policy-2026" className="text-primary hover:underline">
+                <a href="#policy-2026" className="text-ink underline underline-offset-4">
                   2025-2026 政策动向
                 </a>
               </li>
               <li>
-                <a href="#pitfalls" className="text-primary hover:underline">
+                <a href="#pitfalls" className="text-ink underline underline-offset-4">
                   常见踩坑
                 </a>
               </li>
               <li>
-                <a href="#prepare" className="text-primary hover:underline">
+                <a href="#prepare" className="text-ink underline underline-offset-4">
                   准备建议
                 </a>
               </li>
@@ -157,7 +132,7 @@ export default function EijushaLandingPage() {
                 <strong>高度专门职特例：</strong>持高度专门职 70 分以上 3 年、80 分以上 1 年仍可申请永住，是缩短居住要件的主要路径之一。
               </Bullet>
             </ul>
-            <p className="text-muted text-xs mt-3">
+            <p className="text-ash text-[11px] mt-3">
               来源：法務省（令和 8 年 4 月 1 日施行）/ 出入国在留管理庁公开资料 [待书士审核]
             </p>
           </Section>
@@ -202,68 +177,29 @@ export default function EijushaLandingPage() {
             </ul>
             <p className="mt-4">
               延伸阅读：{' '}
-              <Link href="/knowledge" className="text-primary hover:underline">
+              <Link href="/knowledge" className="text-ink underline underline-offset-4">
                 签证基础知识
               </Link>{' '}
               ｜ 想确认其他签证类型？前往{' '}
-              <Link href="/visa-select" className="text-primary hover:underline">
+              <Link href="/visa-select" className="text-ink underline underline-offset-4">
                 签证选择页
               </Link>
               。
             </p>
           </Section>
 
-          <Link
-            href="/visa-select"
-            className="flex items-center justify-center w-full min-h-[60px] bg-primary hover:bg-primary-hover text-title font-bold py-4 rounded-xl text-base mt-8"
+          <TrackedLink
+            href="/consultation?from=eijusha&visa=eijusha"
+            eventName={EVENT.CONSULTATION_CTA_CLICK}
+            payload={{ source: 'eijusha_page', visa: 'eijusha' }}
+            className="mt-5 flex min-h-[48px] w-full items-center justify-center rounded-btn bg-accent px-4 py-3 text-[13px] font-medium text-ink shadow-cta"
           >
-            选择我的签证类型，开始自查 →
-          </Link>
+            永住申请情况复杂,建议直接咨询行政書士 →
+          </TrackedLink>
 
-          <p className="text-center text-muted text-xs mt-8 leading-relaxed">
+          <p className="text-center text-ash text-[11px] mt-8 leading-relaxed">
             本页面内容不构成法律意见，具体情况请咨询持牌行政书士。
           </p>
-        </div>
-      </article>
-
-      <footer className="bg-card border-t border-line px-4 py-6 pb-[max(1.5rem,env(safe-area-inset-bottom))] text-center mt-auto">
-        <Link
-          href="/knowledge"
-          className="inline-block text-primary hover:text-primary-hover text-sm font-bold mb-4 underline underline-offset-4"
-        >
-          了解签证基础知识 →
-        </Link>
-        <p className="text-muted text-xs leading-relaxed">
-          本工具由持牌行政书士团队提供支持
-        </p>
-        <p className="text-muted text-xs mt-1">© 2026 TEBIQ</p>
-      </footer>
-    </main>
-  )
-}
-
-function Section({
-  id,
-  title,
-  children,
-}: {
-  id: string
-  title: string
-  children: React.ReactNode
-}) {
-  return (
-    <section id={id} className="bg-card border border-line rounded-2xl p-5 mb-6 scroll-mt-20">
-      <h2 className="text-title font-bold text-lg mb-3">{title}</h2>
-      <div className="text-body text-sm leading-relaxed space-y-3">{children}</div>
-    </section>
-  )
-}
-
-function Bullet({ children }: { children: React.ReactNode }) {
-  return (
-    <li className="flex gap-2 text-body text-sm leading-relaxed">
-      <span className="text-primary flex-shrink-0">•</span>
-      <span className="flex-1">{children}</span>
-    </li>
+    </SeoVisaArticleShell>
   )
 }

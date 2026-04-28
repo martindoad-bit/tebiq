@@ -35,6 +35,7 @@ function LoginInner() {
   const router = useRouter()
   const search = useSearchParams()
   const next = search.get('next') ?? '/my/archive'
+  const inviteCode = search.get('ref')?.trim() ?? ''
 
   const [phone, setPhone] = useState('')
   const [otp, setOtp] = useState('')
@@ -79,7 +80,7 @@ function LoginInner() {
       const res = await fetch('/api/auth/verify-otp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phone, otp }),
+        body: JSON.stringify({ phone, otp, inviteCode }),
       })
       const data = await res.json()
       if (!res.ok) {
@@ -87,7 +88,13 @@ function LoginInner() {
         return
       }
       localStorage.setItem(LS_USER_KEY, JSON.stringify(data.user))
-      router.push(next)
+      // T13: 邀请兑换成功 → 强制跳 /welcome（无视 next 参数）
+      // 失败的话沿用 next（用户走普通登录路径）
+      if (inviteCode && data.invitationAccepted) {
+        router.push('/welcome')
+      } else {
+        router.push(next)
+      }
     } catch {
       setError('网络错误，请重试')
     } finally {
@@ -103,7 +110,7 @@ function LoginInner() {
         </div>
         <div className="mx-auto mt-5 inline-flex items-center gap-1.5 rounded-full border border-hairline bg-surface px-3 py-1.5 text-[11px] text-ash shadow-card">
           <ShieldCheck size={13} strokeWidth={1.55} className="text-ink" />
-          手机号用于登录和保存档案
+          {inviteCode ? '注册成功后自动领取邀请奖励' : '手机号用于登录和保存档案'}
         </div>
       </section>
 

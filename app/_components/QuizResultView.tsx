@@ -7,10 +7,14 @@
  */
 import { useState } from 'react'
 import Link from 'next/link'
-import { AlertTriangle, CheckCircle2, ClipboardList, ListChecks } from 'lucide-react'
+import { AlertTriangle, CheckCircle2, ClipboardList, Gift, ListChecks } from 'lucide-react'
 import AppShell from './v5/AppShell'
 import AppBar from './v5/AppBar'
 import Button from './v5/Button'
+import ComplianceFooter from './v5/ComplianceFooter'
+import TrackOnMount from './v5/TrackOnMount'
+import { trackClient } from '@/lib/analytics/client'
+import { EVENT } from '@/lib/analytics/events'
 import type {
   AnsweredItem,
   JudgeResult,
@@ -104,6 +108,14 @@ export default function QuizResultView({
 
   return (
     <AppShell appBar={<AppBar title="自查结果" back={backHref} />}>
+      <TrackOnMount
+        event={EVENT.QUIZ_COMPLETED}
+        payload={{
+          visa: bank.visa,
+          verdict: result.verdict,
+          triggeredCount: result.triggered.length,
+        }}
+      />
       <div className="bg-accent-2 rounded-card border border-accent/25 px-4 py-[18px] text-center mt-3 shadow-card">
         <div
           className={`mx-auto w-[38px] h-[38px] rounded-full ${sv.bg} text-white text-[22px] font-medium flex items-center justify-center mb-3`}
@@ -139,9 +151,31 @@ export default function QuizResultView({
           保存结果到我的档案
         </Button>
       </div>
-      <Link href="/my/account" className="block mt-2">
-        <Button variant="secondary">分享给朋友，解锁更多功能</Button>
+      <Link
+        href="/invite"
+        onClick={() =>
+          trackClient(EVENT.INVITE_CTA_CLICK, {
+            source: 'quiz_result',
+            visa: bank.visa,
+            verdict: result.verdict,
+          })
+        }
+        className="mt-2 flex items-start gap-3 rounded-card border border-accent/35 bg-accent-2/70 px-4 py-3 shadow-card transition-colors hover:bg-accent-2"
+      >
+        <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-[12px] bg-surface text-ink shadow-soft">
+          <Gift size={17} strokeWidth={1.55} />
+        </span>
+        <span className="min-w-0 flex-1">
+          <span className="block text-[13px] font-medium leading-snug text-ink">
+            邀请朋友一起做自查
+          </span>
+          <span className="mt-1 block text-[11px] leading-[1.55] text-ash">
+            朋友注册后，双方各得 7 天 basic 会员体验。
+          </span>
+        </span>
       </Link>
+
+      <ComplianceFooter />
 
       <div className="mt-6 mb-6 flex flex-col items-center gap-3">
         <Link

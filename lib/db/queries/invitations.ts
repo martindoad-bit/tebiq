@@ -4,22 +4,102 @@
  * Flow:
  *   inviter creates invite (createInvitation) → gets short code
  *   invitee opens /invite/{code} and signs up → redeemInvitation
- *   reward (1 month basic free for both) granted when status='accepted'
+ *   reward (7 days basic trial for both) granted when status='accepted'
  */
-import { eq } from 'drizzle-orm'
+import { and, desc, eq, lt, sql } from 'drizzle-orm'
 import { createId } from '@paralleldrive/cuid2'
 import { db } from '@/lib/db'
-import { invitations, type Invitation, type NewInvitation } from '@/lib/db/schema'
+import { invitations, members, type Invitation, type NewInvitation } from '@/lib/db/schema'
+import { grantBasicTrialDaysToFamily } from './subscriptions'
 
 const CODE_LEN = 8
+export const INVITE_REWARD_DAYS = Number(process.env.INVITE_REWARD_DAYS ?? 7)
+export const INVITE_EXPIRY_DAYS = Number(process.env.INVITE_EXPIRY_DAYS ?? 30)
+export const INVITE_MONTHLY_REWARD_CAP_DAYS = Number(
+  process.env.INVITE_MONTHLY_REWARD_CAP_DAYS ?? 30,
+)
 
 function generateCode(): string {
   return createId().slice(0, CODE_LEN)
 }
 
+export interface InvitationStats {
+  invitedCount: number
+  earnedDays: number
+  pendingDays: number
+}
+
+export class InvitationLimitError extends Error {
+  constructor(message = '本月邀请奖励已达上限') {
+    super(message)
+    this.name = 'InvitationLimitError'
+  }
+}
+
+function expiryCutoff(): Date {
+  return new Date(Date.now() - INVITE_EXPIRY_DAYS * 24 * 60 * 60 * 1000)
+}
+
+function isExpired(invitation: Invitation): boolean {
+  return invitation.status === 'pending' && invitation.createdAt.getTime() < expiryCutoff().getTime()
+}
+
+function monthRange(now = new Date()) {
+  return {
+    start: new Date(now.getFullYear(), now.getMonth(), 1),
+    end: new Date(now.getFullYear(), now.getMonth() + 1, 1),
+  }
+}
+
+export async function expireOldPendingInvitations(): Promise<void> {
+  await db
+    .update(invitations)
+    .set({ status: 'expired' })
+    .where(and(eq(invitations.status, 'pending'), lt(invitations.createdAt, expiryCutoff())))
+}
+
+async function getMonthlyRewardDays(inviterMemberId: string): Promise<number> {
+  const { start, end } = monthRange()
+  const [row] = await db
+    .select({
+      rewarded: sql<number>`count(*) filter (
+        where ${invitations.status} = 'accepted'
+          and ${invitations.rewardGranted} = true
+          and ${invitations.acceptedAt} >= ${start}
+          and ${invitations.acceptedAt} < ${end}
+      )::int`,
+    })
+    .from(invitations)
+    .where(eq(invitations.inviterMemberId, inviterMemberId))
+  return Number(row?.rewarded ?? 0) * INVITE_REWARD_DAYS
+}
+
+/**
+ * 月度封顶检查 — 只在「本月已经发满 30 天」时拒绝；
+ * 允许部分发放（最后一次只发剩余天数，比如已发 28 → 还能发 2）。
+ *
+ * 实际授予的天数由 `monthlyRewardRemaining()` 在 acceptInvitationAndGrantReward
+ * 时计算，这里只决定能不能创建新的邀请。
+ */
+async function assertMonthlyRewardAvailable(inviterMemberId: string): Promise<void> {
+  const earnedDays = await getMonthlyRewardDays(inviterMemberId)
+  if (earnedDays >= INVITE_MONTHLY_REWARD_CAP_DAYS) {
+    throw new InvitationLimitError()
+  }
+}
+
+/** 该 inviter 当月还能发多少天（封顶到 INVITE_REWARD_DAYS）。 */
+export async function monthlyRewardRemaining(inviterMemberId: string): Promise<number> {
+  const earnedDays = await getMonthlyRewardDays(inviterMemberId)
+  const remainingThisMonth = Math.max(0, INVITE_MONTHLY_REWARD_CAP_DAYS - earnedDays)
+  return Math.min(INVITE_REWARD_DAYS, remainingThisMonth)
+}
+
 export async function createInvitation(
   inviterMemberId: string,
 ): Promise<Invitation> {
+  await expireOldPendingInvitations()
+  await assertMonthlyRewardAvailable(inviterMemberId)
   const code = generateCode()
   const [row] = await db
     .insert(invitations)
@@ -32,13 +112,72 @@ export async function createInvitation(
   return row
 }
 
+export async function getOrCreatePendingInvitation(
+  inviterMemberId: string,
+): Promise<Invitation> {
+  await expireOldPendingInvitations()
+  await assertMonthlyRewardAvailable(inviterMemberId)
+  const rows = await db
+    .select()
+    .from(invitations)
+    .where(
+      and(
+        eq(invitations.inviterMemberId, inviterMemberId),
+        eq(invitations.status, 'pending'),
+      ),
+    )
+    .orderBy(desc(invitations.createdAt))
+    .limit(1)
+  if (rows[0]) return rows[0]
+  return await createInvitation(inviterMemberId)
+}
+
 export async function getInvitationByCode(code: string): Promise<Invitation | null> {
+  await expireOldPendingInvitations()
   const rows = await db
     .select()
     .from(invitations)
     .where(eq(invitations.code, code))
     .limit(1)
-  return rows[0] ?? null
+  const invitation = rows[0] ?? null
+  if (!invitation) return null
+  if (!isExpired(invitation)) return invitation
+  const [expired] = await db
+    .update(invitations)
+    .set({ status: 'expired' })
+    .where(eq(invitations.id, invitation.id))
+    .returning()
+  return expired ?? { ...invitation, status: 'expired' }
+}
+
+export async function getInvitationLandingByCode(code: string): Promise<{
+  invitation: Invitation
+  inviter: { id: string; familyId: string; name: string | null; phone: string }
+} | null> {
+  await expireOldPendingInvitations()
+  const rows = await db
+    .select({
+      invitation: invitations,
+      inviter: {
+        id: members.id,
+        familyId: members.familyId,
+        name: members.name,
+        phone: members.phone,
+      },
+    })
+    .from(invitations)
+    .innerJoin(members, eq(invitations.inviterMemberId, members.id))
+    .where(eq(invitations.code, code))
+    .limit(1)
+  const row = rows[0] ?? null
+  if (!row) return null
+  if (!isExpired(row.invitation)) return row
+  const [expired] = await db
+    .update(invitations)
+    .set({ status: 'expired' })
+    .where(eq(invitations.id, row.invitation.id))
+    .returning()
+  return expired ? { ...row, invitation: expired } : row
 }
 
 /** Mark code as accepted; idempotent (returns null if already accepted). */
@@ -48,6 +187,13 @@ export async function redeemInvitation(
 ): Promise<Invitation | null> {
   const inv = await getInvitationByCode(code)
   if (!inv || inv.status !== 'pending') return null
+  const alreadyInvited = await db
+    .select({ id: invitations.id })
+    .from(invitations)
+    .where(and(eq(invitations.inviteeMemberId, inviteeMemberId), eq(invitations.status, 'accepted')))
+    .limit(1)
+  if (alreadyInvited[0]) return null
+
   const [row] = await db
     .update(invitations)
     .set({
@@ -62,4 +208,65 @@ export async function redeemInvitation(
 
 export async function markRewardGranted(id: string): Promise<void> {
   await db.update(invitations).set({ rewardGranted: true }).where(eq(invitations.id, id))
+}
+
+export async function getInvitationStats(inviterMemberId: string): Promise<InvitationStats> {
+  await expireOldPendingInvitations()
+  const [row] = await db
+    .select({
+      accepted: sql<number>`count(*) filter (where ${invitations.status} = 'accepted')::int`,
+      rewarded: sql<number>`count(*) filter (where ${invitations.status} = 'accepted' and ${invitations.rewardGranted} = true)::int`,
+      pendingReward: sql<number>`count(*) filter (where ${invitations.status} = 'accepted' and ${invitations.rewardGranted} = false)::int`,
+    })
+    .from(invitations)
+    .where(eq(invitations.inviterMemberId, inviterMemberId))
+
+  const invitedCount = Number(row?.accepted ?? 0)
+  return {
+    invitedCount,
+    earnedDays: Number(row?.rewarded ?? 0) * INVITE_REWARD_DAYS,
+    pendingDays: Number(row?.pendingReward ?? 0) * INVITE_REWARD_DAYS,
+  }
+}
+
+export async function acceptInvitationAndGrantReward(
+  code: string,
+  inviteeMemberId: string,
+): Promise<Invitation | null> {
+  const landing = await getInvitationLandingByCode(code)
+  if (!landing) return null
+  const { invitation, inviter } = landing
+  if (invitation.status !== 'pending') return null
+  if (inviter.id === inviteeMemberId) return null
+  await assertMonthlyRewardAvailable(inviter.id)
+
+  const [invitee] = await db
+    .select({
+      id: members.id,
+      familyId: members.familyId,
+    })
+    .from(members)
+    .where(eq(members.id, inviteeMemberId))
+    .limit(1)
+  if (!invitee) return null
+
+  let accepted: Invitation | null = null
+  try {
+    accepted = await redeemInvitation(code, inviteeMemberId)
+  } catch {
+    return null
+  }
+  if (!accepted || accepted.rewardGranted) return accepted
+
+  // Inviter 受月度封顶约束（最后一笔可能只发剩余天数）；
+  // invitee 是首次注册奖励，不受封顶约束。
+  const inviterDays = await monthlyRewardRemaining(inviter.id)
+  if (inviterDays > 0) {
+    await grantBasicTrialDaysToFamily(inviter.familyId, inviterDays)
+  }
+  await grantBasicTrialDaysToFamily(invitee.familyId, INVITE_REWARD_DAYS)
+  await markRewardGranted(invitation.id)
+
+  const latest = await getInvitationByCode(code)
+  return latest ?? accepted
 }

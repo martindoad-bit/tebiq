@@ -1,7 +1,8 @@
-import Link from 'next/link'
 import { ArrowRight, FileText, Lock, ShieldCheck } from 'lucide-react'
 import AppBar from '@/app/_components/v5/AppBar'
 import AppShell from '@/app/_components/v5/AppShell'
+import TrackedLink from '@/app/_components/v5/TrackedLink'
+import { EVENT } from '@/lib/analytics/events'
 import { GIJINKOKU_MATERIALS } from '@/lib/check/materials'
 
 export const metadata = {
@@ -264,13 +265,15 @@ export default function SamplePackagePage() {
               正式价 ¥480 · 早鸟期内享专属折扣
             </p>
 
-            <Link
+            <TrackedLink
               href="/consultation?visa=gijinkoku"
+              eventName={EVENT.CONSULTATION_CTA_CLICK}
+              payload={{ source: 'sample_package', visa: 'gijinkoku' }}
               className="flex min-h-[52px] w-full items-center justify-center gap-2 rounded-btn bg-accent px-4 text-[14px] font-medium text-ink shadow-cta transition-transform active:translate-y-px"
             >
               購入して完全版をダウンロード
               <ArrowRight size={16} strokeWidth={1.55} />
-            </Link>
+            </TrackedLink>
             <p className="mt-3 flex items-center justify-center gap-1.5 text-center text-[11px] text-ash">
               <ShieldCheck size={13} strokeWidth={1.55} />
               支払いはStripeにて安全に処理されます · 即時ダウンロード
