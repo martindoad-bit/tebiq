@@ -60,10 +60,10 @@ export default async function AccountPage() {
     <AppShell appBar={<AppBar title="我的账户" />} tabBar={<TabBar />}>
       <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-4 shadow-card">
         <div className="flex items-center gap-3">
-          <span className="relative flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-ink text-[18px] font-medium text-accent shadow-[0_8px_18px_rgba(30,58,95,0.18)]">
+          <span className="relative flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-ink text-[18px] font-medium text-accent shadow-[0_8px_18px_rgba(24,50,74,0.16)]">
             {avatarText}
             {subActive && (
-              <span className="absolute -right-0.5 -top-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-accent text-ink ring-2 ring-surface">
+              <span className="absolute -right-0.5 -top-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-accent text-white ring-2 ring-surface">
                 <Crown size={11} strokeWidth={1.7} />
               </span>
             )}
@@ -103,7 +103,7 @@ export default async function AccountPage() {
         {!subActive && (
           <Link
             href="/subscribe"
-            className="mt-3 block rounded-btn bg-accent px-4 py-3 text-center text-[13px] font-medium text-ink shadow-cta active:translate-y-px"
+            className="mt-3 block rounded-btn bg-accent px-4 py-3 text-center text-[13px] font-medium text-white shadow-cta active:translate-y-px"
           >
             开通会员
           </Link>

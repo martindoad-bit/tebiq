@@ -142,7 +142,7 @@ export default function MovingHubPage() {
         </p>
         <Link
           href="/life/moving/quiz"
-          className="mt-4 flex min-h-[48px] w-full items-center justify-center gap-2 rounded-btn bg-accent px-4 text-[14px] font-medium text-ink shadow-cta transition-transform active:translate-y-px"
+          className="mt-4 flex min-h-[48px] w-full items-center justify-center gap-2 rounded-btn bg-accent px-4 text-[14px] font-medium text-white shadow-cta transition-transform active:translate-y-px"
         >
           开始自查
           <ArrowRight size={16} strokeWidth={1.55} />

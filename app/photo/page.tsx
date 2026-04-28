@@ -47,7 +47,7 @@ export default function PhotoEntryPage() {
   return (
     <AppShell appBar={<AppBar title="拍照即懂" back />} tabBar={<TabBar />}>
       <div className="flex flex-col min-h-full">
-        <p className="text-center text-[11.5px] leading-[1.55] text-ash mt-1 mb-3">
+        <p className="mx-auto mb-4 mt-2 max-w-[330px] break-all text-center text-[clamp(14px,3.8vw,16px)] leading-[1.65] text-slate/76">
           住民税、年金、在留カード相关文件都可以先拍照确认
         </p>
 

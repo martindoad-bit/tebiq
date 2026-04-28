@@ -1,6 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import { Pin, X } from 'lucide-react'
 
 const DISMISS_KEY = 'tebiq_signup_banner_dismissed_at'
 const HIDE_HOURS = 24
@@ -44,15 +45,17 @@ export default function SignupBanner({
   const next = encodeURIComponent(`/check/result?v=${verdict}&n=${count}`)
 
   return (
-    <div className="no-capture sticky top-14 z-[5] bg-highlight border-b border-primary/30 px-4 py-2.5">
-      <div className="max-w-md md:max-w-3xl mx-auto flex items-center gap-3">
-        <span className="text-primary text-base flex-shrink-0">📌</span>
-        <p className="flex-1 text-title text-sm leading-snug">
+    <div className="no-capture sticky top-14 z-[5] border-b border-hairline bg-accent-2/85 px-4 py-2.5 backdrop-blur">
+      <div className="mx-auto flex max-w-md items-center gap-3 md:max-w-3xl">
+        <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-[9px] bg-surface text-ink shadow-soft">
+          <Pin size={14} strokeWidth={1.55} />
+        </span>
+        <p className="flex-1 text-[13px] font-medium leading-snug text-ink">
           创建免费账号，保存这次结果并获得到期提醒
         </p>
         <Link
           href={`/login?next=${next}`}
-          className="flex-shrink-0 bg-primary hover:bg-primary-hover text-title text-xs font-bold px-3 py-1.5 rounded-lg transition-colors"
+          className="flex-shrink-0 rounded-btn bg-accent px-3 py-1.5 text-[12px] font-medium text-white shadow-soft transition-colors hover:bg-primary-hover"
         >
           创建账号 →
         </Link>
@@ -60,9 +63,9 @@ export default function SignupBanner({
           type="button"
           onClick={dismiss}
           aria-label="关闭"
-          className="flex-shrink-0 text-muted hover:text-title text-base leading-none px-1"
+          className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full text-ash hover:text-ink"
         >
-          ×
+          <X size={14} strokeWidth={1.55} />
         </button>
       </div>
     </div>

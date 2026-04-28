@@ -17,6 +17,8 @@ import Link from 'next/link'
 import type { ReactNode } from 'react'
 import {
   Bell,
+  Archive,
+  CalendarClock,
   ChevronRight,
   Camera,
   ClipboardCheck,
@@ -45,25 +47,25 @@ export default async function HomePage() {
 
   return (
     <AppShell appBar={<HomeAppBar />} tabBar={<TabBar />}>
-      <section className="pt-3 pb-1 px-1">
-        <div className="inline-flex items-center gap-1.5 rounded-full bg-cool-blue/70 px-2.5 py-1 text-[10.5px] font-medium text-ink/80">
+      <section className="px-0.5 pb-1 pt-4">
+        <div className="inline-flex items-center gap-2 rounded-full bg-cool-blue px-3 py-1.5 text-[clamp(12px,3.4vw,14px)] font-semibold text-ink/85">
           <span className="h-1.5 w-1.5 rounded-full bg-success" />
           在日生活工具集
         </div>
-        <h1 className="mt-2.5 text-[22px] font-medium text-ink leading-[1.32] mb-1.5">
+        <h1 className="mb-3 mt-4 text-[clamp(34px,10.6vw,52px)] font-semibold leading-[1.12] tracking-[-0.01em] text-ink">
           你的在日生活
           <br />
           好帮手
         </h1>
-        <p className="max-w-[260px] text-[12.5px] leading-[1.65] text-slate/80">
+        <p className="max-w-[360px] text-[clamp(15px,4.3vw,19px)] leading-[1.62] text-slate/82">
           拍照看懂日文文件，续签前先做风险自查。
         </p>
       </section>
 
-      <div className="mt-3.5 space-y-2.5">
+      <div className="mt-5 space-y-3.5">
         <ActionCard
           variant="primary"
-          icon={<Camera size={20} strokeWidth={1.6} color="#1E3A5F" />}
+          icon={<Camera size={23} strokeWidth={1.7} color="#18324A" />}
           title="拍照即懂"
           subtitle="拍一张，马上知道要不要处理"
           href="/photo"
@@ -71,13 +73,15 @@ export default async function HomePage() {
         />
         <ActionCard
           variant="secondary"
-          icon={<ClipboardCheck size={20} strokeWidth={1.6} color="#F6B133" />}
+          icon={<ClipboardCheck size={23} strokeWidth={1.7} color="#E56F4F" />}
           title="续签自查"
           subtitle="3 分钟了解你的签证风险"
           href="/check"
           eventName={EVENT.HOME_CHECK_CARD_CLICK}
         />
       </div>
+
+      <TrustSummary />
 
       {user ? (
         <TodoSection todos={todos} />
@@ -90,16 +94,58 @@ export default async function HomePage() {
 
 function HomeAppBar() {
   return (
-    <header className="flex-shrink-0 h-12 px-4 flex items-center justify-between bg-canvas">
-      <Logo />
+    <header className="flex h-[72px] flex-shrink-0 items-center justify-between bg-canvas px-5">
+      <Logo size="lg" />
       <Link
         href="/my/reminders"
         aria-label="提醒中心"
-        className="w-8 h-8 flex items-center justify-center text-ink"
+        className="flex h-11 w-11 items-center justify-center rounded-full border border-hairline bg-surface text-ink shadow-soft"
       >
-        <Bell size={18} strokeWidth={1.6} />
+        <Bell size={22} strokeWidth={1.7} />
       </Link>
     </header>
+  )
+}
+
+function TrustSummary() {
+  return (
+    <section className="mt-4 grid grid-cols-3 gap-2">
+      <TrustChip
+        icon={<FileText size={15} strokeWidth={1.55} />}
+        title="识别重点"
+        sub="金额·期限"
+      />
+      <TrustChip
+        icon={<Archive size={15} strokeWidth={1.55} />}
+        title="归入档案"
+        sub="按文件整理"
+      />
+      <TrustChip
+        icon={<CalendarClock size={15} strokeWidth={1.55} />}
+        title="提醒事项"
+        sub="到期前查看"
+      />
+    </section>
+  )
+}
+
+function TrustChip({
+  icon,
+  title,
+  sub,
+}: {
+  icon: ReactNode
+  title: string
+  sub: string
+}) {
+  return (
+    <div className="min-w-0 rounded-[14px] border border-hairline bg-surface/76 px-2.5 py-2.5 shadow-soft">
+      <div className="mb-1.5 flex h-7 w-7 items-center justify-center rounded-[9px] bg-cool-blue text-ink">
+        {icon}
+      </div>
+      <div className="truncate text-[11.5px] font-semibold leading-none text-ink">{title}</div>
+      <div className="mt-1 truncate text-[10px] leading-none text-ash">{sub}</div>
+    </div>
   )
 }
 
@@ -120,28 +166,28 @@ function ActionCard({
 }) {
   const wrap =
     variant === 'primary'
-      ? 'bg-accent shadow-cta'
+      ? 'bg-accent text-white shadow-cta'
       : 'bg-surface border border-hairline shadow-card'
   const iconBg =
     variant === 'primary' ? 'bg-white' : 'bg-accent-2'
-  const titleColor = variant === 'primary' ? 'text-ink' : 'text-ink'
+  const titleColor = variant === 'primary' ? 'text-white' : 'text-ink'
   const subColor =
-    variant === 'primary' ? 'text-ink/70' : 'text-ash'
+    variant === 'primary' ? 'text-white/82' : 'text-ash'
 
   return (
     <TrackedLink
       href={href}
       eventName={eventName}
-      className={`block ${wrap} rounded-card p-3.5 flex items-center gap-3 active:translate-y-px active:opacity-90 transition`}
+      className={`block ${wrap} flex items-center gap-3.5 rounded-card p-4 transition active:translate-y-px active:opacity-90`}
     >
       <span
-        className={`${iconBg} w-[38px] h-[38px] rounded-[10px] flex items-center justify-center flex-shrink-0`}
+        className={`${iconBg} flex h-[50px] w-[50px] flex-shrink-0 items-center justify-center rounded-[15px]`}
       >
         {icon}
       </span>
       <span className="flex-1 min-w-0">
-        <span className={`block text-[14px] font-medium ${titleColor}`}>{title}</span>
-        <span className={`block text-[11px] ${subColor} mt-0.5`}>{subtitle}</span>
+        <span className={`block text-[clamp(18px,5.1vw,22px)] font-semibold leading-tight ${titleColor}`}>{title}</span>
+        <span className={`mt-1 block text-[clamp(13px,3.7vw,15px)] leading-snug ${subColor}`}>{subtitle}</span>
       </span>
     </TrackedLink>
   )
@@ -233,14 +279,14 @@ function EmptyHomeState({
 }) {
   return (
     <section className="mt-4 overflow-hidden rounded-card border border-hairline bg-surface shadow-card">
-      <div className="border-b border-hairline bg-[rgba(230,238,245,0.42)] px-4 py-2.5">
+      <div className="border-b border-hairline bg-cool-blue/55 px-4 py-3">
         <div className="flex items-center justify-between gap-3">
           <div>
-            <h2 className="text-[13px] font-medium leading-snug text-ink">{title}</h2>
-            <p className="mt-1 text-[11px] leading-[1.65] text-ash">{description}</p>
+            <h2 className="text-[14px] font-semibold leading-snug text-ink">{title}</h2>
+            <p className="mt-1 text-[12px] leading-[1.65] text-slate/74">{description}</p>
           </div>
-          <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-[10px] bg-accent-2 text-ink">
-            <ShieldCheck size={17} strokeWidth={1.55} />
+          <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-[13px] bg-surface text-ink shadow-soft">
+            <ShieldCheck size={19} strokeWidth={1.55} />
           </span>
         </div>
       </div>
@@ -251,7 +297,7 @@ function EmptyHomeState({
         {actionHref && actionLabel && (
           <Link
             href={actionHref}
-            className="mt-2.5 flex h-9 items-center justify-center rounded-btn border border-[rgba(30,58,95,0.14)] bg-white text-[13px] font-medium text-ink shadow-soft transition active:translate-y-px"
+            className="mt-2.5 flex h-9 items-center justify-center rounded-btn border border-hairline bg-surface text-[13px] font-medium text-ink shadow-soft transition active:translate-y-px"
           >
             {actionLabel}
             <ChevronRight size={14} strokeWidth={1.6} className="ml-0.5" />

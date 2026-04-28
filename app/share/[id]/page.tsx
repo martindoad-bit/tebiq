@@ -13,8 +13,8 @@ const VERDICT_META = {
   red: {
     label: '红色',
     sub: '存在高风险项',
-    hero: 'bg-[rgba(226,87,76,0.10)] border-danger text-danger',
-    chip: 'bg-[rgba(226,87,76,0.10)] text-danger',
+    hero: 'bg-[rgba(198,79,69,0.10)] border-danger text-danger',
+    chip: 'bg-[rgba(198,79,69,0.10)] text-danger',
     icon: CircleAlert,
   },
   yellow: {
@@ -27,8 +27,8 @@ const VERDICT_META = {
   green: {
     label: '绿色',
     sub: '前置条件均通过',
-    hero: 'bg-[rgba(87,167,123,0.12)] border-success text-success',
-    chip: 'bg-[rgba(87,167,123,0.12)] text-success',
+    hero: 'bg-[rgba(46,125,101,0.12)] border-success text-success',
+    chip: 'bg-[rgba(46,125,101,0.12)] text-success',
     icon: CheckCircle2,
   },
 } satisfies Record<
@@ -127,7 +127,7 @@ export default async function SharePage({ params }: PageProps) {
           </div>
           <Link
             href="/visa-select"
-            className="mt-4 flex min-h-[46px] w-full items-center justify-center rounded-btn bg-accent px-4 py-3 text-[13px] font-medium text-ink shadow-cta"
+            className="mt-4 flex min-h-[46px] w-full items-center justify-center rounded-btn bg-accent px-4 py-3 text-[13px] font-medium text-white shadow-cta"
           >
             开始我的自查
           </Link>

@@ -108,7 +108,7 @@ export default function EmailEditClient({ initialEmail, initialVerifiedAt }: Pro
         </div>
         {hasSavedEmail && !dirty && (
           isVerified ? (
-            <span className="flex flex-shrink-0 items-center gap-1 rounded-[8px] bg-[rgba(87,167,123,0.12)] px-2 py-1 text-[10px] font-medium leading-none text-success">
+            <span className="flex flex-shrink-0 items-center gap-1 rounded-[8px] bg-[rgba(46,125,101,0.12)] px-2 py-1 text-[10px] font-medium leading-none text-success">
               <CheckCircle2 size={11} strokeWidth={1.7} />
               已验证
             </span>
@@ -141,7 +141,7 @@ export default function EmailEditClient({ initialEmail, initialVerifiedAt }: Pro
             type="button"
             onClick={sendVerification}
             disabled={verifyBusy}
-            className="flex min-h-[40px] items-center gap-1.5 rounded-btn border border-[rgba(30,58,95,0.18)] bg-surface px-3 py-2 text-[12.5px] font-medium text-ink transition-colors hover:bg-[rgba(30,58,95,0.04)] disabled:opacity-60"
+            className="flex min-h-[40px] items-center gap-1.5 rounded-btn border border-hairline bg-surface px-3 py-2 text-[12.5px] font-medium text-ink transition-colors hover:bg-canvas disabled:opacity-60"
           >
             <Send size={13} strokeWidth={1.55} />
             {verifyBusy ? '发送中…' : '发送验证邮件'}

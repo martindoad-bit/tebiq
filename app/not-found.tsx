@@ -19,7 +19,7 @@ export default function NotFound() {
         <div className="mt-6 space-y-2">
           <Link
             href="/"
-            className="flex min-h-[44px] w-full items-center justify-center gap-1.5 rounded-btn bg-accent px-4 py-3 text-[13px] font-medium text-ink shadow-cta"
+            className="flex min-h-[44px] w-full items-center justify-center gap-1.5 rounded-btn bg-accent px-4 py-3 text-[13px] font-medium text-white shadow-cta"
           >
             <Home size={14} strokeWidth={1.55} />
             回到首页

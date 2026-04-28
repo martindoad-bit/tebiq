@@ -156,7 +156,7 @@ function FilterButton({
       onClick={onClick}
       className={`min-h-[34px] rounded-[10px] border px-3 text-[12px] font-medium transition-colors ${
         active
-          ? 'border-accent bg-accent text-ink shadow-soft'
+          ? 'border-accent bg-accent text-white shadow-soft'
           : 'border-hairline bg-surface text-ash hover:border-accent'
       }`}
     >
@@ -173,7 +173,7 @@ function UpdateCard({ update }: { update: PolicyUpdate }) {
   return (
     <li className="overflow-hidden rounded-card border border-hairline bg-surface shadow-card">
       <div className="flex items-start gap-3 px-4 pb-2 pt-4">
-        <div className="flex-shrink-0 rounded-[9px] bg-accent px-2 py-1 text-[11px] font-medium text-ink">
+        <div className="flex-shrink-0 rounded-[9px] bg-accent px-2 py-1 text-[11px] font-medium text-white">
           {update.date}
         </div>
         <div className="pt-1 text-[11px] text-ash">{typeLabel}</div>

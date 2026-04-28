@@ -15,11 +15,11 @@ interface Props {
 export default function Illustration({
   height = 130,
   subject,
-  src = '/illustrations/renewal-check.png',
+  src = '/illustrations/renewal-check-wide-image2.png',
 }: Props) {
   return (
     <div
-      className="relative my-4 w-full overflow-hidden rounded-card border border-hairline bg-accent-2 shadow-card"
+      className="relative my-5 w-full overflow-hidden rounded-card border border-white/80 bg-surface shadow-raised"
       style={{ height }}
       role="img"
       aria-label={subject}
@@ -32,7 +32,7 @@ export default function Illustration({
         className="object-cover"
         priority
       />
-      <div className="pointer-events-none absolute inset-0 rounded-card ring-1 ring-white/55" />
+      <div className="pointer-events-none absolute inset-0 rounded-card ring-1 ring-white/70" />
     </div>
   )
 }

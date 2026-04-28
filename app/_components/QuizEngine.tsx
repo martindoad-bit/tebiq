@@ -371,7 +371,7 @@ function AnsweredDrawer({
                 <button
                   type="button"
                   onClick={() => onEdit(i)}
-                  className="ml-7 text-accent hover:text-[#E5A52E] text-[11.5px] font-medium underline underline-offset-2"
+                  className="ml-7 text-accent hover:text-[#D85F43] text-[11.5px] font-medium underline underline-offset-2"
                 >
                   修改 →
                 </button>

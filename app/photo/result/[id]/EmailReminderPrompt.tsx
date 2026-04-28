@@ -69,7 +69,7 @@ export default function EmailReminderPrompt() {
         <button
           type="button"
           onClick={() => setVisible(false)}
-          className="min-h-[40px] rounded-btn border border-[rgba(30,58,95,0.18)] px-3 py-2 text-[12px] font-medium text-ink"
+          className="min-h-[40px] rounded-btn border border-hairline px-3 py-2 text-[12px] font-medium text-ink"
         >
           跳过
         </button>

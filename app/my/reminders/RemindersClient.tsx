@@ -3,7 +3,8 @@
  */
 'use client'
 import { useState } from 'react'
-import { Bell, CalendarClock, CheckCircle2, Clock, ShieldAlert } from 'lucide-react'
+import { Bell, CalendarClock, Clock, ShieldAlert } from 'lucide-react'
+import EmptyVisual from '@/app/_components/v5/EmptyVisual'
 
 export interface ReminderItem {
   id: string
@@ -46,7 +47,7 @@ export default function RemindersClient({ items }: { items: ReminderItem[] }) {
           <span
             className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-[13px] ${
               urgentCount > 0
-                ? 'bg-[rgba(226,87,76,0.10)] text-danger'
+                ? 'bg-[rgba(198,79,69,0.10)] text-danger'
                 : 'bg-accent-2 text-ink'
             }`}
           >
@@ -74,7 +75,7 @@ export default function RemindersClient({ items }: { items: ReminderItem[] }) {
               onClick={() => setTab(t.id)}
               className={`flex-1 rounded-[10px] px-2 py-[7px] text-[11.5px] font-medium transition-colors ${
                 on
-                  ? 'bg-ink text-white shadow-[0_3px_8px_rgba(30,58,95,0.18)]'
+                  ? 'bg-ink text-white shadow-[0_3px_8px_rgba(24,50,74,0.16)]'
                   : 'text-ash'
               }`}
             >
@@ -95,7 +96,7 @@ export default function RemindersClient({ items }: { items: ReminderItem[] }) {
             >
               <span
                 className={`flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-[10px] ${
-                  item.urgent ? 'bg-[rgba(226,87,76,0.10)]' : 'bg-accent-2'
+                  item.urgent ? 'bg-[rgba(198,79,69,0.10)]' : 'bg-accent-2'
                 }`}
               >
                 <Clock
@@ -116,7 +117,7 @@ export default function RemindersClient({ items }: { items: ReminderItem[] }) {
                   <span
                     className={`rounded-[8px] px-1.5 py-1 text-[10px] font-medium leading-none ${
                       item.urgent
-                        ? 'bg-[rgba(226,87,76,0.10)] text-danger'
+                        ? 'bg-[rgba(198,79,69,0.10)] text-danger'
                         : 'bg-canvas text-ash'
                     }`}
                   >
@@ -154,9 +155,7 @@ function SummaryCell({ label, value }: { label: string; value: number }) {
 function EmptyState() {
   return (
     <div className="mt-5 rounded-card border border-hairline bg-surface px-4 py-8 text-center shadow-card">
-      <span className="mx-auto flex h-11 w-11 items-center justify-center rounded-[14px] bg-[rgba(87,167,123,0.12)] text-success">
-        <CheckCircle2 size={21} strokeWidth={1.55} />
-      </span>
+      <EmptyVisual src="/illustrations/empty-state-image2.png" alt="暂无提醒事项" />
       <p className="mt-3 text-[13px] font-medium leading-relaxed text-ink">
         暂无需要处理的提醒
       </p>

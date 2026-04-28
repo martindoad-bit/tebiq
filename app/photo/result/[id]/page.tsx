@@ -17,7 +17,15 @@
 import { notFound, redirect } from 'next/navigation'
 import Link from 'next/link'
 import type { ReactNode } from 'react'
-import { AlertCircle, CheckCircle2, FileText, LockKeyhole, RotateCcw } from 'lucide-react'
+import {
+  AlertCircle,
+  CalendarDays,
+  CheckCircle2,
+  FileText,
+  LockKeyhole,
+  RotateCcw,
+  ShieldCheck,
+} from 'lucide-react'
 import AppShell from '@/app/_components/v5/AppShell'
 import AppBar from '@/app/_components/v5/AppBar'
 import Button from '@/app/_components/v5/Button'
@@ -42,13 +50,13 @@ interface UrgencyDisplay {
 function urgencyDisplay(u: Urgency): UrgencyDisplay {
   switch (u) {
     case 'critical':
-      return { label: '需要尽快处理', bg: '#E2574C', bang: '#E2574C' }
+      return { label: '需要尽快处理', bg: '#C64F45', bang: '#C64F45' }
     case 'high':
-      return { label: '需要尽快处理', bg: '#E2574C', bang: '#E2574C' }
+      return { label: '需要尽快处理', bg: '#C64F45', bang: '#C64F45' }
     case 'normal':
-      return { label: '一般事项', bg: '#F6B133', bang: '#F6B133' }
+      return { label: '一般事项', bg: '#E56F4F', bang: '#E56F4F' }
     case 'ignorable':
-      return { label: '可暂缓', bg: '#6E7A85', bang: '#6E7A85' }
+      return { label: '可暂缓', bg: '#6E7A84', bang: '#6E7A84' }
   }
 }
 
@@ -108,24 +116,32 @@ export default async function PhotoResultPage({
 
       {/* 緊急度 */}
       <section
-        className="mt-2.5 rounded-card border bg-accent-2 px-3.5 py-4 text-center shadow-card"
-        style={{ borderColor: 'rgba(246, 177, 51, 0.4)', borderWidth: '0.5px' }}
+        className="mt-2.5 rounded-card border border-accent/30 bg-accent-2 px-4 py-4 shadow-card"
       >
-        <span
-          className="inline-flex items-center gap-1 px-2.5 py-1 rounded-[12px] text-[11px] font-medium text-white"
-          style={{ background: urg.bg }}
-        >
-          <span aria-hidden>●</span>
-          {urg.label}
-        </span>
-        {result.deadlineRemainingDays !== null && (
-          <div className="mt-2.5 text-[22px] font-medium leading-none text-ink">
-            <span aria-hidden style={{ color: urg.bang }}>
-              !
-            </span>{' '}
-            {result.deadlineRemainingDays} 天内
+        <div className="flex items-start justify-between gap-3">
+          <div className="text-left">
+            <p className="text-[11px] font-medium text-ash">处理优先级</p>
+            <span
+              className="mt-2 inline-flex items-center gap-1.5 rounded-[12px] px-2.5 py-1 text-[11.5px] font-semibold text-white"
+              style={{ background: urg.bg }}
+            >
+              <span aria-hidden>●</span>
+              {urg.label}
+            </span>
           </div>
-        )}
+          {result.deadlineRemainingDays !== null && (
+            <div className="rounded-[14px] border border-white/75 bg-surface/80 px-3 py-2 text-right shadow-soft">
+              <div className="flex items-center justify-end gap-1 text-[10.5px] text-ash">
+                <CalendarDays size={12} strokeWidth={1.55} />
+                剩余
+              </div>
+              <div className="mt-1 text-[21px] font-semibold leading-none text-ink">
+                <span style={{ color: urg.bang }}>{result.deadlineRemainingDays}</span>
+                <span className="ml-0.5 text-[12px] font-medium text-ash">天</span>
+              </div>
+            </div>
+          )}
+        </div>
       </section>
 
       {/* QA blocks */}
@@ -146,6 +162,17 @@ export default async function PhotoResultPage({
       </InfoBlock>
 
       {searchParams?.email === 'prompt' && <EmailReminderPrompt />}
+
+      <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-3 shadow-card">
+        <div className="flex items-start gap-2.5">
+          <span className="mt-0.5 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-[11px] bg-cool-blue text-ink">
+            <ShieldCheck size={16} strokeWidth={1.55} />
+          </span>
+          <p className="text-[11.5px] leading-[1.6] text-slate/74">
+            TEBIQ 帮你整理重点；付款金额、期限和提交要求请以原文件为准。
+          </p>
+        </div>
+      </section>
 
       {/* CTA */}
       <div className="mt-[18px] space-y-2">

@@ -42,16 +42,21 @@ function SummaryCard({
 }) {
   const tone =
     verdict === 'red'
-      ? 'border-danger bg-[rgba(226,87,76,0.06)]'
+      ? 'border-danger bg-[rgba(198,79,69,0.07)]'
       : verdict === 'yellow'
         ? 'border-accent bg-accent-2/35'
-        : 'border-success bg-[rgba(87,167,123,0.08)]'
+        : 'border-success bg-[rgba(46,125,101,0.09)]'
   return (
     <div className={`mb-4 rounded-card border px-4 py-4 shadow-card ${tone}`}>
-      <div className="mb-2 text-[11px] font-medium text-ash">你的情况</div>
-      <p className="text-[13px] leading-[1.65] text-ink">{summary}</p>
-      <p className="mt-4 text-[11px] leading-relaxed text-ash">
-        本摘要由系统自动组合生成，不构成法律意见。具体方案请咨询持牌行政书士。
+      <div className="mb-2 flex items-center justify-between gap-3">
+        <div className="text-[12px] font-semibold text-ink">判断摘要</div>
+        <div className="rounded-full border border-hairline bg-surface px-2 py-0.5 text-[10px] font-medium text-ash">
+          非法律意见
+        </div>
+      </div>
+      <p className="text-[14px] leading-[1.7] text-ink">{summary}</p>
+      <p className="mt-4 border-t border-hairline pt-3 text-[11.5px] leading-relaxed text-slate/70">
+        TEBIQ 根据你的回答整理风险点。最终提交策略请以原材料和行政書士判断为准。
       </p>
     </div>
   )
@@ -71,7 +76,7 @@ function SaveToAccountPrompt({ verdict, count }: { verdict: 'red' | 'yellow' | '
 
   if (authState === 'in') {
     return (
-      <div className="no-capture flex items-center gap-2 rounded-card border border-success bg-[rgba(87,167,123,0.10)] px-4 py-3 text-[12px] font-medium text-ink shadow-card">
+      <div className="no-capture flex items-center gap-2 rounded-card border border-success bg-[rgba(46,125,101,0.10)] px-4 py-3 text-[12px] font-medium text-ink shadow-card">
         <CheckCircle2 size={16} strokeWidth={1.6} className="text-success" />
         <span>已保存到你的账号</span>
         <Link href="/my/archive" className="ml-auto text-ink underline underline-offset-4">
@@ -99,7 +104,7 @@ function SaveToAccountPrompt({ verdict, count }: { verdict: 'red' | 'yellow' | '
       </div>
       <Link
         href={`/login?next=${next}`}
-        className="mt-3 flex min-h-[46px] w-full items-center justify-center rounded-btn bg-accent px-4 py-3 text-[13px] font-medium text-ink shadow-cta"
+        className="mt-3 flex min-h-[46px] w-full items-center justify-center rounded-btn bg-accent px-4 py-3 text-[13px] font-medium text-white shadow-cta"
       >
         登录 / 注册
       </Link>
@@ -366,7 +371,7 @@ function SaveResultButton({
     verdict === 'red'
       ? 'bg-danger text-white hover:bg-[#C84B42]'
       : verdict === 'yellow'
-        ? 'bg-accent text-ink hover:bg-[#E5A52E]'
+        ? 'bg-accent text-white hover:bg-[#D85F43]'
         : 'bg-success text-white hover:bg-[#4A9069]'
 
   return (
@@ -408,7 +413,7 @@ function ResultHero({
   const meta = {
     green: {
       icon: CheckCircle2,
-      tone: 'border-success bg-[rgba(87,167,123,0.12)] text-success',
+      tone: 'border-success bg-[rgba(46,125,101,0.12)] text-success',
     },
     yellow: {
       icon: AlertTriangle,
@@ -416,7 +421,7 @@ function ResultHero({
     },
     red: {
       icon: CircleAlert,
-      tone: 'border-danger bg-[rgba(226,87,76,0.10)] text-danger',
+      tone: 'border-danger bg-[rgba(198,79,69,0.10)] text-danger',
     },
   }[verdict]
   const Icon = meta.icon
@@ -428,9 +433,25 @@ function ResultHero({
       <div className="mt-3 text-[11px] font-medium leading-none text-ash">
         TEBIQ · 续签自查
       </div>
-      <h1 className="mt-2 text-[19px] font-medium leading-snug text-ink">{title}</h1>
-      <p className="mt-2 text-[12px] leading-relaxed text-ash">{description}</p>
+      <h1 className="mt-2 text-[22px] font-semibold leading-snug text-ink">{title}</h1>
+      <p className="mx-auto mt-2 max-w-[300px] text-[13px] leading-relaxed text-slate/74">
+        {description}
+      </p>
+      <div className="mt-4 grid grid-cols-3 gap-2 text-left">
+        <ResultMeta label="依据" value="你的回答" />
+        <ResultMeta label="用途" value="准备参考" />
+        <ResultMeta label="下一步" value="看行动项" />
+      </div>
     </section>
+  )
+}
+
+function ResultMeta({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-[12px] border border-white/70 bg-surface/72 px-2 py-2 shadow-soft">
+      <div className="text-[9.5px] leading-none text-ash">{label}</div>
+      <div className="mt-1 text-[11px] font-semibold leading-none text-ink">{value}</div>
+    </div>
   )
 }
 
@@ -523,14 +544,14 @@ function YellowResult({ result, summary }: { result: JudgeResult; summary: strin
         items={selfFix}
         accentColor="amber"
         sortBySeverity={false}
-        heading={{ text: `✓ 可以自己处理（${selfFix.length} 项）`, tone: 'green' }}
+        heading={{ text: `可以自己处理（${selfFix.length} 项）`, tone: 'green' }}
       />
 
       <RiskList
         items={needPro}
         accentColor="amber"
         sortBySeverity={false}
-        heading={{ text: `⚖ 建议咨询书士（${needPro.length} 项）`, tone: 'amber' }}
+        heading={{ text: `建议咨询行政書士（${needPro.length} 项）`, tone: 'amber' }}
       />
 
       <CTABlock
@@ -573,7 +594,7 @@ function RedResult({ result, summary }: { result: JudgeResult; summary: string }
         <SaveToAccountPrompt verdict="red" count={reds.length} />
       </div>
 
-      <div className="mb-6 rounded-card border border-danger bg-[rgba(226,87,76,0.08)] p-4 shadow-card">
+      <div className="mb-6 rounded-card border border-danger bg-[rgba(198,79,69,0.08)] p-4 shadow-card">
         <p className="text-[13px] leading-relaxed text-ink">
           下列任何一项都可能直接导致续签被拒，甚至影响今后在留资格。
           强烈建议先与持牌行政书士确认应对方案，再决定如何提交申请。

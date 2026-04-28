@@ -141,7 +141,7 @@ export default async function KnowledgeDetailPage({ params }: Props) {
                   待书士审核
                 </span>
               ) : (
-                <span className="rounded-[8px] bg-[rgba(87,167,123,0.12)] px-2 py-1 text-[10px] font-medium leading-none text-success">
+                <span className="rounded-[8px] bg-[rgba(46,125,101,0.12)] px-2 py-1 text-[10px] font-medium leading-none text-success">
                   已由行政書士审核
                 </span>
               )}
@@ -220,7 +220,7 @@ export default async function KnowledgeDetailPage({ params }: Props) {
         <div className="mt-3 grid grid-cols-2 gap-2">
           <Link
             href="/check"
-            className="flex min-h-[42px] items-center justify-center gap-1.5 rounded-btn bg-accent px-3 py-2 text-[12px] font-medium text-ink shadow-cta"
+            className="flex min-h-[42px] items-center justify-center gap-1.5 rounded-btn bg-accent px-3 py-2 text-[12px] font-medium text-white shadow-cta"
           >
             <ClipboardCheck size={14} strokeWidth={1.55} />
             做续签自查
@@ -312,7 +312,7 @@ function ReviewerAttribution({
   return (
     <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-3.5 shadow-card">
       <div className="flex items-start gap-2.5">
-        <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-[rgba(87,167,123,0.12)] text-success">
+        <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-[rgba(46,125,101,0.12)] text-success">
           <BookOpenCheck size={14} strokeWidth={1.7} />
         </span>
         <div className="min-w-0 text-[12px] leading-[1.7] text-slate">

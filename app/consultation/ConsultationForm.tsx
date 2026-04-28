@@ -162,7 +162,7 @@ export default function ConsultationForm() {
                   onClick={() => setPreferredContact(m)}
                   className={`min-h-[40px] rounded-[11px] border text-[12px] font-medium transition-colors ${
                     preferredContact === m
-                      ? 'border-accent bg-accent text-ink shadow-soft'
+                      ? 'border-accent bg-accent text-white shadow-soft'
                       : 'border-hairline bg-surface text-ash hover:border-accent'
                   }`}
                 >
@@ -213,7 +213,7 @@ export default function ConsultationForm() {
                     name="urgency"
                     checked={urgency === u}
                     onChange={() => setUrgency(u)}
-                    className="accent-[#F6B133]"
+                    className="accent-[#E56F4F]"
                   />
                   <span className="text-[13px] text-ink">{URGENCY_LABEL[u]}</span>
                 </label>
@@ -262,7 +262,7 @@ export default function ConsultationForm() {
           <button
             type="submit"
             disabled={submitting}
-            className="mt-4 flex min-h-[50px] w-full items-center justify-center gap-2 rounded-btn bg-accent px-4 text-[14px] font-medium text-ink shadow-cta transition-transform active:translate-y-px disabled:opacity-60"
+            className="mt-4 flex min-h-[50px] w-full items-center justify-center gap-2 rounded-btn bg-accent px-4 text-[14px] font-medium text-white shadow-cta transition-transform active:translate-y-px disabled:opacity-60"
           >
             {submitting ? '提交中...' : (
               <>

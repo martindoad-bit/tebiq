@@ -60,7 +60,7 @@ export default function SamplePackagePage() {
             <span
               className="font-bold text-7xl md:text-8xl select-none"
               style={{
-                color: '#F6B133',
+                color: '#E56F4F',
                 opacity: 0.07,
                 transform: 'rotate(-25deg)',
                 letterSpacing: '0.3em',
@@ -253,7 +253,7 @@ export default function SamplePackagePage() {
       <section className="pb-6">
         <div className="rounded-card border border-hairline bg-surface px-5 py-5 shadow-raised">
             <div className="mb-1 flex items-baseline gap-3">
-              <span className="rounded-[8px] bg-accent px-2 py-1 text-[11px] font-medium text-ink">
+              <span className="rounded-[8px] bg-accent px-2 py-1 text-[11px] font-medium text-white">
                 早鸟价
               </span>
               <span className="text-[34px] font-medium leading-none text-ink">
@@ -269,7 +269,7 @@ export default function SamplePackagePage() {
               href="/consultation?visa=gijinkoku"
               eventName={EVENT.CONSULTATION_CTA_CLICK}
               payload={{ source: 'sample_package', visa: 'gijinkoku' }}
-              className="flex min-h-[52px] w-full items-center justify-center gap-2 rounded-btn bg-accent px-4 text-[14px] font-medium text-ink shadow-cta transition-transform active:translate-y-px"
+              className="flex min-h-[52px] w-full items-center justify-center gap-2 rounded-btn bg-accent px-4 text-[14px] font-medium text-white shadow-cta transition-transform active:translate-y-px"
             >
               購入して完全版をダウンロード
               <ArrowRight size={16} strokeWidth={1.55} />

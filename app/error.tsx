@@ -34,7 +34,7 @@ export default function GlobalError({
   return (
     <main className="min-h-[100dvh] bg-canvas px-4 py-12 flex items-center justify-center">
       <div className="mx-auto w-full max-w-phone rounded-card border border-hairline bg-surface px-5 py-8 text-center shadow-card">
-        <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-[14px] bg-[rgba(226,87,76,0.12)] text-danger">
+        <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-[14px] bg-[rgba(198,79,69,0.12)] text-danger">
           <AlertTriangle size={22} strokeWidth={1.55} />
         </div>
         <h1 className="text-[18px] font-medium leading-snug text-ink">出了点问题</h1>
@@ -50,7 +50,7 @@ export default function GlobalError({
           <button
             type="button"
             onClick={() => reset()}
-            className="flex min-h-[44px] w-full items-center justify-center gap-1.5 rounded-btn bg-accent px-4 py-3 text-[13px] font-medium text-ink shadow-cta active:translate-y-px"
+            className="flex min-h-[44px] w-full items-center justify-center gap-1.5 rounded-btn bg-accent px-4 py-3 text-[13px] font-medium text-white shadow-cta active:translate-y-px"
           >
             <RefreshCcw size={14} strokeWidth={1.55} />
             刷新重试

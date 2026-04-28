@@ -65,7 +65,7 @@ export default function ShareLinkButton({
         type="button"
         onClick={handleClick}
         disabled={busy}
-        className="flex min-h-[48px] w-full items-center justify-center gap-2 rounded-btn border border-[rgba(30,58,95,0.18)] bg-surface px-4 py-3 text-[13px] font-medium text-ink shadow-card transition-colors hover:bg-canvas disabled:opacity-50"
+        className="flex min-h-[48px] w-full items-center justify-center gap-2 rounded-btn border border-hairline bg-surface px-4 py-3 text-[13px] font-medium text-ink shadow-card transition-colors hover:bg-canvas disabled:opacity-50"
       >
         {shareUrl ? (
           copied ? (

@@ -1,8 +1,10 @@
 import type { Config } from 'tailwindcss'
 
 /**
- * v5 视觉系统 — Block 3 锁定的 token。
- * 颜色对应 docs/prototype/v5-mockup.html。
+ * Visual Polish 2.1 — mature but alive Japanese life-admin palette.
+ *
+ * 上一版把「克制」推成了沉闷灰绿。这里重新把信任锚点放回深海军蓝，
+ * 但不用政府蓝；动作色改成低饱和珊瑚赤，让产品有温度而不幼稚。
  */
 const config: Config = {
   content: [
@@ -13,92 +15,102 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // === v5 brand tokens (PROJECT_MEMORY 锁定的视觉规范) ===
-        // 主色 — 信赖蓝（标题、icon stroke、深底）
-        ink: '#1E3A5F',
-        // 强调色 — 温暖橙（CTA、active state、accent）
-        accent: '#F6B133',
-        'accent-2': '#FFF8EA', // 强调色的浅版（icon 背景、卡片高亮）
-        // 背景 — 柔和米
-        canvas: '#FFF5E6',
-        // 卡片 — 纯白
+        // === Product tokens ===
+        // 深海军蓝：信任锚点。比政府蓝暖一点，比墨青更有精神。
+        ink: '#18324A',
+        // 珊瑚赤：主 CTA / 进度 / 重要行动。比旧橙成熟，比赤金更有生命力。
+        accent: '#E56F4F',
+        'accent-2': '#FFF0E8',
+        // 温暖纸白：比奶油米更清爽，不再发黄。
+        canvas: '#FAF7F1',
+        // 卡片纯净但保留一点暖度。
         surface: '#FFFFFF',
-        // 边框 / 分隔线 — rgba(30, 58, 95, 0.08) 的近似十六进制
-        hairline: 'rgba(30, 58, 95, 0.08)',
+        // 边线回到蓝灰中性，和信息产品气质一致。
+        hairline: 'rgba(24, 50, 74, 0.12)',
         // 辅助色
-        'cool-blue': '#E6EEF5', // 清爽蓝灰（背景型）
-        success: '#57A77B', // 安心绿
-        danger: '#E2574C', // 警示红
-        slate: '#4A5563', // 沉稳灰
+        'cool-blue': '#EAF3F7',
+        success: '#2E7D65',
+        danger: '#C64F45',
+        slate: '#405161',
         // 灰阶
-        ash: '#6E7A85', // 副文本
-        haze: '#B5B0A4', // tab 未选中、placeholder
-        chip: '#F4EFE3', // search bar 背景
+        ash: '#6E7A84',
+        haze: '#B7C0C7',
+        chip: '#F1EAE1',
 
         // === Legacy aliases (Block 1/2 代码还在用，保留兼容) ===
         background: 'var(--background)',
         foreground: 'var(--foreground)',
         brand: {
-          blue: '#1E3A5F',
-          orange: '#F6B133',
-          cream: '#FFF5E6',
-          bluegray: '#E6EEF5',
-          green: '#D7EDE6',
-          gray: '#4A5563',
+          blue: '#18324A',
+          orange: '#E56F4F',
+          cream: '#FAF7F1',
+          bluegray: '#EAF3F7',
+          green: '#E2F1EA',
+          gray: '#405161',
         },
         verdict: {
-          green: '#2D9B6F',
-          yellow: '#F6B133',
-          red: '#E05252',
+          green: '#2E7D65',
+          yellow: '#E56F4F',
+          red: '#C64F45',
         },
-        base: '#FFF5E6',
+        base: '#FAF7F1',
         card: '#FFFFFF',
-        line: '#E6EEF5',
-        title: '#1E3A5F',
-        body: '#4A5563',
-        muted: '#6B7280',
-        primary: '#F6B133',
-        'primary-hover': '#E5A52E',
-        highlight: '#FFF3CD',
-        'verdict-red': '#E05252',
-        'verdict-yellow': '#F6B133',
-        'verdict-green': '#2D9B6F',
-        'risk-low-bg': '#D7EDE6',
-        'risk-low-fg': '#2D9B6F',
-        'risk-mid-bg': '#FFF3CD',
-        'risk-mid-fg': '#B45309',
-        'risk-high-bg': '#FDECEA',
-        'risk-high-fg': '#E05252',
-        'risk-notice-bg': '#E6EEF5',
-        'risk-notice-fg': '#1E3A5F',
+        line: '#DDE5EA',
+        title: '#18324A',
+        body: '#405161',
+        muted: '#6E7A84',
+        primary: '#E56F4F',
+        'primary-hover': '#D85F43',
+        highlight: '#FFF0E8',
+        'verdict-red': '#C64F45',
+        'verdict-yellow': '#E56F4F',
+        'verdict-green': '#2E7D65',
+        'risk-low-bg': '#E2F1EA',
+        'risk-low-fg': '#2E7D65',
+        'risk-mid-bg': '#FFF0E8',
+        'risk-mid-fg': '#B7533A',
+        'risk-high-bg': '#FBE7E3',
+        'risk-high-fg': '#C64F45',
+        'risk-notice-bg': '#EAF3F7',
+        'risk-notice-fg': '#18324A',
       },
       fontFamily: {
-        // v5: 系统中日字体优先，与原型一致
+        // 系统中日字体优先；加入 Yu Gothic 让日文术语更像日本工具产品。
         sans: [
           '-apple-system',
           'BlinkMacSystemFont',
           '"PingFang SC"',
           '"Hiragino Sans"',
+          '"Yu Gothic"',
+          '"YuGothic"',
           '"Noto Sans SC"',
           '"Noto Sans CJK SC"',
           'sans-serif',
         ],
+        numeric: [
+          '"SF Mono"',
+          '"SFMono-Regular"',
+          '"Roboto Mono"',
+          '"Noto Sans Mono CJK SC"',
+          'ui-monospace',
+          'monospace',
+        ],
       },
       borderRadius: {
-        // v5 圆角规范：卡片 14, 按钮 12, 小标签 8-10
-        card: '14px',
-        btn: '12px',
+        // 更接近成熟移动产品：卡片 16、按钮 14、标签 999/10。
+        card: '16px',
+        btn: '14px',
         chip: '10px',
       },
       boxShadow: {
-        // 视觉精修：hairline + 2-3 层柔和 elevation，避免单层阴影的工程感。
-        soft: '0 1px 0 rgba(30, 58, 95, 0.04)',
+        // Neutral elevation: 清爽、可见，但不要塑料感。
+        soft: '0 1px 0 rgba(24, 50, 74, 0.035)',
         card:
-          '0 1px 0 rgba(30, 58, 95, 0.04), 0 10px 24px rgba(30, 58, 95, 0.055)',
+          '0 1px 0 rgba(24, 50, 74, 0.035), 0 10px 28px rgba(24, 50, 74, 0.06)',
         raised:
-          '0 1px 0 rgba(30, 58, 95, 0.05), 0 12px 28px rgba(30, 58, 95, 0.07), 0 2px 8px rgba(30, 58, 95, 0.035)',
+          '0 1px 0 rgba(24, 50, 74, 0.045), 0 18px 44px rgba(24, 50, 74, 0.10), 0 5px 14px rgba(24, 50, 74, 0.055)',
         cta:
-          '0 1px 0 rgba(255, 255, 255, 0.42) inset, 0 10px 22px rgba(246, 177, 51, 0.24), 0 2px 7px rgba(30, 58, 95, 0.08)',
+          '0 1px 0 rgba(255, 255, 255, 0.36) inset, 0 14px 28px rgba(229, 111, 79, 0.22), 0 3px 9px rgba(24, 50, 74, 0.10)',
       },
       maxWidth: {
         // 桌面端居中显示「手机视觉」

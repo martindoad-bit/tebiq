@@ -72,25 +72,25 @@ export default function InviteClient() {
   return (
     <div className="pt-2 pb-4">
       <section className="rounded-card border border-hairline bg-surface px-4 pt-4 pb-5 text-center shadow-card">
-        <div className="relative mx-auto h-[150px] w-full overflow-hidden rounded-[14px] bg-accent-2">
+        <div className="relative mx-auto h-[230px] w-full overflow-hidden rounded-card border border-white/80 bg-surface shadow-raised">
           <Image
-            src="/illustrations/invite-gift.png"
+            src="/illustrations/invite-share-wide-image2.png"
             alt=""
             fill
             priority
             sizes="(max-width: 420px) 90vw, 360px"
             className="object-cover"
           />
-          <div className="pointer-events-none absolute inset-0 rounded-[14px] ring-1 ring-white/65" />
+          <div className="pointer-events-none absolute inset-0 rounded-card ring-1 ring-white/60" />
         </div>
         <div className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-accent/35 bg-accent-2 px-3 py-1 text-[11px] font-medium text-ink">
           <Gift size={13} strokeWidth={1.55} />
           双方各得会员体验
         </div>
-        <h1 className="mt-3 text-[22px] font-medium leading-tight text-ink">
+        <h1 className="mt-4 text-[clamp(28px,8.5vw,38px)] font-semibold leading-tight text-ink">
           邀请朋友一起用 TEBIQ
         </h1>
-        <p className="mx-auto mt-2 max-w-[300px] text-[12px] leading-[1.65] text-ash">
+        <p className="mx-auto mt-3 max-w-[330px] text-[clamp(14px,4vw,17px)] leading-[1.65] text-slate/78">
           朋友通过你的链接注册成功后，你和朋友各获得 7 天 basic 会员体验。
         </p>
       </section>

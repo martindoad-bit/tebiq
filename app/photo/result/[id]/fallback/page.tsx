@@ -113,7 +113,7 @@ export default async function PhotoFallbackPage({
           href={`/consultation?from=photo_fallback&doc_id=${doc.id}`}
           eventName={EVENT.PHOTO_FALLBACK_RETRY}
           payload={{ docId: doc.id, action: 'feedback' }}
-          className="mt-2 flex min-h-[44px] w-full items-center justify-center gap-1.5 rounded-btn border border-[rgba(30,58,95,0.18)] bg-surface px-4 py-3 text-center text-[13px] font-medium text-ink transition-colors hover:bg-[rgba(30,58,95,0.04)]"
+          className="mt-2 flex min-h-[44px] w-full items-center justify-center gap-1.5 rounded-btn border border-hairline bg-surface px-4 py-3 text-center text-[13px] font-medium text-ink transition-colors hover:bg-canvas"
         >
           <MessageCircle size={15} strokeWidth={1.55} />
           确认是日文政府文书，反馈以改进
