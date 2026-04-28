@@ -531,6 +531,27 @@ export const loginMagicLinkTokens = pgTable(
   }),
 )
 
+// --- dev_login_links ---
+//
+// Local/dev email-login fallback. Stores generated magic links so the founder
+// can click them from /admin/dev-login without configuring Resend.
+export const devLoginLinks = pgTable(
+  'dev_login_links',
+  {
+    id: idCol(),
+    token: varchar('token', { length: 64 }).notNull(),
+    email: varchar('email', { length: 255 }).notNull(),
+    link: text('link').notNull(),
+    consumedAt: timestamp('consumed_at', { withTimezone: true }),
+    createdAt: createdAt(),
+  },
+  t => ({
+    tokenUnique: uniqueIndex('dev_login_links_token_unique').on(t.token),
+    emailCreatedIdx: index('dev_login_links_email_created_idx').on(t.email, t.createdAt),
+    consumedIdx: index('dev_login_links_consumed_idx').on(t.consumedAt),
+  }),
+)
+
 // --- 类型导出（DAL/前端用） ---
 export type Family = typeof families.$inferSelect
 export type NewFamily = typeof families.$inferInsert
@@ -564,6 +585,8 @@ export type EmailVerificationToken = typeof emailVerificationTokens.$inferSelect
 export type NewEmailVerificationToken = typeof emailVerificationTokens.$inferInsert
 export type LoginMagicLinkToken = typeof loginMagicLinkTokens.$inferSelect
 export type NewLoginMagicLinkToken = typeof loginMagicLinkTokens.$inferInsert
+export type DevLoginLink = typeof devLoginLinks.$inferSelect
+export type NewDevLoginLink = typeof devLoginLinks.$inferInsert
 
 // re-export sql for callers that want raw helpers without importing drizzle
 export { sql }
