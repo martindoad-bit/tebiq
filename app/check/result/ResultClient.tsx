@@ -25,6 +25,7 @@ import MaterialChecklist, { CollapsibleChecklist } from './components/MaterialCh
 import CTABlock from './components/CTABlock'
 import BreathCard from './components/BreathCard'
 import Logo from '@/app/_components/v5/Logo'
+import RelatedKnowledge from '@/app/_components/v5/RelatedKnowledge'
 
 const STORAGE_KEY = 'tebiq_check_answers'
 const SAVED_FOR_KEY = 'tebiq_check_saved_for' // 去重：值 = 已保存过的 history JSON
@@ -56,7 +57,7 @@ function SummaryCard({
       </div>
       <p className="text-[14px] leading-[1.7] text-ink">{summary}</p>
       <p className="mt-4 border-t border-hairline pt-3 text-[11.5px] leading-relaxed text-slate/70">
-        TEBIQ 根据你的回答整理风险点。最终提交策略请以原材料和行政書士判断为准。
+        TEBIQ 根据你的回答整理风险点。最终提交策略请以原材料、官方说明或专家意见为准。
       </p>
     </div>
   )
@@ -226,11 +227,13 @@ function ResultShell({
   banner,
   captureRef,
   signupBanner,
+  relatedTags = ['续签', '在留期間更新', '材料'],
   children,
 }: {
   banner: React.ReactNode
   captureRef: React.RefObject<HTMLDivElement>
   signupBanner?: React.ReactNode
+  relatedTags?: string[]
   children: React.ReactNode
 }) {
   return (
@@ -240,6 +243,9 @@ function ResultShell({
       <div ref={captureRef} id="result-capture">
         {banner}
         <div className="max-w-md md:max-w-3xl mx-auto px-4 py-6">{children}</div>
+        <div className="mx-auto max-w-md px-4 md:max-w-3xl">
+          <RelatedKnowledge tags={relatedTags} />
+        </div>
         <CaptureFooter />
       </div>
       <BottomActions />
@@ -463,6 +469,7 @@ function GreenResult({ summary }: { summary: string }) {
   return (
     <ResultShell
       captureRef={captureRef}
+      relatedTags={['续签', '材料', '在留期間更新']}
       signupBanner={<SignupBanner verdict="green" count={0} />}
       banner={
         <ResultHero
@@ -498,7 +505,7 @@ function GreenResult({ summary }: { summary: string }) {
 
           <CTABlock
             verdict="green"
-            description="材料齐全后即可前往最近的入管局递交。如果在准备过程中遇到任何不确定的地方，可以咨询持牌行政书士。"
+            description="材料齐全后即可前往最近的入管局递交。如果在准备过程中遇到任何不确定的地方，可以咨询专家。"
           />
         </div>
 
@@ -521,6 +528,11 @@ function YellowResult({ result, summary }: { result: JudgeResult; summary: strin
   return (
     <ResultShell
       captureRef={captureRef}
+      relatedTags={[
+        '续签',
+        '在留期間更新',
+        ...result.triggered.map(item => item.triggerLabel),
+      ]}
       signupBanner={<SignupBanner verdict="yellow" count={result.triggered.length} />}
       banner={
         <ResultHero
@@ -551,12 +563,12 @@ function YellowResult({ result, summary }: { result: JudgeResult; summary: strin
         items={needPro}
         accentColor="amber"
         sortBySeverity={false}
-        heading={{ text: `建议咨询行政書士（${needPro.length} 项）`, tone: 'amber' }}
+        heading={{ text: `建议咨询专家（${needPro.length} 项）`, tone: 'amber' }}
       />
 
       <CTABlock
         verdict="yellow"
-        description="这些问题不是绝对致命，但自行处理容易留下隐患。建议在递交申请前请书士过一遍材料和情况说明书。"
+        description="这些问题不是绝对致命，但自行处理容易留下隐患。建议在递交申请前请专家过一遍材料和情况说明书。"
       />
 
       <MaterialsPackage />
@@ -574,6 +586,11 @@ function RedResult({ result, summary }: { result: JudgeResult; summary: string }
   return (
     <ResultShell
       captureRef={captureRef}
+      relatedTags={[
+        '续签',
+        '在留期間更新',
+        ...result.triggered.map(item => item.triggerLabel),
+      ]}
       signupBanner={<SignupBanner verdict="red" count={reds.length} />}
       banner={
         <ResultHero
@@ -597,7 +614,7 @@ function RedResult({ result, summary }: { result: JudgeResult; summary: string }
       <div className="mb-6 rounded-card border border-danger bg-[rgba(198,79,69,0.08)] p-4 shadow-card">
         <p className="text-[13px] leading-relaxed text-ink">
           下列任何一项都可能直接导致续签被拒，甚至影响今后在留资格。
-          强烈建议先与持牌行政书士确认应对方案，再决定如何提交申请。
+          强烈建议先与专家确认应对方案，再决定如何提交申请。
         </p>
       </div>
 
@@ -605,7 +622,7 @@ function RedResult({ result, summary }: { result: JudgeResult; summary: string }
 
       <CTABlock
         verdict="red"
-        description="请务必在提交申请前联系持牌行政书士。每多拖一天，处理空间都会变小。"
+        description="请务必在提交申请前咨询专家。每多拖一天，处理空间都会变小。"
         emphasizeDescription
       />
 

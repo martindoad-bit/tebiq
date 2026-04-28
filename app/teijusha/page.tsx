@@ -41,7 +41,7 @@ const articleSchema = {
 
 export default function TeijushaLandingPage() {
   return (
-    <SeoVisaArticleShell articleSchema={articleSchema} title={"定住者签证指南 2026"} updated={"最新更新：2026-04-24 · 适用「定住者」（告示・非告示） [待书士审核]"}>
+    <SeoVisaArticleShell articleSchema={articleSchema} title={"定住者签证指南 2026"} updated={"最新更新：2026-04-24 · 适用「定住者」（告示・非告示）"}>
 
           <nav
             aria-label="目录"
@@ -85,7 +85,7 @@ export default function TeijushaLandingPage() {
               典型的告示定住包括：日系三世、定住者配偶者等；典型的非告示定住包括：与日本人离婚但与日本人实子有抚养关系、配偶死亡后继续抚养未成年子女、长期日本人配偶者改类等。
             </p>
             <p>
-              定住者像配偶者签证一样没有职业限制，可以正职、兼职、自营。在留期间通常为 5 年、3 年、1 年或 6 个月。[待书士审核]
+              定住者像配偶者签证一样没有职业限制，可以正职、兼职、自营。在留期间通常为 5 年、3 年、1 年或 6 个月。
             </p>
           </Section>
 
@@ -107,7 +107,7 @@ export default function TeijushaLandingPage() {
                 <strong>无重大违规：</strong>无刑事违规，无严重交通违规。
               </Bullet>
               <Bullet>
-                <strong>身份事项申报：</strong>住所、姓氏、亲属关系变化等 14 天内申报。[待书士审核]
+                <strong>身份事项申报：</strong>住所、姓氏、亲属关系变化等 14 天内申报。
               </Bullet>
             </ul>
           </Section>
@@ -125,7 +125,7 @@ export default function TeijushaLandingPage() {
               </Bullet>
             </ul>
             <p className="text-ash text-[11px] mt-3">
-              来源：法務省（令和 8 年 4 月 1 日施行）/ 出入国在留管理庁公开资料 [待书士审核]
+              来源：法務省（令和 8 年 4 月 1 日施行）/ 出入国在留管理庁公开资料
             </p>
           </Section>
 
@@ -144,7 +144,7 @@ export default function TeijushaLandingPage() {
                 <strong>长期出国：</strong>长时间不在日本可能被认为「定住事由」实质性中断。
               </Bullet>
               <Bullet>
-                <strong>误以为「定住=永住」：</strong>定住者仍有在留期间限制，需要按时续签。[待书士审核]
+                <strong>误以为「定住=永住」：</strong>定住者仍有在留期间限制，需要按时续签。
               </Bullet>
             </ul>
           </Section>
@@ -161,7 +161,7 @@ export default function TeijushaLandingPage() {
                 <strong>纳税证明 / 社保记录确认：</strong>到市役所获取最近 1-2 年的纳税证明和加入记录。
               </Bullet>
               <Bullet>
-                <strong>有事由变化早咨询：</strong>子女独立、再婚、新增抚养等情况下，应在变化发生后尽快约书士。
+                <strong>有事由变化早咨询：</strong>子女独立、再婚、新增抚养等情况下，应在变化发生后尽快约专家。
               </Bullet>
               <Bullet>
                 <strong>未来归化或永住规划：</strong>定住者可作为永住或归化的过渡，提前规划居住时间。
@@ -188,7 +188,7 @@ export default function TeijushaLandingPage() {
           </Link>
 
           <p className="text-center text-ash text-[11px] mt-8 leading-relaxed">
-            本页面内容不构成法律意见，具体情况请咨询持牌行政书士。
+            本页面内容不构成法律意见，具体情况请咨询专家。
           </p>
     </SeoVisaArticleShell>
   )

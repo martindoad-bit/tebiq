@@ -92,7 +92,7 @@ function buildAiSystemPrompt(
 - 公司类别：${member.companyType ?? '未填'}
 - 行业：${member.currentJobIndustry ?? '未填'}\n`
     : ''
-  return `你是 TEBIQ 的行政书士助理。基于用户的问卷答案，生成一段 200 字以内的「你需要特别注意的地方」。
+  return `你是 TEBIQ 的在日手续助理。基于用户的问卷答案，生成一段 200 字以内的「你需要特别注意的地方」。
 
 判定结果：${result.verdict}
 风险触发项：
@@ -104,7 +104,7 @@ ${profilePart}
 1. 直接给出"需要特别注意的地方"，不要重复摘要
 2. 200 字以内，分 2-3 个要点
 3. 陈述事实，不做法律判断，不说"会被拒"
-4. 复杂情况建议联系书士
+4. 复杂情况建议咨询专家
 5. 末尾不要加任何免责声明（程序会另行添加）`
 }
 
@@ -112,7 +112,7 @@ async function callAi(systemPrompt: string): Promise<string> {
   const awsKey = process.env.AWS_ACCESS_KEY_ID
   const awsSecret = process.env.AWS_SECRET_ACCESS_KEY
   if (!awsKey || !awsSecret) {
-    return '请根据上方风险项逐条处理，材料齐全后再行递交。复杂情况建议咨询持牌行政书士。'
+    return '请根据上方风险项逐条处理，材料齐全后再行递交。复杂情况建议咨询专家。'
   }
   try {
     const AnthropicBedrock = (await import('@anthropic-ai/bedrock-sdk')).default
@@ -132,7 +132,7 @@ async function callAi(systemPrompt: string): Promise<string> {
   } catch {
     /* fall-through to fallback */
   }
-  return '请根据上方风险项逐条处理，材料齐全后再行递交。复杂情况建议咨询持牌行政书士。'
+  return '请根据上方风险项逐条处理，材料齐全后再行递交。复杂情况建议咨询专家。'
 }
 
 export async function POST(req: Request) {

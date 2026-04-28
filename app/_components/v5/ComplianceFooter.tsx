@@ -1,15 +1,3 @@
-/**
- * ComplianceFooter — 行政書士法合规底注
- *
- * 第 6 天专业人士反馈后新增。所有产生「建议行动」的 surface（自查结果、
- * 拍照即懂结果、知识详情、提醒等）必须挂这个组件。
- *
- * 两个核心声明：
- * 1. 非法律意见（行政書士法第 21 条）
- * 2. 市役所行动以居住地实际窗口为准（各区役所规则微妙不同）
- *
- * 视觉刻意低调（text-ash 11px），避免分散主要建议的注意力。
- */
 import { ShieldAlert } from 'lucide-react'
 
 interface Props {
@@ -30,7 +18,7 @@ export default function ComplianceFooter({
         <div className="space-y-1.5">
           <p>
             以上为参考信息，<strong className="text-slate">非法律意见</strong>。
-            复杂或个别情况请咨询持牌行政書士。
+            具体以官方 website 或专家为准。
           </p>
           {includeMunicipalityNote && (
             <p>

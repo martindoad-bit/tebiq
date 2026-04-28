@@ -19,9 +19,9 @@ const BUTTON_CLASS: Record<Verdict, string> = {
 }
 
 const DEFAULT_CTA_LABEL: Record<Verdict, string> = {
-  red: '立即联系专业书士 →',
-  yellow: '联系专业书士确认 →',
-  green: '联系专业书士确认 →',
+  red: '立即咨询专家 →',
+  yellow: '咨询专家确认 →',
+  green: '咨询专家确认 →',
 }
 
 const BUTTON_HEIGHT: Record<Verdict, string> = {

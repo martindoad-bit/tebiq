@@ -442,6 +442,11 @@ export const articles = pgTable(
     sourcesCount: integer('sources_count'),
     lastVerifiedAt: timestamp('last_verified_at', { withTimezone: true }),
     reviewNotes: text('review_notes'),
+    docTypeTags: jsonb('doc_type_tags').$type<string[]>(),
+    scenarioTags: jsonb('scenario_tags').$type<string[]>(),
+    appliesTo: jsonb('applies_to').$type<string[]>(),
+    urgencyLevel: varchar('urgency_level', { length: 24 }),
+    estimatedReadTime: integer('estimated_read_time'),
     history: jsonb('history').$type<ArticleHistoryEntry[]>(),
     createdAt: createdAt(),
     updatedAt: updatedAt(),
@@ -452,6 +457,34 @@ export const articles = pgTable(
     visibilityIdx: index('articles_visibility_idx').on(t.visibility),
     categoryIdx: index('articles_category_idx').on(t.category),
     updatedIdx: index('articles_updated_at_idx').on(t.updatedAt),
+    urgencyLevelIdx: index('articles_urgency_level_idx').on(t.urgencyLevel),
+  }),
+)
+
+// --- text_understand_requests ---
+export const textUnderstandRequests = pgTable(
+  'text_understand_requests',
+  {
+    id: idCol(),
+    familyId: varchar('family_id', { length: 24 })
+      .references(() => families.id, { onDelete: 'cascade' }),
+    memberId: varchar('member_id', { length: 24 }).references(() => members.id, {
+      onDelete: 'set null',
+    }),
+    sessionId: varchar('session_id', { length: 64 }),
+    inputHash: varchar('input_hash', { length: 64 }).notNull(),
+    summary: text('summary'),
+    aiResponse: jsonb('ai_response').$type<Record<string, unknown>>(),
+    createdAt: createdAt(),
+  },
+  t => ({
+    familyIdx: index('text_understand_family_id_idx').on(t.familyId),
+    sessionIdx: index('text_understand_session_id_idx').on(t.sessionId),
+    createdIdx: index('text_understand_created_at_idx').on(t.createdAt),
+    ownerRequired: check(
+      'text_understand_family_or_session_required',
+      sql`${t.familyId} IS NOT NULL OR ${t.sessionId} IS NOT NULL`,
+    ),
   }),
 )
 
@@ -569,6 +602,8 @@ export type QuizResult = typeof quizResults.$inferSelect
 export type NewQuizResult = typeof quizResults.$inferInsert
 export type Document = typeof documents.$inferSelect
 export type NewDocument = typeof documents.$inferInsert
+export type TextUnderstandRequest = typeof textUnderstandRequests.$inferSelect
+export type NewTextUnderstandRequest = typeof textUnderstandRequests.$inferInsert
 export type Notification = typeof notifications.$inferSelect
 export type NewNotification = typeof notifications.$inferInsert
 export type Invitation = typeof invitations.$inferSelect

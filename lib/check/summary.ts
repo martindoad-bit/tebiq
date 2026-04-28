@@ -66,7 +66,7 @@ function yellowSummary(triggered: TriggeredItem[]): string {
   const sorted = sortBySeverityPriority(triggered)
   const top = sorted[0]
   const pro = triggered.filter(t => !t.selfFix).length
-  const proPart = pro > 0 ? `，其中 ${pro} 项建议咨询书士` : ''
+  const proPart = pro > 0 ? `，其中 ${pro} 项建议咨询专家` : ''
   return `发现 ${triggered.length} 项需要处理：最关键是「${top.triggerLabel}」${proPart}。`
 }
 

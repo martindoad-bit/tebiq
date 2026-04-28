@@ -1,95 +1,170 @@
-/**
- * Screen 01 — 首页
- *
- * v5 layout：
- *   - AppBar: TEBIQ logo（左）+ 通知图标（右）
- *   - Hero: 你的在日生活好帮手 / 安心在日本的每一步
- *   - Action card primary: 拍照即懂 → /photo
- *   - Action card secondary: 续签自查 → /check
- *   - 「你有 N 个需要关注的事项」 + 待办列表（来自 documents 表）
- *   - TabBar 在底部
- *
- * 已登录 vs 未登录差异：
- *   - 未登录：待办 section 隐藏；登录 CTA 替代（轻提示 "登录解锁档案"）
- *   - 已登录：从 documents 表读最近的 urgency=critical|important 行
- */
 import Link from 'next/link'
 import type { ReactNode } from 'react'
 import {
   Bell,
-  Archive,
-  CalendarClock,
-  ChevronRight,
+  BookOpenCheck,
   Camera,
+  CheckSquare,
+  ChevronRight,
   ClipboardCheck,
-  FileText,
-  BellRing,
+  Database,
+  Languages,
   ShieldCheck,
 } from 'lucide-react'
 import AppShell from '@/app/_components/v5/AppShell'
 import TabBar from '@/app/_components/v5/TabBar'
 import Logo from '@/app/_components/v5/Logo'
 import TrackedLink from '@/app/_components/v5/TrackedLink'
+import SoonToolCard from '@/app/_components/v5/SoonToolCard'
 import { EVENT, type EventName } from '@/lib/analytics/events'
 import { getCurrentUser } from '@/lib/auth/session'
+import { listLatestPolicyArticles } from '@/lib/db/queries/articles'
 import { listDocumentsByFamilyId } from '@/lib/db/queries/documents'
-import type { Document } from '@/lib/db/schema'
+import { buildUserContext } from '@/lib/photo/user-context'
+import { sanitizePublicKnowledgeText } from '@/lib/knowledge/public-text'
 
 export const dynamic = 'force-dynamic'
 
+interface TodayCard {
+  title: string
+  desc: string
+  href: string
+  icon: ReactNode
+}
+
 export default async function HomePage() {
-  const user = await getCurrentUser()
-  const todos: Document[] = user
-    ? (await listDocumentsByFamilyId(user.familyId, 5)).filter(
-        d => d.urgency === 'critical' || d.urgency === 'important',
-      )
-    : []
+  const user = await safeGetCurrentUser()
+  const [policyArticles, userContext, docs] = await Promise.all([
+    safeListLatestPolicyArticles(),
+    user ? safeBuildUserContext(user.id) : Promise.resolve(null),
+    user ? safeListDocumentsByFamilyId(user.familyId) : Promise.resolve([]),
+  ])
+
+  const todayCards = user && userContext
+    ? buildLoggedInTodayCards(userContext, docs.length)
+    : buildDefaultTodayCards()
 
   return (
     <AppShell appBar={<HomeAppBar />} tabBar={<TabBar />}>
       <section className="px-0.5 pb-1 pt-4">
         <div className="inline-flex items-center gap-2 rounded-full bg-cool-blue px-3 py-1.5 text-[clamp(12px,3.4vw,14px)] font-semibold text-ink/85">
           <span className="h-1.5 w-1.5 rounded-full bg-success" />
-          在日生活工具集
+          在日生活好帮手
         </div>
-        <h1 className="mb-3 mt-4 text-[clamp(34px,10.6vw,52px)] font-semibold leading-[1.12] tracking-[-0.01em] text-ink">
-          你的在日生活
+        <h1 className="mb-3 mt-4 text-[clamp(34px,10.4vw,50px)] font-semibold leading-[1.12] text-ink">
+          今天要处理的事
           <br />
-          好帮手
+          先看这里
         </h1>
-        <p className="max-w-[360px] text-[clamp(15px,4.3vw,19px)] leading-[1.62] text-slate/82">
-          拍照看懂日文文件，续签前先做风险自查。
+        <p className="max-w-[360px] text-[clamp(15px,4.2vw,18px)] leading-[1.62] text-slate/82">
+          拍文件、粘贴日文、做续签自查，把在日生活的麻烦事拆小。
         </p>
       </section>
 
-      <div className="mt-5 space-y-3.5">
-        <ActionCard
-          variant="primary"
-          icon={<Camera size={23} strokeWidth={1.7} color="#18324A" />}
+      <SectionTitle title="今日相关" actionHref="/tools" actionLabel="全部工具" />
+      <div className="mt-2.5 flex snap-x gap-3 overflow-x-auto pb-1">
+        {todayCards.map(card => (
+          <TodayCard key={card.title} {...card} />
+        ))}
+      </div>
+
+      <SectionTitle title="核心工具" />
+      <div className="mt-2.5 grid grid-cols-2 gap-3">
+        <ToolCard
           title="拍照即懂"
-          subtitle="拍一张，马上知道要不要处理"
+          desc="拍日文文件"
           href="/photo"
+          icon={<Camera size={19} strokeWidth={1.55} />}
           eventName={EVENT.HOME_PHOTO_CARD_CLICK}
         />
-        <ActionCard
-          variant="secondary"
-          icon={<ClipboardCheck size={23} strokeWidth={1.7} color="#E56F4F" />}
+        <ToolCard
+          title="文字即懂"
+          desc="粘贴日文求助"
+          href="/ask"
+          icon={<Languages size={19} strokeWidth={1.55} />}
+        />
+        <ToolCard
           title="续签自查"
-          subtitle="3 分钟了解你的签证风险"
+          desc="3 分钟看风险"
           href="/check"
+          icon={<ClipboardCheck size={19} strokeWidth={1.55} />}
           eventName={EVENT.HOME_CHECK_CARD_CLICK}
+        />
+        <SoonToolCard
+          title="任务清单"
+          desc="即将开放"
+          icon={<CheckSquare size={19} strokeWidth={1.55} />}
         />
       </div>
 
-      <TrustSummary />
+      <SectionTitle title="最新政策" actionHref="/knowledge" actionLabel="更多" />
+      <section className="mt-2.5 rounded-card border border-hairline bg-surface px-4 py-3 shadow-card">
+        {policyArticles.length > 0 ? (
+          <ul className="divide-y divide-hairline">
+            {policyArticles.map(article => (
+              <li key={article.id} className="py-2.5 first:pt-0 last:pb-0">
+                <Link
+                  href={`/knowledge/${article.slug ?? article.id}`}
+                  className="group flex items-center gap-2.5"
+                >
+                  <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-[10px] bg-accent-2 text-ink">
+                    <BookOpenCheck size={15} strokeWidth={1.55} />
+                  </span>
+                  <span className="min-w-0 flex-1">
+                    <span className="block truncate text-[12.5px] font-medium text-ink">
+                      {sanitizePublicKnowledgeText(article.title)}
+                    </span>
+                    <span className="mt-1 block text-[10.5px] text-ash">
+                      更新于 {formatDate(article.updatedAt)}
+                    </span>
+                  </span>
+                  <ChevronRight size={14} className="text-haze group-hover:text-ink" />
+                </Link>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-[12px] leading-[1.65] text-ash">
+            暂无公开政策更新。后续会在这里显示与你相关的新变化。
+          </p>
+        )}
+      </section>
 
-      {user ? (
-        <TodoSection todos={todos} />
-      ) : (
-        <UnloggedHint />
-      )}
+      <TrustStrip />
     </AppShell>
   )
+}
+
+async function safeGetCurrentUser() {
+  try {
+    return await getCurrentUser()
+  } catch {
+    return null
+  }
+}
+
+async function safeListLatestPolicyArticles() {
+  try {
+    return await listLatestPolicyArticles(3)
+  } catch {
+    return []
+  }
+}
+
+async function safeBuildUserContext(memberId: string) {
+  try {
+    return await buildUserContext({ memberId })
+  } catch {
+    return null
+  }
+}
+
+async function safeListDocumentsByFamilyId(familyId: string) {
+  try {
+    return await listDocumentsByFamilyId(familyId, 8)
+  } catch {
+    return []
+  }
 }
 
 function HomeAppBar() {
@@ -107,253 +182,168 @@ function HomeAppBar() {
   )
 }
 
-function TrustSummary() {
-  return (
-    <section className="mt-4 grid grid-cols-3 gap-2">
-      <TrustChip
-        icon={<FileText size={15} strokeWidth={1.55} />}
-        title="识别重点"
-        sub="金额·期限"
-      />
-      <TrustChip
-        icon={<Archive size={15} strokeWidth={1.55} />}
-        title="归入档案"
-        sub="按文件整理"
-      />
-      <TrustChip
-        icon={<CalendarClock size={15} strokeWidth={1.55} />}
-        title="提醒事项"
-        sub="到期前查看"
-      />
-    </section>
-  )
+function buildLoggedInTodayCards(
+  context: NonNullable<Awaited<ReturnType<typeof buildUserContext>>>,
+  documentCount: number,
+): TodayCard[] {
+  const expiry = context.daysToVisaExpiry
+  const expiryText = expiry === null
+    ? '先补一下在留期限，提醒会更准。'
+    : expiry <= 30
+      ? `在留期限还剩 ${expiry} 天，先检查材料和日期。`
+      : `在留期限还剩 ${expiry} 天，可以提前整理材料。`
+  return [
+    {
+      title: '在留期限',
+      desc: expiryText,
+      href: '/my/profile',
+      icon: <ShieldCheck size={18} strokeWidth={1.55} />,
+    },
+    {
+      title: context.hasRecentQuizResult ? '自查已做过' : '先做一次自查',
+      desc: context.hasRecentQuizResult
+        ? '可以根据最近结果继续看材料和提醒。'
+        : '3 分钟先知道哪些地方要留意。',
+      href: '/check',
+      icon: <ClipboardCheck size={18} strokeWidth={1.55} />,
+    },
+    {
+      title: documentCount > 0 ? '最近文件' : '遇到日文文件',
+      desc: documentCount > 0
+        ? `你的档案里已有 ${documentCount} 份识别记录。`
+        : '拍一张或粘贴文字，先看懂重点。',
+      href: documentCount > 0 ? '/my/archive' : '/photo',
+      icon: <Camera size={18} strokeWidth={1.55} />,
+    },
+  ]
 }
 
-function TrustChip({
-  icon,
-  title,
-  sub,
-}: {
-  icon: ReactNode
-  title: string
-  sub: string
-}) {
-  return (
-    <div className="min-w-0 rounded-[14px] border border-hairline bg-surface/76 px-2.5 py-2.5 shadow-soft">
-      <div className="mb-1.5 flex h-7 w-7 items-center justify-center rounded-[9px] bg-cool-blue text-ink">
-        {icon}
-      </div>
-      <div className="truncate text-[11.5px] font-semibold leading-none text-ink">{title}</div>
-      <div className="mt-1 truncate text-[10px] leading-none text-ash">{sub}</div>
-    </div>
-  )
+function buildDefaultTodayCards(): TodayCard[] {
+  return [
+    {
+      title: '收到市役所信件？',
+      desc: '拍一张，先看懂期限、金额和处理步骤。',
+      href: '/photo',
+      icon: <Camera size={18} strokeWidth={1.55} />,
+    },
+    {
+      title: '日文邮件看不懂？',
+      desc: '粘贴原文，用中文拆出重点。',
+      href: '/ask',
+      icon: <Languages size={18} strokeWidth={1.55} />,
+    },
+    {
+      title: '准备续签？',
+      desc: '先做一次自查，知道哪里要留意。',
+      href: '/check',
+      icon: <ClipboardCheck size={18} strokeWidth={1.55} />,
+    },
+  ]
 }
 
-function ActionCard({
-  variant,
-  icon,
-  title,
-  subtitle,
-  href,
-  eventName,
-}: {
-  variant: 'primary' | 'secondary'
-  icon: ReactNode
-  title: string
-  subtitle: string
-  href: string
-  eventName: EventName
-}) {
-  const wrap =
-    variant === 'primary'
-      ? 'bg-accent text-white shadow-cta'
-      : 'bg-surface border border-hairline shadow-card'
-  const iconBg =
-    variant === 'primary' ? 'bg-white' : 'bg-accent-2'
-  const titleColor = variant === 'primary' ? 'text-white' : 'text-ink'
-  const subColor =
-    variant === 'primary' ? 'text-white/82' : 'text-ash'
-
-  return (
-    <TrackedLink
-      href={href}
-      eventName={eventName}
-      className={`block ${wrap} flex items-center gap-3.5 rounded-card p-4 transition active:translate-y-px active:opacity-90`}
-    >
-      <span
-        className={`${iconBg} flex h-[50px] w-[50px] flex-shrink-0 items-center justify-center rounded-[15px]`}
-      >
-        {icon}
-      </span>
-      <span className="flex-1 min-w-0">
-        <span className={`block text-[clamp(18px,5.1vw,22px)] font-semibold leading-tight ${titleColor}`}>{title}</span>
-        <span className={`mt-1 block text-[clamp(13px,3.7vw,15px)] leading-snug ${subColor}`}>{subtitle}</span>
-      </span>
-    </TrackedLink>
-  )
-}
-
-function TodoSection({ todos }: { todos: Document[] }) {
-  if (todos.length === 0) {
-    return (
-      <EmptyHomeState
-        title="目前没有需要关注的事项"
-        description="扫到的文件、自查结果和到期提醒会出现在这里。"
-      />
-    )
-  }
-  return (
-    <>
-      <h2 className="text-[13px] font-medium text-ink mt-4 mb-2.5 px-1">
-        你有 {todos.length} 个需要关注的事项
-      </h2>
-      <div className="space-y-2">
-        {todos.map(t => (
-          <TodoRow key={t.id} doc={t} />
-        ))}
-      </div>
-    </>
-  )
-}
-
-function TodoRow({ doc }: { doc: Document }) {
-  const dotColor =
-    doc.urgency === 'critical'
-      ? 'bg-danger'
-      : doc.urgency === 'important'
-        ? 'bg-accent'
-        : doc.urgency === 'normal'
-          ? 'bg-success'
-          : 'bg-haze'
-  const issuer =
-    typeof doc.aiResponse === 'object' && doc.aiResponse !== null && 'issuer' in doc.aiResponse
-      ? String((doc.aiResponse as { issuer?: unknown }).issuer ?? '')
-      : ''
-  const deadline =
-    typeof doc.aiResponse === 'object' && doc.aiResponse !== null && 'deadline' in doc.aiResponse
-      ? String((doc.aiResponse as { deadline?: unknown }).deadline ?? '')
-      : ''
-
+function TodayCard({ title, desc, href, icon }: TodayCard) {
   return (
     <Link
-      href={`/photo/result/${doc.id}`}
-      className="bg-surface border border-hairline rounded-chip px-3.5 py-3 flex items-center gap-2.5 active:opacity-80 transition"
+      href={href}
+      className="flex min-h-[142px] w-[78%] max-w-[290px] flex-shrink-0 snap-start flex-col rounded-card border border-hairline bg-surface px-4 py-3.5 shadow-card transition active:translate-y-px"
     >
-      <span className="w-7 h-7 rounded-[7px] bg-accent-2 flex items-center justify-center flex-shrink-0">
-        <span className="block w-3 h-4 bg-ink rounded-[2px]" />
-      </span>
-      <span className="flex-1 min-w-0">
-        <span className="flex items-center gap-1.5 text-[13px] font-medium text-ink">
-          <span className={`w-1.5 h-1.5 rounded-full ${dotColor}`} />
-          <span className="truncate">{doc.docType ?? '未识别文件'}</span>
+      <span className="flex items-center gap-2">
+        <span className="flex h-9 w-9 items-center justify-center rounded-[12px] bg-accent-2 text-ink">
+          {icon}
         </span>
-        {issuer && <span className="block text-[10.5px] text-ash mt-0.5">来自：{issuer}</span>}
-        {deadline && <span className="block text-[10.5px] text-ash">截止：{deadline}</span>}
+        <span className="text-[14px] font-medium leading-snug text-ink">{title}</span>
       </span>
-      <ChevronRight size={16} className="text-haze flex-shrink-0" />
+      <span className="mt-3 block flex-1 text-[12px] leading-[1.65] text-slate">{desc}</span>
+      <span className="mt-3 flex justify-end text-[11.5px] font-medium text-ink">
+        查看 <ChevronRight size={13} strokeWidth={1.55} />
+      </span>
     </Link>
   )
 }
 
-function UnloggedHint() {
+function ToolCard({
+  title,
+  desc,
+  href,
+  icon,
+  eventName,
+}: {
+  title: string
+  desc: string
+  href: string
+  icon: ReactNode
+  eventName?: EventName
+}) {
+  const className =
+    'min-h-[124px] rounded-card border border-hairline bg-surface px-3.5 py-3.5 shadow-card transition active:translate-y-px'
+  const inner = (
+    <>
+      <span className="flex h-10 w-10 items-center justify-center rounded-[13px] bg-accent-2 text-ink">
+        {icon}
+      </span>
+      <span className="mt-3 block text-[14px] font-medium leading-snug text-ink">{title}</span>
+      <span className="mt-1 block text-[11px] leading-[1.55] text-ash">{desc}</span>
+    </>
+  )
+  if (eventName) {
+    return (
+      <TrackedLink href={href} eventName={eventName} className={className}>
+        {inner}
+      </TrackedLink>
+    )
+  }
   return (
-    <EmptyHomeState
-      title="登录后建立你的生活档案"
-      description="拍照识别的文件、自查结果和到期提醒，会自动归入「我的档案」。"
-      actionHref="/login"
-      actionLabel="登录 / 注册"
-    />
+    <Link href={href} className={className}>
+      {inner}
+    </Link>
   )
 }
 
-function EmptyHomeState({
+function SectionTitle({
   title,
-  description,
   actionHref,
   actionLabel,
 }: {
   title: string
-  description: string
   actionHref?: string
   actionLabel?: string
 }) {
   return (
-    <section className="mt-4 overflow-hidden rounded-card border border-hairline bg-surface shadow-card">
-      <div className="border-b border-hairline bg-cool-blue/55 px-4 py-3">
-        <div className="flex items-center justify-between gap-3">
-          <div>
-            <h2 className="text-[14px] font-semibold leading-snug text-ink">{title}</h2>
-            <p className="mt-1 text-[12px] leading-[1.65] text-slate/74">{description}</p>
-          </div>
-          <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-[13px] bg-surface text-ink shadow-soft">
-            <ShieldCheck size={19} strokeWidth={1.55} />
-          </span>
-        </div>
-      </div>
+    <div className="mt-5 flex items-center justify-between px-0.5">
+      <h2 className="text-[13px] font-medium text-ink">{title}</h2>
+      {actionHref && actionLabel && (
+        <Link href={actionHref} className="flex items-center text-[11px] text-ash">
+          {actionLabel}
+          <ChevronRight size={13} strokeWidth={1.55} />
+        </Link>
+      )}
+    </div>
+  )
+}
 
-      <div className="px-4 py-3">
-        <ArchivePreview />
-
-        {actionHref && actionLabel && (
-          <Link
-            href={actionHref}
-            className="mt-2.5 flex h-9 items-center justify-center rounded-btn border border-hairline bg-surface text-[13px] font-medium text-ink shadow-soft transition active:translate-y-px"
-          >
-            {actionLabel}
-            <ChevronRight size={14} strokeWidth={1.6} className="ml-0.5" />
-          </Link>
-        )}
-      </div>
+function TrustStrip() {
+  return (
+    <section className="mt-4 grid grid-cols-2 gap-2">
+      <TrustChip icon={<Database size={15} strokeWidth={1.55} />} title="数据在日本境内" />
+      <TrustChip icon={<ShieldCheck size={15} strokeWidth={1.55} />} title="信息仅供参考" />
     </section>
   )
 }
 
-function ArchivePreview() {
+function TrustChip({ icon, title }: { icon: ReactNode; title: string }) {
   return (
-    <div className="relative overflow-hidden rounded-[13px] border border-hairline bg-canvas/50 px-3 py-2.5">
-      <div className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-[12px] bg-white/80 text-ink shadow-soft">
-        <BellRing size={17} strokeWidth={1.55} />
-      </div>
-
-      <div className="mb-2 flex items-center gap-2">
-        <span className="flex h-7 w-7 items-center justify-center rounded-[9px] bg-white text-ink shadow-soft">
-          <FileText size={15} strokeWidth={1.55} />
-        </span>
-        <div>
-          <div className="text-[11.5px] font-medium leading-none text-ink">我的档案</div>
-          <div className="mt-1 text-[10px] leading-none text-ash">拍照、自查、提醒会整理在这里</div>
-        </div>
-      </div>
-
-      <div className="space-y-1 pr-10">
-        <GhostRow title="住民税通知" meta="拍照识别后保存" tone="danger" />
-        <GhostRow title="在留期間更新" meta="自查结果与提醒" tone="accent" />
-      </div>
+    <div className="flex items-center gap-2 rounded-[14px] border border-hairline bg-surface/76 px-3 py-2.5 shadow-soft">
+      <span className="flex h-7 w-7 items-center justify-center rounded-[9px] bg-cool-blue text-ink">
+        {icon}
+      </span>
+      <span className="text-[11.5px] font-medium leading-snug text-ink">{title}</span>
     </div>
   )
 }
 
-function GhostRow({
-  title,
-  meta,
-  tone,
-}: {
-  title: string
-  meta: string
-  tone: 'danger' | 'accent'
-}) {
-  const dot = tone === 'danger' ? 'bg-danger' : 'bg-accent'
-  return (
-    <div className="flex items-center gap-2 rounded-[10px] border border-white/70 bg-white/78 px-2.5 py-1.5 shadow-soft">
-      <span className={`h-1.5 w-1.5 rounded-full ${dot}`} />
-      <span className="min-w-0 flex-1">
-        <span className="block truncate text-[11.5px] font-medium leading-none text-ink">
-          {title}
-        </span>
-        <span className="mt-1 block truncate text-[9.5px] leading-none text-ash">
-          {meta}
-        </span>
-      </span>
-    </div>
-  )
+function formatDate(date: Date): string {
+  const y = date.getFullYear()
+  const m = String(date.getMonth() + 1).padStart(2, '0')
+  const d = String(date.getDate()).padStart(2, '0')
+  return `${y}/${m}/${d}`
 }

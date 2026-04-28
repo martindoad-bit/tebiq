@@ -16,6 +16,11 @@ interface Frontmatter {
   sources_count?: number
   last_verified_at?: string
   review_notes?: string
+  doc_type_tags?: string[] | string
+  scenario_tags?: string[] | string
+  applies_to?: string[] | string
+  urgency_level?: string
+  estimated_read_time?: number
 }
 
 interface ParsedDoc {
@@ -35,6 +40,14 @@ const SEED_DIR = path.join(process.cwd(), 'docs/knowledge-seed')
 function parseScalar(value: string): string | number | boolean | undefined {
   const trimmed = value.trim()
   if (!trimmed) return undefined
+  if (trimmed.startsWith('[') && trimmed.endsWith(']')) {
+    return trimmed
+      .slice(1, -1)
+      .split(',')
+      .map(item => item.trim().replace(/^["']|["']$/g, ''))
+      .filter(Boolean)
+      .join(',')
+  }
   if (trimmed === 'true') return true
   if (trimmed === 'false') return false
   if (/^\d+$/.test(trimmed)) return Number(trimmed)
@@ -66,6 +79,13 @@ function asDate(value: string | undefined): Date | null {
   return Number.isNaN(d.getTime()) ? null : d
 }
 
+function asStringList(value: string[] | string | undefined): string[] | null {
+  if (!value) return null
+  const items = Array.isArray(value) ? value : value.split(',')
+  const cleaned = items.map(item => item.trim()).filter(Boolean)
+  return cleaned.length > 0 ? Array.from(new Set(cleaned)) : null
+}
+
 function articleStatusFromFrontmatter(value: string | undefined): 'draft' | 'published' {
   const status = value?.trim().toLowerCase()
   if (status === 'draft' || status === 'archived') return 'draft'
@@ -80,13 +100,20 @@ async function upsertOne(parsed: ParsedDoc): Promise<'created' | 'updated' | 'sk
     (title ? suggestArticleSlug(title) : null)
   if (!title || !category || !slug || !parsed.body.trim()) return 'skipped'
 
-  const requiresShoshiReview = parsed.frontmatter.requires_shoshi_review ?? true
   const status = articleStatusFromFrontmatter(parsed.frontmatter.status)
   const sourcesCount =
     typeof parsed.frontmatter.sources_count === 'number'
       ? parsed.frontmatter.sources_count
       : null
   const lastVerifiedAt = asDate(parsed.frontmatter.last_verified_at)
+  const docTypeTags = asStringList(parsed.frontmatter.doc_type_tags)
+  const scenarioTags = asStringList(parsed.frontmatter.scenario_tags)
+  const appliesTo = asStringList(parsed.frontmatter.applies_to)
+  const urgencyLevel = parsed.frontmatter.urgency_level?.trim() || null
+  const estimatedReadTime =
+    typeof parsed.frontmatter.estimated_read_time === 'number'
+      ? parsed.frontmatter.estimated_read_time
+      : null
 
   const existing = await db
     .select({ id: articles.id })
@@ -103,12 +130,13 @@ async function upsertOne(parsed: ParsedDoc): Promise<'created' | 'updated' | 'sk
         slug,
         bodyMarkdown: parsed.body.trim(),
         status,
-        requiresShoshiReview,
-        lastReviewedByName: parsed.frontmatter.last_reviewed_by_name?.trim() || null,
-        lastReviewedByRegistration:
-          parsed.frontmatter.last_reviewed_by_registration?.trim() || null,
         sourcesCount,
         lastVerifiedAt,
+        docTypeTags,
+        scenarioTags,
+        appliesTo,
+        urgencyLevel,
+        estimatedReadTime,
         reviewNotes: parsed.frontmatter.review_notes?.trim() || null,
         updatedAt: new Date(),
       })
@@ -122,12 +150,14 @@ async function upsertOne(parsed: ParsedDoc): Promise<'created' | 'updated' | 'sk
     slug,
     bodyMarkdown: parsed.body.trim(),
     status,
-    requiresShoshiReview,
-    lastReviewedByName: parsed.frontmatter.last_reviewed_by_name?.trim() || null,
-    lastReviewedByRegistration:
-      parsed.frontmatter.last_reviewed_by_registration?.trim() || null,
+    requiresShoshiReview: true,
     sourcesCount,
     lastVerifiedAt,
+    docTypeTags,
+    scenarioTags,
+    appliesTo,
+    urgencyLevel,
+    estimatedReadTime,
     reviewNotes: parsed.frontmatter.review_notes?.trim() || null,
   })
   return 'created'

@@ -41,7 +41,7 @@ const articleSchema = {
 
 export default function KeieiLandingPage() {
   return (
-    <SeoVisaArticleShell articleSchema={articleSchema} title={"经营管理签证续签 2026 完全解析"} updated={"最新更新：2026-04-24 · 涵盖令和 7 年 10 月 16 日施行新规 [待书士审核]"}>
+    <SeoVisaArticleShell articleSchema={articleSchema} title={"经营管理签证续签 2026 完全解析"} updated={"最新更新：2026-04-24 · 涵盖令和 7 年 10 月 16 日施行新规"}>
 
           <nav
             aria-label="目录"
@@ -85,7 +85,7 @@ export default function KeieiLandingPage() {
               它和技人国最大的区别在于：技人国是「被雇佣」，经营管理是「自己经营或参与经营决策」。也因此，入管局对申请人和公司双方的实力都有要求，包括资本金、员工规模、办公室、事业可持续性等。
             </p>
             <p>
-              在留期间常见为 5 年、3 年、1 年、6 个月或 4 个月，新设公司初次申请通常先给 1 年。[待书士审核]
+              在留期间常见为 5 年、3 年、1 年、6 个月或 4 个月，新设公司初次申请通常先给 1 年。
             </p>
           </Section>
 
@@ -108,7 +108,7 @@ export default function KeieiLandingPage() {
                 <strong>事业计划书：</strong>需要税理士或中小企业诊断士等第三方专家确认。
               </Bullet>
               <Bullet>
-                <strong>办公室：</strong>原则不可使用自宅兼办公室，需独立场所与租赁合同。[待书士审核]
+                <strong>办公室：</strong>原则不可使用自宅兼办公室，需独立场所与租赁合同。
               </Bullet>
             </ul>
           </Section>
@@ -132,7 +132,7 @@ export default function KeieiLandingPage() {
               </Bullet>
             </ul>
             <p className="text-ash text-[11px] mt-3">
-              来源：出入国在留管理庁「在留資格経営・管理に係る上陸基準省令等の改正」（令和 7 年 10 月 16 日施行）[待书士审核]
+              来源：出入国在留管理庁「在留資格経営・管理に係る上陸基準省令等の改正」（令和 7 年 10 月 16 日施行）
             </p>
           </Section>
 
@@ -151,7 +151,7 @@ export default function KeieiLandingPage() {
                 <strong>事业计划书没有专家盖章：</strong>缺少税理士或中小企业诊断士确认，会被直接退回补充。
               </Bullet>
               <Bullet>
-                <strong>长期出国：</strong>有报道指出长期不在日本可能被判断为「实际不在经营」，影响续签。[待书士审核]
+                <strong>长期出国：</strong>有报道指出长期不在日本可能被判断为「实际不在经营」，影响续签。
               </Bullet>
             </ul>
           </Section>
@@ -171,7 +171,7 @@ export default function KeieiLandingPage() {
                 <strong>找好税理士搭档：</strong>事业计划书的第三方确认基本必备，建议长期合作。
               </Bullet>
               <Bullet>
-                <strong>做一次自查再咨询：</strong>先自查锁定主要风险点，再带着具体问题约书士，效率最高。
+                <strong>做一次自查再咨询：</strong>先自查锁定主要风险点，再带着具体问题约专家，效率最高。
               </Bullet>
             </ul>
             <p className="mt-4">
@@ -195,7 +195,7 @@ export default function KeieiLandingPage() {
           </Link>
 
           <p className="text-center text-ash text-[11px] mt-8 leading-relaxed">
-            本页面内容不构成法律意见，具体情况请咨询持牌行政书士。
+            本页面内容不构成法律意见，具体情况请咨询专家。
           </p>
     </SeoVisaArticleShell>
   )

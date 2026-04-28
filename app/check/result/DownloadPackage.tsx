@@ -263,7 +263,7 @@ function renderHtml(data: GenerateResponse): string {
     <div class="cover-foot">
       本材料包仅限本人使用 · 不得转让或转售<br/>
       本工具生成的内容仅供参考，请用户核对后自行修改提交，不构成法律服务<br/>
-      tebiq.jp · TEBIQ 由持牌行政书士团队提供内容支持
+      tebiq.jp · TEBIQ 提供在日手续信息整理
     </div>
   </section>
 
@@ -297,13 +297,13 @@ function renderHtml(data: GenerateResponse): string {
     </ul>
     <div class="final-action">
       <strong>提交后：</strong> 入管局会发受理証明，审查期间（通常 1-3 个月）可凭此证明合法继续居住和工作。<br/>
-      <strong>如遇疑问：</strong> 联系 TEBIQ 平台合作书士，或致电入管インフォメーションセンター 0570-013904。
+      <strong>如遇疑问：</strong> 咨询专家，或致电入管インフォメーションセンター 0570-013904。
     </div>
   </section>
 
   <footer>
     本材料包由 TEBIQ 自动生成，仅供参考，请用户核对后自行修改提交。<br/>
-    本工具不构成法律服务。复杂情况请咨询持牌行政书士。<br/>
+    本工具不构成法律服务。复杂情况请咨询专家。<br/>
     tebiq.jp · 生成于 ${dateStr}
   </footer>
 </div>

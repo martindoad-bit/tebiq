@@ -28,6 +28,7 @@ import AppBar from '@/app/_components/v5/AppBar'
 import TabBar from '@/app/_components/v5/TabBar'
 import EmptyVisual from '@/app/_components/v5/EmptyVisual'
 import { plainTextFromMarkdown } from '@/lib/knowledge/markdown'
+import { sanitizePublicKnowledgeText } from '@/lib/knowledge/public-text'
 import { trackClient } from '@/lib/analytics/client'
 import { EVENT } from '@/lib/analytics/events'
 
@@ -37,7 +38,6 @@ export interface KnowledgeArticleSummary {
   title: string
   bodyMarkdown: string
   category: string
-  lastReviewedBy: string | null
   updatedAt: string
 }
 
@@ -107,7 +107,7 @@ export default function KnowledgeClient({
               常见手续和在留概念
             </p>
             <p className="mt-1 text-[11px] leading-[1.55] text-ash">
-              先查清楚关键词，再决定是否需要进一步咨询。
+              先查清楚关键词，再决定下一步怎么处理。
             </p>
           </div>
         </div>
@@ -197,7 +197,7 @@ export default function KnowledgeClient({
                 </span>
                 <div className="min-w-0 flex-1">
                   <div className="text-[12.5px] font-medium leading-snug text-ink">
-                    {c.title}
+                    {sanitizePublicKnowledgeText(c.title)}
                   </div>
                   <p className="mt-1 line-clamp-2 text-[10.5px] leading-[1.55] text-ash">
                     {previewContent(c.bodyMarkdown)}
@@ -206,11 +206,6 @@ export default function KnowledgeClient({
                     <span className="text-[10px] leading-none text-ash">
                       {fmtDate(new Date(c.updatedAt))}
                     </span>
-                    {c.lastReviewedBy && (
-                      <span className="rounded-[8px] bg-[rgba(46,125,101,0.12)] px-1.5 py-1 text-[10px] font-medium leading-none text-success">
-                        已审核 by {c.lastReviewedBy}
-                      </span>
-                    )}
                   </div>
                 </div>
                 <ChevronRight
@@ -228,7 +223,7 @@ export default function KnowledgeClient({
 }
 
 function previewContent(markdown: string): string {
-  return plainTextFromMarkdown(markdown)
+  return sanitizePublicKnowledgeText(plainTextFromMarkdown(markdown))
 }
 
 function EmptyState() {

@@ -15,7 +15,7 @@ function TriggerCard({
       <div className="font-bold text-title text-base leading-snug mb-2">
         {item.triggerLabel}
       </div>
-      <div className={`${titleClass} text-xs font-bold mb-2`}>书士建议</div>
+      <div className={`${titleClass} text-xs font-bold mb-2`}>处理建议</div>
       <p className="text-body text-sm leading-relaxed">{item.fixHint}</p>
     </div>
   )

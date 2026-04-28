@@ -34,7 +34,7 @@ export default function VisaSelectPage() {
         </div>
 
         <p className="mt-8 text-center text-[11px] leading-relaxed text-ash">
-          如果你的签证类型还未列出，建议直接联系持牌行政书士咨询。
+          如果你的签证类型还未列出，建议直接联系专家咨询。
         </p>
       </div>
     </AppShell>

@@ -64,7 +64,7 @@ export default function UpdatesPage() {
         )}
 
         <p className="mt-8 text-center text-[11px] leading-relaxed text-ash">
-          信息来源以入管局官网为准；本页内容不构成法律意见，标注 [待书士审核] 的条目正在审核更新中。
+          信息来源以入管局官网为准；本页内容不构成法律意见。
         </p>
       </div>
     </AppShell>

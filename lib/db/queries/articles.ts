@@ -1,4 +1,4 @@
-import { and, desc, eq, ne, or } from 'drizzle-orm'
+import { and, desc, eq, ilike, ne, or, sql } from 'drizzle-orm'
 import { createId } from '@paralleldrive/cuid2'
 import { db } from '@/lib/db'
 import {
@@ -30,6 +30,11 @@ export interface ArticleInput {
   lastReviewedByName?: string | null
   /** Reviewer 行政書士登録番号 */
   lastReviewedByRegistration?: string | null
+  docTypeTags?: string[] | null
+  scenarioTags?: string[] | null
+  appliesTo?: string[] | null
+  urgencyLevel?: string | null
+  estimatedReadTime?: number | null
   reviewNotes?: string | null
 }
 
@@ -39,6 +44,52 @@ export async function listPublishedArticles(): Promise<Article[]> {
     .from(articles)
     .where(and(eq(articles.status, 'published'), eq(articles.visibility, 'public')))
     .orderBy(desc(articles.updatedAt))
+}
+
+export async function listLatestPolicyArticles(limit = 3): Promise<Article[]> {
+  return await db
+    .select()
+    .from(articles)
+    .where(and(
+      eq(articles.status, 'published'),
+      eq(articles.visibility, 'public'),
+      eq(articles.category, 'policy-update'),
+    ))
+    .orderBy(desc(articles.updatedAt))
+    .limit(limit)
+}
+
+export async function listRelatedArticlesByTags(
+  tags: string[],
+  limit = 2,
+): Promise<Article[]> {
+  const normalized = tags.map(t => t.trim()).filter(Boolean).slice(0, 8)
+  if (normalized.length === 0) return []
+
+  const fuzzy = normalized
+    .map(tag => {
+      const pattern = `%${tag}%`
+      return or(
+        ilike(articles.title, pattern),
+        ilike(articles.category, pattern),
+        ilike(articles.bodyMarkdown, pattern),
+        sql`${articles.docTypeTags}::text ILIKE ${pattern}`,
+        sql`${articles.scenarioTags}::text ILIKE ${pattern}`,
+        sql`${articles.appliesTo}::text ILIKE ${pattern}`,
+      )
+    })
+    .filter((item): item is NonNullable<typeof item> => Boolean(item))
+
+  return await db
+    .select()
+    .from(articles)
+    .where(and(
+      eq(articles.status, 'published'),
+      eq(articles.visibility, 'public'),
+      or(...fuzzy),
+    ))
+    .orderBy(desc(articles.updatedAt))
+    .limit(limit)
 }
 
 /** 同 category 下的其他 published 文章，按最近 updated_at 排序，最多 limit 条。 */
@@ -103,6 +154,11 @@ export async function upsertArticle(
     lastReviewedBy: input.lastReviewedBy?.trim() || null,
     lastReviewedByName: input.lastReviewedByName?.trim() || null,
     lastReviewedByRegistration: input.lastReviewedByRegistration?.trim() || null,
+    docTypeTags: input.docTypeTags === undefined ? undefined : input.docTypeTags?.length ? input.docTypeTags : null,
+    scenarioTags: input.scenarioTags === undefined ? undefined : input.scenarioTags?.length ? input.scenarioTags : null,
+    appliesTo: input.appliesTo === undefined ? undefined : input.appliesTo?.length ? input.appliesTo : null,
+    urgencyLevel: input.urgencyLevel === undefined ? undefined : input.urgencyLevel?.trim() || null,
+    estimatedReadTime: input.estimatedReadTime === undefined ? undefined : input.estimatedReadTime,
     reviewNotes: input.reviewNotes?.trim() || null,
   }
 
@@ -152,6 +208,11 @@ export async function upsertArticle(
       lastReviewedBy: input.lastReviewedBy?.trim() || null,
       lastReviewedByName: input.lastReviewedByName?.trim() || null,
       lastReviewedByRegistration: input.lastReviewedByRegistration?.trim() || null,
+      docTypeTags: input.docTypeTags === undefined ? undefined : input.docTypeTags?.length ? input.docTypeTags : null,
+      scenarioTags: input.scenarioTags === undefined ? undefined : input.scenarioTags?.length ? input.scenarioTags : null,
+      appliesTo: input.appliesTo === undefined ? undefined : input.appliesTo?.length ? input.appliesTo : null,
+      urgencyLevel: input.urgencyLevel === undefined ? undefined : input.urgencyLevel?.trim() || null,
+      estimatedReadTime: input.estimatedReadTime === undefined ? undefined : input.estimatedReadTime,
       reviewNotes: input.reviewNotes?.trim() || null,
       ...(nextHistory ? { history: nextHistory } : {}),
       updatedAt: new Date(),
