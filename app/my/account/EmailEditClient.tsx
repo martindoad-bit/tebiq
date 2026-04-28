@@ -108,7 +108,7 @@ export default function EmailEditClient({ initialEmail, initialVerifiedAt }: Pro
         </div>
         {hasSavedEmail && !dirty && (
           isVerified ? (
-            <span className="flex flex-shrink-0 items-center gap-1 rounded-[8px] bg-[rgba(87,167,123,0.12)] px-2 py-1 text-[10px] font-medium leading-none text-success">
+            <span className="flex flex-shrink-0 items-center gap-1 rounded-[8px] bg-[rgba(46,125,101,0.12)] px-2 py-1 text-[10px] font-medium leading-none text-success">
               <CheckCircle2 size={11} strokeWidth={1.7} />
               已验证
             </span>

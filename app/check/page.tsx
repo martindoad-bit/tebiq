@@ -44,7 +44,7 @@ export default function CheckLandingPage() {
 
       <Illustration
         height={220}
-        src="/illustrations/renewal-check-image2.png"
+        src="/illustrations/renewal-check-wide-image2.png"
         subject="日文文件、日历和护照的桌面静物"
       />
 

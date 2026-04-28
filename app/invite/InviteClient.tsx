@@ -74,7 +74,7 @@ export default function InviteClient() {
       <section className="rounded-card border border-hairline bg-surface px-4 pt-4 pb-5 text-center shadow-card">
         <div className="relative mx-auto h-[230px] w-full overflow-hidden rounded-card border border-white/80 bg-surface shadow-raised">
           <Image
-            src="/illustrations/invite-share-image2.png"
+            src="/illustrations/invite-share-wide-image2.png"
             alt=""
             fill
             priority

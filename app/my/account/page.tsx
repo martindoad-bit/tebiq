@@ -102,7 +102,7 @@ export default async function AccountPage() {
         {!subActive && (
           <Link
             href="/subscribe"
-            className="mt-3 block rounded-btn bg-accent px-4 py-3 text-center text-[13px] font-medium text-ink shadow-cta active:translate-y-px"
+            className="mt-3 block rounded-btn bg-accent px-4 py-3 text-center text-[13px] font-medium text-white shadow-cta active:translate-y-px"
           >
             开通会员
           </Link>

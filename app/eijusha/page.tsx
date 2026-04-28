@@ -192,7 +192,7 @@ export default function EijushaLandingPage() {
             href="/consultation?from=eijusha&visa=eijusha"
             eventName={EVENT.CONSULTATION_CTA_CLICK}
             payload={{ source: 'eijusha_page', visa: 'eijusha' }}
-            className="mt-5 flex min-h-[48px] w-full items-center justify-center rounded-btn bg-accent px-4 py-3 text-[13px] font-medium text-ink shadow-cta"
+            className="mt-5 flex min-h-[48px] w-full items-center justify-center rounded-btn bg-accent px-4 py-3 text-[13px] font-medium text-white shadow-cta"
           >
             永住申请情况复杂,建议直接咨询行政書士 →
           </TrackedLink>

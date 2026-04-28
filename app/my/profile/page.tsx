@@ -143,7 +143,7 @@ export default function MyPage() {
 
           <Link
             href="/check"
-            className="my-4 flex min-h-[48px] w-full items-center justify-center gap-2 rounded-btn bg-accent px-4 text-[14px] font-medium text-ink shadow-cta active:translate-y-px"
+            className="my-4 flex min-h-[48px] w-full items-center justify-center gap-2 rounded-btn bg-accent px-4 text-[14px] font-medium text-white shadow-cta active:translate-y-px"
           >
             <ClipboardCheck size={16} strokeWidth={1.55} />
             开始新的自查
@@ -432,7 +432,7 @@ function ProfileForm({
       <button
         onClick={save}
         disabled={saving || !canSave}
-        className="mt-2 min-h-[46px] w-full rounded-btn bg-accent px-4 text-[14px] font-medium text-ink shadow-cta disabled:opacity-50"
+        className="mt-2 min-h-[46px] w-full rounded-btn bg-accent px-4 text-[14px] font-medium text-white shadow-cta disabled:opacity-50"
       >
         {saving ? '保存中...' : !canSave ? '请先填写必填项' : '保存档案'}
       </button>

@@ -9,9 +9,10 @@
  */
 'use client'
 import { useState } from 'react'
+import type { ReactNode } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { Check, CreditCard, ShieldCheck, Sparkles } from 'lucide-react'
+import { Archive, BellRing, Camera, Check, CreditCard, ShieldCheck, Sparkles } from 'lucide-react'
 import AppShell from '@/app/_components/v5/AppShell'
 import AppBar from '@/app/_components/v5/AppBar'
 import Button from '@/app/_components/v5/Button'
@@ -38,7 +39,7 @@ const PLANS: Plan[] = [
     name: '月度会员',
     price: '¥980 / 月',
     meta: '享受所有会员权益',
-    tag: '推荐',
+    tag: '多数人适合',
     benefits: ['无限次拍照识别', '重要事项提醒', '永久保存档案'],
   },
   {
@@ -64,6 +65,7 @@ export default function SubscribePage() {
   const [selected, setSelected] = useState<PlanId>('basic_monthly')
   const [busy, setBusy] = useState(false)
   const [err, setErr] = useState<string | null>(null)
+  const selectedPlan = PLANS.find(p => p.id === selected) ?? PLANS[0]
 
   async function handleSubscribe() {
     if (busy) return
@@ -97,20 +99,26 @@ export default function SubscribePage() {
 
   return (
     <AppShell appBar={<AppBar title="选择适合你的方案" back />}>
-      <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-3.5 shadow-card">
+      <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-4 shadow-card">
         <div className="flex items-start gap-3">
-          <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-[12px] bg-accent-2 text-ink">
-            <Sparkles size={18} strokeWidth={1.55} />
+          <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-[13px] bg-accent-2 text-ink">
+            <Sparkles size={19} strokeWidth={1.55} />
           </span>
           <div>
-            <p className="text-[13px] font-medium leading-snug text-ink">
-              拍照即懂用完后，可按月开通
+            <p className="text-[15px] font-semibold leading-snug text-ink">
+              把每月收到的文件管起来
             </p>
-            <p className="mt-1 text-[11px] leading-[1.55] text-ash">
-              会员主要解锁无限拍照、提醒和档案保存。续签自查仍可免费使用。
+            <p className="mt-1.5 text-[12.5px] leading-[1.65] text-slate/74">
+              会员适合经常收到住民税、年金、在留カード相关通知，需要长期保存记录和提醒的人。
             </p>
           </div>
         </div>
+      </section>
+
+      <section className="mt-3 grid grid-cols-3 gap-2">
+        <PromiseChip icon={<Camera size={15} strokeWidth={1.55} />} title="无限识别" sub="不受月额度限制" />
+        <PromiseChip icon={<Archive size={15} strokeWidth={1.55} />} title="档案保存" sub="文件结果集中看" />
+        <PromiseChip icon={<BellRing size={15} strokeWidth={1.55} />} title="提醒事项" sub="期限前再确认" />
       </section>
 
       <div className="space-y-2.5 mt-3">
@@ -131,7 +139,7 @@ export default function SubscribePage() {
       )}
 
       <Button onClick={handleSubscribe} disabled={busy} className="mt-4">
-        {busy ? '处理中…' : '立即订阅'}
+        {busy ? '处理中…' : `开通${selectedPlan.name}`}
       </Button>
 
       <p className="text-center text-[12px] text-ash mt-2.5">
@@ -167,6 +175,7 @@ function PlanCard({
     <button
       type="button"
       onClick={onSelect}
+      aria-pressed={selected}
       className={`w-full text-left bg-surface rounded-card relative shadow-card transition-all active:translate-y-px ${
         selected
           ? 'border-[1.5px] border-accent p-[13px] bg-accent-2/35'
@@ -180,9 +189,9 @@ function PlanCard({
       )}
       <div className="flex justify-between items-start gap-2">
         <div className="min-w-0">
-          <div className="text-[14px] font-medium text-ink">{plan.name}</div>
-          <div className="text-[17px] font-medium text-ink mt-1.5">{plan.price}</div>
-          <div className="text-[11px] text-ash mt-0.5">{plan.meta}</div>
+          <div className="text-[14px] font-semibold text-ink">{plan.name}</div>
+          <div className="mt-1.5 text-[20px] font-semibold leading-none text-ink">{plan.price}</div>
+          <div className="mt-1 text-[11.5px] text-ash">{plan.meta}</div>
         </div>
         <span
           className={`flex-shrink-0 w-[18px] h-[18px] rounded-full transition-all ${
@@ -194,7 +203,7 @@ function PlanCard({
       </div>
       <ul className="mt-3 grid gap-1.5">
         {plan.benefits.map(b => (
-          <li key={b} className="flex items-center gap-2 text-[11px] text-slate">
+          <li key={b} className="flex items-center gap-2 text-[12px] text-slate">
             <span className="flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full bg-accent text-white">
               <Check size={10.5} strokeWidth={2} />
             </span>
@@ -203,5 +212,25 @@ function PlanCard({
         ))}
       </ul>
     </button>
+  )
+}
+
+function PromiseChip({
+  icon,
+  title,
+  sub,
+}: {
+  icon: ReactNode
+  title: string
+  sub: string
+}) {
+  return (
+    <div className="min-w-0 rounded-[14px] border border-hairline bg-surface/80 px-2.5 py-2.5 shadow-soft">
+      <div className="mb-1.5 flex h-7 w-7 items-center justify-center rounded-[9px] bg-cool-blue text-ink">
+        {icon}
+      </div>
+      <div className="truncate text-[11.5px] font-semibold leading-none text-ink">{title}</div>
+      <div className="mt-1 truncate text-[10px] leading-none text-ash">{sub}</div>
+    </div>
   )
 }

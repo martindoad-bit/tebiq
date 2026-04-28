@@ -17,6 +17,8 @@ import Link from 'next/link'
 import type { ReactNode } from 'react'
 import {
   Bell,
+  Archive,
+  CalendarClock,
   ChevronRight,
   Camera,
   ClipboardCheck,
@@ -79,6 +81,8 @@ export default async function HomePage() {
         />
       </div>
 
+      <TrustSummary />
+
       {user ? (
         <TodoSection todos={todos} />
       ) : (
@@ -90,7 +94,7 @@ export default async function HomePage() {
 
 function HomeAppBar() {
   return (
-    <header className="flex h-[64px] flex-shrink-0 items-center justify-between bg-canvas px-5">
+    <header className="flex h-[72px] flex-shrink-0 items-center justify-between bg-canvas px-5">
       <Logo size="lg" />
       <Link
         href="/my/reminders"
@@ -100,6 +104,48 @@ function HomeAppBar() {
         <Bell size={22} strokeWidth={1.7} />
       </Link>
     </header>
+  )
+}
+
+function TrustSummary() {
+  return (
+    <section className="mt-4 grid grid-cols-3 gap-2">
+      <TrustChip
+        icon={<FileText size={15} strokeWidth={1.55} />}
+        title="识别重点"
+        sub="金额·期限"
+      />
+      <TrustChip
+        icon={<Archive size={15} strokeWidth={1.55} />}
+        title="归入档案"
+        sub="按文件整理"
+      />
+      <TrustChip
+        icon={<CalendarClock size={15} strokeWidth={1.55} />}
+        title="提醒事项"
+        sub="到期前查看"
+      />
+    </section>
+  )
+}
+
+function TrustChip({
+  icon,
+  title,
+  sub,
+}: {
+  icon: ReactNode
+  title: string
+  sub: string
+}) {
+  return (
+    <div className="min-w-0 rounded-[14px] border border-hairline bg-surface/76 px-2.5 py-2.5 shadow-soft">
+      <div className="mb-1.5 flex h-7 w-7 items-center justify-center rounded-[9px] bg-cool-blue text-ink">
+        {icon}
+      </div>
+      <div className="truncate text-[11.5px] font-semibold leading-none text-ink">{title}</div>
+      <div className="mt-1 truncate text-[10px] leading-none text-ash">{sub}</div>
+    </div>
   )
 }
 
@@ -233,14 +279,14 @@ function EmptyHomeState({
 }) {
   return (
     <section className="mt-4 overflow-hidden rounded-card border border-hairline bg-surface shadow-card">
-      <div className="border-b border-hairline bg-[rgba(230,238,245,0.42)] px-4 py-2.5">
+      <div className="border-b border-hairline bg-cool-blue/55 px-4 py-3">
         <div className="flex items-center justify-between gap-3">
           <div>
-            <h2 className="text-[13px] font-medium leading-snug text-ink">{title}</h2>
-            <p className="mt-1 text-[11px] leading-[1.65] text-ash">{description}</p>
+            <h2 className="text-[14px] font-semibold leading-snug text-ink">{title}</h2>
+            <p className="mt-1 text-[12px] leading-[1.65] text-slate/74">{description}</p>
           </div>
-          <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-[10px] bg-accent-2 text-ink">
-            <ShieldCheck size={17} strokeWidth={1.55} />
+          <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-[13px] bg-surface text-ink shadow-soft">
+            <ShieldCheck size={19} strokeWidth={1.55} />
           </span>
         </div>
       </div>

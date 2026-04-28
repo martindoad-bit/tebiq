@@ -34,7 +34,7 @@ export default function ConsultationSuccessPage() {
           <div className="flex flex-col gap-3">
             <Link
               href="/"
-              className="flex min-h-[50px] w-full items-center justify-center gap-2 rounded-btn bg-accent px-4 text-[14px] font-medium text-ink shadow-cta transition-transform active:translate-y-px"
+              className="flex min-h-[50px] w-full items-center justify-center gap-2 rounded-btn bg-accent px-4 text-[14px] font-medium text-white shadow-cta transition-transform active:translate-y-px"
             >
               <Clock3 size={16} strokeWidth={1.55} />
               返回首页

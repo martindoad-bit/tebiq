@@ -212,7 +212,7 @@ export default function KnowledgeClient({
                         待书士审核
                       </span>
                     ) : (
-                      <span className="rounded-[8px] bg-[rgba(87,167,123,0.12)] px-1.5 py-1 text-[10px] font-medium leading-none text-success">
+                      <span className="rounded-[8px] bg-[rgba(46,125,101,0.12)] px-1.5 py-1 text-[10px] font-medium leading-none text-success">
                         {c.lastReviewedBy ? `已审核 by ${c.lastReviewedBy}` : '已审核'}
                       </span>
                     )}

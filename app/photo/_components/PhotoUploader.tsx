@@ -18,7 +18,7 @@
 'use client'
 import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Camera, FileText, Loader, ShieldCheck } from 'lucide-react'
+import { Camera, FileText, Loader, LockKeyhole, ShieldCheck } from 'lucide-react'
 import { compressImageClient, formatBytes } from '@/lib/photo/clientCompress'
 
 interface RecognizeData {
@@ -210,10 +210,10 @@ export default function PhotoUploader() {
           )}
         </span>
         <span className="relative z-10 text-center px-6">
-          <span className="block text-[13px] font-medium text-canvas">
+          <span className="block text-[14px] font-semibold text-canvas">
             {mainLabel}
           </span>
-          <span className="mt-1 block text-[11px] text-canvas/68 transition-opacity duration-200">
+          <span className="mt-1 block text-[12px] text-canvas/70 transition-opacity duration-200">
             {subLabel}
           </span>
         </span>
@@ -233,6 +233,22 @@ export default function PhotoUploader() {
         <HintChip label="金额" value="自动提取" />
         <HintChip label="期限" value="标出日期" />
         <HintChip label="行动" value="列清楚" />
+      </div>
+
+      <div className="mb-3 rounded-card border border-hairline bg-surface px-3.5 py-3 shadow-card">
+        <div className="flex items-start gap-2.5">
+          <span className="mt-0.5 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-[11px] bg-cool-blue text-ink">
+            <LockKeyhole size={16} strokeWidth={1.55} />
+          </span>
+          <div className="min-w-0 flex-1">
+            <div className="text-[12.5px] font-semibold leading-snug text-ink">
+              文件内容不会公开展示
+            </div>
+            <p className="mt-1 break-all text-[11.5px] leading-[1.6] text-slate/74">
+              用于识别文书重点；结果可保存到档案，之后在账号内查看。
+            </p>
+          </div>
+        </div>
       </div>
 
       <input

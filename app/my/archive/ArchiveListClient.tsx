@@ -41,9 +41,9 @@ const DOT_CLS: Record<ArchiveItem['severity'], string> = {
 }
 
 const TONE_CLS: Record<ArchiveItem['severity'], string> = {
-  urgent: 'bg-[rgba(226,87,76,0.10)] text-danger',
+  urgent: 'bg-[rgba(198,79,69,0.10)] text-danger',
   warn: 'bg-accent-2 text-ink',
-  done: 'bg-[rgba(87,167,123,0.12)] text-success',
+  done: 'bg-[rgba(46,125,101,0.12)] text-success',
 }
 
 export default function ArchiveListClient({ items }: { items: ArchiveItem[] }) {

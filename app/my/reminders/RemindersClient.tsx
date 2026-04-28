@@ -47,7 +47,7 @@ export default function RemindersClient({ items }: { items: ReminderItem[] }) {
           <span
             className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-[13px] ${
               urgentCount > 0
-                ? 'bg-[rgba(226,87,76,0.10)] text-danger'
+                ? 'bg-[rgba(198,79,69,0.10)] text-danger'
                 : 'bg-accent-2 text-ink'
             }`}
           >
@@ -96,7 +96,7 @@ export default function RemindersClient({ items }: { items: ReminderItem[] }) {
             >
               <span
                 className={`flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-[10px] ${
-                  item.urgent ? 'bg-[rgba(226,87,76,0.10)]' : 'bg-accent-2'
+                  item.urgent ? 'bg-[rgba(198,79,69,0.10)]' : 'bg-accent-2'
                 }`}
               >
                 <Clock
@@ -117,7 +117,7 @@ export default function RemindersClient({ items }: { items: ReminderItem[] }) {
                   <span
                     className={`rounded-[8px] px-1.5 py-1 text-[10px] font-medium leading-none ${
                       item.urgent
-                        ? 'bg-[rgba(226,87,76,0.10)] text-danger'
+                        ? 'bg-[rgba(198,79,69,0.10)] text-danger'
                         : 'bg-canvas text-ash'
                     }`}
                   >

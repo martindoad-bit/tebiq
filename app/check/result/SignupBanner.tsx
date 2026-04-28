@@ -55,7 +55,7 @@ export default function SignupBanner({
         </p>
         <Link
           href={`/login?next=${next}`}
-          className="flex-shrink-0 rounded-btn bg-accent px-3 py-1.5 text-[12px] font-medium text-ink shadow-soft transition-colors hover:bg-primary-hover"
+          className="flex-shrink-0 rounded-btn bg-accent px-3 py-1.5 text-[12px] font-medium text-white shadow-soft transition-colors hover:bg-primary-hover"
         >
           创建账号 →
         </Link>

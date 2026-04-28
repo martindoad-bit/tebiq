@@ -262,7 +262,7 @@ export default function ConsultationForm() {
           <button
             type="submit"
             disabled={submitting}
-            className="mt-4 flex min-h-[50px] w-full items-center justify-center gap-2 rounded-btn bg-accent px-4 text-[14px] font-medium text-ink shadow-cta transition-transform active:translate-y-px disabled:opacity-60"
+            className="mt-4 flex min-h-[50px] w-full items-center justify-center gap-2 rounded-btn bg-accent px-4 text-[14px] font-medium text-white shadow-cta transition-transform active:translate-y-px disabled:opacity-60"
           >
             {submitting ? '提交中...' : (
               <>

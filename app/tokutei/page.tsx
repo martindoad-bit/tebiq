@@ -190,7 +190,7 @@ export default function TokuteiLandingPage() {
 
           <Link
             href="/check/tokutei/quiz"
-            className="mt-5 flex min-h-[48px] w-full items-center justify-center rounded-btn bg-accent px-4 py-3 text-[13px] font-medium text-ink shadow-cta"
+            className="mt-5 flex min-h-[48px] w-full items-center justify-center rounded-btn bg-accent px-4 py-3 text-[13px] font-medium text-white shadow-cta"
           >
             3 分钟开始特定技能签证自查 →
           </Link>

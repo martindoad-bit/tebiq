@@ -37,14 +37,16 @@
 
 ## 2. 插画处理
 
-GPT Image 2 调用次数：`3`
+GPT Image 2 调用次数：`5`
 
 原因：创始人明确要求不要再用 SVG 主视觉，这次改用 Image 2.0 生成更成熟的 bitmap 静物，并把人物、吉祥物、礼物盒、清单角色全部排除。
 
 最终使用的插画资产：
-- `public/illustrations/renewal-check-image2.png`
-- `public/illustrations/invite-share-image2.png`
+- `public/illustrations/renewal-check-wide-image2.png`
+- `public/illustrations/invite-share-wide-image2.png`
 - `public/illustrations/empty-state-image2.png`
+
+本轮删除了不再使用的旧 SVG / 旧竖版素材，避免后续维护时误接回旧风格。
 
 风格：
 - 真实物件静物：文件、日历、手机、信封、文具托盘
@@ -201,10 +203,10 @@ GPT Image 2 调用次数：`3`
 
 ### Image 2.0 调用
 
-本轮共使用 Image 2.0 生成 3 张 bitmap 资产：
+2.1 阶段共使用 Image 2.0 生成 5 张 bitmap 资产，其中当前保留并接入 3 张：
 
-- `public/illustrations/renewal-check-image2.png`：续签入口用的日式生活文件桌面静物。选择原因：没有人物、没有清单角色，真实物件更成熟。
-- `public/illustrations/invite-share-image2.png`：邀请页用的手机 / 信封 / 日历静物。选择原因：避开礼物盒和卡通奖励感。
+- `public/illustrations/renewal-check-wide-image2.png`：续签入口用的日式生活文件桌面静物。选择原因：没有人物、没有清单角色，真实物件更成熟。
+- `public/illustrations/invite-share-wide-image2.png`：邀请页用的手机 / 信封 / 日历静物。选择原因：避开礼物盒和卡通奖励感。
 - `public/illustrations/empty-state-image2.png`：档案 / 提醒 / 知识空状态共用的文具托盘静物。选择原因：比 SVG 更有质感，也不进入 AI 人物插画套路。
 
 ### 2.1 截图
@@ -228,3 +230,44 @@ CDP 检查结果：
 ### 2.1 自评
 
 这次不再追求「极克制」，而是先把产品从灰死状态拉回成熟、可信、有温度。当前仍不是最终品牌设计，但比 2.0 更接近 TEBIQ 的真实产品方向：在日生活工具，不是政府网站，也不是儿童化 AI 插画 App。
+
+---
+
+## 10. Trust Pass：用户视角细化
+
+创始人认可 2.1 方向后，本轮继续按「用户是否敢把真实在日生活文件交给 TEBIQ」来打磨，不再大换颜色。
+
+### 做了什么
+
+- 首页：放大品牌识别，`lg` logo 增加「てびき」读音标记；首页新增 3 个低噪声信任卡：识别重点、归入档案、提醒事项。用户第一屏更清楚 TEBIQ 最终会产出什么。
+- 拍照页：在取景框下新增隐私 / 处理预期说明「文件内容不会公开展示」，解释照片用于识别重点，结果可保存到档案。
+- 拍照结果页：重要度卡从单纯警示色块改成「处理优先级 + 剩余天数」结构，增加原文件校验提示。
+- 自查结果页：Hero 增加报告元信息（依据 / 用途 / 下一步），摘要卡改成「判断摘要 + 非法律意见」结构，减少像随机结论的感觉。
+- 订阅页：从价格表前置改成「把每月收到的文件管起来」，先解释开通后解决的具体问题，再展示三档方案。
+- 全站残留 `bg-accent + text-ink` 主按钮改成白字，避免珊瑚赤按钮上文字发脏。
+
+### Image 2.0
+
+本轮新增调用 Image 2.0：`2` 次。
+
+新增横版资产：
+
+- `public/illustrations/renewal-check-wide-image2.png`
+- `public/illustrations/invite-share-wide-image2.png`
+
+原因：2.1 的第一批静物图质感成立，但续签页和邀请页使用横向 hero 容器，竖图裁切会显得像硬塞进去。新横版资产保持同一套纸白、深海军蓝、珊瑚赤小点缀、自然光静物系统。
+
+累计 Image 2.0 资产：`5` 张。
+
+### 截图验证
+
+新增 CDP mobile emulation 截图：
+
+`docs/visual-polish-2/screenshots/after-trust-pass/`
+
+覆盖：
+
+- 320px：`home / photo / check / subscribe / invite`
+- 393px：`home / photo / check / subscribe / invite`
+
+CDP 检查结果：上述页面在 320 / 393 下 `document.scrollWidth === innerWidth`，无横向 overflow。`/invite` 在未登录状态会进入登录页，这是当前真实路由行为。

@@ -15,7 +15,7 @@ interface Props {
 export default function Illustration({
   height = 130,
   subject,
-  src = '/illustrations/renewal-check-image2.png',
+  src = '/illustrations/renewal-check-wide-image2.png',
 }: Props) {
   return (
     <div

@@ -59,7 +59,7 @@ export default async function InviteLandingPage({
         <section className="rounded-card border border-hairline bg-surface px-4 pt-4 pb-5 text-center shadow-card">
           <div className="relative mx-auto h-[150px] w-full overflow-hidden rounded-card border border-hairline bg-surface">
             <Image
-            src="/illustrations/invite-share-image2.png"
+            src="/illustrations/invite-share-wide-image2.png"
               alt=""
               fill
               priority
