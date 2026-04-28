@@ -13,6 +13,7 @@
     "db:push": "drizzle-kit push",
     "db:smoke": "tsx --env-file=.env.local scripts/db-smoke.ts",
     "cleanup-kv-stats": "tsx --env-file=.env.local scripts/cleanup-kv-stats.ts",
+    "import-knowledge": "tsx scripts/dev-utils/import-knowledge.ts",
     "test": "tsx --test lib/**/*.test.ts"
   },
   "dependencies": {
@@ -22,6 +23,7 @@
     "@upstash/redis": "^1.37.0",
     "dotenv": "^17.4.2",
     "drizzle-orm": "^0.45.2",
+    "gray-matter": "^4.0.3",
     "html2canvas": "^1.4.1",
     "lucide-react": "^1.11.0",
     "next": "14.2.35",
