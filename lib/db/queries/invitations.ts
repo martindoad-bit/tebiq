@@ -6,7 +6,7 @@
  *   invitee opens /invite/{code} and signs up → redeemInvitation
  *   reward (7 days basic trial for both) granted when status='accepted'
  */
-import { and, desc, eq, lt, sql } from 'drizzle-orm'
+import { and, desc, eq, gte, lt, sql } from 'drizzle-orm'
 import { createId } from '@paralleldrive/cuid2'
 import { db } from '@/lib/db'
 import { invitations, members, type Invitation, type NewInvitation } from '@/lib/db/schema'
@@ -60,18 +60,19 @@ export async function expireOldPendingInvitations(): Promise<void> {
 
 async function getMonthlyRewardDays(inviterMemberId: string): Promise<number> {
   const { start, end } = monthRange()
-  const [row] = await db
-    .select({
-      rewarded: sql<number>`count(*) filter (
-        where ${invitations.status} = 'accepted'
-          and ${invitations.rewardGranted} = true
-          and ${invitations.acceptedAt} >= ${start}
-          and ${invitations.acceptedAt} < ${end}
-      )::int`,
-    })
+  const rows = await db
+    .select({ id: invitations.id })
     .from(invitations)
-    .where(eq(invitations.inviterMemberId, inviterMemberId))
-  return Number(row?.rewarded ?? 0) * INVITE_REWARD_DAYS
+    .where(
+      and(
+        eq(invitations.inviterMemberId, inviterMemberId),
+        eq(invitations.status, 'accepted'),
+        eq(invitations.rewardGranted, true),
+        gte(invitations.acceptedAt, start),
+        lt(invitations.acceptedAt, end),
+      ),
+    )
+  return rows.length * INVITE_REWARD_DAYS
 }
 
 /**
@@ -152,7 +153,7 @@ export async function getInvitationByCode(code: string): Promise<Invitation | nu
 
 export async function getInvitationLandingByCode(code: string): Promise<{
   invitation: Invitation
-  inviter: { id: string; familyId: string; name: string | null; phone: string }
+  inviter: { id: string; familyId: string; name: string | null; phone: string | null }
 } | null> {
   await expireOldPendingInvitations()
   const rows = await db

@@ -29,7 +29,6 @@ import Logo from '@/app/_components/v5/Logo'
 const STORAGE_KEY = 'tebiq_check_answers'
 const SAVED_FOR_KEY = 'tebiq_check_saved_for' // 去重：值 = 已保存过的 history JSON
 const TRACKED_FOR_KEY = 'tebiq_stats_tracked_for' // 匿名 stats 同款去重
-const LS_USER_KEY = 'tebiq_user'
 const CONSULTATION_CTX_KEY = 'tebiq_consultation_ctx'
 
 const SHARE_TEXT = '我刚用 TEBIQ 查了续签前置条件，3 分钟就能发现隐藏风险，推荐给在日华人朋友。'
@@ -205,8 +204,6 @@ async function trackStats(history: AnsweredItem[], j: JudgeResult) {
 
 async function autoSave(history: AnsweredItem[]) {
   if (typeof window === 'undefined') return
-  // 仅当 localStorage 显示已登录时才尝试（避免无谓的 401 噪音）
-  if (!localStorage.getItem(LS_USER_KEY)) return
   // 去重：相同 history 在本会话已保存过就跳过（防 React strict-mode 双触发 + 刷新重复）
   const fingerprint = JSON.stringify(history)
   if (sessionStorage.getItem(SAVED_FOR_KEY) === fingerprint) return

@@ -14,6 +14,12 @@ export async function getMemberByPhone(phone: string): Promise<Member | null> {
   return rows[0] ?? null
 }
 
+export async function getMemberByEmail(email: string): Promise<Member | null> {
+  const normalized = email.trim().toLowerCase()
+  const rows = await db.select().from(members).where(eq(members.email, normalized)).limit(1)
+  return rows[0] ?? null
+}
+
 export async function getMemberById(id: string): Promise<Member | null> {
   const rows = await db.select().from(members).where(eq(members.id, id)).limit(1)
   return rows[0] ?? null
@@ -34,6 +40,26 @@ export async function getOrCreateMemberByPhone(phone: string): Promise<Member> {
       .values({
         familyId: family.id,
         phone,
+        isOwner: true,
+      })
+      .returning()
+    return member
+  })
+}
+
+export async function getOrCreateMemberByEmail(email: string): Promise<Member> {
+  const normalized = email.trim().toLowerCase()
+  const existing = await getMemberByEmail(normalized)
+  if (existing) return existing
+
+  return await db.transaction(async tx => {
+    const [family] = await tx.insert(families).values({}).returning()
+    const [member] = await tx
+      .insert(members)
+      .values({
+        familyId: family.id,
+        email: normalized,
+        emailVerifiedAt: new Date(),
         isOwner: true,
       })
       .returning()
@@ -86,6 +112,18 @@ export async function updateMemberEmail(
       email,
       emailVerifiedAt: null,
     })
+    .where(eq(members.id, id))
+    .returning()
+  return row ?? null
+}
+
+export async function updateMemberPhone(
+  id: string,
+  phone: string | null,
+): Promise<Member | null> {
+  const [row] = await db
+    .update(members)
+    .set({ phone })
     .where(eq(members.id, id))
     .returning()
   return row ?? null

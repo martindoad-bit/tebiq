@@ -17,12 +17,13 @@
 import { notFound, redirect } from 'next/navigation'
 import Link from 'next/link'
 import type { ReactNode } from 'react'
-import { AlertCircle, CheckCircle2, FileText, RotateCcw } from 'lucide-react'
+import { AlertCircle, CheckCircle2, FileText, LockKeyhole, RotateCcw } from 'lucide-react'
 import AppShell from '@/app/_components/v5/AppShell'
 import AppBar from '@/app/_components/v5/AppBar'
 import Button from '@/app/_components/v5/Button'
 import TrackedLink from '@/app/_components/v5/TrackedLink'
 import { EVENT } from '@/lib/analytics/events'
+import { getCurrentUser } from '@/lib/auth/session'
 import { getDocumentById } from '@/lib/db/queries/documents'
 import type { PhotoRecognitionResult, Urgency } from '@/lib/photo/types'
 import SaveToArchiveButton from './SaveToArchiveButton'
@@ -60,6 +61,7 @@ export default async function PhotoResultPage({
 }) {
   const doc = await getDocumentById(params.id)
   if (!doc || !doc.aiResponse) notFound()
+  const user = await getCurrentUser()
 
   const result = doc.aiResponse as unknown as PhotoRecognitionResult
   // 兜底：识别失败的文档跳到专门的 fallback 页（T5）
@@ -150,11 +152,34 @@ export default async function PhotoResultPage({
         <Link href={`/photo/result/${doc.id}/detail`} className="block">
           <Button>查看详细说明</Button>
         </Link>
-        <SaveToArchiveButton />
+        {user ? <SaveToArchiveButton /> : <RegisterAfterPhotoCard docId={doc.id} />}
       </div>
 
       <ComplianceFooter />
     </AppShell>
+  )
+}
+
+function RegisterAfterPhotoCard({ docId }: { docId: string }) {
+  return (
+    <section className="rounded-card border border-accent/35 bg-accent-2/60 p-4 shadow-card">
+      <div className="flex items-start gap-3">
+        <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-[12px] bg-surface text-ink shadow-soft">
+          <LockKeyhole size={17} strokeWidth={1.55} />
+        </span>
+        <div className="min-w-0 flex-1">
+          <h2 className="text-[13px] font-medium leading-snug text-ink">
+            想保存这次识别 + 收到到期提醒？
+          </h2>
+          <p className="mt-1 text-[11px] leading-[1.55] text-ash">
+            注册账号，邮箱 / 手机号都可以。刚才的识别会自动归入你的档案。
+          </p>
+        </div>
+      </div>
+      <Link href={`/register?from=photo&doc_id=${encodeURIComponent(docId)}`} className="mt-3 block">
+        <Button>注册账号</Button>
+      </Link>
+    </section>
   )
 }
 

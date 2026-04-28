@@ -55,7 +55,8 @@ interface UserProfile {
 const LS_USER_KEY = 'tebiq_user'
 
 interface ClientUser {
-  phone: string
+  phone: string | null
+  email: string | null
 }
 
 export default function MyPage() {
@@ -131,7 +132,7 @@ export default function MyPage() {
                 </h1>
                 {user && (
                   <p className="mt-1 truncate text-[11px] leading-[1.5] text-ash">
-                    当前登录：{user.phone}
+                    当前登录：{user.email ?? user.phone ?? '已登录'}
                   </p>
                 )}
               </div>

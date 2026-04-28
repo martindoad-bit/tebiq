@@ -10,11 +10,12 @@
  * 输入：multipart/form-data with file
  * 输出：{ documentId, result }
  */
-import { ok, err, errors } from '@/lib/api/response'
+import { ok, err } from '@/lib/api/response'
 import { getCurrentUser } from '@/lib/auth/session'
+import { getOrCreateAnonymousSessionId } from '@/lib/auth/anonymous-session'
 import { createDocument } from '@/lib/db/queries/documents'
 import { PhotoRecognitionError, recognizePhotoDocument } from '@/lib/photo/bedrock'
-import { getPhotoQuotaForFamily } from '@/lib/photo/quota'
+import { getPhotoQuotaForFamily, getPhotoQuotaForSession } from '@/lib/photo/quota'
 import type { Urgency } from '@/lib/photo/types'
 import { track } from '@/lib/analytics/track'
 import { EVENT } from '@/lib/analytics/events'
@@ -30,18 +31,20 @@ function mapUrgencyToSchema(u: Urgency): 'critical' | 'important' | 'normal' | '
 
 export async function POST(req: Request) {
   const user = await getCurrentUser()
-  if (!user) return errors.unauthorized()
+  const sessionId = user ? null : await getOrCreateAnonymousSessionId()
 
-  await track(EVENT.PHOTO_RECOGNIZE_ATTEMPT, {}, { user })
+  await track(EVENT.PHOTO_RECOGNIZE_ATTEMPT, {}, { user, sessionId })
 
   // 1. 配额检查
-  const quota = await getPhotoQuotaForFamily(user.familyId)
-  const shouldPromptEmail = !user.email && quota.used === 0
+  const quota = user
+    ? await getPhotoQuotaForFamily(user.familyId)
+    : await getPhotoQuotaForSession(sessionId as string)
+  const shouldPromptEmail = !!user && !user.email && quota.used === 0
   if (!quota.unlimited && quota.remaining <= 0) {
     await track(
       EVENT.PHOTO_QUOTA_EXCEEDED,
       { used: quota.used, limit: quota.limit },
-      { user },
+      { user, sessionId },
     )
     return err('quota_exceeded', '本月免费拍照次数已用完', 402, {
       used: quota.used,
@@ -76,7 +79,7 @@ export async function POST(req: Request) {
       await track(
         EVENT.PHOTO_RECOGNIZE_FAIL,
         { code: error.code, message: error.message },
-        { user },
+        { user, sessionId },
       )
       const status = error.code === 'too_large' ? 413
         : error.code === 'unsupported_type' || error.code === 'bad_image' ? 400
@@ -86,7 +89,7 @@ export async function POST(req: Request) {
     await track(
       EVENT.PHOTO_RECOGNIZE_FAIL,
       { code: 'unknown', message: error instanceof Error ? error.message : 'unknown' },
-      { user },
+      { user, sessionId },
     )
     return err('recognition_failed', '拍照识别服务暂时不可用，请稍后再试', 503)
   }
@@ -94,8 +97,9 @@ export async function POST(req: Request) {
   // 3. 写 documents 行
   const result = recognition.result
   const doc = await createDocument({
-    familyId: user.familyId,
-    memberId: user.id,
+    familyId: user?.familyId ?? null,
+    memberId: user?.id ?? null,
+    sessionId,
     imageUrl,
     docType: result.docType,
     summary: result.summary,
@@ -111,7 +115,7 @@ export async function POST(req: Request) {
       hasDeadline: !!result.deadline,
       hasAmount: result.amount !== null,
     },
-    { user },
+    { user, sessionId },
   )
 
   return ok({
@@ -120,7 +124,9 @@ export async function POST(req: Request) {
     recognition: {
       model: recognition.modelId,
     },
-    quota: await getPhotoQuotaForFamily(user.familyId),
+    quota: user
+      ? await getPhotoQuotaForFamily(user.familyId)
+      : await getPhotoQuotaForSession(sessionId as string),
     emailPrompt: shouldPromptEmail,
   })
 }

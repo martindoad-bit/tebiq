@@ -13,7 +13,7 @@ export async function GET() {
   const user = await getCurrentUser()
   if (!user) return NextResponse.json({ error: '未登录' }, { status: 401 })
 
-  const reminder = await storage.get<ReminderRecord>(`reminder:${user.phone}`)
+  const reminder = await storage.get<ReminderRecord>(`reminder:${user.id}`)
   if (!reminder) return NextResponse.json({ reminder: null })
 
   const today = new Date()

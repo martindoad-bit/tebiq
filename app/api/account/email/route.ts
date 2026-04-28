@@ -9,7 +9,7 @@ function parseEmail(value: unknown): string | null | undefined {
   const s = value.trim()
   if (!s) return null
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s)) return undefined
-  return s.slice(0, 255)
+  return s.toLowerCase().slice(0, 255)
 }
 
 export async function POST(req: Request) {

@@ -11,7 +11,11 @@ import {
   destroySession,
   getValidSession,
 } from '@/lib/db/queries/sessions'
-import { getMemberById, getOrCreateMemberByPhone } from '@/lib/db/queries/members'
+import {
+  getMemberById,
+  getOrCreateMemberByEmail,
+  getOrCreateMemberByPhone,
+} from '@/lib/db/queries/members'
 import type { Member } from '@/lib/db/schema'
 
 export const COOKIE_NAME = 'tebiq_user_session'
@@ -36,6 +40,15 @@ export async function getCurrentUser(): Promise<Member | null> {
  */
 export async function setUserSession(phone: string): Promise<Member> {
   const member = await getOrCreateMemberByPhone(phone)
+  return await setUserSessionForMember(member)
+}
+
+export async function setUserSessionByEmail(email: string): Promise<Member> {
+  const member = await getOrCreateMemberByEmail(email)
+  return await setUserSessionForMember(member)
+}
+
+export async function setUserSessionForMember(member: Member): Promise<Member> {
   const session = await createDbSession(member.id)
   const c = await cookies()
   c.set(COOKIE_NAME, session.id, {

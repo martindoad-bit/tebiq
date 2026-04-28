@@ -20,6 +20,7 @@ import { getCurrentUser } from '@/lib/auth/session'
 import { getSubscriptionByFamilyId } from '@/lib/db/queries/subscriptions'
 import AccountListClient from './AccountListClient'
 import EmailEditClient from './EmailEditClient'
+import PhoneEditClient from './PhoneEditClient'
 
 export const dynamic = 'force-dynamic'
 
@@ -48,7 +49,7 @@ export default async function AccountPage() {
   // avatar 文字：优先 name 第一字符，否则 phone 末两位
   const avatarText = user.name
     ? user.name.slice(0, 1)
-    : user.phone.slice(-2)
+    : (user.phone ?? user.email ?? 'TE').slice(-2)
 
   const tierLine = subActive
     ? TIER_LABEL[sub!.tier] ?? '会员用户'
@@ -113,6 +114,7 @@ export default async function AccountPage() {
         initialEmail={user.email}
         initialVerifiedAt={user.emailVerifiedAt ? user.emailVerifiedAt.toISOString() : null}
       />
+      <PhoneEditClient initialPhone={user.phone} />
 
       <div className="mt-4">
         <AccountListClient hasSubscription={!!sub} />

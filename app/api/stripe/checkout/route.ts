@@ -93,10 +93,9 @@ export async function POST(req: Request) {
         ...(existingCustomerId
           ? { customer: existingCustomerId }
           : {
-              // Use a stable placeholder email derived from phone so Stripe
-              // can dedupe customers per-member. The user can edit it on the
-              // hosted page if desired.
-              customer_email: `${member.phone}@tebiq-placeholder.local`,
+              // Prefer a real email; fall back to a stable placeholder so
+              // Stripe can still dedupe customers per-member.
+              customer_email: member.email ?? `${member.id}@tebiq-placeholder.local`,
             }),
         ...(discountCoupon
           ? { discounts: [{ coupon: discountCoupon }] }

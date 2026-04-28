@@ -4,7 +4,7 @@
  * Schema is in place so subscription quota tracking can count documents
  * even before the upload pipeline ships.
  */
-import { and, desc, eq, gte } from 'drizzle-orm'
+import { and, desc, eq, gte, isNull } from 'drizzle-orm'
 import { db } from '@/lib/db'
 import { documents, type Document, type NewDocument } from '@/lib/db/schema'
 
@@ -30,6 +30,18 @@ export async function listDocumentsByFamilyId(
     .limit(limit)
 }
 
+export async function listDocumentsBySessionId(
+  sessionId: string,
+  limit = 50,
+): Promise<Document[]> {
+  return await db
+    .select()
+    .from(documents)
+    .where(and(eq(documents.sessionId, sessionId), isNull(documents.familyId)))
+    .orderBy(desc(documents.createdAt))
+    .limit(limit)
+}
+
 /** Used by the photo-quota check (e.g. 30/month for basic tier). */
 export async function countDocumentsThisPeriod(
   familyId: string,
@@ -39,5 +51,18 @@ export async function countDocumentsThisPeriod(
     .select({ id: documents.id })
     .from(documents)
     .where(and(eq(documents.familyId, familyId), gte(documents.createdAt, since)))
+  return rows.length
+}
+
+export async function attachSessionDocumentsToFamily(
+  sessionId: string,
+  familyId: string,
+  memberId: string | null = null,
+): Promise<number> {
+  const rows = await db
+    .update(documents)
+    .set({ familyId, memberId })
+    .where(and(eq(documents.sessionId, sessionId), isNull(documents.familyId)))
+    .returning({ id: documents.id })
   return rows.length
 }

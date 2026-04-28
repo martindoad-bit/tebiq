@@ -15,6 +15,7 @@ import { createId } from '@paralleldrive/cuid2'
 import { sql } from 'drizzle-orm'
 import {
   boolean,
+  check,
   date,
   index,
   integer,
@@ -155,7 +156,7 @@ export const members = pgTable(
       .references(() => families.id, { onDelete: 'cascade' }),
     isOwner: boolean('is_owner').notNull().default(false),
     name: varchar('name', { length: 80 }),
-    phone: varchar('phone', { length: 20 }).notNull(),
+    phone: varchar('phone', { length: 20 }),
     email: varchar('email', { length: 255 }),
     emailVerifiedAt: timestamp('email_verified_at', { withTimezone: true }),
     visaType: visaTypeEnum('visa_type'),
@@ -176,8 +177,13 @@ export const members = pgTable(
   },
   t => ({
     phoneIdx: uniqueIndex('members_phone_unique').on(t.phone),
+    emailIdx: uniqueIndex('members_email_unique').on(t.email),
     familyIdx: index('members_family_id_idx').on(t.familyId),
     expiryIdx: index('members_visa_expiry_idx').on(t.visaExpiry),
+    contactRequired: check(
+      'phone_or_email_required',
+      sql`${t.phone} is not null or ${t.email} is not null`,
+    ),
   }),
 )
 
@@ -262,11 +268,11 @@ export const documents = pgTable(
   {
     id: idCol(),
     familyId: varchar('family_id', { length: 24 })
-      .notNull()
       .references(() => families.id, { onDelete: 'cascade' }),
     memberId: varchar('member_id', { length: 24 }).references(() => members.id, {
       onDelete: 'set null',
     }),
+    sessionId: varchar('session_id', { length: 64 }),
     imageUrl: text('image_url').notNull(),
     docType: varchar('doc_type', { length: 80 }),
     summary: text('summary'),
@@ -276,7 +282,12 @@ export const documents = pgTable(
   },
   t => ({
     familyIdx: index('documents_family_id_idx').on(t.familyId),
+    sessionIdx: index('documents_session_id_idx').on(t.sessionId),
     createdIdx: index('documents_created_at_idx').on(t.createdAt),
+    ownerRequired: check(
+      'documents_family_or_session_required',
+      sql`${t.familyId} is not null or ${t.sessionId} is not null`,
+    ),
   }),
 )
 
@@ -425,6 +436,8 @@ export const articles = pgTable(
     // last_reviewed_by 留作内部短标识，公开侧用 _name + _registration 显示。
     lastReviewedByName: varchar('last_reviewed_by_name', { length: 100 }),
     lastReviewedByRegistration: varchar('last_reviewed_by_registration', { length: 50 }),
+    sourcesCount: integer('sources_count'),
+    lastVerifiedAt: timestamp('last_verified_at', { withTimezone: true }),
     reviewNotes: text('review_notes'),
     history: jsonb('history').$type<ArticleHistoryEntry[]>(),
     createdAt: createdAt(),
@@ -496,6 +509,28 @@ export const emailVerificationTokens = pgTable(
   }),
 )
 
+// --- login_magic_link_tokens ---
+//
+// Email-first auth: short-lived, single-use login links. The member may not
+// exist yet when the link is sent, so the token stores email directly.
+export const loginMagicLinkTokens = pgTable(
+  'login_magic_link_tokens',
+  {
+    id: idCol(),
+    email: varchar('email', { length: 255 }).notNull(),
+    token: varchar('token', { length: 64 }).notNull(),
+    nextPath: varchar('next_path', { length: 240 }),
+    inviteCode: varchar('invite_code', { length: 16 }),
+    expiresAt: timestamp('expires_at', { withTimezone: true }).notNull(),
+    consumedAt: timestamp('consumed_at', { withTimezone: true }),
+    createdAt: createdAt(),
+  },
+  t => ({
+    tokenUnique: uniqueIndex('login_magic_link_tokens_token_unique').on(t.token),
+    emailExpiryIdx: index('login_magic_link_tokens_email_expires_idx').on(t.email, t.expiresAt),
+  }),
+)
+
 // --- 类型导出（DAL/前端用） ---
 export type Family = typeof families.$inferSelect
 export type NewFamily = typeof families.$inferInsert
@@ -527,6 +562,8 @@ export type OtpCode = typeof otpCodes.$inferSelect
 export type NewOtpCode = typeof otpCodes.$inferInsert
 export type EmailVerificationToken = typeof emailVerificationTokens.$inferSelect
 export type NewEmailVerificationToken = typeof emailVerificationTokens.$inferInsert
+export type LoginMagicLinkToken = typeof loginMagicLinkTokens.$inferSelect
+export type NewLoginMagicLinkToken = typeof loginMagicLinkTokens.$inferInsert
 
 // re-export sql for callers that want raw helpers without importing drizzle
 export { sql }

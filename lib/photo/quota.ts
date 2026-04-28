@@ -5,7 +5,7 @@
  *
  * Block 3：基于 documents 表的 created_at + family_id 计数；不需要新表。
  */
-import { and, eq, gte, sql } from 'drizzle-orm'
+import { and, eq, gte, isNull, sql } from 'drizzle-orm'
 import { db } from '@/lib/db'
 import { documents, subscriptions } from '@/lib/db/schema'
 
@@ -49,6 +49,29 @@ export async function getPhotoQuotaForFamily(familyId: string): Promise<QuotaSta
     .select({ c: sql<number>`count(*)::int` })
     .from(documents)
     .where(and(eq(documents.familyId, familyId), gte(documents.createdAt, since)))
+
+  const used = Number(rows[0]?.c ?? 0)
+  const remaining = Math.max(0, FREE_QUOTA_PER_MONTH - used)
+  return {
+    unlimited: false,
+    used,
+    limit: FREE_QUOTA_PER_MONTH,
+    remaining,
+  }
+}
+
+export async function getPhotoQuotaForSession(sessionId: string): Promise<QuotaStatus> {
+  const since = startOfMonthUtc()
+  const rows = await db
+    .select({ c: sql<number>`count(*)::int` })
+    .from(documents)
+    .where(
+      and(
+        eq(documents.sessionId, sessionId),
+        isNull(documents.familyId),
+        gte(documents.createdAt, since),
+      ),
+    )
 
   const used = Number(rows[0]?.c ?? 0)
   const remaining = Math.max(0, FREE_QUOTA_PER_MONTH - used)
