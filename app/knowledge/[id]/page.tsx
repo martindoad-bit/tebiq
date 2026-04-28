@@ -136,11 +136,7 @@ export default async function KnowledgeDetailPage({ params }: Props) {
               <span className="rounded-[8px] bg-canvas px-2 py-1 text-[10px] font-medium leading-none text-ash">
                 {article.category}
               </span>
-              {article.requiresShoshiReview ? (
-                <span className="rounded-[8px] bg-accent-2 px-2 py-1 text-[10px] font-medium leading-none text-ink">
-                  待书士审核
-                </span>
-              ) : (
+              {!article.requiresShoshiReview && (
                 <span className="rounded-[8px] bg-[rgba(46,125,101,0.12)] px-2 py-1 text-[10px] font-medium leading-none text-success">
                   已由行政書士审核
                 </span>
@@ -281,10 +277,8 @@ function RelatedArticles({ items }: { items: Article[] }) {
  * 公开标注审核行政書士的实名 + 登録番号 + 审核日期。
  * 行政書士法要求公开渠道呈现的法律相关信息标注资格审核人身份。
  *
- * 三态：
- *  - 待审核（requiresShoshiReview=true）：橙色 chip，"本文待审核中" 提示
- *  - 已审核且有 name + registration：完整署名
- *  - 已审核但缺名/番号（旧数据）：保守显示「已由行政書士审核」+ 日期，不伪造身份
+ * 公开侧不显示「待审核」tag。未审核文章默认 private，不应进入公开列表；
+ * 如果数据误设为 public，也不向用户展示橙色待审核提示。
  */
 function ReviewerAttribution({
   article,
@@ -297,13 +291,7 @@ function ReviewerAttribution({
   }
 }) {
   if (article.requiresShoshiReview) {
-    return (
-      <section className="mt-3 rounded-card border border-accent/40 bg-accent-2 px-4 py-3.5">
-        <p className="text-[12px] leading-[1.7] text-ink">
-          本文当前 <strong>待行政書士审核</strong>。请把它当作初稿信息阅读，正式办理时以官方窗口或持牌专家说明为准。
-        </p>
-      </section>
-    )
+    return null
   }
 
   const reviewedAt = article.lastReviewedAt ? fmtDate(article.lastReviewedAt) : null

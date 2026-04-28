@@ -108,6 +108,8 @@ export const articleStatusEnum = pgEnum('article_status', [
   'published',
 ])
 
+export const articleVisibilityEnum = pgEnum('article_visibility', ['public', 'private'])
+
 // Member profile enums (added Block 2)
 export const maritalStatusEnum = pgEnum('marital_status', [
   'single',
@@ -429,6 +431,7 @@ export const articles = pgTable(
     bodyMarkdown: text('body_markdown').notNull(),
     category: varchar('category', { length: 64 }).notNull(),
     status: articleStatusEnum('status').notNull().default('draft'),
+    visibility: articleVisibilityEnum('visibility').notNull().default('private'),
     requiresShoshiReview: boolean('requires_shoshi_review').notNull().default(true),
     lastReviewedAt: timestamp('last_reviewed_at', { withTimezone: true }),
     lastReviewedBy: varchar('last_reviewed_by', { length: 100 }),
@@ -446,6 +449,7 @@ export const articles = pgTable(
   t => ({
     slugUnique: uniqueIndex('articles_slug_unique').on(t.slug),
     statusIdx: index('articles_status_idx').on(t.status),
+    visibilityIdx: index('articles_visibility_idx').on(t.visibility),
     categoryIdx: index('articles_category_idx').on(t.category),
     updatedIdx: index('articles_updated_at_idx').on(t.updatedAt),
   }),
@@ -531,6 +535,27 @@ export const loginMagicLinkTokens = pgTable(
   }),
 )
 
+// --- dev_login_links ---
+//
+// Local/dev email-login fallback. Stores generated magic links so the founder
+// can click them from /admin/dev-login without configuring Resend.
+export const devLoginLinks = pgTable(
+  'dev_login_links',
+  {
+    id: idCol(),
+    token: varchar('token', { length: 64 }).notNull(),
+    email: varchar('email', { length: 255 }).notNull(),
+    link: text('link').notNull(),
+    consumedAt: timestamp('consumed_at', { withTimezone: true }),
+    createdAt: createdAt(),
+  },
+  t => ({
+    tokenUnique: uniqueIndex('dev_login_links_token_unique').on(t.token),
+    emailCreatedIdx: index('dev_login_links_email_created_idx').on(t.email, t.createdAt),
+    consumedIdx: index('dev_login_links_consumed_idx').on(t.consumedAt),
+  }),
+)
+
 // --- 类型导出（DAL/前端用） ---
 export type Family = typeof families.$inferSelect
 export type NewFamily = typeof families.$inferInsert
@@ -564,6 +589,8 @@ export type EmailVerificationToken = typeof emailVerificationTokens.$inferSelect
 export type NewEmailVerificationToken = typeof emailVerificationTokens.$inferInsert
 export type LoginMagicLinkToken = typeof loginMagicLinkTokens.$inferSelect
 export type NewLoginMagicLinkToken = typeof loginMagicLinkTokens.$inferInsert
+export type DevLoginLink = typeof devLoginLinks.$inferSelect
+export type NewDevLoginLink = typeof devLoginLinks.$inferInsert
 
 // re-export sql for callers that want raw helpers without importing drizzle
 export { sql }

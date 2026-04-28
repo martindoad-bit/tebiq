@@ -2,6 +2,7 @@ import { and, eq, isNull, lt, or } from 'drizzle-orm'
 import { createId } from '@paralleldrive/cuid2'
 import { db } from '@/lib/db'
 import { loginMagicLinkTokens, type LoginMagicLinkToken } from '@/lib/db/schema'
+import { markDevLoginLinkConsumed } from './devLoginLinks'
 
 const MAGIC_LINK_TTL_MS = 7 * 60 * 1000
 
@@ -60,6 +61,7 @@ export async function consumeLoginMagicLinkToken(
     .update(loginMagicLinkTokens)
     .set({ consumedAt: new Date() })
     .where(eq(loginMagicLinkTokens.id, row.id))
+  await markDevLoginLinkConsumed(row.token)
 
   return { ok: true, token: row }
 }

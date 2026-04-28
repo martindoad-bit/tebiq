@@ -38,12 +38,8 @@ const REASONS: { title: string; sub: string }[] = [
     sub: '请正面拍摄，确认文件四角都在画面内，文字水平。',
   },
   {
-    title: '文件不是日文政府/官方文书',
-    sub: 'TEBIQ 当前只支持税金、年金、入管、市役所等日本生活手续相关的官方文书。',
-  },
-  {
-    title: '文件内容超出当前识别范围',
-    sub: '罕见或个别地区专用的格式可能没被覆盖，欢迎反馈帮助我们改进。',
+    title: '图片格式不支持',
+    sub: '很少见的格式可能无法读取；如果是微信里的图片，请尝试导出原图后再上传。',
   },
 ]
 
@@ -57,7 +53,7 @@ export default async function PhotoFallbackPage({
   const result = doc.aiResponse as unknown as PhotoRecognitionResult
 
   // 如果用户直接访问这个 URL 但文档其实识别成功了，直接送回正常 result 页。
-  if (result.docType !== FALLBACK_DOCTYPE) {
+  if (result.docType !== FALLBACK_DOCTYPE && result.docType !== null) {
     redirect(`/photo/result/${doc.id}`)
   }
 

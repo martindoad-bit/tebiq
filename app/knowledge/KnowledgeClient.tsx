@@ -37,7 +37,6 @@ export interface KnowledgeArticleSummary {
   title: string
   bodyMarkdown: string
   category: string
-  requiresShoshiReview: boolean
   lastReviewedBy: string | null
   updatedAt: string
 }
@@ -207,13 +206,9 @@ export default function KnowledgeClient({
                     <span className="text-[10px] leading-none text-ash">
                       {fmtDate(new Date(c.updatedAt))}
                     </span>
-                    {c.requiresShoshiReview ? (
-                      <span className="rounded-[8px] bg-accent-2 px-1.5 py-1 text-[10px] font-medium leading-none text-ink">
-                        待书士审核
-                      </span>
-                    ) : (
+                    {c.lastReviewedBy && (
                       <span className="rounded-[8px] bg-[rgba(46,125,101,0.12)] px-1.5 py-1 text-[10px] font-medium leading-none text-success">
-                        {c.lastReviewedBy ? `已审核 by ${c.lastReviewedBy}` : '已审核'}
+                        已审核 by {c.lastReviewedBy}
                       </span>
                     )}
                   </div>

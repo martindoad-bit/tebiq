@@ -16,17 +16,20 @@ import { getOrCreateAnonymousSessionId } from '@/lib/auth/anonymous-session'
 import { createDocument } from '@/lib/db/queries/documents'
 import { PhotoRecognitionError, recognizePhotoDocument } from '@/lib/photo/bedrock'
 import { getPhotoQuotaForFamily, getPhotoQuotaForSession } from '@/lib/photo/quota'
-import type { Urgency } from '@/lib/photo/types'
+import { buildUserContext } from '@/lib/photo/user-context'
+import type { PhotoRecognitionResult } from '@/lib/photo/types'
 import { track } from '@/lib/analytics/track'
 import { EVENT } from '@/lib/analytics/events'
 
 export const dynamic = 'force-dynamic'
 export const runtime = 'nodejs'
 
-function mapUrgencyToSchema(u: Urgency): 'critical' | 'important' | 'normal' | 'ignorable' {
-  // schema enum 用 'important' 而非 'high'
-  if (u === 'high') return 'important'
-  return u
+function mapResultToSchemaUrgency(
+  result: PhotoRecognitionResult,
+): 'critical' | 'important' | 'normal' | 'ignorable' {
+  if (result.isUrgent) return 'important'
+  if (result.recognitionConfidence === 'low') return 'ignorable'
+  return 'normal'
 }
 
 export async function POST(req: Request) {
@@ -68,10 +71,14 @@ export async function POST(req: Request) {
     }
 
     const bytes = Buffer.from(await file.arrayBuffer())
+    const userContext = user
+      ? await buildUserContext({ memberId: user.id })
+      : null
     recognition = await recognizePhotoDocument({
       bytes,
       mediaType: file.type,
       filename: file.name,
+      userContext,
     })
     imageUrl = `bedrock://${recognition.imageHash.slice(0, 24)}`
   } catch (error) {
@@ -101,9 +108,9 @@ export async function POST(req: Request) {
     memberId: user?.id ?? null,
     sessionId,
     imageUrl,
-    docType: result.docType,
+    docType: result.docType ?? (result.isEnvelope ? '信封' : '未识别文件'),
     summary: result.summary,
-    urgency: mapUrgencyToSchema(result.urgency),
+    urgency: mapResultToSchemaUrgency(result),
     aiResponse: result as unknown as Record<string, unknown>,
   })
 
@@ -111,9 +118,11 @@ export async function POST(req: Request) {
     EVENT.PHOTO_RECOGNIZE_SUCCESS,
     {
       docType: result.docType,
-      urgency: result.urgency,
+      confidence: result.recognitionConfidence,
       hasDeadline: !!result.deadline,
       hasAmount: result.amount !== null,
+      isEnvelope: result.isEnvelope,
+      needsExpertAdvice: result.needsExpertAdvice,
     },
     { user, sessionId },
   )
@@ -123,6 +132,8 @@ export async function POST(req: Request) {
     result,
     recognition: {
       model: recognition.modelId,
+      mediaType: recognition.mediaType,
+      userContextInjected: recognition.userContextInjected,
     },
     quota: user
       ? await getPhotoQuotaForFamily(user.familyId)

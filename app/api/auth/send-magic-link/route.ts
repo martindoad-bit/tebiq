@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { createDevLoginLink } from '@/lib/db/queries/devLoginLinks'
 import { createLoginMagicLinkToken } from '@/lib/db/queries/loginMagicLinks'
 import { sendEmail } from '@/lib/notifications/email-channel'
 import { templates } from '@/lib/notifications/templates'
@@ -46,6 +47,7 @@ export async function POST(req: Request) {
       : null
   const row = await createLoginMagicLinkToken({ email, nextPath, inviteCode })
   const loginUrl = `${siteOrigin(req)}/api/auth/verify-magic-link?token=${encodeURIComponent(row.token)}`
+  await createDevLoginLink({ token: row.token, email, link: loginUrl })
   const rendered = templates.login_magic_link.build({ loginUrl })
   const outcome = await sendEmail({
     to: email,

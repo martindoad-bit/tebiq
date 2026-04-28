@@ -1,17 +1,10 @@
 /**
- * /photo/result/[id]/detail — 屏 04 拍照结果（详细说明）
+ * /photo/result/[id]/detail — 拍照识别详细说明。
  *
- * 视觉源：docs/prototype/v5-mockup.html lines 1389-1442
- *
- * Server component：从 DB 读 doc.aiResponse → PhotoRecognitionResult。
- *
- * 渲染：
- *   - 每个 detail.sections：序号 + heading + body + 可选 bullets
- *   - 底部金额卡片（截止日期 + 金额大字右对齐）
- *   - 主按钮：保存到我的档案
+ * Block 9 schema 不再生成长篇判断，只展示文书字面信息、通用行动和合规提示。
  */
 import { notFound } from 'next/navigation'
-import { CalendarDays, FileText, ReceiptText } from 'lucide-react'
+import { CalendarDays, FileText, ReceiptText, ShieldCheck } from 'lucide-react'
 import AppShell from '@/app/_components/v5/AppShell'
 import AppBar from '@/app/_components/v5/AppBar'
 import { getDocumentById } from '@/lib/db/queries/documents'
@@ -23,16 +16,13 @@ export const dynamic = 'force-dynamic'
 
 function formatDeadline(iso: string | null, remaining: number | null): string | null {
   if (!iso) return null
-  const d = new Date(iso)
-  if (Number.isNaN(d.getTime())) return null
+  const d = new Date(`${iso}T00:00:00+09:00`)
+  if (Number.isNaN(d.getTime())) return iso
   const base = `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`
-  if (remaining !== null) return `${base}（还有 ${remaining} 天）`
-  return base
-}
-
-function formatAmount(amount: number | null): string | null {
-  if (amount === null) return null
-  return `¥${amount.toLocaleString('en-US')}`
+  if (remaining === null) return base
+  if (remaining < 0) return `${base}（已过 ${Math.abs(remaining)} 天）`
+  if (remaining === 0) return `${base}（今天）`
+  return `${base}（还有 ${remaining} 天）`
 }
 
 export default async function PhotoResultDetailPage({
@@ -44,12 +34,11 @@ export default async function PhotoResultDetailPage({
   if (!doc || !doc.aiResponse) notFound()
 
   const result = doc.aiResponse as unknown as PhotoRecognitionResult
+  const title = result.docType ?? (result.isEnvelope ? '信封' : '未识别文件')
   const deadline = formatDeadline(result.deadline, result.deadlineRemainingDays)
-  const amount = formatAmount(result.amount)
-  const showAmountCard = deadline !== null || amount !== null
 
   return (
-    <AppShell appBar={<AppBar title={`${result.docType} 详细说明`} back />}>
+    <AppShell appBar={<AppBar title={`${title} 详细说明`} back />}>
       <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-3.5 shadow-card">
         <div className="flex items-start gap-3">
           <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-[12px] bg-accent-2 text-ink">
@@ -58,62 +47,58 @@ export default async function PhotoResultDetailPage({
           <div>
             <p className="text-[11px] text-ash">识别文件</p>
             <h1 className="mt-1 text-[16px] font-medium leading-snug text-ink">
-              {result.docType}
+              {title}
             </h1>
             <p className="mt-1 text-[11px] leading-[1.55] text-slate">
-              以下说明根据识别内容整理，付款和期限请以原文件为准。
+              {result.summary}
             </p>
           </div>
         </div>
       </section>
 
-      {result.detail.sections.map((s, i) => (
-        <section key={i} className="mt-3 rounded-card border border-hairline bg-surface px-4 py-3 shadow-card">
-          <div className="mb-1.5 flex items-center gap-2">
-            <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-cool-blue text-[10px] font-medium text-ink">
-              {i + 1}
-            </span>
-            <p className="text-[13px] font-medium text-ink">{s.heading}</p>
+      <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-3 shadow-card">
+        <div className="mb-2 flex items-center gap-2">
+          <ShieldCheck size={15} strokeWidth={1.55} className="text-ink" />
+          <p className="text-[13px] font-medium text-ink">识别到的信息</p>
+        </div>
+        <dl className="space-y-2 text-[12px] leading-[1.6]">
+          <div className="flex justify-between gap-3">
+            <dt className="text-ash">发件机构</dt>
+            <dd className="text-right text-ink">{result.issuer ?? '未识别'}</dd>
           </div>
-          {s.body && (
-            <p className="text-[12px] text-slate leading-[1.65]">{s.body}</p>
-          )}
-          {s.bullets && s.bullets.length > 0 && (
-            <ul className="list-disc pl-5 text-[12px] text-slate leading-[1.65] space-y-0.5 mt-1">
-              {s.bullets.map((b, j) => (
-                <li key={j}>{b}</li>
-              ))}
-            </ul>
-          )}
-        </section>
-      ))}
-
-      {showAmountCard && (
-        <section className="mt-3 rounded-card border border-accent/30 bg-accent-2 px-3.5 py-3 shadow-card">
+          <div className="flex justify-between gap-3">
+            <dt className="text-ash">识别质量</dt>
+            <dd className="text-right text-ink">{result.recognitionConfidence}</dd>
+          </div>
           {deadline && (
-            <div className="flex items-start justify-between gap-3 text-[12px] py-0.5">
-              <span className="flex items-center gap-1.5 text-ash">
-                <CalendarDays size={14} strokeWidth={1.55} />
+            <div className="flex justify-between gap-3">
+              <dt className="flex items-center gap-1.5 text-ash">
+                <CalendarDays size={13} strokeWidth={1.55} />
                 截止日期
-              </span>
-              <span className="text-right font-medium text-ink">{deadline}</span>
+              </dt>
+              <dd className="text-right text-ink">{deadline}</dd>
             </div>
           )}
-          {amount && (
-            <>
-              <div className="flex justify-between text-[12px] mt-2 py-0.5">
-                <span className="flex items-center gap-1.5 text-ash">
-                  <ReceiptText size={14} strokeWidth={1.55} />
-                  金额
-                </span>
-              </div>
-              <div className="text-[19px] font-medium text-ink mt-1.5 text-right">
-                {amount}
-              </div>
-            </>
+          {result.amount && (
+            <div className="flex justify-between gap-3">
+              <dt className="flex items-center gap-1.5 text-ash">
+                <ReceiptText size={13} strokeWidth={1.55} />
+                金额
+              </dt>
+              <dd className="text-right text-ink">{result.amount}</dd>
+            </div>
           )}
-        </section>
-      )}
+        </dl>
+      </section>
+
+      <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-3 shadow-card">
+        <h2 className="text-[13px] font-medium text-ink">通用处理步骤</h2>
+        <ol className="mt-2 list-decimal space-y-1 pl-4 text-[12px] leading-[1.65] text-slate">
+          {result.generalActions.map((action, i) => (
+            <li key={i}>{action}</li>
+          ))}
+        </ol>
+      </section>
 
       <div className="mt-[18px]">
         <SaveToArchiveButton />

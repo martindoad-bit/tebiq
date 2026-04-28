@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import {
   listArticlesForAdmin,
   upsertArticle,
+  type ArticleVisibility,
   type ArticleStatus,
 } from '@/lib/db/queries/articles'
 
@@ -14,9 +15,16 @@ function isAdmin(req: NextRequest): boolean {
 }
 
 const STATUSES: ArticleStatus[] = ['draft', 'reviewing', 'published']
+const VISIBILITIES: ArticleVisibility[] = ['private', 'public']
 
 function parseStatus(value: unknown): ArticleStatus {
   return STATUSES.includes(value as ArticleStatus) ? (value as ArticleStatus) : 'draft'
+}
+
+function parseVisibility(value: unknown): ArticleVisibility {
+  return VISIBILITIES.includes(value as ArticleVisibility)
+    ? (value as ArticleVisibility)
+    : 'private'
 }
 
 export async function GET(req: NextRequest) {
@@ -46,6 +54,7 @@ export async function POST(req: NextRequest) {
       bodyMarkdown,
       category,
       status: parseStatus(body?.status),
+      visibility: parseVisibility(body?.visibility),
       requiresShoshiReview: Boolean(body?.requiresShoshiReview),
       lastReviewedAt: body?.lastReviewedAt ? String(body.lastReviewedAt) : null,
       lastReviewedBy: body?.lastReviewedBy ? String(body.lastReviewedBy) : null,

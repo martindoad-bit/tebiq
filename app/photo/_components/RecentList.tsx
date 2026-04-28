@@ -32,13 +32,13 @@ function formatDate(iso: string): string {
 }
 
 function urgencyLabel(u: Urgency | null): string {
-  if (u === 'critical' || u === 'high') return '需处理'
+  if (u === 'critical' || u === 'high' || u === 'important') return '需处理'
   if (u === 'normal') return '已处理'
   return '已查看'
 }
 
 function urgencyDot(u: Urgency | null): string {
-  if (u === 'critical' || u === 'high') return 'bg-danger'
+  if (u === 'critical' || u === 'high' || u === 'important') return 'bg-danger'
   if (u === 'normal') return 'bg-success'
   return 'bg-accent'
 }

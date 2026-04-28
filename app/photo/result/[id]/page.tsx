@@ -1,28 +1,18 @@
 /**
- * /photo/result/[id] — 屏 03 拍照结果（重要程度）
+ * /photo/result/[id] — 拍照识别结果。
  *
- * 视觉源：docs/prototype/v5-mockup.html lines 1332-1387
- *
- * Server component：从 DB 读 documents 行，把 aiResponse 反序列化回
- * PhotoRecognitionResult。
- *
- * Sections:
- *   1. 文件类型 + docType + issuer
- *   2. 緊急度卡片（urgency 决定标签颜色 + 剩余天数）
- *   3. QA: 这是做什么的 / 你需要做什么 / 如果不做会怎样
- * 底部两按钮：
- *   - 查看详细说明 → /photo/result/[id]/detail
- *   - 保存到我的档案（client toast 后 router.back()）
+ * Block 9: 新识别 schema 只做客观文书整理 + 保守通用行动，
+ * 不输出对在留资格/永住/续签的影响判断。
  */
 import { notFound, redirect } from 'next/navigation'
 import Link from 'next/link'
 import type { ReactNode } from 'react'
 import {
-  AlertCircle,
+  AlertTriangle,
   CalendarDays,
-  CheckCircle2,
   FileText,
   LockKeyhole,
+  MailOpen,
   RotateCcw,
   ShieldCheck,
 } from 'lucide-react'
@@ -33,31 +23,30 @@ import TrackedLink from '@/app/_components/v5/TrackedLink'
 import { EVENT } from '@/lib/analytics/events'
 import { getCurrentUser } from '@/lib/auth/session'
 import { getDocumentById } from '@/lib/db/queries/documents'
-import type { PhotoRecognitionResult, Urgency } from '@/lib/photo/types'
+import { shouldUseFallbackPage } from '@/lib/photo/bedrock'
+import type { PhotoRecognitionResult } from '@/lib/photo/types'
 import SaveToArchiveButton from './SaveToArchiveButton'
 import EmailReminderPrompt from './EmailReminderPrompt'
 import ComplianceFooter from '@/app/_components/v5/ComplianceFooter'
 
 export const dynamic = 'force-dynamic'
 
-interface UrgencyDisplay {
-  label: string
-  bg: string
-  /** 中文「!」颜色 */
-  bang: string
+function formatDeadline(iso: string | null, remaining: number | null): string | null {
+  if (!iso) return null
+  const d = new Date(`${iso}T00:00:00+09:00`)
+  if (Number.isNaN(d.getTime())) return iso
+  const base = `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`
+  if (remaining === null) return base
+  if (remaining < 0) return `${base}（已过 ${Math.abs(remaining)} 天）`
+  if (remaining === 0) return `${base}（今天）`
+  return `${base}（${remaining} 天后）`
 }
 
-function urgencyDisplay(u: Urgency): UrgencyDisplay {
-  switch (u) {
-    case 'critical':
-      return { label: '需要尽快处理', bg: '#C64F45', bang: '#C64F45' }
-    case 'high':
-      return { label: '需要尽快处理', bg: '#C64F45', bang: '#C64F45' }
-    case 'normal':
-      return { label: '一般事项', bg: '#E56F4F', bang: '#E56F4F' }
-    case 'ignorable':
-      return { label: '可暂缓', bg: '#6E7A84', bang: '#6E7A84' }
-  }
+function confidenceLabel(result: PhotoRecognitionResult): string {
+  if (result.isEnvelope) return '信封识别'
+  if (result.recognitionConfidence === 'high') return '识别质量高'
+  if (result.recognitionConfidence === 'medium') return '识别质量中等'
+  return '识别质量不高'
 }
 
 export default async function PhotoResultPage({
@@ -72,11 +61,13 @@ export default async function PhotoResultPage({
   const user = await getCurrentUser()
 
   const result = doc.aiResponse as unknown as PhotoRecognitionResult
-  // 兜底：识别失败的文档跳到专门的 fallback 页（T5）
-  if (result.docType === '无法确认的文书') {
+  if (shouldUseFallbackPage(result)) {
     redirect(`/photo/result/${doc.id}/fallback`)
   }
-  const urg = urgencyDisplay(result.urgency)
+
+  const deadline = formatDeadline(result.deadline, result.deadlineRemainingDays)
+  const title = result.docType ?? (result.isEnvelope ? '信封' : '未识别文件')
+  const issuer = result.issuer ?? '发件机构不明'
 
   return (
     <AppShell
@@ -98,67 +89,73 @@ export default async function PhotoResultPage({
         />
       }
     >
-      {/* 文件类型 */}
       <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-3.5 shadow-card">
         <div className="flex items-start gap-3">
           <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-[12px] bg-accent-2 text-ink">
-            <FileText size={18} strokeWidth={1.55} />
+            {result.isEnvelope ? <MailOpen size={18} strokeWidth={1.55} /> : <FileText size={18} strokeWidth={1.55} />}
           </span>
           <div className="min-w-0 flex-1">
-            <p className="text-[11px] text-ash mb-1">文件类型</p>
-            <h1 className="text-[17px] font-medium leading-snug text-ink">
-              {result.docType}
-            </h1>
-            <p className="mt-1 text-[11.5px] text-slate">来自：{result.issuer}</p>
+            <p className="text-[11px] text-ash mb-1">{result.isEnvelope ? '信封外观' : '文件类型'}</p>
+            <h1 className="text-[17px] font-medium leading-snug text-ink">{title}</h1>
+            <p className="mt-1 text-[11.5px] text-slate">来自：{issuer}</p>
           </div>
         </div>
       </section>
 
-      {/* 緊急度 */}
-      <section
-        className="mt-2.5 rounded-card border border-accent/30 bg-accent-2 px-4 py-4 shadow-card"
-      >
-        <div className="flex items-start justify-between gap-3">
-          <div className="text-left">
-            <p className="text-[11px] font-medium text-ash">处理优先级</p>
-            <span
-              className="mt-2 inline-flex items-center gap-1.5 rounded-[12px] px-2.5 py-1 text-[11.5px] font-semibold text-white"
-              style={{ background: urg.bg }}
-            >
-              <span aria-hidden>●</span>
-              {urg.label}
+      <section className="mt-2.5 rounded-card border border-hairline bg-surface px-4 py-3 shadow-card">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="inline-flex items-center gap-1.5 rounded-[12px] bg-cool-blue px-2.5 py-1 text-[11px] font-medium text-ink">
+            <ShieldCheck size={12} strokeWidth={1.55} />
+            {confidenceLabel(result)}
+          </span>
+          {deadline && (
+            <span className="inline-flex items-center gap-1.5 rounded-[12px] bg-accent-2 px-2.5 py-1 text-[11px] font-medium text-ink">
+              <CalendarDays size={12} strokeWidth={1.55} />
+              截止日期 {deadline}
             </span>
-          </div>
-          {result.deadlineRemainingDays !== null && (
-            <div className="rounded-[14px] border border-white/75 bg-surface/80 px-3 py-2 text-right shadow-soft">
-              <div className="flex items-center justify-end gap-1 text-[10.5px] text-ash">
-                <CalendarDays size={12} strokeWidth={1.55} />
-                剩余
-              </div>
-              <div className="mt-1 text-[21px] font-semibold leading-none text-ink">
-                <span style={{ color: urg.bang }}>{result.deadlineRemainingDays}</span>
-                <span className="ml-0.5 text-[12px] font-medium text-ash">天</span>
-              </div>
-            </div>
+          )}
+          {result.amount && (
+            <span className="inline-flex items-center rounded-[12px] bg-canvas px-2.5 py-1 text-[11px] font-medium text-ink">
+              金额 {result.amount}
+            </span>
           )}
         </div>
       </section>
 
-      {/* QA blocks */}
+      {result.isEnvelope && (
+        <NoticeBlock tone="envelope" title="这次只识别到信封">
+          目前只能看到发件机构或信封类别。请打开信封后拍摄正文，才能确认期限、金额和办理内容。
+        </NoticeBlock>
+      )}
+
+      {result.recognitionConfidence === 'low' && (
+        <NoticeBlock tone="warning" title="识别质量不高">
+          图片里可读信息较少，建议重新拍摄整页，确保标题、日期、金额和正文都清晰。
+        </NoticeBlock>
+      )}
+
+      {result.contextHints && result.contextHints.length > 0 && (
+        <section className="mt-3 rounded-card border border-accent/35 bg-accent-2/55 px-4 py-3 shadow-card">
+          <div className="space-y-1.5">
+            {result.contextHints.map(hint => (
+              <p key={hint} className="text-[11.5px] leading-[1.6] text-ink">
+                {hint}
+              </p>
+            ))}
+          </div>
+        </section>
+      )}
+
       <InfoBlock title="这是做什么的？">
         <p>{result.summary}</p>
       </InfoBlock>
 
-      <InfoBlock title="你需要做什么？" icon="check">
+      <InfoBlock title="可以先这样处理">
         <ol className="list-decimal pl-4 space-y-0.5">
-          {result.actions.map((a, i) => (
+          {result.generalActions.map((a, i) => (
             <li key={i}>{a}</li>
           ))}
         </ol>
-      </InfoBlock>
-
-      <InfoBlock title="如果不做会怎样？" icon="alert">
-        <p>{result.consequences}</p>
       </InfoBlock>
 
       {searchParams?.email === 'prompt' && <EmailReminderPrompt />}
@@ -169,16 +166,20 @@ export default async function PhotoResultPage({
             <ShieldCheck size={16} strokeWidth={1.55} />
           </span>
           <p className="text-[11.5px] leading-[1.6] text-slate/74">
-            TEBIQ 帮你整理重点；付款金额、期限和提交要求请以原文件为准。
+            TEBIQ 只整理文书字面信息；付款金额、期限和提交要求请以原文件为准。
           </p>
         </div>
       </section>
 
-      {/* CTA */}
       <div className="mt-[18px] space-y-2">
         <Link href={`/photo/result/${doc.id}/detail`} className="block">
           <Button>查看详细说明</Button>
         </Link>
+        {result.needsExpertAdvice && (
+          <Link href={`/consultation?from=photo_result&doc_id=${doc.id}`} className="block">
+            <Button variant="secondary">建议咨询行政書士 ¥9,800</Button>
+          </Link>
+        )}
         {user ? <SaveToArchiveButton /> : <RegisterAfterPhotoCard docId={doc.id} />}
       </div>
 
@@ -210,20 +211,34 @@ function RegisterAfterPhotoCard({ docId }: { docId: string }) {
   )
 }
 
-function InfoBlock({
+function NoticeBlock({
   title,
-  icon,
+  tone,
   children,
 }: {
   title: string
-  icon?: 'check' | 'alert'
+  tone: 'warning' | 'envelope'
   children: ReactNode
 }) {
-  const Icon = icon === 'check' ? CheckCircle2 : icon === 'alert' ? AlertCircle : FileText
+  const icon = tone === 'warning'
+    ? <AlertTriangle size={15} strokeWidth={1.55} />
+    : <MailOpen size={15} strokeWidth={1.55} />
+  return (
+    <section className="mt-3 rounded-card border border-accent/35 bg-accent-2 px-4 py-3 shadow-card">
+      <div className="mb-1.5 flex items-center gap-2 text-ink">
+        {icon}
+        <p className="text-[13px] font-medium">{title}</p>
+      </div>
+      <p className="text-[11.5px] leading-[1.65] text-slate">{children}</p>
+    </section>
+  )
+}
+
+function InfoBlock({ title, children }: { title: string; children: ReactNode }) {
   return (
     <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-3 shadow-card">
       <div className="mb-1.5 flex items-center gap-2">
-        <Icon size={15} strokeWidth={1.55} className="text-ink" />
+        <FileText size={15} strokeWidth={1.55} className="text-ink" />
         <p className="text-[13px] font-medium text-ink">{title}</p>
       </div>
       <div className="text-[12px] leading-[1.62] text-slate">{children}</div>

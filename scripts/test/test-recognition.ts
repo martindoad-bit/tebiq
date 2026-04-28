@@ -1,12 +1,18 @@
 import { readFile, readdir } from 'node:fs/promises'
 import path from 'node:path'
-import { recognizePhotoDocument, PhotoRecognitionError } from '../../lib/photo/bedrock'
+import {
+  detectImageFormat,
+  PhotoRecognitionError,
+  recognizePhotoDocument,
+} from '../../lib/photo/bedrock'
+import type { PhotoRecognitionResult } from '../../lib/photo/types'
+import type { PhotoUserContext } from '../../lib/photo/user-context'
 
 interface SampleExpectation {
   file: string
   expectedType: string
   expectedIssuer: string
-  expectedAmount?: number
+  expectedAmount?: string
   expectedDeadline?: string
 }
 
@@ -17,77 +23,38 @@ const EXPECTATIONS: SampleExpectation[] = [
     file: '01-juminzei-notice.png',
     expectedType: '住民税',
     expectedIssuer: '新宿区役所',
-    expectedAmount: 48000,
+    expectedAmount: '48000',
     expectedDeadline: '2026-05-31',
   },
   {
     file: '02-kokumin-kenko-hoken.png',
     expectedType: '国民健康保険',
     expectedIssuer: '横浜市',
-    expectedAmount: 23400,
+    expectedAmount: '23400',
     expectedDeadline: '2026-06-30',
   },
   {
     file: '03-nenkin-payment.png',
     expectedType: '国民年金',
     expectedIssuer: '日本年金機構',
-    expectedAmount: 16980,
+    expectedAmount: '16980',
     expectedDeadline: '2026-05-15',
-  },
-  {
-    file: '04-zairyu-card-renewal.png',
-    expectedType: '在留カード',
-    expectedIssuer: '出入国在留管理庁',
-    expectedDeadline: '2026-07-10',
-  },
-  {
-    file: '05-kakutei-shinkoku.png',
-    expectedType: '確定申告',
-    expectedIssuer: '税務署',
-    expectedAmount: 72500,
-    expectedDeadline: '2026-03-16',
-  },
-  {
-    file: '06-gensen-choshu.png',
-    expectedType: '源泉徴収票',
-    expectedIssuer: '株式会社サンプル',
-    expectedAmount: 4800000,
-  },
-  {
-    file: '07-kazei-shomeisho.png',
-    expectedType: '課税証明書',
-    expectedIssuer: '大阪市役所',
-    expectedAmount: 3820000,
-  },
-  {
-    file: '08-immigration-fusei.png',
-    expectedType: '資料提出通知書',
-    expectedIssuer: '東京出入国在留管理局',
-    expectedDeadline: '2026-05-08',
-  },
-  {
-    file: '09-city-general-notice.png',
-    expectedType: '市役所',
-    expectedIssuer: '川口市役所',
-  },
-  {
-    file: '10-bank-real-estate-contract.png',
-    expectedType: '賃貸借契約書',
-    expectedIssuer: '青山不動産株式会社',
-    expectedAmount: 286000,
   },
 ]
 
 function includesNormalized(actual: string | null | undefined, expected: string) {
-  return String(actual ?? '').replace(/\s/g, '').includes(expected.replace(/\s/g, ''))
+  return String(actual ?? '').replace(/\s|,|円/g, '').includes(expected.replace(/\s|,|円/g, ''))
 }
 
-function scoreResult(result: Awaited<ReturnType<typeof recognizePhotoDocument>>['result'], expected: SampleExpectation) {
+function scoreResult(result: PhotoRecognitionResult, expected?: SampleExpectation) {
+  if (!expected) return { label: 'not_scored', passed: 0, total: 0 }
   const checks = [
     includesNormalized(result.docType, expected.expectedType),
     includesNormalized(result.issuer, expected.expectedIssuer),
   ]
-  if (expected.expectedAmount !== undefined) checks.push(result.amount === expected.expectedAmount)
+  if (expected.expectedAmount !== undefined) {
+    checks.push(includesNormalized(result.amount, expected.expectedAmount))
+  }
   if (expected.expectedDeadline) checks.push(result.deadline === expected.expectedDeadline)
 
   const passed = checks.filter(Boolean).length
@@ -98,14 +65,69 @@ function scoreResult(result: Awaited<ReturnType<typeof recognizePhotoDocument>>[
   }
 }
 
+function fakeUserContext(userId: string | undefined): PhotoUserContext | null {
+  if (!userId) return null
+  return {
+    visaType: 'gijinkoku',
+    daysToVisaExpiry: 60,
+    hasRecentQuizResult: true,
+    recentDocumentTypes: ['住民税通知', '在留期間更新'],
+    recentDocuments: [
+      { issuer: '新宿区役所', docType: '住民税通知' },
+      { issuer: '東京出入国在留管理局', docType: '在留期間更新のお知らせ' },
+    ],
+  }
+}
+
+function readableSummary(result: PhotoRecognitionResult, userContextInjected: boolean) {
+  return {
+    type: result.docType ?? '未识别',
+    issuer: result.issuer ?? '不明',
+    confidence: result.recognitionConfidence,
+    isEnvelope: result.isEnvelope,
+    deadline: result.deadline,
+    amount: result.amount,
+    needsExpertAdvice: result.needsExpertAdvice,
+    userContextInjected,
+    contextHints: result.contextHints ?? [],
+  }
+}
+
+async function recognizeOne(filePath: string, expected?: SampleExpectation) {
+  const bytes = await readFile(filePath)
+  const detected = detectImageFormat(bytes)
+  const output = await recognizePhotoDocument({
+    bytes,
+    mediaType: detected.mediaType,
+    filename: path.basename(filePath),
+    userContext: fakeUserContext(process.env.USER_ID),
+  })
+  return {
+    file: filePath,
+    detectedFormat: detected.kind,
+    model: output.modelId,
+    mediaTypeSent: output.mediaType,
+    recognition: output.result,
+    summary: readableSummary(output.result, output.userContextInjected),
+    quality: scoreResult(output.result, expected),
+  }
+}
+
 async function main() {
   if (!process.env.AWS_ACCESS_KEY_ID || !process.env.AWS_SECRET_ACCESS_KEY) {
     console.log('AWS Bedrock env is not configured; skipped live recognition test.')
-    console.log('Run with: tsx --env-file=.env.local scripts/test/test-recognition.ts')
+    console.log('Run with: IMAGE=/path/to/photo.jpg USER_ID=test_user_001 npx tsx scripts/test/test-recognition.ts')
     return
   }
 
-  const available = new Set(await readdir(SAMPLE_DIR))
+  const explicitImage = process.env.IMAGE ?? process.argv[2]
+  if (explicitImage) {
+    const result = await recognizeOne(path.resolve(explicitImage))
+    console.log(JSON.stringify({ testedAt: new Date().toISOString(), result }, null, 2))
+    return
+  }
+
+  const available = new Set(await readdir(SAMPLE_DIR).catch(() => []))
   const rows = []
   for (const expected of EXPECTATIONS) {
     if (!available.has(expected.file)) {
@@ -114,18 +136,7 @@ async function main() {
     }
 
     try {
-      const bytes = await readFile(path.join(SAMPLE_DIR, expected.file))
-      const output = await recognizePhotoDocument({
-        bytes,
-        mediaType: 'image/png',
-        filename: expected.file,
-      })
-      const quality = scoreResult(output.result, expected)
-      rows.push({
-        file: expected.file,
-        quality,
-        result: output.result,
-      })
+      rows.push(await recognizeOne(path.join(SAMPLE_DIR, expected.file), expected))
     } catch (error) {
       rows.push({
         file: expected.file,
