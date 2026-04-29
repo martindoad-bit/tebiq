@@ -180,7 +180,7 @@ export default function TokuteiLandingPage() {
               <Link href="/knowledge" className="text-ink underline underline-offset-4">
                 签证基础知识
               </Link>
-              ；想直接进入风险自查，可前往{' '}
+              ；想直接进入材料准备检查，可前往{' '}
               <Link href="/visa-select" className="text-ink underline underline-offset-4">
                 签证选择页
               </Link>

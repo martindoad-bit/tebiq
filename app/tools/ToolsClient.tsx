@@ -12,7 +12,7 @@ const TOOLS: Array<{
 }> = [
   { title: '拍照即懂', desc: '识别日文文书', href: '/photo', Icon: Camera },
   { title: '文字即懂', desc: '解释日文文本', href: '/ask', Icon: MessageSquareText },
-  { title: '续签自查', desc: '查看当前风险点', href: '/check', Icon: ClipboardCheck },
+  { title: '续签材料准备检查', desc: '准备事项', href: '/check', Icon: ClipboardCheck },
   { title: '任务清单', desc: '即将开放', href: '/tools', Icon: ListChecks, disabled: true },
 ]
 

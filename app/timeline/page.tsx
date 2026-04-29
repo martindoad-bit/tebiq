@@ -100,12 +100,12 @@ export default async function TimelinePage({
                   {item.reason ?? '递交前确认'}
                 </span>
               </span>
-              <StatusBadge tone="attention">需处理</StatusBadge>
+              <StatusBadge tone="attention">需要补齐</StatusBadge>
             </Link>
           ))
         ) : (
           <p className="px-4 py-5 text-[13px] leading-[1.65] text-ash">
-            暂无自查事项。完整自查完成后会进入这里。
+            暂无准备事项。完整材料准备检查完成后会进入这里。
           </p>
         )}
       </ListSection>

@@ -46,8 +46,8 @@ function severityVisual(verdict: Verdict, riskCount: number): SeverityVisual {
       bg: 'bg-success',
       text: 'text-success',
       symbol: '',
-      label: '低风险',
-      desc: '当前未发现明显风险点，按常规材料准备即可',
+      label: '基本齐备',
+      desc: '当前未发现明显缺口，按常规材料准备即可',
     }
   }
   if (verdict === 'yellow') {
@@ -55,16 +55,16 @@ function severityVisual(verdict: Verdict, riskCount: number): SeverityVisual {
       bg: 'bg-accent',
       text: 'text-accent',
       symbol: '!',
-      label: '中风险',
-      desc: `你的情况存在一些需要注意的风险点（${riskCount} 项）`,
+      label: '需要补齐',
+      desc: `你的情况有 ${riskCount} 项准备事项需要确认`,
     }
   }
   return {
       bg: 'bg-danger',
       text: 'text-danger',
       symbol: '',
-      label: '高风险',
-      desc: `检测到 ${riskCount} 项严重风险，建议咨询专家`,
+      label: '待确认',
+      desc: `检测到 ${riskCount} 项需要优先确认的事项，建议咨询专家`,
   }
 }
 
@@ -99,7 +99,7 @@ export default function QuizResultView({
   const riskCount = verdict === 'red' ? reds.length : triggered.length
   const sv = severityVisual(verdict, riskCount)
 
-  // 「主要风险点」按 severity 排序
+  // 「主要准备事项」按 severity 排序
   const riskItems = [...reds, ...yellows].map(t => t.triggerLabel)
   // 「建议行动」从 triggered 取 fixHint
   const advices = [...reds, ...yellows]
@@ -137,7 +137,7 @@ export default function QuizResultView({
       ) : (
         <>
           {riskItems.length > 0 && (
-            <ResultBlock title="主要风险点" items={riskItems} />
+            <ResultBlock title="主要准备事项" items={riskItems} />
           )}
           {advices.length > 0 && (
             <ResultBlock title="建议行动" items={advices} />

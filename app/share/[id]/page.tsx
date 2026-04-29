@@ -12,7 +12,7 @@ export const revalidate = 0
 const VERDICT_META = {
   red: {
     label: '红色',
-    sub: '存在高风险项',
+    sub: '存在高准备事项',
     hero: 'bg-[rgba(198,79,69,0.10)] border-danger text-danger',
     chip: 'bg-[rgba(198,79,69,0.10)] text-danger',
     icon: CircleAlert,
@@ -54,7 +54,7 @@ export async function generateMetadata({ params }: PageProps) {
   const v = VERDICT_META[record.verdict]
   return {
     title: `朋友分享了一次 TEBIQ 自查（${v.label}） | TEBIQ`,
-    description: `你的朋友刚刚做了 TEBIQ 续签自查，结果是${v.label}。你也来看看自己的情况吧。`,
+    description: `你的朋友刚刚做了 TEBIQ 续签材料准备检查，结果是${v.label}。你也来看看自己的情况吧。`,
   }
 }
 

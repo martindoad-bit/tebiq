@@ -505,7 +505,7 @@ function EmptyState() {
 function HistoryRow({ record }: { record: HistoryRecord }) {
   const [open, setOpen] = useState(false)
   const verdictLabel = {
-    red: { text: '高风险', cls: 'bg-danger text-white' },
+    red: { text: '待确认', cls: 'bg-danger text-white' },
     yellow: { text: '需注意', cls: 'bg-accent text-white' },
     green: { text: '可申请', cls: 'bg-success text-white' },
   }[record.result]
@@ -520,10 +520,10 @@ function HistoryRow({ record }: { record: HistoryRecord }) {
           {verdictLabel.text}
         </div>
         <div className="flex-1 min-w-0">
-          <div className="text-[13px] font-medium leading-snug text-ink">技人国续签自查</div>
+          <div className="text-[13px] font-medium leading-snug text-ink">技人国续签材料准备检查</div>
           <div className="mt-1 text-[10.5px] text-ash">{dateStr}</div>
           {record.triggeredItems.length > 0 && (
-            <div className="mt-1 text-[10.5px] text-ash">触发 {record.triggeredItems.length} 项风险</div>
+            <div className="mt-1 text-[10.5px] text-ash">触发 {record.triggeredItems.length} 项待确认事项</div>
           )}
         </div>
       </div>

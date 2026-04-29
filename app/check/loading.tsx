@@ -10,7 +10,7 @@ function Pulse({ className = '' }: { className?: string }) {
 
 export default function CheckLoading() {
   return (
-    <AppShell appBar={<AppBar title="续签自查" back="/" />}>
+    <AppShell appBar={<AppBar title="续签材料准备检查" back="/" />}>
       <div className="mt-3 space-y-3">
         <div className="rounded-card border border-hairline bg-surface px-4 py-4 shadow-card">
           <Pulse className="h-4 w-32 mb-3" />

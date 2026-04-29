@@ -62,7 +62,7 @@ export default function ArchiveListClient({ items }: { items: ArchiveItem[] }) {
               已保存 {items.length} 条记录
             </p>
             <p className="mt-1 text-[11px] leading-[1.5] text-ash">
-              文件识别与续签自查会按时间整理在这里。
+              文件识别与续签材料准备检查会按时间整理在这里。
             </p>
           </div>
           <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-[13px] bg-accent-2 text-ink">
@@ -164,7 +164,7 @@ function EmptyState() {
         你还没有任何记录
       </p>
       <p className="mt-1.5 text-[11px] leading-relaxed text-ash">
-        试试拍照即懂或续签自查
+        试试拍照即懂或续签材料准备检查
       </p>
       <div className="mt-4 flex items-center justify-center gap-2">
         <Link
@@ -177,7 +177,7 @@ function EmptyState() {
           href="/check"
           className="text-[12px] text-ink border border-hairline px-3 py-2 rounded-btn font-medium"
         >
-          续签自查
+          续签材料准备检查
         </Link>
       </div>
     </div>

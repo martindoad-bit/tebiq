@@ -17,8 +17,8 @@ export async function generateMetadata({
   const visa = normalizeCheckVisa(params.visa)
   const meta = CHECK_VISA_META[visa]
   return {
-    title: `${meta.label} 完整自查 | TEBIQ`,
-    description: `${meta.label} 完整自查，完成后回写维度状态。`,
+    title: `${meta.label} 完整材料准备检查 | TEBIQ`,
+    description: `${meta.label} 完整检查，完成后回写维度状态。`,
     robots: { index: false, follow: false },
   }
 }

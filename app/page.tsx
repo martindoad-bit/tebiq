@@ -78,13 +78,13 @@ function NewUserHome() {
             eventName={EVENT.HOME_CHECK_CARD_CLICK}
             className="focus-ring flex min-h-[48px] items-center justify-center rounded-btn border border-hairline bg-surface px-4 py-3 text-[14px] font-medium leading-none text-ink"
           >
-            做一次续签自查
+            做一次材料准备检查
           </TrackedLink>
         </div>
       </section>
 
       <SectionLabel title="常用工具" />
-      <ToolList photoSubtitle="识别日文文书" checkSubtitle="当前风险点" reminderSubtitle="期限事项" />
+      <ToolList photoSubtitle="识别日文文书" checkSubtitle="准备事项" reminderSubtitle="期限事项" />
 
       <section className="mt-6 rounded-card border border-hairline bg-surface px-5 py-8 text-center">
         <FileText size={30} strokeWidth={1.5} className="mx-auto text-haze" />
@@ -129,8 +129,8 @@ function UserHome({
       <ListSection>
         <OverviewRow label="在留卡" value={visaOverview(user, daysToExpiry)} href="/my/profile" />
         <OverviewRow
-          label="自查事项"
-          value={needsActionCount > 0 ? `你有 ${needsActionCount} 项需处理` : hasSelfCheck ? '当前无需处理项' : '做一次自查看看'}
+          label="准备事项"
+          value={needsActionCount > 0 ? `你有 ${needsActionCount} 项需要补齐` : hasSelfCheck ? '当前无需补齐项' : '做一次材料准备检查'}
           href={needsActionCount > 0 || !hasSelfCheck ? '/check' : '/timeline'}
         />
         <OverviewRow label="接下来30天" value={`${next30Count} 件期限事项`} href="/timeline" />
@@ -139,7 +139,7 @@ function UserHome({
       {!hasArchiveData && (
         <section className="mt-4 border-b border-hairline pb-4">
           <p className="text-[13px] leading-[1.7] text-ash">
-            当前记录为空。可以先拍一份文书，或做一次续签自查。
+            当前记录为空。可以先拍一份文书，或做一次材料准备检查。
           </p>
         </section>
       )}
@@ -147,7 +147,7 @@ function UserHome({
       <SectionLabel title="常用工具" />
       <ToolList
         photoSubtitle={hasPhoto ? '识别日文文书' : '拍一份文书试试'}
-        checkSubtitle={needsActionCount > 0 ? `${needsActionCount} 项需处理` : hasSelfCheck ? '当前风险点' : '做一次自查看看'}
+        checkSubtitle={needsActionCount > 0 ? `${needsActionCount} 项需要补齐` : hasSelfCheck ? '准备事项' : '做一次材料准备检查'}
         reminderSubtitle={`${next30Count} 项期限事项`}
       />
 
@@ -196,7 +196,7 @@ function ToolList({
       <ListRow
         href="/check"
         icon={<ClipboardCheck size={20} strokeWidth={1.5} />}
-        title="续签自查"
+        title="续签材料准备检查"
         subtitle={checkSubtitle}
       />
       <ListRow

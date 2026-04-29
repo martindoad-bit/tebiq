@@ -1,6 +1,6 @@
 'use client'
 /**
- * QuizEngine — 续签自查的 quiz 状态机 + v5 视觉。
+ * QuizEngine — 续签材料准备检查的 quiz 状态机 + v5 视觉。
  *
  * 状态机（KEEP，不要改）：current question / history / 选项动画 / 「已答」抽屉。
  * 视觉（v5 重写）：AppShell + AppBar，白卡选项 + 自定义 radio，底部「上一题/下一题」。
@@ -341,7 +341,7 @@ function AnsweredDrawer({
                   ? 'bg-accent'
                   : 'bg-success'
             const sevLabel =
-              sev === 'red' ? '高风险' : sev === 'yellow' ? '需注意' : '正常'
+              sev === 'red' ? '待确认' : sev === 'yellow' ? '需注意' : '正常'
             return (
               <div
                 key={`${item.questionId}-${i}`}

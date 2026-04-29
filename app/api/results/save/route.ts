@@ -70,7 +70,7 @@ export async function POST(req: Request) {
     }))
     const relatedEvents = await findRelatedTimelineEvents({
       owner: { memberId: user?.id ?? null, sessionId },
-      docType: `${record.visaType} 续签自查`,
+      docType: `${record.visaType} 续签材料准备检查`,
       excludeId: timelineEvent.id,
       limit: 3,
     })
