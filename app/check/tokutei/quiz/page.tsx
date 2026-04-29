@@ -2,5 +2,5 @@
 import { redirect } from 'next/navigation'
 
 export default function TokuteiQuizRedirect() {
-  redirect('/check/tokutei')
+  redirect('/check/specified_skilled_worker/quiz')
 }

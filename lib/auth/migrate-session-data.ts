@@ -1,12 +1,24 @@
 import { and, eq, isNull } from 'drizzle-orm'
 import { db } from '@/lib/db'
-import { documents, events, members, quizResults, timelineEvents } from '@/lib/db/schema'
+import {
+  checkDimensionEvents,
+  checkDimensionResults,
+  checkRuns,
+  documents,
+  events,
+  members,
+  quizResults,
+  timelineEvents,
+} from '@/lib/db/schema'
 
 export interface SessionDataMigrationResult {
   documents: number
   quizResults: number
   events: number
   timelineEvents: number
+  checkRuns: number
+  checkDimensionResults: number
+  checkDimensionEvents: number
 }
 
 async function getOwnerMemberId(familyId: string): Promise<string | null> {
@@ -22,7 +34,17 @@ export async function migrateSessionDataToFamily(
   sessionId: string | null | undefined,
   familyId: string,
 ): Promise<SessionDataMigrationResult> {
-  if (!sessionId) return { documents: 0, quizResults: 0, events: 0, timelineEvents: 0 }
+  if (!sessionId) {
+    return {
+      documents: 0,
+      quizResults: 0,
+      events: 0,
+      timelineEvents: 0,
+      checkRuns: 0,
+      checkDimensionResults: 0,
+      checkDimensionEvents: 0,
+    }
+  }
 
   const memberId = await getOwnerMemberId(familyId)
   const migratedDocuments = await db
@@ -53,10 +75,37 @@ export async function migrateSessionDataToFamily(
         .returning({ id: timelineEvents.id })
     : []
 
+  const migratedCheckRuns = memberId
+    ? await db
+        .update(checkRuns)
+        .set({ memberId })
+        .where(and(eq(checkRuns.sessionId, sessionId), isNull(checkRuns.memberId)))
+        .returning({ id: checkRuns.id })
+    : []
+
+  const migratedCheckDimensionResults = memberId
+    ? await db
+        .update(checkDimensionResults)
+        .set({ memberId })
+        .where(and(eq(checkDimensionResults.sessionId, sessionId), isNull(checkDimensionResults.memberId)))
+        .returning({ id: checkDimensionResults.id })
+    : []
+
+  const migratedCheckDimensionEvents = memberId
+    ? await db
+        .update(checkDimensionEvents)
+        .set({ memberId })
+        .where(and(eq(checkDimensionEvents.sessionId, sessionId), isNull(checkDimensionEvents.memberId)))
+        .returning({ id: checkDimensionEvents.id })
+    : []
+
   return {
     documents: migratedDocuments.length,
     quizResults: migratedQuizResults.length,
     events: migratedEvents.length,
     timelineEvents: migratedTimelineEvents.length,
+    checkRuns: migratedCheckRuns.length,
+    checkDimensionResults: migratedCheckDimensionResults.length,
+    checkDimensionEvents: migratedCheckDimensionEvents.length,
   }
 }

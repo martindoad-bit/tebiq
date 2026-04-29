@@ -8,6 +8,7 @@ import TrialNotice from '@/app/_components/TrialNotice'
 import { getAnonymousSessionId } from '@/lib/auth/anonymous-session'
 import { getCurrentUser } from '@/lib/auth/session'
 import { getMemberAccess } from '@/lib/billing/access'
+import { listNeedsActionDimensions } from '@/lib/db/queries/checkDimensions'
 import {
   archiveExpiredTimelineEventsForMember,
   getTimelineSummary,
@@ -38,10 +39,11 @@ export default async function TimelinePage({
   const owner = { memberId: user?.id ?? null, sessionId }
   const eventType = single(searchParams?.event_type) as TimelineEventType | undefined
   const includeArchived = single(searchParams?.archived) === 'true'
-  const [summary, events, access] = await Promise.all([
+  const [summary, events, access, checkItems] = await Promise.all([
     safeSummary(owner),
     safeEvents(owner, eventType, includeArchived),
     user ? getMemberAccess(user) : null,
+    listNeedsActionDimensions(owner, 5).catch(() => []),
   ])
 
   return (
@@ -87,6 +89,35 @@ export default async function TimelinePage({
           ))}
           <FilterLink href="/timeline?archived=true" active={includeArchived}>已归档</FilterLink>
         </div>
+      </section>
+
+      <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-3 shadow-card">
+        <h2 className="text-[13px] font-medium text-ink">自查事项</h2>
+        {checkItems.length > 0 ? (
+          <ul className="mt-2 divide-y divide-hairline">
+            {checkItems.map(item => (
+              <li key={item.id} className="py-2.5 first:pt-0 last:pb-0">
+                <Link href={`/check/${item.visaType}`} className="flex items-center justify-between gap-3">
+                  <span className="min-w-0 flex-1">
+                    <span className="block truncate text-[12.5px] font-medium text-ink">
+                      {item.title}
+                    </span>
+                    <span className="mt-1 block truncate text-[10.5px] text-ash">
+                      {item.reason ?? '递交前确认'}
+                    </span>
+                  </span>
+                  <span className="rounded-[8px] bg-cool-blue px-2 py-1 text-[10px] font-medium text-ink">
+                    需处理
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="mt-1.5 text-[12px] leading-[1.65] text-ash">
+            暂无自查事项。完整自查完成后会进入这里。
+          </p>
+        )}
       </section>
 
       <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-3 shadow-card">

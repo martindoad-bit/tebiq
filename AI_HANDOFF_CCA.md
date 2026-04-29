@@ -1,26 +1,24 @@
 # AI Handoff - CCA
 
-最后更新: 2026-04-29T05:33:23Z
+最后更新: 2026-04-29T06:20:00Z
 
 ## CCA(代码)状态
 
-- 当前任务: Block 12 - 拍照体验重塑
-- 当前分支: codex/block-12
-- 当前 worktree: /Users/martin/Documents/tebiq/.claude/worktrees/codex-block-12
+- 当前任务: Block 13 - 续签自查改 C-lean-B
+- 当前分支: codex/block-13
+- 当前 worktree: /Users/martin/Documents/tebiq/.claude/worktrees/codex-block-13
 - 状态: awaiting_merge
-- 最近一次 push: push 后以 `codex/block-12` HEAD 为准（Block 12 awaiting_merge）
-- 给其他 AI 的通知: Block 12 已完成拍照配额弹窗、注册 onboarding、PDF/截图上传入口。视觉细节留给 visual-polish-12。等待 CCA 后续按创始人指令 merge。
+- 最近一次 push: push 后以 `codex/block-13` HEAD 为准
+- 给其他 AI 的通知: Block 13 已完成维度清单、check_runs/check_dimension_results/check_dimension_events、完整问卷回写、自查事项进 /timeline。视觉细节留给后续 visual-polish-12。
 
-## Block 12 验证
+## Block 13 验证
 
 - `npx tsc --noEmit` 通过。
 - `npm run lint` 通过。
-- `npm run build` 通过。
+- `npm run db:generate` 二次执行 No schema changes。
 - `npm run test` 通过。
-- 本地 production build smoke: `/photo` 200，`/onboarding` 未登录重定向到 `/register?next=/onboarding`，`/pricing` 200。
+- `npm run build` 通过。
 
-## Block 11 历史状态
+## 待 review
 
-- Block 11 final adjustment 已合并到 main。
-- production DB migration 0005-0014 已按创始人确认流程处理。
-- import-knowledge batch-03 字段映射已修复并合并 main。
+- brief 提到的 `docs/research/checklist-vs-quiz.md` 当前 main/worktree 未找到；本次按 brief 明确结构实现。

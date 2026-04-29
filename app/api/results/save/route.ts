@@ -1,9 +1,13 @@
 import { NextResponse } from 'next/server'
 import { getOrCreateAnonymousSessionId } from '@/lib/auth/anonymous-session'
 import { getCurrentUser } from '@/lib/auth/session'
-import { judge, QUESTIONS, type AnsweredItem } from '@/lib/check/questions/gijinkoku'
+import { judge } from '@/lib/check/engine'
+import type { AnsweredItem } from '@/lib/check/types'
+import { getBank } from '@/lib/check/questions'
+import { normalizeCheckVisa, CHECK_VISA_META } from '@/lib/check/dimensions'
 import { buildSummary } from '@/lib/check/summary'
 import { createQuizResult } from '@/lib/db/queries/quizResults'
+import { upsertDimensionsFromQuiz } from '@/lib/db/queries/checkDimensions'
 import { createTimelineEvent, findRelatedTimelineEvents } from '@/lib/db/queries/timeline'
 import { visaTypeEnum } from '@/lib/db/schema'
 import { buildSelfCheckTimelineEvent, formatTimelineAssociation } from '@/lib/timeline/builders'
@@ -28,7 +32,10 @@ export async function POST(req: Request) {
     if (!Array.isArray(history) || history.length === 0) {
       return NextResponse.json({ error: '答题记录为空' }, { status: 400 })
     }
-    const judgeResult = judge(history)
+    const canonicalVisa = normalizeCheckVisa(visaTypeRaw)
+    const legacyVisa = CHECK_VISA_META[canonicalVisa].legacyQuizVisa
+    const bank = getBank(legacyVisa)
+    const judgeResult = judge(bank, history)
     const summary = buildSummary(judgeResult.verdict, judgeResult, history)
 
     // Map history → answers (questionId → optionIndex)
@@ -40,7 +47,7 @@ export async function POST(req: Request) {
     const record = await createQuizResult({
       memberId: user?.id ?? null,
       sessionId,
-      visaType: coerceVisa(visaTypeRaw),
+      visaType: coerceVisa(legacyVisa),
       answers,
       resultColor: judgeResult.verdict,
       summary: {
@@ -67,9 +74,12 @@ export async function POST(req: Request) {
       excludeId: timelineEvent.id,
       limit: 3,
     })
-
-    // Avoid lint warning for unused QUESTIONS import (used in older summary path)
-    void QUESTIONS
+    const dimensions = await upsertDimensionsFromQuiz({
+      owner: { memberId: user?.id ?? null, sessionId },
+      visaType: canonicalVisa,
+      quizResultId: record.id,
+      result: judgeResult,
+    })
 
     return NextResponse.json({
       ok: true,
@@ -88,6 +98,7 @@ export async function POST(req: Request) {
         eventId: timelineEvent.id,
         relatedEvents: relatedEvents.map(formatTimelineAssociation),
       },
+      dimensions,
     })
   } catch {
     return NextResponse.json({ error: '请求格式错误' }, { status: 400 })
