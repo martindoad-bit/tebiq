@@ -78,7 +78,7 @@ export default function CheckDimensionList({
         <ul className="divide-y divide-hairline">
           {dimensions.map(item => (
             <li key={item.key} className="py-3 first:pt-1 last:pb-1">
-              <Link href={`/check/${visa}/quiz`} className="group flex items-center gap-3">
+              <Link href={`/check/${visa}/${item.key}`} className="group flex items-center gap-3">
                 <span className="min-w-0 flex-1">
                   <span className="flex flex-wrap items-center gap-1.5">
                     <span className="text-[13px] font-medium text-ink">{item.title}</span>
