@@ -42,7 +42,7 @@ export default async function OnboardingPage() {
       <section className="pt-3">
         <h1 className="text-[20px] font-semibold leading-tight text-ink">选择一份现实文件</h1>
         <p className="mt-2 text-[12px] leading-[1.65] text-ash">
-          7 天试用已开启。拍一份真实文件，结果会自动进入时间线。
+          7 天试用已开启。拍一份真实文件，结果会自动进入我的提醒。
         </p>
       </section>
 
@@ -59,7 +59,7 @@ export default async function OnboardingPage() {
               <div className="min-w-0 flex-1">
                 <h2 className="text-[14px] font-medium leading-snug text-ink">{title}</h2>
                 <p className="mt-1.5 text-[12px] leading-[1.65] text-ash">
-                  拍一张测试TEBIQ识别能力，自动归档到时间线
+                  拍一张测试TEBIQ识别能力，自动进入我的提醒
                 </p>
                 <Link
                   href="/photo"

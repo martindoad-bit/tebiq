@@ -38,7 +38,7 @@ export default async function TimelineEventPage({
     : [event.docType, event.issuer, event.eventType].filter((v): v is string => Boolean(v))
 
   return (
-    <AppShell appBar={<AppBar title="档案详情" back />}>
+    <AppShell appBar={<AppBar title="提醒详情" back />}>
       <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-4 shadow-card">
         <div className="flex items-start gap-3">
           <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-[13px] bg-cool-blue text-ink">
