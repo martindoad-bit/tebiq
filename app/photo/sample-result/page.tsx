@@ -69,7 +69,7 @@ export default function PhotoSampleResultPage() {
           href="/photo"
           className="focus-ring flex min-h-[46px] items-center justify-center rounded-btn bg-ink px-4 py-3 text-[14px] font-medium text-white"
         >
-          拍一份文书试试
+          拍照识别文书
         </Link>
         <Link
           href="/timeline"

@@ -96,7 +96,7 @@ export default function SubscribePage() {
       </section>
 
       {err && <p className="mt-3 text-center text-[12px] text-warning" role="alert">{err}</p>}
-      <Button onClick={handleSubscribe} disabled={busy} className="mt-4">
+      <Button onClick={handleSubscribe} disabled={busy} className="mt-4 min-h-[46px]">
         {busy ? '处理中...' : `开通${selectedPlan.name}`}
       </Button>
 
@@ -175,13 +175,13 @@ function PlanContent({
             {name === '年度' && <StatusBadge tone="neutral">年付</StatusBadge>}
           </div>
           <p className="mt-2 flex items-baseline gap-1">
-            <span className="numeric text-[28px] font-light leading-none text-ink">{price}</span>
+            <span className="numeric text-[26px] font-light leading-none text-ink">{price}</span>
             {period && <span className="text-[13px] font-normal text-ash">/ {period}</span>}
           </p>
         </div>
         {selected && <StatusBadge tone="checked">已选</StatusBadge>}
       </div>
-      <ul className="mt-3 grid gap-1.5 text-[13px] font-normal leading-[1.62] text-ash">
+      <ul className="mt-3 grid gap-1.5 text-[13px] font-normal leading-[1.68] text-slate">
         {features.map(feature => (
           <li key={feature}>{feature}</li>
         ))}

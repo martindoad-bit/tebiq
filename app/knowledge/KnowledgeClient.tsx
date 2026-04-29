@@ -112,7 +112,7 @@ export default function KnowledgeClient({
         </div>
       </section>
 
-      <div className="mt-4 flex items-center gap-2 rounded-[13px] border border-hairline bg-surface px-[14px] py-[10px] shadow-card">
+      <div className="mt-4 flex items-center gap-2 rounded-[12px] border border-hairline bg-surface px-[14px] py-[10px] shadow-card">
         <SearchIcon size={14} strokeWidth={1.55} className="text-haze flex-shrink-0" />
         <input
           type="search"
@@ -123,7 +123,7 @@ export default function KnowledgeClient({
         />
       </div>
 
-      <div className="mt-4 grid grid-cols-3 gap-2.5">
+      <div className="mt-4 grid grid-cols-3 gap-2">
         {KNOWLEDGE_CATEGORIES.map(cat => {
           const Icon = cat.icon
           const active = activeCategory === cat.id
@@ -138,13 +138,13 @@ export default function KnowledgeClient({
                   toggled: active ? 'off' : 'on',
                 })
               }
-              className={`flex min-h-[72px] flex-col items-center justify-center gap-2 rounded-card border px-[6px] py-3 transition-colors ${
+              className={`flex min-h-[66px] flex-col items-center justify-center gap-1.5 rounded-[12px] border px-[6px] py-2.5 transition-colors ${
                 active
                   ? 'border-ink bg-paper'
                   : 'border-hairline bg-surface hover:border-accent'
               }`}
             >
-              <span className="flex h-8 w-8 items-center justify-center rounded-[11px] bg-paper text-ink">
+              <span className="flex h-7 w-7 items-center justify-center rounded-[10px] bg-paper text-ink">
                 <Icon size={15} strokeWidth={1.55} />
               </span>
               <span className="text-[11px] leading-tight text-ink">{cat.label}</span>
@@ -177,7 +177,7 @@ export default function KnowledgeClient({
       {popular.length === 0 ? (
         <EmptyState hasArticles={articles.length > 0} />
       ) : (
-        <ul className="mt-3 flex flex-col gap-2.5">
+        <ul className="mt-3 flex flex-col gap-2">
           {popular.map(c => (
             <li key={c.id}>
               <Link
@@ -189,13 +189,13 @@ export default function KnowledgeClient({
                     category: c.category,
                   })
                 }
-                className="group flex items-start gap-3 rounded-card border border-hairline bg-surface px-3.5 py-3 shadow-card transition-colors hover:border-accent"
+                className="group flex items-start gap-3 rounded-[12px] border border-hairline bg-surface px-3.5 py-3 shadow-card transition-colors hover:border-accent"
               >
                 <span className="mt-0.5 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-[10px] bg-canvas text-ink">
                   <FileText size={15} strokeWidth={1.55} />
                 </span>
                 <div className="min-w-0 flex-1">
-                  <div className="text-[12.5px] font-medium leading-snug text-ink">
+                  <div className="text-[12.5px] font-normal leading-snug text-ink">
                     {sanitizePublicKnowledgeText(c.title)}
                   </div>
                   <p className="mt-1 line-clamp-2 text-[10.5px] leading-[1.55] text-ash">
