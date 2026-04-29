@@ -1,16 +1,16 @@
 # AI Handoff - CCA
 
-最后更新: 2026-04-29T11:20:28Z
+最后更新: 2026-04-29T11:29:30Z
 
 ## CCA(代码)状态
 
-- 当前任务: Launch Bug Sweep / P0 修复后二次扫雷
+- 当前任务: Launch Bug Sweep / P0 修复后二次扫雷（二轮）
 - 当前分支: chore/p0-launch-fixes
 - 当前 worktree: /Users/martin/Documents/tebiq/.claude/worktrees/codex-p0-fixes
 - 状态: awaiting_merge
-- 最近一次 push: bug sweep push 后以 `chore/p0-launch-fixes` HEAD 为准
+- 最近一次 push: launch bug sweep push 后以 `chore/p0-launch-fixes` HEAD 为准
 - 给其他 AI 的通知:
-  - `chore/p0-launch-fixes` 已完成 P0-1 到 P0-3，并完成二次扫雷，等待创始人手机端到端测试。
+  - `chore/p0-launch-fixes` 已完成 P0-1 到 P0-3，并完成 launch bug sweep，等待创始人手机端到端测试。
   - 暂不 merge；测试通过后再进入 main。
 
 ## Block 12 production 验证
@@ -59,3 +59,11 @@
 - 二次验证通过: `npm run lint` / `npx tsc --noEmit` / `npm run build` / `npm run test`。
 - 本地 production server 抽测: `/`、`/photo`、`/photo/sample-result`、`/timeline`、`/pricing`、`/check`、5 个 `/check/{visa}/{dimension}` 组合均为 200；`/settings`、`/settings/account` 未登录 307 跳转。
 - Vercel preview 已 Ready；分支 alias `https://tebiq-git-chore-p0-launch-fixes-martindoad.vercel.app` 当前直连 401，为 Preview Protection。
+
+## Launch Bug Sweep（二轮）
+
+- 新增报告: `LAUNCH_BUG_SWEEP_REPORT.md`。
+- 修复: `/photo/sample-result` demo 字段补全；`/pricing` 消费者保护说明补联系入口；`/knowledge` 无 DB 本地 fallback；自查题库去掉 `一定被拒`。
+- 验证通过: `npm run lint` / `npx tsc --noEmit` / `npm run build` / `npm run test`。
+- 本地 production server 抽测: 指定 17 个页面路由通过；9 个 `/check/{visa}/{dimension}` 组合 200，均走 `该维度准备中` fallback；关键内容断言通过。
+- Preview 抽测: 指定 preview 和分支 alias 均返回 401，为 Vercel Preview Protection，需创始人授权后手机检查。
