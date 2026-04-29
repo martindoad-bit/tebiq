@@ -1,6 +1,6 @@
 # AI Handoff Log
 
-最后更新: 2026-04-28T11:31:50Z
+最后更新: 2026-04-29T02:28:23Z
 
 ## CCA(代码)状态
 - 当前任务: Block 11 - 产品哲学 v1 + 档案中心化重构
@@ -22,6 +22,14 @@
 - 状态: idle
 - 最近一次 push: 无
 - 给 CCA 的待办: 暂不要基于最新 main 开工 visual-polish-3；当前 main 已含 Block 10 + batch-02，但 production DB import 阻塞，等创始人确认 DB 迁移处理。
+
+## 战略调研 alpha 状态
+- 当前任务: TEBIQ Web vs App vs PWA 形态决策调研
+- 当前分支: research/app-strategy-v1
+- 状态: awaiting_merge
+- 输出文件: `docs/research/app-strategy-decision.md`
+- 最近一次 push: 本分支完成后推送到 `origin/research/app-strategy-v1`
+- 给 CCA 的待办: 仅需 review/merge 调研文档；本分支未改代码，未改其他 docs。
 
 ## 异常报告
 - §任务清单里的 CCA / CCB / codexUI 任务均为占位文字，没有实际任务内容。
