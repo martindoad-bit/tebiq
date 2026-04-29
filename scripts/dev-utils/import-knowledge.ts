@@ -1,6 +1,7 @@
 import { readdir, readFile } from 'fs/promises'
 import path from 'path'
 import { eq } from 'drizzle-orm'
+import matter from 'gray-matter'
 import { db } from '@/lib/db'
 import { articles } from '@/lib/db/schema'
 import { normalizeArticleSlug, suggestArticleSlug } from '@/lib/knowledge/slug'
@@ -22,6 +23,14 @@ interface Frontmatter {
   urgency_level?: string
   estimated_read_time?: number
   estimated_read_time_minutes?: number
+  visa_type?: string
+  dimension_key?: string
+  dimension_version?: number
+  priority?: string
+  expiry_days?: number
+  questions?: Array<Record<string, unknown>>
+  result_logic?: Record<string, unknown>
+  result_actions?: Record<string, unknown>
 }
 
 interface ParsedDoc {
@@ -38,40 +47,14 @@ interface Report {
 
 const SEED_DIR = path.join(process.cwd(), 'docs/knowledge-seed')
 
-function parseScalar(value: string): string | number | boolean | undefined {
-  const trimmed = value.trim()
-  if (!trimmed) return undefined
-  if (trimmed.startsWith('[') && trimmed.endsWith(']')) {
-    return trimmed
-      .slice(1, -1)
-      .split(',')
-      .map(item => item.trim().replace(/^["']|["']$/g, ''))
-      .filter(Boolean)
-      .join(',')
-  }
-  if (trimmed === 'true') return true
-  if (trimmed === 'false') return false
-  if (/^\d+$/.test(trimmed)) return Number(trimmed)
-  return trimmed.replace(/^["']|["']$/g, '')
-}
-
 function parseFrontmatter(raw: string): ParsedDoc | null {
-  if (!raw.startsWith('---\n')) return null
-  const end = raw.indexOf('\n---', 4)
-  if (end === -1) return null
-  const fmRaw = raw.slice(4, end).trim()
-  const body = raw.slice(end + 4).replace(/^\s+/, '')
-  const frontmatter: Record<string, unknown> = {}
-  for (const line of fmRaw.split('\n')) {
-    const trimmed = line.trim()
-    if (!trimmed || trimmed.startsWith('#')) continue
-    const idx = trimmed.indexOf(':')
-    if (idx === -1) continue
-    const key = trimmed.slice(0, idx).trim()
-    const value = parseScalar(trimmed.slice(idx + 1))
-    frontmatter[key] = value
+  if (!raw.startsWith('---')) return null
+  const parsed = matter(raw)
+  if (Object.keys(parsed.data).length === 0) return null
+  return {
+    frontmatter: parsed.data as Frontmatter,
+    body: parsed.content.replace(/^\s+/, ''),
   }
-  return { frontmatter: frontmatter as Frontmatter, body }
 }
 
 function asDate(value: string | undefined): Date | null {
@@ -87,6 +70,17 @@ function asStringList(value: string[] | string | undefined): string[] | null {
   return cleaned.length > 0 ? Array.from(new Set(cleaned)) : null
 }
 
+function asRecord(value: unknown): Record<string, unknown> | null {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return null
+  return value as Record<string, unknown>
+}
+
+function asQuestionList(value: unknown): Array<Record<string, unknown>> | null {
+  if (!Array.isArray(value)) return null
+  const rows = value.filter(item => item && typeof item === 'object' && !Array.isArray(item)) as Array<Record<string, unknown>>
+  return rows.length > 0 ? rows : null
+}
+
 function articleStatusFromFrontmatter(value: string | undefined): 'draft' | 'published' {
   const status = value?.trim().toLowerCase()
   if (status === 'draft' || status === 'archived') return 'draft'
@@ -95,7 +89,9 @@ function articleStatusFromFrontmatter(value: string | undefined): 'draft' | 'pub
 
 async function upsertOne(parsed: ParsedDoc): Promise<'created' | 'updated' | 'skipped'> {
   const title = parsed.frontmatter.title?.trim()
-  const category = parsed.frontmatter.category?.trim()
+  const category =
+    parsed.frontmatter.category?.trim() ??
+    (parsed.frontmatter.visa_type && parsed.frontmatter.dimension_key ? 'check-dimension' : null)
   const slug =
     normalizeArticleSlug(parsed.frontmatter.slug ?? '') ??
     (title ? suggestArticleSlug(title) : null)
@@ -117,6 +113,20 @@ async function upsertOne(parsed: ParsedDoc): Promise<'created' | 'updated' | 'sk
       : typeof parsed.frontmatter.estimated_read_time_minutes === 'number'
         ? parsed.frontmatter.estimated_read_time_minutes
       : null
+  const visaType = parsed.frontmatter.visa_type?.trim() || null
+  const dimensionKey = parsed.frontmatter.dimension_key?.trim() || null
+  const dimensionVersion =
+    typeof parsed.frontmatter.dimension_version === 'number'
+      ? parsed.frontmatter.dimension_version
+      : null
+  const priority = parsed.frontmatter.priority?.trim() || null
+  const expiryDays =
+    typeof parsed.frontmatter.expiry_days === 'number'
+      ? parsed.frontmatter.expiry_days
+      : null
+  const questions = asQuestionList(parsed.frontmatter.questions)
+  const resultLogic = asRecord(parsed.frontmatter.result_logic)
+  const resultActions = asRecord(parsed.frontmatter.result_actions)
 
   const existing = await db
     .select({ id: articles.id })
@@ -140,6 +150,14 @@ async function upsertOne(parsed: ParsedDoc): Promise<'created' | 'updated' | 'sk
         appliesTo,
         urgencyLevel,
         estimatedReadTime,
+        visaType,
+        dimensionKey,
+        dimensionVersion,
+        priority,
+        expiryDays,
+        questions,
+        resultLogic,
+        resultActions,
         reviewNotes: parsed.frontmatter.review_notes?.trim() || null,
         updatedAt: new Date(),
       })
@@ -161,34 +179,54 @@ async function upsertOne(parsed: ParsedDoc): Promise<'created' | 'updated' | 'sk
     appliesTo,
     urgencyLevel,
     estimatedReadTime,
+    visaType,
+    dimensionKey,
+    dimensionVersion,
+    priority,
+    expiryDays,
+    questions,
+    resultLogic,
+    resultActions,
     reviewNotes: parsed.frontmatter.review_notes?.trim() || null,
   })
   return 'created'
+}
+
+async function listMarkdownFiles(dir: string): Promise<string[]> {
+  const entries = await readdir(dir, { withFileTypes: true })
+  const nested = await Promise.all(
+    entries.map(async entry => {
+      const fullPath = path.join(dir, entry.name)
+      if (entry.isDirectory()) return listMarkdownFiles(fullPath)
+      return entry.isFile() && entry.name.endsWith('.md') ? [fullPath] : []
+    }),
+  )
+  return nested.flat().sort()
 }
 
 async function main() {
   const report: Report = { created: 0, updated: 0, skipped: 0, skippedFiles: [] }
   let files: string[]
   try {
-    files = (await readdir(SEED_DIR)).filter(f => f.endsWith('.md')).sort()
+    files = await listMarkdownFiles(SEED_DIR)
   } catch {
     console.log('docs/knowledge-seed/ 不存在，跳过导入。')
     return
   }
 
   for (const file of files) {
-    const fullPath = path.join(SEED_DIR, file)
-    const parsed = parseFrontmatter(await readFile(fullPath, 'utf8'))
+    const parsed = parseFrontmatter(await readFile(file, 'utf8'))
+    const relativePath = path.relative(SEED_DIR, file)
     if (!parsed) {
       report.skipped += 1
-      report.skippedFiles.push(file)
+      report.skippedFiles.push(relativePath)
       continue
     }
     const result = await upsertOne(parsed)
     if (result === 'created') report.created += 1
     if (result === 'updated') report.updated += 1
     if (result === 'skipped') report.skipped += 1
-    if (result === 'skipped') report.skippedFiles.push(file)
+    if (result === 'skipped') report.skippedFiles.push(relativePath)
   }
 
   console.log(`知识库导入完成：新增 ${report.created} 篇 / 更新 ${report.updated} 篇 / 跳过 ${report.skipped} 篇`)

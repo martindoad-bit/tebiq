@@ -2,5 +2,5 @@
 import { redirect } from 'next/navigation'
 
 export default function KeieiQuizRedirect() {
-  redirect('/check/keiei')
+  redirect('/check/management/quiz')
 }

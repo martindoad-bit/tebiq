@@ -2,5 +2,5 @@
 import { redirect } from 'next/navigation'
 
 export default function TeijushaQuizRedirect() {
-  redirect('/check/teijusha')
+  redirect('/check/permanent_resident_preparation/quiz')
 }

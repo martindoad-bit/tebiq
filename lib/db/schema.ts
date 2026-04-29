@@ -119,6 +119,23 @@ export const timelineEventTypeEnum = pgEnum('timeline_event_type', [
   'manual_note',
 ])
 
+export const checkDimensionStatusEnum = pgEnum('check_dimension_status', [
+  'unchecked',
+  'checked',
+  'needs_action',
+  'recent',
+  'expired',
+])
+
+export const checkDimensionEventTypeEnum = pgEnum('check_dimension_event_type', [
+  'created',
+  'updated',
+  'quiz_completed',
+  'marked_checked',
+  'marked_needs_action',
+  'expired',
+])
+
 // Member profile enums (added Block 2)
 export const maritalStatusEnum = pgEnum('marital_status', [
   'single',
@@ -277,6 +294,110 @@ export const quizResults = pgTable(
     memberIdx: index('quiz_results_member_id_idx').on(t.memberId),
     sessionIdx: index('quiz_results_session_id_idx').on(t.sessionId),
     createdIdx: index('quiz_results_created_at_idx').on(t.createdAt),
+  }),
+)
+
+// --- check_runs / check_dimension_results / check_dimension_events ---
+//
+// C-lean-B self-check model: the checklist is the primary surface, while the
+// full quiz writes back into dimension-level status rows.
+export const checkRuns = pgTable(
+  'check_runs',
+  {
+    id: idCol(),
+    memberId: varchar('member_id', { length: 24 }).references(() => members.id, {
+      onDelete: 'set null',
+    }),
+    sessionId: varchar('session_id', { length: 64 }),
+    visaType: varchar('visa_type', { length: 80 }).notNull(),
+    runType: varchar('run_type', { length: 32 }).notNull().default('dimension_check'),
+    status: varchar('status', { length: 32 }).notNull().default('started'),
+    sourceQuizResultId: varchar('source_quiz_result_id', { length: 24 }).references(
+      () => quizResults.id,
+      { onDelete: 'set null' },
+    ),
+    startedAt: timestamp('started_at', { withTimezone: true }).notNull().defaultNow(),
+    completedAt: timestamp('completed_at', { withTimezone: true }),
+    createdAt: createdAt(),
+    updatedAt: updatedAt(),
+  },
+  t => ({
+    memberIdx: index('check_runs_member_id_idx').on(t.memberId),
+    sessionIdx: index('check_runs_session_id_idx').on(t.sessionId),
+    visaIdx: index('check_runs_visa_type_idx').on(t.visaType),
+    sourceQuizIdx: index('check_runs_source_quiz_result_id_idx').on(t.sourceQuizResultId),
+    ownerRequired: check(
+      'check_runs_member_or_session_required',
+      sql`${t.memberId} IS NOT NULL OR ${t.sessionId} IS NOT NULL`,
+    ),
+  }),
+)
+
+export const checkDimensionResults = pgTable(
+  'check_dimension_results',
+  {
+    id: idCol(),
+    checkRunId: varchar('check_run_id', { length: 24 }).references(() => checkRuns.id, {
+      onDelete: 'cascade',
+    }),
+    memberId: varchar('member_id', { length: 24 }).references(() => members.id, {
+      onDelete: 'set null',
+    }),
+    sessionId: varchar('session_id', { length: 64 }),
+    visaType: varchar('visa_type', { length: 80 }).notNull(),
+    dimensionKey: varchar('dimension_key', { length: 80 }).notNull(),
+    title: varchar('title', { length: 120 }).notNull(),
+    status: checkDimensionStatusEnum('status').notNull().default('unchecked'),
+    riskFlag: varchar('risk_flag', { length: 32 }),
+    reason: text('reason'),
+    actionLabel: varchar('action_label', { length: 80 }),
+    sourceRecordId: varchar('source_record_id', { length: 24 }),
+    sourceRecordType: varchar('source_record_type', { length: 32 }),
+    lastCheckedAt: timestamp('last_checked_at', { withTimezone: true }),
+    expiresAt: timestamp('expires_at', { withTimezone: true }),
+    createdAt: createdAt(),
+    updatedAt: updatedAt(),
+  },
+  t => ({
+    runIdx: index('check_dimension_results_run_idx').on(t.checkRunId),
+    memberIdx: index('check_dimension_results_member_id_idx').on(t.memberId),
+    sessionIdx: index('check_dimension_results_session_id_idx').on(t.sessionId),
+    visaIdx: index('check_dimension_results_visa_type_idx').on(t.visaType),
+    statusIdx: index('check_dimension_results_status_idx').on(t.status),
+    uniqueOwnerDimension: uniqueIndex('check_dimension_results_owner_dimension_unique').on(
+      t.memberId,
+      t.sessionId,
+      t.visaType,
+      t.dimensionKey,
+    ),
+    ownerRequired: check(
+      'check_dimension_results_member_or_session_required',
+      sql`${t.memberId} IS NOT NULL OR ${t.sessionId} IS NOT NULL`,
+    ),
+  }),
+)
+
+export const checkDimensionEvents = pgTable(
+  'check_dimension_events',
+  {
+    id: idCol(),
+    checkDimensionResultId: varchar('check_dimension_result_id', { length: 24 }).references(
+      () => checkDimensionResults.id,
+      { onDelete: 'cascade' },
+    ),
+    memberId: varchar('member_id', { length: 24 }).references(() => members.id, {
+      onDelete: 'set null',
+    }),
+    sessionId: varchar('session_id', { length: 64 }),
+    eventType: checkDimensionEventTypeEnum('event_type').notNull(),
+    eventPayload: jsonb('event_payload').notNull().$type<Record<string, unknown>>(),
+    createdAt: createdAt(),
+  },
+  t => ({
+    resultIdx: index('check_dimension_events_result_idx').on(t.checkDimensionResultId),
+    memberIdx: index('check_dimension_events_member_id_idx').on(t.memberId),
+    sessionIdx: index('check_dimension_events_session_id_idx').on(t.sessionId),
+    eventTypeIdx: index('check_dimension_events_event_type_idx').on(t.eventType),
   }),
 )
 
@@ -509,6 +630,14 @@ export const articles = pgTable(
     appliesTo: jsonb('applies_to').$type<string[]>(),
     urgencyLevel: varchar('urgency_level', { length: 24 }),
     estimatedReadTime: integer('estimated_read_time'),
+    visaType: varchar('visa_type', { length: 64 }),
+    dimensionKey: varchar('dimension_key', { length: 80 }),
+    dimensionVersion: integer('dimension_version'),
+    priority: varchar('priority', { length: 24 }),
+    expiryDays: integer('expiry_days'),
+    questions: jsonb('questions').$type<Array<Record<string, unknown>>>(),
+    resultLogic: jsonb('result_logic').$type<Record<string, unknown>>(),
+    resultActions: jsonb('result_actions').$type<Record<string, unknown>>(),
     history: jsonb('history').$type<ArticleHistoryEntry[]>(),
     createdAt: createdAt(),
     updatedAt: updatedAt(),
@@ -520,6 +649,7 @@ export const articles = pgTable(
     categoryIdx: index('articles_category_idx').on(t.category),
     updatedIdx: index('articles_updated_at_idx').on(t.updatedAt),
     urgencyLevelIdx: index('articles_urgency_level_idx').on(t.urgencyLevel),
+    visaDimensionIdx: index('articles_visa_dimension_idx').on(t.visaType, t.dimensionKey),
   }),
 )
 
@@ -664,6 +794,12 @@ export type Purchase = typeof purchases.$inferSelect
 export type NewPurchase = typeof purchases.$inferInsert
 export type QuizResult = typeof quizResults.$inferSelect
 export type NewQuizResult = typeof quizResults.$inferInsert
+export type CheckRun = typeof checkRuns.$inferSelect
+export type NewCheckRun = typeof checkRuns.$inferInsert
+export type CheckDimensionResult = typeof checkDimensionResults.$inferSelect
+export type NewCheckDimensionResult = typeof checkDimensionResults.$inferInsert
+export type CheckDimensionEvent = typeof checkDimensionEvents.$inferSelect
+export type NewCheckDimensionEvent = typeof checkDimensionEvents.$inferInsert
 export type Document = typeof documents.$inferSelect
 export type NewDocument = typeof documents.$inferInsert
 export type TextUnderstandRequest = typeof textUnderstandRequests.$inferSelect
