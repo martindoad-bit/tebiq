@@ -26,7 +26,6 @@ import type { LucideIcon } from 'lucide-react'
 import AppShell from '@/app/_components/v5/AppShell'
 import AppBar from '@/app/_components/v5/AppBar'
 import TabBar from '@/app/_components/v5/TabBar'
-import EmptyVisual from '@/app/_components/v5/EmptyVisual'
 import { plainTextFromMarkdown } from '@/lib/knowledge/markdown'
 import { sanitizePublicKnowledgeText } from '@/lib/knowledge/public-text'
 import { trackClient } from '@/lib/analytics/client'
@@ -97,9 +96,9 @@ export default function KnowledgeClient({
 
   return (
     <AppShell appBar={<AppBar title="知识中心" />} tabBar={<TabBar />}>
-      <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-3.5 shadow-card">
+      <section className="mt-3 border-b border-hairline pb-4">
         <div className="flex items-start gap-3">
-          <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-[13px] bg-accent-2 text-ink">
+          <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-[13px] bg-paper text-ink">
             <BookOpenCheck size={19} strokeWidth={1.55} />
           </span>
           <div>
@@ -113,7 +112,7 @@ export default function KnowledgeClient({
         </div>
       </section>
 
-      <div className="mt-3 flex items-center gap-2 rounded-[13px] border border-hairline bg-surface px-[14px] py-[10px] shadow-card">
+      <div className="mt-4 flex items-center gap-2 rounded-[13px] border border-hairline bg-surface px-[14px] py-[10px] shadow-card">
         <SearchIcon size={14} strokeWidth={1.55} className="text-haze flex-shrink-0" />
         <input
           type="search"
@@ -139,13 +138,13 @@ export default function KnowledgeClient({
                   toggled: active ? 'off' : 'on',
                 })
               }
-              className={`flex min-h-[76px] flex-col items-center justify-center gap-2 rounded-card border px-[6px] py-3 shadow-card transition-colors ${
+              className={`flex min-h-[72px] flex-col items-center justify-center gap-2 rounded-card border px-[6px] py-3 transition-colors ${
                 active
-                  ? 'border-accent bg-accent-2/35'
+                  ? 'border-ink bg-paper'
                   : 'border-hairline bg-surface hover:border-accent'
               }`}
             >
-              <span className="flex h-8 w-8 items-center justify-center rounded-[11px] bg-accent-2 text-ink">
+              <span className="flex h-8 w-8 items-center justify-center rounded-[11px] bg-paper text-ink">
                 <Icon size={15} strokeWidth={1.55} />
               </span>
               <span className="text-[11px] leading-tight text-ink">{cat.label}</span>
@@ -176,7 +175,7 @@ export default function KnowledgeClient({
       </div>
 
       {popular.length === 0 ? (
-        <EmptyState />
+        <EmptyState hasArticles={articles.length > 0} />
       ) : (
         <ul className="mt-3 flex flex-col gap-2.5">
           {popular.map(c => (
@@ -226,15 +225,24 @@ function previewContent(markdown: string): string {
   return sanitizePublicKnowledgeText(plainTextFromMarkdown(markdown))
 }
 
-function EmptyState() {
+function EmptyState({ hasArticles }: { hasArticles: boolean }) {
   return (
-    <div className="mt-3 rounded-card border border-hairline bg-surface px-4 py-8 text-center shadow-card">
-      <EmptyVisual src="/illustrations/empty-state-image2.png" alt="没有找到知识内容" />
-      <p className="mt-3 text-[13px] font-medium leading-relaxed text-ink">
-        没有找到相关内容
-      </p>
-      <p className="mt-1.5 text-[11px] leading-relaxed text-ash">
-        换一个关键词，或从上方分类继续查找。
+    <div className="mt-3 rounded-card border border-hairline bg-paper px-4 py-5">
+      <div className="flex items-start gap-3">
+        <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-[10px] bg-surface text-ink">
+          <FileText size={16} strokeWidth={1.5} />
+        </span>
+        <span className="min-w-0 flex-1">
+          <span className="block text-[13px] font-medium leading-snug text-ink">
+            {hasArticles ? '没有匹配内容' : '暂无公开内容'}
+          </span>
+          <span className="mt-1 block text-[11.5px] leading-[1.65] text-ash">
+            {hasArticles ? '换一个关键词，或从上方分类继续查找。' : '内容导入后会显示在这里。'}
+          </span>
+        </span>
+      </div>
+      <p className="mt-4 border-t border-hairline pt-3 text-[11px] leading-[1.6] text-ash">
+        拍照识别和材料准备检查可继续使用。
       </p>
     </div>
   )

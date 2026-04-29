@@ -69,7 +69,7 @@ export default function SubscribePage() {
         <p className="text-[13px] text-ash">定价</p>
         <h1 className="mt-2 text-[20px] font-medium leading-snug text-ink">文书识别和提醒</h1>
         <p className="mt-2 text-[13px] leading-[1.7] text-ash">
-          按使用频率选择。付款由 Stripe 处理。
+          识别次数、提醒保留和时间线查询。付款由 Stripe 处理。
         </p>
       </section>
 
@@ -96,10 +96,11 @@ export default function SubscribePage() {
       </section>
 
       {err && <p className="mt-3 text-center text-[12px] text-warning" role="alert">{err}</p>}
-      <ConsumerProtectionNotice />
       <Button onClick={handleSubscribe} disabled={busy} className="mt-4">
         {busy ? '处理中...' : `开通${selectedPlan.name}`}
       </Button>
+
+      <ConsumerProtectionNotice />
 
       <p className="mt-4 text-center text-[12px] text-ash">
         <Link href="/timeline" className="underline-offset-4 hover:text-ink">查看我的提醒</Link>
@@ -110,24 +111,27 @@ export default function SubscribePage() {
 
 function ConsumerProtectionNotice() {
   return (
-    <section className="mt-4 rounded-card border border-hairline bg-surface px-4 py-3 text-[12px] font-normal leading-[1.7] text-ash">
-      <div>
-        <p>【日本語】</p>
-        <p>・月額自動更新 / いつでもキャンセル可</p>
-        <p>・キャンセル後は次回更新日まで利用可</p>
-        <p>・データはいつでも削除可（設定 → アカウント）</p>
-        <p>・原画像は保存しません（OCR処理後即削除）</p>
-        <p>・お問い合わせ: contact@tebiq.jp</p>
-      </div>
-      <div className="mt-3">
-        <p>【中文】</p>
-        <p>・月度自动续费 / 随时可取消</p>
-        <p>・取消后可使用至下次续费日</p>
-        <p>・数据可随时删除（设置 → 账号）</p>
-        <p>・原始图片不保存（OCR 后立即删除）</p>
-        <p>・联系入口: contact@tebiq.jp</p>
-      </div>
+    <section className="mt-4 rounded-card border border-hairline bg-surface px-4 py-3">
+      <h2 className="text-[12px] font-medium leading-none text-ink">订阅说明</h2>
+      <dl className="mt-3 grid gap-2.5 text-[12px] leading-[1.6]">
+        <NoticeRow label="续费" value="月度 / 年度自动续费" />
+        <NoticeRow label="取消" value="取消后可使用至当前周期结束" />
+        <NoticeRow label="数据" value="可在设置中导出或提交删除请求" />
+        <NoticeRow label="图片" value="原始图片不保存，OCR 后删除" />
+      </dl>
+      <p className="mt-3 border-t border-hairline pt-3 text-[11px] leading-[1.6] text-ash">
+        联系入口: contact@tebiq.jp
+      </p>
     </section>
+  )
+}
+
+function NoticeRow({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="grid grid-cols-[44px_1fr] gap-3">
+      <dt className="text-ash">{label}</dt>
+      <dd className="text-slate">{value}</dd>
+    </div>
   )
 }
 
@@ -171,7 +175,7 @@ function PlanContent({
             {name === '年度' && <StatusBadge tone="neutral">年付</StatusBadge>}
           </div>
           <p className="mt-2 flex items-baseline gap-1">
-            <span className="numeric text-[30px] font-light leading-none text-ink">{price}</span>
+            <span className="numeric text-[28px] font-light leading-none text-ink">{price}</span>
             {period && <span className="text-[13px] font-normal text-ash">/ {period}</span>}
           </p>
         </div>

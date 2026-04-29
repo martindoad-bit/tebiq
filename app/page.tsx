@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Bell, ChevronRight, FileText } from 'lucide-react'
+import { Bell, CalendarDays, ChevronRight, ClipboardCheck, FileText } from 'lucide-react'
 import AppShell from '@/app/_components/v5/AppShell'
 import TabBar from '@/app/_components/v5/TabBar'
 import TrackedLink from '@/app/_components/v5/TrackedLink'
@@ -53,16 +53,19 @@ export default async function HomePage() {
 function NewUserHome() {
   return (
     <>
-      <section className="pt-12 text-center">
-        <h1 className="text-[44px] font-medium leading-none tracking-[0.06em] text-ink">TEBIQ</h1>
-        <p className="mx-auto mt-5 max-w-[270px] text-[17px] font-normal leading-[1.7] text-ink">
+      <section className="pt-10 text-center">
+        <h1 className="text-[42px] font-medium leading-none tracking-[0.055em] text-ink">TEBIQ</h1>
+        <p className="mx-auto mt-5 max-w-[280px] text-[16px] font-normal leading-[1.7] text-ink">
           在日生活的日文文书识别和提醒
         </p>
-        <div className="mt-8 grid gap-3">
+        <p className="mx-auto mt-3 max-w-[300px] text-[12px] leading-[1.7] text-ash">
+          住民税、年金、在留カード、契約書を整理。
+        </p>
+        <div className="mt-7 grid gap-3">
           <TrackedLink
             href="/photo"
             eventName={EVENT.HOME_PHOTO_CARD_CLICK}
-            className="focus-ring flex min-h-[48px] items-center justify-center rounded-btn bg-ink px-4 py-3 text-[14px] font-medium leading-none text-white"
+            className="focus-ring flex min-h-[46px] items-center justify-center rounded-btn bg-ink px-4 py-3 text-[14px] font-medium leading-none text-white"
           >
             拍一份文书试试
           </TrackedLink>
@@ -156,19 +159,23 @@ function SampleDocumentSection() {
       <SectionLabel title="最近文书示例" />
       <Link
         href="/photo/sample-result"
-        className="mt-3 block rounded-card border border-hairline bg-surface px-4 py-4 active:bg-paper"
+        className="mt-3 block overflow-hidden rounded-card border border-hairline bg-surface active:bg-paper"
       >
-        <div className="flex items-start gap-3">
-          <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-[10px] border border-hairline bg-paper text-ink">
-            <FileText size={18} strokeWidth={1.5} />
+        <div className="flex items-start gap-3 px-4 py-4">
+          <span className="mt-0.5 flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-[10px] bg-paper text-ink">
+            <FileText size={17} strokeWidth={1.5} />
           </span>
           <span className="min-w-0 flex-1">
-            <span className="block text-[14px] font-medium leading-snug text-ink">住民税通知</span>
+            <span className="block text-[11px] leading-none text-ash">脱敏样例</span>
+            <span className="mt-2 block text-[15px] font-medium leading-snug text-ink jp-text">住民税 納付通知書</span>
             <span className="mt-1 block text-[12px] leading-[1.6] text-ash">
-              6/30 到期 / 江戸川区役所 / ¥38,500
+              江戸川区役所 / 2026.06.30 / ¥38,500
             </span>
           </span>
-          <span className="mt-1 flex-shrink-0 text-[12px] text-ash">查看样例结果 →</span>
+          <ChevronRight size={16} strokeWidth={1.5} className="mt-5 flex-shrink-0 text-haze" />
+        </div>
+        <div className="border-t border-hairline px-4 py-2.5 text-[12px] leading-none text-ash">
+          查看拍照后会得到的信息 →
         </div>
       </Link>
     </>
@@ -188,11 +195,13 @@ function MoreFeatures({
       <ListSection className="mt-3">
         <ListRow
           href="/check"
+          icon={<ClipboardCheck size={19} strokeWidth={1.5} />}
           title="续签材料准备检查"
           subtitle={needsActionCount > 0 ? `${needsActionCount} 项需要补齐` : '准备事项'}
         />
         <ListRow
           href="/timeline"
+          icon={<CalendarDays size={19} strokeWidth={1.5} />}
           title="我的提醒"
           subtitle={next30Count > 0 ? `${next30Count} 项期限事项` : '期限事项'}
         />

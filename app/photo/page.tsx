@@ -48,9 +48,10 @@ export default function PhotoEntryPage() {
 
         <Link
           href="/photo/sample-result"
-          className="mb-3 text-center text-[12px] leading-none text-ink underline-offset-4 hover:underline"
+          className="mb-3 flex min-h-[40px] items-center justify-between rounded-btn border border-hairline bg-surface px-3.5 text-[12px] leading-none text-ink active:bg-paper"
         >
-          还没拍过？看一份示例结果 →
+          <span>查看一份示例结果</span>
+          <span className="text-haze">→</span>
         </Link>
 
         <PhotoUploader />
