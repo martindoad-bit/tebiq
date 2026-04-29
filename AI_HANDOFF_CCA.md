@@ -1,17 +1,26 @@
 # AI Handoff - CCA
 
-最后更新: 2026-04-29T11:29:30Z
+最后更新: 2026-04-29T21:41:01+09:00
 
 ## CCA(代码)状态
 
-- 当前任务: Launch Bug Sweep / P0 修复后二次扫雷（二轮）
-- 当前分支: chore/p0-launch-fixes
-- 当前 worktree: /Users/martin/Documents/tebiq/.claude/worktrees/codex-p0-fixes
+- 当前任务: Holiday Engineering Upgrade / 产品底盘升级
+- 当前分支: codex/holiday-engineering-upgrade
+- 当前 worktree: /Users/martin/Documents/tebiq/.claude/worktrees/codex-holiday-engineering
 - 状态: awaiting_merge
-- 最近一次 push: launch bug sweep push 后以 `chore/p0-launch-fixes` HEAD 为准
+- 最近一次 push: 待 push 后以 `codex/holiday-engineering-upgrade` HEAD 为准
 - 给其他 AI 的通知:
-  - `chore/p0-launch-fixes` 已完成 P0-1 到 P0-3，并完成 launch bug sweep，等待创始人手机端到端测试。
-  - 暂不 merge；测试通过后再进入 main。
+  - batch-04 的 60 篇 check-dimension 内容已在当前候选分支中，CCA 采用 `articles` 结构化字段接入，不新增 migration。
+  - 新增 `import-check-dimensions` / `validate-check-dimensions` / `smoke:launch` / `audit:launch-copy`。
+  - 暂不 merge main；等待创始人或下一轮集成指令。
+
+## Holiday Engineering Upgrade
+
+- base: `origin/launch/review-candidate-p0-ui` at `2174fbe382dcea2fbd5bbcf32f02d86b33b6744f`。
+- batch-04 merge 检查: `origin/content/knowledge-batch-04` 已是当前 HEAD 祖先，执行 merge 返回 Already up to date。
+- 内容接入: `/check/{visa}/{dimension}` 优先读取 `articles.visa_type + dimension_key`，有结构化题目时展示真实单项检查；无 DB / 无内容继续显示 `该维度准备中`。
+- 验证: lint / typecheck / build / test / db:generate / validate-check-dimensions / audit:launch-copy / smoke:launch 均通过。
+- 注意: 本地无 `DATABASE_URL`，`import-check-dimensions` 已验证到 DB 前置检查，会提示配置后再导入；未执行任何 production DB 写入。
 
 ## Block 12 production 验证
 
