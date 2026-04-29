@@ -18,11 +18,11 @@
 - 给 CCA 的待办: batch-03 30 篇 P1 内容已完成，awaiting_merge；merge 后等 production DB schema 补齐再跑 `npm run import-knowledge`。
 
 ## codexUI(视觉)状态
-- 当前任务: 未从本 brief 获得具体 codexUI 任务
-- 当前分支: codex/visual-polish-N
+- 当前任务: Block 11 U1 - 已在 PROJECT_MEMORY.md 视觉规范段顶部沉淀产品哲学 v1；等待 CCA 完成 Block 11 主页 / timeline / pricing 路由与结构后再开始 U2-U7
+- 当前分支: codex/visual-polish-3
 - 状态: idle
-- 最近一次 push: 无
-- 给 CCA 的待办: 等 CCA merge `codex/block-11` 后再从最新 main 开工 visual-polish-3；也可先查看 `docs/visual-report/screenshots/block-11-timeline/`。
+- 最近一次 push: Block 11 U1 产品哲学沉淀 commit（见 codex/visual-polish-3 HEAD）
+- 给 CCA 的待办: codexUI 已完成 U1 并推送；不开始 U2-U7，等待 CCA 在 main / codex/block-11 完成档案中心化主页、/timeline、/pricing 结构后通知。开始视觉前会先从最新 main 更新本分支。
 
 ## 异常报告
 - §任务清单里的 CCA / CCB / codexUI 任务均为占位文字，没有实际任务内容。
