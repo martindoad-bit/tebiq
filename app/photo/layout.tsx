@@ -3,7 +3,7 @@ import type { ReactNode } from 'react'
 
 export const metadata: Metadata = {
   title: '拍照即懂 | TEBIQ',
-  description: '拍一张日本生活手续相关的文书，立即看懂内容、关键日期、需要的行动。',
+  description: '拍一张日本生活手续相关的文书，识别内容、关键日期、需要的行动。',
   alternates: { canonical: '/photo' },
   openGraph: {
     title: '拍照即懂 — TEBIQ',

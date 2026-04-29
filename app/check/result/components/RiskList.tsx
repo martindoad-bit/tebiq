@@ -7,15 +7,15 @@ function TriggerCard({
   item: TriggeredItem
   accentColor: 'red' | 'amber'
 }) {
-  const borderClass = accentColor === 'red' ? 'border-[#DC2626]' : 'border-primary'
-  const titleClass = accentColor === 'red' ? 'text-[#DC2626]' : 'text-primary'
+  const borderClass = accentColor === 'red' ? 'border-warning' : 'border-hairline'
+  const titleClass = accentColor === 'red' ? 'text-warning' : 'text-ink'
 
   return (
-    <div className={`bg-card border-l-4 ${borderClass} rounded-r-xl p-4`}>
-      <div className="font-bold text-title text-base leading-snug mb-2">
+    <div className={`bg-card border ${borderClass} rounded-card p-4`}>
+      <div className="font-medium text-title text-base leading-snug mb-2">
         {item.triggerLabel}
       </div>
-      <div className={`${titleClass} text-xs font-bold mb-2`}>处理建议</div>
+      <div className={`${titleClass} text-xs font-medium mb-2`}>处理建议</div>
       <p className="text-body text-sm leading-relaxed">{item.fixHint}</p>
     </div>
   )
@@ -47,15 +47,15 @@ export default function RiskList({
 
   const headingClass =
     heading?.tone === 'red'
-      ? 'text-[#DC2626]'
+      ? 'text-warning'
       : heading?.tone === 'green'
-        ? 'text-[#16A34A]'
-        : 'text-primary'
+        ? 'text-ink'
+        : 'text-ink'
 
   return (
     <div className="mb-6">
       {heading && (
-        <h2 className={`font-bold ${headingClass} text-sm mb-3 px-1`}>{heading.text}</h2>
+        <h2 className={`font-medium ${headingClass} text-sm mb-3 px-1`}>{heading.text}</h2>
       )}
       <div className="space-y-3">
         {ordered.map(item => (

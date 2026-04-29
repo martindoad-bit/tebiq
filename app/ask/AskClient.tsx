@@ -1,7 +1,7 @@
 'use client'
 import { useMemo, useState } from 'react'
 import Link from 'next/link'
-import { AlertTriangle, Archive, ChevronDown, FileText, Languages, Loader2, ShieldCheck } from 'lucide-react'
+import { Archive, ChevronDown, FileText, Languages, Loader2, ShieldCheck } from 'lucide-react'
 import Button from '@/app/_components/v5/Button'
 import ComplianceFooter from '@/app/_components/v5/ComplianceFooter'
 import RelatedKnowledge from '@/app/_components/v5/RelatedKnowledge'
@@ -63,10 +63,10 @@ export default function AskClient() {
 
   return (
     <div className="pt-3">
-      <section className="rounded-card border border-hairline bg-surface px-4 py-4 shadow-card">
+      <section className="rounded-card border border-hairline bg-surface px-4 py-4">
         <div className="flex items-start gap-3">
-          <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-[13px] bg-accent-2 text-ink">
-            <Languages size={19} strokeWidth={1.55} />
+          <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-[10px] border border-hairline bg-paper text-ink">
+            <Languages size={19} strokeWidth={1.5} />
           </span>
           <div>
             <h1 className="text-[16px] font-medium leading-snug text-ink">粘贴一段日文</h1>
@@ -81,17 +81,17 @@ export default function AskClient() {
           onChange={e => setText(e.target.value)}
           maxLength={2200}
           placeholder="例：市役所からのお知らせ、税金の納付期限、入管からの通知文..."
-          className="mt-4 min-h-[190px] w-full resize-none rounded-[14px] border border-hairline bg-canvas px-3.5 py-3 text-[14px] leading-[1.65] text-ink outline-none placeholder:text-haze focus:border-accent"
+          className="focus-ring mt-4 min-h-[210px] w-full resize-none rounded-card border border-hairline bg-canvas px-3.5 py-3 text-[14px] leading-[1.65] text-ink outline-none placeholder:text-haze focus:border-ink"
         />
         <div className="mt-1.5 flex items-center justify-between text-[10.5px] text-ash">
-          <span>{chars > 2000 ? '超过 2000 字，请删短' : 'AI 会按字面内容解释，不替你做行政判断'}</span>
+          <span>{chars > 2000 ? '超过 2000 字，请删短' : '系统按字面内容解释，不替代官方判断'}</span>
           <span>{chars}/2000</span>
         </div>
 
         <button
           type="button"
           onClick={() => setShowContext(v => !v)}
-          className="mt-3 flex w-full items-center justify-between rounded-[12px] border border-hairline bg-canvas px-3 py-2 text-left text-[12px] font-medium text-ink"
+          className="focus-ring mt-3 flex w-full items-center justify-between rounded-btn border border-hairline bg-canvas px-3 py-2 text-left text-[12px] font-medium text-ink"
         >
           补充上下文（选填）
           <ChevronDown
@@ -106,13 +106,12 @@ export default function AskClient() {
             onChange={e => setUserNote(e.target.value)}
             maxLength={400}
             placeholder="例：我是技人国，8 月续签，住在江戸川区。"
-            className="mt-2 min-h-[86px] w-full resize-none rounded-[13px] border border-hairline bg-canvas px-3.5 py-3 text-[13px] leading-[1.6] text-ink outline-none placeholder:text-haze focus:border-accent"
+            className="focus-ring mt-2 min-h-[86px] w-full resize-none rounded-btn border border-hairline bg-canvas px-3.5 py-3 text-[13px] leading-[1.6] text-ink outline-none placeholder:text-haze focus:border-ink"
           />
         )}
 
         {error && (
-          <div className="mt-3 flex items-start gap-2 rounded-[12px] border border-accent/35 bg-accent-2 px-3 py-2 text-[11.5px] leading-[1.6] text-ink">
-            <AlertTriangle size={14} strokeWidth={1.55} className="mt-0.5 flex-shrink-0" />
+          <div className="mt-3 flex items-start gap-2 rounded-btn border border-warning/55 bg-surface px-3 py-2 text-[11.5px] leading-[1.6] text-ink">
             {error}
           </div>
         )}
@@ -122,10 +121,10 @@ export default function AskClient() {
             {busy ? (
               <span className="inline-flex items-center gap-2">
                 <Loader2 size={15} strokeWidth={1.55} className="animate-spin" />
-                理解中
+                处理中
               </span>
             ) : (
-              '开始理解'
+              '解释文字'
             )}
           </Button>
         </div>
@@ -136,7 +135,7 @@ export default function AskClient() {
           {timelineEventId && (
             <Link
               href={`/timeline/${timelineEventId}`}
-              className="mt-3 flex items-center gap-2 rounded-card border border-hairline bg-surface px-4 py-3 text-[11.5px] font-medium text-ash shadow-card"
+              className="mt-3 flex items-center gap-2 rounded-card border border-hairline bg-surface px-4 py-3 text-[11.5px] font-medium text-ash"
             >
               <Archive size={14} strokeWidth={1.55} />
               已归档到时间线
@@ -148,7 +147,7 @@ export default function AskClient() {
           <ResultSection icon={<ShieldCheck size={15} strokeWidth={1.55} />} title="和你可能有什么关系">
             {result.relevance}
           </ResultSection>
-          <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-3 shadow-card">
+          <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-3">
             <div className="mb-1.5 flex items-center gap-2">
               <FileText size={15} strokeWidth={1.55} className="text-ink" />
               <p className="text-[13px] font-medium text-ink">可以先这样处理</p>
@@ -160,7 +159,7 @@ export default function AskClient() {
             </ol>
           </section>
           {result.confidence === 'low' && (
-            <section className="mt-3 rounded-card border border-accent/35 bg-accent-2 px-4 py-3 text-[11.5px] leading-[1.65] text-ink shadow-card">
+            <section className="mt-3 rounded-card border border-warning/55 bg-surface px-4 py-3 text-[11.5px] leading-[1.65] text-ink">
               这段文字的上下文不完整，建议补充前后文或拍照识别原文件。
             </section>
           )}
@@ -182,7 +181,7 @@ function ResultSection({
   children: React.ReactNode
 }) {
   return (
-    <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-3 shadow-card">
+    <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-3">
       <div className="mb-1.5 flex items-center gap-2">
         <span className="text-ink">{icon}</span>
         <p className="text-[13px] font-medium text-ink">{title}</p>

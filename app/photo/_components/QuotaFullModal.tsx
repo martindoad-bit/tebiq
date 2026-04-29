@@ -60,7 +60,7 @@ export default function QuotaFullModal({ open, onClose, daysUntilReset }: Props)
       />
       {/* sheet */}
       <div
-        className="relative bg-canvas px-[18px] pt-3 pb-6 flex-shrink-0 mx-auto w-full shadow-raised md:max-w-phone"
+        className="relative bg-canvas px-[18px] pt-3 pb-6 flex-shrink-0 mx-auto w-full md:max-w-phone"
         style={{
           borderTopLeftRadius: 18,
           borderTopRightRadius: 18,
@@ -74,7 +74,7 @@ export default function QuotaFullModal({ open, onClose, daysUntilReset }: Props)
             onClose()
           }}
           aria-label="关闭"
-          className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full border border-hairline bg-surface text-ash"
+          className="focus-ring absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-btn border border-hairline bg-surface text-ash"
         >
           <X size={16} strokeWidth={1.6} />
         </button>
@@ -89,7 +89,7 @@ export default function QuotaFullModal({ open, onClose, daysUntilReset }: Props)
           免费版每天可识别 1 次。已识别的文书在「我的提醒」时间线。
         </p>
 
-        <div className="my-4 rounded-card border border-hairline bg-surface px-4 py-3 shadow-card">
+        <div className="my-4 rounded-card border border-hairline bg-surface px-4 py-3">
           <div className="flex items-center justify-center gap-2 text-ink">
             <Archive size={16} strokeWidth={1.55} />
             <span className="text-[13px] font-medium">

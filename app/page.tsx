@@ -1,36 +1,31 @@
 import Link from 'next/link'
 import type { ReactNode } from 'react'
-import {
-  Bell,
-  CalendarDays,
-  Camera,
-  ChevronRight,
-  ClipboardCheck,
-  ShieldCheck,
-  TimerReset,
-} from 'lucide-react'
+import { Bell, Camera, ClipboardCheck, FileText } from 'lucide-react'
 import AppShell from '@/app/_components/v5/AppShell'
 import TabBar from '@/app/_components/v5/TabBar'
-import Logo from '@/app/_components/v5/Logo'
-import TrackedLink from '@/app/_components/v5/TrackedLink'
 import TrialNotice from '@/app/_components/TrialNotice'
-import { EVENT, type EventName } from '@/lib/analytics/events'
+import {
+  DeadlineRow,
+  ListRow,
+  ListSection,
+  SectionLabel,
+} from '@/components/ui/tebiq'
 import { getAnonymousSessionId } from '@/lib/auth/anonymous-session'
 import { getCurrentUser } from '@/lib/auth/session'
 import { getMemberAccess, getTimelineRetentionCutoff } from '@/lib/billing/access'
-import { listLatestPolicyArticles } from '@/lib/db/queries/articles'
 import { listTimelineEvents } from '@/lib/db/queries/timeline'
-import type { Article, Member, TimelineEvent } from '@/lib/db/schema'
+import type { Member, TimelineEvent } from '@/lib/db/schema'
 import { eventSubline, eventTitle } from '@/lib/timeline/display'
 
 export const dynamic = 'force-dynamic'
 
-interface FocusCard {
-  title: string
-  body: string
-  href: string
-  cta: string
-}
+const DEFAULT_DEADLINES = [
+  { date: '05.20', days: '剩余 5 天', title: '住民税通知', detail: '金额 ¥65,400 / 大阪市役所' },
+  { date: '05.28', days: '剩余 13 天', title: '国民健康保険費', detail: '金额 ¥18,200 / 大阪市役所' },
+  { date: '06.02', days: '剩余 18 天', title: '年金免除申请结果通知', detail: '日本年金機構' },
+  { date: '06.10', days: '剩余 26 天', title: '在留資格更新申請（予定）', detail: '出入国在留管理庁' },
+  { date: '06.15', days: '剩余 31 天', title: '児童補助現況届', detail: '金额 ¥0 / 大阪市役所' },
+]
 
 export default async function HomePage() {
   const user = await safeGetCurrentUser()
@@ -38,24 +33,29 @@ export default async function HomePage() {
   const retentionCutoff = await safeRetentionCutoff(user)
   const owner = { memberId: user?.id ?? null, sessionId }
 
-  const [events, policies, access] = await Promise.all([
+  const [events, access] = await Promise.all([
     safeTimelineEvents(owner, retentionCutoff, 80),
-    safePolicies(),
     user ? getMemberAccess(user) : null,
   ])
 
-  const daysToExpiry = daysUntilJst(user?.visaExpiry)
-  const focusCards = buildFocusCards({ user, events, daysToExpiry })
   const upcoming = buildUpcoming(events)
+  const hasArchive = Boolean(user || events.length > 0)
+  const daysToExpiry = daysUntilJst(user?.visaExpiry)
+  const needsCount = countNeedsAttention(upcoming)
+  const trialActive = Boolean(access?.trialActive)
 
   return (
     <AppShell appBar={<HomeAppBar />} tabBar={<TabBar />}>
-      <section className="pt-3">
-        <div className="flex items-center gap-2 px-0.5 text-[12px] font-medium text-slate">
-          <Logo size="sm" />
-          <span>在日生活好帮手</span>
-        </div>
-      </section>
+      {trialActive && (
+        <section className="-mx-5 mb-4 border-b border-hairline bg-paper px-5 py-3">
+          <p className="text-[13px] font-medium text-ink">
+            试用期 残り {access?.trialDaysRemaining ?? 0} 日
+          </p>
+          <p className="mt-1 text-[12px] leading-snug text-ash">
+            试用期内可查看 TEBIQ 能识别什么
+          </p>
+        </section>
+      )}
 
       {access && (
         <TrialNotice
@@ -66,94 +66,79 @@ export default async function HomePage() {
         />
       )}
 
-      <SectionTitle title="今日相关" />
-      <div className="mt-2.5 grid gap-2.5">
-        {focusCards.map(card => (
-          <FocusCard key={`${card.title}-${card.href}`} {...card} />
-        ))}
-      </div>
+      {hasArchive ? (
+        <ArchiveOverview
+          daysToExpiry={daysToExpiry}
+          needsCount={needsCount}
+          deadlineCount={upcoming.length}
+          updatedAt={events[0]?.createdAt ?? null}
+        />
+      ) : (
+        <NewUserEntry />
+      )}
 
-      <SectionTitle title="核心工具" />
-      <div className="mt-2.5 grid grid-cols-3 gap-2.5">
-        <ToolCard
-          title="拍照即懂"
-          desc="拍文件"
+      <SectionLabel title="常用工具" />
+      <ListSection className="mt-3">
+        <ListRow
           href="/photo"
-          icon={<Camera size={18} strokeWidth={1.55} />}
-          eventName={EVENT.HOME_PHOTO_CARD_CLICK}
+          icon={<Camera size={20} strokeWidth={1.5} />}
+          title="拍照即懂"
+          subtitle="识别日文文书"
         />
-        <ToolCard
-          title="续签自查"
-          desc="看风险"
+        <ListRow
           href="/check"
-          icon={<ClipboardCheck size={18} strokeWidth={1.55} />}
-          eventName={EVENT.HOME_CHECK_CARD_CLICK}
+          icon={<ClipboardCheck size={20} strokeWidth={1.5} />}
+          title="续签自查"
+          subtitle="查看当前风险点"
         />
-        <ToolCard
-          title="我的提醒"
-          desc="看期限"
+        <ListRow
           href="/timeline"
-          icon={<TimerReset size={18} strokeWidth={1.55} />}
+          icon={<Bell size={20} strokeWidth={1.5} />}
+          title="我的提醒"
+          subtitle={hasArchive ? `${upcoming.length} 项期限事项` : '管理期限事项'}
         />
-      </div>
+      </ListSection>
 
-      <SectionTitle title="接下来 30 天" actionHref="/timeline" actionLabel="全部提醒" />
-      <section className="mt-2.5 rounded-card border border-hairline bg-surface px-4 py-3 shadow-card">
-        {upcoming.length > 0 ? (
-          <ul className="divide-y divide-hairline">
-            {upcoming.map(event => (
-              <li key={event.id} className="py-2.5 first:pt-0 last:pb-0">
-                <Link href={`/timeline/${event.id}`} className="group flex items-center gap-3">
-                  <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-[11px] bg-cool-blue text-ink">
-                    <CalendarDays size={15} strokeWidth={1.55} />
-                  </span>
-                  <span className="min-w-0 flex-1">
-                    <span className="block truncate text-[12.5px] font-medium text-ink">
-                      {eventTitle(event)}
-                    </span>
-                    <span className="mt-1 block truncate text-[10.5px] text-ash">
-                      {deadlineLabel(event.deadline)} / {eventSubline(event)}
-                    </span>
-                  </span>
-                  <ChevronRight size={14} className="text-haze group-hover:text-ink" />
-                </Link>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p className="text-[12px] leading-[1.65] text-ash">30 天内暂无已识别期限。</p>
-        )}
-      </section>
-
-      <SectionTitle title="最新政策" actionHref="/knowledge" actionLabel="更多" />
-      <section className="mt-2.5 rounded-card border border-hairline bg-surface px-4 py-3 shadow-card">
-        {policies.length > 0 ? (
-          <ul className="divide-y divide-hairline">
-            {policies.map(article => (
-              <li key={article.id} className="py-2.5 first:pt-0 last:pb-0">
-                <Link href={`/knowledge/${article.slug ?? article.id}`} className="group flex items-center gap-3">
-                  <span className="min-w-0 flex-1">
-                    <span className="block truncate text-[12.5px] font-medium text-ink">
-                      {article.title}
-                    </span>
-                    <span className="mt-1 block text-[10.5px] text-ash">
-                      {formatArticleDate(article.updatedAt)}
-                    </span>
-                  </span>
-                  <ChevronRight size={14} className="text-haze group-hover:text-ink" />
-                </Link>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p className="text-[12px] leading-[1.65] text-ash">暂无公开政策更新。</p>
-        )}
-      </section>
-
-      <section className="mt-5 mb-2 grid grid-cols-2 gap-2 text-[10.5px] leading-[1.45] text-ash">
-        <TrustItem icon={<ShieldCheck size={13} strokeWidth={1.55} />} text="数据在日本境内处理" />
-        <TrustItem icon={<ShieldCheck size={13} strokeWidth={1.55} />} text="信息仅供参考，以官方为准" />
-      </section>
+      {hasArchive ? (
+        <>
+          <SectionLabel title="接下来 30 天的期限事项" action="全部" href="/timeline" />
+          <ListSection className="mt-3">
+            {upcoming.length > 0
+              ? upcoming.slice(0, 5).map(event => {
+                const urgent = isUrgent(event.deadline)
+                return (
+                <DeadlineRow
+                  key={event.id}
+                  href={`/timeline/${event.id}`}
+                  date={formatShortDate(event.deadline ?? event.createdAt)}
+                  days={deadlineCompact(event.deadline)}
+                  title={eventTitle(event)}
+                  detail={eventSubline(event)}
+                  status={urgent ? '待处理' : '待确认'}
+                  urgent={urgent}
+                />
+                )
+              })
+              : DEFAULT_DEADLINES.map(item => (
+                <DeadlineRow
+                  key={`${item.date}-${item.title}`}
+                  date={item.date}
+                  days={item.days}
+                  title={item.title}
+                  detail={item.detail}
+                  status="待处理"
+                  urgent={item.days.includes('5')}
+                />
+              ))}
+          </ListSection>
+        </>
+      ) : (
+        <section className="mt-6 rounded-card border border-hairline bg-surface px-5 py-8 text-center">
+          <FileText size={30} strokeWidth={1.5} className="mx-auto text-haze" />
+          <p className="mt-4 text-[16px] font-normal text-ash">还没识别文书。</p>
+          <p className="mt-1 text-[14px] text-ash">先拍一张试试。</p>
+        </section>
+      )}
     </AppShell>
   )
 }
@@ -190,85 +175,123 @@ async function safeTimelineEvents(
   }
 }
 
-async function safePolicies(): Promise<Article[]> {
-  try {
-    return await listLatestPolicyArticles(3)
-  } catch {
-    return []
-  }
-}
-
-function daysUntilJst(dateValue: string | Date | null | undefined): number | null {
-  if (!dateValue) return null
-  const iso = typeof dateValue === 'string' ? dateValue : dateValue.toISOString().slice(0, 10)
-  const target = new Date(`${iso.slice(0, 10)}T00:00:00+09:00`).getTime()
-  if (Number.isNaN(target)) return null
-  const today = new Intl.DateTimeFormat('en-CA', {
-    timeZone: 'Asia/Tokyo',
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-  }).format(new Date())
-  const now = new Date(`${today}T00:00:00+09:00`).getTime()
-  return Math.ceil((target - now) / 86_400_000)
-}
-
-function buildFocusCards({
-  user,
-  events,
+function ArchiveOverview({
   daysToExpiry,
+  needsCount,
+  deadlineCount,
+  updatedAt,
 }: {
-  user: Member | null
-  events: TimelineEvent[]
   daysToExpiry: number | null
-}): FocusCard[] {
-  if (!user && events.length === 0) {
-    return defaultFocusCards()
-  }
-
-  const cards: FocusCard[] = []
-  if (daysToExpiry !== null) {
-    cards.push({
-      title: `在留期限 ${daysToExpiry} 天后`,
-      body: daysToExpiry <= 90 ? '续签前建议先做一次自查。' : '当前无需处理，继续保留期限信息。',
-      href: daysToExpiry <= 90 ? '/check' : '/my/profile',
-      cta: daysToExpiry <= 90 ? '自查' : '查看',
-    })
-  }
-
-  const nextDeadline = buildUpcoming(events)[0]
-  if (nextDeadline) {
-    cards.push({
-      title: deadlineLabel(nextDeadline.deadline),
-      body: eventTitle(nextDeadline),
-      href: `/timeline/${nextDeadline.id}`,
-      cta: '查看',
-    })
-  }
-
-  const latest = events[0]
-  if (latest) {
-    cards.push({
-      title: '最近识别',
-      body: eventTitle(latest),
-      href: `/timeline/${latest.id}`,
-      cta: '详情',
-    })
-  }
-
-  for (const fallback of defaultFocusCards()) {
-    if (cards.length >= 3) break
-    cards.push(fallback)
-  }
-  return cards.slice(0, 3)
+  needsCount: number
+  deadlineCount: number
+  updatedAt: Date | string | null
+}) {
+  return (
+    <section>
+      <div className="mb-3 flex items-center justify-between text-[12px] text-ash">
+        <span>档案概览</span>
+        <span>更新于 {updatedAt ? formatDateTime(updatedAt) : '未记录'}</span>
+      </div>
+      <ListSection>
+        <MetricRow
+          label="在留卡还有"
+          value={daysToExpiry === null ? '--' : String(Math.max(daysToExpiry, 0))}
+          unit="天"
+          icon={<FileText size={20} strokeWidth={1.5} />}
+          warning={typeof daysToExpiry === 'number' && daysToExpiry < 7}
+        />
+        <MetricRow
+          label="你有"
+          value={String(needsCount)}
+          unit="项需处理"
+          icon={<ClipboardCheck size={20} strokeWidth={1.5} />}
+        />
+        <MetricRow
+          label="接下来 30 天有"
+          value={String(deadlineCount)}
+          unit="件期限事项"
+          icon={<Bell size={20} strokeWidth={1.5} />}
+        />
+      </ListSection>
+    </section>
+  )
 }
 
-function defaultFocusCards(): FocusCard[] {
-  return [
-    { title: '收到日本邮寄文件', body: '先拍照识别文书类型和期限。', href: '/photo', cta: '拍照' },
-    { title: '续签前 3 个月', body: '做一次自查，确认当前风险项。', href: '/check', cta: '自查' },
-    { title: '期限提醒', body: '已识别期限会进入提醒列表。', href: '/timeline', cta: '查看' },
-  ]
+function MetricRow({
+  label,
+  value,
+  unit,
+  icon,
+  warning,
+}: {
+  label: string
+  value: string
+  unit: string
+  icon: ReactNode
+  warning?: boolean
+}) {
+  return (
+    <div className="grid min-h-[112px] grid-cols-[1fr_auto] items-center gap-4 border-b border-hairline px-5 last:border-b-0">
+      <div className="min-w-0">
+        <p className="text-[15px] font-normal text-ink">{label}</p>
+        <p className="mt-2 flex items-baseline gap-2">
+          <span
+            className={`numeric text-[56px] font-light leading-none tracking-[-0.01em] ${
+              warning ? 'text-warning' : 'text-ink'
+            }`}
+          >
+            {value}
+          </span>
+          <span className="text-[16px] font-normal text-ink">{unit}</span>
+        </p>
+      </div>
+      <span className="flex h-12 w-12 items-center justify-center rounded-[12px] border border-hairline bg-paper text-ink">
+        {icon}
+      </span>
+    </div>
+  )
+}
+
+function NewUserEntry() {
+  return (
+    <section className="pt-12 text-center">
+      <h1 className="text-[44px] font-medium leading-none tracking-[0.06em] text-ink">TEBIQ</h1>
+      <p className="mx-auto mt-5 max-w-[270px] text-[17px] font-normal leading-[1.7] text-ink">
+        在日生活的日文文书识别和提醒
+      </p>
+      <div className="mt-10 space-y-3">
+        <Link
+          href="/photo"
+          className="focus-ring flex min-h-[48px] w-full items-center justify-center rounded-btn bg-ink px-4 py-3 text-[14px] font-medium leading-none text-white"
+        >
+          拍一份文书试试
+        </Link>
+        <Link
+          href="/check"
+          className="focus-ring flex min-h-[48px] w-full items-center justify-center rounded-btn border border-ink bg-surface px-4 py-3 text-[14px] font-medium leading-none text-ink"
+        >
+          做一次续签自查
+        </Link>
+      </div>
+    </section>
+  )
+}
+
+function HomeAppBar() {
+  return (
+    <header className="flex h-[64px] flex-shrink-0 items-center justify-between bg-canvas px-5">
+      <Link href="/" className="text-[22px] font-medium leading-none tracking-[0.06em] text-ink">
+        TEBIQ
+      </Link>
+      <Link
+        href="/timeline"
+        aria-label="提醒"
+        className="focus-ring flex h-10 w-10 items-center justify-center rounded-btn text-ink"
+      >
+        <Bell size={21} strokeWidth={1.5} />
+      </Link>
+    </header>
+  )
 }
 
 function buildUpcoming(events: TimelineEvent[]): TimelineEvent[] {
@@ -282,6 +305,13 @@ function buildUpcoming(events: TimelineEvent[]): TimelineEvent[] {
     })
     .sort((a, b) => String(a.deadline).localeCompare(String(b.deadline)))
     .slice(0, 5)
+}
+
+function countNeedsAttention(events: TimelineEvent[]): number {
+  return events.filter(event => {
+    const days = daysUntilJst(event.deadline)
+    return days !== null && days <= 14
+  }).length
 }
 
 function startOfJstDay(): Date {
@@ -300,114 +330,39 @@ function daysAgo(days: number): Date {
   return d
 }
 
-function deadlineLabel(deadline: string | null): string {
-  if (!deadline) return '期限未识别'
+function daysUntilJst(dateValue: string | Date | null | undefined): number | null {
+  if (!dateValue) return null
+  const iso = typeof dateValue === 'string' ? dateValue : dateValue.toISOString().slice(0, 10)
+  const target = new Date(`${iso.slice(0, 10)}T00:00:00+09:00`).getTime()
+  if (Number.isNaN(target)) return null
+  const now = startOfJstDay().getTime()
+  return Math.ceil((target - now) / 86_400_000)
+}
+
+function deadlineCompact(deadline: string | null): string {
   const days = daysUntilJst(deadline)
-  if (days === null) return `期限 ${deadline}`
+  if (days === null) return '期限未识别'
+  if (days < 0) return `已过 ${Math.abs(days)} 天`
   if (days === 0) return '今日截止'
-  if (days < 0) return `已过期 ${Math.abs(days)} 天`
-  return `${days} 天后截止`
+  return `剩余 ${days} 天`
 }
 
-function formatDate(date: Date): string {
-  const y = date.getFullYear()
-  const m = String(date.getMonth() + 1).padStart(2, '0')
-  const d = String(date.getDate()).padStart(2, '0')
-  return `${y}/${m}/${d}`
+function isUrgent(deadline: string | null): boolean {
+  const days = daysUntilJst(deadline)
+  return days !== null && days < 7
 }
 
-function formatArticleDate(date: Date | string): string {
-  return formatDate(typeof date === 'string' ? new Date(date) : date)
+function formatShortDate(dateValue: string | Date): string {
+  const d =
+    typeof dateValue === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(dateValue)
+      ? new Date(`${dateValue}T00:00:00+09:00`)
+      : new Date(dateValue)
+  if (Number.isNaN(d.getTime())) return '--.--'
+  return `${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}`
 }
 
-function HomeAppBar() {
-  return (
-    <header className="flex h-[58px] flex-shrink-0 items-center justify-between bg-canvas px-5">
-      <span className="text-[12px] font-medium text-ash">TEBIQ</span>
-      <Link
-        href="/my/reminders"
-        aria-label="提醒中心"
-        className="flex h-10 w-10 items-center justify-center rounded-full border border-hairline bg-surface text-ink shadow-soft"
-      >
-        <Bell size={20} strokeWidth={1.7} />
-      </Link>
-    </header>
-  )
-}
-
-function FocusCard({ title, body, href, cta }: FocusCard) {
-  return (
-    <Link
-      href={href}
-      className="flex min-h-[72px] items-center gap-3 rounded-card border border-hairline bg-surface px-4 py-3 shadow-card active:translate-y-px"
-    >
-      <span className="min-w-0 flex-1">
-        <span className="block truncate text-[13px] font-medium text-ink">{title}</span>
-        <span className="mt-1 block truncate text-[11px] text-ash">{body}</span>
-      </span>
-      <span className="flex items-center text-[11px] text-ash">
-        {cta}<ChevronRight size={13} strokeWidth={1.55} />
-      </span>
-    </Link>
-  )
-}
-
-function ToolCard({
-  title,
-  desc,
-  href,
-  icon,
-  eventName,
-}: {
-  title: string
-  desc: string
-  href: string
-  icon: ReactNode
-  eventName?: EventName
-}) {
-  const className = 'min-h-[96px] rounded-card border border-hairline bg-surface px-2.5 py-3 shadow-card transition active:translate-y-px'
-  const inner = (
-    <>
-      <span className="flex h-8 w-8 items-center justify-center rounded-[11px] bg-accent-2 text-ink">
-        {icon}
-      </span>
-      <span className="mt-2.5 block text-[12.5px] font-medium leading-snug text-ink">{title}</span>
-      <span className="mt-1 block text-[10px] leading-[1.45] text-ash">{desc}</span>
-    </>
-  )
-  if (eventName) {
-    return <TrackedLink href={href} eventName={eventName} className={className}>{inner}</TrackedLink>
-  }
-  return <Link href={href} className={className}>{inner}</Link>
-}
-
-function SectionTitle({
-  title,
-  actionHref,
-  actionLabel,
-}: {
-  title: string
-  actionHref?: string
-  actionLabel?: string
-}) {
-  return (
-    <div className="mt-5 flex items-center justify-between px-0.5">
-      <h2 className="text-[13px] font-medium text-ink">{title}</h2>
-      {actionHref && actionLabel && (
-        <Link href={actionHref} className="flex items-center text-[11px] text-ash">
-          {actionLabel}
-          <ChevronRight size={13} strokeWidth={1.55} />
-        </Link>
-      )}
-    </div>
-  )
-}
-
-function TrustItem({ icon, text }: { icon: ReactNode; text: string }) {
-  return (
-    <div className="flex min-h-[42px] items-center gap-2 rounded-[12px] border border-hairline bg-surface/70 px-3 py-2">
-      <span className="text-ink">{icon}</span>
-      <span>{text}</span>
-    </div>
-  )
+function formatDateTime(dateValue: Date | string): string {
+  const d = typeof dateValue === 'string' ? new Date(dateValue) : dateValue
+  if (Number.isNaN(d.getTime())) return '未记录'
+  return `${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`
 }

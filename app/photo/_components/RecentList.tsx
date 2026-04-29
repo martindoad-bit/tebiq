@@ -38,9 +38,8 @@ function urgencyLabel(u: Urgency | null): string {
 }
 
 function urgencyDot(u: Urgency | null): string {
-  if (u === 'critical' || u === 'high' || u === 'important') return 'bg-danger'
-  if (u === 'normal') return 'bg-success'
-  return 'bg-accent'
+  if (u === 'critical' || u === 'high' || u === 'important') return 'bg-warning'
+  return 'bg-haze'
 }
 
 export default function RecentList() {
@@ -78,16 +77,16 @@ export default function RecentList() {
       </div>
 
       {items === null && (
-        <div className="rounded-card border border-hairline bg-surface/75 px-4 py-4 text-[11px] text-haze shadow-card">
+        <div className="rounded-card border border-hairline bg-surface/75 px-4 py-4 text-[11px] text-haze">
           加载中…
         </div>
       )}
 
       {items !== null && items.length === 0 && !errMsg && (
-        <div className="rounded-card border border-hairline bg-surface/75 px-4 py-4 shadow-card">
+        <div className="rounded-card border border-hairline bg-surface/75 px-4 py-4">
           <div className="flex items-center gap-3">
-            <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-[12px] bg-accent-2 text-ink">
-              <Camera size={18} strokeWidth={1.55} />
+            <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-[10px] border border-hairline bg-paper text-ink">
+              <Camera size={18} strokeWidth={1.5} />
             </span>
             <div>
               <p className="text-[12px] font-medium leading-snug text-ink">
@@ -102,7 +101,7 @@ export default function RecentList() {
       )}
 
       {errMsg && (
-        <p className="text-[11px] text-danger px-1">{errMsg}</p>
+        <p className="text-[11px] text-warning px-1">{errMsg}</p>
       )}
 
       <ul className="space-y-1.5">
@@ -110,13 +109,13 @@ export default function RecentList() {
           <li key={it.id}>
             <Link
               href={`/photo/result/${it.id}`}
-              className="flex items-center gap-2.5 bg-surface rounded-[12px] border border-hairline px-3 py-2.5 shadow-card hover:border-accent/40 transition-colors"
+              className="flex items-center gap-2.5 bg-surface rounded-[12px] border border-hairline px-3 py-2.5 hover:border-ink transition-colors"
             >
               <span
                 aria-hidden
                 className="w-[26px] h-[26px] flex-shrink-0 rounded-md bg-chip flex items-center justify-center"
               >
-                <FileText size={13} color="#18324A" strokeWidth={1.6} />
+                <FileText size={13} color="#0F2544" strokeWidth={1.5} />
               </span>
               <span className="flex-1 min-w-0">
                 <span className="block text-[12px] font-medium text-ink truncate">

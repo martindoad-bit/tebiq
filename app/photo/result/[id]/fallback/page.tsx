@@ -64,9 +64,9 @@ export default async function PhotoFallbackPage({
         payload={{ docId: doc.id, fallback: true }}
       />
 
-      <section className="mt-3 rounded-card border border-accent/30 bg-accent-2 px-4 py-4 text-center shadow-card">
-        <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-[13px] bg-surface text-accent shadow-soft">
-          <AlertTriangle size={20} strokeWidth={1.55} />
+      <section className="mt-3 rounded-card border border-warning/55 bg-surface px-4 py-4 text-center">
+        <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-[10px] border border-hairline bg-paper text-warning">
+          <AlertTriangle size={20} strokeWidth={1.5} />
         </div>
         <h1 className="text-[16px] font-medium text-ink">这张图我们暂时没有看清</h1>
         <p className="mx-auto mt-2 max-w-[280px] text-[11.5px] leading-[1.65] text-ash">
@@ -74,12 +74,12 @@ export default async function PhotoFallbackPage({
         </p>
       </section>
 
-      <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-4 shadow-card">
+      <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-4">
         <h2 className="mb-2 text-[13px] font-medium text-ink">可能的原因</h2>
         <ul className="space-y-2.5">
           {REASONS.map((r, i) => (
             <li key={i} className="flex items-start gap-2.5">
-              <span className="mt-[3px] flex h-1.5 w-1.5 flex-shrink-0 rounded-full bg-accent" />
+              <span className="mt-[3px] flex h-1.5 w-1.5 flex-shrink-0 rounded-full bg-haze" />
               <div className="min-w-0">
                 <div className="text-[12.5px] font-medium leading-snug text-ink">
                   {r.title}

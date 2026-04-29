@@ -1,105 +1,100 @@
-/**
- * /check — 续签自查入口（v5 screen 05）
- *
- * 三步式入口：landing → /check/select（签证选择）→ /check/[visa]（quiz）→ result。
- * 视觉跟 docs/prototype/v5-mockup.html 1444-1517。
- */
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { AlignLeft, CheckCircle, Clock3, Shield } from 'lucide-react'
 import AppShell from '@/app/_components/v5/AppShell'
 import AppBar from '@/app/_components/v5/AppBar'
-import Illustration from '@/app/_components/v5/Illustration'
-import Button from '@/app/_components/v5/Button'
 import TrackOnMount from '@/app/_components/v5/TrackOnMount'
+import { RiskMark, StatusBadge } from '@/components/ui/tebiq'
 import { EVENT } from '@/lib/analytics/events'
-import type { ReactNode } from 'react'
 
 export const metadata: Metadata = {
   title: '续签自查 | TEBIQ',
-  description: '3 分钟自查在留资格更新风险：覆盖工作、收入、社保、税款、出入国记录等关键维度。',
+  description: '自查在留資格更新风险：覆盖工作、收入、社保、税款、出入国记录等关键维度。',
   alternates: { canonical: '/check' },
   openGraph: {
     title: '续签自查 | TEBIQ',
-    description: '3 分钟自查在留资格更新风险',
+    description: '自查在留資格更新风险',
     url: 'https://tebiq.jp/check',
     siteName: 'TEBIQ',
     locale: 'zh_CN',
   },
 }
 
+const ITEMS = [
+  { title: '在职状态', status: '3月内已查', mark: '档案触发', sub: '就労資格与当前勤務先是否一致。' },
+  { title: '收入变动', status: '需处理', mark: '建议必看', sub: '近一年收入低于上次自查记录。', warning: true },
+  { title: '住民税', status: '未查', mark: '建议必看', sub: '确认納税証明書和課税証明書。' },
+  { title: '年金', status: '已查', mark: '档案触发', sub: '最近一次记录来自年金事務所通知。' },
+  { title: '健康保険', status: '已查', mark: '档案触发', sub: '保险缴纳记录未发现期限冲突。' },
+  { title: '転職记录', status: '未查', mark: '建议必看', sub: '换工作后需确认届出和在留資格适配。' },
+  { title: '扶养家族', status: '未查', mark: '建议必看', sub: '扶养人数变化会影响材料准备。' },
+  { title: '出入国记录', status: '未查', mark: '建议必看', sub: '长期离境记录需在申请前核对。' },
+  { title: '住所变更', status: '已查', mark: '档案触发', sub: '住民票地址与账号资料一致。' },
+  { title: '到期文书', status: '已过期', mark: '已过期', sub: '一件历史提醒超过处理期限。', warning: true },
+] as const
+
 export default function CheckLandingPage() {
   return (
     <AppShell appBar={<AppBar title="续签自查" back="/" />}>
       <TrackOnMount event={EVENT.QUIZ_START} />
-      <div className="mb-2 mt-4 text-center">
-        <div className="mx-auto mb-3 inline-flex items-center gap-2 rounded-full bg-cool-blue px-3 py-1.5 text-[clamp(12px,3.3vw,14px)] font-semibold text-ink/85">
-          <Clock3 size={14} strokeWidth={1.65} />
-          约 3 分钟
+      <section className="mt-3 border-b border-hairline pb-4">
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <p className="text-[12px] text-ash">签证类型</p>
+            <h1 className="mt-1 text-[19px] font-medium leading-snug text-ink">
+              技術・人文知識・国際業務
+            </h1>
+            <p className="mt-2 text-[12px] text-ash">上次自查 2026.04.15</p>
+          </div>
+          <Link href="/check/select" className="mt-1 text-[12px] text-ink underline underline-offset-4">
+            切换
+          </Link>
         </div>
-        <p className="mx-auto max-w-[340px] text-[clamp(15px,4.2vw,18px)] leading-[1.65] text-slate/78">
-          根据你的在留資格和当前情况，先看续签前要注意的风险。
-        </p>
-      </div>
-
-      <Illustration
-        height={220}
-        src="/illustrations/renewal-check-wide-image2.png"
-        subject="日文文件、日历和护照的桌面静物"
-      />
-
-      <ul className="mb-7 mt-3 space-y-3.5">
-        <FeatureRow
-          icon={<CheckCircle size={14} strokeWidth={1.5} className="text-ink" />}
-          title="完整的风险评估"
-          sub="覆盖工作、收入、材料等常见风险"
-        />
-        <FeatureRow
-          icon={<AlignLeft size={14} strokeWidth={1.5} className="text-ink" />}
-          title="个性化建议"
-          sub="按你的回答整理下一步行动"
-        />
-        <FeatureRow
-          icon={<Shield size={14} strokeWidth={1.5} className="text-ink" />}
-          title="保护隐私"
-          sub="所有信息仅用于分析"
-        />
-      </ul>
-
-      <Link href="/check/select" className="block">
-        <Button>开始自查</Button>
-      </Link>
-
-      <div className="text-center mt-4">
         <Link
-          href="/login?next=/my/archive"
-          className="text-[11.5px] text-ash hover:text-ink underline underline-offset-2"
+          href="/check/select"
+          className="focus-ring mt-4 flex min-h-[40px] items-center justify-center rounded-btn border border-hairline bg-surface px-4 text-[13px] font-medium text-ink"
         >
-          已自查过？登录查看结果
+          完整自查（约 5 分钟）
         </Link>
-      </div>
+      </section>
+
+      <section className="mt-4 overflow-hidden rounded-card border border-hairline bg-surface">
+        {ITEMS.map(item => (
+          <ChecklistRow key={item.title} {...item} />
+        ))}
+      </section>
+
+      <p className="mt-4 text-[12px] leading-[1.7] text-ash">
+        递交前可做一次完整自查。自查结果只用于整理风险项，不替代官方判断。
+      </p>
     </AppShell>
   )
 }
 
-function FeatureRow({
-  icon,
+function ChecklistRow({
   title,
+  status,
+  mark,
   sub,
+  warning,
 }: {
-  icon: ReactNode
   title: string
+  status: string
+  mark: string
   sub: string
+  warning?: boolean
 }) {
   return (
-    <li className="flex items-start gap-3">
-      <span className="mt-0.5 flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-[14px] bg-accent-2 shadow-soft">
-        {icon}
-      </span>
-      <div className="min-w-0 flex-1 leading-tight">
-        <div className="text-[clamp(16px,4.5vw,18px)] font-semibold text-ink">{title}</div>
-        <div className="mt-1 text-[clamp(12.5px,3.6vw,14px)] text-ash">{sub}</div>
+    <div className="border-b border-hairline px-4 py-3 last:border-b-0">
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0 flex-1">
+          <p className="truncate text-[14px] font-medium leading-snug text-ink">{title}</p>
+          <p className="mt-1 text-[12px] leading-[1.55] text-ash">{sub}</p>
+        </div>
+        <StatusBadge tone={warning ? 'attention' : 'neutral'}>{status}</StatusBadge>
       </div>
-    </li>
+      <div className="mt-2">
+        <RiskMark tone={warning ? 'warning' : 'neutral'}>{mark}</RiskMark>
+      </div>
+    </div>
   )
 }

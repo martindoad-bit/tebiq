@@ -45,7 +45,7 @@ function severityVisual(verdict: Verdict, riskCount: number): SeverityVisual {
     return {
       bg: 'bg-success',
       text: 'text-success',
-      symbol: '✓',
+      symbol: '',
       label: '低风险',
       desc: '当前未发现明显风险点，按常规材料准备即可',
     }
@@ -60,11 +60,11 @@ function severityVisual(verdict: Verdict, riskCount: number): SeverityVisual {
     }
   }
   return {
-    bg: 'bg-danger',
-    text: 'text-danger',
-    symbol: '✕',
-    label: '高风险',
-    desc: `检测到 ${riskCount} 项严重风险，建议立即咨询专家`,
+      bg: 'bg-danger',
+      text: 'text-danger',
+      symbol: '',
+      label: '高风险',
+      desc: `检测到 ${riskCount} 项严重风险，建议咨询专家`,
   }
 }
 

@@ -45,25 +45,25 @@ export default function SignupBanner({
   const next = encodeURIComponent(`/check/result?v=${verdict}&n=${count}`)
 
   return (
-    <div className="no-capture sticky top-14 z-[5] border-b border-hairline bg-accent-2/85 px-4 py-2.5 backdrop-blur">
+    <div className="no-capture sticky top-14 z-[5] border-b border-hairline bg-paper/95 px-4 py-2.5 backdrop-blur">
       <div className="mx-auto flex max-w-md items-center gap-3 md:max-w-3xl">
-        <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-[9px] bg-surface text-ink shadow-soft">
-          <Pin size={14} strokeWidth={1.55} />
+        <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-[8px] border border-hairline bg-surface text-ink">
+          <Pin size={14} strokeWidth={1.5} />
         </span>
         <p className="flex-1 text-[13px] font-medium leading-snug text-ink">
           创建免费账号，保存这次结果并获得到期提醒
         </p>
         <Link
           href={`/login?next=${next}`}
-          className="flex-shrink-0 rounded-btn bg-accent px-3 py-1.5 text-[12px] font-medium text-white shadow-soft transition-colors hover:bg-primary-hover"
+          className="focus-ring flex-shrink-0 rounded-btn bg-ink px-3 py-1.5 text-[12px] font-medium text-white transition-colors hover:bg-primary-hover"
         >
-          创建账号 →
+          创建账号
         </Link>
         <button
           type="button"
           onClick={dismiss}
           aria-label="关闭"
-          className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full text-ash hover:text-ink"
+          className="focus-ring flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-btn text-ash hover:text-ink"
         >
           <X size={14} strokeWidth={1.55} />
         </button>

@@ -45,7 +45,7 @@ export default function RelatedKnowledge({
   if (items.length === 0) return null
 
   return (
-    <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-4 shadow-card">
+    <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-4">
       <div className="mb-3 flex items-center gap-2 text-[12px] font-medium text-ink">
         <BookOpenCheck size={14} strokeWidth={1.55} />
         {title}
@@ -55,9 +55,9 @@ export default function RelatedKnowledge({
           <li key={item.id}>
             <Link
               href={`/knowledge/${item.slug ?? item.id}`}
-              className="group flex items-start gap-2.5 rounded-[12px] border border-hairline bg-canvas/40 px-3 py-2.5 transition-colors hover:border-accent"
+              className="group flex items-start gap-2.5 rounded-btn border border-hairline bg-canvas/40 px-3 py-2.5 transition-colors hover:border-ink"
             >
-              <span className="mt-0.5 flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-[9px] bg-accent-2 text-ink">
+              <span className="mt-0.5 flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-[8px] border border-hairline bg-paper text-ink">
                 <BookOpenCheck size={13} strokeWidth={1.55} />
               </span>
               <span className="min-w-0 flex-1">

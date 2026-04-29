@@ -18,7 +18,7 @@
 'use client'
 import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Camera, FileText, Loader, LockKeyhole, ShieldCheck, Upload } from 'lucide-react'
+import { Camera, FileText, Image as ImageIcon, Loader, Upload } from 'lucide-react'
 import { compressImageClient, formatBytes } from '@/lib/photo/clientCompress'
 
 interface RecognizeData {
@@ -43,7 +43,7 @@ type Stage =
 const RECOGNIZE_MESSAGES = [
   '识别文书类型…',
   '提取关键信息…',
-  '整理给你…',
+  '整理字段…',
 ] as const
 
 const MAX_UPLOAD_BYTES = 10 * 1024 * 1024
@@ -198,7 +198,7 @@ export default function PhotoUploader() {
     mainLabel = '正在压缩…'
     subLabel = compressInfo
       ? `${formatBytes(compressInfo.before)} → 优化中`
-      : '让上传更快一点'
+      : '准备上传'
   } else if (stage.kind === 'uploading') {
     mainLabel = `上传中 ${stage.pct}%`
     subLabel = compressInfo
@@ -208,7 +208,7 @@ export default function PhotoUploader() {
     mainLabel = '正在识别中…'
     subLabel = RECOGNIZE_MESSAGES[stage.messageIdx]
   } else {
-    mainLabel = '点击拍照'
+    mainLabel = '拍照识别'
     subLabel = '图片 / PDF / 截图'
   }
 
@@ -220,85 +220,66 @@ export default function PhotoUploader() {
         disabled={busy}
         aria-label="拍照或上传图片"
         aria-busy={busy}
-        className="relative w-full max-w-full min-h-[258px] overflow-hidden rounded-card bg-ink flex flex-col items-center justify-center gap-[14px] mb-3 disabled:opacity-95 shadow-raised transition active:translate-y-px"
+        className="focus-ring relative mb-4 flex min-h-[376px] w-full max-w-full flex-col items-center justify-center gap-5 overflow-hidden rounded-card border border-dashed border-hairline bg-surface disabled:opacity-70"
       >
-        <span
-          aria-hidden
-          className="absolute inset-3 rounded-[8px] border border-dashed border-accent/40"
-        />
-        <span
-          aria-hidden
-          className="absolute left-5 top-5 flex items-center gap-1.5 rounded-full bg-white/8 px-2.5 py-1 text-[10px] text-canvas/70"
-        >
-          <FileText size={12} strokeWidth={1.5} />
-          文書 OCR
-        </span>
-        <span
-          aria-hidden
-          className="absolute bottom-5 right-5 flex h-8 w-8 items-center justify-center rounded-[10px] bg-accent/15 text-accent"
-        >
-          <ShieldCheck size={16} strokeWidth={1.55} />
-        </span>
-        <span
-          className="relative z-10 w-[58px] h-[58px] flex items-center justify-center rounded-[17px] bg-white/10 text-accent shadow-soft"
-        >
+        <span className="relative z-10 flex h-[148px] w-[148px] items-center justify-center rounded-full border border-ink text-ink">
           {busy ? (
-            <Loader size={28} color="#E56F4F" className="animate-spin" />
+            <Loader size={32} color="#0F2544" strokeWidth={1.5} className="animate-spin" />
           ) : (
-            <Camera size={28} color="#E56F4F" strokeWidth={1.5} />
+            <Camera size={34} color="#0F2544" strokeWidth={1.5} />
           )}
         </span>
-        <span className="relative z-10 text-center px-6">
-          <span className="block text-[14px] font-semibold text-canvas">
+        <span className="relative z-10 px-6 text-center">
+          <span className="block text-[20px] font-medium leading-none text-ink">
             {mainLabel}
           </span>
-          <span className="mt-1 block text-[12px] text-canvas/70 transition-opacity duration-200">
+          <span className="mt-3 block text-[13px] text-ash transition-opacity duration-200">
             {subLabel}
           </span>
         </span>
 
         {/* 上传进度条 */}
         {stage.kind === 'uploading' && (
-          <div className="absolute bottom-3 left-3 right-3 h-1 overflow-hidden rounded-full bg-white/10">
+          <div className="absolute bottom-0 left-0 right-0 h-0.5 overflow-hidden bg-paper">
             <div
-              className="h-full rounded-full bg-accent transition-all"
+              className="h-full bg-ink transition-all"
               style={{ width: `${stage.pct}%` }}
             />
           </div>
         )}
       </button>
 
-      <button
-        type="button"
-        onClick={onPickUpload}
-        disabled={busy}
-        className="mb-3 flex min-h-[42px] items-center justify-center gap-2 rounded-btn border border-hairline bg-surface px-4 py-2.5 text-[12.5px] font-medium text-ink shadow-card transition active:translate-y-px disabled:opacity-70"
-      >
-        <Upload size={15} strokeWidth={1.55} />
-        上传 PDF / 截图
-      </button>
-
-      <div className="mb-3 grid grid-cols-3 gap-1.5">
-        <HintChip label="金额" value="自动提取" />
-        <HintChip label="期限" value="标出日期" />
-        <HintChip label="行动" value="列清楚" />
+      <div className="mb-3 overflow-hidden rounded-card border border-hairline bg-surface">
+        <button
+          type="button"
+          onClick={onPickUpload}
+          disabled={busy}
+          className="focus-ring flex min-h-[56px] w-full items-center gap-3 border-b border-hairline px-4 text-left text-[15px] font-medium text-ink disabled:opacity-70"
+        >
+          <FileText size={20} strokeWidth={1.5} />
+          上传 PDF
+          <Upload size={18} strokeWidth={1.5} className="ml-auto text-haze" />
+        </button>
+        <button
+          type="button"
+          onClick={onPickUpload}
+          disabled={busy}
+          className="focus-ring flex min-h-[56px] w-full items-center gap-3 px-4 text-left text-[15px] font-medium text-ink disabled:opacity-70"
+        >
+          <ImageIcon size={20} strokeWidth={1.5} />
+          上传截图
+          <Upload size={18} strokeWidth={1.5} className="ml-auto text-haze" />
+        </button>
       </div>
 
-      <div className="mb-3 rounded-card border border-hairline bg-surface px-3.5 py-3 shadow-card">
-        <div className="flex items-start gap-2.5">
-          <span className="mt-0.5 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-[11px] bg-cool-blue text-ink">
-            <LockKeyhole size={16} strokeWidth={1.55} />
-          </span>
-          <div className="min-w-0 flex-1">
-            <div className="text-[12.5px] font-semibold leading-snug text-ink">
-              文件内容不会公开展示
-            </div>
-            <p className="mt-1 break-all text-[11.5px] leading-[1.6] text-slate/74">
-              用于识别文书重点；结果可保存到档案，之后在账号内查看。
-            </p>
-          </div>
-        </div>
-      </div>
+      <p className="mb-3 flex min-h-[44px] items-center border-b border-hairline text-[13px] text-ash">
+        今日 残り 1 次
+      </p>
+
+      <p className="mb-3 flex min-h-[44px] items-center gap-3 rounded-card border border-hairline bg-surface px-4 text-[13px] text-ash">
+        <FileText size={18} strokeWidth={1.5} />
+        支持住民税、年金、在留カード、契約書
+      </p>
 
       <input
         ref={cameraInputRef}
@@ -318,26 +299,15 @@ export default function PhotoUploader() {
 
       {compressInfo && stage.kind === 'idle' && compressInfo.after < compressInfo.before && (
         <p className="mb-2 text-center text-[10.5px] text-ash">
-          已为你压缩 {formatBytes(compressInfo.before)} → {formatBytes(compressInfo.after)}，上传更快
+          已压缩 {formatBytes(compressInfo.before)} → {formatBytes(compressInfo.after)}
         </p>
       )}
 
       {errMsg && (
-        <p className="text-[12px] text-danger mb-2 text-center" role="alert">
+        <p className="text-[12px] text-warning mb-2 text-center" role="alert">
           {errMsg}
         </p>
       )}
     </div>
-  )
-}
-
-function HintChip({ label, value }: { label: string; value: string }) {
-  return (
-    <span className="min-w-0 rounded-[11px] border border-hairline bg-surface/70 px-2 py-2 shadow-soft">
-      <span className="block truncate text-[10px] leading-none text-ash">{label}</span>
-      <span className="mt-1 block truncate text-[11px] font-medium leading-none text-ink">
-        {value}
-      </span>
-    </span>
   )
 }

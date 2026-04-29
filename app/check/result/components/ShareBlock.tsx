@@ -14,10 +14,10 @@ export default function ShareBlock({
   description?: string
 }) {
   return (
-    <div className="no-capture rounded-card border border-hairline bg-surface p-4 shadow-card">
+    <div className="no-capture rounded-card border border-hairline bg-surface p-4">
       <div className="flex items-start gap-3">
-        <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-[12px] bg-accent-2 text-ink">
-          <Gift size={17} strokeWidth={1.55} />
+        <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-[10px] border border-hairline bg-paper text-ink">
+          <Gift size={17} strokeWidth={1.5} />
         </span>
         <div className="min-w-0 flex-1">
           <div className="text-[13px] font-medium leading-snug text-ink">

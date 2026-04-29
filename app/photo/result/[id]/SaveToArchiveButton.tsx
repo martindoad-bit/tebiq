@@ -25,10 +25,10 @@ export default function SaveToArchiveButton() {
   return (
     <>
       <Button variant="secondary" onClick={onSave} disabled={saved}>
-        {saved ? '已保存到我的档案 ✓' : '保存到我的档案'}
+        {saved ? '已保存到我的档案' : '保存到我的档案'}
       </Button>
       {saved && (
-        <p className="text-center text-[11px] text-success mt-1">
+        <p className="text-center text-[11px] text-ash mt-1">
           可在「我的档案」中查看
         </p>
       )}

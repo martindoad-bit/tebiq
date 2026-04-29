@@ -31,9 +31,9 @@ export default function PhotoError({
 
   return (
     <main className="min-h-[100dvh] bg-canvas px-4 py-12 flex items-center justify-center">
-      <div className="mx-auto w-full max-w-phone rounded-card border border-hairline bg-surface px-5 py-7 text-center shadow-card">
-        <div className="mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-[13px] bg-accent-2 text-ink shadow-soft">
-          <Camera size={20} strokeWidth={1.55} />
+      <div className="mx-auto w-full max-w-phone rounded-card border border-hairline bg-surface px-5 py-7 text-center">
+        <div className="mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-[10px] border border-hairline bg-paper text-ink">
+          <Camera size={20} strokeWidth={1.5} />
         </div>
         <h1 className="text-[16px] font-medium text-ink">拍照流程暂时打不开</h1>
         <p className="mx-auto mt-2 max-w-[280px] text-[11.5px] leading-[1.65] text-ash">
@@ -46,9 +46,9 @@ export default function PhotoError({
           <button
             type="button"
             onClick={() => reset()}
-            className="flex min-h-[44px] w-full items-center justify-center gap-1.5 rounded-btn bg-accent px-4 py-3 text-[13px] font-medium text-white shadow-cta"
+            className="focus-ring flex min-h-[44px] w-full items-center justify-center gap-1.5 rounded-btn bg-ink px-4 py-3 text-[13px] font-medium text-white"
           >
-            <RefreshCcw size={14} strokeWidth={1.55} />
+            <RefreshCcw size={14} strokeWidth={1.5} />
             刷新重试
           </button>
           <Link

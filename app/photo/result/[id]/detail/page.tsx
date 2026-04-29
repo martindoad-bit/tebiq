@@ -39,10 +39,10 @@ export default async function PhotoResultDetailPage({
 
   return (
     <AppShell appBar={<AppBar title={`${title} 详细说明`} back />}>
-      <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-3.5 shadow-card">
+      <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-3.5">
         <div className="flex items-start gap-3">
-          <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-[12px] bg-accent-2 text-ink">
-            <FileText size={18} strokeWidth={1.55} />
+          <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-[10px] border border-hairline bg-paper text-ink">
+            <FileText size={18} strokeWidth={1.5} />
           </span>
           <div>
             <p className="text-[11px] text-ash">识别文件</p>
@@ -56,7 +56,7 @@ export default async function PhotoResultDetailPage({
         </div>
       </section>
 
-      <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-3 shadow-card">
+      <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-3">
         <div className="mb-2 flex items-center gap-2">
           <ShieldCheck size={15} strokeWidth={1.55} className="text-ink" />
           <p className="text-[13px] font-medium text-ink">识别到的信息</p>
@@ -91,7 +91,7 @@ export default async function PhotoResultDetailPage({
         </dl>
       </section>
 
-      <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-3 shadow-card">
+      <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-3">
         <h2 className="text-[13px] font-medium text-ink">通用处理步骤</h2>
         <ol className="mt-2 list-decimal space-y-1 pl-4 text-[12px] leading-[1.65] text-slate">
           {result.generalActions.map((action, i) => (

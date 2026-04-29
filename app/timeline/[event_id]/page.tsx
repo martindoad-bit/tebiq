@@ -39,10 +39,10 @@ export default async function TimelineEventPage({
 
   return (
     <AppShell appBar={<AppBar title="档案详情" back />}>
-      <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-4 shadow-card">
+      <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-4">
         <div className="flex items-start gap-3">
-          <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-[13px] bg-cool-blue text-ink">
-            <Archive size={19} strokeWidth={1.55} />
+          <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-[10px] border border-hairline bg-paper text-ink">
+            <Archive size={19} strokeWidth={1.5} />
           </span>
           <div className="min-w-0 flex-1">
             <p className="text-[10.5px] font-medium text-ash">{formatDateTime(event.createdAt)}</p>
@@ -57,7 +57,7 @@ export default async function TimelineEventPage({
         </div>
       </section>
 
-      <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-4 shadow-card">
+      <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-4">
         <h2 className="text-[13px] font-medium text-ink">结构化记录</h2>
         <dl className="mt-3 grid gap-2 text-[12px]">
           <InfoRow label="类型" value={event.docType} />
@@ -68,7 +68,7 @@ export default async function TimelineEventPage({
         </dl>
       </section>
 
-      <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-4 shadow-card">
+      <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-4">
         <h2 className="text-[13px] font-medium text-ink">原始结果</h2>
         <pre className="mt-3 max-h-[360px] overflow-auto whitespace-pre-wrap rounded-[12px] bg-canvas p-3 text-[11px] leading-[1.65] text-slate">
           {JSON.stringify(event.eventPayload, null, 2)}
@@ -83,7 +83,7 @@ export default async function TimelineEventPage({
       />
 
       {related.length > 0 && (
-        <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-4 shadow-card">
+        <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-4">
           <h2 className="text-[13px] font-medium text-ink">历史关联</h2>
           <ul className="mt-2 divide-y divide-hairline">
             {related.map(item => (

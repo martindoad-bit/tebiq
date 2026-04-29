@@ -39,10 +39,10 @@ function QuotaModalFromQuery() {
 
 export default function PhotoEntryPage() {
   return (
-    <AppShell appBar={<AppBar title="拍照即懂" back />} tabBar={<TabBar />}>
+    <AppShell appBar={<AppBar title="拍照" back />} tabBar={<TabBar />}>
       <div className="flex flex-col min-h-full">
-        <p className="mx-auto mb-4 mt-2 max-w-[330px] break-all text-center text-[clamp(14px,3.8vw,16px)] leading-[1.65] text-slate/76">
-          住民税、年金、在留カード相关文件都可以先拍照确认
+        <p className="mx-auto mb-5 mt-1 max-w-[330px] break-all text-center text-[14px] leading-[1.7] text-ash">
+          日文文书识别和提醒
         </p>
 
         <PhotoUploader />
