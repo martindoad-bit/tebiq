@@ -21,6 +21,7 @@ interface Frontmatter {
   applies_to?: string[] | string
   urgency_level?: string
   estimated_read_time?: number
+  estimated_read_time_minutes?: number
 }
 
 interface ParsedDoc {
@@ -113,6 +114,8 @@ async function upsertOne(parsed: ParsedDoc): Promise<'created' | 'updated' | 'sk
   const estimatedReadTime =
     typeof parsed.frontmatter.estimated_read_time === 'number'
       ? parsed.frontmatter.estimated_read_time
+      : typeof parsed.frontmatter.estimated_read_time_minutes === 'number'
+        ? parsed.frontmatter.estimated_read_time_minutes
       : null
 
   const existing = await db
