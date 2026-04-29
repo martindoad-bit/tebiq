@@ -1,6 +1,6 @@
 # AI Handoff Log
 
-最后更新: 2026-04-28T13:06:00Z
+最后更新: 2026-04-29T00:00:00Z
 
 ## CCA(代码)状态
 - 当前任务: Block 11 final adjustment - 首页回到 Block 10 框架 + 试用/定价 + production DB sync
@@ -10,11 +10,12 @@
 - 给其他 AI 的通知: CCA 已按创始人最新方向调整 Block 11。首页不再强调“档案”，文字即懂入口隐藏，定价改为 ¥980/月 + ¥8,800/年，注册自动 7 天试用，新增隐私政策和设置页。production DB 只读检查确认 0005-0014 未应用，不能在未 review 前执行 `db:push` / `db:migrate`。
 
 ## CCB(内容)状态
-- 当前任务: knowledge batch-02
-- 当前分支: content/knowledge-batch-02
-- 状态: idle
-- 最近一次 push: `7f67896391d45bb0f7e8047565e6e99081cc04f1`
-- 给 CCA 的待办: batch-02 已 merge 到 main；import 未成功，等待 DB schema 迁移后重跑。
+- 当前任务: Block 11 知识 batch-03（30 篇 P1 内容）
+- 当前分支: content/knowledge-batch-03
+- 当前 worktree: /Users/martin/Documents/tebiq/.claude/worktrees/cc-b
+- 状态: awaiting_merge
+- 最近一次 push: batch-03 30 篇 P1 内容已完成并 push
+- 给 CCA 的待办: batch-03 30 篇 P1 内容已完成，awaiting_merge；merge 后等 production DB schema 补齐再跑 `npm run import-knowledge`。
 
 ## codexUI(视觉)状态
 - 当前任务: 未从本 brief 获得具体 codexUI 任务
