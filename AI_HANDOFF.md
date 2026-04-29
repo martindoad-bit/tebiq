@@ -1,6 +1,13 @@
 # AI Handoff Log
 
-最后更新: 2026-04-28T11:31:50Z
+最后更新: 2026-04-29T02:39:30Z
+
+## CodexResearch(拍照使用率)状态
+- 当前任务: TEBIQ 拍照即懂真实使用率 deep dive
+- 当前分支: research/photo-usage-v1
+- 状态: awaiting_merge
+- 产出文件: `docs/research/photo-usage-deep-dive.md`
+- 给创始人的提示: 50 个全新画像已按一周生活推演完成；本轮只改研究报告和本 handoff，不改代码。
 
 ## CCA(代码)状态
 - 当前任务: Block 11 - 产品哲学 v1 + 档案中心化重构
