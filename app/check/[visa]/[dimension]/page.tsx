@@ -7,6 +7,7 @@ import Button from '@/app/_components/v5/Button'
 import { fallbackDimensionTitle, normalizeCheckVisa } from '@/lib/check/dimensions'
 import { db } from '@/lib/db'
 import { articles } from '@/lib/db/schema'
+import { sanitizePublicKnowledgeText } from '@/lib/knowledge/public-text'
 import DimensionCheckClient from './DimensionCheckClient'
 
 export const dynamic = 'force-dynamic'
@@ -24,6 +25,7 @@ export default async function DimensionCheckPage({
       .where(and(
         eq(articles.visaType, visaType),
         eq(articles.dimensionKey, params.dimension),
+        eq(articles.status, 'published'),
       ))
       .limit(1)
       .catch(() => [])
@@ -38,26 +40,65 @@ export default async function DimensionCheckPage({
       <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-4 shadow-card">
         <p className="text-[10.5px] font-medium text-ash">{visaType}</p>
         <h1 className="mt-1 text-[17px] font-medium leading-snug text-ink">
-          {article.title}
+          {sanitizePublicKnowledgeText(article.title)}
         </h1>
-        <p className="mt-2 text-[12px] leading-[1.65] text-ash">
-          回答本项问题后，结果会回写到材料准备清单。
-        </p>
+        <div className="mt-3 flex flex-wrap gap-1.5">
+          {article.priority && <MetaChip>{priorityLabel(article.priority)}</MetaChip>}
+          {article.estimatedReadTime && <MetaChip>{`${article.estimatedReadTime} 分钟`}</MetaChip>}
+          {article.expiryDays && <MetaChip>{`${article.expiryDays} 天后复检`}</MetaChip>}
+        </div>
       </section>
 
       <DimensionCheckClient
         articleId={article.id}
         visaType={visaType}
         dimensionKey={params.dimension}
-        title={article.title}
+        title={sanitizePublicKnowledgeText(article.title)}
         priority={article.priority}
         expiryDays={article.expiryDays}
         questions={article.questions}
-        resultLogic={article.resultLogic as Record<string, string>}
-        resultActions={article.resultActions as Record<string, string[]>}
+        resultLogic={normalizeResultLogic(article.resultLogic)}
+        resultActions={normalizeResultActions(article.resultActions)}
       />
     </AppShell>
   )
+}
+
+function priorityLabel(priority: string): string {
+  if (priority === 'must_see') return '递交前确认'
+  if (priority === 'should_see') return '建议确认'
+  return '常规确认'
+}
+
+function MetaChip({ children }: { children: string }) {
+  return (
+    <span className="rounded-[8px] bg-paper px-2 py-1 text-[10.5px] leading-none text-ash">
+      {children}
+    </span>
+  )
+}
+
+function normalizeResultLogic(value: unknown): Record<string, string> {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return {}
+  const raw = value as Record<string, unknown>
+  return Object.fromEntries(
+    Object.entries(raw)
+      .filter(([, v]) => typeof v === 'string')
+      .map(([k, v]) => [k, v as string]),
+  )
+}
+
+function normalizeResultActions(value: unknown): Record<string, string[]> {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return {}
+  const raw = value as Record<string, unknown>
+  const entries = Object.entries(raw).flatMap(([key, item]) => {
+    if (!Array.isArray(item)) return []
+    const rows = item
+      .filter(v => typeof v === 'string' && v.trim())
+      .map(v => sanitizePublicKnowledgeText(v as string))
+    return [[key, rows] as const]
+  })
+  return Object.fromEntries(entries)
 }
 
 function DimensionPreparingPage({

@@ -1,10 +1,12 @@
 import { readdir, readFile } from 'fs/promises'
 import path from 'path'
+import { config as loadEnv } from 'dotenv'
 import { eq } from 'drizzle-orm'
 import matter from 'gray-matter'
-import { db } from '@/lib/db'
-import { articles } from '@/lib/db/schema'
 import { normalizeArticleSlug, suggestArticleSlug } from '@/lib/knowledge/slug'
+
+loadEnv({ path: '.env.local', quiet: true })
+loadEnv({ quiet: true })
 
 interface Frontmatter {
   title?: string
@@ -88,10 +90,12 @@ function articleStatusFromFrontmatter(value: string | undefined): 'draft' | 'pub
 }
 
 async function upsertOne(parsed: ParsedDoc): Promise<'created' | 'updated' | 'skipped'> {
+  const { db } = await import('@/lib/db')
+  const { articles } = await import('@/lib/db/schema')
   const title = parsed.frontmatter.title?.trim()
   const category =
     parsed.frontmatter.category?.trim() ??
-    (parsed.frontmatter.visa_type && parsed.frontmatter.dimension_key ? 'check-dimension' : null)
+    (parsed.frontmatter.visa_type && parsed.frontmatter.dimension_key ? 'check_dimension' : null)
   const slug =
     normalizeArticleSlug(parsed.frontmatter.slug ?? '') ??
     (title ? suggestArticleSlug(title) : null)
@@ -206,6 +210,11 @@ async function listMarkdownFiles(dir: string): Promise<string[]> {
 
 async function main() {
   const report: Report = { created: 0, updated: 0, skipped: 0, skippedFiles: [] }
+  if (!process.env.DATABASE_URL) {
+    console.error('DATABASE_URL not configured. Set it before running import-knowledge.')
+    process.exitCode = 1
+    return
+  }
   let files: string[]
   try {
     files = await listMarkdownFiles(SEED_DIR)

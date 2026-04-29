@@ -9,6 +9,8 @@ interface Question {
   id?: string
   text?: string
   type?: string
+  show_if?: string
+  options?: string[]
 }
 
 interface Props {
@@ -40,6 +42,9 @@ const VALUE_LABELS: Record<string, string> = {
   over_120: '120天以上',
   under_300: '300万以下',
   '300_to_500': '300-500万',
+  '500_to_800': '500-800万',
+  '800_to_1500': '800-1500万',
+  over_1500: '1500万以上',
   over_500: '500万以上',
   full_time: '正社员',
   contract: '契约社员',
@@ -47,6 +52,16 @@ const VALUE_LABELS: Record<string, string> = {
   trial: '试用期',
   gyomu_itaku: '业务委托',
   freelance: '自由职业',
+  social: '会社社保',
+  national: '国民健康保险/年金',
+  mixed: '两者都有',
+  none: '没有/不确定',
+  special: '特别徴収',
+  normal: '普通徴収',
+  both: '两者都有',
+  '1y': '1 年',
+  '3y': '3 年',
+  '5y': '5 年',
 }
 
 export default function DimensionCheckClient({
@@ -66,7 +81,8 @@ export default function DimensionCheckClient({
   const [error, setError] = useState<string | null>(null)
   const [savedLevel, setSavedLevel] = useState<ResultLevel | null>(null)
   const normalizedQuestions = questions.filter(q => q.id && q.text)
-  const complete = normalizedQuestions.every(q => answers[q.id as string])
+  const visibleQuestions = normalizedQuestions.filter(q => isQuestionVisible(q, answers))
+  const complete = visibleQuestions.every(q => answers[q.id as string])
   const result = useMemo(() => complete ? evaluateResult(resultLogic, answers) : null, [answers, complete, resultLogic])
 
   async function submit() {
@@ -104,7 +120,7 @@ export default function DimensionCheckClient({
 
   return (
     <div className="mt-4 grid gap-3">
-      {normalizedQuestions.map(question => {
+      {visibleQuestions.map(question => {
         const id = question.id as string
         return (
           <section key={id} className="rounded-card border border-hairline bg-surface px-4 py-4 shadow-card">
@@ -159,6 +175,9 @@ export default function DimensionCheckClient({
 }
 
 function optionsForQuestion(question: Question, resultLogic: Record<string, string>): string[] {
+  if (Array.isArray(question.options) && question.options.length > 0) {
+    return question.options.filter(option => typeof option === 'string' && option.trim())
+  }
   if (question.type === 'yes_no') return ['yes', 'no']
   if (question.type === 'yes_no_unknown') return ['yes', 'no', 'unknown']
   if (question.type === 'yes_no_unknown_na') return ['yes', 'no', 'unknown', 'na']
@@ -177,6 +196,13 @@ function optionsForQuestion(question: Question, resultLogic: Record<string, stri
     }
   }
   return tokens.size > 0 ? Array.from(tokens) : ['yes', 'no', 'unknown']
+}
+
+function isQuestionVisible(question: Question, answers: Record<string, string>): boolean {
+  const condition = question.show_if?.trim()
+  if (!condition || condition === 'true') return true
+  if (condition === 'false') return false
+  return evaluateExpression(condition, answers)
 }
 
 function evaluateResult(logic: Record<string, string>, answers: Record<string, string>): ResultLevel {
