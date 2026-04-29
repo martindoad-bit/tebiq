@@ -151,7 +151,7 @@ export default function DimensionCheckClient({
         </div>
       ) : (
         <Button onClick={submit} disabled={!complete || busy}>
-          {busy ? '保存中' : '保存结果'}
+          {busy ? '处理中...' : '保存结果'}
         </Button>
       )}
     </div>

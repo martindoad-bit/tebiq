@@ -26,7 +26,7 @@ export default function EmailReminderPrompt() {
         setMessage(data?.error ?? '请输入有效邮箱')
         return
       }
-      setMessage('已保存。之后可以在我的账户修改。')
+      setMessage('已保存。之后可在我的账户修改。')
       window.setTimeout(() => setVisible(false), 900)
     } catch {
       setMessage('网络异常，请稍后再试')
@@ -79,7 +79,7 @@ export default function EmailReminderPrompt() {
           disabled={busy}
           className="min-h-[40px] py-2 text-[12px]"
         >
-          {busy ? '保存中…' : '保存'}
+          {busy ? '处理中...' : '保存'}
         </Button>
       </div>
       {message && <p className="mt-2 text-[11px] leading-relaxed text-ash">{message}</p>}

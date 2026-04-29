@@ -58,7 +58,7 @@ export default function SamplePackagePage() {
             className="absolute inset-0 flex items-center justify-center pointer-events-none z-20"
           >
             <span
-              className="font-bold text-7xl md:text-8xl select-none"
+              className="font-medium text-7xl md:text-8xl select-none"
               style={{
                 color: '#0F2544',
                 opacity: 0.07,
@@ -75,12 +75,12 @@ export default function SamplePackagePage() {
             {/* Cover section */}
             <div className="pb-8 mb-8 border-b-2 border-dashed border-highlight">
               <div
-                className="inline-block text-2xl md:text-3xl font-bold text-primary border-b-[3px] border-primary pb-2 mb-5"
+                className="inline-block text-2xl md:text-3xl font-medium text-primary border-b-[3px] border-primary pb-2 mb-5"
                 style={{ letterSpacing: '0.4em' }}
               >
                 TEBIQ
               </div>
-              <h2 className="text-2xl md:text-3xl font-bold text-title leading-tight mb-2">
+              <h2 className="text-2xl md:text-3xl font-medium text-title leading-tight mb-2">
                 専属材料パッケージ
               </h2>
               <p className="text-body text-sm md:text-base mb-5">
@@ -89,19 +89,19 @@ export default function SamplePackagePage() {
               <dl className="bg-base border-l-4 border-primary rounded-r-lg p-4 grid grid-cols-1 md:grid-cols-2 gap-y-2 gap-x-6">
                 <div className="flex gap-2 text-sm">
                   <dt className="text-muted shrink-0">生成日期</dt>
-                  <dd className="text-title font-semibold">2026 年 4 月 24 日</dd>
+                  <dd className="text-title font-medium">2026 年 4 月 24 日</dd>
                 </div>
                 <div className="flex gap-2 text-sm">
                   <dt className="text-muted shrink-0">签证类型</dt>
-                  <dd className="text-title font-semibold">技術・人文知識・国際業務</dd>
+                  <dd className="text-title font-medium">技術・人文知識・国際業務</dd>
                 </div>
                 <div className="flex gap-2 text-sm">
                   <dt className="text-muted shrink-0">系统判定</dt>
-                  <dd className="text-title font-semibold">需注意（黄色）</dd>
+                  <dd className="text-title font-medium">需注意（黄色）</dd>
                 </div>
                 <div className="flex gap-2 text-sm">
                   <dt className="text-muted shrink-0">材料数量</dt>
-                  <dd className="text-title font-semibold">共 19 项</dd>
+                  <dd className="text-title font-medium">共 19 项</dd>
                 </div>
               </dl>
             </div>
@@ -109,7 +109,7 @@ export default function SamplePackagePage() {
             {/* 情况摘要 */}
             <SectionHeader title="情况摘要" pill="系统组合生成" />
             <div className="bg-base border-l-4 border-primary rounded-r-lg p-4 mb-8">
-              <div className="text-xs font-bold text-[#92400E] mb-1">系统判定</div>
+              <div className="text-xs font-medium text-[#92400E] mb-1">系统判定</div>
               <p className="text-body text-sm leading-relaxed">
                 你换工作后已合规申报，住民税与社保正常，无欠税无断保。可以开始准备续签材料。
               </p>
@@ -125,7 +125,7 @@ export default function SamplePackagePage() {
                   key={m.id}
                   className="bg-card border border-line border-l-4 border-l-primary rounded-lg p-4"
                 >
-                  <h4 className="flex items-start gap-2 text-title text-sm md:text-base font-bold mb-3">
+                  <h4 className="flex items-start gap-2 text-title text-sm md:text-base font-medium mb-3">
                     <span className="inline-block w-4 h-4 border-[1.5px] border-muted rounded-sm flex-shrink-0 mt-0.5" />
                     {m.name}
                   </h4>
@@ -199,7 +199,7 @@ export default function SamplePackagePage() {
                 </div>
               </div>
               <div className="bg-card border border-line rounded-lg p-4">
-                <div className="text-xs font-bold text-title mb-3">
+                <div className="text-xs font-medium text-title mb-3">
                   完整版自动填写以下 15 个字段
                 </div>
                 <ul className="grid grid-cols-1 md:grid-cols-2 gap-y-1.5 gap-x-4">
@@ -287,7 +287,7 @@ export default function SamplePackagePage() {
 function SectionHeader({ title, pill }: { title: string; pill: string }) {
   return (
     <div className="flex items-center justify-between border-b-2 border-primary pb-1.5 mb-4">
-      <h3 className="text-title text-base md:text-lg font-bold">{title}</h3>
+      <h3 className="text-title text-base md:text-lg font-medium">{title}</h3>
       <span className="text-muted text-xs">{pill}</span>
     </div>
   )

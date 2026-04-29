@@ -83,7 +83,7 @@ export default function DownloadPackage({ visaType = 'gijinkoku' }: { visaType?:
         disabled={busy}
         className="focus-ring w-full min-h-[48px] bg-ink hover:bg-primary-hover disabled:opacity-60 text-white font-medium rounded-btn text-[14px] transition-all"
       >
-        {busy ? '生成中' : '生成完整材料清单'}
+        {busy ? '处理中...' : '生成完整材料清单'}
       </button>
       <p className="text-center text-muted text-xs mt-2">
         {busy

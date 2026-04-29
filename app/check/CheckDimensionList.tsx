@@ -42,7 +42,7 @@ export default function CheckDimensionList({
             <ListChecks size={19} strokeWidth={1.55} />
           </span>
           <div className="min-w-0 flex-1">
-            <h1 className="text-[16px] font-semibold text-ink">{meta.label}</h1>
+            <h1 className="text-[16px] font-medium text-ink">{meta.label}</h1>
             <p className="mt-1 text-[12px] leading-[1.65] text-ash">
               {checked} 项已确认 / {needsAction} 项需要补齐
             </p>
@@ -76,26 +76,33 @@ export default function CheckDimensionList({
           维度清单
         </div>
         <ul className="divide-y divide-hairline">
-          {dimensions.map(item => (
-            <li key={item.key} className="py-3 first:pt-1 last:pb-1">
-              <Link href={`/check/${visa}/${item.key}`} className="group flex items-center gap-3">
-                <span className="min-w-0 flex-1">
-                  <span className="flex flex-wrap items-center gap-1.5">
-                    <span className="text-[13px] font-medium text-ink">{item.title}</span>
-                    <StatusBadge status={item.status} />
-                    {item.riskFlag && <RiskBadge label={RISK_LABEL[item.riskFlag] ?? item.riskFlag} />}
+          {dimensions.map(item => {
+            const statusLabel = STATUS_LABEL[item.status]
+            return (
+              <li key={item.key} className="py-3 first:pt-1 last:pb-1">
+                <Link href={`/check/${visa}/${item.key}`} className="group flex items-center gap-3">
+                  <span className="min-w-0 flex-1">
+                    <span className="flex flex-wrap items-center gap-1.5">
+                      <span className="text-[13px] font-medium text-ink">{item.title}</span>
+                      <StatusBadge status={item.status} />
+                      {item.riskFlag && RISK_LABEL[item.riskFlag] !== STATUS_LABEL[item.status] && (
+                        <RiskBadge label={RISK_LABEL[item.riskFlag] ?? item.riskFlag} />
+                      )}
+                    </span>
+                    <span className="mt-1 block text-[11px] leading-[1.55] text-ash">
+                      {item.reason ?? item.description}
+                    </span>
                   </span>
-                  <span className="mt-1 block text-[11px] leading-[1.55] text-ash">
-                    {item.reason ?? item.description}
-                  </span>
-                </span>
-                <span className="flex-shrink-0 text-[11px] text-ash">
-                  {item.actionLabel}
-                </span>
-                <ChevronRight size={14} className="text-haze group-hover:text-ink" />
-              </Link>
-            </li>
-          ))}
+                  {item.actionLabel !== statusLabel && (
+                    <span className="flex-shrink-0 text-[11px] text-ash">
+                      {item.actionLabel}
+                    </span>
+                  )}
+                  <ChevronRight size={14} className="text-haze group-hover:text-ink" />
+                </Link>
+              </li>
+            )
+          })}
         </ul>
       </section>
     </AppShell>
@@ -103,16 +110,19 @@ export default function CheckDimensionList({
 }
 
 function StatusBadge({ status }: { status: DimensionStatus }) {
+  const label = STATUS_LABEL[status]
+  const attention = label === '待确认' || label === '需要补齐'
   return (
-    <span className="rounded-[8px] border border-hairline bg-canvas px-2 py-0.5 text-[10px] font-medium text-slate">
-      {STATUS_LABEL[status]}
+    <span className={`rounded-[8px] px-2 py-0.5 text-[10px] font-normal ${attention ? 'bg-[#FFF4E1] text-warning' : 'bg-paper text-ash'}`}>
+      {label}
     </span>
   )
 }
 
 function RiskBadge({ label }: { label: string }) {
+  const attention = label === '待确认' || label === '需要补齐'
   return (
-    <span className="rounded-[8px] bg-cool-blue px-2 py-0.5 text-[10px] font-medium text-ink">
+    <span className={`rounded-[8px] px-2 py-0.5 text-[10px] font-normal ${attention ? 'bg-[#FFF4E1] text-warning' : 'bg-paper text-ash'}`}>
       {label}
     </span>
   )

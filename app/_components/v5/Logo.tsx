@@ -22,7 +22,7 @@ export default function Logo({ size = 'md' }: { size?: 'sm' | 'md' | 'lg' }) {
         className="rounded-[9px]"
       />
       <span className="flex flex-col">
-        <span className={`${text} font-semibold leading-none text-ink tracking-[0.02em]`}>
+        <span className={`${text} font-medium leading-none text-ink tracking-[0.02em]`}>
           TEBIQ
         </span>
         {size === 'lg' && (

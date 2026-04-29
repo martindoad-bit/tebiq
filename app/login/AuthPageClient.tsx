@@ -224,7 +224,7 @@ export default function AuthPageClient({ intent = 'login' }: { intent?: 'login' 
           {error && <p className="mt-3 text-[12px] text-danger" role="alert">{error}</p>}
           {message && <p className="mt-3 text-[12px] leading-relaxed text-ash">{message}</p>}
           <Button onClick={handleSendMagicLink} disabled={loading} className="mt-4">
-            {loading ? '发送中…' : '发送登录链接'}
+            {loading ? '处理中...' : '发送登录链接'}
           </Button>
           <div className="mt-3 flex items-center justify-center gap-1.5 text-[10.5px] leading-relaxed text-ash">
             <Send size={12} strokeWidth={1.55} />
@@ -251,7 +251,7 @@ export default function AuthPageClient({ intent = 'login' }: { intent?: 'login' 
           </label>
           {error && <p className="mt-3 text-[12px] text-danger" role="alert">{error}</p>}
           <Button onClick={handleSendOtp} disabled={loading} className="mt-4">
-            {loading ? '发送中…' : '获取验证码'}
+            {loading ? '处理中...' : '获取验证码'}
           </Button>
           <div className="mt-3 flex items-center justify-center gap-1.5 text-[10.5px] leading-relaxed text-ash">
             <MessageSquareText size={12} strokeWidth={1.55} />
@@ -281,7 +281,7 @@ export default function AuthPageClient({ intent = 'login' }: { intent?: 'login' 
           </label>
           {error && <p className="mt-3 text-[12px] text-danger" role="alert">{error}</p>}
           <Button onClick={handleVerifyOtp} disabled={loading} className="mt-4">
-            {loading ? '验证中…' : '登录'}
+            {loading ? '处理中...' : '登录'}
           </Button>
           <button
             type="button"

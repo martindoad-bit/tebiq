@@ -87,7 +87,7 @@ export default function InviteClient() {
           <Gift size={13} strokeWidth={1.55} />
           双方各得会员体验
         </div>
-        <h1 className="mt-4 text-[clamp(28px,8.5vw,38px)] font-semibold leading-tight text-ink">
+        <h1 className="mt-4 text-[clamp(28px,8.5vw,38px)] font-medium leading-tight text-ink">
           邀请朋友一起用 TEBIQ
         </h1>
         <p className="mx-auto mt-3 max-w-[330px] text-[clamp(14px,4vw,17px)] leading-[1.65] text-slate/78">
@@ -105,7 +105,7 @@ export default function InviteClient() {
         <div className="mb-2 text-[12px] font-medium text-ink">邀请链接</div>
         <div className="flex min-h-[46px] items-center gap-2 rounded-btn border border-hairline bg-canvas px-3">
           <span className="min-w-0 flex-1 truncate text-[12px] text-slate">
-            {loading ? '生成中…' : data?.url ?? '暂时无法生成链接'}
+            {loading ? '处理中...' : data?.url ?? '暂时无法生成链接'}
           </span>
           {copied && <Check size={15} strokeWidth={1.7} className="text-success" />}
         </div>

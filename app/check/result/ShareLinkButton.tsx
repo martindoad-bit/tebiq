@@ -77,7 +77,7 @@ export default function ShareLinkButton({
           <Link2 size={15} strokeWidth={1.6} />
         )}
         {busy
-          ? '生成分享链接中…'
+          ? '处理中...'
           : shareUrl
             ? copied
               ? '已复制到剪贴板'

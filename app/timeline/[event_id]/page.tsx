@@ -46,7 +46,7 @@ export default async function TimelineEventPage({
           </span>
           <div className="min-w-0 flex-1">
             <p className="text-[10.5px] font-medium text-ash">{formatDateTime(event.createdAt)}</p>
-            <h1 className="mt-1 text-[17px] font-semibold leading-snug text-ink">
+            <h1 className="mt-1 text-[17px] font-medium leading-snug text-ink">
               {eventTitle(event)}
             </h1>
             <p className="mt-1 text-[12px] leading-[1.6] text-ash">{eventSubline(event)}</p>

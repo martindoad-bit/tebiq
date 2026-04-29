@@ -56,6 +56,19 @@ function confidenceLabel(result: PhotoRecognitionResult): string {
   return '识别质量不高'
 }
 
+function documentTypeSubLabel(result: PhotoRecognitionResult): string {
+  const raw = result.docType ?? ''
+  if (result.isEnvelope) return '信封外观'
+  if (/住民税|納税|納付/i.test(raw)) return '住民税缴费通知'
+  if (/国民健康保険|国保/i.test(raw)) return '国民健康保険相关通知'
+  if (/年金/i.test(raw)) return '年金相关通知'
+  if (/在留|入管|補正/i.test(raw)) return '在留手续相关通知'
+  if (/源泉徴収票/i.test(raw)) return '收入证明相关文件'
+  if (/課税証明/i.test(raw)) return '课税证明相关文件'
+  if (/契約|賃貸|銀行/i.test(raw)) return '合同相关文件'
+  return '日文文书'
+}
+
 export default async function PhotoResultPage({
   params,
   searchParams,
@@ -74,6 +87,7 @@ export default async function PhotoResultPage({
 
   const deadline = formatDeadline(result.deadline, result.deadlineRemainingDays)
   const title = result.docType ?? (result.isEnvelope ? '信封' : '未识别文件')
+  const subTitle = documentTypeSubLabel(result)
   const issuer = result.issuer ?? '发件机构不明'
 
   return (
@@ -98,8 +112,9 @@ export default async function PhotoResultPage({
     >
       <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-4">
         <p className="mb-2 text-[11px] text-ash">{result.isEnvelope ? '信封外观' : '文书类型'}</p>
-        <h1 className="text-[20px] font-medium leading-snug text-ink">{title}</h1>
-        <p className="mt-1 text-[13px] text-ash">{issuer}</p>
+        <h1 className="jp-text text-[20px] font-medium leading-snug text-ink">{title}</h1>
+        <p className="mt-1 text-[13px] font-normal text-ash">{subTitle}</p>
+        <p className="mt-2 text-[12px] text-ash">发件机构：{issuer}</p>
       </section>
 
       <section className="mt-3 overflow-hidden rounded-card border border-hairline bg-surface">
