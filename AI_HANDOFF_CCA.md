@@ -48,3 +48,5 @@
 - `npm run build` 通过。
 - `npm run test` 通过。
 - 同邮箱 5 分钟 4 次限流直测通过，第 4 次返回 429 结果。
+- Preview deployment Ready: `https://tebiq-bajbz3ytv-martindoad.vercel.app`
+- Preview 启用了 Vercel Deployment Protection，普通请求返回 401；真实收件和点击链接需要创始人邮箱验证。

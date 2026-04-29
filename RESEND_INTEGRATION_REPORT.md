@@ -40,6 +40,10 @@
 - `npm run build` 通过。
 - `npm run test` 通过。
 - 限流函数本地直测: 同邮箱第 1-3 次允许，第 4 次返回 email scope 429 结果。
+- Preview deployment 已生成并 Ready:
+  - `https://tebiq-bajbz3ytv-martindoad.vercel.app`
+  - alias: `https://tebiq-git-chore-resend-integration-martindoad.vercel.app`
+- Preview 当前启用了 Vercel Deployment Protection；未取得 bypass 的普通请求返回 401。因此真实收件、点击链接、Gmail/iCloud 投递位置需要创始人用受信任访问方式或 merge 前测试链接验证。
 
 ## 待创始人验证
 
