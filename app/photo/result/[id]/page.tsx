@@ -210,7 +210,7 @@ function RegisterAfterPhotoCard({ docId }: { docId: string }) {
             想保存这次识别 + 收到到期提醒？
           </h2>
           <p className="mt-1 text-[11px] leading-[1.55] text-ash">
-            注册账号，邮箱 / 手机号都可以。刚才的识别会自动归入你的档案。
+            注册账号，邮箱 / 手机号都可以。刚才的识别会自动进入我的提醒。
           </p>
         </div>
       </div>

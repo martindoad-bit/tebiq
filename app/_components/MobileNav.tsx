@@ -4,9 +4,9 @@ import { usePathname } from 'next/navigation'
 
 const ITEMS = [
   { href: '/', label: '首页', match: (p: string) => p === '/' },
-  { href: '/tools', label: '工具', match: (p: string) => p.startsWith('/tools') || p.startsWith('/photo') || p.startsWith('/check') },
-  { href: '/my/reminders', label: '提醒', match: (p: string) => p.startsWith('/my/reminders') },
-  { href: '/my', label: '我的', match: (p: string) => p.startsWith('/my') || p.startsWith('/timeline') || p === '/login' },
+  { href: '/photo', label: '拍照', match: (p: string) => p.startsWith('/photo') },
+  { href: '/timeline', label: '提醒', match: (p: string) => p.startsWith('/timeline') || p.startsWith('/my/reminders') },
+  { href: '/my', label: '我的', match: (p: string) => p.startsWith('/my') || p === '/login' },
 ] as const
 
 export default function MobileNav() {
@@ -52,14 +52,15 @@ function Icon({ name, active }: { name: string; active: boolean }) {
       </svg>
     )
   }
-  if (name === '/tools') {
+  if (name === '/photo') {
     return (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={stroke} strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.1-3.1a6 6 0 0 1-7.9 7.9l-6.4 6.4a2 2 0 0 1-2.8-2.8l6.4-6.4a6 6 0 0 1 7.9-7.9z" />
+        <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3Z" />
+        <circle cx="12" cy="13" r="3" />
       </svg>
     )
   }
-  if (name === '/my/reminders') {
+  if (name === '/timeline') {
     return (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={stroke} strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
         <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 7h18s-3 0-3-7" />

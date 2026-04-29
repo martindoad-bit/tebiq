@@ -1,5 +1,5 @@
 /**
- * SaveToArchiveButton — 屏 03/04 底部「保存到我的档案」。
+ * SaveToArchiveButton — 屏 03/04 底部保存反馈。
  *
  * Block 3 mock：documents 已经在识别时入库，这里只做 UX feedback：
  * 显示一个轻量 toast，然后 router.back() 回到拍照入口。
@@ -25,11 +25,11 @@ export default function SaveToArchiveButton() {
   return (
     <>
       <Button variant="secondary" onClick={onSave} disabled={saved}>
-        {saved ? '已保存到我的档案 ✓' : '保存到我的档案'}
+        {saved ? '已进入我的提醒' : '确认进入我的提醒'}
       </Button>
       {saved && (
         <p className="text-center text-[11px] text-success mt-1">
-          可在「我的档案」中查看
+          可在「我的提醒」中查看
         </p>
       )}
     </>

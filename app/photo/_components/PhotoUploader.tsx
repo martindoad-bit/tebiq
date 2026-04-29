@@ -294,7 +294,7 @@ export default function PhotoUploader() {
               文件内容不会公开展示
             </div>
             <p className="mt-1 break-all text-[11.5px] leading-[1.6] text-slate/74">
-              用于识别文书重点；结果可保存到档案，之后在账号内查看。
+              用于识别文书重点；结果会进入我的提醒，之后在账号内查看。
             </p>
           </div>
         </div>

@@ -38,7 +38,7 @@ export default function TrialNotice({
       <section className="mt-4 rounded-card border border-hairline bg-surface px-4 py-3 shadow-card">
         <div className="flex items-center gap-3">
           <Link href="/photo" className="min-w-0 flex-1 text-[12px] font-medium leading-[1.55] text-ink">
-            试用期还剩 {daysRemaining} 天，试拍一份现实文件看看TEBIQ能识别什么
+            试用期 残り {daysRemaining} 日
           </Link>
           <button
             type="button"

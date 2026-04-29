@@ -11,7 +11,7 @@ function Pulse({ className = '' }: { className?: string }) {
 
 export default function PhotoLoading() {
   return (
-    <AppShell appBar={<AppBar title="拍照即懂" back />} tabBar={<TabBar />}>
+    <AppShell appBar={<AppBar title="拍照即懂" />} tabBar={<TabBar />}>
       <Pulse className="h-3 w-2/3 mx-auto mt-2 mb-3" />
       <div className="rounded-card border border-hairline bg-surface px-4 py-12 shadow-card flex flex-col items-center">
         <div className="h-12 w-12 mb-3 rounded-[14px] bg-canvas animate-pulse" />

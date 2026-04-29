@@ -47,7 +47,7 @@ export default async function TimelinePage({
   ])
 
   return (
-    <AppShell appBar={<AppBar title="我的时间线" back />} tabBar={<TabBar />}>
+    <AppShell appBar={<AppBar title="我的提醒" />} tabBar={<TabBar />}>
       {access && (
         <TrialNotice
           trialActive={access.trialActive}
