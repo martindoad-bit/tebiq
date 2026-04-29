@@ -259,15 +259,15 @@ function TimelineRow({ event }: { event: TimelineEvent }) {
 
 function TimelineEmptyPreview() {
   const rows = [
-    { date: '06.30', days: '示例', title: '住民税通知', detail: '6月30日 / 待缴', status: '示例' },
-    { date: '--.--', days: '示例', title: '在留カード更新', detail: '提前2个月递交', status: '示例' },
-    { date: '01.01', days: '示例', title: '学校缴费', detail: '下月1日', status: '示例' },
+    { date: '06.30', days: '残り 12 日', title: '住民税通知', detail: '江戸川区役所 / ¥38,500', status: '待确认' },
+    { date: '08.01', days: '予定', title: '在留カード更新', detail: '递交窗口前确认材料', status: '需要补齐' },
+    { date: '09.10', days: '記録', title: '国民健康保険料通知', detail: '区役所 / 已识别', status: '已识别' },
   ]
 
   return (
     <section className="rounded-card bg-paper px-4 py-4">
       <p className="text-[12px] leading-none text-ash">这里会显示你的文书提醒</p>
-      <div className="mt-3 overflow-hidden rounded-card border border-hairline bg-surface/70 opacity-50">
+      <div className="mt-3 overflow-hidden rounded-card border border-hairline bg-surface/70 opacity-60">
         {rows.map(row => (
           <div key={row.title} className="flex min-h-[60px] items-center gap-3 border-b border-hairline px-3 last:border-b-0">
             <span className="w-[58px] flex-shrink-0">
@@ -278,7 +278,7 @@ function TimelineEmptyPreview() {
               <span className="block truncate text-[13px] font-normal leading-snug text-ink jp-text">{row.title}</span>
               <span className="mt-1 block truncate text-[11px] leading-snug text-ash">{row.detail}</span>
             </span>
-            <StatusBadge tone="neutral">
+            <StatusBadge tone={row.status === '待确认' || row.status === '需要补齐' ? 'attention' : 'neutral'}>
               {row.status}
             </StatusBadge>
           </div>

@@ -4,13 +4,17 @@ import { ClipboardCheck } from 'lucide-react'
 import AppShell from '@/app/_components/v5/AppShell'
 import AppBar from '@/app/_components/v5/AppBar'
 import Button from '@/app/_components/v5/Button'
-import { fallbackDimensionTitle, normalizeCheckVisa } from '@/lib/check/dimensions'
+import { CHECK_VISA_META, fallbackDimensionTitle, normalizeCheckVisa } from '@/lib/check/dimensions'
 import { db } from '@/lib/db'
 import { articles } from '@/lib/db/schema'
 import { sanitizePublicKnowledgeText } from '@/lib/knowledge/public-text'
 import DimensionCheckClient from './DimensionCheckClient'
 
 export const dynamic = 'force-dynamic'
+
+const DIMENSION_DISPLAY_TITLE: Record<string, string> = {
+  capital_investment: '资本金 / 投资',
+}
 
 export default async function DimensionCheckPage({
   params,
@@ -117,15 +121,17 @@ function DimensionPreparingPage({
   visaType: string
   dimensionKey: string
 }) {
+  const visaLabel = CHECK_VISA_META[normalizeCheckVisa(visaType)].label
+  const title = DIMENSION_DISPLAY_TITLE[dimensionKey] ?? fallbackDimensionTitle(dimensionKey)
   return (
     <AppShell appBar={<AppBar title="单项检查" back={`/check/${visaType}`} />}>
       <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-5 text-center shadow-card">
         <span className="mx-auto flex h-10 w-10 items-center justify-center rounded-[12px] border border-hairline bg-paper text-ink">
           <ClipboardCheck size={18} strokeWidth={1.55} />
         </span>
-        <p className="mt-4 text-[11px] text-ash">{visaType}</p>
+        <p className="jp-text mt-4 text-[11px] text-ash">{visaLabel}</p>
         <h1 className="mt-1 text-[17px] font-medium leading-snug text-ink">
-          {fallbackDimensionTitle(dimensionKey)}
+          {title}
         </h1>
         <p className="mx-auto mt-3 max-w-[300px] text-[12px] leading-[1.7] text-ash">
           该维度准备中。可以先返回清单，或做一次完整材料准备检查。

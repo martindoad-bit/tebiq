@@ -16,7 +16,7 @@ export default async function SettingsPage() {
       <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-4 shadow-card">
         <h1 className="text-[17px] font-medium leading-snug text-ink">数据设置</h1>
         <p className="mt-2 text-[12px] leading-[1.65] text-ash">
-          导出 JSON，或提交账号删除请求。
+          管理导出文件和账号删除请求。
         </p>
       </section>
       <SettingsClient />
