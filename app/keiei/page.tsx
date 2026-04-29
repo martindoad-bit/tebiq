@@ -159,7 +159,7 @@ export default function KeieiLandingPage() {
           <Section id="prepare" title="准备建议">
             <ul className="space-y-2">
               <Bullet>
-                <strong>立即评估缺口：</strong>对照新规六条逐一盘点，列出明确差距。
+                <strong>评估缺口：</strong>对照新规六条逐一盘点，列出明确差距。
               </Bullet>
               <Bullet>
                 <strong>提前规划增资 / 招人：</strong>资本金调整与招聘正职员工都需要数月时间，越早越好。

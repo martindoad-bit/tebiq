@@ -49,16 +49,16 @@ export default function TabBar() {
                   if (active) return
                   trackClient(EVENT.TAB_SWITCH, { from: pathname, to: href, label })
                 }}
-                className={`flex h-full flex-col items-center justify-center gap-1 transition-colors ${
+                className={`focus-ring flex h-full flex-col items-center justify-center gap-1 rounded-none transition-colors ${
                   active ? 'text-ink' : 'text-haze'
                 }`}
               >
                 <Icon
-                  size={19}
-                  strokeWidth={1.75}
-                  color={active ? '#E56F4F' : '#B7C0C7'}
+                  size={20}
+                  strokeWidth={1.5}
+                  color={active ? '#0F2544' : '#9AA0AC'}
                 />
-                <span className="text-[10.5px] font-medium">{label}</span>
+                <span className="text-[11px] font-normal">{label}</span>
               </Link>
             </li>
           )

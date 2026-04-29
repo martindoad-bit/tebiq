@@ -19,7 +19,7 @@ export default function Illustration({
 }: Props) {
   return (
     <div
-      className="relative my-5 w-full overflow-hidden rounded-card border border-white/80 bg-surface shadow-raised"
+      className="relative my-5 w-full overflow-hidden rounded-card border border-hairline bg-surface"
       style={{ height }}
       role="img"
       aria-label={subject}
@@ -32,7 +32,7 @@ export default function Illustration({
         className="object-cover"
         priority
       />
-      <div className="pointer-events-none absolute inset-0 rounded-card ring-1 ring-white/70" />
+      <div className="pointer-events-none absolute inset-0 rounded-card ring-1 ring-hairline" />
     </div>
   )
 }

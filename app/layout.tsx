@@ -11,12 +11,12 @@ import './globals.css'
  */
 export const metadata: Metadata = {
   metadataBase: new URL('https://tebiq.jp'),
-  title: 'TEBIQ — 你的在日生活好帮手',
+  title: 'TEBIQ — 日文文书识别和提醒',
   description:
-    '在日生活のお守り。拍照即懂日文文件、续签自查、到期提醒，一个 App 帮你管好在日生活的麻烦事。',
+    '拍照识别日文文书、续签自查、期限提醒。',
   openGraph: {
-    title: 'TEBIQ — 你的在日生活好帮手',
-    description: '拍照即懂、续签自查、到期提醒。在日生活のお守り。',
+    title: 'TEBIQ — 日文文书识别和提醒',
+    description: '拍照识别日文文书、续签自查、期限提醒。',
     url: 'https://tebiq.jp',
     siteName: 'TEBIQ',
     locale: 'zh_CN',
@@ -24,8 +24,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'TEBIQ — 你的在日生活好帮手',
-    description: '拍照即懂、续签自查、到期提醒。',
+    title: 'TEBIQ — 日文文书识别和提醒',
+    description: '拍照识别日文文书、续签自查、期限提醒。',
   },
 }
 
@@ -34,7 +34,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
-  themeColor: '#18324A',
+  themeColor: '#0F2544',
   viewportFit: 'cover',
 }
 

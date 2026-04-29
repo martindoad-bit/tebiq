@@ -36,14 +36,14 @@ export default function EmailReminderPrompt() {
   }
 
   return (
-    <section className="mt-3 rounded-card border border-accent/35 bg-accent-2/60 p-4 shadow-card">
+    <section className="mt-3 rounded-card border border-hairline bg-surface p-4">
       <div className="flex items-start gap-3">
-        <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-[12px] bg-surface text-ink shadow-soft">
-          <BellRing size={17} strokeWidth={1.55} />
+        <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-[10px] border border-hairline bg-paper text-ink">
+          <BellRing size={17} strokeWidth={1.5} />
         </span>
         <div className="min-w-0 flex-1">
           <h2 className="text-[13px] font-medium leading-snug text-ink">
-            想收到到期提醒吗？
+            邮箱提醒
           </h2>
           <p className="mt-1 text-[11px] leading-[1.55] text-ash">
             留一个邮箱，后续有在留期限、缴费期限时提醒你。
@@ -53,9 +53,9 @@ export default function EmailReminderPrompt() {
           type="button"
           onClick={() => setVisible(false)}
           aria-label="跳过"
-          className="-mr-1 -mt-1 flex h-7 w-7 items-center justify-center rounded-full text-ash"
+          className="focus-ring -mr-1 -mt-1 flex h-7 w-7 items-center justify-center rounded-btn text-ash"
         >
-          <X size={15} strokeWidth={1.55} />
+          <X size={15} strokeWidth={1.5} />
         </button>
       </div>
       <input
@@ -63,7 +63,7 @@ export default function EmailReminderPrompt() {
         value={email}
         onChange={e => setEmail(e.target.value)}
         placeholder="name@example.com"
-        className="mt-3 w-full rounded-[11px] border border-hairline bg-surface px-3 py-2.5 text-[13px] text-ink outline-none placeholder:text-haze focus:border-accent"
+        className="focus-ring mt-3 w-full rounded-btn border border-hairline bg-surface px-3 py-2.5 text-[13px] text-ink outline-none placeholder:text-haze focus:border-ink"
       />
       <div className="mt-3 grid grid-cols-2 gap-2">
         <button

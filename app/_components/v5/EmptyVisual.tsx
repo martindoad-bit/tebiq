@@ -9,7 +9,7 @@ interface Props {
 export default function EmptyVisual({ src, alt, className = '' }: Props) {
   return (
     <span
-      className={`mx-auto flex h-[112px] w-[150px] items-center justify-center overflow-hidden rounded-[18px] border border-white/80 bg-surface shadow-card ${className}`}
+      className={`mx-auto flex h-[112px] w-[150px] items-center justify-center overflow-hidden rounded-card border border-hairline bg-surface ${className}`}
       role="img"
       aria-label={alt}
     >

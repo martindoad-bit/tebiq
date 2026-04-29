@@ -43,15 +43,15 @@ function SummaryCard({
 }) {
   const tone =
     verdict === 'red'
-      ? 'border-danger bg-[rgba(198,79,69,0.07)]'
+      ? 'border-warning/55 bg-surface'
       : verdict === 'yellow'
-        ? 'border-accent bg-accent-2/35'
-        : 'border-success bg-[rgba(46,125,101,0.09)]'
+        ? 'border-hairline bg-surface'
+        : 'border-hairline bg-surface'
   return (
-    <div className={`mb-4 rounded-card border px-4 py-4 shadow-card ${tone}`}>
+    <div className={`mb-4 rounded-card border px-4 py-4 ${tone}`}>
       <div className="mb-2 flex items-center justify-between gap-3">
-        <div className="text-[12px] font-semibold text-ink">判断摘要</div>
-        <div className="rounded-full border border-hairline bg-surface px-2 py-0.5 text-[10px] font-medium text-ash">
+        <div className="text-[12px] font-medium text-ink">判断摘要</div>
+        <div className="rounded-chip border border-hairline bg-paper px-2 py-0.5 text-[10px] font-normal text-ash">
           非法律意见
         </div>
       </div>
@@ -77,8 +77,8 @@ function SaveToAccountPrompt({ verdict, count }: { verdict: 'red' | 'yellow' | '
 
   if (authState === 'in') {
     return (
-      <div className="no-capture flex items-center gap-2 rounded-card border border-success bg-[rgba(46,125,101,0.10)] px-4 py-3 text-[12px] font-medium text-ink shadow-card">
-        <CheckCircle2 size={16} strokeWidth={1.6} className="text-success" />
+      <div className="no-capture flex items-center gap-2 rounded-card border border-hairline bg-surface px-4 py-3 text-[12px] font-medium text-ink">
+        <CheckCircle2 size={16} strokeWidth={1.5} className="text-ink" />
         <span>已保存到你的账号</span>
         <Link href="/my/archive" className="ml-auto text-ink underline underline-offset-4">
           查看历史
@@ -89,10 +89,10 @@ function SaveToAccountPrompt({ verdict, count }: { verdict: 'red' | 'yellow' | '
 
   const next = encodeURIComponent(`/check/result?v=${verdict}&n=${count}`)
   return (
-    <div className="no-capture rounded-card border border-hairline bg-surface p-4 shadow-card">
+    <div className="no-capture rounded-card border border-hairline bg-surface p-4">
       <div className="flex items-start gap-3">
-        <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-[12px] bg-accent-2 text-ink">
-          <LockKeyhole size={17} strokeWidth={1.55} />
+        <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-[10px] border border-hairline bg-paper text-ink">
+          <LockKeyhole size={17} strokeWidth={1.5} />
         </span>
         <div>
           <div className="text-[13px] font-medium leading-snug text-ink">
@@ -105,7 +105,7 @@ function SaveToAccountPrompt({ verdict, count }: { verdict: 'red' | 'yellow' | '
       </div>
       <Link
         href={`/login?next=${next}`}
-        className="mt-3 flex min-h-[46px] w-full items-center justify-center rounded-btn bg-accent px-4 py-3 text-[13px] font-medium text-white shadow-cta"
+        className="focus-ring mt-3 flex min-h-[46px] w-full items-center justify-center rounded-btn bg-ink px-4 py-3 text-[13px] font-medium text-white"
       >
         登录 / 注册
       </Link>
@@ -117,10 +117,10 @@ function InviteRewardCallout() {
   return (
     <Link
       href="/invite"
-      className="no-capture flex items-start gap-3 rounded-card border border-accent/35 bg-accent-2/70 px-4 py-3 shadow-card transition-colors hover:bg-accent-2"
+      className="no-capture flex items-start gap-3 rounded-card border border-hairline bg-surface px-4 py-3 transition-colors hover:bg-paper"
     >
-      <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-[12px] bg-surface text-ink shadow-soft">
-        <Gift size={17} strokeWidth={1.55} />
+      <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-[10px] border border-hairline bg-paper text-ink">
+        <Gift size={17} strokeWidth={1.5} />
       </span>
       <span className="min-w-0 flex-1">
         <span className="block text-[13px] font-medium leading-snug text-ink">
@@ -179,7 +179,7 @@ export default function ResultClient() {
   if (!result) {
     return (
       <main className="flex min-h-screen items-center justify-center bg-canvas pb-16 text-ink md:pb-0">
-        <div className="rounded-card border border-hairline bg-surface px-5 py-4 text-[12px] text-ash shadow-card">
+        <div className="rounded-card border border-hairline bg-surface px-5 py-4 text-[12px] text-ash">
           载入判断结果中…
         </div>
       </main>
@@ -375,16 +375,16 @@ function SaveResultButton({
 
   const colorClass =
     verdict === 'red'
-      ? 'bg-danger text-white hover:bg-[#C84B42]'
+      ? 'bg-ink text-white hover:bg-primary-hover'
       : verdict === 'yellow'
-        ? 'bg-accent text-white hover:bg-[#D85F43]'
-        : 'bg-success text-white hover:bg-[#4A9069]'
+        ? 'bg-ink text-white hover:bg-primary-hover'
+        : 'bg-ink text-white hover:bg-primary-hover'
 
   return (
     <button
       onClick={handleSave}
       disabled={busy}
-      className={`no-capture flex min-h-[48px] w-full items-center justify-center gap-2 rounded-btn px-4 py-3 text-[13px] font-medium shadow-card transition-colors disabled:opacity-50 ${colorClass}`}
+      className={`no-capture focus-ring flex min-h-[48px] w-full items-center justify-center gap-2 rounded-btn px-4 py-3 text-[13px] font-medium transition-colors disabled:opacity-50 ${colorClass}`}
     >
       <Download size={15} strokeWidth={1.6} />
       {busy ? '生成图片中…' : '保存结果为图片'}
@@ -419,27 +419,27 @@ function ResultHero({
   const meta = {
     green: {
       icon: CheckCircle2,
-      tone: 'border-success bg-[rgba(46,125,101,0.12)] text-success',
+      tone: 'border-hairline bg-surface text-ink',
     },
     yellow: {
       icon: AlertTriangle,
-      tone: 'border-accent bg-accent-2/55 text-ink',
+      tone: 'border-hairline bg-surface text-ink',
     },
     red: {
       icon: CircleAlert,
-      tone: 'border-danger bg-[rgba(198,79,69,0.10)] text-danger',
+      tone: 'border-warning/55 bg-surface text-warning',
     },
   }[verdict]
   const Icon = meta.icon
   return (
-    <section className={`mx-4 mt-4 rounded-card border px-4 py-5 text-center shadow-card ${meta.tone}`}>
+    <section className={`mx-4 mt-4 rounded-card border px-4 py-5 text-center ${meta.tone}`}>
       <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-[15px] bg-surface/85">
         <Icon size={26} strokeWidth={1.6} />
       </div>
       <div className="mt-3 text-[11px] font-medium leading-none text-ash">
         TEBIQ · 续签自查
       </div>
-      <h1 className="mt-2 text-[22px] font-semibold leading-snug text-ink">{title}</h1>
+      <h1 className="mt-2 text-[22px] font-medium leading-snug text-ink">{title}</h1>
       <p className="mx-auto mt-2 max-w-[300px] text-[13px] leading-relaxed text-slate/74">
         {description}
       </p>
@@ -454,9 +454,9 @@ function ResultHero({
 
 function ResultMeta({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-[12px] border border-white/70 bg-surface/72 px-2 py-2 shadow-soft">
+    <div className="rounded-[12px] border border-hairline bg-surface/72 px-2 py-2">
       <div className="text-[9.5px] leading-none text-ash">{label}</div>
-      <div className="mt-1 text-[11px] font-semibold leading-none text-ink">{value}</div>
+      <div className="mt-1 text-[11px] font-medium leading-none text-ink">{value}</div>
     </div>
   )
 }
@@ -493,7 +493,7 @@ function GreenResult({ summary }: { summary: string }) {
       {/* PC 端左右分栏：左结论右清单；移动端纵向 */}
       <div className="md:grid md:grid-cols-2 md:gap-6">
         <div>
-          <div className="mb-4 rounded-card border border-hairline bg-surface p-4 shadow-card">
+          <div className="mb-4 rounded-card border border-hairline bg-surface p-4">
             <h2 className="mb-2 text-[13px] font-medium text-ink">
               技人国续签材料清单
             </h2>
@@ -611,7 +611,7 @@ function RedResult({ result, summary }: { result: JudgeResult; summary: string }
         <SaveToAccountPrompt verdict="red" count={reds.length} />
       </div>
 
-      <div className="mb-6 rounded-card border border-danger bg-[rgba(198,79,69,0.08)] p-4 shadow-card">
+      <div className="mb-6 rounded-card border border-warning/55 bg-surface p-4">
         <p className="text-[13px] leading-relaxed text-ink">
           下列任何一项都可能直接导致续签被拒，甚至影响今后在留资格。
           强烈建议先与专家确认应对方案，再决定如何提交申请。

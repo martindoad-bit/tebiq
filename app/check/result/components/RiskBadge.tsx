@@ -1,13 +1,13 @@
 import type { Severity } from '@/lib/check/questions/gijinkoku'
 
 const DOT_BG: Record<Severity, string> = {
-  red: 'bg-[#DC2626]',
-  yellow: 'bg-primary',
+  red: 'bg-warning',
+  yellow: 'bg-haze',
 }
 
 const TEXT_COLOR: Record<Severity, string> = {
-  red: 'text-[#DC2626]',
-  yellow: 'text-primary',
+  red: 'text-warning',
+  yellow: 'text-ink',
 }
 
 const DEFAULT_LABELS: Record<Severity, string> = {
@@ -24,7 +24,7 @@ export default function RiskBadge({
 }) {
   return (
     <span
-      className={`inline-flex items-center gap-1.5 ${TEXT_COLOR[severity]} text-xs font-bold`}
+      className={`inline-flex items-center gap-1.5 ${TEXT_COLOR[severity]} text-xs font-medium`}
     >
       <span
         aria-hidden

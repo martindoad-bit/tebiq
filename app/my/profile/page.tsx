@@ -401,7 +401,7 @@ function ProfileForm({
 
           <Field label="⑦ 是否有子女">
             <label className="flex min-h-[36px] items-center gap-2 rounded-[11px] bg-canvas px-3 text-[13px] text-ink">
-              <input type="checkbox" checked={hasChildren} onChange={e => setHasChildren(e.target.checked)} className="h-4 w-4 accent-[#E56F4F]" />
+              <input type="checkbox" checked={hasChildren} onChange={e => setHasChildren(e.target.checked)} className="h-4 w-4 accent-[#0F2544]" />
               有子女
             </label>
           </Field>

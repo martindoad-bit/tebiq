@@ -1,10 +1,11 @@
 import Link from 'next/link'
 import type { ReactNode } from 'react'
-import { Archive, ChevronRight, Filter } from 'lucide-react'
+import { Filter } from 'lucide-react'
 import AppShell from '@/app/_components/v5/AppShell'
 import AppBar from '@/app/_components/v5/AppBar'
 import TabBar from '@/app/_components/v5/TabBar'
 import TrialNotice from '@/app/_components/TrialNotice'
+import { DeadlineRow, ListSection, SectionLabel, StatusBadge } from '@/components/ui/tebiq'
 import { getAnonymousSessionId } from '@/lib/auth/anonymous-session'
 import { getCurrentUser } from '@/lib/auth/session'
 import { getMemberAccess } from '@/lib/billing/access'
@@ -16,7 +17,7 @@ import {
   type TimelineEventType,
 } from '@/lib/db/queries/timeline'
 import type { Member, TimelineEvent } from '@/lib/db/schema'
-import { eventSubline, eventTitle, eventTypeLabel, formatDateTime } from '@/lib/timeline/display'
+import { eventSubline, eventTitle, eventTypeLabel } from '@/lib/timeline/display'
 
 export const dynamic = 'force-dynamic'
 
@@ -57,23 +58,20 @@ export default async function TimelinePage({
         />
       )}
 
-      <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-4 shadow-card">
-        <div className="flex items-start gap-3">
-          <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-[13px] bg-cool-blue text-ink">
-            <Archive size={19} strokeWidth={1.55} />
-          </span>
-          <div className="min-w-0 flex-1">
-            <h1 className="text-[16px] font-semibold text-ink">已记录 {summary.total} 件事</h1>
-            <p className="mt-1 text-[12px] leading-[1.65] text-ash">
-              跨越 {summary.monthsCovered} 个月 / 涉及 {summary.issuerCount} 类机构 / {summary.docTypeCount} 类文书
-            </p>
-          </div>
-        </div>
+      <section className="mt-3 border-b border-hairline pb-5">
+        <p className="text-[13px] text-ash">已记录</p>
+        <p className="mt-2 flex items-baseline gap-2">
+          <span className="numeric text-[52px] font-light leading-none text-ink">{summary.total}</span>
+          <span className="text-[17px] text-ink">件</span>
+        </p>
+        <p className="mt-3 text-[12px] leading-[1.7] text-ash">
+          跨越 {summary.monthsCovered} 个月 / 涉及 {summary.issuerCount} 类机构 / {summary.docTypeCount} 类文书
+        </p>
       </section>
 
-      <section className="mt-3 rounded-card border border-hairline bg-surface px-3 py-3 shadow-card">
+      <section className="mt-4 rounded-card border border-hairline bg-surface px-3 py-3">
         <div className="mb-2 flex items-center gap-1.5 text-[11px] font-medium text-ash">
-          <Filter size={13} strokeWidth={1.55} />
+          <Filter size={13} strokeWidth={1.5} />
           过滤器
         </div>
         <div className="flex gap-2 overflow-x-auto pb-1">
@@ -91,36 +89,28 @@ export default async function TimelinePage({
         </div>
       </section>
 
-      <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-3 shadow-card">
-        <h2 className="text-[13px] font-medium text-ink">自查事项</h2>
+      <SectionLabel title="自查事项" />
+      <ListSection className="mt-3">
         {checkItems.length > 0 ? (
-          <ul className="mt-2 divide-y divide-hairline">
-            {checkItems.map(item => (
-              <li key={item.id} className="py-2.5 first:pt-0 last:pb-0">
-                <Link href={`/check/${item.visaType}`} className="flex items-center justify-between gap-3">
-                  <span className="min-w-0 flex-1">
-                    <span className="block truncate text-[12.5px] font-medium text-ink">
-                      {item.title}
-                    </span>
-                    <span className="mt-1 block truncate text-[10.5px] text-ash">
-                      {item.reason ?? '递交前确认'}
-                    </span>
-                  </span>
-                  <span className="rounded-[8px] bg-cool-blue px-2 py-1 text-[10px] font-medium text-ink">
-                    需处理
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ul>
+          checkItems.map(item => (
+            <Link key={item.id} href={`/check/${item.visaType}`} className="flex min-h-[64px] items-center gap-3 border-b border-hairline px-4 last:border-b-0">
+              <span className="min-w-0 flex-1">
+                <span className="block truncate text-[14px] font-medium leading-snug text-ink">{item.title}</span>
+                <span className="mt-1 block truncate text-[12px] leading-snug text-ash">
+                  {item.reason ?? '递交前确认'}
+                </span>
+              </span>
+              <StatusBadge tone="attention">需处理</StatusBadge>
+            </Link>
+          ))
         ) : (
-          <p className="mt-1.5 text-[12px] leading-[1.65] text-ash">
+          <p className="px-4 py-5 text-[13px] leading-[1.65] text-ash">
             暂无自查事项。完整自查完成后会进入这里。
           </p>
         )}
-      </section>
+      </ListSection>
 
-      <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-3 shadow-card">
+      <section className="mt-4 border-b border-hairline pb-4">
         <h2 className="text-[13px] font-medium text-ink">为你跟踪</h2>
         <p className="mt-1.5 text-[12px] leading-[1.65] text-ash">
           {summary.latestDeadline
@@ -129,17 +119,14 @@ export default async function TimelinePage({
         </p>
       </section>
 
-      <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-3 shadow-card">
+      <SectionLabel title="时间线" />
+      <ListSection className="mt-3">
         {events.length > 0 ? (
-          <ul className="divide-y divide-hairline">
-            {events.map(event => (
-              <TimelineRow key={event.id} event={event} />
-            ))}
-          </ul>
+          events.map(event => <TimelineRow key={event.id} event={event} />)
         ) : (
-          <p className="text-[12px] leading-[1.65] text-ash">暂无匹配记录。</p>
+          <p className="px-4 py-8 text-center text-[13px] leading-[1.65] text-ash">暂无匹配记录。</p>
         )}
-      </section>
+      </ListSection>
     </AppShell>
   )
 }
@@ -227,7 +214,7 @@ function FilterLink({
   return (
     <Link
       href={href}
-      className={`flex-shrink-0 rounded-[10px] border px-3 py-1.5 text-[11px] font-medium ${
+      className={`flex-shrink-0 rounded-[8px] border px-3 py-1.5 text-[11px] font-normal ${
         active
           ? 'border-ink bg-ink text-white'
           : 'border-hairline bg-canvas text-slate'
@@ -239,21 +226,57 @@ function FilterLink({
 }
 
 function TimelineRow({ event }: { event: TimelineEvent }) {
+  const deadline = event.deadline ?? formatDateOnly(event.createdAt)
   return (
-    <li className="py-3 first:pt-0 last:pb-0">
-      <Link href={`/timeline/${event.id}`} className="group flex items-center gap-3">
-        <span className="w-[72px] flex-shrink-0 text-[10.5px] text-ash">
-          {formatDateTime(event.createdAt)}
-        </span>
-        <span className="min-w-0 flex-1">
-          <span className="block truncate text-[13px] font-medium text-ink">{eventTitle(event)}</span>
-          <span className="mt-1 block truncate text-[10.5px] text-ash">{eventSubline(event)}</span>
-        </span>
-        <span className="rounded-[8px] bg-cool-blue px-2 py-1 text-[10px] font-medium text-ink">
-          {event.archived ? '已归档' : eventTypeLabel(event.eventType)}
-        </span>
-        <ChevronRight size={14} className="text-haze group-hover:text-ink" />
-      </Link>
-    </li>
+    <DeadlineRow
+      href={`/timeline/${event.id}`}
+      date={shortDate(deadline)}
+      days={event.deadline ? remainingLabel(event.deadline) : eventTypeLabel(event.eventType)}
+      title={eventTitle(event)}
+      detail={eventSubline(event)}
+      status={event.archived ? '已归档' : eventTypeLabel(event.eventType)}
+      urgent={isUrgent(event.deadline)}
+    />
   )
+}
+
+function formatDateOnly(dateValue: Date | string): string {
+  const d = typeof dateValue === 'string' ? new Date(dateValue) : dateValue
+  if (Number.isNaN(d.getTime())) return ''
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+}
+
+function shortDate(dateValue: string): string {
+  const d = /^\d{4}-\d{2}-\d{2}$/.test(dateValue)
+    ? new Date(`${dateValue}T00:00:00+09:00`)
+    : new Date(dateValue)
+  if (Number.isNaN(d.getTime())) return '--.--'
+  return `${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}`
+}
+
+function remainingLabel(deadline: string): string {
+  const days = daysUntil(deadline)
+  if (days === null) return '期限未识别'
+  if (days < 0) return `已过 ${Math.abs(days)} 天`
+  if (days === 0) return '今日截止'
+  return `剩余 ${days} 天`
+}
+
+function isUrgent(deadline: string | null): boolean {
+  const days = daysUntil(deadline)
+  return days !== null && days < 7
+}
+
+function daysUntil(dateValue: string | null): number | null {
+  if (!dateValue) return null
+  const target = new Date(`${dateValue.slice(0, 10)}T00:00:00+09:00`).getTime()
+  if (Number.isNaN(target)) return null
+  const today = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Asia/Tokyo',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(new Date())
+  const now = new Date(`${today}T00:00:00+09:00`).getTime()
+  return Math.ceil((target - now) / 86_400_000)
 }

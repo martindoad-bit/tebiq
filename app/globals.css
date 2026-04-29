@@ -3,25 +3,25 @@
 @tailwind utilities;
 
 :root {
-  --background: #FAF7F1;
-  --foreground: #18324A;
+  --background: #FAFAF7;
+  --foreground: #0F2544;
 }
 
 html, body {
-  background-color: #FAF7F1;
-  color: #18324A;
-  font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans',
-    'Yu Gothic', YuGothic, 'Noto Sans SC', 'Noto Sans CJK SC', sans-serif;
+  background-color: #FAFAF7;
+  color: #0F2544;
+  font-family: -apple-system, BlinkMacSystemFont, 'Noto Sans CJK SC', 'Noto Sans SC',
+    'Hiragino Sans', 'Yu Gothic', YuGothic, 'PingFang SC', sans-serif;
   -webkit-text-size-adjust: 100%;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-feature-settings: 'kern' 1, 'palt' 1, 'pkna' 1;
+  font-feature-settings: 'kern' 1, 'palt' 1, 'tnum' 1;
   letter-spacing: 0;
-  line-height: 1.62;
+  line-height: 1.58;
 }
 
 html {
-  font-size: clamp(15px, 1.5vw + 12px, 18px);
+  font-size: clamp(15px, 0.65vw + 13px, 17px);
 }
 
 body:lang(ja),
@@ -33,15 +33,13 @@ body:lang(ja),
 .numeric,
 .money,
 .date-text {
-  font-family: 'SF Mono', 'SFMono-Regular', 'Roboto Mono', 'Noto Sans Mono CJK SC',
-    ui-monospace, monospace;
   font-variant-numeric: tabular-nums;
-  letter-spacing: -0.01em;
+  letter-spacing: 0;
 }
 
 ::selection {
-  background: rgba(229, 111, 79, 0.22);
-  color: #18324A;
+  background: rgba(15, 37, 68, 0.12);
+  color: #0F2544;
 }
 
 a,
@@ -63,4 +61,20 @@ textarea {
 .caption {
   font-size: 12px;
   line-height: 16px;
+}
+
+.hairline-bottom {
+  border-bottom: 0.5px solid #E5E7EB;
+}
+
+.hairline-top {
+  border-top: 0.5px solid #E5E7EB;
+}
+
+.focus-ring {
+  outline: none;
+}
+
+.focus-ring:focus-visible {
+  box-shadow: 0 0 0 3px rgba(15, 37, 68, 0.14);
 }

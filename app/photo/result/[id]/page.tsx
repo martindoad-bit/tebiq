@@ -7,15 +7,7 @@
 import { notFound, redirect } from 'next/navigation'
 import Link from 'next/link'
 import type { ReactNode } from 'react'
-import {
-  AlertTriangle,
-  CalendarDays,
-  FileText,
-  LockKeyhole,
-  MailOpen,
-  RotateCcw,
-  ShieldCheck,
-} from 'lucide-react'
+import { AlertTriangle, FileText, LockKeyhole, MailOpen, RotateCcw } from 'lucide-react'
 import AppShell from '@/app/_components/v5/AppShell'
 import AppBar from '@/app/_components/v5/AppBar'
 import Button from '@/app/_components/v5/Button'
@@ -41,6 +33,20 @@ function formatDeadline(iso: string | null, remaining: number | null): string | 
   if (remaining < 0) return `${base}（已过 ${Math.abs(remaining)} 天）`
   if (remaining === 0) return `${base}（今天）`
   return `${base}（${remaining} 天后）`
+}
+
+function formatDeadlineShort(iso: string | null): string {
+  if (!iso) return '未识别'
+  const d = new Date(`${iso}T00:00:00+09:00`)
+  if (Number.isNaN(d.getTime())) return iso
+  return `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}`
+}
+
+function remainingLabel(days: number | null): string {
+  if (days === null) return '残り -- 日'
+  if (days < 0) return `已过 ${Math.abs(days)} 日`
+  if (days === 0) return '今日截止'
+  return `残り ${days} 日`
 }
 
 function confidenceLabel(result: PhotoRecognitionResult): string {
@@ -90,37 +96,16 @@ export default async function PhotoResultPage({
         />
       }
     >
-      <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-3.5 shadow-card">
-        <div className="flex items-start gap-3">
-          <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-[12px] bg-accent-2 text-ink">
-            {result.isEnvelope ? <MailOpen size={18} strokeWidth={1.55} /> : <FileText size={18} strokeWidth={1.55} />}
-          </span>
-          <div className="min-w-0 flex-1">
-            <p className="text-[11px] text-ash mb-1">{result.isEnvelope ? '信封外观' : '文件类型'}</p>
-            <h1 className="text-[17px] font-medium leading-snug text-ink">{title}</h1>
-            <p className="mt-1 text-[11.5px] text-slate">来自：{issuer}</p>
-          </div>
-        </div>
+      <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-4">
+        <p className="mb-2 text-[11px] text-ash">{result.isEnvelope ? '信封外观' : '文书类型'}</p>
+        <h1 className="text-[20px] font-medium leading-snug text-ink">{title}</h1>
+        <p className="mt-1 text-[13px] text-ash">{issuer}</p>
       </section>
 
-      <section className="mt-2.5 rounded-card border border-hairline bg-surface px-4 py-3 shadow-card">
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="inline-flex items-center gap-1.5 rounded-[12px] bg-cool-blue px-2.5 py-1 text-[11px] font-medium text-ink">
-            <ShieldCheck size={12} strokeWidth={1.55} />
-            {confidenceLabel(result)}
-          </span>
-          {deadline && (
-            <span className="inline-flex items-center gap-1.5 rounded-[12px] bg-accent-2 px-2.5 py-1 text-[11px] font-medium text-ink">
-              <CalendarDays size={12} strokeWidth={1.55} />
-              截止日期 {deadline}
-            </span>
-          )}
-          {result.amount && (
-            <span className="inline-flex items-center rounded-[12px] bg-canvas px-2.5 py-1 text-[11px] font-medium text-ink">
-              金额 {result.amount}
-            </span>
-          )}
-        </div>
+      <section className="mt-3 overflow-hidden rounded-card border border-hairline bg-surface">
+        <FactRow label="期限" value={formatDeadlineShort(result.deadline)} sub={remainingLabel(result.deadlineRemainingDays)} urgent={(result.deadlineRemainingDays ?? 99) < 7} />
+        <FactRow label="金额" value={result.amount ?? '未识别'} sub="原文件金额为准" />
+        <FactRow label="识别质量" value={confidenceLabel(result)} sub={deadline ?? '结构化字段已整理'} />
       </section>
 
       {result.isEnvelope && (
@@ -136,7 +121,7 @@ export default async function PhotoResultPage({
       )}
 
       {result.contextHints && result.contextHints.length > 0 && (
-        <section className="mt-3 rounded-card border border-accent/35 bg-accent-2/55 px-4 py-3 shadow-card">
+        <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-3">
           <div className="space-y-1.5">
             {result.contextHints.map(hint => (
               <p key={hint} className="text-[11.5px] leading-[1.6] text-ink">
@@ -161,12 +146,12 @@ export default async function PhotoResultPage({
 
       {searchParams?.email === 'prompt' && <EmailReminderPrompt />}
 
-      <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-3 shadow-card">
+      <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-3">
         <div className="flex items-start gap-2.5">
-          <span className="mt-0.5 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-[11px] bg-cool-blue text-ink">
-            <ShieldCheck size={16} strokeWidth={1.55} />
+          <span className="mt-0.5 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-[10px] border border-hairline bg-paper text-ink">
+            <FileText size={16} strokeWidth={1.5} />
           </span>
-          <p className="text-[11.5px] leading-[1.6] text-slate/74">
+          <p className="text-[11.5px] leading-[1.6] text-ash">
             TEBIQ 只整理文书字面信息；付款金额、期限和提交要求请以原文件为准。
           </p>
         </div>
@@ -200,14 +185,14 @@ export default async function PhotoResultPage({
 
 function RegisterAfterPhotoCard({ docId }: { docId: string }) {
   return (
-    <section className="rounded-card border border-accent/35 bg-accent-2/60 p-4 shadow-card">
+    <section className="rounded-card border border-hairline bg-surface p-4">
       <div className="flex items-start gap-3">
-        <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-[12px] bg-surface text-ink shadow-soft">
+        <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-[10px] border border-hairline bg-paper text-ink">
           <LockKeyhole size={17} strokeWidth={1.55} />
         </span>
         <div className="min-w-0 flex-1">
           <h2 className="text-[13px] font-medium leading-snug text-ink">
-            想保存这次识别 + 收到到期提醒？
+            保存识别记录和到期提醒
           </h2>
           <p className="mt-1 text-[11px] leading-[1.55] text-ash">
             注册账号，邮箱 / 手机号都可以。刚才的识别会自动进入我的提醒。
@@ -218,6 +203,30 @@ function RegisterAfterPhotoCard({ docId }: { docId: string }) {
         <Button>注册账号</Button>
       </Link>
     </section>
+  )
+}
+
+function FactRow({
+  label,
+  value,
+  sub,
+  urgent,
+}: {
+  label: string
+  value: string
+  sub?: string
+  urgent?: boolean
+}) {
+  return (
+    <div className="grid min-h-[64px] grid-cols-[72px_1fr] items-center gap-3 border-b border-hairline px-4 last:border-b-0">
+      <span className="text-[12px] text-ash">{label}</span>
+      <span className="min-w-0">
+        <span className={`block truncate text-[20px] font-light leading-tight numeric ${urgent ? 'text-warning' : 'text-ink'}`}>
+          {value}
+        </span>
+        {sub && <span className="mt-1 block truncate text-[11px] text-ash">{sub}</span>}
+      </span>
+    </div>
   )
 }
 
@@ -234,7 +243,7 @@ function NoticeBlock({
     ? <AlertTriangle size={15} strokeWidth={1.55} />
     : <MailOpen size={15} strokeWidth={1.55} />
   return (
-    <section className="mt-3 rounded-card border border-accent/35 bg-accent-2 px-4 py-3 shadow-card">
+    <section className={`mt-3 rounded-card border px-4 py-3 ${tone === 'warning' ? 'border-warning/55 bg-surface' : 'border-hairline bg-surface'}`}>
       <div className="mb-1.5 flex items-center gap-2 text-ink">
         {icon}
         <p className="text-[13px] font-medium">{title}</p>
@@ -246,7 +255,7 @@ function NoticeBlock({
 
 function InfoBlock({ title, children }: { title: string; children: ReactNode }) {
   return (
-    <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-3 shadow-card">
+    <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-3">
       <div className="mb-1.5 flex items-center gap-2">
         <FileText size={15} strokeWidth={1.55} className="text-ink" />
         <p className="text-[13px] font-medium text-ink">{title}</p>

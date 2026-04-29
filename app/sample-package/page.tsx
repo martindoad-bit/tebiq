@@ -60,7 +60,7 @@ export default function SamplePackagePage() {
             <span
               className="font-bold text-7xl md:text-8xl select-none"
               style={{
-                color: '#E56F4F',
+                color: '#0F2544',
                 opacity: 0.07,
                 transform: 'rotate(-25deg)',
                 letterSpacing: '0.3em',
@@ -300,8 +300,8 @@ function CheckIcon() {
       height="14"
       viewBox="0 0 24 24"
       fill="none"
-      stroke="#16A34A"
-      strokeWidth="3"
+      stroke="#0F2544"
+      strokeWidth="1.7"
       strokeLinecap="round"
       strokeLinejoin="round"
       className="flex-shrink-0"

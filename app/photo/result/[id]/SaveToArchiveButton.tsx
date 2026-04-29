@@ -28,7 +28,7 @@ export default function SaveToArchiveButton() {
         {saved ? '已进入我的提醒' : '确认进入我的提醒'}
       </Button>
       {saved && (
-        <p className="text-center text-[11px] text-success mt-1">
+        <p className="text-center text-[11px] text-ash mt-1">
           可在「我的提醒」中查看
         </p>
       )}

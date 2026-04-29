@@ -1,17 +1,15 @@
 import Link from 'next/link'
-import type { ReactNode } from 'react'
-import {
-  Bell,
-  Camera,
-  ChevronRight,
-  ClipboardCheck,
-  TimerReset,
-} from 'lucide-react'
+import { Bell, Camera, ChevronRight, ClipboardCheck, FileText } from 'lucide-react'
 import AppShell from '@/app/_components/v5/AppShell'
 import TabBar from '@/app/_components/v5/TabBar'
-import Logo from '@/app/_components/v5/Logo'
 import TrackedLink from '@/app/_components/v5/TrackedLink'
-import { EVENT, type EventName } from '@/lib/analytics/events'
+import {
+  DeadlineRow,
+  ListRow,
+  ListSection,
+  SectionLabel,
+} from '@/components/ui/tebiq'
+import { EVENT } from '@/lib/analytics/events'
 import { getCurrentUser } from '@/lib/auth/session'
 import { getMemberAccess, getTimelineRetentionCutoff, type MemberAccess } from '@/lib/billing/access'
 import { listNeedsActionDimensions } from '@/lib/db/queries/checkDimensions'
@@ -62,61 +60,36 @@ export default async function HomePage() {
 function NewUserHome() {
   return (
     <>
-      <BrandStrip />
-
-      <section className="mt-5">
-        <h1 className="text-[26px] font-semibold leading-none text-ink">TEBIQ</h1>
-        <p className="mt-3 text-[13px] leading-[1.7] text-slate">
+      <section className="pt-12 text-center">
+        <h1 className="text-[44px] font-medium leading-none tracking-[0.06em] text-ink">TEBIQ</h1>
+        <p className="mx-auto mt-5 max-w-[270px] text-[17px] font-normal leading-[1.7] text-ink">
           在日生活的日文文书识别和提醒
         </p>
-        <div className="mt-5 grid gap-2.5">
+        <div className="mt-8 grid gap-3">
           <TrackedLink
             href="/photo"
             eventName={EVENT.HOME_PHOTO_CARD_CLICK}
-            className="flex min-h-[46px] items-center justify-center rounded-btn bg-ink px-4 text-[13px] font-medium text-white shadow-cta active:translate-y-px"
+            className="focus-ring flex min-h-[48px] items-center justify-center rounded-btn bg-ink px-4 py-3 text-[14px] font-medium leading-none text-white"
           >
             拍一份文书试试
           </TrackedLink>
           <TrackedLink
             href="/check"
             eventName={EVENT.HOME_CHECK_CARD_CLICK}
-            className="flex min-h-[46px] items-center justify-center rounded-btn border border-hairline bg-surface px-4 text-[13px] font-medium text-ink shadow-card active:translate-y-px"
+            className="focus-ring flex min-h-[48px] items-center justify-center rounded-btn border border-hairline bg-surface px-4 py-3 text-[14px] font-medium leading-none text-ink"
           >
             做一次续签自查
           </TrackedLink>
         </div>
       </section>
 
-      <section className="mt-6">
-        <h2 className="px-0.5 text-[13px] font-medium text-ink">常用工具</h2>
-        <div className="mt-2.5 rounded-card border border-hairline bg-surface shadow-card">
-          <ToolRow
-            title="拍照即懂"
-            desc="识别日文文书"
-            href="/photo"
-            icon={<Camera size={18} strokeWidth={1.55} />}
-            eventName={EVENT.HOME_PHOTO_CARD_CLICK}
-          />
-          <ToolRow
-            title="续签自查"
-            desc="当前风险点"
-            href="/check"
-            icon={<ClipboardCheck size={18} strokeWidth={1.55} />}
-            eventName={EVENT.HOME_CHECK_CARD_CLICK}
-          />
-          <ToolRow
-            title="我的提醒"
-            desc="期限事项"
-            href="/timeline"
-            icon={<TimerReset size={18} strokeWidth={1.55} />}
-          />
-        </div>
-      </section>
+      <SectionLabel title="常用工具" />
+      <ToolList photoSubtitle="识别日文文书" checkSubtitle="当前风险点" reminderSubtitle="期限事项" />
 
-      <section className="mt-5 rounded-card border border-hairline bg-surface px-4 py-4 shadow-card">
-        <p className="text-[12px] leading-[1.65] text-ash">
-          还没识别文书。先拍一张试试。
-        </p>
+      <section className="mt-6 rounded-card border border-hairline bg-surface px-5 py-8 text-center">
+        <FileText size={30} strokeWidth={1.5} className="mx-auto text-haze" />
+        <p className="mt-4 text-[16px] font-normal text-ash">还没识别文书。</p>
+        <p className="mt-1 text-[14px] text-ash">先拍一张试试。</p>
       </section>
     </>
   )
@@ -145,184 +118,106 @@ function UserHome({
 
   return (
     <>
-      <BrandStrip />
-      {showTrial && <TrialStrip days={access.trialDaysRemaining ?? 0} />}
+      {showTrial && (
+        <section className="-mx-5 mb-4 border-b border-hairline bg-paper px-5 py-3">
+          <p className="text-[13px] font-medium text-ink">
+            试用期 残り {access.trialDaysRemaining ?? 0} 日
+          </p>
+        </section>
+      )}
 
-      <section className="mt-4 rounded-card border border-hairline bg-surface px-4 shadow-card">
-        <OverviewRow
-          label="在留卡"
-          value={visaOverview(user, daysToExpiry)}
-          href="/my/profile"
-        />
+      <ListSection>
+        <OverviewRow label="在留卡" value={visaOverview(user, daysToExpiry)} href="/my/profile" />
         <OverviewRow
           label="自查事项"
           value={needsActionCount > 0 ? `你有 ${needsActionCount} 项需处理` : hasSelfCheck ? '当前无需处理项' : '做一次自查看看'}
           href={needsActionCount > 0 || !hasSelfCheck ? '/check' : '/timeline'}
         />
-        <OverviewRow
-          label="接下来30天"
-          value={`${next30Count} 件期限事项`}
-          href="/timeline"
-          last
-        />
-      </section>
+        <OverviewRow label="接下来30天" value={`${next30Count} 件期限事项`} href="/timeline" />
+      </ListSection>
 
       {!hasArchiveData && (
-        <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-3 shadow-card">
-          <p className="text-[12px] leading-[1.65] text-ash">
+        <section className="mt-4 border-b border-hairline pb-4">
+          <p className="text-[13px] leading-[1.7] text-ash">
             当前记录为空。可以先拍一份文书，或做一次续签自查。
           </p>
         </section>
       )}
 
-      <section className="mt-5">
-        <h2 className="px-0.5 text-[13px] font-medium text-ink">常用工具</h2>
-        <div className="mt-2.5 rounded-card border border-hairline bg-surface shadow-card">
-          <ToolRow
-            title="拍照即懂"
-            desc={hasPhoto ? '识别日文文书' : '拍一份文书试试'}
-            href="/photo"
-            icon={<Camera size={18} strokeWidth={1.55} />}
-            eventName={EVENT.HOME_PHOTO_CARD_CLICK}
-          />
-          <ToolRow
-            title="续签自查"
-            desc={needsActionCount > 0 ? `${needsActionCount} 项需处理` : hasSelfCheck ? '当前风险点' : '做一次自查看看'}
-            href="/check"
-            icon={<ClipboardCheck size={18} strokeWidth={1.55} />}
-            eventName={EVENT.HOME_CHECK_CARD_CLICK}
-          />
-          <ToolRow
-            title="我的提醒"
-            desc={`${next30Count} 项期限事项`}
-            href="/timeline"
-            icon={<TimerReset size={18} strokeWidth={1.55} />}
-          />
-        </div>
-      </section>
+      <SectionLabel title="常用工具" />
+      <ToolList
+        photoSubtitle={hasPhoto ? '识别日文文书' : '拍一份文书试试'}
+        checkSubtitle={needsActionCount > 0 ? `${needsActionCount} 项需处理` : hasSelfCheck ? '当前风险点' : '做一次自查看看'}
+        reminderSubtitle={`${next30Count} 项期限事项`}
+      />
 
-      <section className="mt-5">
-        <div className="flex items-center justify-between px-0.5">
-          <h2 className="text-[13px] font-medium text-ink">接下来30天的期限事项</h2>
-          <Link href="/timeline" className="flex items-center text-[11px] text-ash">
-            全部
-            <ChevronRight size={13} strokeWidth={1.55} />
-          </Link>
-        </div>
-        <div className="mt-2.5 rounded-card border border-hairline bg-surface px-4 py-3 shadow-card">
-          {upcoming.length > 0 ? (
-            <ul className="divide-y divide-hairline">
-              {upcoming.slice(0, 5).map(event => (
-                <DeadlineRow key={event.id} event={event} />
-              ))}
-            </ul>
-          ) : (
-            <p className="text-[12px] leading-[1.65] text-ash">
-              30 天内暂无已识别期限。
-            </p>
-          )}
-        </div>
-      </section>
+      <SectionLabel title="接下来30天的期限事项" action="全部" href="/timeline" />
+      <ListSection className="mt-3">
+        {upcoming.length > 0 ? (
+          upcoming.slice(0, 5).map(event => (
+            <DeadlineRow
+              key={event.id}
+              href={`/timeline/${event.id}`}
+              date={formatMonthDay(event.deadline ?? '')}
+              days={deadlineShortLabel(event.deadline ?? '')}
+              title={eventTitle(event)}
+              detail={event.amount ? `${event.amount} / ${eventSubline(event)}` : eventSubline(event)}
+              status={isUrgent(event.deadline) ? '待处理' : '待确认'}
+              urgent={isUrgent(event.deadline)}
+            />
+          ))
+        ) : (
+          <p className="px-4 py-8 text-center text-[13px] leading-[1.65] text-ash">
+            30 天内暂无已识别期限。
+          </p>
+        )}
+      </ListSection>
     </>
   )
 }
 
-function BrandStrip() {
-  return (
-    <section className="pt-3">
-      <div className="flex items-center gap-2 px-0.5 text-[12px] font-medium text-slate">
-        <Logo size="sm" />
-        <span>在日生活好帮手</span>
-      </div>
-    </section>
-  )
-}
-
-function TrialStrip({ days }: { days: number }) {
-  return (
-    <section className="mt-4 rounded-card border border-hairline bg-surface px-4 py-2.5 shadow-card">
-      <p className="text-[12px] font-medium leading-[1.55] text-ink">
-        试用期 残り {days} 日
-      </p>
-    </section>
-  )
-}
-
-function OverviewRow({
-  label,
-  value,
-  href,
-  last = false,
+function ToolList({
+  photoSubtitle,
+  checkSubtitle,
+  reminderSubtitle,
 }: {
-  label: string
-  value: string
-  href: string
-  last?: boolean
+  photoSubtitle: string
+  checkSubtitle: string
+  reminderSubtitle: string
 }) {
   return (
-    <Link
-      href={href}
-      className={`flex min-h-[54px] items-center justify-between gap-3 ${last ? '' : 'border-b border-hairline'}`}
-    >
-      <span className="text-[11px] text-ash">{label}</span>
-      <span className="flex min-w-0 items-center gap-1.5 text-right text-[13px] font-medium text-ink">
+    <ListSection className="mt-3">
+      <ListRow
+        href="/photo"
+        icon={<Camera size={20} strokeWidth={1.5} />}
+        title="拍照即懂"
+        subtitle={photoSubtitle}
+      />
+      <ListRow
+        href="/check"
+        icon={<ClipboardCheck size={20} strokeWidth={1.5} />}
+        title="续签自查"
+        subtitle={checkSubtitle}
+      />
+      <ListRow
+        href="/timeline"
+        icon={<Bell size={20} strokeWidth={1.5} />}
+        title="我的提醒"
+        subtitle={reminderSubtitle}
+      />
+    </ListSection>
+  )
+}
+
+function OverviewRow({ label, value, href }: { label: string; value: string; href: string }) {
+  return (
+    <Link href={href} className="flex min-h-[64px] items-center justify-between gap-3 border-b border-hairline px-5 last:border-b-0">
+      <span className="text-[13px] text-ash">{label}</span>
+      <span className="flex min-w-0 items-center gap-1.5 text-right text-[15px] font-medium text-ink">
         <span className="truncate">{value}</span>
-        <ChevronRight size={13} strokeWidth={1.55} className="flex-shrink-0 text-haze" />
+        <ChevronRight size={16} strokeWidth={1.5} className="flex-shrink-0 text-haze" />
       </span>
     </Link>
-  )
-}
-
-function ToolRow({
-  title,
-  desc,
-  href,
-  icon,
-  eventName,
-}: {
-  title: string
-  desc: string
-  href: string
-  icon: ReactNode
-  eventName?: EventName
-}) {
-  const className = 'flex min-h-[62px] items-center gap-3 border-b border-hairline px-4 py-3 last:border-b-0 active:translate-y-px'
-  const inner = (
-    <>
-      <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-[12px] bg-accent-2 text-ink">
-        {icon}
-      </span>
-      <span className="min-w-0 flex-1">
-        <span className="block truncate text-[13px] font-medium text-ink">{title}</span>
-        <span className="mt-1 block truncate text-[11px] text-ash">{desc}</span>
-      </span>
-      <ChevronRight size={14} strokeWidth={1.55} className="text-haze" />
-    </>
-  )
-  if (eventName) {
-    return <TrackedLink href={href} eventName={eventName} className={className}>{inner}</TrackedLink>
-  }
-  return <Link href={href} className={className}>{inner}</Link>
-}
-
-function DeadlineRow({ event }: { event: TimelineEvent }) {
-  const date = event.deadline ?? ''
-  return (
-    <li className="py-2.5 first:pt-0 last:pb-0">
-      <Link href={`/timeline/${event.id}`} className="flex items-center gap-3">
-        <span className="w-[58px] flex-shrink-0">
-          <span className="block text-[12px] font-medium text-ink">{formatMonthDay(date)}</span>
-          <span className="mt-1 block text-[10px] text-ash">{deadlineShortLabel(date)}</span>
-        </span>
-        <span className="min-w-0 flex-1">
-          <span className="block truncate text-[12.5px] font-medium text-ink">{eventTitle(event)}</span>
-          <span className="mt-1 block truncate text-[10.5px] text-ash">
-            {event.amount ? `${event.amount} / ` : ''}{eventSubline(event)}
-          </span>
-        </span>
-        <ChevronRight size={14} strokeWidth={1.55} className="text-haze" />
-      </Link>
-    </li>
   )
 }
 
@@ -424,16 +319,21 @@ function deadlineShortLabel(deadline: string): string {
   return `残り ${days} 日`
 }
 
+function isUrgent(deadline: string | null): boolean {
+  const days = daysUntilJst(deadline)
+  return days !== null && days <= 7
+}
+
 function HomeAppBar() {
   return (
     <header className="flex h-[58px] flex-shrink-0 items-center justify-between bg-canvas px-5">
-      <span className="text-[12px] font-medium text-ash">TEBIQ</span>
+      <span className="text-[12px] font-medium tracking-[0.14em] text-ash">TEBIQ</span>
       <Link
         href="/timeline"
         aria-label="我的提醒"
-        className="flex h-10 w-10 items-center justify-center rounded-full border border-hairline bg-surface text-ink shadow-soft"
+        className="focus-ring flex h-10 w-10 items-center justify-center rounded-full border border-hairline bg-surface text-ink"
       >
-        <Bell size={20} strokeWidth={1.7} />
+        <Bell size={20} strokeWidth={1.5} />
       </Link>
     </header>
   )

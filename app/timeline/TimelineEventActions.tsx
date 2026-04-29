@@ -42,22 +42,22 @@ export default function TimelineEventActions({
   }
 
   return (
-    <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-4 shadow-card">
+    <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-4">
       <h2 className="text-[13px] font-medium text-ink">备注 / 标签</h2>
       <textarea
         value={note}
         onChange={e => setNote(e.target.value)}
         rows={4}
-        className="mt-3 w-full resize-none rounded-[12px] border border-hairline bg-canvas px-3 py-2.5 text-[13px] leading-[1.6] text-ink outline-none focus:border-accent"
+        className="focus-ring mt-3 w-full resize-none rounded-btn border border-hairline bg-canvas px-3 py-2.5 text-[13px] leading-[1.6] text-ink outline-none focus:border-ink"
         placeholder="用户备注"
       />
       <input
         value={tags}
         onChange={e => setTags(e.target.value)}
-        className="mt-2 w-full rounded-[12px] border border-hairline bg-canvas px-3 py-2.5 text-[13px] text-ink outline-none focus:border-accent"
+        className="focus-ring mt-2 w-full rounded-btn border border-hairline bg-canvas px-3 py-2.5 text-[13px] text-ink outline-none focus:border-ink"
         placeholder="标签, 逗号分隔"
       />
-      {error && <p className="mt-2 text-[12px] text-danger">{error}</p>}
+      {error && <p className="mt-2 text-[12px] text-warning">{error}</p>}
       <div className="mt-3 grid grid-cols-2 gap-2">
         <Button
           disabled={busy}
@@ -72,7 +72,7 @@ export default function TimelineEventActions({
           type="button"
           disabled={busy}
           onClick={() => patch({ archived: !archived })}
-          className="min-h-[44px] rounded-btn border border-hairline bg-canvas px-4 py-3 text-[13px] font-medium text-ink disabled:opacity-60"
+          className="focus-ring min-h-[44px] rounded-btn border border-hairline bg-canvas px-4 py-3 text-[13px] font-medium text-ink disabled:opacity-60"
         >
           {archived ? '取消归档' : '归档'}
         </button>

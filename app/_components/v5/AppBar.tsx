@@ -38,14 +38,14 @@ export default function AppBar({ title, back, right, transparent }: Props) {
           type="button"
           onClick={onBack}
           aria-label="返回"
-          className="-ml-2 flex h-10 w-10 items-center justify-center text-ink"
+          className="focus-ring -ml-2 flex h-10 w-10 items-center justify-center rounded-btn text-ink"
         >
-          <ChevronLeft size={26} strokeWidth={1.65} />
+          <ChevronLeft size={24} strokeWidth={1.5} />
         </button>
       ) : (
         <span className="w-10" />
       )}
-      <h1 className="truncate text-[clamp(17px,4.9vw,22px)] font-semibold leading-none text-ink">
+      <h1 className="truncate text-[18px] font-medium leading-none text-ink">
         {title}
       </h1>
       <div className="flex w-10 items-center justify-end">{right}</div>
