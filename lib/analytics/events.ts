@@ -17,7 +17,7 @@ export const EVENT = {
   PHOTO_RETAKE_CLICK: 'photo.retake.click',
   PHOTO_FALLBACK_RETRY: 'photo.fallback.retry',
 
-  // 续签自查
+  // 材料准备检查
   QUIZ_START: 'quiz.start',
   QUIZ_VISA_SELECTED: 'quiz.visa_selected',
   QUIZ_QUESTION_ANSWERED: 'quiz.question_answered',

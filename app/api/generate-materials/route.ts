@@ -96,7 +96,7 @@ function buildAiSystemPrompt(
   return `你是 TEBIQ 的在日手续助理。基于用户的问卷答案，生成一段 200 字以内的「你需要特别注意的地方」。
 
 判定结果：${result.verdict}
-待确认事项触发项：
+待确认项目：
 ${trig}
 
 摘要：${summary}
