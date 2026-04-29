@@ -25,6 +25,7 @@ export default async function DimensionCheckPage({
       eq(articles.dimensionKey, params.dimension),
     ))
     .limit(1)
+    .catch(() => [])
 
   if (!article || !article.questions || !article.resultLogic || !article.resultActions) {
     return <DimensionPreparingPage visaType={visaType} dimensionKey={params.dimension} />

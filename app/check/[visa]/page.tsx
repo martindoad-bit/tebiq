@@ -35,8 +35,8 @@ export default async function CheckVisaPage({
 }) {
   const visa = normalizeCheckVisa(params.visa)
   if (!CHECK_VISA_META[visa]) notFound()
-  const user = await getCurrentUser()
-  const sessionId = user ? null : await getAnonymousSessionId()
+  const user = await getCurrentUser().catch(() => null)
+  const sessionId = user ? null : await getAnonymousSessionId().catch(() => null)
   const dimensions = await listDimensionViews({ memberId: user?.id ?? null, sessionId }, visa)
 
   return (

@@ -93,7 +93,7 @@ export async function listDimensionViews(
   visaInput: string,
 ): Promise<DimensionView[]> {
   const visa = normalizeCheckVisa(visaInput)
-  let definitions = await listArticleDimensionDefinitions(visa)
+  let definitions = await listArticleDimensionDefinitions(visa).catch(() => [])
   if (definitions.length === 0) definitions = dimensionsForVisa(visa)
   const rows = owner.memberId || owner.sessionId
     ? await db
@@ -101,6 +101,7 @@ export async function listDimensionViews(
         .from(checkDimensionResults)
         .where(and(ownerCondition(owner), eq(checkDimensionResults.visaType, visa)))
         .orderBy(desc(checkDimensionResults.updatedAt))
+        .catch(() => [])
     : []
   const byKey = new Map(rows.map(row => [row.dimensionKey, row]))
   return definitions.map(definition => {

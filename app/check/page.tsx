@@ -16,10 +16,11 @@ export const metadata: Metadata = {
 }
 
 export default async function CheckLandingPage() {
-  const user = await getCurrentUser()
-  const sessionId = user ? null : await getAnonymousSessionId()
+  const user = await getCurrentUser().catch(() => null)
+  const sessionId = user ? null : await getAnonymousSessionId().catch(() => null)
   const visa = normalizeCheckVisa(user?.visaType ?? null)
   const dimensions = await listDimensionViews({ memberId: user?.id ?? null, sessionId }, visa)
+    .catch(() => [])
 
   return (
     <>
