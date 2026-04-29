@@ -157,157 +157,161 @@ export default function AuthPageClient({ intent = 'login' }: { intent?: 'login' 
 
   return (
     <AppShell appBar={<AppBar back="/" />}>
-      <section className="pt-2 pb-5 text-center">
-        <div className="flex justify-center">
-          <Logo size="md" />
-        </div>
-        <div className="mx-auto mt-5 inline-flex items-center gap-1.5 rounded-full border border-hairline bg-surface px-3 py-1.5 text-[11px] text-ash shadow-card">
-          <ShieldCheck size={13} strokeWidth={1.55} className="text-ink" />
-          {inviteCode ? '注册成功后自动领取邀请奖励' : '邮箱优先，也可用手机号登录'}
-        </div>
-      </section>
-
-      <h1 className="mb-1.5 text-center text-[22px] font-medium leading-tight text-ink">
-        {phoneStep === 'otp' && method === 'phone' ? '输入验证码' : title}
-      </h1>
-      <p className="mb-5 text-center text-[12px] leading-relaxed text-ash">
-        {method === 'email'
-          ? '用邮箱收一次性登录链接，没有账号会自动注册'
-          : phoneStep === 'phone'
-            ? '手机号登录保留给已有用户和备用登录'
-            : `验证码已发送至 ${phone}`}
-      </p>
-
-      <div className="mb-3 grid grid-cols-2 gap-2 rounded-card border border-hairline bg-surface p-1 shadow-card">
-        <button
-          type="button"
-          onClick={() => {
-            setMethod('email')
-            setError('')
-          }}
-          className={`min-h-[38px] rounded-[10px] text-[12px] font-medium ${
-            method === 'email' ? 'bg-accent text-ink shadow-soft' : 'text-ash'
-          }`}
-        >
-          用邮箱登录
-        </button>
-        <button
-          type="button"
-          onClick={() => {
-            setMethod('phone')
-            setError('')
-          }}
-          className={`min-h-[38px] rounded-[10px] text-[12px] font-medium ${
-            method === 'phone' ? 'bg-accent text-ink shadow-soft' : 'text-ash'
-          }`}
-        >
-          用手机号登录
-        </button>
-      </div>
-
-      {method === 'email' && (
-        <div className="rounded-card border border-hairline bg-surface p-4 shadow-card">
-          <label className="block">
-            <span className="mb-2 block text-[13px] font-medium text-ink">邮箱</span>
-            <span className="flex items-center gap-2 rounded-btn border border-hairline bg-canvas px-3.5 py-3 transition-colors focus-within:border-accent">
-              <Mail size={16} strokeWidth={1.55} className="flex-shrink-0 text-haze" />
-              <input
-                type="email"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                placeholder="name@example.com"
-                className="min-w-0 flex-1 bg-transparent text-[16px] text-ink outline-none placeholder:text-haze"
-                autoFocus
-              />
-            </span>
-          </label>
-          {error && <p className="mt-3 text-[12px] text-danger" role="alert">{error}</p>}
-          {message && <p className="mt-3 text-[12px] leading-relaxed text-ash">{message}</p>}
-          <Button onClick={handleSendMagicLink} disabled={loading} className="mt-4">
-            {loading ? '处理中...' : '发送登录链接'}
-          </Button>
-          <div className="mt-3 flex items-center justify-center gap-1.5 text-[10.5px] leading-relaxed text-ash">
-            <Send size={12} strokeWidth={1.55} />
-            链接 7 分钟内有效
+      <div className="mx-auto w-full min-w-0 max-w-[420px]">
+        <section className="pt-2 pb-5 text-center">
+          <div className="flex justify-center">
+            <Logo size="md" />
           </div>
-        </div>
-      )}
-
-      {method === 'phone' && phoneStep === 'phone' && (
-        <div className="rounded-card border border-hairline bg-surface p-4 shadow-card">
-          <label className="block">
-            <span className="mb-2 block text-[13px] font-medium text-ink">手机号</span>
-            <span className="flex items-center gap-2 rounded-btn border border-hairline bg-canvas px-3.5 py-3 transition-colors focus-within:border-accent">
-              <Phone size={16} strokeWidth={1.55} className="flex-shrink-0 text-haze" />
-              <input
-                type="tel"
-                value={phone}
-                onChange={e => setPhone(e.target.value)}
-                placeholder="13800138000 或 +818012345678"
-                className="min-w-0 flex-1 bg-transparent text-[16px] text-ink outline-none placeholder:text-haze"
-                autoFocus
-              />
-            </span>
-          </label>
-          {error && <p className="mt-3 text-[12px] text-danger" role="alert">{error}</p>}
-          <Button onClick={handleSendOtp} disabled={loading} className="mt-4">
-            {loading ? '处理中...' : '获取验证码'}
-          </Button>
-          <div className="mt-3 flex items-center justify-center gap-1.5 text-[10.5px] leading-relaxed text-ash">
-            <MessageSquareText size={12} strokeWidth={1.55} />
-            短信验证码 5 分钟内有效
+          <div className="mx-auto mt-5 inline-flex max-w-full items-center justify-center gap-1.5 rounded-full border border-hairline bg-surface px-3 py-1.5 text-center text-[11px] text-slate shadow-card">
+            <ShieldCheck size={13} strokeWidth={1.55} className="text-ink" />
+            {inviteCode ? '注册成功后自动领取邀请奖励' : '邮箱优先，也可用手机号登录'}
           </div>
-        </div>
-      )}
+        </section>
 
-      {method === 'phone' && phoneStep === 'otp' && (
-        <div className="rounded-card border border-hairline bg-surface p-4 shadow-card">
-          <label className="block">
-            <span className="mb-2 block text-[13px] font-medium text-ink">6 位验证码</span>
-            <span className="flex items-center gap-2 rounded-btn border border-hairline bg-canvas px-3.5 py-3 transition-colors focus-within:border-accent">
-              <KeyRound size={16} strokeWidth={1.55} className="flex-shrink-0 text-haze" />
-              <input
-                type="text"
-                inputMode="numeric"
-                pattern="\d{6}"
-                maxLength={6}
-                value={otp}
-                onChange={e => setOtp(e.target.value.replace(/\D/g, ''))}
-                placeholder="000000"
-                className="min-w-0 flex-1 bg-transparent text-center text-[22px] tracking-[0.38em] text-ink outline-none placeholder:text-haze"
-                autoFocus
-              />
-            </span>
-          </label>
-          {error && <p className="mt-3 text-[12px] text-danger" role="alert">{error}</p>}
-          <Button onClick={handleVerifyOtp} disabled={loading} className="mt-4">
-            {loading ? '处理中...' : '登录'}
-          </Button>
+        <h1 className="mb-1.5 text-center text-[22px] font-medium leading-tight text-ink">
+          {phoneStep === 'otp' && method === 'phone' ? '输入验证码' : title}
+        </h1>
+        <p className="mb-5 text-center text-[12px] leading-relaxed text-slate">
+          {method === 'email'
+            ? '用邮箱收一次性登录链接，没有账号会自动注册'
+            : phoneStep === 'phone'
+              ? '手机号登录保留给已有用户和备用登录'
+              : `验证码已发送至 ${phone}`}
+        </p>
+
+        <div className="mb-3 grid w-full min-w-0 grid-cols-2 gap-2 rounded-card border border-hairline bg-surface p-1 shadow-card">
           <button
             type="button"
             onClick={() => {
-              setPhoneStep('phone')
-              setOtp('')
+              setMethod('email')
               setError('')
             }}
-            className="mt-3 flex w-full items-center justify-center gap-1.5 text-center text-[12px] text-ash hover:text-ink"
+            className={`focus-ring min-h-[40px] min-w-0 rounded-[10px] px-2 text-[12px] font-medium transition-colors ${
+              method === 'email' ? 'bg-ink text-white shadow-soft' : 'text-slate hover:text-ink'
+            }`}
+            aria-pressed={method === 'email'}
           >
-            <RotateCcw size={13} strokeWidth={1.55} />
-            换个手机号
+            用邮箱登录
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setMethod('phone')
+              setError('')
+            }}
+            className={`focus-ring min-h-[40px] min-w-0 rounded-[10px] px-2 text-[12px] font-medium transition-colors ${
+              method === 'phone' ? 'bg-ink text-white shadow-soft' : 'text-slate hover:text-ink'
+            }`}
+            aria-pressed={method === 'phone'}
+          >
+            用手机号登录
           </button>
         </div>
-      )}
 
-      <p className="mt-6 text-center text-[10px] leading-relaxed text-haze">
-        登录即表示同意{' '}
-        <Link href="/terms" className="underline">
-          利用規約
-        </Link>{' '}
-        和{' '}
-        <Link href="/privacy" className="underline">
-          プライバシーポリシー
-        </Link>
-      </p>
+        {method === 'email' && (
+          <div className="w-full min-w-0 rounded-card border border-hairline bg-surface p-4 shadow-card">
+            <label className="block">
+              <span className="mb-2 block text-[13px] font-medium text-ink">邮箱</span>
+              <span className="relative block min-w-0">
+                <Mail size={16} strokeWidth={1.55} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate" />
+                <input
+                  type="email"
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
+                  placeholder="name@example.com"
+                  className="w-full min-w-0 rounded-btn border border-hairline bg-canvas py-3 pl-11 pr-3 text-[16px] text-ink outline-none transition-colors placeholder:text-ash focus:border-ink"
+                  autoFocus
+                />
+              </span>
+            </label>
+            {error && <p className="mt-3 text-[12px] text-danger" role="alert">{error}</p>}
+            {message && <p className="mt-3 text-[12px] leading-relaxed text-slate">{message}</p>}
+            <Button onClick={handleSendMagicLink} disabled={loading} className="mt-4">
+              {loading ? '处理中...' : '发送登录链接'}
+            </Button>
+            <div className="mt-3 flex items-center justify-center gap-1.5 text-[10.5px] leading-relaxed text-slate">
+              <Send size={12} strokeWidth={1.55} />
+              链接 7 分钟内有效
+            </div>
+          </div>
+        )}
+
+        {method === 'phone' && phoneStep === 'phone' && (
+          <div className="w-full min-w-0 rounded-card border border-hairline bg-surface p-4 shadow-card">
+            <label className="block">
+              <span className="mb-2 block text-[13px] font-medium text-ink">手机号</span>
+              <span className="relative block min-w-0">
+                <Phone size={16} strokeWidth={1.55} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate" />
+                <input
+                  type="tel"
+                  value={phone}
+                  onChange={e => setPhone(e.target.value)}
+                  placeholder="例: 08012345678"
+                  className="w-full min-w-0 rounded-btn border border-hairline bg-canvas py-3 pl-11 pr-3 text-[16px] text-ink outline-none transition-colors placeholder:text-ash focus:border-ink"
+                  autoFocus
+                />
+              </span>
+            </label>
+            {error && <p className="mt-3 text-[12px] text-danger" role="alert">{error}</p>}
+            <Button onClick={handleSendOtp} disabled={loading} className="mt-4">
+              {loading ? '处理中...' : '获取验证码'}
+            </Button>
+            <div className="mt-3 flex items-center justify-center gap-1.5 text-[10.5px] leading-relaxed text-slate">
+              <MessageSquareText size={12} strokeWidth={1.55} />
+              短信验证码 5 分钟内有效
+            </div>
+          </div>
+        )}
+
+        {method === 'phone' && phoneStep === 'otp' && (
+          <div className="w-full min-w-0 rounded-card border border-hairline bg-surface p-4 shadow-card">
+            <label className="block">
+              <span className="mb-2 block text-[13px] font-medium text-ink">6 位验证码</span>
+              <span className="relative block min-w-0">
+                <KeyRound size={16} strokeWidth={1.55} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate" />
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  pattern="\d{6}"
+                  maxLength={6}
+                  value={otp}
+                  onChange={e => setOtp(e.target.value.replace(/\D/g, ''))}
+                  placeholder="000000"
+                  className="w-full min-w-0 rounded-btn border border-hairline bg-canvas py-3 pl-11 pr-3 text-center text-[22px] tracking-[0.32em] text-ink outline-none transition-colors placeholder:text-ash focus:border-ink"
+                  autoFocus
+                />
+              </span>
+            </label>
+            {error && <p className="mt-3 text-[12px] text-danger" role="alert">{error}</p>}
+            <Button onClick={handleVerifyOtp} disabled={loading} className="mt-4">
+              {loading ? '处理中...' : '登录'}
+            </Button>
+            <button
+              type="button"
+              onClick={() => {
+                setPhoneStep('phone')
+                setOtp('')
+                setError('')
+              }}
+              className="mt-3 flex w-full items-center justify-center gap-1.5 text-center text-[12px] text-slate hover:text-ink"
+            >
+              <RotateCcw size={13} strokeWidth={1.55} />
+              换个手机号
+            </button>
+          </div>
+        )}
+
+        <p className="mt-6 text-center text-[10.5px] leading-relaxed text-ash">
+          登录即表示同意{' '}
+          <Link href="/terms" className="text-ink underline underline-offset-4">
+            利用規約
+          </Link>{' '}
+          和{' '}
+          <Link href="/privacy" className="text-ink underline underline-offset-4">
+            プライバシーポリシー
+          </Link>
+        </p>
+      </div>
 
       {process.env.NODE_ENV !== 'production' && lastDevOtp && (
         <div className="fixed bottom-3 right-3 z-50 rounded-[10px] border border-hairline bg-surface px-3 py-2 text-[11px] text-ink shadow-card">
