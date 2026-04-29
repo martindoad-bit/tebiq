@@ -6,7 +6,8 @@ const routes = [
   '',
   '/visa-select',
   '/tools',
-  '/ask',
+  '/timeline',
+  '/pricing',
   '/check',
   '/check/select',
   '/check/gijinkoku',
@@ -25,7 +26,6 @@ const routes = [
   '/eijusha',
   '/tokutei',
   '/teijusha',
-  '/consultation',
 ]
 
 export default function sitemap(): MetadataRoute.Sitemap {

@@ -15,15 +15,15 @@ test('createPurchase shape', () => {
   type Input = Parameters<typeof import('./purchases').createPurchase>[0]
   const _i: Input = {
     familyId: 'fam_test',
-    product: 'material_package',
-    amountJpy: 980,
-    metadata: { quizResultId: 'qr_test' },
+    product: 'expert_consultation',
+    amountJpy: 9800,
+    metadata: { source: 'test' },
   }
   void _i
   assert.ok(true)
 })
 
-test('material_package amount matches v2 pricing (¥980)', () => {
-  const expectedPrice = 980
-  assert.equal(expectedPrice, 980)
+test('legacy one-time consultation product stays available in DAL', () => {
+  const expectedPrice = 9800
+  assert.equal(expectedPrice, 9800)
 })

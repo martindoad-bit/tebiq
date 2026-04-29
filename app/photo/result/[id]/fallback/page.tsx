@@ -106,7 +106,7 @@ export default async function PhotoFallbackPage({
           </Button>
         </TrackedLink>
         <TrackedLink
-          href={`/consultation?from=photo_fallback&doc_id=${doc.id}`}
+          href="/photo"
           eventName={EVENT.PHOTO_FALLBACK_RETRY}
           payload={{ docId: doc.id, action: 'feedback' }}
           className="mt-2 flex min-h-[44px] w-full items-center justify-center gap-1.5 rounded-btn border border-hairline bg-surface px-4 py-3 text-center text-[13px] font-medium text-ink transition-colors hover:bg-canvas"

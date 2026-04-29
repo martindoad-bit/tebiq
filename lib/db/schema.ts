@@ -20,6 +20,7 @@ import {
   index,
   integer,
   jsonb,
+  numeric,
   pgEnum,
   pgTable,
   text,
@@ -110,6 +111,14 @@ export const articleStatusEnum = pgEnum('article_status', [
 
 export const articleVisibilityEnum = pgEnum('article_visibility', ['public', 'private'])
 
+export const timelineEventTypeEnum = pgEnum('timeline_event_type', [
+  'photo_recognition',
+  'self_check',
+  'text_understand',
+  'policy_match',
+  'manual_note',
+])
+
 // Member profile enums (added Block 2)
 export const maritalStatusEnum = pgEnum('marital_status', [
   'single',
@@ -173,6 +182,13 @@ export const members = pgTable(
     lastVisaRenewalAt: date('last_visa_renewal_at'),
     companyType: companyTypeEnum('company_type'),
     recentChanges: jsonb('recent_changes').$type<Record<string, unknown>>(),
+    archiveRetentionUntil: date('archive_retention_until').default(
+      sql`(CURRENT_DATE + INTERVAL '30 days')`,
+    ),
+    trialStartedAt: timestamp('trial_started_at', { withTimezone: true }),
+    trialUsed: boolean('trial_used').notNull().default(false),
+    deletionRequestedAt: timestamp('deletion_requested_at', { withTimezone: true }),
+    deletionScheduledAt: timestamp('deletion_scheduled_at', { withTimezone: true }),
 
     createdAt: createdAt(),
     updatedAt: updatedAt(),
@@ -289,6 +305,52 @@ export const documents = pgTable(
     ownerRequired: check(
       'documents_family_or_session_required',
       sql`${t.familyId} is not null or ${t.sessionId} is not null`,
+    ),
+  }),
+)
+
+// --- timeline_events ---
+//
+// 档案中心化索引表。documents / quiz_results / text_understand_requests
+// 仍是原始记录；timeline_events 是跨工具统一时间线。
+export const timelineEvents = pgTable(
+  'timeline_events',
+  {
+    id: idCol(),
+    memberId: varchar('member_id', { length: 24 }).references(() => members.id, {
+      onDelete: 'set null',
+    }),
+    sessionId: varchar('session_id', { length: 64 }),
+    eventType: timelineEventTypeEnum('event_type').notNull(),
+    eventPayload: jsonb('event_payload').notNull().$type<Record<string, unknown>>(),
+    docType: varchar('doc_type', { length: 120 }),
+    issuer: varchar('issuer', { length: 160 }),
+    amount: numeric('amount', { precision: 12, scale: 2 }),
+    deadline: date('deadline'),
+    isEnvelope: boolean('is_envelope'),
+    recognitionConfidence: varchar('recognition_confidence', { length: 32 }),
+    visaRelevance: jsonb('visa_relevance').$type<Record<string, unknown>>(),
+    tags: text('tags').array().notNull().default(sql`'{}'::text[]`),
+    archived: boolean('archived').notNull().default(false),
+    userNote: text('user_note'),
+    sourceRecordId: varchar('source_record_id', { length: 24 }),
+    sourceRecordType: varchar('source_record_type', { length: 32 }),
+    createdAt: createdAt(),
+    updatedAt: updatedAt(),
+  },
+  t => ({
+    memberIdx: index('timeline_events_member_id_idx').on(t.memberId),
+    sessionIdx: index('timeline_events_session_id_idx').on(t.sessionId),
+    typeIdx: index('timeline_events_event_type_idx').on(t.eventType),
+    docTypeIdx: index('timeline_events_doc_type_idx').on(t.docType),
+    issuerIdx: index('timeline_events_issuer_idx').on(t.issuer),
+    deadlineIdx: index('timeline_events_deadline_idx').on(t.deadline),
+    createdIdx: index('timeline_events_created_at_idx').on(t.createdAt),
+    archivedIdx: index('timeline_events_archived_idx').on(t.archived),
+    sourceIdx: index('timeline_events_source_idx').on(t.sourceRecordType, t.sourceRecordId),
+    ownerRequired: check(
+      'timeline_events_member_or_session_required',
+      sql`${t.memberId} IS NOT NULL OR ${t.sessionId} IS NOT NULL`,
     ),
   }),
 )
@@ -594,6 +656,8 @@ export type Family = typeof families.$inferSelect
 export type NewFamily = typeof families.$inferInsert
 export type Member = typeof members.$inferSelect
 export type NewMember = typeof members.$inferInsert
+export type TimelineEvent = typeof timelineEvents.$inferSelect
+export type NewTimelineEvent = typeof timelineEvents.$inferInsert
 export type Subscription = typeof subscriptions.$inferSelect
 export type NewSubscription = typeof subscriptions.$inferInsert
 export type Purchase = typeof purchases.$inferSelect

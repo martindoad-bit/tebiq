@@ -19,15 +19,15 @@ import { EVENT } from '@/lib/analytics/events'
 interface Props {
   open: boolean
   onClose: () => void
-  /** 距下个月初剩余天数（用于提示用户配额重置） */
+  /** 距明天额度重置剩余天数（保留旧 prop 名称兼容调用方） */
   daysUntilReset?: number
 }
 
 const FEATURES = [
   '无限次拍照识别',
   '自动提醒重要事项',
-  '永久保存档案',
-  '家人共用账户',
+  '提醒永久保留',
+  '续签自查不限',
 ] as const
 
 export default function QuotaFullModal({ open, onClose, daysUntilReset }: Props) {
@@ -71,14 +71,14 @@ export default function QuotaFullModal({ open, onClose, daysUntilReset }: Props)
           id="quota-modal-title"
           className="text-[16px] font-medium text-ink text-center mb-1"
         >
-          本月免费额度已用完
+          今日免费额度已用完
         </h2>
         <p className="text-[11.5px] text-ash text-center mb-[14px]">
           开通会员，享受无限次拍照即懂
         </p>
         {typeof daysUntilReset === 'number' && daysUntilReset > 0 && (
           <p className="-mt-2.5 mb-3 text-center text-[10.5px] text-haze">
-            距下个月免费额度重置还有 {daysUntilReset} 天
+            明天恢复免费额度
           </p>
         )}
 

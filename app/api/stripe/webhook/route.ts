@@ -24,6 +24,7 @@ import {
   getSubscriptionByStripeSubId,
   updateSubscriptionStatus,
 } from '@/lib/db/queries/subscriptions'
+import { unarchiveTimelineEventsForFamily } from '@/lib/db/queries/timeline'
 import {
   createPurchase,
   markPurchasePaid,
@@ -38,9 +39,7 @@ export const dynamic = 'force-dynamic'
 // --- Helpers --------------------------------------------------------------
 
 const PRODUCT_AMOUNTS: Record<string, number> = {
-  material_package: 980,
   expert_consultation: 9800,
-  photo_credit_pack: 0, // reserved for future
 }
 
 function statusFromStripe(s: Stripe.Subscription.Status): NewSubscription['status'] {
@@ -181,6 +180,7 @@ async function upsertSubscriptionFromStripe(
       stripeSubscriptionId: sub.id,
       canceledAt: sub.canceled_at ? toDate(sub.canceled_at) : null,
     })
+    await unarchiveTimelineEventsForFamily(familyId)
     return
   }
 
@@ -195,6 +195,7 @@ async function upsertSubscriptionFromStripe(
       stripeSubscriptionId: sub.id,
       canceledAt: sub.canceled_at ? toDate(sub.canceled_at) : null,
     })
+    await unarchiveTimelineEventsForFamily(familyId)
     return
   }
 
@@ -208,6 +209,7 @@ async function upsertSubscriptionFromStripe(
     stripeCustomerId: customerId ?? undefined,
     stripeSubscriptionId: sub.id,
   })
+  await unarchiveTimelineEventsForFamily(familyId)
 }
 
 async function handleSubscriptionUpdated(sub: Stripe.Subscription): Promise<void> {

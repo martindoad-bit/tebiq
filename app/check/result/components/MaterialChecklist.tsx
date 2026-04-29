@@ -80,7 +80,7 @@ function ExpandableMaterial({ material }: { material: MaterialDetail }) {
           <Detail label="可在线办理" value={online} />
           <div className="bg-highlight border-l-[3px] border-orange-500 px-3 py-2.5 mt-3 rounded">
             <div className="text-[#92400E] font-bold text-xs mb-1">
-              ⚠ 外国人常见踩坑
+              外国人常见问题
             </div>
             <p className="text-[#92400E] text-xs leading-relaxed">{tips}</p>
           </div>

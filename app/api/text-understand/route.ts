@@ -6,11 +6,13 @@ import {
   getTextUnderstandQuotaForFamily,
   getTextUnderstandQuotaForSession,
 } from '@/lib/db/queries/textUnderstand'
+import { createTimelineEvent, findRelatedTimelineEvents } from '@/lib/db/queries/timeline'
 import { buildUserContext } from '@/lib/photo/user-context'
 import {
   TextUnderstandError,
   understandJapaneseText,
 } from '@/lib/text-understand/bedrock'
+import { buildTextTimelineEvent, formatTimelineAssociation } from '@/lib/timeline/builders'
 
 export const dynamic = 'force-dynamic'
 export const runtime = 'nodejs'
@@ -46,13 +48,26 @@ export async function POST(req: Request) {
   try {
     const userContext = user ? await buildUserContext({ memberId: user.id }) : null
     const output = await understandJapaneseText({ text, userNote, userContext })
-    await createTextUnderstandRequest({
+    const requestRecord = await createTextUnderstandRequest({
       familyId: user?.familyId ?? null,
       memberId: user?.id ?? null,
       sessionId,
       inputHash: output.inputHash,
       summary: output.result.detectedTopic ?? output.result.meaning.slice(0, 120),
       aiResponse: output.result as unknown as Record<string, unknown>,
+    })
+    const timelineEvent = await createTimelineEvent(buildTextTimelineEvent({
+      memberId: user?.id ?? null,
+      sessionId,
+      requestId: requestRecord.id,
+      result: output.result,
+      visaType: userContext?.visaType ?? null,
+    }))
+    const relatedEvents = await findRelatedTimelineEvents({
+      owner: { memberId: user?.id ?? null, sessionId },
+      docType: output.result.detectedTopic,
+      excludeId: timelineEvent.id,
+      limit: 3,
     })
 
     const nextQuota = user
@@ -66,6 +81,10 @@ export async function POST(req: Request) {
         userContextInjected: output.userContextInjected,
       },
       quota: nextQuota,
+      timeline: {
+        eventId: timelineEvent.id,
+        relatedEvents: relatedEvents.map(formatTimelineAssociation),
+      },
     })
   } catch (error) {
     if (error instanceof TextUnderstandError) {

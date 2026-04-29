@@ -14,10 +14,12 @@ import { ok, err } from '@/lib/api/response'
 import { getCurrentUser } from '@/lib/auth/session'
 import { getOrCreateAnonymousSessionId } from '@/lib/auth/anonymous-session'
 import { createDocument } from '@/lib/db/queries/documents'
+import { createTimelineEvent, findRelatedTimelineEvents } from '@/lib/db/queries/timeline'
 import { PhotoRecognitionError, recognizePhotoDocument } from '@/lib/photo/bedrock'
 import { getPhotoQuotaForFamily, getPhotoQuotaForSession } from '@/lib/photo/quota'
-import { buildUserContext } from '@/lib/photo/user-context'
+import { buildUserContext, type PhotoUserContext } from '@/lib/photo/user-context'
 import type { PhotoRecognitionResult } from '@/lib/photo/types'
+import { buildPhotoTimelineEvent, formatTimelineAssociation } from '@/lib/timeline/builders'
 import { track } from '@/lib/analytics/track'
 import { EVENT } from '@/lib/analytics/events'
 
@@ -49,7 +51,7 @@ export async function POST(req: Request) {
       { used: quota.used, limit: quota.limit },
       { user, sessionId },
     )
-    return err('quota_exceeded', '本月免费拍照次数已用完', 402, {
+    return err('quota_exceeded', '今日免费拍照次数已用完', 402, {
       used: quota.used,
       limit: quota.limit,
     })
@@ -63,6 +65,7 @@ export async function POST(req: Request) {
 
   let recognition
   let imageUrl = ''
+  let userContext: PhotoUserContext | null = null
   try {
     const form = await req.formData()
     const file = form.get('file')
@@ -71,7 +74,7 @@ export async function POST(req: Request) {
     }
 
     const bytes = Buffer.from(await file.arrayBuffer())
-    const userContext = user
+    userContext = user
       ? await buildUserContext({ memberId: user.id })
       : null
     recognition = await recognizePhotoDocument({
@@ -114,6 +117,21 @@ export async function POST(req: Request) {
     aiResponse: result as unknown as Record<string, unknown>,
   })
 
+  const timelineEvent = await createTimelineEvent(buildPhotoTimelineEvent({
+    memberId: user?.id ?? null,
+    sessionId,
+    documentId: doc.id,
+    result,
+    visaType: userContext?.visaType ?? null,
+  }))
+  const relatedEvents = await findRelatedTimelineEvents({
+    owner: { memberId: user?.id ?? null, sessionId },
+    issuer: result.issuer,
+    docType: result.docType,
+    excludeId: timelineEvent.id,
+    limit: 3,
+  })
+
   await track(
     EVENT.PHOTO_RECOGNIZE_SUCCESS,
     {
@@ -139,5 +157,9 @@ export async function POST(req: Request) {
       ? await getPhotoQuotaForFamily(user.familyId)
       : await getPhotoQuotaForSession(sessionId as string),
     emailPrompt: shouldPromptEmail,
+    timeline: {
+      eventId: timelineEvent.id,
+      relatedEvents: relatedEvents.map(formatTimelineAssociation),
+    },
   })
 }

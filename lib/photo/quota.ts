@@ -1,19 +1,16 @@
+import {
+  countDocumentsThisPeriod,
+  countSessionDocumentsThisPeriod,
+} from '@/lib/db/queries/documents'
+import { familyHasUnlimitedPhoto, FREE_PHOTO_QUOTA_PER_DAY } from '@/lib/billing/access'
+
 /**
  * 拍照配额逻辑。
- * - 免费用户 3 次/月（自然月，UTC 计算）
- * - 订阅用户无限（status='active' 或 'trialing' 的 family）
- *
- * Block 3：基于 documents 表的 created_at + family_id 计数；不需要新表。
+ * - free: 每天 1 次
+ * - 7 天试用 / 付费: 不限次数
  */
-import { and, eq, gte, isNull, sql } from 'drizzle-orm'
-import { db } from '@/lib/db'
-import { documents, subscriptions } from '@/lib/db/schema'
-
-export const FREE_QUOTA_PER_MONTH = 3
-
-function startOfMonthUtc(now = new Date()): Date {
-  return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1, 0, 0, 0, 0))
-}
+export const FREE_QUOTA_PER_MONTH = FREE_PHOTO_QUOTA_PER_DAY
+export const FREE_QUOTA_PER_DAY = FREE_PHOTO_QUOTA_PER_DAY
 
 export interface QuotaStatus {
   unlimited: boolean
@@ -22,63 +19,37 @@ export interface QuotaStatus {
   remaining: number
 }
 
-/**
- * 查询当前 family 的本月拍照配额状态。
- */
 export async function getPhotoQuotaForFamily(familyId: string): Promise<QuotaStatus> {
-  // 1. 检查订阅
-  const sub = await db
-    .select({ status: subscriptions.status, periodEnd: subscriptions.currentPeriodEnd })
-    .from(subscriptions)
-    .where(eq(subscriptions.familyId, familyId))
-    .limit(1)
-
-  const active = sub[0]
-  const isUnlimited =
-    !!active &&
-    (active.status === 'active' || active.status === 'trialing') &&
-    active.periodEnd.getTime() > Date.now()
-
-  if (isUnlimited) {
+  if (await familyHasUnlimitedPhoto(familyId)) {
     return { unlimited: true, used: 0, limit: Infinity, remaining: Infinity }
   }
+  const since = startOfJstDay()
+  const used = await countDocumentsThisPeriod(familyId, since)
+  return limitedQuota(used)
+}
 
-  // 2. 计算本月用量
-  const since = startOfMonthUtc()
-  const rows = await db
-    .select({ c: sql<number>`count(*)::int` })
-    .from(documents)
-    .where(and(eq(documents.familyId, familyId), gte(documents.createdAt, since)))
+export async function getPhotoQuotaForSession(sessionId: string): Promise<QuotaStatus> {
+  const since = startOfJstDay()
+  const used = await countSessionDocumentsThisPeriod(sessionId, since)
+  return limitedQuota(used)
+}
 
-  const used = Number(rows[0]?.c ?? 0)
-  const remaining = Math.max(0, FREE_QUOTA_PER_MONTH - used)
+function limitedQuota(used: number): QuotaStatus {
+  const remaining = Math.max(0, FREE_QUOTA_PER_DAY - used)
   return {
     unlimited: false,
     used,
-    limit: FREE_QUOTA_PER_MONTH,
+    limit: FREE_QUOTA_PER_DAY,
     remaining,
   }
 }
 
-export async function getPhotoQuotaForSession(sessionId: string): Promise<QuotaStatus> {
-  const since = startOfMonthUtc()
-  const rows = await db
-    .select({ c: sql<number>`count(*)::int` })
-    .from(documents)
-    .where(
-      and(
-        eq(documents.sessionId, sessionId),
-        isNull(documents.familyId),
-        gte(documents.createdAt, since),
-      ),
-    )
-
-  const used = Number(rows[0]?.c ?? 0)
-  const remaining = Math.max(0, FREE_QUOTA_PER_MONTH - used)
-  return {
-    unlimited: false,
-    used,
-    limit: FREE_QUOTA_PER_MONTH,
-    remaining,
-  }
+function startOfJstDay(): Date {
+  const today = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Asia/Tokyo',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(new Date())
+  return new Date(`${today}T00:00:00+09:00`)
 }

@@ -5,7 +5,7 @@ import ToolsClient from './ToolsClient'
 
 export const metadata = {
   title: '工具 - TEBIQ',
-  description: 'TEBIQ 的在日生活工具：拍照即懂、文字即懂、续签自查、任务清单。',
+  description: 'TEBIQ 的在日生活工具：拍照即懂、续签自查、我的提醒。',
 }
 
 export default function ToolsPage() {

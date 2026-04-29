@@ -8,6 +8,7 @@ import { err } from '@/lib/api/response'
 import { db } from '@/lib/db'
 import { purchases } from '@/lib/db/schema'
 import { and, eq } from 'drizzle-orm'
+import { isSubscriptionActive } from '@/lib/db/queries/subscriptions'
 
 export const dynamic = 'force-dynamic'
 
@@ -149,16 +150,12 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'history required' }, { status: 400 })
   }
 
-  // --- Paywall: require a paid material_package purchase. -----------------
-  // Accept either:
-  //   (a) the current member's family has any paid material_package, or
-  //   (b) the request carries a quizResultId that matches the metadata of
-  //       a paid material_package purchase (covers the anonymous → paid →
-  //       result-page flow before the user is logged in).
+  // Block 11: the old ¥980 material package is no longer sold.
+  // Existing paid purchases still work; new access comes from archive yearly.
   const user = await getCurrentUser()
   const paid = await hasPaidMaterialPackage(user?.familyId ?? null, quizResultId)
   if (!paid) {
-    return err('payment_required', '请先购买材料包', 402)
+    return err('payment_required', '请先开通档案保留', 402)
   }
 
   const result = judge(history)
@@ -202,6 +199,7 @@ async function hasPaidMaterialPackage(
   quizResultId: string | undefined,
 ): Promise<boolean> {
   if (familyId) {
+    if (await isSubscriptionActive(familyId)) return true
     const rows = await db
       .select({ id: purchases.id })
       .from(purchases)

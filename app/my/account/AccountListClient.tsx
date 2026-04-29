@@ -73,9 +73,10 @@ const ROWS: Row[] = [
   {
     id: 'settings',
     label: '设置',
-    desc: '通知、语言和隐私设置',
+    desc: '导出记录、删除账号、隐私设置',
     icon: Settings,
-    kind: 'disabled',
+    kind: 'link',
+    href: '/settings',
     group: 'settings',
   },
 ]

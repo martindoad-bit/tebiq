@@ -31,11 +31,6 @@ function fmtDate(d: Date): string {
   return `${y}/${m}/${day}`
 }
 
-const TIER_LABEL: Record<string, string> = {
-  basic: '月度会员',
-  premium: '高级会员',
-}
-
 export default async function AccountPage() {
   const user = await getCurrentUser()
   if (!user) redirect('/login?next=/my/account')
@@ -52,7 +47,7 @@ export default async function AccountPage() {
     : (user.phone ?? user.email ?? 'TE').slice(-2)
 
   const tierLine = subActive
-    ? TIER_LABEL[sub!.tier] ?? '会员用户'
+    ? sub!.billingCycle === 'yearly' ? '年度会员' : '月度会员'
     : '免费用户'
   const expiryLine = subActive ? `有效期至 ${fmtDate(sub!.currentPeriodEnd)}` : null
 
