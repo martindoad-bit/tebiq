@@ -54,6 +54,7 @@ function viewStatus(row: CheckDimensionResult | undefined): DimensionStatus {
 async function listArticleDimensionDefinitions(
   visa: CanonicalCheckVisa,
 ): Promise<CheckDimensionDefinition[]> {
+  if (!process.env.DATABASE_URL) return []
   const rows = await db
     .select({
       key: articles.dimensionKey,
@@ -96,12 +97,14 @@ export async function listDimensionViews(
   let definitions = await listArticleDimensionDefinitions(visa).catch(() => [])
   if (definitions.length === 0) definitions = dimensionsForVisa(visa)
   const rows = owner.memberId || owner.sessionId
-    ? await db
+    ? process.env.DATABASE_URL
+      ? await db
         .select()
         .from(checkDimensionResults)
         .where(and(ownerCondition(owner), eq(checkDimensionResults.visaType, visa)))
         .orderBy(desc(checkDimensionResults.updatedAt))
         .catch(() => [])
+      : []
     : []
   const byKey = new Map(rows.map(row => [row.dimensionKey, row]))
   return definitions.map(definition => {

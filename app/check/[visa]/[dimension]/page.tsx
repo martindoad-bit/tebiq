@@ -17,15 +17,17 @@ export default async function DimensionCheckPage({
   params: { visa: string; dimension: string }
 }) {
   const visaType = normalizeCheckVisa(params.visa)
-  const [article] = await db
-    .select()
-    .from(articles)
-    .where(and(
-      eq(articles.visaType, visaType),
-      eq(articles.dimensionKey, params.dimension),
-    ))
-    .limit(1)
-    .catch(() => [])
+  const [article] = process.env.DATABASE_URL
+    ? await db
+      .select()
+      .from(articles)
+      .where(and(
+        eq(articles.visaType, visaType),
+        eq(articles.dimensionKey, params.dimension),
+      ))
+      .limit(1)
+      .catch(() => [])
+    : []
 
   if (!article || !article.questions || !article.resultLogic || !article.resultActions) {
     return <DimensionPreparingPage visaType={visaType} dimensionKey={params.dimension} />
