@@ -51,6 +51,21 @@ export const CHECK_VISA_META: Record<CanonicalCheckVisa, {
   },
 }
 
+const DIMENSION_TITLE_FALLBACK: Record<string, string> = {
+  passport_zairyu: '護照 / 在留カード',
+  residence_tax: '住民税',
+  income_tax: '所得税 / 確定申告',
+  tax_certificate: '課税・納税証明書',
+  health_pension: '健康保険 / 年金',
+  employment_contract: '雇用契約',
+  work_change: '工作变更',
+  income_level: '收入水平',
+  entry_exit_record: '出入国记录',
+  juuminhyou: '住民票',
+  violation_record: '违反记录',
+  material_preparation: '材料准备',
+}
+
 const VISA_ALIASES: Record<string, CanonicalCheckVisa> = {
   gijinkoku: 'technical_humanities_international',
   technical_humanities_international: 'technical_humanities_international',
@@ -173,6 +188,10 @@ export function dimensionsForVisa(visa: CanonicalCheckVisa): CheckDimensionDefin
   return [...BASE_DIMENSIONS, ...(VISA_EXTRA[visa] ?? [])].slice(0, 15)
 }
 
+export function fallbackDimensionTitle(key: string): string {
+  return DIMENSION_TITLE_FALLBACK[key] ?? key.replace(/_/g, ' ')
+}
+
 export function isDimensionTriggered(
   dimension: CheckDimensionDefinition,
   triggered: TriggeredItem[],
@@ -188,12 +207,12 @@ export function defaultActionForStatus(status: DimensionStatus): string {
     case 'needs_action':
       return '递交前确认'
     case 'recent':
-      return '3月内已查'
+      return '基本齐备'
     case 'expired':
-      return '已过期'
+      return '待确认'
     case 'checked':
-      return '已查'
+      return '已确认'
     default:
-      return '未查'
+      return '待确认'
   }
 }

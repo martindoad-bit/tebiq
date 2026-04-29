@@ -83,7 +83,7 @@ function buildAiSystemPrompt(
   summary: string,
   member: Member | null,
 ): string {
-  const trig = result.triggered.map(t => `- ${t.triggerLabel}（${t.severity}）`).join('\n') || '- 无触发风险项'
+  const trig = result.triggered.map(t => `- ${t.triggerLabel}（${t.severity}）`).join('\n') || '- 无触发准备事项'
   const profilePart = member
     ? `\n用户档案：
 - 国籍：${member.nationality ?? '未填'}
@@ -96,7 +96,7 @@ function buildAiSystemPrompt(
   return `你是 TEBIQ 的在日手续助理。基于用户的问卷答案，生成一段 200 字以内的「你需要特别注意的地方」。
 
 判定结果：${result.verdict}
-风险触发项：
+待确认项目：
 ${trig}
 
 摘要：${summary}
@@ -113,7 +113,7 @@ async function callAi(systemPrompt: string): Promise<string> {
   const awsKey = process.env.AWS_ACCESS_KEY_ID
   const awsSecret = process.env.AWS_SECRET_ACCESS_KEY
   if (!awsKey || !awsSecret) {
-    return '请根据上方风险项逐条处理，材料齐全后再行递交。复杂情况建议咨询专家。'
+    return '请根据上方准备事项逐条处理，材料齐全后再行递交。复杂情况建议咨询专家。'
   }
   try {
     const AnthropicBedrock = (await import('@anthropic-ai/bedrock-sdk')).default
@@ -133,7 +133,7 @@ async function callAi(systemPrompt: string): Promise<string> {
   } catch {
     /* fall-through to fallback */
   }
-  return '请根据上方风险项逐条处理，材料齐全后再行递交。复杂情况建议咨询专家。'
+  return '请根据上方准备事项逐条处理，材料齐全后再行递交。复杂情况建议咨询专家。'
 }
 
 export async function POST(req: Request) {

@@ -17,18 +17,18 @@ export async function generateMetadata({
   const v = sp.v
   const n = parseInt(sp.n ?? '0', 10) || 0
 
-  let title = 'TEBIQ - 续签自查结果'
-  let description = '在日签证续签风险自查 · 3 分钟看清你的情况'
+  let title = 'TEBIQ - 续签材料准备检查结果'
+  let description = '在日签证续签材料准备检查 · 3 分钟整理准备事项'
 
   if (v === 'green') {
-    title = '续签前置条件通过 - TEBIQ'
-    description = '续签风险自查结果为通过。'
+    title = '续签材料基本齐备 - TEBIQ'
+    description = '续签材料准备检查结果为基本齐备。'
   } else if (v === 'yellow') {
-    title = `发现 ${n} 项需要注意的问题 - TEBIQ`
-    description = `续签自查发现 ${n} 项需要处理。完整结果与处理建议请查看。`
+    title = `发现 ${n} 项需要补齐 - TEBIQ`
+    description = `材料准备检查发现 ${n} 项需要补齐。完整结果与处理建议请查看。`
   } else if (v === 'red') {
-    title = `发现 ${n} 项严重风险，续签前必须处理 - TEBIQ`
-    description = `续签自查检测到 ${n} 项严重风险。在递签前必须先解决。`
+    title = `发现 ${n} 项待确认事项 - TEBIQ`
+    description = `材料准备检查检测到 ${n} 项待确认事项。递交前请先确认。`
   }
 
   return {

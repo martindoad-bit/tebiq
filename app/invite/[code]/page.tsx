@@ -23,7 +23,7 @@ export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
   title: '朋友邀请你加入 TEBIQ',
-  description: 'TEBIQ 在日生活的小帮手 — 续签自查、拍照识别、到期提醒。',
+  description: 'TEBIQ 在日生活的小帮手 — 续签材料准备检查、拍照识别、到期提醒。',
   robots: { index: false, follow: false }, // 邀请链接不入索引
 }
 
@@ -122,7 +122,7 @@ export default async function InviteLandingPage({
                 TEBIQ 可以帮你处理什么
               </h2>
               <p className="mt-1 text-[11.5px] leading-[1.6] text-ash">
-                续签自查、拍照识别日本生活文件、到期提醒和档案保存，适合在日中文母语者日常使用。
+                续签材料准备检查、拍照识别日本生活文件、到期提醒和档案保存，适合在日中文母语者日常使用。
               </p>
             </div>
           </div>

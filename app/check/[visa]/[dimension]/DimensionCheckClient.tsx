@@ -87,8 +87,8 @@ export default function DimensionCheckClient({
           answers,
           resultLevel: result,
           status: result === 'green' ? 'checked' : 'needs_action',
-          reason: actions[0] ?? (result === 'green' ? '已查' : '递交前确认'),
-          actionLabel: result === 'green' ? '已查' : '递交前确认',
+          reason: actions[0] ?? (result === 'green' ? '已确认' : '递交前确认'),
+          actionLabel: result === 'green' ? '已确认' : '递交前确认',
           riskFlag: priority === 'must_see' ? 'recommended' : null,
         }),
       })
@@ -133,7 +133,7 @@ export default function DimensionCheckClient({
         <section className="rounded-card border border-hairline bg-surface px-4 py-4 shadow-card">
           <h2 className="text-[13px] font-medium text-ink">结果</h2>
           <p className="mt-2 text-[12px] leading-[1.65] text-ash">
-            {result === 'green' ? '已查' : '需处理'}
+            {result === 'green' ? '已确认' : '需要补齐'}
           </p>
           {(resultActions[result] ?? []).length > 0 && (
             <ul className="mt-3 list-disc space-y-1 pl-4 text-[12px] leading-[1.65] text-slate">

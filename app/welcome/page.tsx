@@ -71,7 +71,7 @@ export default async function WelcomePage() {
       <section className="mt-4 rounded-card border border-hairline bg-surface p-4 shadow-card">
         <h2 className="text-[13px] font-medium text-ink">先从这里开始</h2>
         <p className="mt-1 text-[11.5px] leading-[1.6] text-ash">
-          会员体验内可以无限使用拍照即懂，也可以做完续签自查保存到档案。
+          会员体验内可以无限使用拍照即懂，也可以做完续签材料准备检查保存到档案。
         </p>
       </section>
 

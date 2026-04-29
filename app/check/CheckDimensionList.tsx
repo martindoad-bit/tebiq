@@ -10,17 +10,17 @@ import {
 } from '@/lib/check/dimensions'
 
 const STATUS_LABEL: Record<DimensionStatus, string> = {
-  unchecked: '未查',
-  checked: '已查',
-  needs_action: '需处理',
-  recent: '3月内已查',
-  expired: '已过期',
+  unchecked: '待确认',
+  checked: '已确认',
+  needs_action: '需要补齐',
+  recent: '基本齐备',
+  expired: '待确认',
 }
 
 const RISK_LABEL: Record<string, string> = {
-  recommended: '建议必看',
-  archive_triggered: '档案触发',
-  expired: '已过期',
+  recommended: '递交前确认',
+  archive_triggered: '档案缺失',
+  expired: '待确认',
 }
 
 export default function CheckDimensionList({
@@ -35,7 +35,7 @@ export default function CheckDimensionList({
   const checked = dimensions.filter(item => item.status === 'checked' || item.status === 'recent').length
 
   return (
-    <AppShell appBar={<AppBar title="续签自查" back="/" />}>
+    <AppShell appBar={<AppBar title="续签材料准备检查" back="/" />}>
       <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-4 shadow-card">
         <div className="flex items-start gap-3">
           <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-[13px] bg-cool-blue text-ink">
@@ -44,14 +44,14 @@ export default function CheckDimensionList({
           <div className="min-w-0 flex-1">
             <h1 className="text-[16px] font-semibold text-ink">{meta.label}</h1>
             <p className="mt-1 text-[12px] leading-[1.65] text-ash">
-              {checked} 项已查 / {needsAction} 项需处理
+              {checked} 项已确认 / {needsAction} 项需要补齐
             </p>
           </div>
         </div>
         <div className="mt-3 flex items-center justify-between border-t border-hairline pt-3">
-          <span className="text-[11px] text-ash">完整自查约 5 分钟</span>
+          <span className="text-[11px] text-ash">完整检查约 5 分钟</span>
           <Link href={`/check/${visa}/quiz`} className="text-[12px] font-medium text-ink underline-offset-4 hover:underline">
-            完整自查
+            完整检查
           </Link>
         </div>
       </section>

@@ -86,7 +86,7 @@ export default function QuotaFullModal({ open, onClose, daysUntilReset }: Props)
           今日次数已用完
         </h2>
         <p className="mx-auto max-w-[300px] text-center text-[12px] leading-[1.65] text-ash">
-          免费版每天可识别 1 次。已识别的文书在「我的提醒」。
+          免费版每天可识别 1 次。已识别的文书在「我的提醒」时间线。
         </p>
 
         <div className="my-4 rounded-card border border-hairline bg-surface px-4 py-3">
@@ -103,7 +103,7 @@ export default function QuotaFullModal({ open, onClose, daysUntilReset }: Props)
             href="/timeline"
             className="flex min-h-[44px] items-center justify-center rounded-btn border border-hairline bg-surface px-3 py-3 text-center text-[13px] font-medium text-ink transition-colors hover:bg-canvas"
           >
-            查看我的提醒
+            查看时间线
           </Link>
           <Link
             href="/pricing"

@@ -1,20 +1,17 @@
 # AI Handoff - CCA
 
-最后更新: 2026-04-29T06:06:05Z
+最后更新: 2026-04-29T11:29:30Z
 
 ## CCA(代码)状态
 
-- 当前任务: Block 14 - 主页和核心页面结构重构
-- 当前分支: codex/block-14
-- 当前 worktree: /Users/martin/Documents/tebiq/.claude/worktrees/codex-block-14
+- 当前任务: Launch Bug Sweep / P0 修复后二次扫雷（二轮）
+- 当前分支: chore/p0-launch-fixes
+- 当前 worktree: /Users/martin/Documents/tebiq/.claude/worktrees/codex-p0-fixes
 - 状态: awaiting_merge
-- 最近一次 push: push 后以 `codex/block-14` HEAD 为准
+- 最近一次 push: launch bug sweep push 后以 `chore/p0-launch-fixes` HEAD 为准
 - 给其他 AI 的通知:
-  - Block 12 已 merge 到 main 并已生产部署验证。
-  - Block 13 已 push 到 `codex/block-13`，待 merge。
-  - Block 14 已基于 Block 13 完成并 push，待 merge。
-  - 后续 merge 顺序必须是 `codex/block-13` → `codex/block-14`。
-  - codexUI 可在 `codex/block-14` 后做 visual-polish-12，重点处理首页三态、TabBar、/timeline、/photo、/check、/onboarding。
+  - `chore/p0-launch-fixes` 已完成 P0-1 到 P0-3，并完成 launch bug sweep，等待创始人手机端到端测试。
+  - 暂不 merge；测试通过后再进入 main。
 
 ## Block 12 production 验证
 
@@ -42,3 +39,31 @@
 - `npm run db:generate` 通过，No schema changes。
 - `npm run test` 通过。
 - `npm run build` 通过。
+
+## P0 上线修复验证
+
+- P0-1: `/check/[visa]/[dimension]` 数据缺失时降级为准备中页，不再 404。
+- P0-1: `/check` 清单优先读取 batch-04 `articles.dimension_key`，无数据时回退内置维度。
+- P0-1: 用户可见文案改为 `续签材料准备检查 / 准备事项 / 递交前确认` 系统。
+- P0-2: 首页去掉双层重复入口，只保留一个主 CTA，并前置住民税样例结果。
+- P0-2: 新增 `/photo/sample-result`，`/photo` 和 `/timeline` 空态已接入样例。
+- P0-3: `/pricing` 开通按钮上方新增日中双语消费者保护说明。
+- P0-3: 新增 `/settings/account`，删除按钮使用现有软删除 API 和不可撤销二次确认文案。
+- 验证通过: `npm run lint` / `npx tsc --noEmit` / `npm run build` / `npm run test`。
+
+## P0 二次扫雷
+
+- 修正配额弹窗: 副文案含 `「我的提醒」时间线`，CTA 为 `查看时间线 / 升级会员`。
+- 清理自查可见文案残留: 非 admin 前端扫描无 `续签自查 / 当前风险点 / 建议必看 / 风险 / 必看 / 危险`。
+- 修正机械替换表达: `待确认事项触发项 / 待确认事项等级 / 待确认事项高`。
+- 二次验证通过: `npm run lint` / `npx tsc --noEmit` / `npm run build` / `npm run test`。
+- 本地 production server 抽测: `/`、`/photo`、`/photo/sample-result`、`/timeline`、`/pricing`、`/check`、5 个 `/check/{visa}/{dimension}` 组合均为 200；`/settings`、`/settings/account` 未登录 307 跳转。
+- Vercel preview 已 Ready；分支 alias `https://tebiq-git-chore-p0-launch-fixes-martindoad.vercel.app` 当前直连 401，为 Preview Protection。
+
+## Launch Bug Sweep（二轮）
+
+- 新增报告: `LAUNCH_BUG_SWEEP_REPORT.md`。
+- 修复: `/photo/sample-result` demo 字段补全；`/pricing` 消费者保护说明补联系入口；`/knowledge` 无 DB 本地 fallback；自查题库去掉 `一定被拒`。
+- 验证通过: `npm run lint` / `npx tsc --noEmit` / `npm run build` / `npm run test`。
+- 本地 production server 抽测: 指定 17 个页面路由通过；9 个 `/check/{visa}/{dimension}` 组合 200，均走 `该维度准备中` fallback；关键内容断言通过。
+- Preview 抽测: 指定 preview 和分支 alias 均返回 401，为 Vercel Preview Protection，需创始人授权后手机检查。

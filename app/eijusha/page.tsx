@@ -194,7 +194,7 @@ export default function EijushaLandingPage() {
             payload={{ source: 'eijusha_page', visa: 'eijusha' }}
             className="mt-5 flex min-h-[48px] w-full items-center justify-center rounded-btn bg-accent px-4 py-3 text-[13px] font-medium text-white shadow-cta"
           >
-            先做续签自查 →
+            先做材料准备检查 →
           </TrackedLink>
 
           <p className="text-center text-ash text-[11px] mt-8 leading-relaxed">

@@ -100,12 +100,12 @@ export default async function TimelinePage({
                   {item.reason ?? '递交前确认'}
                 </span>
               </span>
-              <StatusBadge tone="attention">需处理</StatusBadge>
+              <StatusBadge tone="attention">需要补齐</StatusBadge>
             </Link>
           ))
         ) : (
           <p className="px-4 py-5 text-[13px] leading-[1.65] text-ash">
-            暂无自查事项。完整自查完成后会进入这里。
+            暂无准备事项。完整材料准备检查完成后会进入这里。
           </p>
         )}
       </ListSection>
@@ -124,10 +124,32 @@ export default async function TimelinePage({
         {events.length > 0 ? (
           events.map(event => <TimelineRow key={event.id} event={event} />)
         ) : (
-          <p className="px-4 py-8 text-center text-[13px] leading-[1.65] text-ash">暂无匹配记录。</p>
+          <TimelineEmptySamples />
         )}
       </ListSection>
     </AppShell>
+  )
+}
+
+function TimelineEmptySamples() {
+  const samples = [
+    { date: '06.30', days: '示例', title: '住民税通知', detail: '6月30日 / 待缴' },
+    { date: '--.--', days: '示例', title: '在留カード更新', detail: '提前2个月递交' },
+    { date: '01.01', days: '示例', title: '学校缴费', detail: '下月1日' },
+  ]
+  return (
+    <div className="opacity-50">
+      {samples.map(item => (
+        <DeadlineRow
+          key={item.title}
+          date={item.date}
+          days={item.days}
+          title={item.title}
+          detail={item.detail}
+          status="示例"
+        />
+      ))}
+    </div>
   )
 }
 

@@ -5,7 +5,7 @@ import { SeoBullet as Bullet, SeoSection as Section, SeoVisaArticleShell } from 
 export const metadata: Metadata = {
   title: '配偶者签证续签指南 2026 | TEBIQ',
   description:
-    '日本人配偶者・永住者配偶者签证续签完整指南。婚姻实质性、同居证明、收入要件、常见踩坑、准备清单。3 分钟自查续签风险。',
+    '日本人配偶者・永住者配偶者签证续签完整指南。婚姻实质性、同居证明、收入要件、常见踩坑、准备清单。3 分钟自查续签待确认事项。',
   alternates: { canonical: '/haigusha' },
   openGraph: {
     title: '配偶者签证续签指南 2026',
@@ -175,7 +175,7 @@ export default function HaigushaLandingPage() {
               <Link href="/knowledge" className="text-ink underline underline-offset-4">
                 签证基础知识
               </Link>
-              ；想直接进入风险自查，可前往{' '}
+              ；想直接进入材料准备检查，可前往{' '}
               <Link href="/visa-select" className="text-ink underline underline-offset-4">
                 签证选择页
               </Link>

@@ -171,7 +171,7 @@ export default function KeieiLandingPage() {
                 <strong>找好税理士搭档：</strong>事业计划书的第三方确认基本必备，建议长期合作。
               </Bullet>
               <Bullet>
-                <strong>做一次自查再咨询：</strong>先自查锁定主要风险点，再带着具体问题约专家，效率最高。
+                <strong>做一次自查再咨询：</strong>先自查锁定主要准备事项点，再带着具体问题约专家，效率最高。
               </Bullet>
             </ul>
             <p className="mt-4">
@@ -191,7 +191,7 @@ export default function KeieiLandingPage() {
             href="/check/keiei/quiz"
             className="mt-5 flex min-h-[48px] w-full items-center justify-center rounded-btn bg-accent px-4 py-3 text-[13px] font-medium text-white shadow-cta"
           >
-            3 分钟开始经营管理续签自查 →
+            3 分钟开始经营管理续签材料准备检查 →
           </Link>
 
           <p className="text-center text-ash text-[11px] mt-8 leading-relaxed">

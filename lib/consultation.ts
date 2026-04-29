@@ -56,7 +56,7 @@ export const VISA_LABEL: Record<string, string> = {
 }
 
 export const COLOR_LABEL: Record<Consultation['resultColor'], string> = {
-  red: '红色（高风险）',
+  red: '红色（待确认）',
   yellow: '黄色（需注意）',
   green: '绿色（可准备）',
   unknown: '未做自查',
