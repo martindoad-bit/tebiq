@@ -96,6 +96,7 @@ export default function SubscribePage() {
       </section>
 
       {err && <p className="mt-3 text-center text-[12px] text-warning" role="alert">{err}</p>}
+      <ConsumerProtectionNotice />
       <Button onClick={handleSubscribe} disabled={busy} className="mt-4">
         {busy ? '处理中' : `开通${selectedPlan.name}`}
       </Button>
@@ -104,6 +105,27 @@ export default function SubscribePage() {
         <Link href="/timeline" className="underline-offset-4 hover:text-ink">查看我的提醒</Link>
       </p>
     </AppShell>
+  )
+}
+
+function ConsumerProtectionNotice() {
+  return (
+    <section className="mt-4 rounded-card border border-hairline bg-surface px-4 py-3 text-[12px] font-normal leading-[1.7] text-ash">
+      <div>
+        <p>【日本語】</p>
+        <p>・月額自動更新 / いつでもキャンセル可</p>
+        <p>・キャンセル後は次回更新日まで利用可</p>
+        <p>・データはいつでも削除可（設定 → アカウント）</p>
+        <p>・原画像は保存しません（OCR処理後即削除）</p>
+      </div>
+      <div className="mt-3">
+        <p>【中文】</p>
+        <p>・月度自动续费 / 随时可取消</p>
+        <p>・取消后可使用至下次续费日</p>
+        <p>・数据可随时删除（设置 → 账号）</p>
+        <p>・原始图片不保存（OCR 后立即删除）</p>
+      </div>
+    </section>
   )
 }
 

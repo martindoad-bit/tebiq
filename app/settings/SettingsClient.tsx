@@ -29,7 +29,7 @@ export default function SettingsClient() {
   }
 
   async function requestDeletion() {
-    if (!window.confirm('确认提交账号删除请求？30 天后执行硬删除。')) return
+    if (!window.confirm('这将删除您的全部档案、提醒和账号。该操作不可撤销。')) return
     setBusy('delete')
     setMessage(null)
     try {
@@ -63,9 +63,9 @@ export default function SettingsClient() {
         disabled={busy !== null}
         className="rounded-card border border-hairline bg-surface px-4 py-4 text-left shadow-card disabled:opacity-60"
       >
-        <span className="block text-[14px] font-medium text-danger">删除我的账号</span>
+        <span className="block text-[14px] font-medium text-danger">删除账号和全部数据</span>
         <span className="mt-1 block text-[12px] leading-[1.6] text-ash">
-          先软删除标记，30 天后执行硬删除。
+          先提交删除标记，30 天后执行硬删除。
         </span>
       </button>
 
