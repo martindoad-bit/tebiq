@@ -250,7 +250,7 @@ export default function ConsultationForm() {
               <li>
                 详见
                 <Link
-                  href="/privacy"
+                  href="/privacy-policy"
                   className="mx-0.5 text-ink underline underline-offset-2"
                 >
                   プライバシーポリシー
