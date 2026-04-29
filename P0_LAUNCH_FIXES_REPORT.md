@@ -1,6 +1,6 @@
 # P0_LAUNCH_FIXES_REPORT
 
-最后更新: 2026-04-29T11:17:57Z
+最后更新: 2026-04-29T11:20:28Z
 
 ## 分支
 
@@ -76,6 +76,11 @@
   - `npm run test` 通过。
   - 本地 production server 路由抽测同上，全部维持预期状态。
   - `/photo?quota=full` 弹窗为客户端渲染；源码文案已验证，服务端 HTML 不包含该 modal 属于预期。
+- Vercel preview:
+  - 最新 deployment: `https://tebiq-2vyrzwbao-martindoad.vercel.app`
+  - 分支 alias: `https://tebiq-git-chore-p0-launch-fixes-martindoad.vercel.app`
+  - `vercel inspect` 状态: `Ready`
+  - 未登录 HTTP 直连返回 401，属于 Vercel Preview Protection；应用路由验证以本地 production server 为准。
 
 ## 自测结果
 
