@@ -58,4 +58,4 @@
 - 修正机械替换表达: `待确认事项触发项 / 待确认事项等级 / 待确认事项高`。
 - 二次验证通过: `npm run lint` / `npx tsc --noEmit` / `npm run build` / `npm run test`。
 - 本地 production server 抽测: `/`、`/photo`、`/photo/sample-result`、`/timeline`、`/pricing`、`/check`、5 个 `/check/{visa}/{dimension}` 组合均为 200；`/settings`、`/settings/account` 未登录 307 跳转。
-- Vercel preview 已 Ready: `https://tebiq-2vyrzwbao-martindoad.vercel.app`；分支 alias `https://tebiq-git-chore-p0-launch-fixes-martindoad.vercel.app` 当前直连 401，为 Preview Protection。
+- Vercel preview 已 Ready；分支 alias `https://tebiq-git-chore-p0-launch-fixes-martindoad.vercel.app` 当前直连 401，为 Preview Protection。

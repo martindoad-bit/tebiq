@@ -77,8 +77,8 @@
   - 本地 production server 路由抽测同上，全部维持预期状态。
   - `/photo?quota=full` 弹窗为客户端渲染；源码文案已验证，服务端 HTML 不包含该 modal 属于预期。
 - Vercel preview:
-  - 最新 deployment: `https://tebiq-2vyrzwbao-martindoad.vercel.app`
   - 分支 alias: `https://tebiq-git-chore-p0-launch-fixes-martindoad.vercel.app`
+  - deployment URL 会随每次 push 更新；以分支 alias 为准。
   - `vercel inspect` 状态: `Ready`
   - 未登录 HTTP 直连返回 401，属于 Vercel Preview Protection；应用路由验证以本地 production server 为准。
 
