@@ -387,7 +387,7 @@ function SaveResultButton({
       className={`no-capture focus-ring flex min-h-[48px] w-full items-center justify-center gap-2 rounded-btn px-4 py-3 text-[13px] font-medium transition-colors disabled:opacity-50 ${colorClass}`}
     >
       <Download size={15} strokeWidth={1.6} />
-      {busy ? '生成图片中…' : '保存结果为图片'}
+      {busy ? '处理中...' : '保存结果为图片'}
     </button>
   )
 }

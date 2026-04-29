@@ -4,7 +4,7 @@
  * Block 7 升级：
  *   - T10a: 客户端 canvas 压缩到 ≤2048px / JPEG q=0.85
  *   - T10b: XMLHttpRequest 上传，监听 progress
- *   - T9b: 「正在识别中...」期间每 1 秒切一句进度提示
+ *   - T9b: 处理期间每 1 秒切一句进度提示
  *
  * 状态机：idle → compressing → uploading(%) → recognizing(rotating msg) → done/error
  *
@@ -41,9 +41,9 @@ type Stage =
   | { kind: 'recognizing'; messageIdx: number }
 
 const RECOGNIZE_MESSAGES = [
-  '识别文书类型…',
-  '提取关键信息…',
-  '整理字段…',
+  '识别文书类型',
+  '提取关键信息',
+  '整理字段',
 ] as const
 
 const MAX_UPLOAD_BYTES = 10 * 1024 * 1024
@@ -96,7 +96,7 @@ export default function PhotoUploader() {
     after: number
   } | null>(null)
 
-  // 「正在识别中…」每 1s 切一句话
+  // 识别阶段每 1s 切一句话
   useEffect(() => {
     if (stage.kind !== 'recognizing') return
     const id = window.setInterval(() => {
@@ -195,17 +195,15 @@ export default function PhotoUploader() {
   let mainLabel: string
   let subLabel: string
   if (stage.kind === 'compressing') {
-    mainLabel = '正在压缩…'
+    mainLabel = '处理中...'
     subLabel = compressInfo
       ? `${formatBytes(compressInfo.before)} → 优化中`
-      : '准备上传'
+      : '压缩图片'
   } else if (stage.kind === 'uploading') {
-    mainLabel = `上传中 ${stage.pct}%`
-    subLabel = compressInfo
-      ? `${formatBytes(compressInfo.before)} → ${formatBytes(compressInfo.after)}`
-      : '请稍候'
+    mainLabel = '处理中...'
+    subLabel = `上传中 ${stage.pct}%`
   } else if (stage.kind === 'recognizing') {
-    mainLabel = '正在识别中…'
+    mainLabel = '处理中...'
     subLabel = RECOGNIZE_MESSAGES[stage.messageIdx]
   } else {
     mainLabel = '拍照识别'

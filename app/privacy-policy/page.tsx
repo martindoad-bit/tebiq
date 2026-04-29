@@ -11,7 +11,7 @@ export default function PrivacyPolicyPage() {
     <AppShell appBar={<AppBar title="隐私政策" back />}>
       <article className="mt-3 space-y-3">
         <section className="rounded-card border border-hairline bg-surface px-4 py-4 shadow-card">
-          <h1 className="text-[17px] font-semibold leading-snug text-ink">
+          <h1 className="text-[17px] font-medium leading-snug text-ink">
             隐私政策 / プライバシーポリシー
           </h1>
           <p className="mt-2 text-[12px] leading-[1.7] text-ash">

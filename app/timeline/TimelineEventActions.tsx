@@ -66,7 +66,7 @@ export default function TimelineEventActions({
             tags: tags.split(',').map(tag => tag.trim()).filter(Boolean),
           })}
         >
-          保存
+          {busy ? '处理中...' : '保存'}
         </Button>
         <button
           type="button"
@@ -74,7 +74,7 @@ export default function TimelineEventActions({
           onClick={() => patch({ archived: !archived })}
           className="focus-ring min-h-[44px] rounded-btn border border-hairline bg-canvas px-4 py-3 text-[13px] font-medium text-ink disabled:opacity-60"
         >
-          {archived ? '取消归档' : '归档'}
+          {busy ? '处理中...' : archived ? '取消归档' : '归档'}
         </button>
       </div>
     </section>

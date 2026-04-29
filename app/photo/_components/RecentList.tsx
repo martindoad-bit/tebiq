@@ -78,7 +78,7 @@ export default function RecentList() {
 
       {items === null && (
         <div className="rounded-card border border-hairline bg-surface/75 px-4 py-4 text-[11px] text-haze">
-          加载中…
+          处理中...
         </div>
       )}
 

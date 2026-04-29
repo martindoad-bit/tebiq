@@ -431,7 +431,7 @@ function ProfileForm({
         disabled={saving || !canSave}
         className="mt-2 min-h-[46px] w-full rounded-btn bg-accent px-4 text-[14px] font-medium text-white shadow-cta disabled:opacity-50"
       >
-        {saving ? '保存中...' : !canSave ? '请先填写必填项' : '保存档案'}
+        {saving ? '处理中...' : !canSave ? '请先填写必填项' : '保存档案'}
       </button>
     </div>
   )

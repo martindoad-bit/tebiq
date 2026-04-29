@@ -40,7 +40,7 @@ export default async function OnboardingPage() {
   return (
     <AppShell appBar={<AppBar title="首次试拍" back="/" />}>
       <section className="pt-3">
-        <h1 className="text-[20px] font-semibold leading-tight text-ink">选择一份现实文件</h1>
+        <h1 className="text-[20px] font-medium leading-tight text-ink">选择一份现实文件</h1>
         <p className="mt-2 text-[12px] leading-[1.65] text-ash">
           7 天试用已开启。拍一份真实文件，结果会自动进入我的提醒。
         </p>

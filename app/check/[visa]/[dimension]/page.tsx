@@ -30,7 +30,7 @@ export default async function DimensionCheckPage({
     <AppShell appBar={<AppBar title="单项自查" back={`/check/${visaType}`} />}>
       <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-4 shadow-card">
         <p className="text-[10.5px] font-medium text-ash">{visaType}</p>
-        <h1 className="mt-1 text-[17px] font-semibold leading-snug text-ink">
+        <h1 className="mt-1 text-[17px] font-medium leading-snug text-ink">
           {article.title}
         </h1>
         <p className="mt-2 text-[12px] leading-[1.65] text-ash">

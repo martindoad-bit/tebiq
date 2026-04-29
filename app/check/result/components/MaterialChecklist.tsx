@@ -66,7 +66,7 @@ function ExpandableMaterial({ material }: { material: MaterialDetail }) {
             <polyline points="20 6 9 17 4 12" />
           </svg>
         </span>
-        <span className="flex-1 text-title text-sm font-bold leading-snug">
+        <span className="flex-1 text-title text-sm font-medium leading-snug">
           {material.name}
         </span>
         <Chevron open={open} />
@@ -79,7 +79,7 @@ function ExpandableMaterial({ material }: { material: MaterialDetail }) {
           <Detail label="大概费用" value={cost} />
           <Detail label="可在线办理" value={online} />
           <div className="bg-highlight border-l-[3px] border-orange-500 px-3 py-2.5 mt-3 rounded">
-            <div className="text-[#92400E] font-bold text-xs mb-1">
+            <div className="text-[#92400E] font-medium text-xs mb-1">
               外国人常见问题
             </div>
             <p className="text-[#92400E] text-xs leading-relaxed">{tips}</p>
@@ -133,7 +133,7 @@ export function CollapsibleChecklist() {
         aria-expanded={open}
       >
         <div className="flex-1 min-w-0 pr-3">
-          <div className="text-primary font-bold text-base leading-snug">
+          <div className="text-primary font-medium text-base leading-snug">
             无论结果如何，以下材料都需要准备
           </div>
           <div className="text-muted text-xs mt-1 leading-relaxed">

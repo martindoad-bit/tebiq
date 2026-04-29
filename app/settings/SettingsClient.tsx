@@ -51,7 +51,9 @@ export default function SettingsClient() {
         disabled={busy !== null}
         className="rounded-card border border-hairline bg-surface px-4 py-4 text-left shadow-card disabled:opacity-60"
       >
-        <span className="block text-[14px] font-medium text-ink">导出我的记录</span>
+        <span className="block text-[14px] font-medium text-ink">
+          {busy === 'export' ? '处理中...' : '导出我的记录'}
+        </span>
         <span className="mt-1 block text-[12px] leading-[1.6] text-ash">
           下载 JSON 文件。
         </span>
@@ -63,7 +65,9 @@ export default function SettingsClient() {
         disabled={busy !== null}
         className="rounded-card border border-hairline bg-surface px-4 py-4 text-left shadow-card disabled:opacity-60"
       >
-        <span className="block text-[14px] font-medium text-danger">删除我的账号</span>
+        <span className="block text-[14px] font-medium text-danger">
+          {busy === 'delete' ? '处理中...' : '删除我的账号'}
+        </span>
         <span className="mt-1 block text-[12px] leading-[1.6] text-ash">
           先软删除标记，30 天后执行硬删除。
         </span>

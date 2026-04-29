@@ -21,7 +21,7 @@ const PAID_PLANS = [
     name: '年度',
     price: '¥8,800',
     period: '年',
-    features: ['拍照每天不限', '提醒持续保留', '时间线查询', '省 25%'],
+    features: ['拍照每天不限', '提醒持续保留', '时间线查询', '年付：每月相当 ¥733'],
   },
 ] as const
 
@@ -97,7 +97,7 @@ export default function SubscribePage() {
 
       {err && <p className="mt-3 text-center text-[12px] text-warning" role="alert">{err}</p>}
       <Button onClick={handleSubscribe} disabled={busy} className="mt-4">
-        {busy ? '处理中' : `开通${selectedPlan.name}`}
+        {busy ? '处理中...' : `开通${selectedPlan.name}`}
       </Button>
 
       <p className="mt-4 text-center text-[12px] text-ash">
@@ -144,16 +144,16 @@ function PlanContent({
         <div>
           <div className="flex items-center gap-2">
             <p className="text-[15px] font-medium text-ink">{name}</p>
-            {name === '年度' && <StatusBadge tone="neutral">省 25%</StatusBadge>}
+            {name === '年度' && <StatusBadge tone="neutral">年付</StatusBadge>}
           </div>
           <p className="mt-2 flex items-baseline gap-1">
-            <span className="numeric text-[34px] font-light leading-none text-ink">{price}</span>
-            {period && <span className="text-[13px] text-ash">/ {period}</span>}
+            <span className="numeric text-[30px] font-light leading-none text-ink">{price}</span>
+            {period && <span className="text-[13px] font-normal text-ash">/ {period}</span>}
           </p>
         </div>
         {selected && <StatusBadge tone="checked">已选</StatusBadge>}
       </div>
-      <ul className="mt-3 grid gap-1.5 text-[12px] leading-[1.6] text-ash">
+      <ul className="mt-3 grid gap-1.5 text-[13px] font-normal leading-[1.62] text-ash">
         {features.map(feature => (
           <li key={feature}>{feature}</li>
         ))}

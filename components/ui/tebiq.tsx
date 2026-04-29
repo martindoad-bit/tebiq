@@ -5,11 +5,11 @@ import { ChevronRight } from 'lucide-react'
 type BadgeTone = 'neutral' | 'checked' | 'attention' | 'expired' | 'recent'
 
 const badgeToneClass: Record<BadgeTone, string> = {
-  neutral: 'border-hairline bg-paper text-ash',
-  checked: 'border-hairline bg-paper text-ash',
-  attention: 'border-warning/55 bg-surface text-ink',
-  expired: 'border-warning/70 bg-surface text-warning',
-  recent: 'border-hairline bg-paper text-ash',
+  neutral: 'bg-paper text-ash',
+  checked: 'bg-paper text-ink',
+  attention: 'bg-[#FFF4E1] text-warning',
+  expired: 'bg-[#FFF4E1] text-warning',
+  recent: 'bg-paper text-ash',
 }
 
 export function StatusBadge({
@@ -21,7 +21,7 @@ export function StatusBadge({
 }) {
   return (
     <span
-      className={`inline-flex min-h-[24px] items-center rounded-chip border px-2 text-[11px] font-normal leading-none ${badgeToneClass[tone]}`}
+      className={`inline-flex min-h-[24px] items-center rounded-chip px-2 text-[11px] font-normal leading-none ${badgeToneClass[tone]}`}
     >
       {children}
     </span>
@@ -37,10 +37,10 @@ export function RiskMark({
 }) {
   return (
     <span
-      className={`inline-flex min-h-[20px] items-center rounded-[6px] border px-1.5 text-[10.5px] leading-none ${
+      className={`inline-flex min-h-[20px] items-center rounded-[6px] px-1.5 text-[10.5px] font-normal leading-none ${
         tone === 'warning'
-          ? 'border-warning/55 bg-surface text-warning'
-          : 'border-hairline bg-paper text-ash'
+          ? 'bg-[#FFF4E1] text-warning'
+          : 'bg-paper text-ash'
       }`}
     >
       {children}
@@ -99,7 +99,7 @@ export function ListRow({
     <>
       {icon && <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center text-ink">{icon}</span>}
       <span className="min-w-0 flex-1">
-        <span className="block truncate text-[15px] font-medium leading-snug text-ink">{title}</span>
+        <span className="block truncate text-[15px] font-normal leading-snug text-ink">{title}</span>
         {subtitle && (
           <span className="mt-0.5 block truncate text-[12px] leading-snug text-ash">{subtitle}</span>
         )}
@@ -177,6 +177,8 @@ export function DeadlineRow({
   status?: string
   urgent?: boolean
 }) {
+  const statusTone: BadgeTone =
+    status === '待确认' || status === '需要补齐' ? 'attention' : 'neutral'
   const content = (
     <>
       <span className="w-[64px] flex-shrink-0">
@@ -186,10 +188,10 @@ export function DeadlineRow({
         </span>
       </span>
       <span className="min-w-0 flex-1">
-        <span className="block truncate text-[14px] font-medium leading-snug text-ink">{title}</span>
+        <span className="block truncate text-[14px] font-normal leading-snug text-ink">{title}</span>
         {detail && <span className="mt-1 block truncate text-[12px] leading-snug text-ash">{detail}</span>}
       </span>
-      {status && <StatusBadge tone={urgent ? 'attention' : 'neutral'}>{status}</StatusBadge>}
+      {status && <StatusBadge tone={statusTone}>{status}</StatusBadge>}
       <ChevronRight size={16} strokeWidth={1.5} className="flex-shrink-0 text-haze" />
     </>
   )
