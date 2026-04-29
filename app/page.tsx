@@ -67,7 +67,7 @@ function NewUserHome() {
             eventName={EVENT.HOME_PHOTO_CARD_CLICK}
             className="focus-ring flex min-h-[46px] items-center justify-center rounded-btn bg-ink px-4 py-3 text-[14px] font-medium leading-none text-white"
           >
-            拍一份文书试试
+            拍照识别文书
           </TrackedLink>
         </div>
       </section>
@@ -175,7 +175,7 @@ function SampleDocumentSection() {
           <ChevronRight size={16} strokeWidth={1.5} className="mt-5 flex-shrink-0 text-haze" />
         </div>
         <div className="border-t border-hairline px-4 py-2.5 text-[12px] leading-none text-ash">
-          查看拍照后会得到的信息 →
+          查看识别结果结构 →
         </div>
       </Link>
     </>

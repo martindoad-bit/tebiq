@@ -21,7 +21,7 @@ export function StatusBadge({
 }) {
   return (
     <span
-      className={`inline-flex min-h-[24px] items-center rounded-chip px-2 text-[11px] font-normal leading-none ${badgeToneClass[tone]}`}
+      className={`inline-flex min-h-[22px] items-center rounded-chip px-2 text-[10.5px] font-normal leading-none ${badgeToneClass[tone]}`}
     >
       {children}
     </span>
@@ -178,7 +178,7 @@ export function DeadlineRow({
   urgent?: boolean
 }) {
   const statusTone: BadgeTone =
-    status === '待确认' || status === '需要补齐' ? 'attention' : 'neutral'
+    status === '待处理' || status === '需要补齐' ? 'attention' : 'neutral'
   const content = (
     <>
       <span className="w-[64px] flex-shrink-0">

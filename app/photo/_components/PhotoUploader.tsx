@@ -218,9 +218,9 @@ export default function PhotoUploader() {
         disabled={busy}
         aria-label="拍照或上传图片"
         aria-busy={busy}
-        className="focus-ring relative mb-4 flex min-h-[304px] w-full max-w-full flex-col items-center justify-center gap-5 overflow-hidden rounded-card border border-dashed border-hairline bg-surface disabled:opacity-70 sm:min-h-[328px]"
+        className="focus-ring relative mb-4 flex min-h-[276px] w-full max-w-full flex-col items-center justify-center gap-5 overflow-hidden rounded-card border border-dashed border-hairline bg-surface disabled:opacity-70 sm:min-h-[312px]"
       >
-        <span className="relative z-10 flex h-[112px] w-[112px] items-center justify-center rounded-full border border-ink text-ink">
+        <span className="relative z-10 flex h-[104px] w-[104px] items-center justify-center rounded-full border border-ink text-ink">
           {busy ? (
             <Loader size={28} color="#0F2544" strokeWidth={1.5} className="animate-spin" />
           ) : (
@@ -252,7 +252,7 @@ export default function PhotoUploader() {
           type="button"
           onClick={onPickUpload}
           disabled={busy}
-          className="focus-ring flex min-h-[56px] w-full items-center gap-3 border-b border-hairline px-4 text-left text-[15px] font-medium text-ink disabled:opacity-70"
+          className="focus-ring flex min-h-[56px] w-full items-center gap-3 border-b border-hairline px-4 text-left text-[15px] font-normal text-ink disabled:opacity-70"
         >
           <FileText size={20} strokeWidth={1.5} />
           上传 PDF
@@ -262,7 +262,7 @@ export default function PhotoUploader() {
           type="button"
           onClick={onPickUpload}
           disabled={busy}
-          className="focus-ring flex min-h-[56px] w-full items-center gap-3 px-4 text-left text-[15px] font-medium text-ink disabled:opacity-70"
+          className="focus-ring flex min-h-[56px] w-full items-center gap-3 px-4 text-left text-[15px] font-normal text-ink disabled:opacity-70"
         >
           <ImageIcon size={20} strokeWidth={1.5} />
           上传图片 / 截图

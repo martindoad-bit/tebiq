@@ -163,7 +163,7 @@ export default function AuthPageClient({ intent = 'login' }: { intent?: 'login' 
         </div>
         <div className="mx-auto mt-5 inline-flex items-center gap-1.5 rounded-full border border-hairline bg-surface px-3 py-1.5 text-[11px] text-ash shadow-card">
           <ShieldCheck size={13} strokeWidth={1.55} className="text-ink" />
-          {inviteCode ? '注册成功后自动领取邀请奖励' : '邮箱优先，也可用手机号登录'}
+          {inviteCode ? '注册后自动领取邀请奖励' : '邮箱优先，手机号可作为备用登录'}
         </div>
       </section>
 
@@ -186,7 +186,7 @@ export default function AuthPageClient({ intent = 'login' }: { intent?: 'login' 
             setError('')
           }}
           className={`min-h-[38px] rounded-[10px] text-[12px] font-medium ${
-            method === 'email' ? 'bg-accent text-ink shadow-soft' : 'text-ash'
+            method === 'email' ? 'bg-ink text-white shadow-soft' : 'text-ash'
           }`}
         >
           用邮箱登录
@@ -198,7 +198,7 @@ export default function AuthPageClient({ intent = 'login' }: { intent?: 'login' 
             setError('')
           }}
           className={`min-h-[38px] rounded-[10px] text-[12px] font-medium ${
-            method === 'phone' ? 'bg-accent text-ink shadow-soft' : 'text-ash'
+            method === 'phone' ? 'bg-ink text-white shadow-soft' : 'text-ash'
           }`}
         >
           用手机号登录
