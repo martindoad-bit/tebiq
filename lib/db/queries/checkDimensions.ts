@@ -10,6 +10,7 @@ import {
 } from '@/lib/db/schema'
 import { plainTextFromMarkdown } from '@/lib/knowledge/markdown'
 import { sanitizePublicKnowledgeText } from '@/lib/knowledge/public-text'
+import { listStaticCheckDimensionDefinitions } from '@/lib/check/static-dimension-content'
 import {
   defaultActionForStatus,
   dimensionsForVisa,
@@ -107,6 +108,7 @@ export async function listDimensionViews(
 ): Promise<DimensionView[]> {
   const visa = normalizeCheckVisa(visaInput)
   let definitions = await listArticleDimensionDefinitions(visa).catch(() => [])
+  if (definitions.length === 0) definitions = await listStaticCheckDimensionDefinitions(visa).catch(() => [])
   if (definitions.length === 0) definitions = dimensionsForVisa(visa)
   const rows = owner.memberId || owner.sessionId
     ? process.env.DATABASE_URL

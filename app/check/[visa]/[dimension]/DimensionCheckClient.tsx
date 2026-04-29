@@ -15,7 +15,7 @@ interface Question {
 }
 
 interface Props {
-  articleId: string
+  articleId: string | null
   visaType: string
   dimensionKey: string
   title: string

@@ -5,6 +5,7 @@ import AppShell from '@/app/_components/v5/AppShell'
 import AppBar from '@/app/_components/v5/AppBar'
 import Button from '@/app/_components/v5/Button'
 import { CHECK_VISA_META, fallbackDimensionTitle, normalizeCheckVisa } from '@/lib/check/dimensions'
+import { getStaticCheckDimensionContent } from '@/lib/check/static-dimension-content'
 import { db } from '@/lib/db'
 import { articles } from '@/lib/db/schema'
 import { sanitizePublicKnowledgeText } from '@/lib/knowledge/public-text'
@@ -22,7 +23,7 @@ export default async function DimensionCheckPage({
   params: { visa: string; dimension: string }
 }) {
   const visaType = normalizeCheckVisa(params.visa)
-  const [article] = process.env.DATABASE_URL
+  const [dbArticle] = process.env.DATABASE_URL
     ? await db
       .select()
       .from(articles)
@@ -35,6 +36,12 @@ export default async function DimensionCheckPage({
       .limit(1)
       .catch(() => [])
     : []
+  const staticArticle = dbArticle?.questions && dbArticle.resultLogic && dbArticle.resultActions
+    ? null
+    : await getStaticCheckDimensionContent(visaType, params.dimension)
+  const article = dbArticle?.questions && dbArticle.resultLogic && dbArticle.resultActions
+    ? dbArticle
+    : staticArticle
 
   if (!article || !article.questions || !article.resultLogic || !article.resultActions) {
     return <DimensionPreparingPage visaType={visaType} dimensionKey={params.dimension} />
