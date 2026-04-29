@@ -67,6 +67,7 @@ async function listArticleDimensionDefinitions(
     })
     .from(articles)
     .where(and(
+      eq(articles.category, 'check_dimension'),
       eq(articles.visaType, visa),
       eq(articles.status, 'published'),
       sql`${articles.dimensionKey} is not null`,

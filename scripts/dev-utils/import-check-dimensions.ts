@@ -131,7 +131,7 @@ async function upsertDoc(
     questions: fm.questions ? fm.questions.map(question => ({ ...question })) : null,
     resultLogic: fm.result_logic ? { ...fm.result_logic } : null,
     resultActions: fm.result_actions ? { ...fm.result_actions } : null,
-    reviewNotes: `source: docs/knowledge-seed/check-dimensions/${doc.relativePath}`,
+    reviewNotes: `source: docs/knowledge-seed/${doc.relativePath}${hasReviewMarker(doc) ? '; contains ⚠ review marker' : ''}`,
     updatedAt: new Date(),
   }
 
@@ -142,6 +142,10 @@ async function upsertDoc(
 
   await db.insert(articles).values(values)
   return 'created'
+}
+
+function hasReviewMarker(doc: CheckDimensionDoc): boolean {
+  return doc.body.includes('⚠') || doc.body.includes('⚠️')
 }
 
 main().catch(error => {

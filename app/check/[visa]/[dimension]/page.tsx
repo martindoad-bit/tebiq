@@ -23,6 +23,7 @@ export default async function DimensionCheckPage({
       .select()
       .from(articles)
       .where(and(
+        eq(articles.category, 'check_dimension'),
         eq(articles.visaType, visaType),
         eq(articles.dimensionKey, params.dimension),
         eq(articles.status, 'published'),
@@ -95,10 +96,18 @@ function normalizeResultActions(value: unknown): Record<string, string[]> {
     if (!Array.isArray(item)) return []
     const rows = item
       .filter(v => typeof v === 'string' && v.trim())
-      .map(v => sanitizePublicKnowledgeText(v as string))
+      .map(v => sanitizeCheckActionText(v as string))
     return [[key, rows] as const]
   })
   return Object.fromEntries(entries)
+}
+
+function sanitizeCheckActionText(input: string): string {
+  return sanitizePublicKnowledgeText(input)
+    .replace(/リスク\s*高/g, '递交前确认')
+    .replace(/风险\s*高/g, '递交前确认')
+    .replace(/高风险/g, '递交前确认')
+    .replace(/风险/g, '待确认')
 }
 
 function DimensionPreparingPage({

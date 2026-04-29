@@ -2,10 +2,10 @@ import { readdir, readFile } from 'fs/promises'
 import path from 'path'
 import matter from 'gray-matter'
 
-export const CHECK_DIMENSION_DIR = path.join(
-  process.cwd(),
-  'docs/knowledge-seed/check-dimensions',
-)
+export const CHECK_DIMENSION_DIRS = [
+  'check-dimensions',
+  'dimensions-visa-specific',
+] as const
 
 export const CHECK_DIMENSION_VISA_TYPES = [
   'technical_humanities_international',
@@ -39,6 +39,7 @@ export interface CheckDimensionQuestion {
   type?: string
   show_if?: string
   options?: unknown
+  choices?: unknown
 }
 
 export interface CheckDimensionFrontmatter {
@@ -86,19 +87,25 @@ export async function listMarkdownFiles(dir: string): Promise<string[]> {
 }
 
 export async function readCheckDimensionDocs(): Promise<CheckDimensionDoc[]> {
-  const files = await listMarkdownFiles(CHECK_DIMENSION_DIR)
   const docs: CheckDimensionDoc[] = []
-  for (const filePath of files) {
-    const raw = await readFile(filePath, 'utf8')
-    const parsed = matter(raw)
-    docs.push({
-      filePath,
-      relativePath: path.relative(CHECK_DIMENSION_DIR, filePath),
-      frontmatter: parsed.data as CheckDimensionFrontmatter,
-      body: parsed.content.replace(/^\s+/, ''),
+  for (const dirName of CHECK_DIMENSION_DIRS) {
+    const root = path.join(process.cwd(), 'docs/knowledge-seed', dirName)
+    const files = await listMarkdownFiles(root).catch((error: NodeJS.ErrnoException) => {
+      if (error.code === 'ENOENT') return []
+      throw error
     })
+    for (const filePath of files) {
+      const raw = await readFile(filePath, 'utf8')
+      const parsed = matter(raw)
+      docs.push({
+        filePath,
+        relativePath: path.join(dirName, path.relative(root, filePath)),
+        frontmatter: parsed.data as CheckDimensionFrontmatter,
+        body: parsed.content.replace(/^\s+/, ''),
+      })
+    }
   }
-  return docs
+  return docs.sort((a, b) => a.relativePath.localeCompare(b.relativePath))
 }
 
 export function asStringList(value: string[] | string | undefined): string[] | null {

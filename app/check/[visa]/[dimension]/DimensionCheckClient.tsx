@@ -11,6 +11,7 @@ interface Question {
   type?: string
   show_if?: string
   options?: string[]
+  choices?: string[]
 }
 
 interface Props {
@@ -175,9 +176,8 @@ export default function DimensionCheckClient({
 }
 
 function optionsForQuestion(question: Question, resultLogic: Record<string, string>): string[] {
-  if (Array.isArray(question.options) && question.options.length > 0) {
-    return question.options.filter(option => typeof option === 'string' && option.trim())
-  }
+  const explicitOptions = normalizeChoiceList(question.options ?? question.choices)
+  if (explicitOptions.length > 0) return explicitOptions
   if (question.type === 'yes_no') return ['yes', 'no']
   if (question.type === 'yes_no_unknown') return ['yes', 'no', 'unknown']
   if (question.type === 'yes_no_unknown_na') return ['yes', 'no', 'unknown', 'na']
@@ -186,8 +186,8 @@ function optionsForQuestion(question: Question, resultLogic: Record<string, stri
   if (!id) return ['yes', 'no', 'unknown']
   const expr = Object.values(resultLogic).join(' ')
   const tokens = new Set<string>()
-  for (const match of Array.from(expr.matchAll(new RegExp(`${id}\\s*(?:==|!=)\\s*([a-zA-Z0-9_]+)`, 'g')))) {
-    tokens.add(match[1])
+  for (const match of findComparisons(expr)) {
+    if (match.qid === id) tokens.add(match.value)
   }
   for (const match of Array.from(expr.matchAll(new RegExp(`${id}\\s+IN\\s+\\[([^\\]]+)\\]`, 'g')))) {
     for (const token of match[1].split(',')) {
@@ -196,6 +196,13 @@ function optionsForQuestion(question: Question, resultLogic: Record<string, stri
     }
   }
   return tokens.size > 0 ? Array.from(tokens) : ['yes', 'no', 'unknown']
+}
+
+function normalizeChoiceList(value: unknown): string[] {
+  if (!Array.isArray(value)) return []
+  return value
+    .filter(option => typeof option === 'string' && option.trim())
+    .map(option => option.trim())
 }
 
 function isQuestionVisible(question: Question, answers: Record<string, string>): boolean {
@@ -214,16 +221,19 @@ function evaluateResult(logic: Record<string, string>, answers: Record<string, s
 
 function evaluateExpression(expression: string | undefined, answers: Record<string, string>): boolean {
   if (!expression) return false
-  const js = expression
+  const trimmed = expression.trim()
+  if (trimmed === 'true') return true
+  if (trimmed === 'false') return false
+
+  const js = trimmed
     .replace(/\b(q\d+)\s+IN\s+\[([^\]]+)\]/g, (_, qid: string, values: string) => {
       const list = values.split(',').map(v => JSON.stringify(v.trim())).join(',')
       return `[${list}].includes(ans[${JSON.stringify(qid)}])`
     })
-    .replace(/\b(q\d+)\s*==\s*([a-zA-Z0-9_]+)/g, (_, qid: string, value: string) => {
+    .replace(/\b(q\d+)\s*(==|!=)\s*([^()]+?)(?=\s+(?:AND|OR)\b|\s*\)|$)/g, (_, qid: string, operator: string, rawValue: string) => {
+      const value = rawValue.trim()
+      if (operator === '!=') return `ans[${JSON.stringify(qid)}] !== ${JSON.stringify(value)}`
       return `ans[${JSON.stringify(qid)}] === ${JSON.stringify(value)}`
-    })
-    .replace(/\b(q\d+)\s*!=\s*([a-zA-Z0-9_]+)/g, (_, qid: string, value: string) => {
-      return `ans[${JSON.stringify(qid)}] !== ${JSON.stringify(value)}`
     })
     .replace(/\bAND\b/g, '&&')
     .replace(/\bOR\b/g, '||')
@@ -232,4 +242,14 @@ function evaluateExpression(expression: string | undefined, answers: Record<stri
   } catch {
     return false
   }
+}
+
+function findComparisons(expression: string): Array<{ qid: string; value: string }> {
+  const matches: Array<{ qid: string; value: string }> = []
+  const pattern = /\b(q\d+)\s*(?:==|!=)\s*([^()]+?)(?=\s+(?:AND|OR)\b|\s*\)|$)/g
+  for (const match of Array.from(expression.matchAll(pattern))) {
+    const value = match[2].trim()
+    if (value) matches.push({ qid: match[1], value })
+  }
+  return matches
 }
