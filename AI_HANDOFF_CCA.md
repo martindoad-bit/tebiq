@@ -1,20 +1,18 @@
 # AI Handoff - CCA
 
-最后更新: 2026-04-29T06:06:05Z
+最后更新: 2026-04-29T09:55:40Z
 
 ## CCA(代码)状态
 
-- 当前任务: Block 14 - 主页和核心页面结构重构
-- 当前分支: codex/block-14
-- 当前 worktree: /Users/martin/Documents/tebiq/.claude/worktrees/codex-block-14
+- 当前任务: Resend 邮件集成 - 邮箱注册 magic link 真实发送
+- 当前分支: chore/resend-integration
+- 当前 worktree: /Users/martin/Documents/tebiq/.claude/worktrees/codex-resend
 - 状态: awaiting_merge
-- 最近一次 push: push 后以 `codex/block-14` HEAD 为准
+- 最近一次 push: push 后以 `chore/resend-integration` HEAD 为准
 - 给其他 AI 的通知:
-  - Block 12 已 merge 到 main 并已生产部署验证。
-  - Block 13 已 push 到 `codex/block-13`，待 merge。
-  - Block 14 已基于 Block 13 完成并 push，待 merge。
-  - 后续 merge 顺序必须是 `codex/block-13` → `codex/block-14`。
-  - codexUI 可在 `codex/block-14` 后做 visual-polish-12，重点处理首页三态、TabBar、/timeline、/photo、/check、/onboarding。
+  - `chore/resend-integration` 已接入 Resend magic link 发送。
+  - 生产/Preview 有 `RESEND_API_KEY` 时真实发邮件；本地无 key 时保留 dev mode magic link。
+  - 等创始人真实邮箱测试通过后再 merge 到 main。
 
 ## Block 12 production 验证
 
@@ -42,3 +40,11 @@
 - `npm run db:generate` 通过，No schema changes。
 - `npm run test` 通过。
 - `npm run build` 通过。
+
+## Resend 集成验证
+
+- `npm run lint` 通过。
+- `npx tsc --noEmit` 通过。
+- `npm run build` 通过。
+- `npm run test` 通过。
+- 同邮箱 5 分钟 4 次限流直测通过，第 4 次返回 429 结果。

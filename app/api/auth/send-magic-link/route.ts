@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { checkMagicLinkRateLimit } from '@/lib/auth/magic-link-rate-limit'
 import { createDevLoginLink } from '@/lib/db/queries/devLoginLinks'
 import { createLoginMagicLinkToken } from '@/lib/db/queries/loginMagicLinks'
 import { sendEmail } from '@/lib/notifications/email-channel'
@@ -29,6 +30,11 @@ function siteOrigin(req: Request): string {
   return `${url.protocol}//${url.host}`
 }
 
+function clientIp(req: Request): string {
+  const forwarded = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
+  return forwarded || req.headers.get('x-real-ip')?.trim() || 'unknown'
+}
+
 export async function POST(req: Request) {
   let body: Record<string, unknown>
   try {
@@ -40,6 +46,17 @@ export async function POST(req: Request) {
   const email = parseEmail(body.email)
   if (!email) return NextResponse.json({ error: '请输入有效邮箱' }, { status: 400 })
 
+  const rateLimit = await checkMagicLinkRateLimit({ email, ip: clientIp(req) })
+  if (!rateLimit.allowed) {
+    return NextResponse.json(
+      { error: '发送过于频繁，请稍后重试 / 送信回数が多すぎます。後ほどお試しください' },
+      {
+        status: 429,
+        headers: { 'Retry-After': String(rateLimit.retryAfterSeconds) },
+      },
+    )
+  }
+
   const nextPath = safeNextPath(body.next) ?? '/my/archive'
   const inviteCode =
     typeof body.inviteCode === 'string' && body.inviteCode.trim()
@@ -47,7 +64,9 @@ export async function POST(req: Request) {
       : null
   const row = await createLoginMagicLinkToken({ email, nextPath, inviteCode })
   const loginUrl = `${siteOrigin(req)}/api/auth/verify-magic-link?token=${encodeURIComponent(row.token)}`
-  await createDevLoginLink({ token: row.token, email, link: loginUrl })
+  if (!process.env.RESEND_API_KEY && process.env.NODE_ENV !== 'production') {
+    await createDevLoginLink({ token: row.token, email, link: loginUrl })
+  }
   const rendered = templates.login_magic_link.build({ loginUrl })
   const outcome = await sendEmail({
     to: email,
@@ -64,7 +83,7 @@ export async function POST(req: Request) {
 
   if (!outcome.ok) {
     return NextResponse.json(
-      { error: '邮件发送暂时失败，请稍后再试' },
+      { error: '发送失败，请稍后重试 / 送信に失敗しました。後ほどお試しください' },
       { status: 503 },
     )
   }
