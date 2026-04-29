@@ -1,0 +1,9 @@
+ALTER TABLE "articles" ADD COLUMN "visa_type" varchar(64);--> statement-breakpoint
+ALTER TABLE "articles" ADD COLUMN "dimension_key" varchar(80);--> statement-breakpoint
+ALTER TABLE "articles" ADD COLUMN "dimension_version" integer;--> statement-breakpoint
+ALTER TABLE "articles" ADD COLUMN "priority" varchar(24);--> statement-breakpoint
+ALTER TABLE "articles" ADD COLUMN "expiry_days" integer;--> statement-breakpoint
+ALTER TABLE "articles" ADD COLUMN "questions" jsonb;--> statement-breakpoint
+ALTER TABLE "articles" ADD COLUMN "result_logic" jsonb;--> statement-breakpoint
+ALTER TABLE "articles" ADD COLUMN "result_actions" jsonb;--> statement-breakpoint
+CREATE INDEX "articles_visa_dimension_idx" ON "articles" USING btree ("visa_type","dimension_key");

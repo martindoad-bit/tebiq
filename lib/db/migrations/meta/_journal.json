@@ -127,6 +127,13 @@
       "when": 1777442229812,
       "tag": "0017_check_dimension_events",
       "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1777443089171,
+      "tag": "0018_shallow_nemesis",
+      "breakpoints": true
     }
   ]
 }

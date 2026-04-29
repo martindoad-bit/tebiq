@@ -630,6 +630,14 @@ export const articles = pgTable(
     appliesTo: jsonb('applies_to').$type<string[]>(),
     urgencyLevel: varchar('urgency_level', { length: 24 }),
     estimatedReadTime: integer('estimated_read_time'),
+    visaType: varchar('visa_type', { length: 64 }),
+    dimensionKey: varchar('dimension_key', { length: 80 }),
+    dimensionVersion: integer('dimension_version'),
+    priority: varchar('priority', { length: 24 }),
+    expiryDays: integer('expiry_days'),
+    questions: jsonb('questions').$type<Array<Record<string, unknown>>>(),
+    resultLogic: jsonb('result_logic').$type<Record<string, unknown>>(),
+    resultActions: jsonb('result_actions').$type<Record<string, unknown>>(),
     history: jsonb('history').$type<ArticleHistoryEntry[]>(),
     createdAt: createdAt(),
     updatedAt: updatedAt(),
@@ -641,6 +649,7 @@ export const articles = pgTable(
     categoryIdx: index('articles_category_idx').on(t.category),
     updatedIdx: index('articles_updated_at_idx').on(t.updatedAt),
     urgencyLevelIdx: index('articles_urgency_level_idx').on(t.urgencyLevel),
+    visaDimensionIdx: index('articles_visa_dimension_idx').on(t.visaType, t.dimensionKey),
   }),
 )
 
