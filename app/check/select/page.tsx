@@ -11,6 +11,14 @@ export const metadata: Metadata = {
   alternates: { canonical: '/check/select' },
 }
 
+const VISA_DESCRIPTION: Record<CanonicalCheckVisa, string> = {
+  technical_humanities_international: '技人国',
+  management: '经营管理',
+  spouse: '配偶者相关',
+  permanent_resident_preparation: '永住申请准备',
+  specified_skilled_worker: '特定技能',
+}
+
 export default function CheckSelectPage() {
   return (
     <AppShell appBar={<AppBar title="选择签证类型" back="/check" />}>
@@ -37,7 +45,10 @@ export default function CheckSelectPage() {
               href={`/check/${key}`}
               className="flex items-center justify-between rounded-[12px] border border-hairline bg-surface px-[14px] py-[13px] shadow-card transition-colors hover:border-accent active:translate-y-px"
             >
-              <span className="text-[13px] text-ink jp-text">{item.label}</span>
+              <span className="min-w-0">
+                <span className="block truncate text-[13px] font-medium text-ink jp-text">{item.label}</span>
+                <span className="mt-0.5 block text-[11px] font-normal text-ash">{VISA_DESCRIPTION[key]}</span>
+              </span>
               <ChevronRight size={16} className="text-haze" strokeWidth={1.6} />
             </Link>
           </li>

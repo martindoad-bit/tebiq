@@ -18,7 +18,7 @@ interface Visa {
 
 export default function VisaSelectPage() {
   return (
-    <AppShell appBar={<AppBar title="续签自查" back="/" />}>
+    <AppShell appBar={<AppBar title="续签材料准备检查" back="/" />}>
       <div className="py-5">
         <h1 className="text-[25px] font-medium leading-tight text-ink">
           选择你要续签的在留资格

@@ -1,14 +1,9 @@
 import Link from 'next/link'
-import { Bell, Camera, ChevronRight, ClipboardCheck, FileText } from 'lucide-react'
+import { Bell, CalendarDays, ChevronRight, ClipboardCheck, FileText } from 'lucide-react'
 import AppShell from '@/app/_components/v5/AppShell'
 import TabBar from '@/app/_components/v5/TabBar'
 import TrackedLink from '@/app/_components/v5/TrackedLink'
-import {
-  DeadlineRow,
-  ListRow,
-  ListSection,
-  SectionLabel,
-} from '@/components/ui/tebiq'
+import { DeadlineRow, ListRow, ListSection, SectionLabel } from '@/components/ui/tebiq'
 import { EVENT } from '@/lib/analytics/events'
 import { getCurrentUser } from '@/lib/auth/session'
 import { getMemberAccess, getTimelineRetentionCutoff, type MemberAccess } from '@/lib/billing/access'
@@ -38,7 +33,6 @@ export default async function HomePage() {
     listNeedsActionDimensions(owner, 20).catch(() => []),
   ])
   const upcoming = buildUpcoming(events)
-  const hasPhoto = events.some(event => event.eventType === 'photo_recognition')
   const hasSelfCheck = events.some(event => event.eventType === 'self_check') || checkItems.length > 0
   const hasArchiveData = events.length > 0 || checkItems.length > 0 || Boolean(user.visaExpiry)
 
@@ -50,7 +44,6 @@ export default async function HomePage() {
         upcoming={upcoming}
         needsActionCount={checkItems.length}
         hasArchiveData={hasArchiveData}
-        hasPhoto={hasPhoto}
         hasSelfCheck={hasSelfCheck}
       />
     </AppShell>
@@ -60,37 +53,27 @@ export default async function HomePage() {
 function NewUserHome() {
   return (
     <>
-      <section className="pt-12 text-center">
-        <h1 className="text-[44px] font-medium leading-none tracking-[0.06em] text-ink">TEBIQ</h1>
-        <p className="mx-auto mt-5 max-w-[270px] text-[17px] font-normal leading-[1.7] text-ink">
+      <section className="pt-10 text-center">
+        <h1 className="text-[42px] font-medium leading-none tracking-[0.055em] text-ink">TEBIQ</h1>
+        <p className="mx-auto mt-5 max-w-[280px] text-[16px] font-normal leading-[1.7] text-ink">
           在日生活的日文文书识别和提醒
         </p>
-        <div className="mt-8 grid gap-3">
+        <p className="mx-auto mt-3 max-w-[300px] text-[12px] leading-[1.7] text-ash">
+          住民税、年金、在留カード、契約書を整理。
+        </p>
+        <div className="mt-7 grid gap-3">
           <TrackedLink
             href="/photo"
             eventName={EVENT.HOME_PHOTO_CARD_CLICK}
-            className="focus-ring flex min-h-[48px] items-center justify-center rounded-btn bg-ink px-4 py-3 text-[14px] font-medium leading-none text-white"
+            className="focus-ring flex min-h-[46px] items-center justify-center rounded-btn bg-ink px-4 py-3 text-[14px] font-medium leading-none text-white"
           >
             拍一份文书试试
-          </TrackedLink>
-          <TrackedLink
-            href="/check"
-            eventName={EVENT.HOME_CHECK_CARD_CLICK}
-            className="focus-ring flex min-h-[48px] items-center justify-center rounded-btn border border-hairline bg-surface px-4 py-3 text-[14px] font-medium leading-none text-ink"
-          >
-            做一次续签自查
           </TrackedLink>
         </div>
       </section>
 
-      <SectionLabel title="常用工具" />
-      <ToolList photoSubtitle="识别日文文书" checkSubtitle="当前风险点" reminderSubtitle="期限事项" />
-
-      <section className="mt-6 rounded-card border border-hairline bg-surface px-5 py-8 text-center">
-        <FileText size={30} strokeWidth={1.5} className="mx-auto text-haze" />
-        <p className="mt-4 text-[16px] font-normal text-ash">还没识别文书。</p>
-        <p className="mt-1 text-[14px] text-ash">先拍一张试试。</p>
-      </section>
+      <SampleDocumentSection />
+      <MoreFeatures />
     </>
   )
 }
@@ -101,7 +84,6 @@ function UserHome({
   upcoming,
   needsActionCount,
   hasArchiveData,
-  hasPhoto,
   hasSelfCheck,
 }: {
   user: Member
@@ -109,7 +91,6 @@ function UserHome({
   upcoming: TimelineEvent[]
   needsActionCount: number
   hasArchiveData: boolean
-  hasPhoto: boolean
   hasSelfCheck: boolean
 }) {
   const daysToExpiry = daysUntilJst(user.visaExpiry)
@@ -129,8 +110,8 @@ function UserHome({
       <ListSection>
         <OverviewRow label="在留卡" value={visaOverview(user, daysToExpiry)} href="/my/profile" />
         <OverviewRow
-          label="自查事项"
-          value={needsActionCount > 0 ? `你有 ${needsActionCount} 项需处理` : hasSelfCheck ? '当前无需处理项' : '做一次自查看看'}
+          label="准备事项"
+          value={needsActionCount > 0 ? `你有 ${needsActionCount} 项需要补齐` : hasSelfCheck ? '当前无需补齐项' : '做一次材料准备检查'}
           href={needsActionCount > 0 || !hasSelfCheck ? '/check' : '/timeline'}
         />
         <OverviewRow label="接下来30天" value={`${next30Count} 件期限事项`} href="/timeline" />
@@ -139,17 +120,13 @@ function UserHome({
       {!hasArchiveData && (
         <section className="mt-4 border-b border-hairline pb-4">
           <p className="text-[13px] leading-[1.7] text-ash">
-            当前记录为空。可以先拍一份文书，或做一次续签自查。
+            当前记录为空。可以先拍一份文书，或做一次材料准备检查。
           </p>
         </section>
       )}
 
-      <SectionLabel title="常用工具" />
-      <ToolList
-        photoSubtitle={hasPhoto ? '识别日文文书' : '拍一份文书试试'}
-        checkSubtitle={needsActionCount > 0 ? `${needsActionCount} 项需处理` : hasSelfCheck ? '当前风险点' : '做一次自查看看'}
-        reminderSubtitle={`${next30Count} 项期限事项`}
-      />
+      <SampleDocumentSection />
+      <MoreFeatures needsActionCount={needsActionCount} next30Count={next30Count} />
 
       <SectionLabel title="接下来30天的期限事项" action="全部" href="/timeline" />
       <ListSection className="mt-3">
@@ -176,36 +153,60 @@ function UserHome({
   )
 }
 
-function ToolList({
-  photoSubtitle,
-  checkSubtitle,
-  reminderSubtitle,
+function SampleDocumentSection() {
+  return (
+    <>
+      <SectionLabel title="最近文书示例" />
+      <Link
+        href="/photo/sample-result"
+        className="mt-3 block overflow-hidden rounded-card border border-hairline bg-surface active:bg-paper"
+      >
+        <div className="flex items-start gap-3 px-4 py-4">
+          <span className="mt-0.5 flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-[10px] bg-paper text-ink">
+            <FileText size={17} strokeWidth={1.5} />
+          </span>
+          <span className="min-w-0 flex-1">
+            <span className="block text-[11px] leading-none text-ash">脱敏样例</span>
+            <span className="mt-2 block text-[15px] font-medium leading-snug text-ink jp-text">住民税 納付通知書</span>
+            <span className="mt-1 block text-[12px] leading-[1.6] text-ash">
+              江戸川区役所 / 2026.06.30 / ¥38,500
+            </span>
+          </span>
+          <ChevronRight size={16} strokeWidth={1.5} className="mt-5 flex-shrink-0 text-haze" />
+        </div>
+        <div className="border-t border-hairline px-4 py-2.5 text-[12px] leading-none text-ash">
+          查看拍照后会得到的信息 →
+        </div>
+      </Link>
+    </>
+  )
+}
+
+function MoreFeatures({
+  needsActionCount = 0,
+  next30Count = 0,
 }: {
-  photoSubtitle: string
-  checkSubtitle: string
-  reminderSubtitle: string
+  needsActionCount?: number
+  next30Count?: number
 }) {
   return (
-    <ListSection className="mt-3">
-      <ListRow
-        href="/photo"
-        icon={<Camera size={20} strokeWidth={1.5} />}
-        title="拍照即懂"
-        subtitle={photoSubtitle}
-      />
-      <ListRow
-        href="/check"
-        icon={<ClipboardCheck size={20} strokeWidth={1.5} />}
-        title="续签自查"
-        subtitle={checkSubtitle}
-      />
-      <ListRow
-        href="/timeline"
-        icon={<Bell size={20} strokeWidth={1.5} />}
-        title="我的提醒"
-        subtitle={reminderSubtitle}
-      />
-    </ListSection>
+    <>
+      <SectionLabel title="更多功能" />
+      <ListSection className="mt-3">
+        <ListRow
+          href="/check"
+          icon={<ClipboardCheck size={19} strokeWidth={1.5} />}
+          title="续签材料准备检查"
+          subtitle={needsActionCount > 0 ? `${needsActionCount} 项需要补齐` : '准备事项'}
+        />
+        <ListRow
+          href="/timeline"
+          icon={<CalendarDays size={19} strokeWidth={1.5} />}
+          title="我的提醒"
+          subtitle={next30Count > 0 ? `${next30Count} 项期限事项` : '期限事项'}
+        />
+      </ListSection>
+    </>
   )
 }
 

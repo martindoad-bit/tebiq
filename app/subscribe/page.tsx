@@ -21,7 +21,7 @@ const PAID_PLANS = [
     name: '年度',
     price: '¥8,800',
     period: '年',
-    features: ['拍照每天不限', '提醒持续保留', '时间线查询', '省 25%'],
+    features: ['拍照每天不限', '提醒持续保留', '时间线查询', '年付：每月相当 ¥733'],
   },
 ] as const
 
@@ -69,7 +69,7 @@ export default function SubscribePage() {
         <p className="text-[13px] text-ash">定价</p>
         <h1 className="mt-2 text-[20px] font-medium leading-snug text-ink">文书识别和提醒</h1>
         <p className="mt-2 text-[13px] leading-[1.7] text-ash">
-          按使用频率选择。付款由 Stripe 处理。
+          识别次数、提醒保留和时间线查询。付款由 Stripe 处理。
         </p>
       </section>
 
@@ -97,13 +97,41 @@ export default function SubscribePage() {
 
       {err && <p className="mt-3 text-center text-[12px] text-warning" role="alert">{err}</p>}
       <Button onClick={handleSubscribe} disabled={busy} className="mt-4">
-        {busy ? '处理中' : `开通${selectedPlan.name}`}
+        {busy ? '处理中...' : `开通${selectedPlan.name}`}
       </Button>
+
+      <ConsumerProtectionNotice />
 
       <p className="mt-4 text-center text-[12px] text-ash">
         <Link href="/timeline" className="underline-offset-4 hover:text-ink">查看我的提醒</Link>
       </p>
     </AppShell>
+  )
+}
+
+function ConsumerProtectionNotice() {
+  return (
+    <section className="mt-4 rounded-card border border-hairline bg-surface px-4 py-3">
+      <h2 className="text-[12px] font-medium leading-none text-ink">订阅说明</h2>
+      <dl className="mt-3 grid gap-2.5 text-[12px] leading-[1.6]">
+        <NoticeRow label="续费" value="月度 / 年度自动续费" />
+        <NoticeRow label="取消" value="取消后可使用至当前周期结束" />
+        <NoticeRow label="数据" value="可在设置中导出或提交删除请求" />
+        <NoticeRow label="图片" value="原始图片不保存，OCR 后删除" />
+      </dl>
+      <p className="mt-3 border-t border-hairline pt-3 text-[11px] leading-[1.6] text-ash">
+        联系入口: contact@tebiq.jp
+      </p>
+    </section>
+  )
+}
+
+function NoticeRow({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="grid grid-cols-[44px_1fr] gap-3">
+      <dt className="text-ash">{label}</dt>
+      <dd className="text-slate">{value}</dd>
+    </div>
   )
 }
 
@@ -144,16 +172,16 @@ function PlanContent({
         <div>
           <div className="flex items-center gap-2">
             <p className="text-[15px] font-medium text-ink">{name}</p>
-            {name === '年度' && <StatusBadge tone="neutral">省 25%</StatusBadge>}
+            {name === '年度' && <StatusBadge tone="neutral">年付</StatusBadge>}
           </div>
           <p className="mt-2 flex items-baseline gap-1">
-            <span className="numeric text-[34px] font-light leading-none text-ink">{price}</span>
-            {period && <span className="text-[13px] text-ash">/ {period}</span>}
+            <span className="numeric text-[28px] font-light leading-none text-ink">{price}</span>
+            {period && <span className="text-[13px] font-normal text-ash">/ {period}</span>}
           </p>
         </div>
         {selected && <StatusBadge tone="checked">已选</StatusBadge>}
       </div>
-      <ul className="mt-3 grid gap-1.5 text-[12px] leading-[1.6] text-ash">
+      <ul className="mt-3 grid gap-1.5 text-[13px] font-normal leading-[1.62] text-ash">
         {features.map(feature => (
           <li key={feature}>{feature}</li>
         ))}

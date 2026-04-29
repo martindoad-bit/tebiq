@@ -9,10 +9,13 @@ interface Question {
   id?: string
   text?: string
   type?: string
+  show_if?: string
+  options?: string[]
+  choices?: string[]
 }
 
 interface Props {
-  articleId: string
+  articleId: string | null
   visaType: string
   dimensionKey: string
   title: string
@@ -40,6 +43,9 @@ const VALUE_LABELS: Record<string, string> = {
   over_120: '120天以上',
   under_300: '300万以下',
   '300_to_500': '300-500万',
+  '500_to_800': '500-800万',
+  '800_to_1500': '800-1500万',
+  over_1500: '1500万以上',
   over_500: '500万以上',
   full_time: '正社员',
   contract: '契约社员',
@@ -47,6 +53,16 @@ const VALUE_LABELS: Record<string, string> = {
   trial: '试用期',
   gyomu_itaku: '业务委托',
   freelance: '自由职业',
+  social: '会社社保',
+  national: '国民健康保险/年金',
+  mixed: '两者都有',
+  none: '没有/不确定',
+  special: '特别徴収',
+  normal: '普通徴収',
+  both: '两者都有',
+  '1y': '1 年',
+  '3y': '3 年',
+  '5y': '5 年',
 }
 
 export default function DimensionCheckClient({
@@ -66,7 +82,8 @@ export default function DimensionCheckClient({
   const [error, setError] = useState<string | null>(null)
   const [savedLevel, setSavedLevel] = useState<ResultLevel | null>(null)
   const normalizedQuestions = questions.filter(q => q.id && q.text)
-  const complete = normalizedQuestions.every(q => answers[q.id as string])
+  const visibleQuestions = normalizedQuestions.filter(q => isQuestionVisible(q, answers))
+  const complete = visibleQuestions.every(q => answers[q.id as string])
   const result = useMemo(() => complete ? evaluateResult(resultLogic, answers) : null, [answers, complete, resultLogic])
 
   async function submit() {
@@ -87,8 +104,8 @@ export default function DimensionCheckClient({
           answers,
           resultLevel: result,
           status: result === 'green' ? 'checked' : 'needs_action',
-          reason: actions[0] ?? (result === 'green' ? '已查' : '递交前确认'),
-          actionLabel: result === 'green' ? '已查' : '递交前确认',
+          reason: actions[0] ?? (result === 'green' ? '已确认' : '递交前确认'),
+          actionLabel: result === 'green' ? '已确认' : '递交前确认',
           riskFlag: priority === 'must_see' ? 'recommended' : null,
         }),
       })
@@ -104,7 +121,7 @@ export default function DimensionCheckClient({
 
   return (
     <div className="mt-4 grid gap-3">
-      {normalizedQuestions.map(question => {
+      {visibleQuestions.map(question => {
         const id = question.id as string
         return (
           <section key={id} className="rounded-card border border-hairline bg-surface px-4 py-4 shadow-card">
@@ -133,7 +150,7 @@ export default function DimensionCheckClient({
         <section className="rounded-card border border-hairline bg-surface px-4 py-4 shadow-card">
           <h2 className="text-[13px] font-medium text-ink">结果</h2>
           <p className="mt-2 text-[12px] leading-[1.65] text-ash">
-            {result === 'green' ? '已查' : '需处理'}
+            {result === 'green' ? '已确认' : '需要补齐'}
           </p>
           {(resultActions[result] ?? []).length > 0 && (
             <ul className="mt-3 list-disc space-y-1 pl-4 text-[12px] leading-[1.65] text-slate">
@@ -151,7 +168,7 @@ export default function DimensionCheckClient({
         </div>
       ) : (
         <Button onClick={submit} disabled={!complete || busy}>
-          {busy ? '保存中' : '保存结果'}
+          {busy ? '处理中...' : '保存结果'}
         </Button>
       )}
     </div>
@@ -159,6 +176,8 @@ export default function DimensionCheckClient({
 }
 
 function optionsForQuestion(question: Question, resultLogic: Record<string, string>): string[] {
+  const explicitOptions = normalizeChoiceList(question.options ?? question.choices)
+  if (explicitOptions.length > 0) return explicitOptions
   if (question.type === 'yes_no') return ['yes', 'no']
   if (question.type === 'yes_no_unknown') return ['yes', 'no', 'unknown']
   if (question.type === 'yes_no_unknown_na') return ['yes', 'no', 'unknown', 'na']
@@ -167,8 +186,8 @@ function optionsForQuestion(question: Question, resultLogic: Record<string, stri
   if (!id) return ['yes', 'no', 'unknown']
   const expr = Object.values(resultLogic).join(' ')
   const tokens = new Set<string>()
-  for (const match of Array.from(expr.matchAll(new RegExp(`${id}\\s*(?:==|!=)\\s*([a-zA-Z0-9_]+)`, 'g')))) {
-    tokens.add(match[1])
+  for (const match of findComparisons(expr)) {
+    if (match.qid === id) tokens.add(match.value)
   }
   for (const match of Array.from(expr.matchAll(new RegExp(`${id}\\s+IN\\s+\\[([^\\]]+)\\]`, 'g')))) {
     for (const token of match[1].split(',')) {
@@ -177,6 +196,20 @@ function optionsForQuestion(question: Question, resultLogic: Record<string, stri
     }
   }
   return tokens.size > 0 ? Array.from(tokens) : ['yes', 'no', 'unknown']
+}
+
+function normalizeChoiceList(value: unknown): string[] {
+  if (!Array.isArray(value)) return []
+  return value
+    .filter(option => typeof option === 'string' && option.trim())
+    .map(option => option.trim())
+}
+
+function isQuestionVisible(question: Question, answers: Record<string, string>): boolean {
+  const condition = question.show_if?.trim()
+  if (!condition || condition === 'true') return true
+  if (condition === 'false') return false
+  return evaluateExpression(condition, answers)
 }
 
 function evaluateResult(logic: Record<string, string>, answers: Record<string, string>): ResultLevel {
@@ -188,16 +221,19 @@ function evaluateResult(logic: Record<string, string>, answers: Record<string, s
 
 function evaluateExpression(expression: string | undefined, answers: Record<string, string>): boolean {
   if (!expression) return false
-  const js = expression
+  const trimmed = expression.trim()
+  if (trimmed === 'true') return true
+  if (trimmed === 'false') return false
+
+  const js = trimmed
     .replace(/\b(q\d+)\s+IN\s+\[([^\]]+)\]/g, (_, qid: string, values: string) => {
       const list = values.split(',').map(v => JSON.stringify(v.trim())).join(',')
       return `[${list}].includes(ans[${JSON.stringify(qid)}])`
     })
-    .replace(/\b(q\d+)\s*==\s*([a-zA-Z0-9_]+)/g, (_, qid: string, value: string) => {
+    .replace(/\b(q\d+)\s*(==|!=)\s*([^()]+?)(?=\s+(?:AND|OR)\b|\s*\)|$)/g, (_, qid: string, operator: string, rawValue: string) => {
+      const value = rawValue.trim()
+      if (operator === '!=') return `ans[${JSON.stringify(qid)}] !== ${JSON.stringify(value)}`
       return `ans[${JSON.stringify(qid)}] === ${JSON.stringify(value)}`
-    })
-    .replace(/\b(q\d+)\s*!=\s*([a-zA-Z0-9_]+)/g, (_, qid: string, value: string) => {
-      return `ans[${JSON.stringify(qid)}] !== ${JSON.stringify(value)}`
     })
     .replace(/\bAND\b/g, '&&')
     .replace(/\bOR\b/g, '||')
@@ -206,4 +242,14 @@ function evaluateExpression(expression: string | undefined, answers: Record<stri
   } catch {
     return false
   }
+}
+
+function findComparisons(expression: string): Array<{ qid: string; value: string }> {
+  const matches: Array<{ qid: string; value: string }> = []
+  const pattern = /\b(q\d+)\s*(?:==|!=)\s*([^()]+?)(?=\s+(?:AND|OR)\b|\s*\)|$)/g
+  for (const match of Array.from(expression.matchAll(pattern))) {
+    const value = match[2].trim()
+    if (value) matches.push({ qid: match[1], value })
+  }
+  return matches
 }

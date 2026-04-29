@@ -12,6 +12,7 @@
  */
 'use client'
 import { Suspense } from 'react'
+import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import AppShell from '@/app/_components/v5/AppShell'
 import AppBar from '@/app/_components/v5/AppBar'
@@ -44,6 +45,14 @@ export default function PhotoEntryPage() {
         <p className="mx-auto mb-5 mt-1 max-w-[330px] break-all text-center text-[14px] leading-[1.7] text-ash">
           日文文书识别和提醒
         </p>
+
+        <Link
+          href="/photo/sample-result"
+          className="mb-3 flex min-h-[40px] items-center justify-between rounded-btn border border-hairline bg-surface px-3.5 text-[12px] leading-none text-ink active:bg-paper"
+        >
+          <span>查看一份示例结果</span>
+          <span className="text-haze">→</span>
+        </Link>
 
         <PhotoUploader />
 

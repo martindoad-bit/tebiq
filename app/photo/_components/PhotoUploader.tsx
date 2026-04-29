@@ -4,7 +4,7 @@
  * Block 7 升级：
  *   - T10a: 客户端 canvas 压缩到 ≤2048px / JPEG q=0.85
  *   - T10b: XMLHttpRequest 上传，监听 progress
- *   - T9b: 「正在识别中...」期间每 1 秒切一句进度提示
+ *   - T9b: 处理期间每 1 秒切一句进度提示
  *
  * 状态机：idle → compressing → uploading(%) → recognizing(rotating msg) → done/error
  *
@@ -41,9 +41,9 @@ type Stage =
   | { kind: 'recognizing'; messageIdx: number }
 
 const RECOGNIZE_MESSAGES = [
-  '识别文书类型…',
-  '提取关键信息…',
-  '整理字段…',
+  '识别文书类型',
+  '提取关键信息',
+  '整理字段',
 ] as const
 
 const MAX_UPLOAD_BYTES = 10 * 1024 * 1024
@@ -96,7 +96,7 @@ export default function PhotoUploader() {
     after: number
   } | null>(null)
 
-  // 「正在识别中…」每 1s 切一句话
+  // 识别阶段每 1s 切一句话
   useEffect(() => {
     if (stage.kind !== 'recognizing') return
     const id = window.setInterval(() => {
@@ -195,21 +195,19 @@ export default function PhotoUploader() {
   let mainLabel: string
   let subLabel: string
   if (stage.kind === 'compressing') {
-    mainLabel = '正在压缩…'
+    mainLabel = '处理中...'
     subLabel = compressInfo
       ? `${formatBytes(compressInfo.before)} → 优化中`
-      : '准备上传'
+      : '压缩图片'
   } else if (stage.kind === 'uploading') {
-    mainLabel = `上传中 ${stage.pct}%`
-    subLabel = compressInfo
-      ? `${formatBytes(compressInfo.before)} → ${formatBytes(compressInfo.after)}`
-      : '请稍候'
+    mainLabel = '处理中...'
+    subLabel = `上传中 ${stage.pct}%`
   } else if (stage.kind === 'recognizing') {
-    mainLabel = '正在识别中…'
+    mainLabel = '处理中...'
     subLabel = RECOGNIZE_MESSAGES[stage.messageIdx]
   } else {
-    mainLabel = '拍照识别'
-    subLabel = '图片 / PDF / 截图'
+    mainLabel = '拍照或上传文书'
+    subLabel = '图片、PDF、截图'
   }
 
   return (
@@ -220,17 +218,17 @@ export default function PhotoUploader() {
         disabled={busy}
         aria-label="拍照或上传图片"
         aria-busy={busy}
-        className="focus-ring relative mb-4 flex min-h-[376px] w-full max-w-full flex-col items-center justify-center gap-5 overflow-hidden rounded-card border border-dashed border-hairline bg-surface disabled:opacity-70"
+        className="focus-ring relative mb-4 flex min-h-[304px] w-full max-w-full flex-col items-center justify-center gap-5 overflow-hidden rounded-card border border-dashed border-hairline bg-surface disabled:opacity-70 sm:min-h-[328px]"
       >
-        <span className="relative z-10 flex h-[148px] w-[148px] items-center justify-center rounded-full border border-ink text-ink">
+        <span className="relative z-10 flex h-[112px] w-[112px] items-center justify-center rounded-full border border-ink text-ink">
           {busy ? (
-            <Loader size={32} color="#0F2544" strokeWidth={1.5} className="animate-spin" />
+            <Loader size={28} color="#0F2544" strokeWidth={1.5} className="animate-spin" />
           ) : (
-            <Camera size={34} color="#0F2544" strokeWidth={1.5} />
+            <Camera size={30} color="#0F2544" strokeWidth={1.5} />
           )}
         </span>
         <span className="relative z-10 px-6 text-center">
-          <span className="block text-[20px] font-medium leading-none text-ink">
+          <span className="block text-[18px] font-medium leading-none text-ink">
             {mainLabel}
           </span>
           <span className="mt-3 block text-[13px] text-ash transition-opacity duration-200">
@@ -267,13 +265,13 @@ export default function PhotoUploader() {
           className="focus-ring flex min-h-[56px] w-full items-center gap-3 px-4 text-left text-[15px] font-medium text-ink disabled:opacity-70"
         >
           <ImageIcon size={20} strokeWidth={1.5} />
-          上传截图
+          上传图片 / 截图
           <Upload size={18} strokeWidth={1.5} className="ml-auto text-haze" />
         </button>
       </div>
 
-      <p className="mb-3 flex min-h-[44px] items-center border-b border-hairline text-[13px] text-ash">
-        今日 残り 1 次
+      <p className="mb-3 flex min-h-[40px] items-center rounded-btn bg-paper px-3.5 text-[12px] text-ash">
+        今日还可免费识别 1 次
       </p>
 
       <p className="mb-3 flex min-h-[44px] items-center gap-3 rounded-card border border-hairline bg-surface px-4 text-[13px] text-ash">

@@ -205,7 +205,7 @@ export default async function KnowledgeDetailPage({ params }: Props) {
               仍然不确定时
             </h2>
             <p className="mt-1 text-[11.5px] leading-[1.6] text-ash">
-              如果这篇内容和你的实际情况不完全一致，建议先做一次续签自查，再决定是否咨询专家。
+              如果这篇内容和你的实际情况不完全一致，建议先做一次续签材料准备检查，再决定是否咨询专家。
             </p>
           </div>
         </div>
@@ -215,7 +215,7 @@ export default async function KnowledgeDetailPage({ params }: Props) {
             className="flex min-h-[42px] items-center justify-center gap-1.5 rounded-btn bg-accent px-3 py-2 text-[12px] font-medium text-white shadow-cta"
           >
             <ClipboardCheck size={14} strokeWidth={1.55} />
-            做续签自查
+            做续签材料准备检查
           </Link>
           <Link
             href="/photo"

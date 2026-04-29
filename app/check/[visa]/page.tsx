@@ -22,8 +22,8 @@ export async function generateMetadata({
   const visa = normalizeCheckVisa(params.visa)
   const meta = CHECK_VISA_META[visa]
   return {
-    title: `${meta.label} 续签自查 | TEBIQ`,
-    description: `${meta.label} 续签维度清单。完整自查约 5 分钟。`,
+    title: `${meta.label} 续签材料准备检查 | TEBIQ`,
+    description: `${meta.label} 材料准备清单。完整检查约 5 分钟。`,
     alternates: { canonical: `/check/${visa}` },
   }
 }
@@ -35,8 +35,8 @@ export default async function CheckVisaPage({
 }) {
   const visa = normalizeCheckVisa(params.visa)
   if (!CHECK_VISA_META[visa]) notFound()
-  const user = await getCurrentUser()
-  const sessionId = user ? null : await getAnonymousSessionId()
+  const user = await getCurrentUser().catch(() => null)
+  const sessionId = user ? null : await getAnonymousSessionId().catch(() => null)
   const dimensions = await listDimensionViews({ memberId: user?.id ?? null, sessionId }, visa)
 
   return (

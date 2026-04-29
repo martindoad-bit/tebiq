@@ -76,7 +76,7 @@ export default function TrialNotice({
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-ink/28 px-5 pb-[calc(88px+env(safe-area-inset-bottom))] md:items-center md:pb-5">
       <section className="w-full max-w-[420px] rounded-card border border-hairline bg-surface px-4 py-4 shadow-raised">
-        <h2 className="text-[15px] font-semibold leading-snug text-ink">试用已结束</h2>
+        <h2 className="text-[15px] font-medium leading-snug text-ink">试用已结束</h2>
         <p className="mt-2 text-[12px] leading-[1.65] text-ash">
           升级 ¥980/月 后，拍照不限次数，提醒永久保留。
         </p>

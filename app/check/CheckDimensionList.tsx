@@ -10,17 +10,17 @@ import {
 } from '@/lib/check/dimensions'
 
 const STATUS_LABEL: Record<DimensionStatus, string> = {
-  unchecked: '未查',
-  checked: '已查',
-  needs_action: '需处理',
-  recent: '3月内已查',
-  expired: '已过期',
+  unchecked: '待确认',
+  checked: '已确认',
+  needs_action: '需要补齐',
+  recent: '基本齐备',
+  expired: '待确认',
 }
 
 const RISK_LABEL: Record<string, string> = {
-  recommended: '建议必看',
-  archive_triggered: '档案触发',
-  expired: '已过期',
+  recommended: '递交前确认',
+  archive_triggered: '档案缺失',
+  expired: '待确认',
 }
 
 export default function CheckDimensionList({
@@ -35,23 +35,23 @@ export default function CheckDimensionList({
   const checked = dimensions.filter(item => item.status === 'checked' || item.status === 'recent').length
 
   return (
-    <AppShell appBar={<AppBar title="续签自查" back="/" />}>
+    <AppShell appBar={<AppBar title="续签材料准备检查" back="/" />}>
       <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-4 shadow-card">
         <div className="flex items-start gap-3">
           <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-[13px] bg-cool-blue text-ink">
             <ListChecks size={19} strokeWidth={1.55} />
           </span>
           <div className="min-w-0 flex-1">
-            <h1 className="text-[16px] font-semibold text-ink">{meta.label}</h1>
+            <h1 className="text-[16px] font-medium text-ink">{meta.label}</h1>
             <p className="mt-1 text-[12px] leading-[1.65] text-ash">
-              {checked} 项已查 / {needsAction} 项需处理
+              {checked} 项已确认 / {needsAction} 项需要补齐
             </p>
           </div>
         </div>
         <div className="mt-3 flex items-center justify-between border-t border-hairline pt-3">
-          <span className="text-[11px] text-ash">完整自查约 5 分钟</span>
+          <span className="text-[11px] text-ash">完整检查约 5 分钟</span>
           <Link href={`/check/${visa}/quiz`} className="text-[12px] font-medium text-ink underline-offset-4 hover:underline">
-            完整自查
+            完整检查
           </Link>
         </div>
       </section>
@@ -76,26 +76,33 @@ export default function CheckDimensionList({
           维度清单
         </div>
         <ul className="divide-y divide-hairline">
-          {dimensions.map(item => (
-            <li key={item.key} className="py-3 first:pt-1 last:pb-1">
-              <Link href={`/check/${visa}/${item.key}`} className="group flex items-center gap-3">
-                <span className="min-w-0 flex-1">
-                  <span className="flex flex-wrap items-center gap-1.5">
-                    <span className="text-[13px] font-medium text-ink">{item.title}</span>
-                    <StatusBadge status={item.status} />
-                    {item.riskFlag && <RiskBadge label={RISK_LABEL[item.riskFlag] ?? item.riskFlag} />}
+          {dimensions.map(item => {
+            const statusLabel = STATUS_LABEL[item.status]
+            return (
+              <li key={item.key} className="py-3 first:pt-1 last:pb-1">
+                <Link href={`/check/${visa}/${item.key}`} className="group flex items-center gap-3">
+                  <span className="min-w-0 flex-1">
+                    <span className="flex flex-wrap items-center gap-1.5">
+                      <span className="text-[13px] font-medium text-ink">{item.title}</span>
+                      <StatusBadge status={item.status} />
+                      {item.riskFlag && RISK_LABEL[item.riskFlag] !== STATUS_LABEL[item.status] && (
+                        <RiskBadge label={RISK_LABEL[item.riskFlag] ?? item.riskFlag} />
+                      )}
+                    </span>
+                    <span className="mt-1 block text-[11px] leading-[1.55] text-ash">
+                      {item.reason ?? item.description}
+                    </span>
                   </span>
-                  <span className="mt-1 block text-[11px] leading-[1.55] text-ash">
-                    {item.reason ?? item.description}
-                  </span>
-                </span>
-                <span className="flex-shrink-0 text-[11px] text-ash">
-                  {item.actionLabel}
-                </span>
-                <ChevronRight size={14} className="text-haze group-hover:text-ink" />
-              </Link>
-            </li>
-          ))}
+                  {item.actionLabel !== statusLabel && (
+                    <span className="flex-shrink-0 text-[11px] text-ash">
+                      {item.actionLabel}
+                    </span>
+                  )}
+                  <ChevronRight size={14} className="text-haze group-hover:text-ink" />
+                </Link>
+              </li>
+            )
+          })}
         </ul>
       </section>
     </AppShell>
@@ -103,16 +110,19 @@ export default function CheckDimensionList({
 }
 
 function StatusBadge({ status }: { status: DimensionStatus }) {
+  const label = STATUS_LABEL[status]
+  const attention = label === '待确认' || label === '需要补齐'
   return (
-    <span className="rounded-[8px] border border-hairline bg-canvas px-2 py-0.5 text-[10px] font-medium text-slate">
-      {STATUS_LABEL[status]}
+    <span className={`rounded-[8px] px-2 py-0.5 text-[10px] font-normal ${attention ? 'bg-[#FFF4E1] text-warning' : 'bg-paper text-ash'}`}>
+      {label}
     </span>
   )
 }
 
 function RiskBadge({ label }: { label: string }) {
+  const attention = label === '待确认' || label === '需要补齐'
   return (
-    <span className="rounded-[8px] bg-cool-blue px-2 py-0.5 text-[10px] font-medium text-ink">
+    <span className={`rounded-[8px] px-2 py-0.5 text-[10px] font-normal ${attention ? 'bg-[#FFF4E1] text-warning' : 'bg-paper text-ash'}`}>
       {label}
     </span>
   )

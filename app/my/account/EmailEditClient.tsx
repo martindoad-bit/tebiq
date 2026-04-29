@@ -134,7 +134,7 @@ export default function EmailEditClient({ initialEmail, initialVerifiedAt }: Pro
           disabled={busy || !dirty}
           className="min-h-[40px] py-2 text-[13px]"
         >
-          {busy ? '保存中…' : '保存邮箱'}
+          {busy ? '处理中...' : '保存邮箱'}
         </Button>
         {hasSavedEmail && !dirty && !isVerified && (
           <button
@@ -144,7 +144,7 @@ export default function EmailEditClient({ initialEmail, initialVerifiedAt }: Pro
             className="flex min-h-[40px] items-center gap-1.5 rounded-btn border border-hairline bg-surface px-3 py-2 text-[12.5px] font-medium text-ink transition-colors hover:bg-canvas disabled:opacity-60"
           >
             <Send size={13} strokeWidth={1.55} />
-            {verifyBusy ? '发送中…' : '发送验证邮件'}
+            {verifyBusy ? '处理中...' : '发送验证邮件'}
           </button>
         )}
       </div>

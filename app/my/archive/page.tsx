@@ -34,8 +34,8 @@ function quizSeverity(color: 'red' | 'yellow' | 'green'): {
   status: string
   cls: 'urgent' | 'warn' | 'done'
 } {
-  if (color === 'red') return { status: '高风险', cls: 'urgent' }
-  if (color === 'yellow') return { status: '中风险', cls: 'warn' }
+  if (color === 'red') return { status: '待确认', cls: 'urgent' }
+  if (color === 'yellow') return { status: '需要补齐', cls: 'warn' }
   return { status: '可申请', cls: 'done' }
 }
 
@@ -70,7 +70,7 @@ export default async function ArchivePage() {
       return {
         id: `quiz-${r.id}`,
         kind: 'quiz' as const,
-        title: '续签自查结果',
+        title: '续签材料准备检查结果',
         source: VISA_LABEL[r.visaType] ?? r.visaType,
         date: fmtDate(r.createdAt),
         timestamp: r.createdAt.getTime(),

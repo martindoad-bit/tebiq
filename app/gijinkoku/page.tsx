@@ -5,7 +5,7 @@ import { SeoBullet as Bullet, SeoSection as Section, SeoVisaArticleShell } from 
 export const metadata: Metadata = {
   title: '技人国签证续签完整指南 2026 | TEBIQ',
   description:
-    '在日技术・人文知识・国际业务（技人国）签证续签完整指南。涵盖 2026 年 4 月新增书类要求、派遣形态严格化、常见踩坑与准备时间。3 分钟自查续签风险。',
+    '在日技术・人文知识・国际业务（技人国）签证续签完整指南。涵盖 2026 年 4 月新增书类要求、派遣形态严格化、常见踩坑与准备时间。3 分钟自查续签待确认事项。',
   alternates: { canonical: '/gijinkoku' },
   openGraph: {
     title: '技人国签证续签完整指南 2026',
@@ -94,7 +94,7 @@ export default function GijinkokuLandingPage() {
             <p>续签审查围绕以下几条主线展开，缺一项就可能转为不许可或缩短在留期间：</p>
             <ul className="space-y-2">
               <Bullet>
-                <strong>工作内容连续性：</strong>实际从事的业务仍与原签证许可的内容一致。换岗、调动到与学历无关的工作是高风险点。
+                <strong>工作内容连续性：</strong>实际从事的业务仍与原签证许可的内容一致。换岗、调动到与学历无关的工作是高准备事项。
               </Bullet>
               <Bullet>
                 <strong>雇主公司稳定性：</strong>公司经营持续、有完整决算、按时缴纳社保和源泉税。
@@ -162,7 +162,7 @@ export default function GijinkokuLandingPage() {
                 <strong>提前 4-5 个月动手：</strong>入管局允许的最早申请时点是到期前 3 个月，但公司材料、登记书类、税票本身就要 2-4 周。
               </Bullet>
               <Bullet>
-                <strong>先做风险自查：</strong>把税款、社保、工作内容、申报记录四件事一次过一遍，再开始递交材料。
+                <strong>先做材料准备检查：</strong>把税款、社保、工作内容、申报记录四件事一次过一遍，再开始递交材料。
               </Bullet>
               <Bullet>
                 <strong>留意公司类别：</strong>类别 1/2 与 3/4 的材料清单完全不同。先向公司人事确认所属类别。
@@ -179,7 +179,7 @@ export default function GijinkokuLandingPage() {
               <Link href="/knowledge" className="text-ink underline underline-offset-4">
                 签证基础知识
               </Link>
-              ；想直接进入风险自查，可前往{' '}
+              ；想直接进入材料准备检查，可前往{' '}
               <Link href="/visa-select" className="text-ink underline underline-offset-4">
                 签证选择页
               </Link>
@@ -191,7 +191,7 @@ export default function GijinkokuLandingPage() {
             href="/check"
             className="mt-5 flex min-h-[48px] w-full items-center justify-center rounded-btn bg-accent px-4 py-3 text-[13px] font-medium text-white shadow-cta"
           >
-            3 分钟开始技人国续签自查 →
+            3 分钟开始技人国续签材料准备检查 →
           </Link>
 
           <p className="text-center text-ash text-[11px] mt-8 leading-relaxed">

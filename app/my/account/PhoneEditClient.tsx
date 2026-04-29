@@ -128,7 +128,7 @@ export default function PhoneEditClient({ initialPhone }: Props) {
             disabled={busy || !dirty}
             className="min-h-[40px] py-2 text-[13px]"
           >
-            {busy ? '发送中…' : savedPhone ? '更换手机号' : '发送验证码'}
+            {busy ? '处理中...' : savedPhone ? '更换手机号' : '发送验证码'}
           </Button>
         ) : (
           <Button
@@ -137,7 +137,7 @@ export default function PhoneEditClient({ initialPhone }: Props) {
             disabled={busy}
             className="min-h-[40px] py-2 text-[13px]"
           >
-            {busy ? '验证中…' : '确认绑定'}
+            {busy ? '处理中...' : '确认绑定'}
           </Button>
         )}
         {step === 'otp' && (

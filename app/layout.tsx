@@ -13,10 +13,10 @@ export const metadata: Metadata = {
   metadataBase: new URL('https://tebiq.jp'),
   title: 'TEBIQ — 日文文书识别和提醒',
   description:
-    '拍照识别日文文书、续签自查、期限提醒。',
+    '拍照识别日文文书、续签材料准备检查、期限提醒。',
   openGraph: {
     title: 'TEBIQ — 日文文书识别和提醒',
-    description: '拍照识别日文文书、续签自查、期限提醒。',
+    description: '拍照识别日文文书、续签材料准备检查、期限提醒。',
     url: 'https://tebiq.jp',
     siteName: 'TEBIQ',
     locale: 'zh_CN',
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'TEBIQ — 日文文书识别和提醒',
-    description: '拍照识别日文文书、续签自查、期限提醒。',
+    description: '拍照识别日文文书、续签材料准备检查、期限提醒。',
   },
 }
 

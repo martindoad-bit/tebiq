@@ -130,13 +130,13 @@ export default function MovingHubPage() {
         </p>
       </section>
 
-      {/* 风险自查入口 */}
+      {/* 材料准备检查入口 */}
       <section className="rounded-card border border-hairline bg-surface px-4 py-4 shadow-card">
         <div className="mb-2 flex items-center gap-2 text-[13px] font-medium text-ink">
           <CheckSquare size={16} strokeWidth={1.55} />
           2 分钟自查
         </div>
-        <h2 className="text-[15px] font-medium leading-snug text-ink">你的搬家情况有没有特殊风险？</h2>
+        <h2 className="text-[15px] font-medium leading-snug text-ink">你的搬家情况有没有特殊待确认事项？</h2>
         <p className="mt-2 text-[12px] leading-[1.7] text-slate">
           6 个问题，确认是否漏掉关键申报，特别是涉及在留卡和入管局的部分。
         </p>

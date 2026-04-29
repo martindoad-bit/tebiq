@@ -106,7 +106,7 @@ export function buildSelfCheckTimelineEvent(input: {
       resultColor: input.resultColor,
       summary: input.summary,
     },
-    docType: `${input.visaType} 续签自查`,
+    docType: `${input.visaType} 续签材料准备检查`,
     issuer: null,
     amount: null,
     deadline: null,

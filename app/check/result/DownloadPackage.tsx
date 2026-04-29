@@ -83,7 +83,7 @@ export default function DownloadPackage({ visaType = 'gijinkoku' }: { visaType?:
         disabled={busy}
         className="focus-ring w-full min-h-[48px] bg-ink hover:bg-primary-hover disabled:opacity-60 text-white font-medium rounded-btn text-[14px] transition-all"
       >
-        {busy ? '生成中' : '生成完整材料清单'}
+        {busy ? '处理中...' : '生成完整材料清单'}
       </button>
       <p className="text-center text-muted text-xs mt-2">
         {busy
@@ -123,7 +123,7 @@ function renderHtml(data: GenerateResponse): string {
   const dateStr = `${date.getFullYear()} 年 ${date.getMonth() + 1} 月 ${date.getDate()} 日`
   const visaLabel = VISA_LABEL[data.visaType] ?? data.visaType
   const verdictLabel =
-    data.verdict === 'red' ? '高风险（红色）' : data.verdict === 'yellow' ? '需注意（黄色）' : '可以准备（绿色）'
+    data.verdict === 'red' ? '待确认（红色）' : data.verdict === 'yellow' ? '需注意（黄色）' : '可以准备（绿色）'
 
   const profileBlock = data.profileSnapshot
     ? `<dl class="profile">
@@ -137,11 +137,11 @@ function renderHtml(data: GenerateResponse): string {
 
   const triggeredBlock =
     data.triggered.length === 0
-      ? `<p class="muted">未发现红 / 黄风险项。</p>`
+      ? `<p class="muted">未发现红 / 黄准备事项。</p>`
       : data.triggered
           .map(
             t => `<div class="trigger ${t.severity}">
-              <div class="trig-label">${t.severity === 'red' ? '高风险' : '需注意'} · ${esc(t.triggerLabel)}</div>
+              <div class="trig-label">${t.severity === 'red' ? '待确认' : '需注意'} · ${esc(t.triggerLabel)}</div>
               <p>${esc(t.fixHint)}</p>
             </div>`,
           )
@@ -277,7 +277,7 @@ function renderHtml(data: GenerateResponse): string {
   <header class="section-h"><h2>你需要特别注意的地方</h2><span class="pill">AI 个性化建议</span></header>
   <div class="notes">${esc(data.personalizedNotes)}</div>
 
-  <header class="section-h"><h2>触发的风险项</h2><span class="pill">${data.triggered.length} 项</span></header>
+  <header class="section-h"><h2>触发的准备事项</h2><span class="pill">${data.triggered.length} 项</span></header>
   ${triggeredBlock}
 
   <header class="section-h"><h2>需要准备的材料清单</h2><span class="pill">${data.materials.length} 项</span></header>

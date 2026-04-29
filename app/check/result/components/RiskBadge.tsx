@@ -11,7 +11,7 @@ const TEXT_COLOR: Record<Severity, string> = {
 }
 
 const DEFAULT_LABELS: Record<Severity, string> = {
-  red: '高风险',
+  red: '待确认',
   yellow: '需注意',
 }
 

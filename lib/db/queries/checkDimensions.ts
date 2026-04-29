@@ -1,18 +1,24 @@
-import { and, desc, eq, isNull, sql } from 'drizzle-orm'
+import { and, asc, desc, eq, isNull, sql } from 'drizzle-orm'
 import { db } from '@/lib/db'
 import {
+  articles,
   checkDimensionEvents,
   checkDimensionResults,
   checkRuns,
   type CheckDimensionResult,
   type NewCheckDimensionResult,
 } from '@/lib/db/schema'
+import { plainTextFromMarkdown } from '@/lib/knowledge/markdown'
+import { sanitizePublicKnowledgeText } from '@/lib/knowledge/public-text'
+import { listStaticCheckDimensionDefinitions } from '@/lib/check/static-dimension-content'
 import {
   defaultActionForStatus,
   dimensionsForVisa,
+  fallbackDimensionTitle,
   isDimensionTriggered,
   normalizeCheckVisa,
   type CanonicalCheckVisa,
+  type CheckDimensionDefinition,
   type DimensionStatus,
   type DimensionView,
 } from '@/lib/check/dimensions'
@@ -48,18 +54,71 @@ function viewStatus(row: CheckDimensionResult | undefined): DimensionStatus {
   return row.status
 }
 
+async function listArticleDimensionDefinitions(
+  visa: CanonicalCheckVisa,
+): Promise<CheckDimensionDefinition[]> {
+  if (!process.env.DATABASE_URL) return []
+  const rows = await db
+    .select({
+      key: articles.dimensionKey,
+      title: articles.title,
+      priority: articles.priority,
+      expiryDays: articles.expiryDays,
+      bodyMarkdown: articles.bodyMarkdown,
+    })
+    .from(articles)
+    .where(and(
+      eq(articles.category, 'check_dimension'),
+      eq(articles.visaType, visa),
+      eq(articles.status, 'published'),
+      sql`${articles.dimensionKey} is not null`,
+    ))
+    .orderBy(
+      sql`case when ${articles.priority} = 'must_see' then 0 when ${articles.priority} = 'should_see' then 1 else 2 end`,
+      asc(articles.expiryDays),
+      asc(articles.title),
+    )
+
+  const seen = new Set<string>()
+  const definitions: CheckDimensionDefinition[] = []
+  for (const row of rows) {
+    if (!row.key || seen.has(row.key)) continue
+    seen.add(row.key)
+    definitions.push({
+      key: row.key,
+      title: row.title || fallbackDimensionTitle(row.key),
+      description: summaryFromBody(row.bodyMarkdown),
+      riskFlag: row.priority === 'must_see' ? 'recommended' : null,
+      linkedQuestionIds: [],
+    })
+  }
+  return definitions
+}
+
+function summaryFromBody(markdown: string | null): string {
+  const text = sanitizePublicKnowledgeText(plainTextFromMarkdown(markdown ?? ''))
+  const withoutTitle = text.replace(/^.+?这是什么\s*/, '')
+  const summary = (withoutTitle || text).slice(0, 72).trim()
+  return summary || '按该项确认递交前材料和记录。'
+}
+
 export async function listDimensionViews(
   owner: CheckOwner,
   visaInput: string,
 ): Promise<DimensionView[]> {
   const visa = normalizeCheckVisa(visaInput)
-  const definitions = dimensionsForVisa(visa)
+  let definitions = await listArticleDimensionDefinitions(visa).catch(() => [])
+  if (definitions.length === 0) definitions = await listStaticCheckDimensionDefinitions(visa).catch(() => [])
+  if (definitions.length === 0) definitions = dimensionsForVisa(visa)
   const rows = owner.memberId || owner.sessionId
-    ? await db
+    ? process.env.DATABASE_URL
+      ? await db
         .select()
         .from(checkDimensionResults)
         .where(and(ownerCondition(owner), eq(checkDimensionResults.visaType, visa)))
         .orderBy(desc(checkDimensionResults.updatedAt))
+        .catch(() => [])
+      : []
     : []
   const byKey = new Map(rows.map(row => [row.dimensionKey, row]))
   return definitions.map(definition => {
@@ -108,7 +167,7 @@ export async function upsertDimensionsFromQuiz(input: {
       status,
       riskFlag: definition.riskFlag ?? null,
       reason: triggered?.fixHint ?? null,
-      actionLabel: triggered ? '递交前确认' : '已查',
+      actionLabel: triggered ? '递交前确认' : '已确认',
       sourceRecordId: input.quizResultId,
       sourceRecordType: 'quiz_result',
       lastCheckedAt: new Date(),

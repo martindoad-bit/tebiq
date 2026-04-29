@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import type { ReactNode } from 'react'
-import { Filter } from 'lucide-react'
+import { Camera, Filter } from 'lucide-react'
 import AppShell from '@/app/_components/v5/AppShell'
 import AppBar from '@/app/_components/v5/AppBar'
 import TabBar from '@/app/_components/v5/TabBar'
@@ -60,13 +60,24 @@ export default async function TimelinePage({
 
       <section className="mt-3 border-b border-hairline pb-5">
         <p className="text-[13px] text-ash">已记录</p>
-        <p className="mt-2 flex items-baseline gap-2">
-          <span className="numeric text-[52px] font-light leading-none text-ink">{summary.total}</span>
-          <span className="text-[17px] text-ink">件</span>
-        </p>
-        <p className="mt-3 text-[12px] leading-[1.7] text-ash">
-          跨越 {summary.monthsCovered} 个月 / 涉及 {summary.issuerCount} 类机构 / {summary.docTypeCount} 类文书
-        </p>
+        {summary.total > 0 ? (
+          <>
+            <p className="mt-2 flex items-baseline gap-2">
+              <span className="numeric text-[52px] font-light leading-none text-ink">{summary.total}</span>
+              <span className="text-[17px] text-ink">件</span>
+            </p>
+            <p className="mt-3 text-[12px] leading-[1.7] text-ash">
+              跨越 {summary.monthsCovered} 个月 / 涉及 {summary.issuerCount} 类机构 / {summary.docTypeCount} 类文书
+            </p>
+          </>
+        ) : (
+          <>
+            <p className="mt-3 text-[19px] font-medium leading-snug text-ink">待建立时间线</p>
+            <p className="mt-2 text-[12px] leading-[1.7] text-ash">
+              拍照、自查或文字识别后，事项会按日期进入这里。
+            </p>
+          </>
+        )}
       </section>
 
       <section className="mt-4 rounded-card border border-hairline bg-surface px-3 py-3">
@@ -100,12 +111,12 @@ export default async function TimelinePage({
                   {item.reason ?? '递交前确认'}
                 </span>
               </span>
-              <StatusBadge tone="attention">需处理</StatusBadge>
+              <StatusBadge tone="attention">需要补齐</StatusBadge>
             </Link>
           ))
         ) : (
           <p className="px-4 py-5 text-[13px] leading-[1.65] text-ash">
-            暂无自查事项。完整自查完成后会进入这里。
+            暂无准备事项。完整材料准备检查完成后会进入这里。
           </p>
         )}
       </ListSection>
@@ -120,13 +131,19 @@ export default async function TimelinePage({
       </section>
 
       <SectionLabel title="时间线" />
-      <ListSection className="mt-3">
+      <div className="mt-3">
         {events.length > 0 ? (
-          events.map(event => <TimelineRow key={event.id} event={event} />)
+          <ListSection>
+            {events.map(event => <TimelineRow key={event.id} event={event} />)}
+          </ListSection>
+        ) : summary.total === 0 && !eventType && !includeArchived ? (
+          <TimelineEmptyPreview />
         ) : (
-          <p className="px-4 py-8 text-center text-[13px] leading-[1.65] text-ash">暂无匹配记录。</p>
+          <ListSection>
+            <p className="px-4 py-8 text-center text-[13px] leading-[1.65] text-ash">当前筛选暂无记录。</p>
+          </ListSection>
         )}
-      </ListSection>
+      </div>
     </AppShell>
   )
 }
@@ -237,6 +254,41 @@ function TimelineRow({ event }: { event: TimelineEvent }) {
       status={event.archived ? '已归档' : eventTypeLabel(event.eventType)}
       urgent={isUrgent(event.deadline)}
     />
+  )
+}
+
+function TimelineEmptyPreview() {
+  const rows = [
+    { date: '06.30', days: '残り 12 日', title: '住民税通知', detail: '江戸川区役所 / ¥38,500', status: '待确认' },
+    { date: '08.01', days: '予定', title: '在留カード更新', detail: '递交窗口前确认材料', status: '需要补齐' },
+    { date: '09.10', days: '記録', title: '国民健康保険料通知', detail: '区役所 / 已识别', status: '已识别' },
+  ]
+
+  return (
+    <section className="rounded-card bg-paper px-4 py-4">
+      <p className="text-[12px] leading-none text-ash">这里会显示你的文书提醒</p>
+      <div className="mt-3 overflow-hidden rounded-card border border-hairline bg-surface/70 opacity-60">
+        {rows.map(row => (
+          <div key={row.title} className="flex min-h-[60px] items-center gap-3 border-b border-hairline px-3 last:border-b-0">
+            <span className="w-[58px] flex-shrink-0">
+              <span className="block text-[14px] font-light leading-none text-ink numeric">{row.date}</span>
+              <span className="mt-1.5 block text-[11px] leading-none text-ash">{row.days}</span>
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="block truncate text-[13px] font-normal leading-snug text-ink jp-text">{row.title}</span>
+              <span className="mt-1 block truncate text-[11px] leading-snug text-ash">{row.detail}</span>
+            </span>
+            <StatusBadge tone={row.status === '待确认' || row.status === '需要补齐' ? 'attention' : 'neutral'}>
+              {row.status}
+            </StatusBadge>
+          </div>
+        ))}
+      </div>
+      <Link href="/photo" className="mt-4 flex items-center gap-1.5 text-[13px] font-normal text-ink">
+        <Camera size={14} strokeWidth={1.5} />
+        拍一份文书开始 →
+      </Link>
+    </section>
   )
 }
 

@@ -121,7 +121,7 @@ export default function AskClient() {
             {busy ? (
               <span className="inline-flex items-center gap-2">
                 <Loader2 size={15} strokeWidth={1.55} className="animate-spin" />
-                处理中
+                处理中...
               </span>
             ) : (
               '解释文字'

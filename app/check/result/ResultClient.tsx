@@ -32,7 +32,7 @@ const SAVED_FOR_KEY = 'tebiq_check_saved_for' // 去重：值 = 已保存过的 
 const TRACKED_FOR_KEY = 'tebiq_stats_tracked_for' // 匿名 stats 同款去重
 const CONSULTATION_CTX_KEY = 'tebiq_consultation_ctx'
 
-const SHARE_TEXT = '我刚用 TEBIQ 查了续签前置条件，3 分钟就能发现隐藏风险，推荐给在日华人朋友。'
+const SHARE_TEXT = '我刚用 TEBIQ 查了续签前置条件，3 分钟就能发现隐藏准备事项，推荐给在日华人朋友。'
 
 function SummaryCard({
   verdict,
@@ -57,7 +57,7 @@ function SummaryCard({
       </div>
       <p className="text-[14px] leading-[1.7] text-ink">{summary}</p>
       <p className="mt-4 border-t border-hairline pt-3 text-[11.5px] leading-relaxed text-slate/70">
-        TEBIQ 根据你的回答整理风险点。最终提交策略请以原材料、官方说明或专家意见为准。
+        TEBIQ 根据你的回答整理准备事项。最终提交策略请以原材料、官方说明或专家意见为准。
       </p>
     </div>
   )
@@ -352,7 +352,7 @@ function SaveResultButton({
         try {
           await navigator.share({
             files: [file],
-            title: 'TEBIQ 续签自查结果',
+            title: 'TEBIQ 续签材料准备检查结果',
             text: SHARE_TEXT,
           })
           return
@@ -387,7 +387,7 @@ function SaveResultButton({
       className={`no-capture focus-ring flex min-h-[48px] w-full items-center justify-center gap-2 rounded-btn px-4 py-3 text-[13px] font-medium transition-colors disabled:opacity-50 ${colorClass}`}
     >
       <Download size={15} strokeWidth={1.6} />
-      {busy ? '生成图片中…' : '保存结果为图片'}
+      {busy ? '处理中...' : '保存结果为图片'}
     </button>
   )
 }
@@ -437,7 +437,7 @@ function ResultHero({
         <Icon size={26} strokeWidth={1.6} />
       </div>
       <div className="mt-3 text-[11px] font-medium leading-none text-ash">
-        TEBIQ · 续签自查
+        TEBIQ · 续签材料准备检查
       </div>
       <h1 className="mt-2 text-[22px] font-medium leading-snug text-ink">{title}</h1>
       <p className="mx-auto mt-2 max-w-[300px] text-[13px] leading-relaxed text-slate/74">
@@ -475,7 +475,7 @@ function GreenResult({ summary }: { summary: string }) {
         <ResultHero
           verdict="green"
           title="可以开始准备材料"
-          description="前置条件全部通过，没有发现明显风险点。"
+          description="前置条件全部通过，没有发现明显准备事项。"
         />
       }
     >
@@ -595,8 +595,8 @@ function RedResult({ result, summary }: { result: JudgeResult; summary: string }
       banner={
         <ResultHero
           verdict="red"
-          title="检测到高风险项"
-          description={`发现 ${reds.length} 项严重风险，请先确认处理方案。`}
+          title="检测到高准备事项"
+          description={`发现 ${reds.length} 项待确认事项，请先确认处理方案。`}
         />
       }
     >

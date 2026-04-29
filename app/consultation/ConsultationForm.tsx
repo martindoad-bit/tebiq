@@ -250,7 +250,7 @@ export default function ConsultationForm() {
               <li>
                 详见
                 <Link
-                  href="/privacy"
+                  href="/privacy-policy"
                   className="mx-0.5 text-ink underline underline-offset-2"
                 >
                   プライバシーポリシー
@@ -300,7 +300,7 @@ function ContextCard({ ctx }: { ctx: PageContext }) {
         </div>
         {ctx.triggeredItems.length > 0 && (
           <div className="rounded-[11px] bg-canvas px-3 py-2.5">
-            <span className="mb-1.5 block text-[11px] font-medium text-ash">触发的主要风险</span>
+            <span className="mb-1.5 block text-[11px] font-medium text-ash">触发的主要准备事项</span>
             <ul className="space-y-1 text-[12px] leading-relaxed text-slate">
               {ctx.triggeredItems.slice(0, 5).map((it, i) => (
                 <li key={i} className="flex gap-1.5">

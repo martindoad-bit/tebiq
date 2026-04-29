@@ -78,7 +78,7 @@ export async function POST(req: Request) {
     status,
     riskFlag: body.riskFlag ?? null,
     reason: body.reason ?? null,
-    actionLabel: body.actionLabel ?? (status === 'needs_action' ? '递交前确认' : '已查'),
+    actionLabel: body.actionLabel ?? (status === 'needs_action' ? '递交前确认' : '已确认'),
     sourceRecordId: body.articleId ?? null,
     sourceRecordType: 'article',
     lastCheckedAt: now,

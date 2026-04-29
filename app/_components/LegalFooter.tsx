@@ -8,7 +8,7 @@ export default function LegalFooter() {
           <Link href="/tokusho" className="hover:text-title transition-colors">
             特定商取引法に基づく表記
           </Link>
-          <Link href="/privacy" className="hover:text-title transition-colors">
+          <Link href="/privacy-policy" className="hover:text-title transition-colors">
             プライバシーポリシー
           </Link>
           <Link href="/terms" className="hover:text-title transition-colors">

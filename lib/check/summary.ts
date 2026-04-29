@@ -57,7 +57,7 @@ function greenSummary(history: AnsweredItem[]): string {
   if (a['6'] === 0) points.push('社保全程参保')
   if (a['7'] === 0 || a['7'] === 2) points.push('未出现不法残留')
 
-  if (points.length === 0) points.push('关键风险项均通过')
+  if (points.length === 0) points.push('关键准备事项均通过')
 
   return `你的情况：${points.slice(0, 3).join('，')}。主要需要确认材料完整性即可。`
 }
@@ -73,5 +73,5 @@ function yellowSummary(triggered: TriggeredItem[]): string {
 function redSummary(triggered: TriggeredItem[]): string {
   const reds = triggered.filter(t => t.severity === 'red')
   const top = sortBySeverityPriority(reds)[0]
-  return `发现 ${reds.length} 项严重风险，最优先要解决：「${top.triggerLabel}」。在这之前不建议自行递签。`
+  return `发现 ${reds.length} 项待确认事项，最优先要解决：「${top.triggerLabel}」。在这之前不建议自行递签。`
 }
