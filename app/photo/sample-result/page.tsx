@@ -20,6 +20,8 @@ export default function PhotoSampleResultPage() {
       </section>
 
       <section className="mt-3 overflow-hidden rounded-card border border-hairline bg-surface">
+        <SampleFact label="文书类型" value="住民税通知" sub="脱敏样例" />
+        <SampleFact label="发件机构" value="江戸川区役所" sub="样例机构" />
         <SampleFact label="期限" value="2026.06.30" sub="6月30日 到期" />
         <SampleFact label="金额" value="¥38,500" sub="原文件金额为准" />
         <SampleFact label="状态" value="已加入提醒" sub="我的提醒中可查看" />
@@ -31,7 +33,7 @@ export default function PhotoSampleResultPage() {
             <FileText size={17} strokeWidth={1.5} />
           </span>
           <div className="min-w-0 flex-1">
-            <h2 className="text-[13px] font-medium leading-snug text-ink">下一步</h2>
+            <h2 className="text-[13px] font-medium leading-snug text-ink">要做什么</h2>
             <ol className="mt-2 list-decimal space-y-1 pl-4 text-[12px] leading-[1.65] text-ash">
               <li>确认通知书上的納付期限。</li>
               <li>按原文件金额缴纳。</li>
@@ -39,6 +41,13 @@ export default function PhotoSampleResultPage() {
             </ol>
           </div>
         </div>
+      </section>
+
+      <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-4">
+        <h2 className="text-[13px] font-medium leading-snug text-ink">不处理会怎样</h2>
+        <p className="mt-2 text-[12px] leading-[1.65] text-ash">
+          期限后可能产生延滞金或追加通知。具体以原通知书和市役所说明为准。
+        </p>
       </section>
 
       <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-3">

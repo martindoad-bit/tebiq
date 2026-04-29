@@ -65,7 +65,7 @@ export default async function KnowledgePage({
 }: {
   searchParams?: SearchParams
 }) {
-  const all = await listPublishedArticles()
+  const all = await listPublishedArticles().catch(() => [])
   const cat = searchParams?.category
   const filtered = cat && isValidCategory(cat) ? articlesForCategory(all, cat) : all
   const activeCategory = cat && isValidCategory(cat) ? cat : null
