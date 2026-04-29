@@ -278,7 +278,7 @@ function TimelineEmptyPreview() {
               <span className="block truncate text-[13px] font-normal leading-snug text-ink jp-text">{row.title}</span>
               <span className="mt-1 block truncate text-[11px] leading-snug text-ash">{row.detail}</span>
             </span>
-            <StatusBadge tone={row.status === '待确认' || row.status === '需要补齐' ? 'attention' : 'neutral'}>
+            <StatusBadge tone={row.status === '需要补齐' ? 'attention' : 'neutral'}>
               {row.status}
             </StatusBadge>
           </div>

@@ -61,7 +61,7 @@ export default function CheckDimensionList({
           <Link
             key={key}
             href={`/check/${key}`}
-            className={`flex-shrink-0 rounded-[10px] border px-3 py-1.5 text-[11px] font-medium ${
+            className={`flex-shrink-0 rounded-[10px] border px-3 py-1.5 text-[11px] font-normal ${
               key === visa ? 'border-ink bg-ink text-white' : 'border-hairline bg-surface text-slate'
             }`}
           >
@@ -83,7 +83,7 @@ export default function CheckDimensionList({
                 <Link href={`/check/${visa}/${item.key}`} className="group flex items-center gap-3">
                   <span className="min-w-0 flex-1">
                     <span className="flex flex-wrap items-center gap-1.5">
-                      <span className="text-[13px] font-medium text-ink">{item.title}</span>
+                      <span className="text-[13px] font-normal text-ink">{item.title}</span>
                       <StatusBadge status={item.status} />
                       {item.riskFlag && RISK_LABEL[item.riskFlag] !== STATUS_LABEL[item.status] && (
                         <RiskBadge label={RISK_LABEL[item.riskFlag] ?? item.riskFlag} />
@@ -111,7 +111,7 @@ export default function CheckDimensionList({
 
 function StatusBadge({ status }: { status: DimensionStatus }) {
   const label = STATUS_LABEL[status]
-  const attention = label === '待确认' || label === '需要补齐'
+  const attention = label === '需要补齐'
   return (
     <span className={`rounded-[8px] px-2 py-0.5 text-[10px] font-normal ${attention ? 'bg-[#FFF4E1] text-warning' : 'bg-paper text-ash'}`}>
       {label}
@@ -120,7 +120,7 @@ function StatusBadge({ status }: { status: DimensionStatus }) {
 }
 
 function RiskBadge({ label }: { label: string }) {
-  const attention = label === '待确认' || label === '需要补齐'
+  const attention = label === '需要补齐'
   return (
     <span className={`rounded-[8px] px-2 py-0.5 text-[10px] font-normal ${attention ? 'bg-[#FFF4E1] text-warning' : 'bg-paper text-ash'}`}>
       {label}
