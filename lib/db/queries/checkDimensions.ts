@@ -8,6 +8,8 @@ import {
   type CheckDimensionResult,
   type NewCheckDimensionResult,
 } from '@/lib/db/schema'
+import { plainTextFromMarkdown } from '@/lib/knowledge/markdown'
+import { sanitizePublicKnowledgeText } from '@/lib/knowledge/public-text'
 import {
   defaultActionForStatus,
   dimensionsForVisa,
@@ -61,10 +63,13 @@ async function listArticleDimensionDefinitions(
       title: articles.title,
       priority: articles.priority,
       expiryDays: articles.expiryDays,
+      bodyMarkdown: articles.bodyMarkdown,
     })
     .from(articles)
     .where(and(
+      eq(articles.category, 'check_dimension'),
       eq(articles.visaType, visa),
+      eq(articles.status, 'published'),
       sql`${articles.dimensionKey} is not null`,
     ))
     .orderBy(
@@ -81,12 +86,19 @@ async function listArticleDimensionDefinitions(
     definitions.push({
       key: row.key,
       title: row.title || fallbackDimensionTitle(row.key),
-      description: '按该项确认递交前材料和记录。',
+      description: summaryFromBody(row.bodyMarkdown),
       riskFlag: row.priority === 'must_see' ? 'recommended' : null,
       linkedQuestionIds: [],
     })
   }
   return definitions
+}
+
+function summaryFromBody(markdown: string | null): string {
+  const text = sanitizePublicKnowledgeText(plainTextFromMarkdown(markdown ?? ''))
+  const withoutTitle = text.replace(/^.+?这是什么\s*/, '')
+  const summary = (withoutTitle || text).slice(0, 72).trim()
+  return summary || '按该项确认递交前材料和记录。'
 }
 
 export async function listDimensionViews(

@@ -307,7 +307,7 @@ export default function AuthPageClient({ intent = 'login' }: { intent?: 'login' 
             利用規約
           </Link>{' '}
           和{' '}
-          <Link href="/privacy" className="text-ink underline underline-offset-4">
+          <Link href="/privacy-policy" className="text-ink underline underline-offset-4">
             プライバシーポリシー
           </Link>
         </p>

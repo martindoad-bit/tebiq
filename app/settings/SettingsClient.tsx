@@ -1,8 +1,10 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 export default function SettingsClient() {
+  const router = useRouter()
   const [busy, setBusy] = useState<'export' | 'delete' | null>(null)
   const [message, setMessage] = useState<string | null>(null)
 
@@ -35,7 +37,9 @@ export default function SettingsClient() {
     try {
       const res = await fetch('/api/settings/delete-account', { method: 'POST' })
       if (!res.ok) throw new Error('删除请求提交失败')
-      setMessage('已提交删除请求')
+      setMessage('已提交删除请求。当前登录状态已退出。')
+      router.replace('/')
+      router.refresh()
     } catch (e) {
       setMessage(e instanceof Error ? e.message : '删除请求提交失败')
     } finally {
