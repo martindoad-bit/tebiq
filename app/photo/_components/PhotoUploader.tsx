@@ -18,7 +18,7 @@
 'use client'
 import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Camera, FileText, Loader, LockKeyhole, ShieldCheck } from 'lucide-react'
+import { Camera, FileText, Loader, LockKeyhole, ShieldCheck, Upload } from 'lucide-react'
 import { compressImageClient, formatBytes } from '@/lib/photo/clientCompress'
 
 interface RecognizeData {
@@ -46,6 +46,24 @@ const RECOGNIZE_MESSAGES = [
   '整理给你…',
 ] as const
 
+const MAX_UPLOAD_BYTES = 10 * 1024 * 1024
+const UPLOAD_ACCEPT = [
+  'application/pdf',
+  'image/png',
+  'image/jpeg',
+  'image/jpg',
+  'image/heic',
+  'image/heif',
+  'image/webp',
+  '.pdf',
+  '.png',
+  '.jpg',
+  '.jpeg',
+  '.heic',
+  '.heif',
+  '.webp',
+].join(',')
+
 function postWithProgress(
   fd: FormData,
   onProgress: (pct: number) => void,
@@ -69,7 +87,8 @@ function postWithProgress(
 
 export default function PhotoUploader() {
   const router = useRouter()
-  const inputRef = useRef<HTMLInputElement | null>(null)
+  const cameraInputRef = useRef<HTMLInputElement | null>(null)
+  const uploadInputRef = useRef<HTMLInputElement | null>(null)
   const [stage, setStage] = useState<Stage>({ kind: 'idle' })
   const [errMsg, setErrMsg] = useState<string | null>(null)
   const [compressInfo, setCompressInfo] = useState<{
@@ -92,9 +111,14 @@ export default function PhotoUploader() {
 
   const busy = stage.kind !== 'idle'
 
-  const onPick = () => {
+  const onPickCamera = () => {
     if (busy) return
-    inputRef.current?.click()
+    cameraInputRef.current?.click()
+  }
+
+  const onPickUpload = () => {
+    if (busy) return
+    uploadInputRef.current?.click()
   }
 
   const onFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -104,17 +128,31 @@ export default function PhotoUploader() {
     setCompressInfo(null)
 
     try {
-      // 1. 客户端压缩
-      setStage({ kind: 'compressing' })
-      const compressed = await compressImageClient(file)
-      setCompressInfo({
-        before: compressed.beforeBytes,
-        after: compressed.afterBytes,
-      })
+      if (file.size > MAX_UPLOAD_BYTES) {
+        setErrMsg('文件超过 10MB')
+        setStage({ kind: 'idle' })
+        return
+      }
+
+      const isPdf = file.type === 'application/pdf' || /\.pdf$/i.test(file.name)
+      let uploadBlob: Blob = file
+      let uploadFilename = file.name
+
+      if (!isPdf) {
+        // 1. 客户端压缩
+        setStage({ kind: 'compressing' })
+        const compressed = await compressImageClient(file)
+        setCompressInfo({
+          before: compressed.beforeBytes,
+          after: compressed.afterBytes,
+        })
+        uploadBlob = compressed.blob
+        uploadFilename = compressed.filename
+      }
 
       // 2. XHR 上传 + 监听进度
       const fd = new FormData()
-      fd.append('file', compressed.blob, compressed.filename)
+      fd.append('file', uploadBlob, uploadFilename)
       setStage({ kind: 'uploading', pct: 0 })
       const { status, text } = await postWithProgress(fd, pct => {
         setStage(s => (s.kind === 'uploading' ? { kind: 'uploading', pct } : s))
@@ -148,7 +186,8 @@ export default function PhotoUploader() {
       setStage({ kind: 'idle' })
     } finally {
       // 允许重选同一张
-      if (inputRef.current) inputRef.current.value = ''
+      if (cameraInputRef.current) cameraInputRef.current.value = ''
+      if (uploadInputRef.current) uploadInputRef.current.value = ''
     }
   }
 
@@ -170,14 +209,14 @@ export default function PhotoUploader() {
     subLabel = RECOGNIZE_MESSAGES[stage.messageIdx]
   } else {
     mainLabel = '点击拍照'
-    subLabel = '或上传图片'
+    subLabel = '图片 / PDF / 截图'
   }
 
   return (
     <div className="flex flex-col">
       <button
         type="button"
-        onClick={onPick}
+        onClick={onPickCamera}
         disabled={busy}
         aria-label="拍照或上传图片"
         aria-busy={busy}
@@ -229,6 +268,16 @@ export default function PhotoUploader() {
         )}
       </button>
 
+      <button
+        type="button"
+        onClick={onPickUpload}
+        disabled={busy}
+        className="mb-3 flex min-h-[42px] items-center justify-center gap-2 rounded-btn border border-hairline bg-surface px-4 py-2.5 text-[12.5px] font-medium text-ink shadow-card transition active:translate-y-px disabled:opacity-70"
+      >
+        <Upload size={15} strokeWidth={1.55} />
+        上传 PDF / 截图
+      </button>
+
       <div className="mb-3 grid grid-cols-3 gap-1.5">
         <HintChip label="金额" value="自动提取" />
         <HintChip label="期限" value="标出日期" />
@@ -252,10 +301,17 @@ export default function PhotoUploader() {
       </div>
 
       <input
-        ref={inputRef}
+        ref={cameraInputRef}
         type="file"
         accept="image/*"
         capture="environment"
+        className="sr-only"
+        onChange={onFile}
+      />
+      <input
+        ref={uploadInputRef}
+        type="file"
+        accept={UPLOAD_ACCEPT}
         className="sr-only"
         onChange={onFile}
       />

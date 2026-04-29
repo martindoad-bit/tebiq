@@ -62,6 +62,7 @@ export default async function HomePage() {
           trialActive={access.trialActive}
           trialExpired={access.trialExpired}
           daysRemaining={access.trialDaysRemaining}
+          needsFirstPhoto={!events.some(event => event.eventType === 'photo_recognition')}
         />
       )}
 

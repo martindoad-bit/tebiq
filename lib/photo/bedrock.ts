@@ -20,6 +20,7 @@ const GENERAL_ACTIONS = [
 type GeneralAction = (typeof GENERAL_ACTIONS)[number]
 
 type BedrockImageMediaType = 'image/jpeg' | 'image/png' | 'image/gif' | 'image/webp'
+type BedrockInputMediaType = BedrockImageMediaType | 'application/pdf'
 
 type DetectedImage =
   | { kind: 'jpeg'; mediaType: 'image/jpeg' }
@@ -27,6 +28,7 @@ type DetectedImage =
   | { kind: 'webp'; mediaType: 'image/webp' }
   | { kind: 'heic'; mediaType: 'image/heic' }
   | { kind: 'heif'; mediaType: 'image/heif' }
+  | { kind: 'pdf'; mediaType: 'application/pdf' }
   | { kind: 'unknown'; mediaType: 'application/octet-stream' }
 
 const nullableTrimmed = z.preprocess(value => {
@@ -72,15 +74,18 @@ export interface PhotoRecognitionOutput {
   result: PhotoRecognitionResult
   imageHash: string
   modelId: string
-  mediaType: BedrockImageMediaType
+  mediaType: BedrockInputMediaType
   userContextInjected: boolean
 }
 
 interface PreparedPhotoInput extends PhotoRecognitionInput {
-  mediaType: BedrockImageMediaType
+  mediaType: BedrockInputMediaType
 }
 
 export function detectImageFormat(bytes: Buffer): DetectedImage {
+  if (bytes.length >= 5 && bytes.subarray(0, 5).toString('ascii') === '%PDF-') {
+    return { kind: 'pdf', mediaType: 'application/pdf' }
+  }
   if (bytes.length >= 2 && bytes[0] === 0xff && bytes[1] === 0xd8) {
     return { kind: 'jpeg', mediaType: 'image/jpeg' }
   }
@@ -140,7 +145,12 @@ export async function validatePhotoInput(input: PhotoRecognitionInput): Promise<
   }
 
   const detected = detectImageFormat(input.bytes)
-  if (detected.kind === 'jpeg' || detected.kind === 'png' || detected.kind === 'webp') {
+  if (
+    detected.kind === 'jpeg' ||
+    detected.kind === 'png' ||
+    detected.kind === 'webp' ||
+    detected.kind === 'pdf'
+  ) {
     return { ...input, mediaType: detected.mediaType }
   }
   if (detected.kind === 'heic' || detected.kind === 'heif') {
@@ -176,7 +186,8 @@ function buildSystemPrompt() {
 8. isUrgent 只做简单判断：deadline 存在且距离今天 <= 7 天时为 true；其他都是 false。
 9. needsExpertAdvice 只做简单分类：涉及法律、税务、签证/在留、行政决定或必须判断个人资格时为 true；日常账单、普通通知可为 false。
 10. 严禁输出「对你续签/永住/在留資格的影响」。严禁输出具体金额预测、审查时间预测、办理成败判断。严禁输出「建议你 X 月 X 日做 Y」这类行政指导。
-11. 如果图片模糊或不是日本生活相关文书，也仍返回 JSON：docType=null, issuer=null, isEnvelope=false, recognitionConfidence=low, deadline=null, amount=null, summary 说明无法可靠识别，generalActions 选择「保留原件备查」。`
+11. 如果图片模糊或不是日本生活相关文书，也仍返回 JSON：docType=null, issuer=null, isEnvelope=false, recognitionConfidence=low, deadline=null, amount=null, summary 说明无法可靠识别，generalActions 选择「保留原件备查」。
+12. 如果输入是 PDF，只识别第一页，不读取或总结后续页面。`
 }
 
 function formatUserContext(userContext?: PhotoUserContext | null): string {
@@ -203,7 +214,7 @@ function formatUserContext(userContext?: PhotoUserContext | null): string {
 
 function buildUserPrompt(filename?: string, userContext?: PhotoUserContext | null) {
   const name = filename ? `文件名：${filename}\n` : ''
-  return `${name}请识别这张图片里的日本生活相关文书，按系统要求返回 JSON。今天按服务器当前日期理解。${formatUserContext(userContext)}`
+  return `${name}请识别这份日本生活相关文书，按系统要求返回 JSON。如果输入是 PDF，只识别第一页，不读取后续页面。今天按服务器当前日期理解。${formatUserContext(userContext)}`
 }
 
 function textFromAnthropicContent(content: unknown): string {
@@ -323,6 +334,31 @@ export function shouldUseFallbackPage(result: PhotoRecognitionResult): boolean {
   return !result.docType && !result.issuer && !result.isEnvelope
 }
 
+function buildFileContentBlock(input: PreparedPhotoInput) {
+  const data = input.bytes.toString('base64')
+  if (input.mediaType === 'application/pdf') {
+    return {
+      type: 'document' as const,
+      title: input.filename?.slice(0, 80) || 'uploaded-document.pdf',
+      context: '只识别第一页。',
+      source: {
+        type: 'base64' as const,
+        media_type: 'application/pdf' as const,
+        data,
+      },
+    }
+  }
+
+  return {
+    type: 'image' as const,
+    source: {
+      type: 'base64' as const,
+      media_type: input.mediaType,
+      data,
+    },
+  }
+}
+
 export async function recognizePhotoDocument(
   rawInput: PhotoRecognitionInput,
 ): Promise<PhotoRecognitionOutput> {
@@ -353,14 +389,7 @@ export async function recognizePhotoDocument(
         {
           role: 'user',
           content: [
-            {
-              type: 'image',
-              source: {
-                type: 'base64',
-                media_type: input.mediaType,
-                data: input.bytes.toString('base64'),
-              },
-            },
+            buildFileContentBlock(input),
             { type: 'text', text: buildUserPrompt(input.filename, input.userContext) },
           ],
         },

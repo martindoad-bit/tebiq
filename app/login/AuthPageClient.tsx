@@ -137,7 +137,14 @@ export default function AuthPageClient({ intent = 'login' }: { intent?: 'login' 
         return
       }
       localStorage.setItem(LS_USER_KEY, JSON.stringify(data.user))
-      router.push(inviteCode && data.invitationAccepted ? '/welcome' : next)
+      const defaultRegisterNext = isRegister && data.firstLogin && next === '/my/archive'
+      router.push(
+        inviteCode && data.invitationAccepted
+          ? '/welcome'
+          : defaultRegisterNext
+            ? '/onboarding'
+            : next,
+      )
     } catch {
       setError('网络错误，请重试')
     } finally {

@@ -71,5 +71,7 @@ export async function GET(req: Request) {
   )
 
   if (invitationAccepted) return redirectTo(req, '/welcome')
-  return redirectTo(req, safeNextPath(row.nextPath))
+  const nextPath = safeNextPath(row.nextPath)
+  if (!existingMember && nextPath === '/my/archive') return redirectTo(req, '/onboarding')
+  return redirectTo(req, nextPath)
 }

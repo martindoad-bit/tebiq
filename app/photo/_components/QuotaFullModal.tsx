@@ -9,10 +9,9 @@
  *  - onClose: 关闭回调（清除 query / 刷新 router）
  */
 'use client'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { Check, Crown, Gift } from 'lucide-react'
-import Button from '@/app/_components/v5/Button'
+import { Archive, X } from 'lucide-react'
 import { trackClient } from '@/lib/analytics/client'
 import { EVENT } from '@/lib/analytics/events'
 
@@ -23,19 +22,24 @@ interface Props {
   daysUntilReset?: number
 }
 
-const FEATURES = [
-  '无限次拍照识别',
-  '自动提醒重要事项',
-  '提醒永久保留',
-  '续签自查不限',
-] as const
-
 export default function QuotaFullModal({ open, onClose, daysUntilReset }: Props) {
+  const [archivedCount, setArchivedCount] = useState<number | null>(null)
+
   useEffect(() => {
     if (open) {
       trackClient(EVENT.QUOTA_MODAL_VIEW, {
         daysUntilReset: daysUntilReset ?? null,
       })
+      setArchivedCount(null)
+      fetch('/api/photo/quota')
+        .then(res => (res.ok ? res.json() : null))
+        .then(data => {
+          const count = data?.data?.archivedDocumentsCount
+          if (typeof count === 'number') setArchivedCount(count)
+        })
+        .catch(() => {
+          setArchivedCount(null)
+        })
     }
   }, [open, daysUntilReset])
 
@@ -56,74 +60,59 @@ export default function QuotaFullModal({ open, onClose, daysUntilReset }: Props)
       />
       {/* sheet */}
       <div
-        className="bg-canvas px-[18px] pt-3 pb-6 flex-shrink-0 mx-auto w-full shadow-raised md:max-w-phone"
+        className="relative bg-canvas px-[18px] pt-3 pb-6 flex-shrink-0 mx-auto w-full shadow-raised md:max-w-phone"
         style={{
           borderTopLeftRadius: 18,
           borderTopRightRadius: 18,
           paddingBottom: 'calc(24px + env(safe-area-inset-bottom))',
         }}
       >
-        <div className="mx-auto mb-4 h-1 w-9 rounded-full bg-ink/12" />
-        <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-[13px] bg-accent-2 text-ink shadow-soft">
-          <Crown size={20} strokeWidth={1.55} />
-        </div>
-        <h2
-          id="quota-modal-title"
-          className="text-[16px] font-medium text-ink text-center mb-1"
-        >
-          今日免费额度已用完
-        </h2>
-        <p className="text-[11.5px] text-ash text-center mb-[14px]">
-          开通会员，享受无限次拍照即懂
-        </p>
-        {typeof daysUntilReset === 'number' && daysUntilReset > 0 && (
-          <p className="-mt-2.5 mb-3 text-center text-[10.5px] text-haze">
-            明天恢复免费额度
-          </p>
-        )}
-
-        <ul className="mb-4 space-y-1.5 rounded-card border border-hairline bg-surface/70 px-3.5 py-3 shadow-card">
-          {FEATURES.map(f => (
-            <li
-              key={f}
-              className="flex items-center gap-2 text-[12px] text-ink leading-[1.5]"
-            >
-              <span
-                aria-hidden
-                className="flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full bg-accent text-white"
-              >
-                <Check size={11} strokeWidth={2} />
-              </span>
-              {f}
-            </li>
-          ))}
-        </ul>
-
-        <Link
-          href="/subscribe"
-          className="block"
-          onClick={() => trackClient(EVENT.QUOTA_MODAL_SUBSCRIBE_CLICK, {})}
-        >
-          <Button>立即开通会员</Button>
-        </Link>
-        <Link
-          href="/invite"
-          onClick={() => trackClient(EVENT.QUOTA_MODAL_INVITE_CLICK, {})}
-          className="mt-2 flex min-h-[44px] w-full items-center justify-center gap-1.5 rounded-btn border border-hairline bg-surface px-4 py-3 text-center text-[13px] font-medium text-ink transition-colors hover:bg-canvas"
-        >
-          <Gift size={15} strokeWidth={1.55} />
-          邀请朋友 = 免费 7 天
-        </Link>
         <button
           type="button"
           onClick={() => {
             trackClient(EVENT.QUOTA_MODAL_DISMISS, {})
             onClose()
           }}
-          className="block w-full text-center text-[12px] text-ash mt-3"
+          aria-label="关闭"
+          className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full border border-hairline bg-surface text-ash"
         >
-          稍后再说
+          <X size={16} strokeWidth={1.6} />
         </button>
+        <div className="mx-auto mb-5 h-1 w-9 rounded-full bg-ink/12" />
+        <h2
+          id="quota-modal-title"
+          className="text-[16px] font-medium text-ink text-center mb-2"
+        >
+          今日次数已用完
+        </h2>
+        <p className="mx-auto max-w-[300px] text-center text-[12px] leading-[1.65] text-ash">
+          免费版每天可识别 1 次。已识别的文书在「我的提醒」时间线。
+        </p>
+
+        <div className="my-4 rounded-card border border-hairline bg-surface px-4 py-3 shadow-card">
+          <div className="flex items-center justify-center gap-2 text-ink">
+            <Archive size={16} strokeWidth={1.55} />
+            <span className="text-[13px] font-medium">
+              {archivedCount === null ? '已归档文书统计中' : `已归档 ${archivedCount} 份文书`}
+            </span>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-2">
+          <Link
+            href="/timeline"
+            className="flex min-h-[44px] items-center justify-center rounded-btn border border-hairline bg-surface px-3 py-3 text-center text-[13px] font-medium text-ink transition-colors hover:bg-canvas"
+          >
+            查看时间线
+          </Link>
+          <Link
+            href="/pricing"
+            className="flex min-h-[44px] items-center justify-center rounded-btn border border-hairline bg-surface px-3 py-3 text-center text-[13px] font-medium text-ink transition-colors hover:bg-canvas"
+            onClick={() => trackClient(EVENT.QUOTA_MODAL_SUBSCRIBE_CLICK, {})}
+          >
+            升级会员
+          </Link>
+        </div>
       </div>
     </div>
   )
