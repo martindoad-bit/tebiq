@@ -1,4 +1,4 @@
-import { and, desc, eq, gte, ilike, isNull, lte, ne, or, sql } from 'drizzle-orm'
+import { and, count, desc, eq, gte, ilike, isNull, lte, ne, or, sql } from 'drizzle-orm'
 import { db } from '@/lib/db'
 import { isMemberTrialActive } from '@/lib/db/queries/members'
 import { isSubscriptionActive } from '@/lib/db/queries/subscriptions'
@@ -67,6 +67,22 @@ function clean(value: string | null | undefined): string | null {
 export async function createTimelineEvent(input: NewTimelineEvent): Promise<TimelineEvent> {
   const [row] = await db.insert(timelineEvents).values(input).returning()
   return row
+}
+
+export async function countTimelineEvents(
+  owner: TimelineOwner,
+  filters: Pick<TimelineFilters, 'eventType' | 'includeArchived'> = {},
+): Promise<number> {
+  const conditions = [ownerCondition(owner)]
+  if (filters.eventType) conditions.push(eq(timelineEvents.eventType, filters.eventType))
+  if (!filters.includeArchived) conditions.push(eq(timelineEvents.archived, false))
+
+  const rows = await db
+    .select({ value: count() })
+    .from(timelineEvents)
+    .where(and(...conditions))
+    .limit(1)
+  return rows[0]?.value ?? 0
 }
 
 export async function listTimelineEvents(

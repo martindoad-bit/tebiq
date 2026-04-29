@@ -4,8 +4,10 @@ import { Archive, ChevronRight, Filter } from 'lucide-react'
 import AppShell from '@/app/_components/v5/AppShell'
 import AppBar from '@/app/_components/v5/AppBar'
 import TabBar from '@/app/_components/v5/TabBar'
+import TrialNotice from '@/app/_components/TrialNotice'
 import { getAnonymousSessionId } from '@/lib/auth/anonymous-session'
 import { getCurrentUser } from '@/lib/auth/session'
+import { getMemberAccess } from '@/lib/billing/access'
 import {
   archiveExpiredTimelineEventsForMember,
   getTimelineSummary,
@@ -36,13 +38,23 @@ export default async function TimelinePage({
   const owner = { memberId: user?.id ?? null, sessionId }
   const eventType = single(searchParams?.event_type) as TimelineEventType | undefined
   const includeArchived = single(searchParams?.archived) === 'true'
-  const [summary, events] = await Promise.all([
+  const [summary, events, access] = await Promise.all([
     safeSummary(owner),
     safeEvents(owner, eventType, includeArchived),
+    user ? getMemberAccess(user) : null,
   ])
 
   return (
     <AppShell appBar={<AppBar title="我的时间线" back />} tabBar={<TabBar />}>
+      {access && (
+        <TrialNotice
+          trialActive={access.trialActive}
+          trialExpired={access.trialExpired}
+          daysRemaining={access.trialDaysRemaining}
+          needsFirstPhoto={summary.documents === 0}
+        />
+      )}
+
       <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-4 shadow-card">
         <div className="flex items-start gap-3">
           <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-[13px] bg-cool-blue text-ink">

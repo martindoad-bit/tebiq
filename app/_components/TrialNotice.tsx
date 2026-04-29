@@ -7,16 +7,54 @@ interface Props {
   trialActive: boolean
   trialExpired: boolean
   daysRemaining: number | null
+  needsFirstPhoto?: boolean
 }
 
 const DISMISS_KEY = 'tebiq_trial_expired_dismissed'
+const FIRST_PHOTO_DISMISS_KEY = 'tebiq_trial_first_photo_dismissed'
 
-export default function TrialNotice({ trialActive, trialExpired, daysRemaining }: Props) {
+export default function TrialNotice({
+  trialActive,
+  trialExpired,
+  daysRemaining,
+  needsFirstPhoto = false,
+}: Props) {
   const [dismissed, setDismissed] = useState(false)
+  const [firstPhotoDismissed, setFirstPhotoDismissed] = useState(false)
 
   useEffect(() => {
     setDismissed(sessionStorage.getItem(DISMISS_KEY) === '1')
+    setFirstPhotoDismissed(sessionStorage.getItem(FIRST_PHOTO_DISMISS_KEY) === '1')
   }, [])
+
+  if (
+    trialActive &&
+    needsFirstPhoto &&
+    daysRemaining !== null &&
+    daysRemaining > 0 &&
+    !firstPhotoDismissed
+  ) {
+    return (
+      <section className="mt-4 rounded-card border border-hairline bg-surface px-4 py-3 shadow-card">
+        <div className="flex items-center gap-3">
+          <Link href="/photo" className="min-w-0 flex-1 text-[12px] font-medium leading-[1.55] text-ink">
+            试用期还剩 {daysRemaining} 天，试拍一份现实文件看看TEBIQ能识别什么
+          </Link>
+          <button
+            type="button"
+            aria-label="关闭试拍提示"
+            onClick={() => {
+              sessionStorage.setItem(FIRST_PHOTO_DISMISS_KEY, '1')
+              setFirstPhotoDismissed(true)
+            }}
+            className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full border border-hairline text-[14px] leading-none text-ash"
+          >
+            ×
+          </button>
+        </div>
+      </section>
+    )
+  }
 
   if (trialActive && daysRemaining !== null && daysRemaining <= 2) {
     return (

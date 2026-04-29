@@ -55,6 +55,7 @@ export async function POST(req: Request) {
     return NextResponse.json({
       user: { phone: member.phone, email: member.email },
       invitationAccepted,
+      firstLogin: !existingMember,
     })
   } catch {
     return NextResponse.json({ error: '请求格式错误' }, { status: 400 })
