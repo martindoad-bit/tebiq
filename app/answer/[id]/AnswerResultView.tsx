@@ -17,7 +17,6 @@ export interface AnswerResult {
   question: string
   statusLabel: string
   statusClassName: string
-  primaryActionTitle: string
   sourceHint: string
   actionAnswer: ActionAnswer
 }
@@ -40,7 +39,11 @@ export default function AnswerResultView({
   const [busyFeedback, setBusyFeedback] = useState<string | null>(null)
   const [copyState, setCopyState] = useState<'idle' | 'copied'>('idle')
   const action = answer.actionAnswer
-  const confirmationItems = buildConfirmationItems(action)
+  const firstTwo = safeItems(action.what_to_do).slice(0, 2)
+  const stepItems = withoutItems(
+    uniqueItems(action.how_to_do.length > 0 ? action.how_to_do : action.what_to_do.slice(2)),
+    firstTwo,
+  )
   const managerCopy = buildManagerCopy(answer)
 
   async function submitFeedback(type: string, label: string) {
@@ -80,69 +83,54 @@ export default function AnswerResultView({
   }
 
   return (
-    <div className="grid gap-5 pt-1">
-      <section className="rounded-card border border-hairline bg-surface px-4 py-4">
-        <div className="flex flex-wrap items-center gap-2">
-          <StatusPill className={answer.statusClassName}>{answer.statusLabel}</StatusPill>
-        </div>
-        <p className="mt-4 text-[11px] leading-none text-ash">整理结果</p>
-        <h1 className="mt-2 text-[21px] font-medium leading-[1.45] tracking-[-0.01em] text-ink [overflow-wrap:anywhere]">
+    <div className="pt-1">
+      <section className="rounded-[16px] border border-hairline bg-surface px-4 py-4">
+        <StatusPill className={answer.statusClassName}>{answer.statusLabel}</StatusPill>
+        <h1 className="mt-4 text-[22px] font-medium leading-[1.38] tracking-[-0.01em] text-ink [overflow-wrap:anywhere]">
           {answer.title}
         </h1>
-        <div className="mt-4 rounded-[12px] bg-paper px-3 py-3">
-          <SectionHeading>一句话结论</SectionHeading>
-          <p className="mt-2 text-[14px] leading-[1.75] text-ink [overflow-wrap:anywhere]">{action.conclusion}</p>
+        <p className="mt-3 rounded-[12px] bg-paper px-3 py-3 text-[13px] leading-[1.7] text-slate [overflow-wrap:anywhere]">
+          {answer.question}
+        </p>
+        <div className="mt-4">
+          <SectionHeading>结论</SectionHeading>
+          <p className="mt-2 text-[15px] leading-[1.7] text-ink [overflow-wrap:anywhere]">{action.conclusion}</p>
         </div>
         <div className="mt-4 border-t border-hairline pt-4">
-          <ActionList title={answer.primaryActionTitle} items={action.what_to_do} ordered />
-        </div>
-        <div className="mt-4 border-t border-hairline pt-4">
-          <p className="text-[11px] leading-none text-ash">你的问题</p>
-          <p className="mt-2 text-[12px] leading-[1.65] text-slate [overflow-wrap:anywhere]">{answer.question}</p>
+          <TaskList title="最紧的两件" items={firstTwo} ordered emphasis />
         </div>
       </section>
 
-      <section className="rounded-card border border-hairline bg-surface">
-        <div className="border-b border-hairline px-4 py-3">
-          <SectionTitle title="下一步怎么做" />
-        </div>
-        <div className="divide-y divide-hairline px-4">
-          <ActionList title="去哪里办理" items={action.where_to_go} />
-          <ActionList title="怎么做" items={action.how_to_do} />
-          <ActionList title="需要准备什么" items={action.documents_needed} />
-          <ActionList title="期限和时机" items={action.deadline_or_timing} />
-          <ActionList title="不处理可能怎样" items={action.consequences} />
+      <section className="mt-5 rounded-[16px] border border-hairline bg-surface px-4">
+        <div className="divide-y divide-hairline">
+          <TaskList title="步骤" items={stepItems} ordered />
+          <TaskList title="要带什么" items={action.documents_needed} />
+          <TaskList title="期限" items={action.deadline_or_timing} />
+          <TaskList title="不做会怎样" items={action.consequences} />
+          <TaskList title="要找专家的情况" items={action.expert_handoff} />
         </div>
       </section>
 
-      <section className="rounded-card border border-hairline bg-surface px-4 py-4">
-        <ActionList title="需要专家确认的情况" items={action.expert_handoff} />
-      </section>
-
-      <section className="rounded-card border border-hairline bg-surface px-4 py-4">
-        <SectionTitle title="给客户看的简短说明" />
-        <p className="mt-3 text-[13px] leading-[1.75] text-slate [overflow-wrap:anywhere]">{managerCopy}</p>
+      <details className="mt-5 rounded-[14px] border border-hairline bg-surface px-4 py-3">
+        <summary className="cursor-pointer text-[13px] font-medium text-ink">复制给客户</summary>
+        <p className="mt-3 text-[12px] leading-[1.7] text-slate [overflow-wrap:anywhere]">{managerCopy}</p>
         <button
           type="button"
           onClick={copyManagerText}
-          className="mt-3 min-h-[38px] rounded-[10px] border border-hairline bg-canvas px-3 text-[12px] font-medium text-ink active:bg-paper"
+          className="mt-3 min-h-[36px] rounded-[10px] border border-hairline bg-canvas px-3 text-[12px] font-medium text-ink active:bg-paper"
         >
-          {copyState === 'copied' ? '已复制' : '复制这段说明'}
+          {copyState === 'copied' ? '已复制' : '复制'}
         </button>
+      </details>
+
+      <section className="mt-5 border-t border-hairline pt-4">
+        <SectionHeading>来源与说明</SectionHeading>
+        <p className="mt-2 text-[12px] leading-[1.7] text-ash [overflow-wrap:anywhere]">{answer.sourceHint}</p>
+        <p className="mt-2 text-[11px] leading-[1.7] text-ash [overflow-wrap:anywhere]">{action.boundary_note}</p>
       </section>
 
-      <section className="rounded-card border border-hairline bg-surface px-4 py-4">
-        <ActionList title="还需要确认" items={confirmationItems} />
-      </section>
-
-      <section className="rounded-card border border-hairline bg-surface px-4 py-4">
-        <SectionTitle title="使用边界" />
-        <p className="mt-3 text-[12px] leading-[1.7] text-ash [overflow-wrap:anywhere]">{action.boundary_note}</p>
-        <p className="mt-3 text-[11px] leading-[1.6] text-ash [overflow-wrap:anywhere]">{answer.sourceHint}</p>
-      </section>
-
-      <section className="rounded-card border border-hairline bg-surface px-4 py-4">
-        <SectionTitle title="这条整理是否有用" />
+      <section className="mt-5 rounded-[16px] border border-hairline bg-surface px-4 py-4">
+        <SectionTitle title="这个整理有帮助吗？" />
         <div className="mt-3 grid grid-cols-2 gap-2">
           {FEEDBACK_OPTIONS.map(option => (
             <button
@@ -181,18 +169,20 @@ function SectionHeading({ children }: { children: string }) {
   return <h2 className="text-[13px] font-medium leading-none text-ink">{children}</h2>
 }
 
-function ActionList({
+function TaskList({
   title,
   items,
   ordered = false,
+  emphasis = false,
 }: {
   title: string
   items: string[]
   ordered?: boolean
+  emphasis?: boolean
 }) {
-  const displayItems = items.length > 0 ? items.slice(0, 6) : ['这部分需要进一步确认。']
+  const displayItems = safeItems(items).slice(0, emphasis ? 2 : 6)
   const content = displayItems.map((item, index) => (
-    <li key={`${title}-${item}`} className="grid grid-cols-[24px_1fr] gap-2 text-[12px] leading-[1.65] text-slate">
+    <li key={`${title}-${item}`} className={`grid grid-cols-[24px_1fr] gap-2 ${emphasis ? 'text-[13px] text-ink' : 'text-[12px] text-slate'} leading-[1.65]`}>
       <span className="flex h-6 w-6 items-center justify-center rounded-[8px] bg-paper text-[11px] tabular-nums text-ink">
         {ordered ? index + 1 : '·'}
       </span>
@@ -215,28 +205,24 @@ function StatusPill({ children, className = 'bg-paper text-slate' }: { children:
   )
 }
 
-function buildConfirmationItems(action: ActionAnswer): string[] {
-  const text = [
-    action.conclusion,
-    ...action.what_to_do,
-    ...action.where_to_go,
-    ...action.how_to_do,
-    ...action.expert_handoff,
-  ].join('\n')
-  const items = [
-    '你的在留资格',
-    '事情发生日期',
-    '是否已经收到文书',
-    '是否已经逾期',
-    '是否涉及公司 / 雇主',
-  ]
-  if (/会社|公司|雇主|勤務先|经营管理|経営|办公室|事務所/.test(text)) {
-    items.push('公司、雇主或办公室当前状态')
-  }
-  if (/税|年金|保険|社保|国保|厚生年金|住民税/.test(text)) {
-    items.push('最近一次缴纳、资格丧失或督促记录')
-  }
-  return items.slice(0, 7)
+function safeItems(items: string[]): string[] {
+  return items.length > 0 ? items : ['这部分需要进一步确认。']
+}
+
+function uniqueItems(items: string[]): string[] {
+  const seen = new Set<string>()
+  return items.filter(item => {
+    const key = item.replace(/\s+/g, '')
+    if (!key || seen.has(key)) return false
+    seen.add(key)
+    return true
+  })
+}
+
+function withoutItems(items: string[], excluded: string[]): string[] {
+  const excludedKeys = new Set(excluded.map(item => item.replace(/\s+/g, '')))
+  const result = items.filter(item => !excludedKeys.has(item.replace(/\s+/g, '')))
+  return result.length > 0 ? result : items
 }
 
 function buildManagerCopy(answer: AnswerResult): string {

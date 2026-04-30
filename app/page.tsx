@@ -1,10 +1,10 @@
 import Link from 'next/link'
-import { Bell, Camera, ChevronRight, ClipboardCheck, FileText, MessageSquareText } from 'lucide-react'
+import { Bell, Camera, ChevronRight, ClipboardCheck, UserCircle } from 'lucide-react'
 import AppShell from '@/app/_components/v5/AppShell'
 import TabBar from '@/app/_components/v5/TabBar'
 import Logo from '@/app/_components/v5/Logo'
 import QuestionIntakeBox from '@/app/_components/QuestionIntakeBox'
-import { DeadlineRow, ListRow, ListSection, SectionLabel } from '@/components/ui/tebiq'
+import { DeadlineRow, ListSection, SectionLabel } from '@/components/ui/tebiq'
 import { getCurrentUser } from '@/lib/auth/session'
 import { getMemberAccess, getTimelineRetentionCutoff, type MemberAccess } from '@/lib/billing/access'
 import { listNeedsActionDimensions } from '@/lib/db/queries/checkDimensions'
@@ -53,13 +53,12 @@ export default async function HomePage() {
 function NewUserHome() {
   return (
     <>
-      <BrandIntro />
+      <HomeHero />
 
-      <div id="question" className="mt-6 scroll-mt-4">
+      <div id="question" className="mt-5 scroll-mt-4">
         <QuestionIntakeBox sourcePage="/" />
       </div>
-      <StartOptions />
-      <SampleDocumentSection />
+      <QuickTools />
     </>
   )
 }
@@ -93,7 +92,7 @@ function UserHome({
         </section>
       )}
 
-      <BrandIntro compact />
+      <HomeHero />
 
       <div id="question" className="mt-5 scroll-mt-4">
         <QuestionIntakeBox sourcePage="/" />
@@ -117,8 +116,7 @@ function UserHome({
         </section>
       )}
 
-      <StartOptions needsActionCount={needsActionCount} />
-      <SampleDocumentSection />
+      <QuickTools needsActionCount={needsActionCount} />
 
       <SectionLabel title="接下来30天的期限事项" action="全部" href="/timeline" />
       <ListSection className="mt-3">
@@ -145,77 +143,62 @@ function UserHome({
   )
 }
 
-function BrandIntro({ compact = false }: { compact?: boolean }) {
+function HomeHero() {
   return (
-    <section className={compact ? 'pt-1' : 'pt-6'}>
-      <Logo size="lg" />
-      <h1 className={`${compact ? 'mt-4 text-[22px]' : 'mt-6 text-[26px]'} max-w-[340px] font-medium leading-[1.28] text-ink`}>
-        下一步怎么做？
+    <section className="pt-4">
+      <h1 className="text-[28px] font-medium leading-[1.18] tracking-[-0.01em] text-ink">
+        材料有问题，问 TEBIQ
       </h1>
-      <p className="mt-3 max-w-[360px] text-[13px] leading-[1.75] text-slate">
-        签证、税金、年金、会社手续和日文通知。写下你的情况，先看步骤、材料、期限和办理窗口。
+      <p className="mt-2 text-[13px] leading-[1.6] text-ash">
+        拍文书 / 问手续 / 看下一步
       </p>
     </section>
   )
 }
 
-function SampleDocumentSection() {
-  return (
-    <>
-      <SectionLabel title="最近文书示例" />
-      <Link
-        href="/photo/sample-result"
-        className="mt-3 block overflow-hidden rounded-card border border-hairline bg-surface active:bg-paper"
-      >
-        <div className="flex items-start gap-3 px-4 py-4">
-          <span className="mt-0.5 flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-[10px] bg-paper text-ink">
-            <FileText size={17} strokeWidth={1.5} />
-          </span>
-          <span className="min-w-0 flex-1">
-            <span className="block text-[11px] leading-none text-ash">脱敏样例</span>
-            <span className="mt-2 block text-[15px] font-medium leading-snug text-ink jp-text">住民税 納付通知書</span>
-            <span className="mt-1 block text-[12px] leading-[1.6] text-ash">
-              江戸川区役所 / 2026.06.30 / ¥38,500
-            </span>
-          </span>
-          <ChevronRight size={16} strokeWidth={1.5} className="mt-5 flex-shrink-0 text-haze" />
-        </div>
-        <div className="border-t border-hairline px-4 py-2.5 text-[12px] leading-none text-ash">
-          查看识别结果结构 →
-        </div>
-      </Link>
-    </>
-  )
-}
-
-function StartOptions({
+function QuickTools({
   needsActionCount = 0,
 }: {
   needsActionCount?: number
 }) {
+  const tools = [
+    {
+      href: '/photo',
+      icon: <Camera size={20} strokeWidth={1.5} />,
+      title: '拍照',
+      subtitle: '日文文书',
+    },
+    {
+      href: '/check',
+      icon: <ClipboardCheck size={20} strokeWidth={1.5} />,
+      title: '续签检查',
+      subtitle: needsActionCount > 0 ? `${needsActionCount}项补齐` : '材料',
+    },
+    {
+      href: '/timeline',
+      icon: <Bell size={20} strokeWidth={1.5} />,
+      title: '提醒',
+      subtitle: '期限',
+    },
+  ]
   return (
     <>
-      <SectionLabel title="你可以这样开始" />
-      <ListSection className="mt-3">
-        <ListRow
-          href="/#question"
-          icon={<MessageSquareText size={19} strokeWidth={1.5} />}
-          title="写情况"
-          subtitle="不知道该办什么手续时使用"
-        />
-        <ListRow
-          href="/photo"
-          icon={<Camera size={19} strokeWidth={1.5} />}
-          title="拍文书"
-          subtitle="收到日文通知、税单、年金信时使用"
-        />
-        <ListRow
-          href="/check"
-          icon={<ClipboardCheck size={19} strokeWidth={1.5} />}
-          title="续签材料准备检查"
-          subtitle={needsActionCount > 0 ? `${needsActionCount} 项需要补齐` : '快更新签证前使用'}
-        />
-      </ListSection>
+      <SectionLabel title="快捷工具" />
+      <section className="mt-3 grid grid-cols-3 gap-2">
+        {tools.map(tool => (
+          <Link
+            key={tool.href}
+            href={tool.href}
+            className="rounded-card border border-hairline bg-surface px-2.5 py-3 text-center active:bg-paper"
+          >
+            <span className="mx-auto flex h-9 w-9 items-center justify-center rounded-[10px] bg-paper text-ink">
+              {tool.icon}
+            </span>
+            <span className="mt-2 block truncate text-[13px] font-medium leading-none text-ink">{tool.title}</span>
+            <span className="mt-1.5 block truncate text-[11px] leading-none text-ash">{tool.subtitle}</span>
+          </Link>
+        ))}
+      </section>
     </>
   )
 }
@@ -339,13 +322,22 @@ function HomeAppBar() {
   return (
     <header className="flex h-[58px] flex-shrink-0 items-center justify-between bg-canvas px-5">
       <Logo size="sm" />
-      <Link
-        href="/timeline"
-        aria-label="我的提醒"
-        className="focus-ring flex h-10 w-10 items-center justify-center rounded-full border border-hairline bg-surface text-ink"
-      >
-        <Bell size={20} strokeWidth={1.5} />
-      </Link>
+      <div className="flex items-center gap-2">
+        <Link
+          href="/timeline"
+          aria-label="我的提醒"
+          className="focus-ring flex h-10 w-10 items-center justify-center rounded-full border border-hairline bg-surface text-ink"
+        >
+          <Bell size={19} strokeWidth={1.5} />
+        </Link>
+        <Link
+          href="/my/account"
+          aria-label="我的"
+          className="focus-ring flex h-10 w-10 items-center justify-center rounded-full border border-hairline bg-surface text-ink"
+        >
+          <UserCircle size={19} strokeWidth={1.5} />
+        </Link>
+      </div>
     </header>
   )
 }
