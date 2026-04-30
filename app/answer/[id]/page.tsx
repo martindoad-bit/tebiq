@@ -16,8 +16,8 @@ import AnswerResultView, { type AnswerResult, type AnswerStatus } from './Answer
 export const dynamic = 'force-dynamic'
 
 export const metadata = {
-  title: '整理结果 | TEBIQ',
-  description: 'TEBIQ 根据用户问题整理的手续路径和注意事项。',
+  title: '下一步 | TEBIQ',
+  description: 'TEBIQ 根据用户问题整理下一步、材料、期限和办理窗口。',
 }
 
 type FullAnswer = {
@@ -66,7 +66,7 @@ const DEMO_ANSWERS: Record<string, FullAnswer> = {
       '去市区町村窗口确认国民年金 / 国民健康保険处理方式。',
       '保存窗口记录、缴纳记录、新会社社保加入记录。',
     ],
-    sourceHint: '参考：日本年金機構、市区町村 国民健康保険 手续说明。',
+    sourceHint: '日本年金機構、市区町村 国民健康保険 手续说明。',
     boundaryNote: ANSWER_BOUNDARY_NOTE,
     actionAnswer: formatActionAnswer({
       ok: true,
@@ -115,7 +115,7 @@ const DEMO_ANSWERS: Record<string, FullAnswer> = {
       '列出会社登记、税务、社保、入管相关材料。',
       '把新旧地址相关文件归档到同一条时间线。',
     ],
-    sourceHint: '来源提示：法務局、税務署、自治体公开手续说明。此条尚未人工复核。',
+    sourceHint: '法務局、税務署、自治体公开手续说明。',
     boundaryNote: ANSWER_BOUNDARY_NOTE,
     actionAnswer: formatActionAnswer({
       ok: true,
@@ -195,11 +195,11 @@ export default async function AnswerPage({
 
   if (!answer) {
     return (
-      <AppShell appBar={<AppBar title="整理结果" back="/" />} tabBar={<TabBar />}>
+      <AppShell appBar={<AppBar title="下一步" back="/" />} tabBar={<TabBar />}>
         <section className="mt-4 rounded-card border border-hairline bg-surface px-4 py-5">
           <h1 className="text-[18px] font-medium text-ink">回答不存在或已过期</h1>
           <p className="mt-2 text-[12px] leading-[1.7] text-ash">
-            可以回到首页重新整理这个问题。
+            可以回到首页继续问。
           </p>
           <Link
             href="/"
@@ -213,7 +213,7 @@ export default async function AnswerPage({
   }
 
   return (
-    <AppShell appBar={<AppBar title="整理结果" back="/" />} tabBar={<TabBar />}>
+    <AppShell appBar={<AppBar title="下一步" back="/" />} tabBar={<TabBar />}>
       <AnswerResultView answer={toViewAnswer(withActionAnswer(answer))} answerId={draft?.id ?? null} />
     </AppShell>
   )
@@ -231,7 +231,7 @@ function draftToAnswer(draft: AnswerDraftRow): FullAnswer {
     ? sources.map(source => source.title).join(' / ')
     : relatedLinks.length > 0
       ? relatedLinks.map(link => link.title).join(' / ')
-      : '来源提示：系统根据已整理内容和公开手续资料生成。'
+      : '系统根据已整理内容和公开手续资料生成。'
 
   return {
     id: draft.id,
@@ -349,8 +349,8 @@ function answerStatus(value: string): AnswerStatus {
 
 function publicStatusLabel(status: AnswerStatus): string {
   if (status === 'matched') return '已整理'
-  if (status === 'draft') return '初步整理，待复核'
-  return '需要进一步确认'
+  if (status === 'draft') return '初步整理'
+  return '需确认'
 }
 
 function publicStatusClassName(status: AnswerStatus): string {
