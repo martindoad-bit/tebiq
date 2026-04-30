@@ -1,65 +1,89 @@
 # AI Handoff - CCB
 
-最后更新: 2026-04-30（CCB content/answer-seed-v1 完成）
+最后更新: 2026-04-30（CCB content/answer-copy-rewrite-v1 完成）
 
 ## CCB(内容)状态
 
-- 当前任务: Answer Seed v1（强化 v0 100 条，让用户问题更易命中答案）
-- 当前分支: `content/answer-seed-v1`（基于 `origin/content/answer-seed-v0`）
+- 当前任务: Answer Copy Rewrite v1（把答案改成用户能照着做）
+- 当前分支: `content/answer-copy-rewrite-v1`（基于 `origin/content/answer-seed-v1`）
 - 当前 worktree: /tmp/cc-b-batch-04
 - 状态: **awaiting_merge**
 
 ## 本次交付
 
-按创始人 v1 brief：在 v0 100 条 answer seed 基础上做 4 项强化（不增删 Q / 不重写 summary / 仅强化可命中性 + 高风险题透明度）。
+按创始人 brief：不新增 Q / 不写新 batch / 仅给 TOP 50 加 `action_answer` 字段块，让用户看到答案就能照着做。
 
-### 修改文件（5 个）
+### 修改文件
 
-| 文件 | 修改 |
+| 文件 | TOP 50 加 action_answer |
 |---|---|
-| `answer_seed_001-025.md` | aliases 补全 + test_queries + 7 条 first_screen_answer + 7 条 high-risk 字段 |
-| `answer_seed_026-050.md` | aliases 补全 + test_queries + 11 条 first_screen_answer + 6 条 high-risk 字段 |
-| `answer_seed_051-075.md` | aliases 补全 + test_queries + 5 条 first_screen_answer + 6 条 high-risk 字段 |
-| `answer_seed_076-100.md` | aliases 补全 + test_queries + 7 条 first_screen_answer + 7 条 high-risk 字段 |
-| `ANSWER_SEED_V1_REPORT.md` | 新建（v1 强化报告） |
+| `answer_seed_001-025.md` | 17 条 |
+| `answer_seed_026-050.md` | 13 条（含 Q032 重点重写）|
+| `answer_seed_051-075.md` | 10 条 |
+| `answer_seed_076-100.md` | 10 条 |
+| `ANSWER_COPY_REWRITE_V1_REPORT.md` | 新建（重写报告） |
 
-### 关键统计
+### action_answer 字段块（TOP 50 必填）
 
-| 指标 | v0 | v1 | 增量 |
-|---|---|---|---|
-| Q 总数 | 100 | 100 | 0 |
-| aliases 总条数 | ~425 | **837** | +412 |
-| test_queries 总条数 | 0 | **350** | +350 |
-| first_screen_answer | 0 | **30** | TOP30 全 |
-| why_not_simple_answer | 0 | **26** | 高风险全 |
-| expert_handoff | 部分 | **26** | 统一格式 |
+```yaml
+action_answer:
+  conclusion: <一句话明确结论 / 或「这个问题不能简单回答」>
+  do_now: <用户现在 1-3 件具体可执行的事>
+  where_to_go: <去哪里办：机关名 + 具体窗口>
+  how_to_do: <怎么操作：编号步骤清单>
+  documents_needed: [...]
+  deadline_or_timing: <多久内做>
+  consequences: <不做会怎样>
+  expert_handoff: <什么情况必须找专家>
+```
 
-### Schema 增量（v0 → v1）
+### Q032 办公室搬迁（创始人特别要求重点重写）
 
-新增字段：
-- `test_queries` text[] — 自动测试用查询
-- `first_screen_answer` text — 首屏 ≤ 300 字答案（仅 TOP30）
-- `why_not_simple_answer` text — 高风险题特有
-- `expert_handoff` jsonb — {trigger[], who, why}（v1 统一格式）
+按 brief 8 点全覆盖：法人办公确认 + 法人名义合同 + 商業登記 + 异动届 + 社保银行许可 + 入管立证持续性 + 新旧租约照片平面图 + 仅改邮寄地址的不一致风险。
+
+关键时间节点：
+- 法務局 本店移転登記 **2 週間以内**
+- 入管 所属機関等届出 **14 日以内**
+- 税務 / 社保 / 雇用保険 異動届 **1 ヶ月以内**
+
+### 高风险 16 条 ⚠️ 严格处理
+
+Q003 / Q004 / Q005 / Q024 / Q026 / Q029 / Q031 / Q036 / Q040 / Q050 / Q057 / Q065 / Q081 / Q091 / Q098 / Q099
+
+统一 conclusion = 「这个问题不能简单回答」+ 明确专家分类 + 客观陈述。
+
+### 语气合规
+
+- ✗ 不写「保证 / 一定（肯定式）/ 拒签概率 / 赶紧委托 / 我们可以帮你办」
+- ✓ 写「通常 / 一般 / 需要先确认 / 需要先整理 / 如果涉及个别事实，建议咨询专业人士」
+
+无法确定的字段 → 写「需要先确认」，不留空。
 
 ## 给 CCA 的接入建议
 
-### answer engine 自动测试套件
+### 前端 UI 三层渲染
 
-用 100 条 Q 的 350 条 test_queries 跑：
-- Tier 1 命中（top1）目标 ≥ 80%
-- Tier 2 命中（top3）目标 ≥ 95%
-- 误触发率 ≤ 5%
+| 命中类型 | 渲染主体 |
+|---|---|
+| 命中 TOP 50 题 | 优先展 `action_answer`（可执行清单 8 字段） |
+| 命中 TOP 50 外（TOP 30） | 展 `first_screen_answer`（v1 已有 4 段）|
+| 命中其他题 | 展 `summary` + `sections`（v0 已有） |
 
-### 前端 UI 三档展示
+高风险题（answer_type: needs_expert / misconception）命中时强制展示 `why_not_simple_answer` + `expert_handoff` CTA → ¥9,800 咨询入口。
 
-- low-risk：仅 first_screen_answer
-- medium-risk：first_screen_answer + boundary_note
-- high-risk：first_screen_answer + why_not_simple_answer + expert_handoff CTA → ¥9,800 咨询
+### Schema 增量字段
 
-### 双咨询题处理
+```sql
+action_answer  jsonb  -- {conclusion, do_now, where_to_go, how_to_do,
+                     --  documents_needed[], deadline_or_timing,
+                     --  consequences, expert_handoff}
+```
 
-9 条题需「两位专家联合」（如 Q029 行政書士+税理士、Q065 行政書士+弁護士+DV センター、Q099 弁護士+行政書士）。`expert_handoff.who` 字段已具体到职业。
+### 测试建议
+
+用 v1 350 条 test_queries 跑命中：
+- 命中 TOP 50 时验证 `action_answer.conclusion` 渲染优先级
+- 高风险 16 条命中时验证「不能简单回答」+ 引导专家路径
 
 ## 历次交付
 
@@ -68,4 +92,5 @@
 - content/index-and-review-registry：4 治理文件
 - content/real-question-data-v1：152 个 Q 标注 + TOP 20 + 5 seed YAML
 - content/answer-seed-v0：100 条 answer seed + report
-- **content/answer-seed-v1：v0 强化版（aliases 837 / test_queries 350 / TOP30 first_screen / 26 高风险题透明度）**
+- content/answer-seed-v1：v0 强化版（aliases 837 / test_queries 350 / TOP30 first_screen / 26 高风险题透明度）
+- **content/answer-copy-rewrite-v1：v1 答案重写（TOP 50 + Q032 重点重写 + 16 条高风险题严格处理）**
