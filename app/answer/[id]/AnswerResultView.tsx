@@ -21,13 +21,6 @@ export interface AnswerResult {
   actionAnswer: ActionAnswer
 }
 
-const LEVEL_LABELS: Record<AnswerLevel, string> = {
-  L1: 'L1 一般信息',
-  L2: 'L2 手续路径',
-  L3: 'L3 决策辅助',
-  L4: 'L4 个案判断',
-}
-
 const STATUS_META: Record<AnswerStatus, { label: string; detail: string; className: string }> = {
   matched: {
     label: '已整理',
@@ -40,7 +33,7 @@ const STATUS_META: Record<AnswerStatus, { label: string; detail: string; classNa
     className: 'bg-[#FFF7E8] text-ink',
   },
   cannot_determine: {
-    label: '这个情况需要进一步确认',
+    label: '需要进一步确认',
     detail: '先补齐关键日期和身份信息',
     className: 'bg-paper text-ink',
   },
@@ -94,57 +87,50 @@ export default function AnswerResultView({
 
   return (
     <div className="grid gap-5 pt-1">
-      <section className="rounded-card border border-hairline bg-surface px-4 py-4">
-        <div className="flex flex-wrap items-center gap-2">
+      <section className="rounded-[16px] border border-hairline bg-surface px-4 py-4">
+        <div>
           <StatusPill className={meta.className}>{meta.label}</StatusPill>
-          <StatusPill>{LEVEL_LABELS[answer.answerLevel]}</StatusPill>
         </div>
-        <h1 className="mt-4 text-[21px] font-medium leading-[1.45] tracking-[-0.01em] text-ink [overflow-wrap:anywhere]">
+        <h1 className="mt-4 text-[22px] font-medium leading-[1.42] tracking-[-0.01em] text-ink [overflow-wrap:anywhere]">
           {answer.title}
         </h1>
+
         <div className="mt-4 rounded-[12px] bg-paper px-3 py-3">
-          <SectionHeading>结论</SectionHeading>
-          <p className="mt-2 text-[14px] leading-[1.75] text-ink [overflow-wrap:anywhere]">{action.conclusion}</p>
+          <p className="text-[11px] leading-none text-ash">你的问题</p>
+          <p className="mt-2 text-[13px] leading-[1.7] text-slate [overflow-wrap:anywhere]">{answer.question}</p>
         </div>
+
         <div className="mt-4 border-t border-hairline pt-4">
-          <ActionList title={cannotDetermine ? '先确认什么' : '现在要做什么'} items={action.what_to_do} ordered />
+          <SectionHeading>一句话结论</SectionHeading>
+          <p className="mt-2 text-[15px] leading-[1.75] text-ink [overflow-wrap:anywhere]">{action.conclusion}</p>
         </div>
+
+        <div className="mt-4 border-t border-hairline pt-4">
+          <ActionList title={cannotDetermine ? '今天先确认什么' : '今天先做什么'} items={action.what_to_do} ordered strong />
+        </div>
+
         <div className="mt-4 border-t border-hairline pt-4">
           <SectionHeading>边界说明</SectionHeading>
           <p className="mt-2 text-[12px] leading-[1.7] text-ash [overflow-wrap:anywhere]">{action.boundary_note}</p>
         </div>
-        <div className="mt-4 border-t border-hairline pt-4">
-          <p className="text-[11px] leading-none text-ash">原始问题</p>
-          <p className="mt-2 text-[12px] leading-[1.65] text-slate [overflow-wrap:anywhere]">{answer.question}</p>
-        </div>
       </section>
 
-      <section className="rounded-card border border-hairline bg-surface">
+      <section className="rounded-[16px] border border-hairline bg-surface">
         <div className="border-b border-hairline px-4 py-3">
-          <SectionTitle title="行动答案" />
+          <SectionTitle title="下一步说明" />
         </div>
         <div className="divide-y divide-hairline px-4">
-          <ActionList title="去哪里办" items={action.where_to_go} />
-          <ActionList title="怎么做" items={action.how_to_do} />
-          <ActionList title="需要带什么" items={action.documents_needed} />
-          <ActionList title="大概多久内做" items={action.deadline_or_timing} />
-          <ActionList title="不做可能怎样" items={action.consequences} />
+          <ActionList title="去哪办理" items={action.where_to_go} />
+          <ActionList title="需要准备什么" items={action.documents_needed} />
+          <ActionList title="期限和时机" items={action.deadline_or_timing} />
+          <ActionList title="不处理可能怎样" items={action.consequences} />
+          <ActionList title="需要专家确认的情况" items={action.expert_handoff} />
+          <CustomerNote sourceHint={answer.sourceHint} boundaryNote={action.boundary_note} />
         </div>
       </section>
 
-      {action.expert_handoff.length > 0 && (
-        <section className="rounded-card border border-hairline bg-surface px-4 py-4">
-          <ActionList title="什么时候要问专家" items={action.expert_handoff} />
-        </section>
-      )}
-
-      <section className="rounded-card border border-hairline bg-surface px-4 py-4">
-        <SectionTitle title="来源提示" />
-        <p className="mt-3 text-[13px] leading-[1.75] text-slate">{answer.sourceHint}</p>
-      </section>
-
-      <section className="rounded-card border border-hairline bg-surface px-4 py-4">
-        <SectionTitle title="这条整理是否有用" />
+      <section className="rounded-[16px] border border-hairline bg-surface px-4 py-4">
+        <SectionTitle title="这个整理有帮助吗？" />
         <div className="mt-3 grid grid-cols-2 gap-2">
           {FEEDBACK_OPTIONS.map(option => (
             <button
@@ -187,13 +173,16 @@ function ActionList({
   title,
   items,
   ordered = false,
+  strong = false,
 }: {
   title: string
   items: string[]
   ordered?: boolean
+  strong?: boolean
 }) {
-  const content = items.slice(0, 6).map((item, index) => (
-    <li key={`${title}-${item}`} className="grid grid-cols-[24px_1fr] gap-2 text-[12px] leading-[1.65] text-slate">
+  const safeItems = items.length > 0 ? items : ['这部分需要进一步确认。']
+  const content = safeItems.slice(0, strong ? 3 : 6).map((item, index) => (
+    <li key={`${title}-${item}`} className={`grid grid-cols-[24px_1fr] gap-2 text-[12px] leading-[1.65] ${strong ? 'text-ink' : 'text-slate'}`}>
       <span className="flex h-6 w-6 items-center justify-center rounded-[8px] bg-paper text-[11px] tabular-nums text-ink">
         {ordered ? index + 1 : '·'}
       </span>
@@ -204,6 +193,26 @@ function ActionList({
     <div className="py-4 first:pt-0 last:pb-0">
       <SectionHeading>{title}</SectionHeading>
       {ordered ? <ol className="mt-3 grid gap-2">{content}</ol> : <ul className="mt-3 grid gap-2">{content}</ul>}
+    </div>
+  )
+}
+
+function CustomerNote({
+  sourceHint,
+  boundaryNote,
+}: {
+  sourceHint: string
+  boundaryNote: string
+}) {
+  return (
+    <div className="py-4 first:pt-0 last:pb-0">
+      <SectionHeading>给客户看的简短说明</SectionHeading>
+      <p className="mt-3 text-[12px] leading-[1.75] text-slate [overflow-wrap:anywhere]">
+        {boundaryNote}
+      </p>
+      <p className="mt-2 text-[11px] leading-[1.7] text-ash [overflow-wrap:anywhere]">
+        来源提示：{sourceHint}
+      </p>
     </div>
   )
 }

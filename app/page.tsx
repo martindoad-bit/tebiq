@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { Bell, CalendarDays, Camera, ChevronRight, ClipboardCheck, FileText } from 'lucide-react'
 import AppShell from '@/app/_components/v5/AppShell'
 import TabBar from '@/app/_components/v5/TabBar'
+import Logo from '@/app/_components/v5/Logo'
 import QuestionIntakeBox from '@/app/_components/QuestionIntakeBox'
 import { DeadlineRow, ListRow, ListSection, SectionLabel } from '@/components/ui/tebiq'
 import { getCurrentUser } from '@/lib/auth/session'
@@ -52,10 +53,13 @@ export default async function HomePage() {
 function NewUserHome() {
   return (
     <>
-      <section className="pt-6">
-        <h1 className="text-[36px] font-medium leading-none tracking-[0.04em] text-ink">TEBIQ</h1>
-        <p className="mt-3 max-w-[300px] text-[14px] leading-[1.7] text-slate">
-          在日生活的日文文书识别和提醒
+      <section className="pt-4">
+        <Logo size="lg" />
+        <h1 className="mt-7 max-w-[340px] text-[28px] font-medium leading-[1.28] tracking-[-0.01em] text-ink">
+          在日本遇到手续问题，TEBIQ 帮你整理下一步。
+        </h1>
+        <p className="mt-3 max-w-[330px] text-[14px] leading-[1.75] text-slate">
+          写下情况，或拍一份日文文书。TEBIQ 会把要做什么、去哪办、需要准备什么整理成可执行说明。
         </p>
       </section>
 
@@ -97,7 +101,16 @@ function UserHome({
         </section>
       )}
 
-      <QuestionIntakeBox sourcePage="/" />
+      <section className="pt-3">
+        <Logo />
+        <p className="mt-3 max-w-[320px] text-[13px] leading-[1.7] text-slate">
+          在日本遇到手续问题，TEBIQ 帮你整理下一步。
+        </p>
+      </section>
+
+      <div className="mt-5">
+        <QuestionIntakeBox sourcePage="/" />
+      </div>
 
       <ListSection className="mt-5">
         <OverviewRow label="在留卡" value={visaOverview(user, daysToExpiry)} href="/my/profile" />
@@ -326,7 +339,7 @@ function isUrgent(deadline: string | null): boolean {
 function HomeAppBar() {
   return (
     <header className="flex h-[58px] flex-shrink-0 items-center justify-between bg-canvas px-5">
-      <span className="text-[12px] font-medium tracking-[0.14em] text-ash">TEBIQ</span>
+      <Logo size="sm" />
       <Link
         href="/timeline"
         aria-label="我的提醒"
