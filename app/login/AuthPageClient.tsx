@@ -77,12 +77,12 @@ export default function AuthPageClient({ intent = 'login' }: { intent?: 'login' 
       })
       const data = await res.json()
       if (!res.ok) {
-        setError(data?.error ?? '发送失败')
+        setError(data?.error ?? '发送失败，请检查邮箱地址或稍后重试')
         return
       }
-      setMessage(`登录链接已发送到 ${normalized}，7 分钟内有效。`)
+      setMessage(`登录链接已发送到 ${normalized}，7 分钟内有效。没有收到时，检查垃圾邮件或改用手机号登录。`)
     } catch {
-      setError('网络错误，请重试')
+      setError('请求失败，请稍后重试')
     } finally {
       setLoading(false)
     }
@@ -164,7 +164,7 @@ export default function AuthPageClient({ intent = 'login' }: { intent?: 'login' 
           </div>
           <div className="mx-auto mt-5 inline-flex max-w-full items-center justify-center gap-1.5 rounded-full border border-hairline bg-surface px-3 py-1.5 text-center text-[11px] text-slate shadow-card">
             <ShieldCheck size={13} strokeWidth={1.55} className="text-ink" />
-            {inviteCode ? '注册成功后自动领取邀请奖励' : '邮箱优先，也可用手机号登录'}
+            {inviteCode ? '注册后自动领取邀请奖励' : '邮箱优先，手机号可作为备用登录'}
           </div>
         </section>
 

@@ -17,9 +17,9 @@ export function StatCard({
   const valColor =
     tone === 'green' ? 'text-[#16A34A]' : tone === 'red' ? 'text-[#DC2626]' : 'text-primary'
   return (
-    <div className="bg-card border border-line rounded-2xl p-4">
+    <div className="rounded-card border border-hairline bg-surface p-4">
       <div className="text-muted text-xs mb-2">{label}</div>
-      <div className={`${valColor} text-3xl font-bold leading-none`}>
+      <div className={`${valColor} text-3xl font-medium leading-none`}>
         {value.toLocaleString()}
         <span className="text-base text-muted ml-1">{unit}</span>
       </div>
@@ -31,7 +31,7 @@ export function StatCard({
 export function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
     <div className="mb-8">
-      <h2 className="text-primary font-bold text-sm mb-3 px-1">{title}</h2>
+      <h2 className="text-primary font-medium text-sm mb-3 px-1">{title}</h2>
       {children}
     </div>
   )
@@ -40,7 +40,7 @@ export function Section({ title, children }: { title: string; children: ReactNod
 export function Field({ label, children }: { label: string; children: ReactNode }) {
   return (
     <label className="block">
-      <span className="text-body text-xs font-bold mb-1 block">{label}</span>
+      <span className="text-body text-xs font-medium mb-1 block">{label}</span>
       {children}
     </label>
   )
@@ -56,10 +56,10 @@ export function PageShell({
   children: ReactNode
 }) {
   return (
-    <div className="flex-1 px-4 py-8 md:py-12 pb-[env(safe-area-inset-bottom)]">
+    <div className="flex-1 bg-canvas px-4 py-8 pb-[env(safe-area-inset-bottom)] md:py-12">
       <div className="max-w-md md:max-w-5xl mx-auto">
-        <h1 className="text-2xl md:text-3xl font-bold mb-2">{title}</h1>
-        {subtitle && <p className="text-muted text-xs mb-6">{subtitle}</p>}
+        <h1 className="mb-2 text-[22px] font-medium leading-tight text-ink md:text-[28px]">{title}</h1>
+        {subtitle && <p className="mb-6 max-w-[720px] text-[12px] leading-[1.65] text-ash">{subtitle}</p>}
         {children}
       </div>
     </div>

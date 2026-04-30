@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { ChevronRight, ClipboardCheck, ListChecks } from 'lucide-react'
 import AppShell from '@/app/_components/v5/AppShell'
 import AppBar from '@/app/_components/v5/AppBar'
+import QuestionIntakeCard from '@/app/_components/QuestionIntakeCard'
 import {
   CHECK_VISA_META,
   type CanonicalCheckVisa,
@@ -105,6 +106,8 @@ export default function CheckDimensionList({
           })}
         </ul>
       </section>
+
+      <QuestionIntakeCard sourcePage="/check" className="mt-4" />
     </AppShell>
   )
 }

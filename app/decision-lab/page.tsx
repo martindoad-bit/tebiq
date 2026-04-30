@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { ArrowRight, DatabaseZap } from 'lucide-react'
 import AppShell from '@/app/_components/v5/AppShell'
 import AppBar from '@/app/_components/v5/AppBar'
+import QuestionIntakeCard from '@/app/_components/QuestionIntakeCard'
 import { listDecisionCards } from '@/lib/decision/cards'
 import {
   ANSWER_LEVEL_LABEL,
@@ -56,6 +57,8 @@ export default async function DecisionLabPage() {
           {cards.map(card => <CardRow key={card.slug} card={card} />)}
         </div>
       </section>
+
+      <QuestionIntakeCard sourcePage="/decision-lab" className="mt-4" />
     </AppShell>
   )
 }

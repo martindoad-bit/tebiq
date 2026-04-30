@@ -26,6 +26,7 @@ import type { LucideIcon } from 'lucide-react'
 import AppShell from '@/app/_components/v5/AppShell'
 import AppBar from '@/app/_components/v5/AppBar'
 import TabBar from '@/app/_components/v5/TabBar'
+import QuestionIntakeCard from '@/app/_components/QuestionIntakeCard'
 import { plainTextFromMarkdown } from '@/lib/knowledge/markdown'
 import { sanitizePublicKnowledgeText } from '@/lib/knowledge/public-text'
 import { trackClient } from '@/lib/analytics/client'
@@ -217,6 +218,8 @@ export default function KnowledgeClient({
           ))}
         </ul>
       )}
+
+      <QuestionIntakeCard sourcePage="/knowledge" className="mt-5" />
     </AppShell>
   )
 }

@@ -62,6 +62,12 @@ function ReviewCard({ card }: { card: DecisionCard }) {
   const [busy, setBusy] = useState(false)
   const [saved, setSaved] = useState<string | null>(null)
   const [flags, setFlags] = useState<string[]>([])
+  const [scores, setScores] = useState({
+    accuracyScore: 3,
+    sourceScore: 3,
+    boundaryScore: 3,
+    actionabilityScore: 3,
+  })
 
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -81,10 +87,7 @@ function ReviewCard({ card }: { card: DecisionCard }) {
           conclusionOk: conclusion === 'ok' ? true : conclusion === 'wrong' ? false : null,
           publishDecision: String(form.get('publishDecision') ?? 'revise'),
           expertNeed: String(form.get('expertNeed') ?? 'none'),
-          accuracyScore: Number(form.get('accuracyScore') ?? 3),
-          sourceScore: Number(form.get('sourceScore') ?? 3),
-          boundaryScore: Number(form.get('boundaryScore') ?? 3),
-          actionabilityScore: Number(form.get('actionabilityScore') ?? 3),
+          ...scores,
           flags,
           note: String(form.get('note') ?? ''),
         }),
@@ -99,38 +102,44 @@ function ReviewCard({ card }: { card: DecisionCard }) {
 
   return (
     <article className="rounded-card border border-hairline bg-surface p-4 shadow-card">
-      <div className="flex flex-wrap items-center gap-2">
-        <h2 className="mr-auto text-base font-semibold text-ink">{card.title}</h2>
-        <Chip>{card.cardType}</Chip>
-        <Chip>{card.answerLevel}</Chip>
-        <Chip>{card.sourceGrade}</Chip>
-        <Chip>{card.requiresReview ? 'requires_review' : 'reviewed'}</Chip>
+      <div className="rounded-[12px] bg-paper px-4 py-3">
+        <p className="text-[11px] leading-none text-ash">原始问题</p>
+        <h2 className="mt-2 text-[18px] font-medium leading-[1.55] text-ink">{card.title}</h2>
+        <div className="mt-3 flex flex-wrap gap-1.5">
+          <Chip>{card.cardType}</Chip>
+          <Chip>{card.answerLevel}</Chip>
+          <Chip>{card.sourceGrade}</Chip>
+          <Chip>{card.requiresReview ? 'requires_review' : 'reviewed'}</Chip>
+        </div>
       </div>
-      <div className="mt-3 grid gap-3 md:grid-cols-[1fr_360px]">
-        <div className="rounded-[12px] bg-paper p-3">
-          <p className="text-xs font-medium text-ink">AI / 内容草稿</p>
-          <p className="mt-2 whitespace-pre-line text-xs leading-6 text-slate">
+
+      <div className="mt-3 grid gap-3 md:grid-cols-[minmax(0,1fr)_380px]">
+        <div className="rounded-[12px] border border-hairline bg-canvas p-3">
+          <p className="text-[12px] font-medium text-ink">内容草稿</p>
+          <p className="mt-2 max-h-[320px] overflow-auto whitespace-pre-line text-[12px] leading-[1.7] text-slate">
             {card.bodyMarkdown || card.recommendedAction || '未记录'}
           </p>
-          <p className="mt-3 text-xs font-medium text-ink">source refs</p>
-          <ul className="mt-1 list-disc pl-4 text-xs leading-6 text-slate">
+          <p className="mt-3 border-t border-hairline pt-3 text-[12px] font-medium text-ink">source refs</p>
+          <ul className="mt-1 list-disc pl-4 text-[11.5px] leading-[1.7] text-ash">
             {card.sourceRefs.map(source => <li key={`${source.title}-${source.url ?? ''}`}>{source.title}</li>)}
             {card.sourceRefs.length === 0 && <li>未记录</li>}
           </ul>
         </div>
 
-        <form onSubmit={submit} className="grid gap-2 text-xs">
-          <Field label="审核人">
-            <input name="reviewerName" defaultValue="staff" className={INPUT_CLASS} />
-          </Field>
-          <Field label="角色">
-            <select name="reviewerRole" className={INPUT_CLASS} defaultValue="staff">
-              <option value="staff">staff</option>
-              <option value="shoshi">shoshi</option>
-              <option value="founder">founder</option>
-              <option value="other">other</option>
-            </select>
-          </Field>
+        <form onSubmit={submit} className="grid gap-3 text-xs">
+          <div className="grid grid-cols-2 gap-2">
+            <Field label="审核人">
+              <input name="reviewerName" defaultValue="staff" className={INPUT_CLASS} />
+            </Field>
+            <Field label="角色">
+              <select name="reviewerRole" className={INPUT_CLASS} defaultValue="staff">
+                <option value="staff">staff</option>
+                <option value="shoshi">shoshi</option>
+                <option value="founder">founder</option>
+                <option value="other">other</option>
+              </select>
+            </Field>
+          </div>
           <Field label="结论方向">
             <select name="conclusion" className={INPUT_CLASS} defaultValue="unknown">
               <option value="ok">对</option>
@@ -138,80 +147,124 @@ function ReviewCard({ card }: { card: DecisionCard }) {
               <option value="unknown">不确定</option>
             </select>
           </Field>
-          <Field label="是否可公开">
-            <select name="publishDecision" className={INPUT_CLASS} defaultValue="revise">
-              <option value="approve">可以</option>
-              <option value="revise">修改后可以</option>
-              <option value="reject">不可以</option>
-              <option value="escalate">升级确认</option>
-            </select>
-          </Field>
-          <Field label="是否需要专家">
-            <select name="expertNeed" className={INPUT_CLASS} defaultValue="none">
-              <option value="none">否</option>
-              <option value="shoshi">行政書士</option>
-              <option value="sharoushi">社労士</option>
-              <option value="tax_accountant">税理士</option>
-              <option value="other">其他</option>
-            </select>
-          </Field>
-          <ScoreGrid />
+          <div className="grid grid-cols-2 gap-2">
+            <Field label="公开判断">
+              <select name="publishDecision" className={INPUT_CLASS} defaultValue="revise">
+                <option value="approve">可以</option>
+                <option value="revise">修改后可以</option>
+                <option value="reject">不可以</option>
+                <option value="escalate">升级确认</option>
+              </select>
+            </Field>
+            <Field label="专家确认">
+              <select name="expertNeed" className={INPUT_CLASS} defaultValue="none">
+                <option value="none">否</option>
+                <option value="shoshi">行政書士</option>
+                <option value="sharoushi">社労士</option>
+                <option value="tax_accountant">税理士</option>
+                <option value="other">其他</option>
+              </select>
+            </Field>
+          </div>
+          <ScoreGrid scores={scores} onChange={setScores} />
           <div>
-            <span className="mb-1 block font-medium text-ink">flags</span>
-            <div className="flex flex-wrap gap-1">
-              {FLAGS.map(flag => (
-                <label key={flag} className="rounded-[8px] border border-hairline bg-canvas px-2 py-1 text-ash">
-                  <input
-                    type="checkbox"
-                    className="mr-1"
-                    checked={flags.includes(flag)}
-                    onChange={event => {
-                      setFlags(current => event.target.checked
-                        ? [...current, flag]
-                        : current.filter(item => item !== flag))
+            <span className="mb-1.5 block font-medium text-ink">flags</span>
+            <div className="flex flex-wrap gap-1.5">
+              {FLAGS.map(flag => {
+                const active = flags.includes(flag)
+                return (
+                  <button
+                    key={flag}
+                    type="button"
+                    onClick={() => {
+                      setFlags(current => active
+                        ? current.filter(item => item !== flag)
+                        : [...current, flag])
                     }}
-                  />
-                  {flag}
-                </label>
-              ))}
+                    className={`rounded-[9px] border px-2.5 py-1.5 text-[11px] ${
+                      active ? 'border-ink bg-ink text-white' : 'border-hairline bg-canvas text-ash'
+                    }`}
+                  >
+                    {flag}
+                  </button>
+                )
+              })}
             </div>
           </div>
-          <Field label="note">
-            <textarea name="note" rows={2} className={INPUT_CLASS} placeholder="一句话审核说明" />
+          <Field label="补充一句话">
+            <textarea name="note" rows={2} className={INPUT_CLASS} placeholder="可选" />
           </Field>
           <button
             type="submit"
             disabled={busy}
-            className="min-h-[38px] rounded-btn bg-ink px-3 text-xs font-medium text-white disabled:opacity-50"
+            className="min-h-[42px] rounded-btn bg-ink px-3 text-xs font-medium text-white disabled:opacity-50"
           >
-            {busy ? '处理中...' : '保存 review record'}
+            {busy ? '处理中...' : '保存审核记录'}
           </button>
-          {saved && <p className="text-ash">{saved}</p>}
+          {saved && <p className="rounded-[10px] bg-paper px-3 py-2 text-ash">{saved}</p>}
         </form>
       </div>
     </article>
   )
 }
 
-function ScoreGrid() {
+function ScoreGrid({
+  scores,
+  onChange,
+}: {
+  scores: {
+    accuracyScore: number
+    sourceScore: number
+    boundaryScore: number
+    actionabilityScore: number
+  }
+  onChange: (scores: {
+    accuracyScore: number
+    sourceScore: number
+    boundaryScore: number
+    actionabilityScore: number
+  }) => void
+}) {
   return (
     <div className="grid grid-cols-2 gap-2">
-      <Score name="accuracyScore" label="准确度" />
-      <Score name="sourceScore" label="来源充分" />
-      <Score name="boundaryScore" label="边界安全" />
-      <Score name="actionabilityScore" label="可操作性" />
+      <Score name="accuracyScore" label="准确度" value={scores.accuracyScore} onChange={value => onChange({ ...scores, accuracyScore: value })} />
+      <Score name="sourceScore" label="来源充分" value={scores.sourceScore} onChange={value => onChange({ ...scores, sourceScore: value })} />
+      <Score name="boundaryScore" label="边界安全" value={scores.boundaryScore} onChange={value => onChange({ ...scores, boundaryScore: value })} />
+      <Score name="actionabilityScore" label="可操作性" value={scores.actionabilityScore} onChange={value => onChange({ ...scores, actionabilityScore: value })} />
     </div>
   )
 }
 
-function Score({ name, label }: { name: string; label: string }) {
+function Score({
+  name,
+  label,
+  value,
+  onChange,
+}: {
+  name: string
+  label: string
+  value: number
+  onChange: (value: number) => void
+}) {
   return (
-    <label>
+    <div>
       <span className="mb-1 block font-medium text-ink">{label}</span>
-      <select name={name} className={INPUT_CLASS} defaultValue="3">
-        {[1, 2, 3, 4, 5].map(score => <option key={score} value={score}>{score}</option>)}
-      </select>
-    </label>
+      <input type="hidden" name={name} value={value} />
+      <div className="grid grid-cols-5 gap-1">
+        {[1, 2, 3, 4, 5].map(score => (
+          <button
+            key={score}
+            type="button"
+            onClick={() => onChange(score)}
+            className={`min-h-[34px] rounded-[8px] border text-[12px] ${
+              value === score ? 'border-ink bg-ink text-white' : 'border-hairline bg-canvas text-slate'
+            }`}
+          >
+            {score}
+          </button>
+        ))}
+      </div>
+    </div>
   )
 }
 
@@ -229,4 +282,4 @@ function Chip({ children }: { children: string }) {
 }
 
 const INPUT_CLASS =
-  'w-full rounded-[10px] border border-hairline bg-canvas px-3 py-2 text-xs text-ink outline-none focus:border-ink'
+  'w-full rounded-[10px] border border-hairline bg-canvas px-3 py-2.5 text-xs text-ink outline-none focus:border-ink'
