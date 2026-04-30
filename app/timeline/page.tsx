@@ -21,13 +21,18 @@ import { eventSubline, eventTitle, eventTypeLabel } from '@/lib/timeline/display
 
 export const dynamic = 'force-dynamic'
 
-const EVENT_TYPES: Array<{ value: TimelineEventType; label: string }> = [
-  { value: 'photo_recognition', label: '拍照' },
-  { value: 'text_understand', label: '文字' },
-  { value: 'self_check', label: '自查' },
-  { value: 'policy_match', label: '政策' },
-  { value: 'manual_note', label: '手动' },
+const EVENT_TYPES: Array<{ param: string; value: TimelineEventType; label: string }> = [
+  { param: 'photo', value: 'photo_recognition', label: '拍照' },
+  { param: 'text', value: 'text_understand', label: '文字' },
+  { param: 'check', value: 'self_check', label: '自查' },
+  { param: 'policy', value: 'policy_match', label: '政策' },
+  { param: 'note', value: 'manual_note', label: '手动' },
 ]
+
+const EVENT_TYPE_BY_PARAM = EVENT_TYPES.reduce<Record<string, TimelineEventType>>((acc, item) => {
+  acc[item.param] = item.value
+  return acc
+}, {})
 
 export default async function TimelinePage({
   searchParams,
@@ -38,7 +43,8 @@ export default async function TimelinePage({
   const sessionId = user ? null : await getAnonymousSessionId()
   if (user) await safeArchiveExpired(user)
   const owner = { memberId: user?.id ?? null, sessionId }
-  const eventType = single(searchParams?.event_type) as TimelineEventType | undefined
+  const eventTypeParam = single(searchParams?.event_type)
+  const eventType = eventTypeParam ? EVENT_TYPE_BY_PARAM[eventTypeParam] : undefined
   const includeArchived = single(searchParams?.archived) === 'true'
   const [summary, events, access, checkItems] = await Promise.all([
     safeSummary(owner),
@@ -90,7 +96,7 @@ export default async function TimelinePage({
           {EVENT_TYPES.map(item => (
             <FilterLink
               key={item.value}
-              href={`/timeline?event_type=${item.value}`}
+              href={`/timeline?event_type=${item.param}`}
               active={eventType === item.value}
             >
               {item.label}
