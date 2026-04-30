@@ -1,5 +1,5 @@
 import type { DecisionAnswerLevel } from '@/lib/decision/types'
-import type { AnswerReviewStatus, AnswerSection, AnswerSource, AnswerType } from './types'
+import type { AnswerReviewStatus, AnswerSection, AnswerSource, AnswerType, ExpertHandoff } from './types'
 
 export interface AnswerSeed {
   slug: string
@@ -16,6 +16,10 @@ export interface AnswerSeed {
   sources: AnswerSource[]
   relatedLinks?: Array<{ title: string; href: string }>
   boundaryNote?: string
+  firstScreenAnswer?: string
+  whyNotSimpleAnswer?: string
+  expertHandoff?: ExpertHandoff
+  testQueries?: string[]
 }
 
 export const FREQUENT_QA_SEEDS: AnswerSeed[] = [

@@ -8,6 +8,7 @@ import {
   type AnswerSection,
   type AnswerSource,
 } from './types'
+import { formatActionAnswer } from './format-action-answer'
 import { matchDecisionQuery } from '@/lib/decision/cards'
 import type { DecisionCard, DecisionOption, SourceRef } from '@/lib/decision/types'
 
@@ -95,21 +96,37 @@ function decisionCardToAnswer(card: DecisionCard, questionText: string): AnswerR
 }
 
 function seedToAnswer(seed: AnswerSeed, _questionText: string): AnswerResult {
+  const sections = [
+    ...seed.sections,
+    ...(seed.whyNotSimpleAnswer ? [{ heading: '为什么不能简单回答', body: seed.whyNotSimpleAnswer }] : []),
+    ...(seed.expertHandoff ? [{ heading: '专家交接点', body: expertHandoffToText(seed.expertHandoff) }] : []),
+  ]
   return {
     ok: true,
     answer_type: seed.answerType ?? 'matched',
     answer_level: seed.answerLevel,
     review_status: seed.reviewStatus ?? 'reviewed',
     title: seed.title,
-    summary: seed.summary,
-    sections: seed.sections,
+    summary: seed.firstScreenAnswer ?? seed.summary,
+    sections,
     next_steps: seed.nextSteps,
     related_links: seed.relatedLinks ?? [],
     sources: seed.sources,
     query_id: null,
     answer_id: null,
     boundary_note: seed.boundaryNote ?? ANSWER_BOUNDARY_NOTE,
+    first_screen_answer: seed.firstScreenAnswer ?? null,
+    why_not_simple_answer: seed.whyNotSimpleAnswer ?? null,
+    expert_handoff: seed.expertHandoff ?? null,
   }
+}
+
+function expertHandoffToText(handoff: NonNullable<AnswerSeed['expertHandoff']>): string {
+  return [
+    ...handoff.trigger,
+    handoff.who ? `咨询对象：${handoff.who}` : '',
+    handoff.why ? `原因：${handoff.why}` : '',
+  ].filter(Boolean).join('\n')
 }
 
 function knowledgeSeedToAnswer(seed: KnowledgeSeed, _questionText: string): AnswerResult {
@@ -226,7 +243,7 @@ async function bestQaSeed(normalized: string): Promise<AnswerSeed | null> {
   ]
   const ranked = seeds
     .map(seed => ({ seed, ...rankKeywords(normalized, seed.keywords) }))
-    .filter(item => item.matches >= 2)
+    .filter(item => item.score >= 4)
     .sort((a, b) => b.score - a.score)
   return ranked[0]?.seed ?? null
 }
@@ -298,7 +315,11 @@ function parseAnswerSeedBlocks(raw: string, _filePath: string): AnswerSeed[] {
     const reviewStatus = normalizeReviewStatus(fieldValue(body, 'review_status'))
     const answerType = responseTypeFromSeed(fieldValue(body, 'answer_type'), reviewStatus)
     const aliases = listValue(body, 'aliases')
+    const testQueries = listValue(body, 'test_queries')
     const summary = fieldValue(body, 'summary') ?? question
+    const firstScreenAnswer = blockValue(body, 'first_screen_answer')
+    const whyNotSimpleAnswer = blockValue(body, 'why_not_simple_answer')
+    const expertHandoff = expertHandoffValue(body)
     const sections = sectionValue(body)
     const nextSteps = listValue(body, 'next_steps')
     const sourceHints = listValue(body, 'source_hint')
@@ -307,7 +328,7 @@ function parseAnswerSeedBlocks(raw: string, _filePath: string): AnswerSeed[] {
       slug: slugify(`${code}-${question}`),
       title: question,
       question,
-      keywords: Array.from(new Set([question, ...aliases])).filter(Boolean),
+      keywords: Array.from(new Set([question, ...aliases, ...testQueries])).filter(Boolean),
       answerType,
       answerLevel: answerLevel as AnswerSeed['answerLevel'],
       reviewStatus,
@@ -318,6 +339,10 @@ function parseAnswerSeedBlocks(raw: string, _filePath: string): AnswerSeed[] {
       sources: sourceHints.map(title => ({ title, source_grade: sourceGrade })),
       boundaryNote: boundaryNote ?? ANSWER_BOUNDARY_NOTE,
       relatedLinks: [{ title: '续签材料准备检查', href: '/check' }],
+      firstScreenAnswer: firstScreenAnswer ?? undefined,
+      whyNotSimpleAnswer: whyNotSimpleAnswer ?? undefined,
+      expertHandoff: expertHandoff ?? undefined,
+      testQueries,
     })
   }
   return seeds
@@ -328,19 +353,48 @@ function fieldValue(block: string, field: string): string | null {
   return match?.[1]?.trim() || null
 }
 
+function blockValue(block: string, field: string): string | null {
+  return fieldBlock(block, field)
+    ?.split('\n')
+    .map(line => line.replace(/^ {2}/, '').trimEnd())
+    .join('\n')
+    .trim() || null
+}
+
+function expertHandoffValue(block: string): AnswerSeed['expertHandoff'] | null {
+  const raw = fieldBlock(block, 'expert_handoff')
+  if (!raw) return null
+  const triggerMatch = raw.match(/^\s*trigger:\s*\n([\s\S]*?)(?=^\s*\w[\w_]*:|$)/m)
+  const trigger = triggerMatch
+    ? triggerMatch[1]
+      .split('\n')
+      .map(line => line.replace(/^\s*-\s*/, '').trim())
+      .filter(Boolean)
+    : []
+  const who = nestedField(raw, 'who')
+  const why = nestedField(raw, 'why')
+  if (trigger.length === 0 && !who && !why) return null
+  return { trigger, who: who ?? undefined, why: why ?? undefined }
+}
+
+function nestedField(block: string, field: string): string | null {
+  const match = block.match(new RegExp(`^\\s*${field}:\\s*(.+)$`, 'm'))
+  return match?.[1]?.trim() || null
+}
+
 function listValue(block: string, field: string): string[] {
-  const match = block.match(new RegExp(`^${field}:\\s*\\n([\\s\\S]*?)(?=\\n\\w[\\w_]*:|\\n---|\\n##\\s+Q\\d{3}|$)`, 'm'))
-  if (!match) return []
-  return match[1]
+  const raw = fieldBlock(block, field)
+  if (!raw) return []
+  return raw
     .split('\n')
     .map(line => line.replace(/^\s*-\s*/, '').trim())
     .filter(Boolean)
 }
 
 function sectionValue(block: string): AnswerSection[] {
-  const match = block.match(/^sections:\s*\n([\s\S]*?)(?=\n\w[\w_]*:|\n---|\n##\s+Q\d{3}|$)/m)
-  if (!match) return []
-  const lines = match[1].split('\n')
+  const raw = fieldBlock(block, 'sections')
+  if (!raw) return []
+  const lines = raw.split('\n')
   const sections: AnswerSection[] = []
   let current: AnswerSection | null = null
   for (const rawLine of lines) {
@@ -360,6 +414,20 @@ function sectionValue(block: string): AnswerSection[] {
   }
   if (current) sections.push(current)
   return sections.filter(section => section.heading && section.body)
+}
+
+function fieldBlock(block: string, field: string): string | null {
+  const lines = block.split('\n')
+  const start = lines.findIndex(line => line.match(new RegExp(`^${field}:\\s*(?:\\|\\s*)?$`)))
+  if (start < 0) return null
+  const collected: string[] = []
+  for (let i = start + 1; i < lines.length; i += 1) {
+    const line = lines[i]
+    if (/^(?:---|##\s+Q\d{3})/.test(line)) break
+    if (/^[A-Za-z_][A-Za-z0-9_]*:\s*/.test(line)) break
+    collected.push(line)
+  }
+  return collected.join('\n').trimEnd()
 }
 
 function normalizeReviewStatus(value: string | null): 'reviewed' | 'unreviewed' | 'needs_expert' {
@@ -450,11 +518,63 @@ function rankKeywords(normalized: string, keywords: string[]): { score: number; 
   let score = 0
   let matches = 0
   for (const keyword of keywords) {
-    if (!normalized.includes(normalize(keyword))) continue
-    matches += 1
-    score += normalize(keyword).length >= 4 ? 3 : 2
+    const normalizedKeyword = normalize(keyword)
+    if (normalized.includes(normalizedKeyword)) {
+      matches += 1
+      score += normalizedKeyword.length >= 4 ? 8 : 4
+      continue
+    }
+    const terms = keywordDomainTerms(normalizedKeyword)
+    const termMatches = terms.filter(term => normalized.includes(term))
+    if (termMatches.length < Math.min(2, terms.length)) continue
+    matches += termMatches.length
+    score += termMatches.length * 2
   }
   return { score, matches }
+}
+
+const DOMAIN_TERMS = [
+  '办公室',
+  '事務所',
+  '搬迁',
+  '公司休眠',
+  '休眠',
+  '国民年金',
+  '社保',
+  '社会保険',
+  '厚生年金',
+  '在留卡',
+  '在留カード',
+  '地址',
+  '住所',
+  '搬家',
+  '留学生',
+  '留学',
+  '人文签',
+  '技人国',
+  '工作签',
+  '特定技能',
+  '住民税',
+  '晚交',
+  '滞納',
+  '永住',
+  '父母',
+  '养老',
+  '老板',
+  '雇',
+  '签证不符',
+  '不法就労',
+  '经营管理',
+  '経営管理',
+  '资本金',
+  '資本金',
+]
+
+function keywordDomainTerms(normalizedKeyword: string): string[] {
+  const terms = DOMAIN_TERMS
+    .map(term => normalize(term))
+    .filter(term => normalizedKeyword.includes(term))
+  return Array.from(new Set(terms))
 }
 
 function queryTokens(normalized: string): string[] {
@@ -497,7 +617,7 @@ function plainMarkdown(markdown: string): string {
 }
 
 function sanitizeAnswer(answer: AnswerResult): AnswerResult {
-  return {
+  const sanitized = {
     ...answer,
     title: sanitizeCopy(answer.title),
     summary: sanitizeCopy(answer.summary),
@@ -507,6 +627,19 @@ function sanitizeAnswer(answer: AnswerResult): AnswerResult {
     })),
     next_steps: answer.next_steps.map(sanitizeCopy),
     boundary_note: ANSWER_BOUNDARY_NOTE,
+    first_screen_answer: answer.first_screen_answer ? sanitizeCopy(answer.first_screen_answer) : null,
+    why_not_simple_answer: answer.why_not_simple_answer ? sanitizeCopy(answer.why_not_simple_answer) : null,
+    expert_handoff: answer.expert_handoff
+      ? {
+          trigger: answer.expert_handoff.trigger.map(sanitizeCopy),
+          who: answer.expert_handoff.who ? sanitizeCopy(answer.expert_handoff.who) : undefined,
+          why: answer.expert_handoff.why ? sanitizeCopy(answer.expert_handoff.why) : undefined,
+        }
+      : null,
+  }
+  return {
+    ...sanitized,
+    action_answer: formatActionAnswer(sanitized),
   }
 }
 

@@ -132,7 +132,7 @@ export default async function TimelinePage({
         <p className="mt-1.5 text-[12px] leading-[1.65] text-ash">
           {summary.latestDeadline
             ? `当前最早记录期限: ${summary.latestDeadline}`
-            : '暂无政策更新记录。后续相关政策会进入这里。'}
+            : '暂无可跟踪事项。后续相关通知会进入这里。'}
         </p>
       </section>
 
@@ -254,7 +254,7 @@ function TimelineRow({ event }: { event: TimelineEvent }) {
     <DeadlineRow
       href={`/timeline/${event.id}`}
       date={shortDate(deadline)}
-      days={event.deadline ? remainingLabel(event.deadline) : eventTypeLabel(event.eventType)}
+      days={event.deadline ? remainingLabel(event.deadline) : '暂未记录期限'}
       title={eventTitle(event)}
       detail={eventSubline(event)}
       status={event.archived ? '已归档' : eventTypeLabel(event.eventType)}

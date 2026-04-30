@@ -1,74 +1,65 @@
 # AI Handoff - CCB
 
-最后更新: 2026-04-30（CCB content/answer-seed-v0 完成）
+最后更新: 2026-04-30（CCB content/answer-seed-v1 完成）
 
 ## CCB(内容)状态
 
-- 当前任务: Answer Seed v0（100 条可展示问答种子，给 answer engine 用）
-- 当前分支: `content/answer-seed-v0`
+- 当前任务: Answer Seed v1（强化 v0 100 条，让用户问题更易命中答案）
+- 当前分支: `content/answer-seed-v1`（基于 `origin/content/answer-seed-v0`）
 - 当前 worktree: /tmp/cc-b-batch-04
 - 状态: **awaiting_merge**
 
 ## 本次交付
 
-按创始人 v0 brief：从已有 QA 资产 + 已交付内容反推，写 100 条**可直接展示的种子答案**（不是问题清单 / 不是文章 / 不是营销）。
+按创始人 v1 brief：在 v0 100 条 answer seed 基础上做 4 项强化（不增删 Q / 不重写 summary / 仅强化可命中性 + 高风险题透明度）。
 
-### 5 个新建文件（docs/answer-seed/）
+### 修改文件（5 个）
 
-| 文件 | 范围 | 主题 |
-|---|---|---|
-| `answer_seed_001-025.md` | Q001-Q025 | 永住（15）+ 工作签（10） |
-| `answer_seed_026-050.md` | Q026-Q050 | 経営・管理（15）+ 公司设立（10） |
-| `answer_seed_051-075.md` | Q051-Q075 | 特定技能（5）+ 定住者（5）+ 配偶（5）+ 离婚 / 转签（10） |
-| `answer_seed_076-100.md` | Q076-Q100 | 住民税 / 年金 / 社保 / 地址 / 换工作 / 公司倒闭 / 父母来日 / 通用 |
-| `ANSWER_SEED_V0_REPORT.md` | 报告 | 总数 / 类型分布 / TOP 20 / 接入建议 |
+| 文件 | 修改 |
+|---|---|
+| `answer_seed_001-025.md` | aliases 补全 + test_queries + 7 条 first_screen_answer + 7 条 high-risk 字段 |
+| `answer_seed_026-050.md` | aliases 补全 + test_queries + 11 条 first_screen_answer + 6 条 high-risk 字段 |
+| `answer_seed_051-075.md` | aliases 补全 + test_queries + 5 条 first_screen_answer + 6 条 high-risk 字段 |
+| `answer_seed_076-100.md` | aliases 补全 + test_queries + 7 条 first_screen_answer + 7 条 high-risk 字段 |
+| `ANSWER_SEED_V1_REPORT.md` | 新建（v1 强化报告） |
 
 ### 关键统计
 
-- 100 条 Q
-- 26 条高风险（needs_expert 16 + misconception 3 + risk_chain 7）≥ brief 要求 20 条
-- 44 条 `requires_review: true`
-- 64 / 35 / 1 条 source_grade A / B / C
-- 100% 中日混合 + 工具感 voice
+| 指标 | v0 | v1 | 增量 |
+|---|---|---|---|
+| Q 总数 | 100 | 100 | 0 |
+| aliases 总条数 | ~425 | **837** | +412 |
+| test_queries 总条数 | 0 | **350** | +350 |
+| first_screen_answer | 0 | **30** | TOP30 全 |
+| why_not_simple_answer | 0 | **26** | 高风险全 |
+| expert_handoff | 部分 | **26** | 统一格式 |
 
-### 每条字段（统一 schema）
+### Schema 增量（v0 → v1）
 
-- aliases（2-4 个用户问法）
-- question（归一化）
-- answer_level（L1/L2/L3/L4）
-- answer_type（info/workflow/decision_card/risk_chain/misconception/needs_expert）
-- review_status（全部 unreviewed）
-- source_grade（A/B/C）
-- summary（1-2 句）
-- sections（先确认 / 今天可以做什么 / 不能做什么 等）
-- next_steps（3-5 条 todo）
-- source_hint（机关名）
-- boundary_note（1 句）
+新增字段：
+- `test_queries` text[] — 自动测试用查询
+- `first_screen_answer` text — 首屏 ≤ 300 字答案（仅 TOP30）
+- `why_not_simple_answer` text — 高风险题特有
+- `expert_handoff` jsonb — {trigger[], who, why}（v1 统一格式）
 
-## 给 CCA 的待办（Block 14+）
+## 给 CCA 的接入建议
 
-### 建议新建 `question_seeds` 表
+### answer engine 自动测试套件
 
-详见 `ANSWER_SEED_V0_REPORT.md` § 给 CCA 部分。
+用 100 条 Q 的 350 条 test_queries 跑：
+- Tier 1 命中（top1）目标 ≥ 80%
+- Tier 2 命中（top3）目标 ≥ 95%
+- 误触发率 ≤ 5%
 
-### Importer 路由
+### 前端 UI 三档展示
 
-`docs/answer-seed/answer_seed_*.md` → 用 `## Q[number]` 切分 + yaml-parser 解析 → `question_seeds` 表。
+- low-risk：仅 first_screen_answer
+- medium-risk：first_screen_answer + boundary_note
+- high-risk：first_screen_answer + why_not_simple_answer + expert_handoff CTA → ¥9,800 咨询
 
-### 前端 `/admin/questions/import` 接入
+### 双咨询题处理
 
-3 档展示策略：
-- Tier 1（约 40 条）：直接导入 + 前端展示
-- Tier 2（约 44 条）：导入 + 标「待书士复核」
-- Tier 3（约 16 条 needs_expert）：导入 + 立即引导 ¥9,800 咨询
-- Tier 4（约 1 条 source_grade C）：仅内部数据
-
-### 与已有 batch 关联
-
-可在 importer 时建立关联：
-- `related_dimension_slugs[]` → batch-04/05 dimensions
-- `related_document_slugs[]` → batch-06 documents
-- `related_scenario_slugs[]` → batch-07 scenarios
+9 条题需「两位专家联合」（如 Q029 行政書士+税理士、Q065 行政書士+弁護士+DV センター、Q099 弁護士+行政書士）。`expert_handoff.who` 字段已具体到职业。
 
 ## 历次交付
 
@@ -76,4 +67,5 @@
 - batch-05/06/07：awaiting_merge
 - content/index-and-review-registry：4 治理文件
 - content/real-question-data-v1：152 个 Q 标注 + TOP 20 + 5 seed YAML
-- **content/answer-seed-v0：100 条 answer seed + report（可直接接 answer engine）**
+- content/answer-seed-v0：100 条 answer seed + report
+- **content/answer-seed-v1：v0 强化版（aliases 837 / test_queries 350 / TOP30 first_screen / 26 高风险题透明度）**
