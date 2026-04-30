@@ -40,38 +40,38 @@ export default function ImportQuestionsClient() {
   return (
     <div className="grid gap-4">
       <section className="rounded-card border border-hairline bg-surface p-4">
-        <h2 className="text-sm font-semibold text-ink">批量导入原始问题</h2>
-        <p className="mt-2 text-xs leading-6 text-ash">
-          可以每行一个问题，也可以直接粘贴多行原始咨询记录。系统会先作为原始问题保存，后续再分类、审核和整理。
+        <h2 className="text-[15px] font-medium text-ink">粘贴问题</h2>
+        <p className="mt-2 text-[12px] leading-6 text-ash">
+          每行一个问题，也可以直接粘贴多行原始咨询记录。
         </p>
         <textarea
           value={text}
           onChange={event => setText(event.target.value)}
-          rows={14}
+          rows={18}
           placeholder={'公司休眠后要不要切国民年金？\\n经营管理签办公室搬迁要先做什么？'}
-          className="mt-4 w-full resize-y rounded-[12px] border border-hairline bg-canvas px-3 py-3 text-sm leading-6 text-ink outline-none placeholder:text-ash focus:border-ink"
+          className="mt-4 min-h-[360px] w-full resize-y rounded-[12px] border border-hairline bg-canvas px-3 py-3 text-[16px] leading-[1.7] text-ink outline-none placeholder:text-haze focus:border-ink"
         />
-        <div className="mt-3 flex flex-wrap items-center gap-2">
-          <span className="text-xs text-ash">预览导入数量：{preview.length}</span>
+        <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-hairline pt-3">
+          <span className="text-[12px] text-ash">预览导入数量：<span className="numeric text-ink">{preview.length}</span></span>
           <button
             type="button"
             disabled={busy || preview.length === 0}
             onClick={submit}
-            className="ml-auto rounded-btn bg-ink px-4 py-2 text-xs font-medium text-white disabled:opacity-50"
+            className="ml-auto rounded-btn bg-ink px-4 py-2 text-[12px] font-medium text-white disabled:opacity-50"
           >
             {busy ? '处理中...' : '导入'}
           </button>
-          <Link href="/admin/questions" className="rounded-btn border border-hairline bg-surface px-4 py-2 text-xs font-medium text-ink">
+          <Link href="/admin/questions" className="rounded-btn border border-hairline bg-surface px-4 py-2 text-[12px] font-medium text-ink">
             返回列表
           </Link>
         </div>
-        {result && <p className="mt-3 rounded-[10px] bg-paper px-3 py-2 text-xs text-slate">{result}</p>}
+        {result && <p className="mt-3 rounded-[10px] bg-paper px-3 py-2 text-[12px] text-slate">{result}</p>}
       </section>
 
       {preview.length > 0 && (
         <section className="rounded-card border border-hairline bg-surface p-4">
-          <h2 className="text-sm font-semibold text-ink">预览前 20 条</h2>
-          <ol className="mt-3 list-decimal space-y-2 pl-5 text-xs leading-6 text-slate">
+          <h2 className="text-[14px] font-medium text-ink">预览前 20 条</h2>
+          <ol className="mt-3 list-decimal space-y-2 pl-5 text-[12px] leading-6 text-slate">
             {preview.slice(0, 20).map((line, index) => <li key={`${line}-${index}`}>{line}</li>)}
           </ol>
         </section>

@@ -7,6 +7,24 @@ import type { AdminQuestionRow, AdminQuestionStats } from './types'
 const STATUSES = ['all', 'new', 'triaged', 'needs_draft', 'drafted', 'reviewed', 'published', 'ignored']
 const PRIORITIES = ['all', 'low', 'normal', 'high']
 
+const STATUS_LABEL: Record<string, string> = {
+  all: '全部状态',
+  new: '新问题',
+  triaged: '已分流',
+  needs_draft: '待起草',
+  drafted: '已起草',
+  reviewed: '已审核',
+  published: '已发布',
+  ignored: '已忽略',
+}
+
+const PRIORITY_LABEL: Record<string, string> = {
+  all: '全部优先级',
+  low: '低',
+  normal: '普通',
+  high: '高优先级',
+}
+
 export default function QuestionsClient({
   initialQuestions,
   stats,
@@ -41,25 +59,23 @@ export default function QuestionsClient({
     <div className="grid gap-4">
       {unavailable && (
         <div className="rounded-card border border-hairline bg-paper p-4 text-sm text-ash">
-          query_backlog 当前不可读。确认 migration 0019/0020 已应用后再查看数据。
+          当前无法读取问题数据。确认本地数据库已更新后再查看。
         </div>
       )}
 
-      <div className="grid grid-cols-2 gap-3 md:grid-cols-6">
-        <Metric label="总问题数" value={stats.total} />
+      <div className="grid grid-cols-2 gap-2 md:grid-cols-4">
+        <Metric label="总数" value={stats.total} />
         <Metric label="今日新增" value={stats.today} />
         <Metric label="未处理" value={stats.unprocessed} />
         <Metric label="高优先级" value={stats.highPriority} />
-        <Metric label="已忽略" value={stats.ignored} />
-        <Metric label="已发布" value={stats.published} />
       </div>
 
-      <div className="flex flex-wrap items-center gap-2">
+      <div className="flex flex-wrap items-center gap-2 rounded-card border border-hairline bg-surface p-2">
         <select value={statusFilter} onChange={event => setStatusFilter(event.target.value)} className={INPUT_CLASS}>
-          {STATUSES.map(status => <option key={status} value={status}>status: {status}</option>)}
+          {STATUSES.map(status => <option key={status} value={status}>{STATUS_LABEL[status] ?? status}</option>)}
         </select>
         <select value={priorityFilter} onChange={event => setPriorityFilter(event.target.value)} className={INPUT_CLASS}>
-          {PRIORITIES.map(priority => <option key={priority} value={priority}>priority: {priority}</option>)}
+          {PRIORITIES.map(priority => <option key={priority} value={priority}>{PRIORITY_LABEL[priority] ?? priority}</option>)}
         </select>
         <Link href="/admin/questions/import" className="rounded-btn bg-ink px-4 py-2 text-xs font-medium text-white">
           批量导入
@@ -104,34 +120,36 @@ function QuestionRow({
   }
 
   return (
-    <article className="p-4">
+    <article className="px-4 py-3">
       <div className="flex flex-wrap items-center gap-2">
-        <span className="rounded-[8px] bg-paper px-2 py-1 text-[11px] text-ash">{question.status}</span>
-        <span className="rounded-[8px] bg-paper px-2 py-1 text-[11px] text-ash">{question.priority}</span>
-        <span className="rounded-[8px] bg-paper px-2 py-1 text-[11px] text-ash">{question.matchStatus}</span>
+        <LowNoiseBadge>{STATUS_LABEL[question.status] ?? question.status}</LowNoiseBadge>
+        <LowNoiseBadge tone={question.priority === 'high' ? 'attention' : 'neutral'}>
+          {PRIORITY_LABEL[question.priority] ?? question.priority}
+        </LowNoiseBadge>
+        <LowNoiseBadge>{question.matchStatus}</LowNoiseBadge>
         <span className="ml-auto text-[11px] text-ash">{formatDate(question.createdAt)}</span>
       </div>
-      <p className="mt-3 whitespace-pre-line text-sm leading-6 text-ink">{question.rawQuery}</p>
-      <dl className="mt-3 grid gap-1 text-xs text-ash md:grid-cols-3">
-        <Meta label="visa_type" value={question.visaType ?? '-'} />
-        <Meta label="source_page" value={question.sourcePage ?? '-'} />
-        <Meta label="contact_email" value={question.contactEmail ? '已留邮箱' : '-'} />
+      <p className="mt-3 whitespace-pre-line text-[15px] leading-[1.7] text-ink">{question.rawQuery}</p>
+      <dl className="mt-3 grid gap-1.5 text-[11px] text-ash md:grid-cols-3">
+        <Meta label="签证" value={question.visaType ?? '未记录'} />
+        <Meta label="来源" value={question.sourcePage ?? '未记录'} />
+        <Meta label="联系方式" value={question.contactEmail ? '已留邮箱' : '未留'} />
       </dl>
       <div className="mt-3 flex flex-wrap gap-2">
-        <button disabled={busy} onClick={() => quick({ status: 'triaged' })} className={SMALL_BUTTON}>triaged</button>
-        <button disabled={busy} onClick={() => quick({ status: 'needs_draft' })} className={SMALL_BUTTON}>needs_draft</button>
-        <button disabled={busy} onClick={() => quick({ status: 'ignored' })} className={SMALL_BUTTON}>ignored</button>
-        <button disabled={busy} onClick={() => quick({ priority: 'high' })} className={SMALL_BUTTON}>high priority</button>
-        <Link href={`/admin/review-lite?questionId=${question.id}`} className={SMALL_LINK}>进入审核/起草</Link>
+        <button disabled={busy} onClick={() => quick({ status: 'triaged' })} className={SMALL_BUTTON}>标记已分流</button>
+        <button disabled={busy} onClick={() => quick({ status: 'needs_draft' })} className={SMALL_BUTTON}>待起草</button>
+        <button disabled={busy} onClick={() => quick({ status: 'ignored' })} className={SMALL_BUTTON}>忽略</button>
+        <button disabled={busy} onClick={() => quick({ priority: 'high' })} className={SMALL_BUTTON}>设为高优先级</button>
+        <Link href={`/admin/review-lite?questionId=${question.id}`} className={SMALL_LINK}>审核 / 起草</Link>
       </div>
       <div className="mt-3 flex gap-2">
         <input
           value={note}
           onChange={event => setNote(event.target.value)}
-          placeholder="note"
+          placeholder="内部备注"
           className="min-h-[36px] flex-1 rounded-[10px] border border-hairline bg-canvas px-3 text-xs text-ink outline-none focus:border-ink"
         />
-        <button disabled={busy} onClick={saveNote} className={SMALL_BUTTON}>保存 note</button>
+        <button disabled={busy} onClick={saveNote} className={SMALL_BUTTON}>保存</button>
       </div>
     </article>
   )
@@ -139,19 +157,35 @@ function QuestionRow({
 
 function Metric({ label, value }: { label: string; value: number }) {
   return (
-    <div className="rounded-card border border-hairline bg-surface p-4">
-      <div className="text-2xl font-semibold text-ink">{value.toLocaleString()}</div>
-      <div className="mt-1 text-xs text-ash">{label}</div>
+    <div className="rounded-card border border-hairline bg-surface px-4 py-3">
+      <div className="numeric text-[28px] font-light leading-none text-ink">{value.toLocaleString()}</div>
+      <div className="mt-2 text-[11px] text-ash">{label}</div>
     </div>
   )
 }
 
 function Meta({ label, value }: { label: string; value: string }) {
   return (
-    <div>
-      <span className="font-medium text-ink">{label}: </span>
+    <div className="min-w-0 truncate">
+      <span className="text-slate">{label}: </span>
       {value}
     </div>
+  )
+}
+
+function LowNoiseBadge({
+  children,
+  tone = 'neutral',
+}: {
+  children: string
+  tone?: 'neutral' | 'attention'
+}) {
+  return (
+    <span className={`rounded-[8px] px-2 py-1 text-[11px] ${
+      tone === 'attention' ? 'bg-[#FFF4E1] text-warning' : 'bg-paper text-ash'
+    }`}>
+      {children}
+    </span>
   )
 }
 
@@ -169,6 +203,6 @@ function formatDate(value: string): string {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
 }
 
-const INPUT_CLASS = 'min-h-[36px] rounded-[10px] border border-hairline bg-surface px-3 text-xs text-ink outline-none'
+const INPUT_CLASS = 'min-h-[36px] rounded-[10px] border border-hairline bg-canvas px-3 text-xs text-ink outline-none'
 const SMALL_BUTTON = 'rounded-[9px] border border-hairline bg-canvas px-3 py-1.5 text-xs text-ink disabled:opacity-50'
 const SMALL_LINK = 'rounded-[9px] border border-hairline bg-ink px-3 py-1.5 text-xs text-white'
