@@ -4,6 +4,7 @@ import matter from 'gray-matter'
 import { FREQUENT_QA_SEEDS, type AnswerSeed } from './answer-seeds'
 import {
   ANSWER_BOUNDARY_NOTE,
+  type ActionAnswer,
   type AnswerResult,
   type AnswerSection,
   type AnswerSource,
@@ -40,12 +41,18 @@ export async function buildAnswer(input: BuildAnswerInput): Promise<AnswerResult
 
   const decisionMatch = await matchDecisionQuery(questionText)
   if (decisionMatch.card) {
-    return sanitizeAnswer(decisionCardToAnswer(decisionMatch.card, questionText))
+    const answer = decisionCardToAnswer(decisionMatch.card, questionText)
+    if (matchIntentGuard(questionText, answer).pass) {
+      return sanitizeAnswer(answer)
+    }
   }
 
   const knowledge = await bestKnowledgeSeed(normalized, input.visaType)
   if (knowledge) {
-    return sanitizeAnswer(knowledgeSeedToAnswer(knowledge, questionText))
+    const answer = knowledgeSeedToAnswer(knowledge, questionText)
+    if (matchIntentGuard(questionText, answer).pass) {
+      return sanitizeAnswer(answer)
+    }
   }
 
   return sanitizeAnswer(ruleBasedAnswer(questionText, normalized))
@@ -98,6 +105,7 @@ function decisionCardToAnswer(card: DecisionCard, questionText: string): AnswerR
 function seedToAnswer(seed: AnswerSeed, _questionText: string): AnswerResult {
   const sections = [
     ...seed.sections,
+    ...actionAnswerToSections(seed.actionAnswer),
     ...(seed.whyNotSimpleAnswer ? [{ heading: '为什么不能简单回答', body: seed.whyNotSimpleAnswer }] : []),
     ...(seed.expertHandoff ? [{ heading: '专家交接点', body: expertHandoffToText(seed.expertHandoff) }] : []),
   ]
@@ -114,11 +122,27 @@ function seedToAnswer(seed: AnswerSeed, _questionText: string): AnswerResult {
     sources: seed.sources,
     query_id: null,
     answer_id: null,
+    matched_seed_id: seed.slug,
+    intent_guard_pass: true,
     boundary_note: seed.boundaryNote ?? ANSWER_BOUNDARY_NOTE,
     first_screen_answer: seed.firstScreenAnswer ?? null,
     why_not_simple_answer: seed.whyNotSimpleAnswer ?? null,
     expert_handoff: seed.expertHandoff ?? null,
+    action_answer: seed.actionAnswer,
   }
+}
+
+function actionAnswerToSections(actionAnswer: AnswerSeed['actionAnswer']): AnswerSection[] {
+  if (!actionAnswer) return []
+  return [
+    { heading: '行动答案：现在做什么', body: actionAnswer.what_to_do.join('\n') },
+    { heading: '行动答案：办理窗口', body: actionAnswer.where_to_go.join('\n') },
+    { heading: '行动答案：怎么做', body: actionAnswer.how_to_do.join('\n') },
+    { heading: '行动答案：需要材料', body: actionAnswer.documents_needed.join('\n') },
+    { heading: '行动答案：期限和时机', body: actionAnswer.deadline_or_timing.join('\n') },
+    { heading: '行动答案：不处理后果', body: actionAnswer.consequences.join('\n') },
+    { heading: '行动答案：专家确认', body: actionAnswer.expert_handoff.join('\n') },
+  ].filter(section => section.body.trim())
 }
 
 function expertHandoffToText(handoff: NonNullable<AnswerSeed['expertHandoff']>): string {
@@ -245,7 +269,11 @@ async function bestQaSeed(normalized: string): Promise<AnswerSeed | null> {
     .map(seed => ({ seed, ...rankKeywords(normalized, seed.keywords) }))
     .filter(item => item.score >= 4)
     .sort((a, b) => b.score - a.score)
-  return ranked[0]?.seed ?? null
+  for (const item of ranked) {
+    const answer = seedToAnswer(item.seed, normalized)
+    if (matchIntentGuard(normalized, answer).pass) return item.seed
+  }
+  return null
 }
 
 async function bestKnowledgeSeed(normalized: string, visaType?: string | null): Promise<KnowledgeSeed | null> {
@@ -320,6 +348,7 @@ function parseAnswerSeedBlocks(raw: string, _filePath: string): AnswerSeed[] {
     const firstScreenAnswer = blockValue(body, 'first_screen_answer')
     const whyNotSimpleAnswer = blockValue(body, 'why_not_simple_answer')
     const expertHandoff = expertHandoffValue(body)
+    const actionAnswer = actionAnswerValue(body)
     const sections = sectionValue(body)
     const nextSteps = listValue(body, 'next_steps')
     const sourceHints = listValue(body, 'source_hint')
@@ -343,6 +372,7 @@ function parseAnswerSeedBlocks(raw: string, _filePath: string): AnswerSeed[] {
       whyNotSimpleAnswer: whyNotSimpleAnswer ?? undefined,
       expertHandoff: expertHandoff ?? undefined,
       testQueries,
+      actionAnswer: actionAnswer ?? undefined,
     })
   }
   return seeds
@@ -375,6 +405,75 @@ function expertHandoffValue(block: string): AnswerSeed['expertHandoff'] | null {
   const why = nestedField(raw, 'why')
   if (trigger.length === 0 && !who && !why) return null
   return { trigger, who: who ?? undefined, why: why ?? undefined }
+}
+
+function actionAnswerValue(block: string): ActionAnswer | null {
+  const raw = fieldBlock(block, 'action_answer')
+  if (!raw) return null
+  const conclusion = nestedTextValue(raw, 'conclusion') ?? ''
+  const whatToDo = nestedBlockValue(raw, 'do_now')
+  const whereToGo = nestedBlockValue(raw, 'where_to_go')
+  const howToDo = nestedBlockValue(raw, 'how_to_do')
+  const documentsNeeded = nestedBlockValue(raw, 'documents_needed')
+  const deadlineOrTiming = nestedBlockValue(raw, 'deadline_or_timing')
+  const consequences = nestedBlockValue(raw, 'consequences')
+  const expertHandoff = nestedBlockValue(raw, 'expert_handoff')
+  if (!conclusion && whatToDo.length === 0 && whereToGo.length === 0) return null
+  return {
+    conclusion,
+    what_to_do: whatToDo,
+    where_to_go: whereToGo,
+    how_to_do: howToDo,
+    documents_needed: documentsNeeded,
+    deadline_or_timing: deadlineOrTiming,
+    consequences,
+    expert_handoff: expertHandoff,
+    boundary_note: ANSWER_BOUNDARY_NOTE,
+  }
+}
+
+function nestedTextValue(block: string, field: string): string | null {
+  const lines = block.split('\n')
+  const start = lines.findIndex(line => line.match(new RegExp(`^\\s{2}${field}:\\s*(.*)$`)))
+  if (start < 0) return null
+  const startLine = lines[start] ?? ''
+  const inline = startLine.replace(new RegExp(`^\\s{2}${field}:\\s*`), '').trim()
+  const collected: string[] = []
+  if (inline && inline !== '|') collected.push(inline)
+  for (let i = start + 1; i < lines.length; i += 1) {
+    const line = lines[i] ?? ''
+    if (/^\s{2}[A-Za-z_][A-Za-z0-9_]*:\s*/.test(line)) break
+    collected.push(line)
+  }
+  const raw = collected
+    .join('\n')
+    .replace(/^\s*[-*]\s*/gm, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+  return raw || null
+}
+
+function nestedBlockValue(block: string, field: string): string[] {
+  const lines = block.split('\n')
+  const start = lines.findIndex(line => line.match(new RegExp(`^\\s{2}${field}:\\s*(.*)$`)))
+  if (start < 0) return []
+  const startLine = lines[start] ?? ''
+  const inline = startLine.replace(new RegExp(`^\\s{2}${field}:\\s*`), '').trim()
+  const collected: string[] = []
+  if (inline && inline !== '|') collected.push(inline)
+  for (let i = start + 1; i < lines.length; i += 1) {
+    const line = lines[i] ?? ''
+    if (/^\s{2}[A-Za-z_][A-Za-z0-9_]*:\s*/.test(line)) break
+    collected.push(line)
+  }
+  const raw = collected.join('\n').trim()
+  if (!raw) return []
+  const listItems = raw
+    .split('\n')
+    .map(line => line.replace(/^\s*-\s*/, '').trim())
+    .filter(Boolean)
+  if (listItems.length > 1 && listItems.every(line => !line.includes('：') || line.length < 80)) return listItems
+  return splitStructured(raw)
 }
 
 function nestedField(block: string, field: string): string | null {
@@ -439,6 +538,74 @@ function normalizeReviewStatus(value: string | null): 'reviewed' | 'unreviewed' 
 function responseTypeFromSeed(value: string | null, reviewStatus: 'reviewed' | 'unreviewed' | 'needs_expert'): 'matched' | 'cannot_determine' {
   if (value === 'needs_expert' || reviewStatus === 'needs_expert') return 'cannot_determine'
   return 'matched'
+}
+
+export function matchIntentGuard(questionText: string, candidateAnswer: AnswerResult): { pass: boolean; reason: string } {
+  const question = normalize(questionText)
+  const answerText = normalize(answerTextForGuard(candidateAnswer))
+
+  if (isPensionDormantQuestion(question)) {
+    const hasPension = countContains(answerText, ['国民年金', '区役所', '市役所', '年金事務所']) >= 1
+    const hasLossOrSwitch = countContains(answerText, ['厚生年金', '資格喪失', '国民健康保険', '健保', '国保', '14 日', '14日']) >= 1
+    const hasDormantContext = countContains(answerText, ['休眠', '倒闭', '倒産', '離職', '离职', '喪失']) >= 1
+    if (!hasPension || !hasLossOrSwitch || !hasDormantContext) return { pass: false, reason: 'pension_dormant_mismatch' }
+  }
+
+  if (isCapitalShortageQuestion(question)) {
+    if (/资本金\s*多少|資本金\s*多少|多少最合适|多少合適|推奨/.test(answerText)) {
+      return { pass: false, reason: 'capital_shortage_matched_generic_amount' }
+    }
+    const required = ['增资', '増資', '资金来源', '資金来源', '借款', '短期借入', '事业计划', '事業計画', '新规', '新規', '续签', '更新申請', '专家复核', '行政書士']
+    const hits = countContains(answerText, required)
+    if (hits < 2) return { pass: false, reason: 'capital_shortage_mismatch' }
+  }
+
+  if (isOfficeRelocationQuestion(question)) {
+    const required = ['法務局', '税務署', '入管', '出入国在留管理庁', '租赁合同', '賃貸契約', '办公室照片', '看板', '本店所在地', '異動届']
+    const hits = countContains(answerText, required)
+    if (hits < 3) return { pass: false, reason: 'office_relocation_mismatch' }
+  }
+
+  return { pass: true, reason: 'pass' }
+}
+
+function answerTextForGuard(answer: AnswerResult): string {
+  const action = answer.action_answer
+  return [
+    answer.title,
+    answer.summary,
+    answer.first_screen_answer,
+    answer.why_not_simple_answer,
+    ...answer.sections.flatMap(section => [section.heading, section.body]),
+    ...answer.next_steps,
+    ...(action ? [
+      action.conclusion,
+      ...action.what_to_do,
+      ...action.where_to_go,
+      ...action.how_to_do,
+      ...action.documents_needed,
+      ...action.deadline_or_timing,
+      ...action.consequences,
+      ...action.expert_handoff,
+    ] : []),
+  ].filter(Boolean).join('\n')
+}
+
+function isPensionDormantQuestion(question: string): boolean {
+  return /(年金|国民年金|厚生年金|社保|社会保险|社会保険)/.test(question)
+    && /(公司休眠|休眠|倒闭|倒産|离职|退职|空白期)/.test(question)
+}
+
+function isCapitalShortageQuestion(question: string): boolean {
+  return /(资本金不够|資本金不足|资金不够|資金不足|3000万不够|3000万円不足|不到3000|不到 3000|增资|増資)/.test(question)
+}
+
+function isOfficeRelocationQuestion(question: string): boolean {
+  return /(办公室搬迁|事務所搬迁|事務所移転|公司换地址|公司搬办公室|本店移転|本店所在地変更)/.test(question)
+}
+
+function countContains(text: string, keywords: string[]): number {
+  return keywords.filter(keyword => text.includes(normalize(keyword))).length
 }
 
 function enumValue<T extends readonly string[]>(value: string | null, allowed: T, fallback: T[number]): T[number] {
@@ -531,6 +698,14 @@ function rankKeywords(normalized: string, keywords: string[]): { score: number; 
     score += termMatches.length * 2
   }
   return { score, matches }
+}
+
+function splitStructured(value: string): string[] {
+  return value
+    .split(/\n|。|；|;/)
+    .flatMap(line => line.split(/(?=\d+[）.)]\s*)/))
+    .map(line => line.replace(/^\s*[-*]\s*/, '').trim())
+    .filter(Boolean)
 }
 
 const DOMAIN_TERMS = [
@@ -636,10 +811,24 @@ function sanitizeAnswer(answer: AnswerResult): AnswerResult {
           why: answer.expert_handoff.why ? sanitizeCopy(answer.expert_handoff.why) : undefined,
         }
       : null,
+    action_answer: answer.action_answer
+      ? {
+          conclusion: sanitizeCopy(answer.action_answer.conclusion),
+          what_to_do: answer.action_answer.what_to_do.map(sanitizeCopy),
+          where_to_go: answer.action_answer.where_to_go.map(sanitizeCopy),
+          how_to_do: answer.action_answer.how_to_do.map(sanitizeCopy),
+          documents_needed: answer.action_answer.documents_needed.map(sanitizeCopy),
+          deadline_or_timing: answer.action_answer.deadline_or_timing.map(sanitizeCopy),
+          consequences: answer.action_answer.consequences.map(sanitizeCopy),
+          expert_handoff: answer.action_answer.expert_handoff.map(sanitizeCopy),
+          boundary_note: ANSWER_BOUNDARY_NOTE,
+        }
+      : undefined,
   }
   return {
     ...sanitized,
     action_answer: formatActionAnswer(sanitized),
+    intent_guard_pass: answer.intent_guard_pass ?? true,
   }
 }
 

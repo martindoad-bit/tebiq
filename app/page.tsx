@@ -150,10 +150,10 @@ function BrandIntro({ compact = false }: { compact?: boolean }) {
     <section className={compact ? 'pt-1' : 'pt-6'}>
       <Logo size="lg" />
       <h1 className={`${compact ? 'mt-4 text-[22px]' : 'mt-6 text-[26px]'} max-w-[340px] font-medium leading-[1.28] text-ink`}>
-        在日本遇到手续问题，先把情况说清楚。
+        下一步怎么做？
       </h1>
       <p className="mt-3 max-w-[360px] text-[13px] leading-[1.75] text-slate">
-        签证、税金、年金、会社手续和日文通知。TEBIQ 会把你的情况整理成：下一步、材料、期限、办理窗口和需要专家确认的点。
+        签证、税金、年金、会社手续和日文通知。写下你的情况，先看步骤、材料、期限和办理窗口。
       </p>
     </section>
   )

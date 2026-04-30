@@ -216,22 +216,27 @@ function StatusPill({ children, className = 'bg-paper text-slate' }: { children:
 }
 
 function buildConfirmationItems(action: ActionAnswer): string[] {
-  const total =
-    action.what_to_do.length +
-    action.where_to_go.length +
-    action.how_to_do.length +
-    action.documents_needed.length +
-    action.deadline_or_timing.length +
-    action.consequences.length
-
-  if (total >= 6 && action.conclusion.length >= 42) return []
-  return [
+  const text = [
+    action.conclusion,
+    ...action.what_to_do,
+    ...action.where_to_go,
+    ...action.how_to_do,
+    ...action.expert_handoff,
+  ].join('\n')
+  const items = [
     '你的在留资格',
     '事情发生日期',
     '是否已经收到文书',
     '是否已经逾期',
     '是否涉及公司 / 雇主',
   ]
+  if (/会社|公司|雇主|勤務先|经营管理|経営|办公室|事務所/.test(text)) {
+    items.push('公司、雇主或办公室当前状态')
+  }
+  if (/税|年金|保険|社保|国保|厚生年金|住民税/.test(text)) {
+    items.push('最近一次缴纳、资格丧失或督促记录')
+  }
+  return items.slice(0, 7)
 }
 
 function buildManagerCopy(answer: AnswerResult): string {
