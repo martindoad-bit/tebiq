@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Bell, CalendarDays, ChevronRight, ClipboardCheck, FileText } from 'lucide-react'
+import { Bell, CalendarDays, Camera, ChevronRight, ClipboardCheck, FileText } from 'lucide-react'
 import AppShell from '@/app/_components/v5/AppShell'
 import TabBar from '@/app/_components/v5/TabBar'
 import TrackedLink from '@/app/_components/v5/TrackedLink'
@@ -66,9 +66,13 @@ function NewUserHome() {
           <TrackedLink
             href="/photo"
             eventName={EVENT.HOME_PHOTO_CARD_CLICK}
-            className="focus-ring flex min-h-[46px] items-center justify-center rounded-btn bg-ink px-4 py-3 text-[14px] font-medium leading-none text-white"
+            className="focus-ring flex min-h-[56px] items-center justify-center gap-3 rounded-btn bg-ink px-4 py-3 text-left text-white"
           >
-            拍照识别文书
+            <Camera size={19} strokeWidth={1.5} />
+            <span>
+              <span className="block text-[14px] font-medium leading-none">拍一份文书试试</span>
+              <span className="mt-1 block text-[11px] font-normal leading-none text-white/70">看不懂日文通知时使用</span>
+            </span>
           </TrackedLink>
         </div>
       </section>
@@ -200,6 +204,12 @@ function MoreFeatures({
     <>
       <SectionLabel title="更多功能" />
       <ListSection className="mt-3">
+        <ListRow
+          href="/photo"
+          icon={<Camera size={19} strokeWidth={1.5} />}
+          title="拍一份文书试试"
+          subtitle="看不懂日文通知时使用"
+        />
         <ListRow
           href="/check"
           icon={<ClipboardCheck size={19} strokeWidth={1.5} />}

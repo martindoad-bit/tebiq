@@ -53,7 +53,7 @@ export default function QuestionIntakeBox({
         error?: { message?: string }
       }
       if (!res.ok || !json.ok) {
-        setError(json.error?.message ?? '提交暂时没有保存成功，请稍后再试')
+        setError(json.error?.message ?? '请求暂时没有保存成功，请稍后再试')
         return
       }
       setQuestionText('')
@@ -61,7 +61,7 @@ export default function QuestionIntakeBox({
       setResultHref(resolveAnswerHref(json.data?.matchStatus, json.data?.matchedSlug))
       setMessage('整理结果已生成。')
     } catch {
-      setError('提交暂时没有保存成功，请稍后再试')
+      setError('请求暂时没有保存成功，请稍后再试')
     } finally {
       setBusy(false)
     }
@@ -73,7 +73,7 @@ export default function QuestionIntakeBox({
       {!compact && (
         <p className="mt-2 text-[12px] leading-[1.65] text-ash">
           例如：办公室搬迁、换工作、父母来日本、公司休眠、签证转换。
-          把你的情况写下来，TEBIQ 会根据真实问题继续整理手续路径。
+          写下情况后，会返回一份整理结果；不确定时会说明需要补充什么信息。
         </p>
       )}
       <form onSubmit={submit} className="mt-3 grid gap-2">
@@ -109,7 +109,7 @@ export default function QuestionIntakeBox({
           disabled={busy || !questionText.trim()}
           className="min-h-[42px] rounded-btn bg-ink px-4 py-2 text-[13px] font-medium text-white disabled:cursor-not-allowed disabled:opacity-45"
         >
-          {busy ? '正在整理...' : '查看整理结果'}
+          {busy ? '正在整理...' : '整理这个问题'}
         </button>
       </form>
       {message && (

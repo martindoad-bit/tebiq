@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Archive, CalendarDays, FileText } from 'lucide-react'
+import { Archive, CalendarDays, Camera, FileText } from 'lucide-react'
 import AppShell from '@/app/_components/v5/AppShell'
 import AppBar from '@/app/_components/v5/AppBar'
 import TabBar from '@/app/_components/v5/TabBar'
@@ -72,9 +72,10 @@ export default function PhotoSampleResultPage() {
       <div className="mt-5 grid gap-2">
         <Link
           href="/photo"
-          className="focus-ring flex min-h-[46px] items-center justify-center rounded-btn bg-ink px-4 py-3 text-[14px] font-medium text-white"
+          className="focus-ring flex min-h-[50px] items-center justify-center gap-2 rounded-btn bg-ink px-4 py-3 text-[14px] font-medium text-white"
         >
-          拍照识别文书
+          <Camera size={18} strokeWidth={1.5} />
+          拍一份文书试试
         </Link>
         <Link
           href="/timeline"
@@ -98,8 +99,8 @@ function SampleFact({
 }) {
   return (
     <div className="flex min-h-[64px] items-center justify-between gap-3 border-b border-hairline px-4 last:border-b-0">
-      <span className="text-[12px] text-ash">{label}</span>
-      <span className="min-w-0 text-right">
+      <span className="flex-shrink-0 text-[12px] text-ash">{label}</span>
+      <span className="min-w-0 flex-1 text-right">
         <span className="block text-[15px] font-medium text-ink jp-text">{value}</span>
         <span className="mt-0.5 block text-[11px] text-ash">{sub}</span>
       </span>
