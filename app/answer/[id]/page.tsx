@@ -3,7 +3,13 @@ import AppShell from '@/app/_components/v5/AppShell'
 import AppBar from '@/app/_components/v5/AppBar'
 import TabBar from '@/app/_components/v5/TabBar'
 import { getAnswerDraftById } from '@/lib/db/queries/answerDrafts'
-import { ANSWER_BOUNDARY_NOTE, type AnswerLink, type AnswerSection, type AnswerSource } from '@/lib/answer/types'
+import {
+  ANSWER_BOUNDARY_NOTE,
+  type ActionAnswer,
+  type AnswerLink,
+  type AnswerSection,
+  type AnswerSource,
+} from '@/lib/answer/types'
 import { formatActionAnswer } from '@/lib/answer/format-action-answer'
 import AnswerResultView, { type AnswerResult, type AnswerStatus } from './AnswerResultView'
 
@@ -220,6 +226,7 @@ function draftToAnswer(draft: AnswerDraftRow): FullAnswer {
   const nextSteps = draft.nextStepsJson as string[]
   const relatedLinks = draft.relatedLinksJson as AnswerLink[]
   const sources = draft.sourcesJson as AnswerSource[]
+  const storedActionAnswer = actionAnswerFromSections(sections, draft.summary)
   const sourceHint = sources.length > 0
     ? sources.map(source => source.title).join(' / ')
     : relatedLinks.length > 0
@@ -253,8 +260,51 @@ function draftToAnswer(draft: AnswerDraftRow): FullAnswer {
       query_id: draft.queryId,
       answer_id: draft.id,
       boundary_note: ANSWER_BOUNDARY_NOTE,
+      action_answer: storedActionAnswer ?? undefined,
     }),
   }
+}
+
+function actionAnswerFromSections(sections: AnswerSection[], fallbackConclusion: string): ActionAnswer | null {
+  const conclusion = actionSectionLines(sections, '一句话结论')[0] ?? fallbackConclusion
+  const whatToDo = actionSectionLines(sections, '现在做什么')
+  const whereToGo = actionSectionLines(sections, '办理窗口')
+  const howToDo = actionSectionLines(sections, '怎么做')
+  const documentsNeeded = actionSectionLines(sections, '需要材料')
+  const deadlineOrTiming = actionSectionLines(sections, '期限和时机')
+  const consequences = actionSectionLines(sections, '不处理后果')
+  const expertHandoff = actionSectionLines(sections, '专家确认')
+  if (
+    whatToDo.length === 0 &&
+    whereToGo.length === 0 &&
+    howToDo.length === 0 &&
+    documentsNeeded.length === 0 &&
+    deadlineOrTiming.length === 0 &&
+    consequences.length === 0 &&
+    expertHandoff.length === 0
+  ) {
+    return null
+  }
+  return {
+    conclusion,
+    what_to_do: whatToDo,
+    where_to_go: whereToGo,
+    how_to_do: howToDo,
+    documents_needed: documentsNeeded,
+    deadline_or_timing: deadlineOrTiming,
+    consequences,
+    expert_handoff: expertHandoff,
+    boundary_note: ANSWER_BOUNDARY_NOTE,
+  }
+}
+
+function actionSectionLines(sections: AnswerSection[], label: string): string[] {
+  const section = sections.find(item => item.heading.includes(`行动答案：${label}`))
+  if (!section) return []
+  return section.body
+    .split('\n')
+    .map(line => line.replace(/^\s*[-*]\s*/, '').trim())
+    .filter(Boolean)
 }
 
 function withActionAnswer(answer: FullAnswer): FullAnswer {
