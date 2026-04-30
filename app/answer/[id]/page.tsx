@@ -5,7 +5,7 @@ import TabBar from '@/app/_components/v5/TabBar'
 import { getAnswerDraftById } from '@/lib/db/queries/answerDrafts'
 import { ANSWER_BOUNDARY_NOTE, type AnswerLink, type AnswerSection, type AnswerSource } from '@/lib/answer/types'
 import { formatActionAnswer } from '@/lib/answer/format-action-answer'
-import AnswerResultView, { type AnswerResult } from './AnswerResultView'
+import AnswerResultView, { type AnswerResult, type AnswerStatus } from './AnswerResultView'
 
 export const dynamic = 'force-dynamic'
 
@@ -14,13 +14,20 @@ export const metadata = {
   description: 'TEBIQ 根据用户问题整理的手续路径和注意事项。',
 }
 
-type FullAnswer = AnswerResult & {
+type FullAnswer = {
+  id: string
+  status: AnswerStatus
+  title: string
+  question: string
+  answerLevel: 'L1' | 'L2' | 'L3' | 'L4'
   answerType: string
   reviewStatus: string
   summary: string
   sections: Array<{ title: string; body: string }>
   nextSteps: string[]
+  sourceHint: string
   boundaryNote: string
+  actionAnswer: AnswerResult['actionAnswer']
 }
 
 const DEMO_ANSWERS: Record<string, FullAnswer> = {
@@ -275,21 +282,33 @@ function withActionAnswer(answer: FullAnswer): FullAnswer {
 function toViewAnswer(answer: FullAnswer): AnswerResult {
   return {
     id: answer.id,
-    status: answer.status,
     title: answer.title,
     question: answer.question,
-    answerLevel: answer.answerLevel,
+    statusLabel: publicStatusLabel(answer.status),
+    statusClassName: publicStatusClassName(answer.status),
+    primaryActionTitle: answer.status === 'cannot_determine' ? '先确认什么' : '你现在先做什么',
     sourceHint: answer.sourceHint,
     actionAnswer: answer.actionAnswer,
   }
 }
 
-function answerStatus(value: string): AnswerResult['status'] {
+function answerStatus(value: string): AnswerStatus {
   if (value === 'matched' || value === 'draft' || value === 'cannot_determine') return value
   return 'draft'
 }
 
-function answerLevel(value: string): AnswerResult['answerLevel'] {
+function publicStatusLabel(status: AnswerStatus): string {
+  if (status === 'matched') return '已整理'
+  if (status === 'draft') return '初步整理，待复核'
+  return '需要进一步确认'
+}
+
+function publicStatusClassName(status: AnswerStatus): string {
+  if (status === 'draft') return 'bg-[#FFF7E8] text-ink'
+  return 'bg-paper text-ink'
+}
+
+function answerLevel(value: string): FullAnswer['answerLevel'] {
   if (value === 'L1' || value === 'L2' || value === 'L3' || value === 'L4') return value
   return 'L2'
 }
