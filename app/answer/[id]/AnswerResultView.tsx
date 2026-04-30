@@ -232,6 +232,10 @@ function buildManagerCopy(answer: AnswerResult): string {
   const action = answer.actionAnswer
   const firstTodo = action.what_to_do[0] ?? '先确认基本事实'
   const firstDocument = action.documents_needed[0] ?? '准备相关文书和日期记录'
-  const expert = action.expert_handoff[0] ?? '若已逾期或涉及个别事实，建议咨询专业人士'
+  const expert = stripTerminalPunctuation(action.expert_handoff[0] ?? '若已逾期或涉及个别事实，建议咨询专业人士')
   return `这类情况先确认身份、日期和已收到的文书。一般需要先做「${firstTodo}」，再准备「${firstDocument}」。${expert}。`
+}
+
+function stripTerminalPunctuation(value: string): string {
+  return value.replace(/[。.!！]+$/, '')
 }
