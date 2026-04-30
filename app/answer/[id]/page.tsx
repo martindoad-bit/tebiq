@@ -336,7 +336,6 @@ function toViewAnswer(answer: FullAnswer): AnswerResult {
     question: answer.question,
     statusLabel: publicStatusLabel(answer.status),
     statusClassName: publicStatusClassName(answer.status),
-    primaryActionTitle: answer.status === 'cannot_determine' ? '先确认什么' : '你现在先做什么',
     sourceHint: answer.sourceHint,
     actionAnswer: answer.actionAnswer,
   }

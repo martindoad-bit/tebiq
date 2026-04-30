@@ -3,22 +3,11 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
-const COMMON_QUESTIONS = [
-  '搬家了在留卡要改地址吗',
+const RECENT_QUESTIONS = [
+  '厚生年金截止日期是什么时候？',
+  '办公室搬迁要做哪些手续？',
   '住民税晚交会影响永住吗？',
-  '公司没给我上社保怎么办',
-  '办公室搬迁，法务局和入管哪个先',
-]
-
-const VISA_OPTIONS = [
-  { value: 'management', label: '经营管理' },
-  { value: 'technical_humanities_international', label: '技人国' },
-  { value: 'specified_skilled_worker', label: '特定技能' },
-  { value: 'spouse', label: '配偶者' },
-  { value: 'permanent_resident', label: '永住' },
-  { value: 'student', label: '留学' },
-  { value: 'family_stay', label: '家族滞在' },
-  { value: 'unknown', label: '还不确定' },
+  '搬家后在留卡地址要不要改？',
 ]
 
 export default function QuestionIntakeBox({
@@ -30,7 +19,6 @@ export default function QuestionIntakeBox({
 }) {
   const router = useRouter()
   const [questionText, setQuestionText] = useState('')
-  const [visaType, setVisaType] = useState('')
   const [busy, setBusy] = useState(false)
   const [inlineAnswer, setInlineAnswer] = useState<InlineAnswer | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -48,13 +36,13 @@ export default function QuestionIntakeBox({
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({
           question_text: text,
-          visa_type: visaType || null,
+          visa_type: null,
           source_page: sourcePage,
         }),
       })
       const json = await res.json() as InlineAnswer & { ok?: boolean; error?: { message?: string } }
       if (!res.ok || !json.ok) {
-        setError(json.error?.message ?? '暂时无法处理，请稍后再试')
+        setError(json.error?.message ?? '整理暂时没有完成，请稍后再试')
         return
       }
       setQuestionText('')
@@ -64,7 +52,7 @@ export default function QuestionIntakeBox({
         setInlineAnswer(json)
       }
     } catch {
-      setError('暂时无法处理，请稍后再试')
+      setError('整理暂时没有完成，请稍后再试')
     } finally {
       setBusy(false)
     }
@@ -75,50 +63,37 @@ export default function QuestionIntakeBox({
       ? 'rounded-card border border-hairline bg-surface px-4 py-4'
       : 'rounded-[16px] border border-hairline bg-surface px-4 py-4'
     }>
-      <form onSubmit={submit} className="grid gap-3">
-        <label className="grid gap-1.5">
-          <span className="text-[12px] font-medium leading-none text-ink">你的问题</span>
+      <h2 className={`${compact ? 'text-[15px]' : 'text-[16px]'} font-medium leading-tight text-ink`}>
+        {compact ? '找不到对应内容？' : '你的问题'}
+      </h2>
+      <form onSubmit={submit} className="mt-4 grid gap-3">
         <textarea
           value={questionText}
           onChange={event => setQuestionText(event.target.value)}
           required
-          rows={compact ? 3 : 4}
+          rows={compact ? 3 : 2}
           maxLength={4000}
           placeholder={compact ? '换工作后在留更新要准备什么？' : '厚生年金截止日期是什么时候？'}
-          className={`${compact ? 'min-h-[94px]' : 'min-h-[124px]'} w-full resize-none rounded-[12px] border border-hairline bg-canvas px-3.5 py-3 text-[16px] leading-[1.65] text-ink outline-none placeholder:text-haze focus:border-ink`}
+          className={`${compact ? 'min-h-[94px]' : 'min-h-[76px]'} w-full resize-none rounded-[12px] border border-hairline bg-canvas px-3.5 py-3 text-[16px] leading-[1.55] text-ink outline-none placeholder:text-haze focus:border-ink`}
         />
-        </label>
-        <label className="grid gap-1.5">
-          <span className="text-[12px] font-medium leading-none text-ash">身份 / 签证类型</span>
-          <select
-            value={visaType}
-            onChange={event => setVisaType(event.target.value)}
-            className="min-h-[42px] rounded-[12px] border border-hairline bg-canvas px-3 text-[13px] text-ink outline-none focus:border-ink"
-          >
-            <option value="">可选</option>
-            {VISA_OPTIONS.map(option => (
-              <option key={option.value} value={option.value}>{option.label}</option>
-            ))}
-          </select>
-        </label>
         <button
           type="submit"
           disabled={busy || !questionText.trim()}
-          className="min-h-[44px] rounded-btn bg-ink px-4 py-2 text-[13px] font-medium text-white disabled:cursor-not-allowed disabled:opacity-45"
+          className="min-h-[46px] rounded-btn bg-ink px-4 py-2 text-[14px] font-medium text-white disabled:cursor-not-allowed disabled:opacity-45"
         >
-          {busy ? '正在整理' : '看下一步'}
+          {busy ? '正在整理...' : '看下一步'}
         </button>
       </form>
       {!compact && (
         <div className="mt-4">
-          <p className="text-[12px] font-medium leading-none text-ink">最近常问</p>
+          <p className="text-[12px] leading-none text-ash">最近常问</p>
           <div className="mt-2 flex flex-wrap gap-2">
-            {COMMON_QUESTIONS.map(example => (
+            {RECENT_QUESTIONS.map(example => (
               <button
                 key={example}
                 type="button"
                 onClick={() => setQuestionText(example)}
-                className="min-h-[30px] rounded-[8px] bg-paper px-2.5 text-[12px] text-slate active:bg-hairline"
+                className="min-h-[30px] rounded-[9px] bg-paper px-2.5 text-[12px] text-slate active:bg-hairline"
               >
                 {example}
               </button>
