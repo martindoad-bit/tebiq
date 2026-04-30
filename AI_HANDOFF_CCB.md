@@ -1,96 +1,95 @@
 # AI Handoff - CCB
 
-最后更新: 2026-04-30（CCB content/answer-copy-rewrite-v1 完成）
+最后更新: 2026-04-30（CCB content/answer-copy-qa-v2 完成）
 
 ## CCB(内容)状态
 
-- 当前任务: Answer Copy Rewrite v1（把答案改成用户能照着做）
-- 当前分支: `content/answer-copy-rewrite-v1`（基于 `origin/content/answer-seed-v1`）
+- 当前任务: Answer Copy QA v2（只修 10 个 benchmark 答案）
+- 当前分支: `content/answer-copy-qa-v2`（基于 `origin/content/answer-copy-rewrite-v1`）
 - 当前 worktree: /tmp/cc-b-batch-04
 - 状态: **awaiting_merge**
 
 ## 本次交付
 
-按创始人 brief：不新增 Q / 不写新 batch / 仅给 TOP 50 加 `action_answer` 字段块，让用户看到答案就能照着做。
+按创始人 brief：100 位测试指出 10 个 benchmark 答案质量不稳定。本轮**只修这 10 个 benchmark**，不增删 100 条 / 不动其他答案。
 
-### 修改文件
+### 新建文件
 
-| 文件 | TOP 50 加 action_answer |
+| 文件 | 内容 |
 |---|---|
-| `answer_seed_001-025.md` | 17 条 |
-| `answer_seed_026-050.md` | 13 条（含 Q032 重点重写）|
-| `answer_seed_051-075.md` | 10 条 |
-| `answer_seed_076-100.md` | 10 条 |
-| `ANSWER_COPY_REWRITE_V1_REPORT.md` | 新建（重写报告） |
+| `docs/answer-seed/benchmark_overrides.md` | 10 个 benchmark 最终标准答案（19 字段 schema） |
+| `docs/answer-seed/ANSWER_COPY_QA_V2_REPORT.md` | 修改摘要 + 重点修正说明 + must_match 规则建议 |
 
-### action_answer 字段块（TOP 50 必填）
+### 10 个 benchmark
 
-```yaml
-action_answer:
-  conclusion: <一句话明确结论 / 或「这个问题不能简单回答」>
-  do_now: <用户现在 1-3 件具体可执行的事>
-  where_to_go: <去哪里办：机关名 + 具体窗口>
-  how_to_do: <怎么操作：编号步骤清单>
-  documents_needed: [...]
-  deadline_or_timing: <多久内做>
-  consequences: <不做会怎样>
-  expert_handoff: <什么情况必须找专家>
-```
+| BM | 主题 | 重点修正 |
+|---|---|---|
+| BM01 | 公司休眠 → 国民年金 | **重写**：主答个人年金（不是签证）|
+| BM02 | 办公室搬迁 | **表格化**：7 步 5 列 |
+| BM03 | 永住直近 5 年纳税 | 标准 |
+| BM04 | 永住者带父母 | misconception 表格化 |
+| BM05 | 14 日届出 超期 | risk_chain |
+| BM06 | 公司倒闭在留资格 | misconception 14 日 + 3 月 |
+| BM07 | 经管 2025/10/16 改正 | decision_card 4 状态 |
+| BM08 | 搬家在留卡地址 | **样板答案**简洁版 |
+| BM09 | 经管资本金不够 | **重写**：4 路径表格 |
+| BM10 | 离婚不满 3 年定住 | needs_expert 3 例外 |
 
-### Q032 办公室搬迁（创始人特别要求重点重写）
+## 给 CCA 的待办
 
-按 brief 8 点全覆盖：法人办公确认 + 法人名义合同 + 商業登記 + 异动届 + 社保银行许可 + 入管立证持续性 + 新旧租约照片平面图 + 仅改邮寄地址的不一致风险。
-
-关键时间节点：
-- 法務局 本店移転登記 **2 週間以内**
-- 入管 所属機関等届出 **14 日以内**
-- 税務 / 社保 / 雇用保険 異動届 **1 ヶ月以内**
-
-### 高风险 16 条 ⚠️ 严格处理
-
-Q003 / Q004 / Q005 / Q024 / Q026 / Q029 / Q031 / Q036 / Q040 / Q050 / Q057 / Q065 / Q081 / Q091 / Q098 / Q099
-
-统一 conclusion = 「这个问题不能简单回答」+ 明确专家分类 + 客观陈述。
-
-### 语气合规
-
-- ✗ 不写「保证 / 一定（肯定式）/ 拒签概率 / 赶紧委托 / 我们可以帮你办」
-- ✓ 写「通常 / 一般 / 需要先确认 / 需要先整理 / 如果涉及个别事实，建议咨询专业人士」
-
-无法确定的字段 → 写「需要先确认」，不留空。
-
-## 给 CCA 的接入建议
-
-### 前端 UI 三层渲染
-
-| 命中类型 | 渲染主体 |
-|---|---|
-| 命中 TOP 50 题 | 优先展 `action_answer`（可执行清单 8 字段） |
-| 命中 TOP 50 外（TOP 30） | 展 `first_screen_answer`（v1 已有 4 段）|
-| 命中其他题 | 展 `summary` + `sections`（v0 已有） |
-
-高风险题（answer_type: needs_expert / misconception）命中时强制展示 `why_not_simple_answer` + `expert_handoff` CTA → ¥9,800 咨询入口。
-
-### Schema 增量字段
+### 新 schema：`benchmark_overrides` 表
 
 ```sql
-action_answer  jsonb  -- {conclusion, do_now, where_to_go, how_to_do,
-                     --  documents_needed[], deadline_or_timing,
-                     --  consequences, expert_handoff}
+benchmark_id              text PRIMARY KEY  -- BM01-BM10
+question / aliases / must_match_keywords / must_not_match_keywords
+answer_type / answer_level
+conclusion / applies_when / do_now / where_to_go / how_to_do
+documents_needed / deadline_or_timing / consequences
+expert_handoff / customer_message / source_hint
+requires_review / review_notes
 ```
 
-### 测试建议
+### Importer 路由
 
-用 v1 350 条 test_queries 跑命中：
-- 命中 TOP 50 时验证 `action_answer.conclusion` 渲染优先级
-- 高风险 16 条命中时验证「不能简单回答」+ 引导专家路径
+`docs/answer-seed/benchmark_overrides.md` → 用 `## BMxx` 切分 + yaml-parser → `benchmark_overrides` 表
+
+### Answer Engine 路由（priority）
+
+```python
+def match(query):
+    # 1. 先查 benchmark_overrides（强命中规则）
+    for bm in benchmark_overrides:
+        has_must_match = any(kw in query for kw in bm.must_match_keywords)
+        has_must_not = any(kw in query for kw in bm.must_not_match_keywords)
+        if has_must_match and not has_must_not:
+            return bm
+    # 2. 不命中退回 question_seeds（v1 100 条）
+    return fallback_match(query)
+```
+
+### 已识别冲突 case
+
+- 「公司休眠 经管签证还能续吗」 → BM01 + BM07 提示选择
+- 「资本金 3000 万 300 万够不够」 → BM07
+- 「资本金不到 3000 万 怎么办」 → BM09（不是 BM07/Q047）
+- 「公司倒闭 + 年金」 → BM06 + BM01 提示选择
+- 「办公室搬迁 + 在留卡地址」 → BM02 + BM08 提示选择
+
+### 前端渲染
+
+命中 benchmark 时：
+- 优先展示 `customer_message`（短答）
+- 展开 `do_now` + `where_to_go` + `how_to_do` 表格（BM02 / BM07 / BM09 含表格）
+- BM04 / BM06 / BM07 / BM09 / BM10 强制展示 `expert_handoff` CTA → ¥9,800 咨询
 
 ## 历次交付
 
 - batch-01-04：已 merge to main
 - batch-05/06/07：awaiting_merge
 - content/index-and-review-registry：4 治理文件
-- content/real-question-data-v1：152 个 Q 标注 + TOP 20 + 5 seed YAML
-- content/answer-seed-v0：100 条 answer seed + report
-- content/answer-seed-v1：v0 强化版（aliases 837 / test_queries 350 / TOP30 first_screen / 26 高风险题透明度）
-- **content/answer-copy-rewrite-v1：v1 答案重写（TOP 50 + Q032 重点重写 + 16 条高风险题严格处理）**
+- content/real-question-data-v1：152 个 Q + TOP 20 + 5 seed YAML
+- content/answer-seed-v0：100 条 answer seed
+- content/answer-seed-v1：v0 强化（aliases 837 / test_queries 350 / TOP30 / 26 高风险）
+- content/answer-copy-rewrite-v1：TOP 50 action_answer + Q032 重点
+- content/product-copy-v1：BIBLE + HOMEPAGE 3 版 + TOP 50 customer_facing_answer
+- **content/answer-copy-qa-v2：10 个 benchmark 最终标准答案 + must_match 规则**
