@@ -25,12 +25,26 @@ interface ReviewQuestion {
   createdAt: string
 }
 
+interface ReviewAnswerDraft {
+  id: string
+  questionText: string
+  answerType: string
+  answerLevel: string
+  reviewStatus: string
+  title: string
+  summary: string
+  createdAt: string
+  reviewNote: string | null
+}
+
 export default function ReviewLiteClient({
   cards,
   question,
+  answerDrafts,
 }: {
   cards: DecisionCard[]
   question?: ReviewQuestion | null
+  answerDrafts: ReviewAnswerDraft[]
 }) {
   const [filter, setFilter] = useState<Filter>('needs_review')
   const visibleCards = useMemo(() => cards.filter(card => {
@@ -53,10 +67,27 @@ export default function ReviewLiteClient({
           </div>
           <p className="mt-3 whitespace-pre-line text-sm leading-6 text-slate">{question.rawQuery}</p>
           <p className="mt-3 text-xs text-ash">
-            暂无草稿。后续可由 AI 或人工生成 Decision Card。
+            {answerDrafts.some(draft => draft.questionText === question.rawQuery)
+              ? '该问题已有 answer draft，可在下方审核。'
+              : '暂无草稿。后续可由 AI 或人工生成 Decision Card。'}
           </p>
         </section>
       )}
+
+      <section className="rounded-card border border-hairline bg-surface p-4 shadow-card">
+        <div className="flex flex-wrap items-center gap-2">
+          <h2 className="mr-auto text-base font-semibold text-ink">Answer Drafts</h2>
+          <Chip>{String(answerDrafts.length)}</Chip>
+        </div>
+        <div className="mt-3 grid gap-3">
+          {answerDrafts.map(draft => <AnswerDraftReviewItem key={draft.id} draft={draft} />)}
+          {answerDrafts.length === 0 && (
+            <p className="rounded-[12px] bg-paper px-3 py-3 text-xs text-ash">
+              暂无 answer draft。
+            </p>
+          )}
+        </div>
+      </section>
 
       <div className="flex flex-wrap gap-2">
         {[
@@ -86,6 +117,70 @@ export default function ReviewLiteClient({
         </div>
       )}
     </div>
+  )
+}
+
+function AnswerDraftReviewItem({ draft }: { draft: ReviewAnswerDraft }) {
+  const [status, setStatus] = useState(draft.reviewStatus)
+  const [note, setNote] = useState(draft.reviewNote ?? '')
+  const [busy, setBusy] = useState(false)
+  const [saved, setSaved] = useState<string | null>(null)
+
+  async function submit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    setBusy(true)
+    setSaved(null)
+    try {
+      const res = await fetch('/api/admin/review-lite', {
+        method: 'PATCH',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          answerDraftId: draft.id,
+          reviewStatus: status,
+          note,
+        }),
+      })
+      setSaved(res.ok ? '已保存' : '保存失败')
+    } catch {
+      setSaved('保存失败')
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  return (
+    <article className="rounded-[12px] border border-hairline bg-paper p-3">
+      <div className="flex flex-wrap items-center gap-2">
+        <h3 className="mr-auto text-sm font-medium text-ink">{draft.title}</h3>
+        <Chip>{draft.answerType}</Chip>
+        <Chip>{draft.answerLevel}</Chip>
+        <Chip>{draft.reviewStatus}</Chip>
+      </div>
+      <p className="mt-2 text-xs leading-6 text-slate">{draft.questionText}</p>
+      <p className="mt-2 text-xs leading-6 text-ash">{draft.summary}</p>
+      <form onSubmit={submit} className="mt-3 grid gap-2 md:grid-cols-[160px_1fr_120px]">
+        <select value={status} onChange={event => setStatus(event.target.value)} className={INPUT_CLASS}>
+          <option value="reviewed">reviewed</option>
+          <option value="needs_expert">needs_expert</option>
+          <option value="rejected">rejected</option>
+          <option value="unreviewed">unreviewed</option>
+        </select>
+        <input
+          value={note}
+          onChange={event => setNote(event.target.value)}
+          className={INPUT_CLASS}
+          placeholder="审核 note"
+        />
+        <button
+          type="submit"
+          disabled={busy}
+          className="min-h-[36px] rounded-btn bg-ink px-3 text-xs font-medium text-white disabled:opacity-50"
+        >
+          {busy ? '处理中...' : '保存'}
+        </button>
+      </form>
+      {saved && <p className="mt-2 text-xs text-ash">{saved}</p>}
+    </article>
   )
 }
 

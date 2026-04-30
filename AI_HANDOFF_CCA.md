@@ -1,15 +1,24 @@
 # AI Handoff - CCA
 
-最后更新: 2026-04-30T13:45:11+09:00
+最后更新: 2026-04-30T16:35:42+09:00
 
 ## CCA(代码)状态
 
-- 当前任务: Auth + Question Intake Production Integration
-- 当前分支: codex/auth-intake-production
-- 当前 worktree: /Users/martin/Documents/tebiq/.claude/worktrees/auth-intake-production
-- 状态: done
-- 最近一次 push: main final report update（以当前 main HEAD 为准）
+- 当前任务: Answer Engine v0
+- 当前分支: codex/answer-engine-v0
+- 当前 worktree: /Users/martin/Documents/tebiq/.claude/worktrees/answer-engine-v0
+- 状态: awaiting_merge
+- 最近一次 push: 待 push
 - 给其他 AI 的通知:
+  - 用户提问入口已从“提交问题”改为“整理这个问题”，`POST /api/questions` 直接返回 `matched / draft / cannot_determine` 结构化答案。
+  - 新增 `/answer/[id]` 结果页、`answer_drafts` 表、`/api/answer/feedback` 和 review-lite answer draft 审核列表。
+  - 新增 migration `0021_slow_maelstrom.sql`，非破坏性：创建 `answer_drafts`，给 `answer_feedback` 增加 `answer_draft_id`。
+  - 本轮未接实时 AI / RAG / 支付；无 DB 时仍返回 inline answer fallback，不白屏。
+  - 报告: `ANSWER_ENGINE_V0_REPORT.md`。
+
+## Auth + Question Intake Production Integration
+
+  - 当前任务已完成并上线。
   - 已合入 `origin/codex/question-intake-v1`，保留 `/api/questions`、`/admin/questions`、批量导入和 review-lite 衔接。
   - 已接入 Resend magic link 发送；production 有 `RESEND_API_KEY` 时真发，无 key 不回退 dev。
   - 非 production dev mode 保留 mock email + server log magic link。
