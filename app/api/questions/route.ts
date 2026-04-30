@@ -1,6 +1,5 @@
-import { errors, ok } from '@/lib/api/response'
-import { matchDecisionQuery } from '@/lib/decision/cards'
-import { createQuestion } from '@/lib/db/queries/questions'
+import { errors } from '@/lib/api/response'
+import { submitQuestionForAnswer } from '@/lib/answer/submit-question'
 
 export const dynamic = 'force-dynamic'
 export const runtime = 'nodejs'
@@ -12,52 +11,35 @@ export async function POST(req: Request) {
   } catch {
     return errors.badRequest()
   }
+
   if (!body || typeof body !== 'object') return errors.badRequest()
   const row = body as Record<string, unknown>
-  const questionText = stringOrNull(row.question_text ?? row.questionText ?? row.rawQuery)
-  if (!questionText) return errors.badRequest('请输入情况')
-  if (questionText.length > 4000) return errors.badRequest('输入过长')
+  const questionText = stringValue(row.question_text ?? row.questionText)
+  if (!questionText) return errors.badRequest('请输入要整理的问题')
+  if (questionText.length > 4000) return errors.badRequest('问题最多 4000 字')
 
-  const contactEmail = parseEmail(row.contact_email ?? row.contactEmail)
-  const visaType = stringOrNull(row.visa_type ?? row.visaType)
-  const sourcePage = stringOrNull(row.source_page ?? row.sourcePage) ?? '/question-intake'
-  const match = await matchDecisionQuery(questionText)
+  const contactEmail = stringValue(row.contact_email ?? row.contactEmail)
+  if (contactEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contactEmail)) {
+    return errors.badRequest('邮箱格式不正确')
+  }
 
   try {
-    const saved = await createQuestion({
-      rawQuery: questionText,
-      normalizedQuery: match.normalizedQuery,
-      visaType,
+    const answer = await submitQuestionForAnswer({
+      questionText,
+      visaType: stringValue(row.visa_type ?? row.visaType),
       contactEmail,
-      sourcePage,
-      matchedCardId: match.card?.id ?? null,
-      matchStatus: match.status,
-      status: 'new',
-      priority: 'normal',
+      sourcePage: stringValue(row.source_page ?? row.sourcePage) ?? '/question-intake',
     })
-    return ok({
-      id: saved.id,
-      matchStatus: saved.matchStatus,
-      matchedSlug: match.card?.slug ?? null,
-      message: '已收到。TEBIQ 会根据收到的问题继续整理场景和手续说明。',
-    })
+    const { ok: _ok, ...payload } = answer
+    return Response.json({ ok: true, ...payload })
   } catch (error) {
-    console.warn('[questions] submit failed', errorCode(error))
-    return errors.internal('提交暂时没有保存成功，请稍后再试')
+    console.warn('[api/questions] answer failed', errorCode(error))
+    return errors.internal('整理暂时失败，请稍后再试')
   }
 }
 
-function stringOrNull(value: unknown): string | null {
-  if (typeof value !== 'string') return null
-  const trimmed = value.trim()
-  return trimmed ? trimmed : null
-}
-
-function parseEmail(value: unknown): string | null {
-  const email = stringOrNull(value)?.toLowerCase()
-  if (!email) return null
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return null
-  return email.slice(0, 255)
+function stringValue(value: unknown): string | null {
+  return typeof value === 'string' && value.trim() ? value.trim() : null
 }
 
 function errorCode(error: unknown): string {

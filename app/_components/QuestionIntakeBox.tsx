@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 const VISA_OPTIONS = [
   { value: '', label: '不确定 / 不选择' },
@@ -19,11 +20,12 @@ export default function QuestionIntakeBox({
   sourcePage: string
   compact?: boolean
 }) {
+  const router = useRouter()
   const [questionText, setQuestionText] = useState('')
   const [visaType, setVisaType] = useState('')
   const [contactEmail, setContactEmail] = useState('')
   const [busy, setBusy] = useState(false)
-  const [message, setMessage] = useState<string | null>(null)
+  const [inlineAnswer, setInlineAnswer] = useState<InlineAnswer | null>(null)
   const [error, setError] = useState<string | null>(null)
 
   async function submit(event: React.FormEvent<HTMLFormElement>) {
@@ -31,7 +33,7 @@ export default function QuestionIntakeBox({
     const text = questionText.trim()
     if (!text || busy) return
     setBusy(true)
-    setMessage(null)
+    setInlineAnswer(null)
     setError(null)
     try {
       const res = await fetch('/api/questions', {
@@ -44,18 +46,20 @@ export default function QuestionIntakeBox({
           source_page: sourcePage,
         }),
       })
-      const json = await res.json() as { ok?: boolean; data?: { message?: string }; error?: { message?: string } }
+      const json = await res.json() as InlineAnswer & { ok?: boolean; error?: { message?: string } }
       if (!res.ok || !json.ok) {
-        setError(json.error?.message ?? '提交暂时没有保存成功，请稍后再试')
+        setError(json.error?.message ?? '整理暂时没有完成，请稍后再试')
         return
       }
       setQuestionText('')
       setContactEmail('')
-      setMessage(
-        '已收到。TEBIQ 会根据收到的问题继续整理场景和手续说明。如果涉及紧急期限或个别判断，请咨询行政書士等专业人士。',
-      )
+      if (json.answer_id) {
+        router.push(`/answer/${json.answer_id}`)
+      } else {
+        setInlineAnswer(json)
+      }
     } catch {
-      setError('提交暂时没有保存成功，请稍后再试')
+      setError('整理暂时没有完成，请稍后再试')
     } finally {
       setBusy(false)
     }
@@ -103,11 +107,35 @@ export default function QuestionIntakeBox({
           disabled={busy || !questionText.trim()}
           className="min-h-[42px] rounded-btn bg-ink px-4 py-2 text-[13px] font-medium text-white disabled:cursor-not-allowed disabled:opacity-45"
         >
-          {busy ? '处理中...' : '提交问题'}
+          {busy ? '正在整理...' : '整理这个问题'}
         </button>
       </form>
-      {message && <p className="mt-3 rounded-[10px] bg-paper px-3 py-2 text-[12px] leading-[1.6] text-slate">{message}</p>}
+      {inlineAnswer && (
+        <div className="mt-3 rounded-[10px] bg-paper px-3 py-3 text-[12px] leading-[1.6] text-slate">
+          <p className="font-medium text-ink">{statusLabel(inlineAnswer.answer_type)}</p>
+          <p className="mt-1">{inlineAnswer.summary}</p>
+          {inlineAnswer.next_steps.length > 0 && (
+            <ol className="mt-2 list-decimal pl-4">
+              {inlineAnswer.next_steps.slice(0, 3).map(step => <li key={step}>{step}</li>)}
+            </ol>
+          )}
+        </div>
+      )}
       {error && <p className="mt-3 rounded-[10px] bg-paper px-3 py-2 text-[12px] leading-[1.6] text-danger">{error}</p>}
     </section>
   )
+}
+
+interface InlineAnswer {
+  ok?: boolean
+  answer_id?: string | null
+  answer_type: 'matched' | 'draft' | 'cannot_determine'
+  summary: string
+  next_steps: string[]
+}
+
+function statusLabel(type: InlineAnswer['answer_type']) {
+  if (type === 'matched') return '已整理'
+  if (type === 'draft') return '初步整理，尚未人工复核'
+  return '这个情况需要进一步确认'
 }
