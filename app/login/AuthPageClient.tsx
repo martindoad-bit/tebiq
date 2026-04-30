@@ -57,12 +57,12 @@ export default function AuthPageClient({ intent = 'login' }: { intent?: 'login' 
   const [phoneStep, setPhoneStep] = useState<PhoneStep>('phone')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(initialError ? ERROR_TEXT[initialError] ?? '登录未完成' : '')
-  const [message, setMessage] = useState('')
+  const [sentEmail, setSentEmail] = useState('')
   const [lastDevOtp, setLastDevOtp] = useState('')
 
   async function handleSendMagicLink() {
     setError('')
-    setMessage('')
+    setSentEmail('')
     const normalized = email.trim().toLowerCase()
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalized)) {
       setError('请输入有效邮箱')
@@ -77,12 +77,12 @@ export default function AuthPageClient({ intent = 'login' }: { intent?: 'login' 
       })
       const data = await res.json()
       if (!res.ok) {
-        setError(data?.error ?? '发送失败')
+        setError(data?.error ?? '邮件发送未完成，请稍后再试')
         return
       }
-      setMessage(`登录链接已发送到 ${normalized}，10 分钟内有效。`)
+      setSentEmail(normalized)
     } catch {
-      setError('网络错误，请重试')
+      setError('邮件发送未完成，请稍后再试')
     } finally {
       setLoading(false)
     }
@@ -90,7 +90,7 @@ export default function AuthPageClient({ intent = 'login' }: { intent?: 'login' 
 
   async function handleSendOtp() {
     setError('')
-    setMessage('')
+    setSentEmail('')
     if (!/^[+]?\d{10,15}$/.test(phone)) {
       setError('请输入有效的手机号')
       return
@@ -109,7 +109,7 @@ export default function AuthPageClient({ intent = 'login' }: { intent?: 'login' 
       }
       if (data?.devOtp) setLastDevOtp(data.devOtp)
       setPhoneStep('otp')
-      setMessage('')
+      setSentEmail('')
     } catch {
       setError('网络错误，请重试')
     } finally {
@@ -119,7 +119,7 @@ export default function AuthPageClient({ intent = 'login' }: { intent?: 'login' 
 
   async function handleVerifyOtp() {
     setError('')
-    setMessage('')
+    setSentEmail('')
     if (otp.length !== 6) {
       setError('验证码为 6 位数字')
       return
@@ -164,7 +164,7 @@ export default function AuthPageClient({ intent = 'login' }: { intent?: 'login' 
           </div>
           <div className="mx-auto mt-5 inline-flex max-w-full items-center justify-center gap-1.5 rounded-full border border-hairline bg-surface px-3 py-1.5 text-center text-[11px] text-slate shadow-card">
             <ShieldCheck size={13} strokeWidth={1.55} className="text-ink" />
-            {inviteCode ? '注册成功后自动领取邀请奖励' : '邮箱优先，也可用手机号登录'}
+            {inviteCode ? '注册成功后自动领取邀请奖励' : '邮箱和手机号都可以登录'}
           </div>
         </section>
 
@@ -172,8 +172,8 @@ export default function AuthPageClient({ intent = 'login' }: { intent?: 'login' 
           {phoneStep === 'otp' && method === 'phone' ? '输入验证码' : title}
         </h1>
         <p className="mb-5 text-center text-[12px] leading-relaxed text-slate">
-          {method === 'email'
-            ? '用邮箱收一次性登录链接，没有账号会自动注册'
+            {method === 'email'
+            ? '用邮箱收一次性登录链接。没有账号会自动注册'
             : phoneStep === 'phone'
               ? '手机号登录保留给已有用户和备用登录'
               : `验证码已发送至 ${phone}`}
@@ -185,6 +185,7 @@ export default function AuthPageClient({ intent = 'login' }: { intent?: 'login' 
             onClick={() => {
               setMethod('email')
               setError('')
+              setSentEmail('')
             }}
             className={`focus-ring min-h-[40px] min-w-0 rounded-[10px] px-2 text-[12px] font-medium transition-colors ${
               method === 'email' ? 'bg-ink text-white shadow-soft' : 'text-slate hover:text-ink'
@@ -198,6 +199,7 @@ export default function AuthPageClient({ intent = 'login' }: { intent?: 'login' 
             onClick={() => {
               setMethod('phone')
               setError('')
+              setSentEmail('')
             }}
             className={`focus-ring min-h-[40px] min-w-0 rounded-[10px] px-2 text-[12px] font-medium transition-colors ${
               method === 'phone' ? 'bg-ink text-white shadow-soft' : 'text-slate hover:text-ink'
@@ -225,23 +227,35 @@ export default function AuthPageClient({ intent = 'login' }: { intent?: 'login' 
               </span>
             </label>
             {error && (
-              <div className="mt-3 rounded-[10px] bg-paper px-3 py-2" role="alert">
-                <p className="text-[12px] leading-relaxed text-danger">{error}</p>
+              <div className="mt-3 rounded-[10px] border border-hairline bg-paper px-3 py-2" role="alert">
+                <p className="text-[12px] font-medium text-ink">邮件发送未完成</p>
+                <p className="mt-1 text-[12px] leading-relaxed text-danger">{error}</p>
                 <button
                   type="button"
                   onClick={() => {
                     setMethod('phone')
                     setError('')
+                    setSentEmail('')
                   }}
                   className="mt-2 text-[12px] font-medium text-ink underline underline-offset-4"
                 >
-                  使用手机号登录
+                  改用手机号登录
                 </button>
               </div>
             )}
-            {message && <p className="mt-3 text-[12px] leading-relaxed text-slate">{message}</p>}
+            {sentEmail && (
+              <div className="mt-3 rounded-[10px] border border-hairline bg-paper px-3 py-2" role="status">
+                <p className="text-[12px] font-medium text-ink">登录链接已发送</p>
+                <p className="mt-1 text-[12px] leading-relaxed text-slate">
+                  已发送到 {sentEmail}。请检查收件箱、垃圾箱、广告邮件夹。
+                </p>
+                <p className="mt-1 text-[12px] leading-relaxed text-slate">
+                  链接有效期 10 分钟。没有收到时，可以重新发送。
+                </p>
+              </div>
+            )}
             <Button onClick={handleSendMagicLink} disabled={loading} className="mt-4">
-              {loading ? '处理中...' : '发送登录链接'}
+              {loading ? '发送中...' : sentEmail ? '重新发送登录链接' : '发送登录链接'}
             </Button>
             <div className="mt-3 flex items-center justify-center gap-1.5 text-[10.5px] leading-relaxed text-slate">
               <Send size={12} strokeWidth={1.55} />

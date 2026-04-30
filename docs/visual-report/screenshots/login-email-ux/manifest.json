@@ -1,0 +1,15 @@
+{
+  "base": "http://127.0.0.1:3017/login",
+  "created": [
+    "320-login-initial.png",
+    "320-login-email-sent.png",
+    "375-login-initial.png",
+    "375-login-email-sent.png",
+    "393-login-initial.png",
+    "393-login-email-sent.png",
+    "430-login-initial.png",
+    "430-login-email-sent.png",
+    "768-login-initial.png",
+    "768-login-email-sent.png"
+  ]
+}
