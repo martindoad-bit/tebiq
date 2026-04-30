@@ -134,6 +134,20 @@
       "when": 1777443089171,
       "tag": "0018_shallow_nemesis",
       "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1777521915098,
+      "tag": "0019_cheerful_junta",
+      "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "7",
+      "when": 1777522777491,
+      "tag": "0020_salty_spiral",
+      "breakpoints": true
     }
   ]
 }

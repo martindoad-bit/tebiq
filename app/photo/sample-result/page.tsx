@@ -3,6 +3,7 @@ import { Archive, CalendarDays, FileText } from 'lucide-react'
 import AppShell from '@/app/_components/v5/AppShell'
 import AppBar from '@/app/_components/v5/AppBar'
 import TabBar from '@/app/_components/v5/TabBar'
+import QuestionIntakeBox from '@/app/_components/QuestionIntakeBox'
 
 export const metadata = {
   title: '样例结果 | TEBIQ',
@@ -63,6 +64,10 @@ export default function PhotoSampleResultPage() {
           这是一份脱敏样例。实际结果按原文件识别，不替代官方说明。
         </p>
       </section>
+
+      <div className="mt-5">
+        <QuestionIntakeBox sourcePage="/photo/sample-result" compact />
+      </div>
 
       <div className="mt-5 grid gap-2">
         <Link

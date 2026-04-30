@@ -1,19 +1,49 @@
 # AI Handoff - CCA
 
-最后更新: 2026-04-30T00:18:00+09:00
+最后更新: 2026-04-30T13:35:00+09:00
 
 ## CCA(代码)状态
 
-- 当前任务: Holiday Engineering Upgrade / 产品底盘升级
-- 当前分支: codex/holiday-engineering-upgrade
-- 当前 worktree: /Users/martin/Documents/tebiq/.claude/worktrees/codex-holiday-engineering
+- 当前任务: Question Intake + Decision Intelligence v1
+- 当前分支: codex/question-intake-v1
+- 当前 worktree: /Users/martin/Documents/tebiq/.claude/worktrees/question-intake-v1
 - 状态: awaiting_merge
-- 最近一次 push: 待 push 后以 `codex/holiday-engineering-upgrade` HEAD 为准
+- 最近一次 push: 待 push 后以 `codex/question-intake-v1` HEAD 为准
 - 给其他 AI 的通知:
-  - batch-04 的 60 篇 check-dimension 内容已在当前候选分支中，batch-05 的 25 篇 visa-specific 维度卡已合入当前工程分支；CCA 采用 `articles` 结构化字段接入，不新增 migration。
-  - batch-06 / batch-07 已读取报告并写入 schema/importer 规划；未合入当前工程分支，未进入用户前台。
-  - 新增 `import-check-dimensions` / `validate-check-dimensions` / `smoke:launch` / `audit:launch-copy`。
-  - 暂不 merge main；等待创始人或下一轮集成指令。
+  - 在 v0 基础上新增前台提问入口和 `/admin/questions` / `/admin/questions/import`。
+  - 复用 `query_backlog`，新增非破坏性 migration `0020_salty_spiral.sql`。
+  - `/admin/review-lite?questionId=...` 可显示原始问题并进入人工/AI 起草流程；本轮不做 AI 起草。
+  - 登录邮件失败统一为安全错误，并给用户手机号登录入口；未读取或修改任何外部 env。
+  - 合入前需要 migration 0019 + 0020，才能真实收集问题和批量导入。
+  - 报告: `QUESTION_INTAKE_V1_REPORT.md`。
+
+## Question Intake v1
+
+- 前台入口: `/`、`/check`、`/knowledge`、`/photo/sample-result`、`/decision-lab`。
+- API: `POST /api/questions`。
+- Admin:
+  - `/admin/questions` 列表、筛选、统计、status/priority/note 更新。
+  - `/admin/questions/import` 粘贴 300-500 行历史问题，默认 `manual_import/new/normal`。
+- 数据:
+  - `query_backlog.visa_type`
+  - `query_backlog.contact_email`
+  - `query_backlog.status`
+  - `query_backlog.priority`
+  - `query_backlog.note`
+  - `query_backlog.updated_at`
+  - `query_match_status.manual_import`
+- 验证: lint / typecheck / build / test / db:generate 通过。
+- 本地无 `DATABASE_URL`，页面 200，写入 API 返回安全失败文案；未做任何 production DB 写入。
+
+## Decision Intelligence v0
+
+  - 已在 `codex/decision-intelligence-v0` 完成并作为本分支 base。
+  - 新增 `/decision-lab`、`/decision-lab/[slug]`、`/admin/review-lite`。
+  - 新增非破坏性 migration `0019_cheerful_junta.sql`，包含 `decision_cards` / `decision_reviews` / `query_backlog` / `answer_feedback`。
+  - 无 DB / 未迁移时，Decision Lab 使用内置 5 张 seed card fallback；query/feedback/review 写入返回 `saved=false`，页面不崩。
+  - CCB 可把真实 seed cards 放到 `docs/decision-seed-cards/**/*.yaml|yml|md`；loader 已支持。
+  - CODEXUI 可以基于本分支精修 Decision Lab UI。
+  - 暂不 merge main，等待 CCB seed cards 和 UI 分支后做集成。
 
 ## Holiday Engineering Upgrade
 

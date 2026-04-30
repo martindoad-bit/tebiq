@@ -45,29 +45,46 @@ export async function POST(req: Request) {
     typeof body.inviteCode === 'string' && body.inviteCode.trim()
       ? body.inviteCode.trim().slice(0, 16)
       : null
-  const row = await createLoginMagicLinkToken({ email, nextPath, inviteCode })
-  const loginUrl = `${siteOrigin(req)}/api/auth/verify-magic-link?token=${encodeURIComponent(row.token)}`
-  await createDevLoginLink({ token: row.token, email, link: loginUrl })
-  const rendered = templates.login_magic_link.build({ loginUrl })
-  const outcome = await sendEmail({
-    to: email,
-    subject: rendered.subject,
-    html: rendered.html,
-    text: rendered.text,
-  })
+  try {
+    const row = await createLoginMagicLinkToken({ email, nextPath, inviteCode })
+    const loginUrl = `${siteOrigin(req)}/api/auth/verify-magic-link?token=${encodeURIComponent(row.token)}`
+    await createDevLoginLink({ token: row.token, email, link: loginUrl })
+    const rendered = templates.login_magic_link.build({ loginUrl })
+    const outcome = await sendEmail({
+      to: email,
+      subject: rendered.subject,
+      html: rendered.html,
+      text: rendered.text,
+    })
 
-  await track(EVENT.AUTH_OTP_SENT, {
-    channel: 'email',
-    provider: outcome.provider,
-    ok: outcome.ok,
-  })
+    await track(EVENT.AUTH_OTP_SENT, {
+      channel: 'email',
+      provider: outcome.provider,
+      ok: outcome.ok,
+    })
 
-  if (!outcome.ok) {
+    if (!outcome.ok) {
+      console.warn('[auth/email] magic link send failed', outcome.provider, outcome.error)
+      return NextResponse.json(
+        { error: '登录邮件暂时没有发送成功。请稍后再试，或使用其他登录方式。' },
+        { status: 503 },
+      )
+    }
+
+    return NextResponse.json({ ok: true, provider: outcome.provider })
+  } catch (error) {
+    console.warn('[auth/email] magic link flow failed', errorCode(error))
     return NextResponse.json(
-      { error: '邮件发送暂时失败，请稍后再试' },
+      { error: '登录邮件暂时没有发送成功。请稍后再试，或使用其他登录方式。' },
       { status: 503 },
     )
   }
+}
 
-  return NextResponse.json({ ok: true, provider: outcome.provider })
+function errorCode(error: unknown): string {
+  if (error && typeof error === 'object' && 'code' in error) {
+    return String((error as { code?: unknown }).code)
+  }
+  if (error instanceof Error) return error.message
+  return 'unknown'
 }

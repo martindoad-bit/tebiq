@@ -10,6 +10,15 @@ const nextConfig = {
         './docs/knowledge-seed/check-dimensions/**/*.md',
         './docs/knowledge-seed/dimensions-visa-specific/**/*.md',
       ],
+      '/decision-lab': [
+        './docs/decision-seed-cards/**/*',
+      ],
+      '/decision-lab/[slug]': [
+        './docs/decision-seed-cards/**/*',
+      ],
+      '/admin/review-lite': [
+        './docs/decision-seed-cards/**/*',
+      ],
     },
     serverComponentsExternalPackages: [
       'heic-convert',

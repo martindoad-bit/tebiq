@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { ChevronRight, ClipboardCheck, ListChecks } from 'lucide-react'
 import AppShell from '@/app/_components/v5/AppShell'
 import AppBar from '@/app/_components/v5/AppBar'
+import QuestionIntakeBox from '@/app/_components/QuestionIntakeBox'
 import {
   CHECK_VISA_META,
   type CanonicalCheckVisa,
@@ -26,9 +27,11 @@ const RISK_LABEL: Record<string, string> = {
 export default function CheckDimensionList({
   visa,
   dimensions,
+  sourcePage = '/check',
 }: {
   visa: CanonicalCheckVisa
   dimensions: DimensionView[]
+  sourcePage?: string
 }) {
   const meta = CHECK_VISA_META[visa]
   const needsAction = dimensions.filter(item => item.status === 'needs_action').length
@@ -105,6 +108,10 @@ export default function CheckDimensionList({
           })}
         </ul>
       </section>
+
+      <div className="mt-5">
+        <QuestionIntakeBox sourcePage={sourcePage} compact />
+      </div>
     </AppShell>
   )
 }
