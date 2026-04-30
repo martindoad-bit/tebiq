@@ -24,6 +24,7 @@ export interface AnswerResult {
   nextSteps: string[]
   sourceHint: string
   boundaryNote: string
+  clarity?: Partial<Record<ClarityKey, string>>
 }
 
 const LEVEL_LABELS: Record<AnswerLevel, string> = {
@@ -45,13 +46,21 @@ const STATUS_META: Record<AnswerStatus, { label: string; detail: string; classNa
     className: 'bg-[#FFF7E8] text-ink',
   },
   cannot_determine: {
-    label: '这个情况需要进一步确认',
+    label: '需要进一步确认',
     detail: '先补齐关键日期和身份信息',
-    className: 'bg-paper text-ink',
+    className: 'bg-canvas text-slate',
   },
 }
 
 const FEEDBACK_OPTIONS = ['有帮助', '不准确', '看不懂', '我的情况不一样']
+const CLARITY_SECTIONS: Array<{ key: ClarityKey; title: string }> = [
+  { key: 'what', title: '现在要做什么' },
+  { key: 'where', title: '去哪办理' },
+  { key: 'materials', title: '需要准备什么' },
+  { key: 'timing', title: '期限和时机' },
+  { key: 'consequence', title: '不处理会怎样' },
+  { key: 'expert', title: '需要专家确认的情况' },
+]
 
 export default function AnswerResultView({ answer }: { answer: AnswerResult }) {
   const [feedback, setFeedback] = useState<string | null>(null)
@@ -68,6 +77,12 @@ export default function AnswerResultView({ answer }: { answer: AnswerResult }) {
         <h1 className="mt-4 text-[21px] font-medium leading-[1.45] tracking-[-0.01em] text-ink [overflow-wrap:anywhere]">
           {answer.title}
         </h1>
+
+        <div className="mt-4 rounded-[12px] bg-paper px-3 py-3">
+          <SectionHeading>用户问题</SectionHeading>
+          <p className="mt-2 text-[12px] leading-[1.65] text-slate [overflow-wrap:anywhere]">{answer.question}</p>
+        </div>
+
         <div className="mt-4 rounded-[12px] bg-paper px-3 py-3">
           <SectionHeading>结论</SectionHeading>
           <p className="mt-2 text-[14px] leading-[1.75] text-ink [overflow-wrap:anywhere]">{answer.summary}</p>
@@ -89,21 +104,19 @@ export default function AnswerResultView({ answer }: { answer: AnswerResult }) {
           <SectionHeading>边界说明</SectionHeading>
           <p className="mt-2 text-[12px] leading-[1.7] text-ash [overflow-wrap:anywhere]">{answer.boundaryNote}</p>
         </div>
-        <div className="mt-4 border-t border-hairline pt-4">
-          <p className="text-[11px] leading-none text-ash">原始问题</p>
-          <p className="mt-2 text-[12px] leading-[1.65] text-slate [overflow-wrap:anywhere]">{answer.question}</p>
-        </div>
       </section>
 
       <section className="rounded-card border border-hairline bg-surface">
         <div className="border-b border-hairline px-4 py-3">
-          <SectionTitle title={cannotDetermine ? '进一步确认' : '整理内容'} />
+          <SectionTitle title={cannotDetermine ? '先确认这些信息' : '下一步说明'} />
         </div>
         <div className="divide-y divide-hairline">
-          {answer.sections.map(section => (
+          {CLARITY_SECTIONS.map(section => (
             <article key={section.title} className="px-4 py-4">
               <h2 className="text-[15px] font-medium leading-[1.5] text-ink [overflow-wrap:anywhere]">{section.title}</h2>
-              <p className="mt-2 text-[13px] leading-[1.75] text-slate [overflow-wrap:anywhere]">{section.body}</p>
+              <p className="mt-2 text-[13px] leading-[1.75] text-slate [overflow-wrap:anywhere]">
+                {answer.clarity?.[section.key] ?? '这部分需要进一步确认。'}
+              </p>
             </article>
           ))}
         </div>
@@ -184,3 +197,5 @@ function ExpertRow({ title, body }: { title: string; body: string }) {
     </div>
   )
 }
+
+type ClarityKey = 'what' | 'where' | 'materials' | 'timing' | 'consequence' | 'expert'

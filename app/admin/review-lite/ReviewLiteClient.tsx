@@ -155,7 +155,7 @@ function ReviewCard({ card }: { card: DecisionCard }) {
         <div className="grid gap-4 md:grid-cols-[1fr_320px]">
           <div className="grid gap-3">
             <div className="rounded-[12px] bg-paper p-3">
-              <p className="text-[10px] uppercase tracking-[0.12em] text-ash">summary</p>
+              <p className="text-[10px] uppercase tracking-[0.12em] text-ash">整理摘要</p>
               <p className="mt-2 whitespace-pre-line text-[13px] leading-[1.75] text-slate">
                 {summary}
               </p>

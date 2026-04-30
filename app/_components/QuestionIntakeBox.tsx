@@ -22,7 +22,6 @@ export default function QuestionIntakeBox({
 }) {
   const [questionText, setQuestionText] = useState('')
   const [visaType, setVisaType] = useState('')
-  const [contactEmail, setContactEmail] = useState('')
   const [busy, setBusy] = useState(false)
   const [message, setMessage] = useState<string | null>(null)
   const [resultHref, setResultHref] = useState<string | null>(null)
@@ -43,7 +42,7 @@ export default function QuestionIntakeBox({
         body: JSON.stringify({
           question_text: text,
           visa_type: visaType || null,
-          contact_email: contactEmail.trim() || null,
+          contact_email: null,
           source_page: sourcePage,
         }),
       })
@@ -57,7 +56,6 @@ export default function QuestionIntakeBox({
         return
       }
       setQuestionText('')
-      setContactEmail('')
       setResultHref(resolveAnswerHref(json.data?.matchStatus, json.data?.matchedSlug))
       setMessage('整理结果已生成。')
     } catch {
@@ -86,7 +84,7 @@ export default function QuestionIntakeBox({
           placeholder="把你的情况写下来"
           className="w-full resize-none rounded-[12px] border border-hairline bg-canvas px-3 py-3 text-[13px] leading-[1.6] text-ink outline-none placeholder:text-ash focus:border-ink"
         />
-        <div className="grid gap-2 sm:grid-cols-2">
+        <div className="grid gap-2">
           <select
             value={visaType}
             onChange={event => setVisaType(event.target.value)}
@@ -96,13 +94,6 @@ export default function QuestionIntakeBox({
               <option key={option.value || 'none'} value={option.value}>{option.label}</option>
             ))}
           </select>
-          <input
-            type="email"
-            value={contactEmail}
-            onChange={event => setContactEmail(event.target.value)}
-            placeholder="邮箱（可选）"
-            className="min-h-[42px] rounded-[12px] border border-hairline bg-canvas px-3 text-[12px] text-ink outline-none placeholder:text-ash focus:border-ink"
-          />
         </div>
         <button
           type="submit"
