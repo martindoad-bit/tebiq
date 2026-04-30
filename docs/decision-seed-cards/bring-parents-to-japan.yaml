@@ -1,0 +1,119 @@
+slug: bring-parents-to-japan
+title: "永住者 / 工作签 想把父母接来日本长居 — misconception 纠偏"
+card_type: misconception
+answer_level: L2
+visa_types:
+  - 永住者
+  - 永住者の配偶者等
+  - 日本人配偶者等
+  - 技人国
+  - 経営・管理
+  - 通用
+trigger:
+  - "用户问「能不能把父母接来日本住」"
+  - "用户问「家族滞在 是不是包括父母」"
+  - "用户问「永住者 親族滞在 是不是真的」"
+user_state:
+  - "误以为日本有「親族滞在」类似中国「探亲签」长期版"
+  - "误以为「家族滞在」包括父母"
+  - "误以为「永住者 = 父母自动可来日」"
+decision_options: []
+recommended_direction: misconception
+why_not_other_options: null
+steps:
+  - 1: "认知纠偏：日本入管法 別表第二 中「家族滞在」明确仅含 配偶者 + 子（実子 + 特別養子）"
+  - 2: "认知纠偏：父母不属于「家族滞在」对象"
+  - 3: "可行路径 1 — 短期滞在 90 日 招聘理由書（最常见）"
+  - 4: "可行路径 2 — 特定活動（老親扶養 / 介護 ビザ）— 超严格条件，事实上不易取"
+  - 5: "可行路径 3 — 将来 高度専門職 1 号 + 一定家庭年収 → 親族 帯同（技术人材）"
+  - 6: "用户应该做什么：放弃「长居」预期，做 短期滞在 90 日 多次入境策略"
+today_actions:
+  - "查 本人是否为 高度専門職 1 号 持有者（仅高度人材有 親族帯同 路径）"
+  - "查 本人 + 配偶 年収 是否 > ¥800 万円（高度人材 親族帯同 高门槛要件）"
+  - "查 父母 健康状态（特定活動 老親扶養 ビザ 仅适用真实需要看护的高齢親族）"
+related_documents:
+  - "doc-23_sai-nyuukoku-kyokasho"
+related_check_dimensions:
+  - "check-permanent_resident_preparation-koudo_to_eijuu_path"
+source_refs:
+  - title: "在留資格一覧表（出入国在留管理庁）"
+    url: "https://www.moj.go.jp/isa/applications/qaq5.html"
+    source_grade: A
+  - title: "高度専門職 1 号 親族帯同（出入国在留管理庁）"
+    url: "https://www.moj.go.jp/isa/applications/status/koudojinzai.html"
+    source_grade: A
+  - title: "短期滞在（外務省 査証案内）"
+    url: "https://www.mofa.go.jp/mofaj/toko/visa/tanki/visitor.html"
+    source_grade: A
+  - title: "在中国日本国大使館 査証案内"
+    url: "https://www.cn.emb-japan.go.jp/itpr_ja/consular_visa.html"
+    source_grade: A
+last_verified_at: "2026-04-30"
+requires_review: true
+requires_review_after_days: 180
+expert_handoff:
+  trigger:
+    - "高齢親族 真的需要 介護 + 本人有照护能力 → 特定活動 老親扶養 ビザ"
+    - "高度専門職 1 号 + 親族帯同 申请被拒后异议"
+    - "親族 持中国 因公护照 / 公務护照 涉及外交査証"
+  who: "行政書士（入管手续）"
+  why: "特定活動 老親扶養 ビザ 是个別審査，需要书士基于具体案例判断可能性"
+fallback:
+  - "用户硬以「家族滞在」名义申请 → 100% 不许可"
+  - "用户硬以 短期滞在 滞在 → 90 日超过即 不法滞在 → 退去強制 + 上陸拒否"
+boundary_note: |
+  本卡是认知纠偏（misconception）— 直接否定「父母可在日长居」普遍误区。
+  不是 决策 卡 — 永住者 / 高度人材 不能选择把父母接来长居。
+  不是 workflow 卡 — 短期滞在 90 日招聘 见 batch-07 parents-visit-visa.md。
+  「老親扶養 ビザ」实务通过率极低 + 个別審査，本卡不展开操作流程。
+body_markdown: |
+  # 永住者 / 工作签 想把父母接来日本长居 — 认知纠偏
+
+  ## 这事跟我有关吗？
+
+  如果你曾这样想 → 这张卡适合你：
+  - 「我拿了永住，应该能把爸妈接来吧」
+  - 「家族滞在不就是包括家里所有人吗」
+  - 「日本有没有像中国探亲签那样的长居证？」
+
+  ## 这是什么（事实）
+
+  日本入管法 別表第二 明确：
+  - **家族滞在** 仅含 **配偶者 + 子（実子 / 特別養子）**
+  - **父母不属于「家族滞在」对象**
+  - 永住者 ≠ 父母自动可长居
+  - 日本无中国「探亲签 多次入境长居版」对应制度
+
+  父母可来日本的 **3 条真实路径**：
+
+  | 路径 | 最长期间 | 难度 | 适用条件 |
+  |---|---|---|---|
+  | 短期滞在（招聘） | 90 日 | 中 | 普遍可，多次入境 |
+  | 特定活動（老親扶養） | 1 年（更新可） | 极高（事実上極少下签） | 真有看护需要 + 高齢 + 本人具备照护能力 |
+  | 高度専門職 1 号 親族帯同 | 与本人在留期限同 | 高 | 仅 高度専門職 1 号 持有者 + 高家庭年収 |
+
+  ## 你应该做什么
+
+  - 放弃「长居」预期
+  - 走 短期滞在 90 日 多次入境策略（一年内可数次入境）
+  - 详细操作见 batch-07 `parents-visit-visa.md`
+
+  ## 不做的后果
+
+  - 硬以「家族滞在」名义申请 → 100% 不许可
+  - 硬以 短期滞在 滞在超 90 日 → 不法滞在 → 退去強制 + 上陸拒否
+
+  ## 什么时候你应该找专家
+
+  以下情况建议咨询 **行政書士**：
+  - 父母确实需要介護 + 本人有照护能力 → 特定活動 老親扶養 ビザ 个別审查
+  - 高度専門職 + 親族帯同 申请被拒后异议
+  - 父母持外交护照 / 公务护照
+
+  TEBIQ 提供专业咨询服务（[预约](/consultation)）。
+
+  ## 信息来源
+
+  - [在留資格一覧表（出入国在留管理庁）](https://www.moj.go.jp/isa/applications/qaq5.html)（取得日 2026-04-30）
+  - [高度専門職 親族帯同](https://www.moj.go.jp/isa/applications/status/koudojinzai.html)（取得日 2026-04-30）
+  - [短期滞在 査証案内（外務省）](https://www.mofa.go.jp/mofaj/toko/visa/tanki/visitor.html)（取得日 2026-04-30）

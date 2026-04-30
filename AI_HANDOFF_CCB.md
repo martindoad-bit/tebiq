@@ -1,48 +1,58 @@
 # AI Handoff - CCB
 
-最后更新: 2026-04-29（CCB Block 13+ batch-05 完成）
+最后更新: 2026-04-30（CCB content/real-question-data-v1 完成）
 
 ## CCB(内容)状态
 
-- 当前任务: Block 13+ 知识 batch-05（25 篇 visa-specific 维度卡）
-- 当前分支: content/knowledge-batch-05
-- 当前 worktree: /tmp/cc-b-batch-04（共用，不同分支）
+- 当前任务: 真实问题数据化 v1（不写文章，只整理问题）
+- 当前分支: `content/real-question-data-v1`
+- 当前 worktree: /tmp/cc-b-batch-04
 - 状态: **awaiting_merge**
-- 最近一次 push: batch-05 25 篇 visa-specific 维度卡 + 报告（见本次 commit）
 
-## 给 CCA 的待办（batch-05 merge）
+## 本次交付
 
-### Schema / Importer
+按创始人 v1 brief：从 QA 高频问答 9 个 docx（合并 439 行 / 142 个 Q）+ 已交付内容反推 10 个 = 共 152 个 Q，沉淀为可标注、可分类、可生成 Decision Card 的数据。
 
-batch-05 frontmatter **完全沿用 batch-04 schema** — 不需要新增 column / 不需要改 importer。
-CCA 在 Block 13 已为 batch-04 写过 importer (`articles` 表的 dimension importer)，batch-05 直接复用。
+### 5 个新建文件
 
-### Merge 顺序建议
+| 文件 | 说明 |
+|---|---|
+| `docs/real-questions/SOURCE_QA_RAW.md` | QA 源文件（439 行，9 节） |
+| `docs/real-questions/QUESTION_TAXONOMY_V1.md` | 11 字段分类体系（visa_type / life_event / urgency / answer_level / card_type 等）|
+| `docs/real-questions/REAL_QUESTIONS_BACKLOG_V1.md` | 152 个 Q 标注表 + 分类小结 + source_gap 风险 |
+| `docs/real-questions/HIGH_VALUE_QUESTIONS_TOP20.md` | TOP 20 高价值问题（按 6 项优先级判定）|
+| `docs/real-questions/REAL_QUESTION_DATA_V1_REPORT.md` | 总报告（数量 / 分布 / 5 seed card 状态 / 下一步建议） |
 
-1. 确认 batch-04 (`content/knowledge-batch-04`) merge 状态（如未 merge，先 merge）
-2. 然后 merge batch-05 (`content/knowledge-batch-05`)
-3. 跑 import-knowledge / import-dimensions
+### 5 个 decision-seed-cards/*.yaml（按 brief 任务 4 指定 slug）
 
-### batch-05 内容统计
+| Slug | 类型 | 关联 case |
+|---|---|---|
+| `pension-switch-company-dormant.yaml` | decision_card | 潘先生 |
+| `management-office-relocation.yaml` | workflow | 顾夏夏 |
+| `address-change-order.yaml` | workflow + decision hybrid | 卢向阳 |
+| `bring-parents-to-japan.yaml` | misconception | 永住带父母 |
+| `employment-violation-risk-chain.yaml` | risk_chain | 老板雇错签证 |
 
-- 25 篇 .md 文件，5 visa × 5 visa-specific 维度
-- 总字符 159,698，平均每篇 6,400 字符
-- 政府来源引用约 90 条（每篇 2-6 个 .go.jp / .moj.go.jp / .nta.go.jp 等）
-- 6 篇标 ⚠️ 需创始人 / 書士复核（経営・管理 2025/10/16 改正实施细则 + 特定技能 業種・試験 实务）
+每个 YAML 含完整字段（slug / title / card_type / answer_level / visa_types / trigger / user_state / decision_options / recommended_direction / why_not_other_options / steps / today_actions / related_documents / related_check_dimensions / source_refs[A/B/C] / last_verified_at / requires_review / requires_review_after_days / expert_handoff / fallback / boundary_note / body_markdown）。
 
-### 文件路径
+## 给 CCA 的待办（schema + importer）
 
-`docs/knowledge-seed/dimensions-visa-specific/{visa_type}_{dimension_key}.md`
+### 建议新建 `decision_cards` 表
 
-## CCB 后续 batch（按 brief）
+详见 `REAL_QUESTION_DATA_V1_REPORT.md` § 给 CCA 部分。
+schema 字段（建议）：
+- card_type / answer_level / decision_options(jsonb) / recommended_direction
+- expert_handoff(jsonb) / fallback(text[]) / boundary_note(text)
+- related_documents(text[]) / related_check_dimensions(text[]) — 关联表
+- source_refs(jsonb) / requires_review_after_days(int)
 
-- **batch-06**：50 篇高频文书逐封解读（document 类）— 等 batch-05 创始人 review 后启动；可能需要新 schema 字段（document_type / sender_type / triggers）
-- **batch-07**：20-30 篇场景化决策清单（scenario 类）— 等 batch-06 完成后启动；可能需要新 schema 字段（scenario_key / timeline_stages）
+### Importer 路由
 
-## 历史交付
+`docs/decision-seed-cards/*.yaml` → `decision_cards` 表（用 yaml-parser，不再用 gray-matter）
 
-- batch-01：初始化基础知识种子
-- batch-02：50 篇旧结构 P0 内容
-- batch-03：30 篇 P1 档案中心化内容（已 merge to main）
-- batch-04：60 篇 CleanB 续签自查 P0 维度卡（已 merge to main，含 dimensions importer）
-- **batch-05：25 篇 visa-specific 维度卡（awaiting_merge）**
+## 历次交付
+
+- batch-01-04：已 merge to main
+- batch-05/06/07：awaiting_merge（content/knowledge-batch-05/06/07）
+- content/index-and-review-registry：4 索引文件（CONTENT/REVIEW/SOURCE/SCHEMA）+ 1 强词修订
+- **content/real-question-data-v1：152 个 Q 标注 + TOP 20 + 5 seed YAML + report**

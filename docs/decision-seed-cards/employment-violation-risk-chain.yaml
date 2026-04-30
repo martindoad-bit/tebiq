@@ -1,0 +1,133 @@
+slug: employment-violation-risk-chain
+title: "雇主雇错签证 / 资格外活動 — 雇主 + 雇员双方风险链"
+card_type: risk_chain
+answer_level: L3
+visa_types:
+  - 経営・管理
+  - 技人国
+  - 留学
+  - 家族滞在
+  - 特定技能
+  - 通用
+trigger:
+  - "雇主考虑雇用 留学生 / 家族滞在 持有者"
+  - "雇主已雇但不确定签证类型与岗位是否一致"
+  - "已知存在 资格外活動 / 不法就労 风险"
+user_state:
+  - "雇主：法人 経営者 / 役員 / 採用担当"
+  - "或 雇员：留学生 / 家族滞在 / 错配岗位 工作签持有者"
+  - "尚未被入管 / 警察 / 労基署 调查（窗口期）"
+decision_options: []
+recommended_direction: risk_chain
+why_not_other_options: null
+steps:
+  - 1: "立即检查每位 外国人雇员 在留カード「就労制限」栏 vs 实际岗位"
+  - 2: "技人国 = 自然科学 / 人文科学 / 国际业务 范围；超出 = 资格外活動"
+  - 3: "留学 / 家族滞在 = 资格外活動許可 範囲内（28 時間 / 週、夏休等 8 時間 / 日）"
+  - 4: "特定技能 = 厚労省 認定 14-16 業種（業種別 業務範囲）"
+  - 5: "発现违规 → 立即停止违规岗位 + 评估补救（補正 / 在留資格変更）"
+  - 6: "雇主 → 入管「不法就労助長」回避 + 「契約機関に関する届出」14 日内"
+today_actions:
+  - "查 每位外国人雇员 在留カード 上「就労制限」栏 当日复核"
+  - "查 公司当前雇员名单 vs 持签类型对照表"
+  - "查 公司是否有 留学生 / 家族滞在 持有者 + 资格外活動許可 確認 + 28 時間 / 週 遵守状况"
+related_documents:
+  - "doc-25_shuurou-shikaku-shoumeisho"
+  - "doc-26_nyuukan-fugou-tsuuchi"
+  - "doc-29_shutsutou-tsuuchi"
+  - "doc-30_bakkin-tsuuchi"
+related_check_dimensions:
+  - "check-{visa}-employment_contract"
+  - "check-technical_humanities_international_employment_contract_clauses"
+  - "check-management-business_substance"
+source_refs:
+  - title: "外国人雇用状況届出（厚生労働省 / ハローワーク）"
+    url: "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/koyou/gaikokujin/gaikokujin-koyou/06.html"
+    source_grade: A
+  - title: "在留資格別 就労制限（出入国在留管理庁）"
+    url: "https://www.moj.go.jp/isa/applications/qaq5.html"
+    source_grade: A
+  - title: "不法就労助長罪（入管法 73 条 2）"
+    url: "https://elaws.e-gov.go.jp/document?lawid=326CO0000000319"
+    source_grade: A
+  - title: "資格外活動許可（出入国在留管理庁）"
+    url: "https://www.moj.go.jp/isa/applications/procedures/16-8.html"
+    source_grade: A
+last_verified_at: "2026-04-30"
+requires_review: true
+requires_review_after_days: 180
+expert_handoff:
+  trigger:
+    - "已收到 入管 / 警察 / 労基署 出頭通知 / 質問書 / 立入検査 通知"
+    - "已被举报 / 媒体曝光 / 客户反映"
+    - "雇用状況届出 累計 5 件以上 違反 / 不法就労 既往"
+  who: "弁護士（刑事案件）+ 行政書士（在留資格调整）"
+  why: "刑事追究 + 在留管理 双方面，需要专业代理"
+fallback:
+  - "继续违规 → 入管 摘発 → 雇主 不法就労助長罪（懲役 3 年以下 + 罚金 ¥3,000,000 以下） + 雇员 退去強制 + 上陸拒否 5 年"
+  - "雇员后续 永住 / 帰化 申请 → 直近 5 年 不法就労 履歴 = 不许可可能性显著上升"
+  - "雇主 経営・管理 续签 → 経営実態 + 法令遵守 評価负分"
+boundary_note: |
+  本卡为风险链卡（risk_chain）— 描述「不行动 / 错行动」的逐级后果。
+  不替用户做决定 — 给制度 + 一般动作 + 复杂时引向専家。
+  实际判定 资格外活動 / 不法就労 構成 受 個別事案 影响 — 已收到入管通知時必須咨询专家。
+  本卡不覆盖 短期滞在 / ビザなし 入国后的非法就労（事案性质不同）。
+body_markdown: |
+  # 雇主雇错签证 / 资格外活動 — 风险链
+
+  ## 这事跟我有关吗？
+
+  如果你符合任一 → 这张卡适合你：
+  - 雇主：考虑或已经雇外国人，但不确定 在留資格 vs 岗位是否合规
+  - 雇员：在做的工作 与 在留資格 范围 不一致
+  - 已知存在 资格外活動 / 不法就労 风险但还没被查
+
+  ## 这是什么
+
+  日本入管法对「外国人就労」严格按 在留資格 限制：
+  - **技人国** = 自然科学 / 人文科学 / 国际业务（限三领域）
+  - **留学 / 家族滞在** = 資格外活動許可 範囲内（28 時間 / 週、夏休 8 時間 / 日）
+  - **特定技能** = 厚労省 認定 業種
+
+  错配 = **资格外活動**。雇主明知雇用 = **不法就労助長罪**（入管法 73 条 2）。
+
+  ## 风险链（按时间梯度）
+
+  ### 阶段 1：违规进行中（无外部知晓）
+  - 表面无事
+  - 实质：每月累積 不法就労 期間
+  - 后果：续签 / 永住 申请时 直近 5 年 履歴 审查
+
+  ### 阶段 2：入管 / 警察 / 労基署 立入検査 / 通报
+  - 出頭通知書 / 質問書
+  - 雇主 + 雇员双方调查
+  - 后果：调查中 在留資格 暂停审批
+
+  ### 阶段 3：不法就労 認定
+  - 雇主：**不法就労助長罪 — 懲役 3 年以下 + 罚金 ¥3,000,000 以下**
+  - 雇员：在留資格 取消 + **退去強制** + **上陸拒否 5 年**
+
+  ### 阶段 4：永住 / 帰化 申请封路
+  - 直近 5 年 不法就労 履歴 = 不许可
+  - 雇主 経営・管理 续签 = 経営実態 + 法令遵守 評価负分
+
+  ## 你应该做什么
+
+  详见 frontmatter `steps`。**今天就做的事**：
+  - 查每位外国人雇员 在留カード「就労制限」栏 vs 实际岗位
+  - 查 留学 / 家族滞在 持有者 资格外活動許可 + 28 時間 / 週 实绩
+
+  ## 什么时候你应该找专家
+
+  - 已收到 入管 / 警察 / 労基署 出頭通知 / 質問書
+  - 已被举报 / 媒体曝光 / 客户反映
+  - 累計 5 件以上 違反 / 不法就労 既往
+
+  建议同时咨询 **弁護士（刑事案件）+ 行政書士（在留調整）**。
+  TEBIQ 提供专业咨询服务（[预约](/consultation)）。
+
+  ## 信息来源
+
+  - [外国人雇用状況届出（厚労省）](https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/koyou/gaikokujin/gaikokujin-koyou/06.html)（取得日 2026-04-30）
+  - [在留資格別 就労制限](https://www.moj.go.jp/isa/applications/qaq5.html)（取得日 2026-04-30）
+  - [不法就労助長罪 入管法 73 条 2](https://elaws.e-gov.go.jp/document?lawid=326CO0000000319)（取得日 2026-04-30）

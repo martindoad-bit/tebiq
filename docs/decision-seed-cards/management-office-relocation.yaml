@@ -1,0 +1,112 @@
+slug: management-office-relocation
+title: "経営・管理 事務所搬迁 / 移転 — 商業登記 + 入管届出 联动 workflow"
+card_type: workflow
+answer_level: L2
+visa_types:
+  - 経営・管理
+trigger:
+  - "事務所 賃貸契約 到期 / 解约"
+  - "公司业务扩张需更大空间"
+  - "2025/10/16 改正后 + 旧事務所不符合新规「事業所要件」需要替换"
+user_state:
+  - "現有 経営・管理 在留資格 持有人"
+  - "公司事務所将搬到新住所"
+  - "本人 役員 / 代表取締役 身份"
+  - "新事務所 賃貸契約 已签 / 即将签"
+decision_options: []
+recommended_direction: workflow
+why_not_other_options: null
+steps:
+  - 1: "新事務所 賃貸契約書（法人名義）取得 + 鍵引渡日 確認"
+  - 2: "搬迁日決定（含全部設備搬出 / 搬入完了日）"
+  - 3: "搬迁日 → 法務局 本店所在地変更登記（2 週間以内 / 商業登記法 915 条）"
+  - 4: "登記完了 → 登記事項証明書 取得（変更後反映）"
+  - 5: "出入国在留管理庁 → 所属機関等に関する届出（事務所所在地変更）/ 14 日内"
+  - 6: "労基署 / 年金事務所 → 適用事業所 所在地変更届"
+  - 7: "税務署 → 異動届出書（所在地変更）/ 都道府県税事務所 / 市町村役所"
+  - 8: "印鑑証明 / 銀行口座 / 取引先 通知（同步进行）"
+today_actions:
+  - "查 新事務所 賃貸契約書（法人名義）签订日"
+  - "Google Maps 查 法人本店住所地 管轄 法務局"
+  - "查 出入国在留管理庁 届出 オンライン申請 是否可用"
+  - "确认 公司印鑑（実印 / 銀行印 / 角印）当前是否需要刻新印章"
+related_documents:
+  - "doc-22_zairyu-shikaku-henkou-kekka"
+  - "doc-25_shuurou-shikaku-shoumeisho"
+related_check_dimensions:
+  - "check-management-business_substance"
+  - "check-management-office_lease_vs_owned"
+  - "check-management-director_change_filing"
+source_refs:
+  - title: "本店移転登記（法務局 商業登記）"
+    url: "https://houmukyoku.moj.go.jp/homu/COMMERCIAL_8.html"
+    source_grade: A
+  - title: "所属機関等に関する届出（出入国在留管理庁）"
+    url: "https://www.moj.go.jp/isa/applications/procedures/16-3.html"
+    source_grade: A
+  - title: "事業所変更（適用事業所）— 年金機構"
+    url: "https://www.nenkin.go.jp/service/kounen/jigyosho/jigyosho/20141204.html"
+    source_grade: A
+  - title: "異動届出書（国税庁）"
+    url: "https://www.nta.go.jp/taxes/tetsuzuki/shinsei/annai/hojin/annai/1554_5.htm"
+    source_grade: A
+last_verified_at: "2026-04-30"
+requires_review: true
+requires_review_after_days: 180
+expert_handoff:
+  trigger:
+    - "搬迁后 新事務所 不符合「独立性 + 業務遂行 適切性」（共享办公 / 自宅兼用）"
+    - "2025/10/16 改正过渡期内 旧事務所要件 不达标"
+    - "搬迁同時涉及 役員変更 / 業種変更"
+  who: "行政書士（入管 + 商業登記 + 税务联动方面）"
+  why: "事務所要件 経営実態 立証 + 改正过渡期对应 + 多手続き同时联动需要协调"
+fallback:
+  - "本店移転登記 2 週間 期限超过 → 過料 100,000 円以下（商法 976 条 1 項 1 号）"
+  - "入管届出 14 日 期限超过 → 続ければ続签時 不利评价（経営実態 質疑可能）"
+  - "税務署 異動届出 遅滞 → 課税関係 整合性混乱 + 後日延滞税"
+boundary_note: |
+  本卡是 经营・管理 事務所搬迁的 7 步 workflow。
+  并非新规 vs 旧规 取舍 — 假定持有人继续経営・管理 在留資格 + 仅搬迁事務所。
+  涉及 同時的 役員変更 / 商号変更 / 業種拡大 时不適用本卡（多手続き連動需要单独规划）。
+  搬迁后 経営実態 評価 受 新事務所 独立性 + 規模 影响 — 続签前 3 月 应单独自查。
+body_markdown: |
+  # 経営・管理 事務所搬迁 — 7 步 workflow
+
+  ## 这事跟我有关吗？
+
+  如果你符合以下条件 → 这张卡适合你：
+  - 现持有 経営・管理 在留資格
+  - 公司事務所将在 30 日内搬迁
+  - 想知道搬迁完整手续 + 时限 + 不交的后果
+
+  ## 这是什么
+
+  事務所搬迁不是「搬完就行」— 涉及 4 个机关 7 步联动：
+  - **法務局** 商業登記（本店移転登記）2 週間以内
+  - **出入国在留管理庁** 所属機関等に関する届出 14 日内
+  - **年金事務所 / 労基署 / 税務署** 異動届出
+  - **取引先 / 銀行** 通知
+
+  ## 你应该做什么
+
+  按 frontmatter `steps` 7 步执行。建议在 新事務所 賃貸契約 签订后立即开始倒推时间表。
+
+  ## 不做的后果
+
+  - 商業登記 遅滞 → 過料 ¥100,000 以下
+  - 入管届出 遅滞 → 続签时 経営実態 评价不利
+  - 各税務署 異動届 遅滞 → 後日 延滞税 + 課税関係 混乱
+
+  ## 什么时候你应该找专家
+
+  - 搬迁后 新事務所 不符合 独立性 / 業務遂行 適切性 要件
+  - 2025/10/16 改正 过渡期内
+  - 搬迁同时涉及 役員変更 / 商号変更
+
+  建议咨询 **行政書士**。TEBIQ 提供专业咨询服务（[预约](/consultation)）。
+
+  ## 信息来源
+
+  - [本店移転登記（法務局）](https://houmukyoku.moj.go.jp/homu/COMMERCIAL_8.html)（取得日 2026-04-30）
+  - [所属機関等に関する届出](https://www.moj.go.jp/isa/applications/procedures/16-3.html)（取得日 2026-04-30）
+  - [事業所変更（年金機構）](https://www.nenkin.go.jp/service/kounen/jigyosho/jigyosho/20141204.html)（取得日 2026-04-30）

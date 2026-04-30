@@ -1,0 +1,139 @@
+slug: pension-switch-company-dormant
+title: "公司休眠 / 倒闭 → 厚生年金 → 国民年金 切换"
+card_type: decision_card
+answer_level: L3
+visa_types:
+  - 技人国
+  - 経営・管理
+  - 特定技能
+  - 通用
+trigger:
+  - "公司决议休眠 / 解散"
+  - "雇主倒産 / 民事再生 通知"
+  - "厚生年金 喪失届 已提交（社労士 / 自己提交）"
+user_state:
+  - "持有 健康保険証（社保版）但雇主已停业"
+  - "未在新公司入职 + 不打算自営业"
+  - "未办理 国民健康保険 + 国民年金 切换"
+  - "通常已收到 健康保険資格喪失証明書"
+decision_options:
+  - id: A
+    label: "立即切换 国民年金 + 国民健康保険（14 日内办理）"
+    when:
+      - "退职后 14 日内"
+      - "尚未失业认定 / 失业认定中"
+      - "无下家公司"
+    actions:
+      - "持 健康保険資格喪失証明書 → 居住地 市役所 国保年金課 → 14 日内 加入届"
+      - "国民年金 加入届（同窗口或 年金事務所）"
+      - "国保保険料 減免申請（如失业 / 倒産特例 / 收入大幅減）"
+  - id: B
+    label: "进入新公司前的过渡（任意継続健康保険 2 年内）"
+    when:
+      - "原 健康保険 加入 2 ヶ月以上"
+      - "退职后 20 日内 申请"
+      - "短期内会进入新公司（< 2 年）"
+    actions:
+      - "向原 健康保険組合 / 協会けんぽ 申请 任意継続"
+      - "保険料 全額自己负担（公司分 + 自己分）"
+      - "国民年金 仍需単独加入（任意継続不含年金部分）"
+  - id: C
+    label: "扶養家族 加入 配偶 / 親 的 健康保険（条件严格）"
+    when:
+      - "配偶 / 親 在职且加入 健康保険"
+      - "本人年収见込 < ¥130 万円（60 歳 / 障害者 < ¥180 万円）"
+    actions:
+      - "配偶 / 親 公司 厚生年金事業所 提交 被扶養者異動届"
+      - "国民年金 第 3 号被保険者 切换（配偶为厚生年金加入者时）"
+recommended_direction: A
+why_not_other_options:
+  - "B 任意継続：保険料 全額自己负担 = 月额翻倍；仅当 2 年内确定回归雇用 + 不希望保険証重发时合算"
+  - "C 扶養加入：年収门槛 ¥130 万円 极易破线；副業 / 失業給付（基本手当 ≥ ¥3,612/日）通常超线"
+steps:
+  - 1: "确认手头 健康保険資格喪失証明書（公司应当在喪失日起 5 日内交付）"
+  - 2: "决定路径：原则路径 A，特殊条件下 B / C"
+  - 3: "携 喪失証明書 + 在留カード + マイナンバーカード → 居住地 市役所 国保年金課"
+  - 4: "国保 + 国民年金 同时加入（14 日内）"
+  - 5: "如失业 / 倒産特例 → 国保保険料 減免 申請"
+today_actions:
+  - "查找 健康保険資格喪失証明書 是否已收到（未到 → 联络 公司 / 元雇主）"
+  - "Google Maps 查 居住地 市役所 国保年金課 营业时间"
+  - "确认 マイナンバー 通知書 / カード 在手"
+related_documents:
+  - "doc-11_kaigo-hokenryou-nouzeitsuuchi"
+  - "doc-03_kokumin-nenkin-nouzeitsuuchi"
+  - "doc-02_kokumin-kenkouhokenryou-nouzeitsuuchi"
+related_check_dimensions:
+  - "check-{visa}-health_pension"
+  - "check-permanent_resident_preparation-public_obligations_arrears"
+source_refs:
+  - title: "国民年金 加入手続き"
+    url: "https://www.nenkin.go.jp/service/kokunen/kanyu-shikumi/index.html"
+    source_grade: A
+  - title: "任意継続被保険者制度（協会けんぽ）"
+    url: "https://www.kyoukaikenpo.or.jp/g3/sb3050/sbb3057/r150/"
+    source_grade: A
+  - title: "国民健康保険 加入・脱退（厚労省）"
+    url: "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000133698.html"
+    source_grade: A
+  - title: "倒産・解雇等による離職者の国保保険料軽減"
+    url: "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/iryouhoken/hihokenshahoken/index.html"
+    source_grade: A
+last_verified_at: "2026-04-30"
+requires_review: true
+requires_review_after_days: 365
+expert_handoff:
+  trigger:
+    - "倒産 + 過去 2 年以上 厚生年金 滞納（雇主未缴）"
+    - "本人厚生年金加入記録 缺失（雇主未届出）"
+  who: "社会保険労務士"
+  why: "雇主未缴納情况下追溯申诉 涉及社保审查请求 / 厚生年金事務所 異議申立 + 倒産特例給付（雇用保険）联动"
+fallback:
+  - "未在 14 日内 切换 → 加入届 受理后保険料 遡及徴収（最大 2 年分）"
+  - "永住申請时 公的義務履行 评价负分"
+boundary_note: |
+  本卡仅说明 制度选项 + 路径条件，不替用户选择。
+  実際の保険料金額・減免可否 受 各自治体条例 / 個別審査 影响。
+  ¥130 万円 / ¥180 万円 等门槛为 取得日时点 数字，年度改定可能。
+  跨年度切换时建议查 取得日 当年最新公示。
+body_markdown: |
+  # 公司休眠 / 倒闭 → 厚生年金 → 国民年金 切换
+
+  ## 这事跟我有关吗？
+
+  如果你符合以下任一条件 → 这张卡适合你：
+  - 现公司已决议休眠 / 解散，但你尚未办手续
+  - 收到雇主 倒産 / 民事再生 通知
+  - 已收到 健康保険資格喪失証明書 但还在拖
+
+  ## 这是什么
+
+  退职 / 雇主倒闭后，原 厚生年金 + 健康保険（社保版）会从 喪失日 起失效。
+  日本国民「国民皆保険」原则要求所有居住者 14 日内 必须加入某种公的保险。
+  你有 3 条路径：A 国保 + 国民年金（默认）/ B 任意継続 2 年（条件性）/ C 扶養加入（高门槛）。
+
+  ## 你应该做什么
+
+  原则路径 A：14 日内办理 国保 + 国民年金。
+  详细决策树见 frontmatter `decision_options`。
+
+  ## 不做的后果
+
+  - 14 日内未办 → 保険料 遡及徴収（最大 2 年分），后日 居住地 市役所 出督促状
+  - 永住申請 直近 2 年 公的義務履行 评价负分
+  - 病院就诊 → 100% 自費（後日 国保加入後 7 割 還付申請可，但流程繁琐）
+
+  ## 什么时候你应该找专家
+
+  以下情况建议咨询 **社会保険労務士**：
+  - 雇主 過去 2 年以上 未缴 厚生年金（本人加入記録缺失）
+  - 倒産特例給付（雇用保険）+ 国保軽減 同时申请
+  - 配偶扶養加入审查 被拒后异议
+
+  TEBIQ 提供专业咨询服务（[预约](/consultation)）。
+
+  ## 信息来源
+
+  - [国民年金 加入手続き](https://www.nenkin.go.jp/service/kokunen/kanyu-shikumi/index.html)（取得日 2026-04-30）
+  - [任意継続被保険者制度](https://www.kyoukaikenpo.or.jp/g3/sb3050/sbb3057/r150/)（取得日 2026-04-30）
+  - [国民健康保険 加入・脱退](https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000133698.html)（取得日 2026-04-30）
