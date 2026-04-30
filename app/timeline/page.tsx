@@ -126,7 +126,7 @@ export default async function TimelinePage({
         <p className="mt-1.5 text-[12px] leading-[1.65] text-ash">
           {summary.latestDeadline
             ? `当前最早记录期限: ${summary.latestDeadline}`
-            : '暂无政策匹配记录。后续 policy_match 事件会进入这里。'}
+            : '暂无政策更新记录。后续相关政策会进入这里。'}
         </p>
       </section>
 

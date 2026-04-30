@@ -805,11 +805,48 @@ export const queryBacklog = pgTable(
   }),
 )
 
+export const answerDrafts = pgTable(
+  'answer_drafts',
+  {
+    id: idCol(),
+    queryId: varchar('query_id', { length: 24 }).references(() => queryBacklog.id, {
+      onDelete: 'set null',
+    }),
+    matchedCardId: varchar('matched_card_id', { length: 24 }).references(() => decisionCards.id, {
+      onDelete: 'set null',
+    }),
+    questionText: text('question_text').notNull(),
+    answerType: varchar('answer_type', { length: 32 }).notNull(),
+    answerLevel: decisionAnswerLevelEnum('answer_level').notNull().default('L2'),
+    reviewStatus: varchar('review_status', { length: 32 }).notNull().default('unreviewed'),
+    title: varchar('title', { length: 220 }).notNull(),
+    summary: text('summary').notNull(),
+    sectionsJson: jsonb('sections_json').$type<Array<{ heading: string; body: string }>>().notNull().default(sql`'[]'::jsonb`),
+    nextStepsJson: jsonb('next_steps_json').$type<string[]>().notNull().default(sql`'[]'::jsonb`),
+    relatedLinksJson: jsonb('related_links_json').$type<Array<{ title: string; href: string }>>().notNull().default(sql`'[]'::jsonb`),
+    sourcesJson: jsonb('sources_json').$type<Array<{ title: string; url?: string; source_grade?: string }>>().notNull().default(sql`'[]'::jsonb`),
+    modelUsed: varchar('model_used', { length: 120 }),
+    reviewNote: text('review_note'),
+    createdAt: createdAt(),
+    updatedAt: updatedAt(),
+  },
+  t => ({
+    queryIdx: index('answer_drafts_query_idx').on(t.queryId),
+    typeIdx: index('answer_drafts_type_idx').on(t.answerType),
+    reviewStatusIdx: index('answer_drafts_review_status_idx').on(t.reviewStatus),
+    createdIdx: index('answer_drafts_created_at_idx').on(t.createdAt),
+    matchedCardIdx: index('answer_drafts_matched_card_idx').on(t.matchedCardId),
+  }),
+)
+
 export const answerFeedback = pgTable(
   'answer_feedback',
   {
     id: idCol(),
     cardId: varchar('card_id', { length: 24 }).references(() => decisionCards.id, {
+      onDelete: 'set null',
+    }),
+    answerDraftId: varchar('answer_draft_id', { length: 24 }).references(() => answerDrafts.id, {
       onDelete: 'set null',
     }),
     pagePath: varchar('page_path', { length: 240 }).notNull(),
@@ -819,6 +856,7 @@ export const answerFeedback = pgTable(
   },
   t => ({
     cardIdx: index('answer_feedback_card_idx').on(t.cardId),
+    answerDraftIdx: index('answer_feedback_answer_draft_idx').on(t.answerDraftId),
     typeIdx: index('answer_feedback_type_idx').on(t.feedbackType),
     createdIdx: index('answer_feedback_created_at_idx').on(t.createdAt),
   }),
@@ -995,6 +1033,8 @@ export type QueryBacklog = typeof queryBacklog.$inferSelect
 export type NewQueryBacklog = typeof queryBacklog.$inferInsert
 export type AnswerFeedback = typeof answerFeedback.$inferSelect
 export type NewAnswerFeedback = typeof answerFeedback.$inferInsert
+export type AnswerDraft = typeof answerDrafts.$inferSelect
+export type NewAnswerDraft = typeof answerDrafts.$inferInsert
 export type Session = typeof sessions.$inferSelect
 export type NewSession = typeof sessions.$inferInsert
 export type OtpCode = typeof otpCodes.$inferSelect

@@ -54,7 +54,7 @@ export async function POST(req: Request) {
     if (!awsKey || !awsSecret) {
       // Mock fallback
       return NextResponse.json({
-        answer: `[Mock 回答] 你的问题已收到。AI 功能配置中，请稍后再试。${DISCLAIMER}`,
+        answer: `[Mock 回答] 当前无法生成正式整理结果。请先确认相关文书、期限、发件机构和你的在留资格。${DISCLAIMER}`,
         mock: true,
       })
     }

@@ -9,7 +9,7 @@ export function eventTypeLabel(type: string): string {
     case 'text_understand':
       return '已解析'
     case 'policy_match':
-      return '政策匹配'
+      return '政策更新'
     case 'manual_note':
       return '手动记录'
     default:

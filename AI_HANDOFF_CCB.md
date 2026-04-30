@@ -1,48 +1,79 @@
 # AI Handoff - CCB
 
-最后更新: 2026-04-29（CCB Block 13+ batch-05 完成）
+最后更新: 2026-04-30（CCB content/answer-seed-v0 完成）
 
 ## CCB(内容)状态
 
-- 当前任务: Block 13+ 知识 batch-05（25 篇 visa-specific 维度卡）
-- 当前分支: content/knowledge-batch-05
-- 当前 worktree: /tmp/cc-b-batch-04（共用，不同分支）
+- 当前任务: Answer Seed v0（100 条可展示问答种子，给 answer engine 用）
+- 当前分支: `content/answer-seed-v0`
+- 当前 worktree: /tmp/cc-b-batch-04
 - 状态: **awaiting_merge**
-- 最近一次 push: batch-05 25 篇 visa-specific 维度卡 + 报告（见本次 commit）
 
-## 给 CCA 的待办（batch-05 merge）
+## 本次交付
 
-### Schema / Importer
+按创始人 v0 brief：从已有 QA 资产 + 已交付内容反推，写 100 条**可直接展示的种子答案**（不是问题清单 / 不是文章 / 不是营销）。
 
-batch-05 frontmatter **完全沿用 batch-04 schema** — 不需要新增 column / 不需要改 importer。
-CCA 在 Block 13 已为 batch-04 写过 importer (`articles` 表的 dimension importer)，batch-05 直接复用。
+### 5 个新建文件（docs/answer-seed/）
 
-### Merge 顺序建议
+| 文件 | 范围 | 主题 |
+|---|---|---|
+| `answer_seed_001-025.md` | Q001-Q025 | 永住（15）+ 工作签（10） |
+| `answer_seed_026-050.md` | Q026-Q050 | 経営・管理（15）+ 公司设立（10） |
+| `answer_seed_051-075.md` | Q051-Q075 | 特定技能（5）+ 定住者（5）+ 配偶（5）+ 离婚 / 转签（10） |
+| `answer_seed_076-100.md` | Q076-Q100 | 住民税 / 年金 / 社保 / 地址 / 换工作 / 公司倒闭 / 父母来日 / 通用 |
+| `ANSWER_SEED_V0_REPORT.md` | 报告 | 总数 / 类型分布 / TOP 20 / 接入建议 |
 
-1. 确认 batch-04 (`content/knowledge-batch-04`) merge 状态（如未 merge，先 merge）
-2. 然后 merge batch-05 (`content/knowledge-batch-05`)
-3. 跑 import-knowledge / import-dimensions
+### 关键统计
 
-### batch-05 内容统计
+- 100 条 Q
+- 26 条高风险（needs_expert 16 + misconception 3 + risk_chain 7）≥ brief 要求 20 条
+- 44 条 `requires_review: true`
+- 64 / 35 / 1 条 source_grade A / B / C
+- 100% 中日混合 + 工具感 voice
 
-- 25 篇 .md 文件，5 visa × 5 visa-specific 维度
-- 总字符 159,698，平均每篇 6,400 字符
-- 政府来源引用约 90 条（每篇 2-6 个 .go.jp / .moj.go.jp / .nta.go.jp 等）
-- 6 篇标 ⚠️ 需创始人 / 書士复核（経営・管理 2025/10/16 改正实施细则 + 特定技能 業種・試験 实务）
+### 每条字段（统一 schema）
 
-### 文件路径
+- aliases（2-4 个用户问法）
+- question（归一化）
+- answer_level（L1/L2/L3/L4）
+- answer_type（info/workflow/decision_card/risk_chain/misconception/needs_expert）
+- review_status（全部 unreviewed）
+- source_grade（A/B/C）
+- summary（1-2 句）
+- sections（先确认 / 今天可以做什么 / 不能做什么 等）
+- next_steps（3-5 条 todo）
+- source_hint（机关名）
+- boundary_note（1 句）
 
-`docs/knowledge-seed/dimensions-visa-specific/{visa_type}_{dimension_key}.md`
+## 给 CCA 的待办（Block 14+）
 
-## CCB 后续 batch（按 brief）
+### 建议新建 `question_seeds` 表
 
-- **batch-06**：50 篇高频文书逐封解读（document 类）— 等 batch-05 创始人 review 后启动；可能需要新 schema 字段（document_type / sender_type / triggers）
-- **batch-07**：20-30 篇场景化决策清单（scenario 类）— 等 batch-06 完成后启动；可能需要新 schema 字段（scenario_key / timeline_stages）
+详见 `ANSWER_SEED_V0_REPORT.md` § 给 CCA 部分。
 
-## 历史交付
+### Importer 路由
 
-- batch-01：初始化基础知识种子
-- batch-02：50 篇旧结构 P0 内容
-- batch-03：30 篇 P1 档案中心化内容（已 merge to main）
-- batch-04：60 篇 CleanB 续签自查 P0 维度卡（已 merge to main，含 dimensions importer）
-- **batch-05：25 篇 visa-specific 维度卡（awaiting_merge）**
+`docs/answer-seed/answer_seed_*.md` → 用 `## Q[number]` 切分 + yaml-parser 解析 → `question_seeds` 表。
+
+### 前端 `/admin/questions/import` 接入
+
+3 档展示策略：
+- Tier 1（约 40 条）：直接导入 + 前端展示
+- Tier 2（约 44 条）：导入 + 标「待书士复核」
+- Tier 3（约 16 条 needs_expert）：导入 + 立即引导 ¥9,800 咨询
+- Tier 4（约 1 条 source_grade C）：仅内部数据
+
+### 与已有 batch 关联
+
+可在 importer 时建立关联：
+- `related_dimension_slugs[]` → batch-04/05 dimensions
+- `related_document_slugs[]` → batch-06 documents
+- `related_scenario_slugs[]` → batch-07 scenarios
+
+## 历次交付
+
+- batch-01-04：已 merge to main
+- batch-05/06/07：awaiting_merge
+- content/index-and-review-registry：4 治理文件
+- content/real-question-data-v1：152 个 Q 标注 + TOP 20 + 5 seed YAML
+- **content/answer-seed-v0：100 条 answer seed + report（可直接接 answer engine）**

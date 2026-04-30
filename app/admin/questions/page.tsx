@@ -20,8 +20,8 @@ export default async function AdminQuestionsPage({
   const result = await loadQuestions()
   return (
     <PageShell
-      title="Questions"
-      subtitle="用户原始问题、手动导入咨询记录和后续 Decision Card 起草入口。"
+      title="问题列表"
+      subtitle="用户提交的问题和手动导入的咨询记录。先分流，再起草。"
     >
       <QuestionsClient
         initialQuestions={result.questions}
