@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { useState } from 'react'
 
 const VISA_OPTIONS = [
@@ -24,6 +25,7 @@ export default function QuestionIntakeBox({
   const [contactEmail, setContactEmail] = useState('')
   const [busy, setBusy] = useState(false)
   const [message, setMessage] = useState<string | null>(null)
+  const [resultHref, setResultHref] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
 
   async function submit(event: React.FormEvent<HTMLFormElement>) {
@@ -32,6 +34,7 @@ export default function QuestionIntakeBox({
     if (!text || busy) return
     setBusy(true)
     setMessage(null)
+    setResultHref(null)
     setError(null)
     try {
       const res = await fetch('/api/questions', {
@@ -44,16 +47,19 @@ export default function QuestionIntakeBox({
           source_page: sourcePage,
         }),
       })
-      const json = await res.json() as { ok?: boolean; data?: { message?: string }; error?: { message?: string } }
+      const json = await res.json() as {
+        ok?: boolean
+        data?: { message?: string; matchStatus?: string | null; matchedSlug?: string | null }
+        error?: { message?: string }
+      }
       if (!res.ok || !json.ok) {
         setError(json.error?.message ?? '提交暂时没有保存成功，请稍后再试')
         return
       }
       setQuestionText('')
       setContactEmail('')
-      setMessage(
-        '已收到。TEBIQ 会根据收到的问题继续整理场景和手续说明。如果涉及紧急期限或个别判断，请咨询行政書士等专业人士。',
-      )
+      setResultHref(resolveAnswerHref(json.data?.matchStatus, json.data?.matchedSlug))
+      setMessage('整理结果已生成。')
     } catch {
       setError('提交暂时没有保存成功，请稍后再试')
     } finally {
@@ -103,11 +109,29 @@ export default function QuestionIntakeBox({
           disabled={busy || !questionText.trim()}
           className="min-h-[42px] rounded-btn bg-ink px-4 py-2 text-[13px] font-medium text-white disabled:cursor-not-allowed disabled:opacity-45"
         >
-          {busy ? '处理中...' : '提交问题'}
+          {busy ? '正在整理...' : '查看整理结果'}
         </button>
       </form>
-      {message && <p className="mt-3 rounded-[10px] bg-paper px-3 py-2 text-[12px] leading-[1.6] text-slate">{message}</p>}
+      {message && (
+        <div className="mt-3 rounded-[10px] bg-paper px-3 py-3 text-[12px] leading-[1.6] text-slate">
+          <p>{message}</p>
+          {resultHref && (
+            <Link
+              href={resultHref}
+              className="mt-2 inline-flex min-h-[34px] items-center rounded-[9px] bg-ink px-3 text-[12px] font-medium text-white"
+            >
+              查看整理结果
+            </Link>
+          )}
+        </div>
+      )}
       {error && <p className="mt-3 rounded-[10px] bg-paper px-3 py-2 text-[12px] leading-[1.6] text-danger">{error}</p>}
     </section>
   )
+}
+
+function resolveAnswerHref(matchStatus?: string | null, matchedSlug?: string | null): string {
+  if (matchedSlug || matchStatus === 'matched') return '/answer/demo-matched'
+  if (matchStatus === 'no_match') return '/answer/demo-cannot-determine'
+  return '/answer/demo-draft'
 }

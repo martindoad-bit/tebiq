@@ -44,16 +44,18 @@ export default function ReviewLiteClient({
   return (
     <div className="grid gap-4">
       {question && (
-        <section className="rounded-card border border-hairline bg-paper p-4">
+        <section className="rounded-card border border-hairline bg-surface p-4">
           <div className="flex flex-wrap items-center gap-2">
-            <h2 className="mr-auto text-sm font-semibold text-ink">原始问题</h2>
-            <Chip>{question.status}</Chip>
-            <Chip>{question.priority}</Chip>
+            <h2 className="mr-auto text-[13px] font-medium text-ink">原始问题</h2>
+            <Chip>status: {question.status}</Chip>
+            <Chip>priority: {question.priority}</Chip>
             {question.visaType && <Chip>{question.visaType}</Chip>}
           </div>
-          <p className="mt-3 whitespace-pre-line text-sm leading-6 text-slate">{question.rawQuery}</p>
-          <p className="mt-3 text-xs text-ash">
-            暂无草稿。后续可由 AI 或人工生成 Decision Card。
+          <p className="mt-4 whitespace-pre-line text-[17px] font-medium leading-[1.65] text-ink">
+            {question.rawQuery}
+          </p>
+          <p className="mt-3 text-[12px] leading-[1.6] text-ash">
+            source_page: {question.sourcePage ?? 'unknown'} / created_at: {question.createdAt}
           </p>
         </section>
       )}
@@ -93,6 +95,11 @@ function ReviewCard({ card }: { card: DecisionCard }) {
   const [busy, setBusy] = useState(false)
   const [saved, setSaved] = useState<string | null>(null)
   const [flags, setFlags] = useState<string[]>([])
+  const [reviewStatus, setReviewStatus] = useState<ReviewAction>(
+    card.status === 'rejected' ? 'rejected' : card.requiresReview ? 'needs_expert' : 'reviewed',
+  )
+  const summary = card.bodyMarkdown || card.recommendedAction || '未记录'
+  const questionText = extractQuestion(card)
 
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -129,28 +136,59 @@ function ReviewCard({ card }: { card: DecisionCard }) {
   }
 
   return (
-    <article className="rounded-card border border-hairline bg-surface p-4 shadow-card">
-      <div className="flex flex-wrap items-center gap-2">
-        <h2 className="mr-auto text-base font-semibold text-ink">{card.title}</h2>
-        <Chip>{card.cardType}</Chip>
-        <Chip>{card.answerLevel}</Chip>
-        <Chip>{card.sourceGrade}</Chip>
-        <Chip>{card.requiresReview ? 'requires_review' : 'reviewed'}</Chip>
-      </div>
-      <div className="mt-3 grid gap-3 md:grid-cols-[1fr_360px]">
-        <div className="rounded-[12px] bg-paper p-3">
-          <p className="text-xs font-medium text-ink">AI / 内容草稿</p>
-          <p className="mt-2 whitespace-pre-line text-xs leading-6 text-slate">
-            {card.bodyMarkdown || card.recommendedAction || '未记录'}
-          </p>
-          <p className="mt-3 text-xs font-medium text-ink">source refs</p>
-          <ul className="mt-1 list-disc pl-4 text-xs leading-6 text-slate">
-            {card.sourceRefs.map(source => <li key={`${source.title}-${source.url ?? ''}`}>{source.title}</li>)}
-            {card.sourceRefs.length === 0 && <li>未记录</li>}
-          </ul>
-        </div>
+    <article className="rounded-card border border-hairline bg-surface p-4">
+      <div className="grid gap-4">
+        <header className="grid gap-3 border-b border-hairline pb-4">
+          <div className="flex flex-wrap items-center gap-2">
+            <Chip>answer draft</Chip>
+            <Chip>answer_type: {card.cardType}</Chip>
+            <Chip>answer_level: {formatAnswerLevel(card.answerLevel)}</Chip>
+            <Chip>review_status: {reviewStatus}</Chip>
+          </div>
+          <h2 className="text-[18px] font-medium leading-[1.5] text-ink">{card.title}</h2>
+          <div className="rounded-[12px] bg-paper px-3 py-3">
+            <p className="text-[10px] uppercase tracking-[0.12em] text-ash">question</p>
+            <p className="mt-2 text-[14px] leading-[1.7] text-ink">{questionText}</p>
+          </div>
+        </header>
 
-        <form onSubmit={submit} className="grid gap-2 text-xs">
+        <div className="grid gap-4 md:grid-cols-[1fr_320px]">
+          <div className="grid gap-3">
+            <div className="rounded-[12px] bg-paper p-3">
+              <p className="text-[10px] uppercase tracking-[0.12em] text-ash">summary</p>
+              <p className="mt-2 whitespace-pre-line text-[13px] leading-[1.75] text-slate">
+                {summary}
+              </p>
+            </div>
+            <div className="rounded-[12px] bg-paper p-3">
+              <p className="text-[10px] uppercase tracking-[0.12em] text-ash">sources</p>
+              <ul className="mt-2 grid gap-1.5 text-[12px] leading-[1.6] text-slate">
+                {card.sourceRefs.map(source => <li key={`${source.title}-${source.url ?? ''}`}>{source.title}</li>)}
+                {card.sourceRefs.length === 0 && <li>未记录</li>}
+              </ul>
+            </div>
+          </div>
+
+        <form onSubmit={submit} className="grid gap-3 text-xs">
+          <div>
+            <span className="mb-2 block font-medium text-ink">审核标记</span>
+            <div className="grid grid-cols-3 gap-2">
+              {(['reviewed', 'needs_expert', 'rejected'] as ReviewAction[]).map(action => (
+                <button
+                  key={action}
+                  type="button"
+                  onClick={() => setReviewStatus(action)}
+                  className={`min-h-[38px] rounded-[10px] border px-2 text-[11px] ${
+                    reviewStatus === action
+                      ? 'border-ink bg-ink text-white'
+                      : 'border-hairline bg-canvas text-slate'
+                  }`}
+                >
+                  {action}
+                </button>
+              ))}
+            </div>
+          </div>
           <Field label="审核人">
             <input name="reviewerName" defaultValue="staff" className={INPUT_CLASS} />
           </Field>
@@ -215,10 +253,11 @@ function ReviewCard({ card }: { card: DecisionCard }) {
             disabled={busy}
             className="min-h-[38px] rounded-btn bg-ink px-3 text-xs font-medium text-white disabled:opacity-50"
           >
-            {busy ? '处理中...' : '保存 review record'}
+            {busy ? '处理中...' : '保存审核记录'}
           </button>
           {saved && <p className="text-ash">{saved}</p>}
         </form>
+      </div>
       </div>
     </article>
   )
@@ -255,9 +294,33 @@ function Field({ label, children }: { label: string; children: ReactNode }) {
   )
 }
 
-function Chip({ children }: { children: string }) {
-  return <span className="rounded-[8px] bg-paper px-2 py-1 text-[11px] text-ash">{children}</span>
+function Chip({ children }: { children: ReactNode }) {
+  return <span className="rounded-[8px] bg-paper px-2 py-1 text-[11px] leading-none text-ash">{children}</span>
 }
 
 const INPUT_CLASS =
   'w-full rounded-[10px] border border-hairline bg-canvas px-3 py-2 text-xs text-ink outline-none focus:border-ink'
+
+type ReviewAction = 'reviewed' | 'needs_expert' | 'rejected'
+
+function formatAnswerLevel(level: DecisionCard['answerLevel']): string {
+  if (level === 'L1') return 'L1 一般信息'
+  if (level === 'L2') return 'L2 手续路径'
+  if (level === 'L3') return 'L3 决策辅助'
+  return 'L4 个案判断'
+}
+
+function extractQuestion(card: DecisionCard): string {
+  const rawQuery = card.trigger['rawQuery']
+  if (typeof rawQuery === 'string' && rawQuery.trim()) return rawQuery
+
+  const query = card.trigger['query']
+  if (typeof query === 'string' && query.trim()) return query
+
+  const keywords = card.trigger['keywords']
+  if (Array.isArray(keywords) && keywords.length > 0) {
+    return keywords.filter(item => typeof item === 'string').join(' / ')
+  }
+
+  return card.title
+}
