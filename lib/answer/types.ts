@@ -51,6 +51,8 @@ export interface AnswerResult {
   query_id: string | null
   answer_id: string | null
   matched_card_id?: string | null
+  matched_seed_id?: string | null
+  intent_guard_pass?: boolean
   saved?: boolean
   boundary_note?: string
   first_screen_answer?: string | null

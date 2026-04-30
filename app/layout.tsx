@@ -11,12 +11,12 @@ import './globals.css'
  */
 export const metadata: Metadata = {
   metadataBase: new URL('https://tebiq.jp'),
-  title: 'TEBIQ — 日文文书识别和提醒',
+  title: 'TEBIQ — 日本手续下一步整理',
   description:
-    '拍照识别日文文书、续签材料准备检查、期限提醒。',
+    '签证、税金、年金、会社手续和日文通知的下一步、材料、期限和办理窗口整理。',
   openGraph: {
-    title: 'TEBIQ — 日文文书识别和提醒',
-    description: '拍照识别日文文书、续签材料准备检查、期限提醒。',
+    title: 'TEBIQ — 日本手续下一步整理',
+    description: '签证、税金、年金、会社手续和日文通知的下一步、材料、期限和办理窗口整理。',
     url: 'https://tebiq.jp',
     siteName: 'TEBIQ',
     locale: 'zh_CN',
@@ -24,8 +24,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'TEBIQ — 日文文书识别和提醒',
-    description: '拍照识别日文文书、续签材料准备检查、期限提醒。',
+    title: 'TEBIQ — 日本手续下一步整理',
+    description: '签证、税金、年金、会社手续和日文通知的下一步、材料、期限和办理窗口整理。',
   },
 }
 

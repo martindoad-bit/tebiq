@@ -79,7 +79,7 @@ export default function QuestionIntakeBox({
     }>
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <p className="text-[11px] leading-none text-ash">{compact ? '情况整理' : '情况入口'}</p>
+          <p className="text-[11px] leading-none text-ash">{compact ? '情况整理' : '下一步整理'}</p>
           <h2 className={`${compact ? 'mt-2 text-[15px]' : 'mt-2 text-[22px]'} font-medium leading-tight text-ink`}>
             {compact ? '找不到你的情况？' : '你现在遇到什么情况？'}
           </h2>
@@ -111,14 +111,13 @@ export default function QuestionIntakeBox({
       )}
       <form onSubmit={submit} className="mt-4 grid gap-3">
         <label className="grid gap-1.5">
-          <span className="text-[12px] font-medium leading-none text-ink">先选你的身份</span>
+          <span className="text-[12px] font-medium leading-none text-ink">先选你的身份（可选）</span>
           <select
             value={visaType}
             onChange={event => setVisaType(event.target.value)}
-            required
             className="min-h-[44px] rounded-[12px] border border-hairline bg-canvas px-3 text-[13px] text-ink outline-none focus:border-ink"
           >
-            <option value="" disabled>请选择身份 / 签证类型</option>
+            <option value="">选择身份 / 签证类型</option>
             {VISA_OPTIONS.map(option => (
               <option key={option.value} value={option.value}>{option.label}</option>
             ))}
@@ -138,10 +137,10 @@ export default function QuestionIntakeBox({
         </label>
         <button
           type="submit"
-          disabled={busy || !questionText.trim() || !visaType}
+          disabled={busy || !questionText.trim()}
           className="min-h-[44px] rounded-btn bg-ink px-4 py-2 text-[13px] font-medium text-white disabled:cursor-not-allowed disabled:opacity-45"
         >
-          {busy ? '正在整理...' : '整理这个问题'}
+          {busy ? '正在整理...' : '看下一步'}
         </button>
       </form>
       {inlineAnswer && (

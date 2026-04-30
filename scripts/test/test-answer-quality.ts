@@ -26,7 +26,21 @@ const FORBIDDEN = [
 ]
 
 async function main() {
-  const rows: Array<{ question: string; type: string; title: string; ok: boolean; notes: string }> = []
+  const rows: Array<{
+    question: string
+    answer_type: string
+    matched_seed_id: string
+    intent_guard_pass: boolean
+    has_conclusion: boolean
+    has_do_now: boolean
+    has_where_to_go: boolean
+    has_documents: boolean
+    has_timing: boolean
+    has_consequences: boolean
+    has_expert_handoff: boolean
+    ok: boolean
+    notes: string
+  }> = []
   let failed = false
 
   for (const question of QUESTIONS) {
@@ -45,12 +59,33 @@ async function main() {
       ...(action?.expert_handoff ?? []),
     ].join('\n')
     const problems: string[] = []
+    const hasConclusion = Boolean(action?.conclusion)
+    const hasDoNow = Boolean(action?.what_to_do?.length)
+    const hasWhereToGo = Boolean(action?.where_to_go?.length)
+    const hasDocuments = Boolean(action?.documents_needed?.length)
+    const hasTiming = Boolean(action?.deadline_or_timing?.length)
+    const hasConsequences = Boolean(action?.consequences?.length)
+    const hasExpertHandoff = Boolean(action?.expert_handoff?.length)
+
     if (!['matched', 'draft', 'cannot_determine'].includes(answer.answer_type)) problems.push('invalid answer_type')
-    if (!action?.conclusion) problems.push('missing conclusion')
+    if (!hasConclusion) problems.push('missing conclusion')
     if (!action?.boundary_note) problems.push('missing boundary_note')
-    if (!(action?.what_to_do?.length || answer.answer_type === 'cannot_determine')) problems.push('missing what_to_do')
+    if (!(hasDoNow || answer.answer_type === 'cannot_determine')) problems.push('missing do_now')
+    if (!hasWhereToGo && answer.answer_type !== 'cannot_determine') problems.push('missing where_to_go')
+    if (!hasDocuments && answer.answer_type !== 'cannot_determine') problems.push('missing documents')
+    if (!hasTiming && answer.answer_type !== 'cannot_determine') problems.push('missing timing')
+    if (!hasConsequences) problems.push('missing consequences')
+    if (!hasExpertHandoff) problems.push('missing expert_handoff')
+    if (answer.intent_guard_pass !== true) problems.push('intent guard did not pass')
+
     const forbidden = FORBIDDEN.filter(word => text.includes(word))
     if (forbidden.length) problems.push(`forbidden: ${forbidden.join(', ')}`)
+    if (question.includes('公司休眠') && /经营管理公司休眠|在留资格影响|休眠 \/ 解散 在留资格/.test(answer.title)) {
+      problems.push('Q1 matched management visa dormant answer')
+    }
+    if (question.includes('资本金不够') && /多少最合适|資本金 多少|资本金多少/.test(answer.title)) {
+      problems.push('Q9 matched generic capital amount answer')
+    }
     if (question.includes('办公室搬迁')) {
       const required = [
         /经营场所|事務所/,
@@ -67,11 +102,25 @@ async function main() {
         if (!pattern.test(text)) problems.push(`office detail ${index + 1} missing`)
       })
     }
+    if (question.includes('搬家后在留卡地址')) {
+      if (!/(市役所|区役所)/.test(text)) problems.push('Q8 missing city/ward office')
+      if (!/(在留カード|在留卡)/.test(text)) problems.push('Q8 missing residence card')
+      if (!/14\s*(日|天)/.test(text)) problems.push('Q8 missing 14-day timing')
+      if ((action?.what_to_do.length ?? 0) > 7) problems.push('Q8 too verbose')
+    }
     if (problems.length) failed = true
     rows.push({
       question,
-      type: answer.answer_type,
-      title: answer.title,
+      answer_type: answer.answer_type,
+      matched_seed_id: answer.matched_seed_id ?? '',
+      intent_guard_pass: answer.intent_guard_pass === true,
+      has_conclusion: hasConclusion,
+      has_do_now: hasDoNow,
+      has_where_to_go: hasWhereToGo,
+      has_documents: hasDocuments,
+      has_timing: hasTiming,
+      has_consequences: hasConsequences,
+      has_expert_handoff: hasExpertHandoff,
       ok: problems.length === 0,
       notes: problems.join('; ') || 'ok',
     })
