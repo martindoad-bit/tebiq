@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { checkMagicLinkRateLimit } from '@/lib/auth/magic-link-rate-limit'
 import { createDevLoginLink } from '@/lib/db/queries/devLoginLinks'
 import { createLoginMagicLinkToken } from '@/lib/db/queries/loginMagicLinks'
 import { sendEmail } from '@/lib/notifications/email-channel'
@@ -29,6 +30,16 @@ function siteOrigin(req: Request): string {
   return `${url.protocol}//${url.host}`
 }
 
+function clientIp(req: Request): string {
+  const forwarded = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
+  return forwarded || req.headers.get('x-real-ip') || 'unknown'
+}
+
+const SEND_FAILED_MESSAGE =
+  '发送失败，请稍后重试。\n送信に失敗しました。後ほどお試しください。'
+const RATE_LIMIT_MESSAGE =
+  '发送次数较多，请稍后再试。\n送信回数が多いため、しばらくしてからお試しください。'
+
 export async function POST(req: Request) {
   let body: Record<string, unknown>
   try {
@@ -46,9 +57,20 @@ export async function POST(req: Request) {
       ? body.inviteCode.trim().slice(0, 16)
       : null
   try {
+    const rateLimit = await checkMagicLinkRateLimit(email, clientIp(req))
+    if (!rateLimit.ok) {
+      return NextResponse.json(
+        { error: RATE_LIMIT_MESSAGE },
+        { status: 429, headers: { 'Retry-After': String(rateLimit.retryAfterSeconds) } },
+      )
+    }
+
     const row = await createLoginMagicLinkToken({ email, nextPath, inviteCode })
     const loginUrl = `${siteOrigin(req)}/api/auth/verify-magic-link?token=${encodeURIComponent(row.token)}`
     await createDevLoginLink({ token: row.token, email, link: loginUrl })
+    if (process.env.NODE_ENV !== 'production') {
+      console.info(`[auth/dev] magic link for ${email}: ${loginUrl}`)
+    }
     const rendered = templates.login_magic_link.build({ loginUrl })
     const outcome = await sendEmail({
       to: email,
@@ -65,19 +87,13 @@ export async function POST(req: Request) {
 
     if (!outcome.ok) {
       console.warn('[auth/email] magic link send failed', outcome.provider, outcome.error)
-      return NextResponse.json(
-        { error: '登录邮件暂时没有发送成功。请稍后再试，或使用其他登录方式。' },
-        { status: 503 },
-      )
+      return NextResponse.json({ error: SEND_FAILED_MESSAGE }, { status: 503 })
     }
 
     return NextResponse.json({ ok: true, provider: outcome.provider })
   } catch (error) {
     console.warn('[auth/email] magic link flow failed', errorCode(error))
-    return NextResponse.json(
-      { error: '登录邮件暂时没有发送成功。请稍后再试，或使用其他登录方式。' },
-      { status: 503 },
-    )
+    return NextResponse.json({ error: SEND_FAILED_MESSAGE }, { status: 503 })
   }
 }
 

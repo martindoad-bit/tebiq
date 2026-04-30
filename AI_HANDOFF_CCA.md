@@ -1,21 +1,21 @@
 # AI Handoff - CCA
 
-最后更新: 2026-04-30T13:35:00+09:00
+最后更新: 2026-04-30T13:40:35+09:00
 
 ## CCA(代码)状态
 
-- 当前任务: Question Intake + Decision Intelligence v1
-- 当前分支: codex/question-intake-v1
-- 当前 worktree: /Users/martin/Documents/tebiq/.claude/worktrees/question-intake-v1
-- 状态: awaiting_merge
-- 最近一次 push: 待 push 后以 `codex/question-intake-v1` HEAD 为准
+- 当前任务: Auth + Question Intake Production Integration
+- 当前分支: codex/auth-intake-production
+- 当前 worktree: /Users/martin/Documents/tebiq/.claude/worktrees/auth-intake-production
+- 状态: in_progress
+- 最近一次 push: 待 push 后以 `codex/auth-intake-production` HEAD 为准
 - 给其他 AI 的通知:
-  - 在 v0 基础上新增前台提问入口和 `/admin/questions` / `/admin/questions/import`。
-  - 复用 `query_backlog`，新增非破坏性 migration `0020_salty_spiral.sql`。
-  - `/admin/review-lite?questionId=...` 可显示原始问题并进入人工/AI 起草流程；本轮不做 AI 起草。
-  - 登录邮件失败统一为安全错误，并给用户手机号登录入口；未读取或修改任何外部 env。
-  - 合入前需要 migration 0019 + 0020，才能真实收集问题和批量导入。
-  - 报告: `QUESTION_INTAKE_V1_REPORT.md`。
+  - 已合入 `origin/codex/question-intake-v1`，保留 `/api/questions`、`/admin/questions`、批量导入和 review-lite 衔接。
+  - 已接入 Resend magic link 发送；production 有 `RESEND_API_KEY` 时真发，无 key 不回退 dev。
+  - 非 production dev mode 保留 mock email + server log magic link。
+  - 新增 magic link rate limit：同邮箱 5 分钟 3 次、同 IP 1 小时 10 次。
+  - `0019_cheerful_junta.sql` / `0020_salty_spiral.sql` 已检查为非破坏性；production migration 待执行。
+  - 报告: `AUTH_INTAKE_PRODUCTION_REPORT.md`。
 
 ## Question Intake v1
 

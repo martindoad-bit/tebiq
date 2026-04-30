@@ -80,7 +80,7 @@ export default function AuthPageClient({ intent = 'login' }: { intent?: 'login' 
         setError(data?.error ?? '发送失败')
         return
       }
-      setMessage(`登录链接已发送到 ${normalized}，7 分钟内有效。`)
+      setMessage(`登录链接已发送到 ${normalized}，10 分钟内有效。`)
     } catch {
       setError('网络错误，请重试')
     } finally {
@@ -245,7 +245,7 @@ export default function AuthPageClient({ intent = 'login' }: { intent?: 'login' 
             </Button>
             <div className="mt-3 flex items-center justify-center gap-1.5 text-[10.5px] leading-relaxed text-slate">
               <Send size={12} strokeWidth={1.55} />
-              链接 7 分钟内有效
+              链接 10 分钟内有效
             </div>
           </div>
         )}

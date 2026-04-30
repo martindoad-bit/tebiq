@@ -120,7 +120,7 @@ function ConsumerProtectionNotice() {
         <NoticeRow label="图片" value="原始图片不保存，OCR 后删除" />
       </dl>
       <p className="mt-3 border-t border-hairline pt-3 text-[11px] leading-[1.6] text-ash">
-        联系入口: contact@tebiq.jp
+        运营主体: 刺狐合同会社 / 联系入口: contact@tebiq.jp
       </p>
     </section>
   )
