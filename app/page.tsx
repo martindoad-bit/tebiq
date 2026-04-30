@@ -1,7 +1,8 @@
 import Link from 'next/link'
-import { Bell, CalendarDays, Camera, ChevronRight, ClipboardCheck, FileText } from 'lucide-react'
+import { Bell, Camera, ChevronRight, ClipboardCheck, FileText, MessageSquareText } from 'lucide-react'
 import AppShell from '@/app/_components/v5/AppShell'
 import TabBar from '@/app/_components/v5/TabBar'
+import Logo from '@/app/_components/v5/Logo'
 import QuestionIntakeBox from '@/app/_components/QuestionIntakeBox'
 import { DeadlineRow, ListRow, ListSection, SectionLabel } from '@/components/ui/tebiq'
 import { getCurrentUser } from '@/lib/auth/session'
@@ -52,17 +53,12 @@ export default async function HomePage() {
 function NewUserHome() {
   return (
     <>
-      <section className="pt-6">
-        <h1 className="text-[36px] font-medium leading-none tracking-[0.04em] text-ink">TEBIQ</h1>
-        <p className="mt-3 max-w-[300px] text-[14px] leading-[1.7] text-slate">
-          在日生活的日文文书识别和提醒
-        </p>
-      </section>
+      <BrandIntro />
 
-      <div className="mt-6">
+      <div id="question" className="mt-6 scroll-mt-4">
         <QuestionIntakeBox sourcePage="/" />
       </div>
-      <MoreFeatures />
+      <StartOptions />
       <SampleDocumentSection />
     </>
   )
@@ -97,7 +93,11 @@ function UserHome({
         </section>
       )}
 
-      <QuestionIntakeBox sourcePage="/" />
+      <BrandIntro compact />
+
+      <div id="question" className="mt-5 scroll-mt-4">
+        <QuestionIntakeBox sourcePage="/" />
+      </div>
 
       <ListSection className="mt-5">
         <OverviewRow label="在留卡" value={visaOverview(user, daysToExpiry)} href="/my/profile" />
@@ -117,7 +117,7 @@ function UserHome({
         </section>
       )}
 
-      <MoreFeatures needsActionCount={needsActionCount} next30Count={next30Count} />
+      <StartOptions needsActionCount={needsActionCount} />
       <SampleDocumentSection />
 
       <SectionLabel title="接下来30天的期限事项" action="全部" href="/timeline" />
@@ -142,6 +142,20 @@ function UserHome({
         )}
       </ListSection>
     </>
+  )
+}
+
+function BrandIntro({ compact = false }: { compact?: boolean }) {
+  return (
+    <section className={compact ? 'pt-1' : 'pt-6'}>
+      <Logo size="lg" />
+      <h1 className={`${compact ? 'mt-4 text-[22px]' : 'mt-6 text-[26px]'} max-w-[340px] font-medium leading-[1.28] text-ink`}>
+        在日本遇到手续问题，先把情况说清楚。
+      </h1>
+      <p className="mt-3 max-w-[360px] text-[13px] leading-[1.75] text-slate">
+        签证、税金、年金、会社手续和日文通知。TEBIQ 会把你的情况整理成：下一步、材料、期限、办理窗口和需要专家确认的点。
+      </p>
+    </section>
   )
 }
 
@@ -174,34 +188,32 @@ function SampleDocumentSection() {
   )
 }
 
-function MoreFeatures({
+function StartOptions({
   needsActionCount = 0,
-  next30Count = 0,
 }: {
   needsActionCount?: number
-  next30Count?: number
 }) {
   return (
     <>
-      <SectionLabel title="快捷工具" />
+      <SectionLabel title="你可以这样开始" />
       <ListSection className="mt-3">
+        <ListRow
+          href="/#question"
+          icon={<MessageSquareText size={19} strokeWidth={1.5} />}
+          title="写情况"
+          subtitle="不知道该办什么手续时使用"
+        />
         <ListRow
           href="/photo"
           icon={<Camera size={19} strokeWidth={1.5} />}
-          title="拍一份文书试试"
-          subtitle="看不懂日文通知时使用"
+          title="拍文书"
+          subtitle="收到日文通知、税单、年金信时使用"
         />
         <ListRow
           href="/check"
           icon={<ClipboardCheck size={19} strokeWidth={1.5} />}
           title="续签材料准备检查"
-          subtitle={needsActionCount > 0 ? `${needsActionCount} 项需要补齐` : '准备事项'}
-        />
-        <ListRow
-          href="/timeline"
-          icon={<CalendarDays size={19} strokeWidth={1.5} />}
-          title="我的提醒"
-          subtitle={next30Count > 0 ? `${next30Count} 项期限事项` : '期限事项'}
+          subtitle={needsActionCount > 0 ? `${needsActionCount} 项需要补齐` : '快更新签证前使用'}
         />
       </ListSection>
     </>
@@ -326,7 +338,7 @@ function isUrgent(deadline: string | null): boolean {
 function HomeAppBar() {
   return (
     <header className="flex h-[58px] flex-shrink-0 items-center justify-between bg-canvas px-5">
-      <span className="text-[12px] font-medium tracking-[0.14em] text-ash">TEBIQ</span>
+      <Logo size="sm" />
       <Link
         href="/timeline"
         aria-label="我的提醒"

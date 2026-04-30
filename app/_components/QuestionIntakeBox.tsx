@@ -3,16 +3,24 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
-const EXAMPLES = ['办公室搬迁', '换工作', '父母来日本', '公司休眠', '签证转换']
+const COMMON_QUESTIONS = [
+  '公司休眠了要不要交国民年金？',
+  '办公室搬迁要做哪些手续？',
+  '住民税晚交会影响永住吗？',
+  '永住者能不能带父母来日本？',
+  '特定技能1号能不能转工作签？',
+  '搬家后在留卡地址要不要改？',
+]
 
 const VISA_OPTIONS = [
-  { value: '', label: '不确定 / 不选择' },
-  { value: 'technical_humanities_international', label: '技人国' },
   { value: 'management', label: '经营管理' },
+  { value: 'technical_humanities_international', label: '技人国' },
   { value: 'spouse', label: '配偶者' },
-  { value: 'permanent_resident_preparation', label: '永住准备' },
+  { value: 'permanent_resident', label: '永住' },
   { value: 'specified_skilled_worker', label: '特定技能' },
-  { value: 'other', label: '其他' },
+  { value: 'student', label: '留学' },
+  { value: 'family_stay', label: '家族滞在' },
+  { value: 'unknown', label: '还不确定' },
 ]
 
 export default function QuestionIntakeBox({
@@ -79,20 +87,20 @@ export default function QuestionIntakeBox({
       </div>
       <p className={`${compact ? 'mt-2 text-[12px]' : 'mt-3 text-[13px]'} leading-[1.7] text-ash`}>
         {compact
-          ? '把你现在遇到的问题写下来，TEBIQ 会先整理可确认的手续路径。'
-          : '把具体情况写下来。TEBIQ 会先给出整理结果，并把问题进入后台复核。'}
+          ? '把你现在遇到的问题写下来，TEBIQ 会先整理出下一步。'
+          : 'TEBIQ 会先整理出下一步。高风险问题会标出需要专家确认的条件。'}
       </p>
       {!compact && (
         <>
           <p className="mt-2 text-[12px] leading-[1.65] text-ash">
-            写下情况后，会返回一份整理结果；不确定时会说明需要补充什么信息。
+            签证、税金、年金、会社手续和日文通知，都可以先写成一句具体情况。
           </p>
           <div className="mt-4 flex flex-wrap gap-2">
-            {EXAMPLES.map(example => (
+            {COMMON_QUESTIONS.map(example => (
               <button
                 key={example}
                 type="button"
-                onClick={() => setQuestionText(current => current.trim() ? current : example)}
+                onClick={() => setQuestionText(example)}
                 className="min-h-[30px] rounded-[8px] bg-paper px-2.5 text-[12px] text-slate active:bg-hairline"
               >
                 {example}
@@ -102,27 +110,35 @@ export default function QuestionIntakeBox({
         </>
       )}
       <form onSubmit={submit} className="mt-4 grid gap-3">
+        <label className="grid gap-1.5">
+          <span className="text-[12px] font-medium leading-none text-ink">先选你的身份</span>
+          <select
+            value={visaType}
+            onChange={event => setVisaType(event.target.value)}
+            required
+            className="min-h-[44px] rounded-[12px] border border-hairline bg-canvas px-3 text-[13px] text-ink outline-none focus:border-ink"
+          >
+            <option value="" disabled>请选择身份 / 签证类型</option>
+            {VISA_OPTIONS.map(option => (
+              <option key={option.value} value={option.value}>{option.label}</option>
+            ))}
+          </select>
+        </label>
+        <label className="grid gap-1.5">
+          <span className="text-[12px] font-medium leading-none text-ink">你现在遇到什么情况？</span>
         <textarea
           value={questionText}
           onChange={event => setQuestionText(event.target.value)}
           required
           rows={compact ? 3 : 5}
           maxLength={4000}
-          placeholder={compact ? '例如：换工作后在留更新要准备什么' : '例：公司下个月搬办公室，我是经营管理签证。需要先办什么，哪些材料会影响续签？'}
+          placeholder={compact ? '例如：换工作后在留更新要准备什么' : '例如：公司休眠了要不要交国民年金？办公室搬迁要做哪些手续？'}
           className={`${compact ? 'min-h-[94px]' : 'min-h-[148px]'} w-full resize-none rounded-[12px] border border-hairline bg-canvas px-3.5 py-3 text-[16px] leading-[1.65] text-ink outline-none placeholder:text-haze focus:border-ink`}
         />
-        <select
-          value={visaType}
-          onChange={event => setVisaType(event.target.value)}
-          className="min-h-[42px] rounded-[12px] border border-hairline bg-canvas px-3 text-[12px] text-ink outline-none focus:border-ink"
-        >
-          {VISA_OPTIONS.map(option => (
-            <option key={option.value || 'none'} value={option.value}>{option.label}</option>
-          ))}
-        </select>
+        </label>
         <button
           type="submit"
-          disabled={busy || !questionText.trim()}
+          disabled={busy || !questionText.trim() || !visaType}
           className="min-h-[44px] rounded-btn bg-ink px-4 py-2 text-[13px] font-medium text-white disabled:cursor-not-allowed disabled:opacity-45"
         >
           {busy ? '正在整理...' : '整理这个问题'}
@@ -156,6 +172,6 @@ interface InlineAnswer {
 
 function statusLabel(type: InlineAnswer['answer_type']) {
   if (type === 'matched') return '已整理'
-  if (type === 'draft') return '初步整理，尚未人工复核'
-  return '这个情况需要进一步确认'
+  if (type === 'draft') return '初步整理，待复核'
+  return '需要进一步确认'
 }
