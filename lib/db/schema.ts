@@ -136,6 +136,57 @@ export const checkDimensionEventTypeEnum = pgEnum('check_dimension_event_type', 
   'expired',
 ])
 
+export const decisionCardTypeEnum = pgEnum('decision_card_type', [
+  'decision_card',
+  'workflow',
+  'risk_chain',
+  'misconception',
+])
+
+export const decisionAnswerLevelEnum = pgEnum('decision_answer_level', [
+  'L1',
+  'L2',
+  'L3',
+  'L4',
+])
+
+export const decisionStatusEnum = pgEnum('decision_status', [
+  'draft',
+  'needs_review',
+  'approved',
+  'rejected',
+  'deprecated',
+])
+
+export const sourceGradeEnum = pgEnum('source_grade', ['S', 'A', 'B', 'C'])
+
+export const decisionReviewerRoleEnum = pgEnum('decision_reviewer_role', [
+  'staff',
+  'shoshi',
+  'founder',
+  'other',
+])
+
+export const decisionPublishDecisionEnum = pgEnum('decision_publish_decision', [
+  'approve',
+  'revise',
+  'reject',
+  'escalate',
+])
+
+export const queryMatchStatusEnum = pgEnum('query_match_status', [
+  'matched',
+  'no_match',
+  'low_confidence',
+])
+
+export const answerFeedbackTypeEnum = pgEnum('answer_feedback_type', [
+  'helpful',
+  'inaccurate',
+  'unclear',
+  'my_case_differs',
+])
+
 // Member profile enums (added Block 2)
 export const maritalStatusEnum = pgEnum('marital_status', [
   'single',
@@ -653,6 +704,116 @@ export const articles = pgTable(
   }),
 )
 
+// --- decision intelligence v0 ---
+//
+// Lightweight, auditable decision-card layer. Public routes can render repo
+// seed cards without DB; these tables are for durable query/feedback/review
+// collection once migrations are applied.
+export const decisionCards = pgTable(
+  'decision_cards',
+  {
+    id: idCol(),
+    slug: varchar('slug', { length: 200 }).notNull(),
+    title: varchar('title', { length: 180 }).notNull(),
+    cardType: decisionCardTypeEnum('card_type').notNull(),
+    answerLevel: decisionAnswerLevelEnum('answer_level').notNull(),
+    status: decisionStatusEnum('status').notNull().default('needs_review'),
+    visaTypes: jsonb('visa_types').$type<string[]>().notNull().default(sql`'[]'::jsonb`),
+    trigger: jsonb('trigger').$type<Record<string, unknown>>(),
+    userState: jsonb('user_state').$type<Record<string, unknown>>(),
+    decisionOptions: jsonb('decision_options').$type<Array<Record<string, unknown>>>(),
+    recommendedAction: text('recommended_action'),
+    whyNotOtherOptions: jsonb('why_not_other_options').$type<Array<Record<string, unknown>>>(),
+    steps: jsonb('steps').$type<Array<Record<string, unknown>>>(),
+    relatedDocuments: jsonb('related_documents').$type<Array<Record<string, unknown>>>(),
+    relatedCheckDimensions: jsonb('related_check_dimensions').$type<Array<Record<string, unknown>>>(),
+    sourceRefs: jsonb('source_refs').$type<Array<Record<string, unknown>>>(),
+    sourceGrade: sourceGradeEnum('source_grade').notNull().default('B'),
+    lastVerifiedAt: date('last_verified_at'),
+    requiresReviewAfterDays: integer('requires_review_after_days').notNull().default(90),
+    requiresReview: boolean('requires_review').notNull().default(true),
+    expertHandoff: jsonb('expert_handoff').$type<Record<string, unknown>>(),
+    bodyMarkdown: text('body_markdown').notNull().default(''),
+    createdAt: createdAt(),
+    updatedAt: updatedAt(),
+  },
+  t => ({
+    slugUnique: uniqueIndex('decision_cards_slug_unique').on(t.slug),
+    statusIdx: index('decision_cards_status_idx').on(t.status),
+    typeIdx: index('decision_cards_type_idx').on(t.cardType),
+    answerLevelIdx: index('decision_cards_answer_level_idx').on(t.answerLevel),
+    sourceGradeIdx: index('decision_cards_source_grade_idx').on(t.sourceGrade),
+    requiresReviewIdx: index('decision_cards_requires_review_idx').on(t.requiresReview),
+    updatedIdx: index('decision_cards_updated_at_idx').on(t.updatedAt),
+  }),
+)
+
+export const decisionReviews = pgTable(
+  'decision_reviews',
+  {
+    id: idCol(),
+    decisionCardId: varchar('decision_card_id', { length: 24 }).references(() => decisionCards.id, {
+      onDelete: 'cascade',
+    }),
+    reviewerName: varchar('reviewer_name', { length: 120 }).notNull(),
+    reviewerRole: decisionReviewerRoleEnum('reviewer_role').notNull().default('staff'),
+    conclusionOk: boolean('conclusion_ok'),
+    publishDecision: decisionPublishDecisionEnum('publish_decision').notNull(),
+    accuracyScore: integer('accuracy_score').notNull(),
+    sourceScore: integer('source_score').notNull(),
+    boundaryScore: integer('boundary_score').notNull(),
+    actionabilityScore: integer('actionability_score').notNull(),
+    flags: jsonb('flags').$type<string[]>().notNull().default(sql`'[]'::jsonb`),
+    note: text('note'),
+    reviewedAt: timestamp('reviewed_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  t => ({
+    cardIdx: index('decision_reviews_card_idx').on(t.decisionCardId),
+    reviewedIdx: index('decision_reviews_reviewed_at_idx').on(t.reviewedAt),
+    publishIdx: index('decision_reviews_publish_decision_idx').on(t.publishDecision),
+  }),
+)
+
+export const queryBacklog = pgTable(
+  'query_backlog',
+  {
+    id: idCol(),
+    rawQuery: text('raw_query').notNull(),
+    normalizedQuery: text('normalized_query').notNull(),
+    matchedCardId: varchar('matched_card_id', { length: 24 }).references(() => decisionCards.id, {
+      onDelete: 'set null',
+    }),
+    matchStatus: queryMatchStatusEnum('match_status').notNull(),
+    userContext: jsonb('user_context').$type<Record<string, unknown>>(),
+    sourcePage: varchar('source_page', { length: 200 }),
+    createdAt: createdAt(),
+  },
+  t => ({
+    matchIdx: index('query_backlog_match_status_idx').on(t.matchStatus),
+    createdIdx: index('query_backlog_created_at_idx').on(t.createdAt),
+    matchedCardIdx: index('query_backlog_matched_card_idx').on(t.matchedCardId),
+  }),
+)
+
+export const answerFeedback = pgTable(
+  'answer_feedback',
+  {
+    id: idCol(),
+    cardId: varchar('card_id', { length: 24 }).references(() => decisionCards.id, {
+      onDelete: 'set null',
+    }),
+    pagePath: varchar('page_path', { length: 240 }).notNull(),
+    feedbackType: answerFeedbackTypeEnum('feedback_type').notNull(),
+    note: text('note'),
+    createdAt: createdAt(),
+  },
+  t => ({
+    cardIdx: index('answer_feedback_card_idx').on(t.cardId),
+    typeIdx: index('answer_feedback_type_idx').on(t.feedbackType),
+    createdIdx: index('answer_feedback_created_at_idx').on(t.createdAt),
+  }),
+)
+
 // --- text_understand_requests ---
 export const textUnderstandRequests = pgTable(
   'text_understand_requests',
@@ -816,6 +977,14 @@ export type ErrorLog = typeof errorLogs.$inferSelect
 export type NewErrorLog = typeof errorLogs.$inferInsert
 export type Article = typeof articles.$inferSelect
 export type NewArticle = typeof articles.$inferInsert
+export type DecisionCard = typeof decisionCards.$inferSelect
+export type NewDecisionCard = typeof decisionCards.$inferInsert
+export type DecisionReview = typeof decisionReviews.$inferSelect
+export type NewDecisionReview = typeof decisionReviews.$inferInsert
+export type QueryBacklog = typeof queryBacklog.$inferSelect
+export type NewQueryBacklog = typeof queryBacklog.$inferInsert
+export type AnswerFeedback = typeof answerFeedback.$inferSelect
+export type NewAnswerFeedback = typeof answerFeedback.$inferInsert
 export type Session = typeof sessions.$inferSelect
 export type NewSession = typeof sessions.$inferInsert
 export type OtpCode = typeof otpCodes.$inferSelect

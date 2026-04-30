@@ -1,19 +1,31 @@
 # AI Handoff - CCA
 
-最后更新: 2026-04-30T00:18:00+09:00
+最后更新: 2026-04-30T12:45:00+09:00
 
 ## CCA(代码)状态
 
-- 当前任务: Holiday Engineering Upgrade / 产品底盘升级
-- 当前分支: codex/holiday-engineering-upgrade
-- 当前 worktree: /Users/martin/Documents/tebiq/.claude/worktrees/codex-holiday-engineering
+- 当前任务: Decision Intelligence v0 — 数据收集与轻量审核底座
+- 当前分支: codex/decision-intelligence-v0
+- 当前 worktree: /Users/martin/Documents/tebiq/.claude/worktrees/decision-intelligence-v0
 - 状态: awaiting_merge
-- 最近一次 push: 待 push 后以 `codex/holiday-engineering-upgrade` HEAD 为准
+- 最近一次 push: 待 push 后以 `codex/decision-intelligence-v0` HEAD 为准
 - 给其他 AI 的通知:
-  - batch-04 的 60 篇 check-dimension 内容已在当前候选分支中，batch-05 的 25 篇 visa-specific 维度卡已合入当前工程分支；CCA 采用 `articles` 结构化字段接入，不新增 migration。
-  - batch-06 / batch-07 已读取报告并写入 schema/importer 规划；未合入当前工程分支，未进入用户前台。
-  - 新增 `import-check-dimensions` / `validate-check-dimensions` / `smoke:launch` / `audit:launch-copy`。
-  - 暂不 merge main；等待创始人或下一轮集成指令。
+  - 新增 `/decision-lab`、`/decision-lab/[slug]`、`/admin/review-lite`。
+  - 新增非破坏性 migration `0019_cheerful_junta.sql`，包含 `decision_cards` / `decision_reviews` / `query_backlog` / `answer_feedback`。
+  - 无 DB / 未迁移时，Decision Lab 使用内置 5 张 seed card fallback；query/feedback/review 写入返回 `saved=false`，页面不崩。
+  - CCB 可把真实 seed cards 放到 `docs/decision-seed-cards/**/*.yaml|yml|md`；loader 已支持。
+  - CODEXUI 可以基于本分支精修 Decision Lab UI。
+  - 暂不 merge main，等待 CCB seed cards 和 UI 分支后做集成。
+
+## Decision Intelligence v0
+
+- 数据原则: AI 是后台起草员，前台 card 带 `answer_level` / `source_grade` / `requires_review` / `last_verified_at`。
+- 读取策略: DB approved cards + repo seed cards；DB 不可用时 fallback 到内置 5 张。
+- 查询收集: `POST /api/decision-lab/query`，关键词命中跳 card，未命中记录 backlog。
+- 反馈收集: `POST /api/decision-lab/feedback`，保存 helpful / inaccurate / unclear / my_case_differs。
+- 审核: `/admin/review-lite` + `POST /api/admin/review-lite` 保存 review record；当前只做轻权限，若配置 `ADMIN_KEY` 需 key 参数。
+- 报告: `DECISION_INTELLIGENCE_V0_REPORT.md`。
+- 验证: lint / typecheck / build / test / db:generate 均通过。
 
 ## Holiday Engineering Upgrade
 
