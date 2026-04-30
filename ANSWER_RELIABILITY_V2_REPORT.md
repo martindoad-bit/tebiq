@@ -10,6 +10,7 @@
 4. lint:answer: 新增 `npm run lint:answer`，自动检查行动卡字段串位、技术字段泄漏和占位式确认文案。
 5. homepage copy: 首页标题改为「下一步怎么做？」，副文案改为步骤/材料/期限/办理窗口取向，身份选择不再阻断提交。
 6. meta title: 更新为 `TEBIQ — 日本手续下一步整理`。
+7. answer draft 展示: 保存到 DB 后的 `/answer/[id]` 会从 `行动答案：...` sections 还原行动卡，避免结果页退回字段混排。
 
 ## 10 个 benchmark
 | 问题 | 命中 | intent guard | 行动卡完整性 | 备注 |

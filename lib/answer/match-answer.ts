@@ -135,6 +135,7 @@ function seedToAnswer(seed: AnswerSeed, _questionText: string): AnswerResult {
 function actionAnswerToSections(actionAnswer: AnswerSeed['actionAnswer']): AnswerSection[] {
   if (!actionAnswer) return []
   return [
+    { heading: '行动答案：一句话结论', body: actionAnswer.conclusion },
     { heading: '行动答案：现在做什么', body: actionAnswer.what_to_do.join('\n') },
     { heading: '行动答案：办理窗口', body: actionAnswer.where_to_go.join('\n') },
     { heading: '行动答案：怎么做', body: actionAnswer.how_to_do.join('\n') },
