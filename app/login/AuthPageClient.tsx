@@ -164,7 +164,7 @@ export default function AuthPageClient({ intent = 'login' }: { intent?: 'login' 
           </div>
           <div className="mx-auto mt-5 inline-flex max-w-full items-center justify-center gap-1.5 rounded-full border border-hairline bg-surface px-3 py-1.5 text-center text-[11px] text-slate shadow-card">
             <ShieldCheck size={13} strokeWidth={1.55} className="text-ink" />
-            {inviteCode ? '注册成功后自动领取邀请奖励' : '邮箱优先，也可用手机号登录'}
+            {inviteCode ? '注册成功后自动领取邀请奖励' : '邮箱和手机号都可以登录'}
           </div>
         </section>
 
@@ -225,8 +225,9 @@ export default function AuthPageClient({ intent = 'login' }: { intent?: 'login' 
               </span>
             </label>
             {error && (
-              <div className="mt-3 rounded-[10px] bg-paper px-3 py-2" role="alert">
-                <p className="text-[12px] leading-relaxed text-danger">{error}</p>
+              <div className="mt-3 rounded-[10px] border border-hairline bg-paper px-3 py-2" role="alert">
+                <p className="text-[12px] font-medium text-ink">邮箱登录未完成</p>
+                <p className="mt-1 text-[12px] leading-relaxed text-danger">{error}</p>
                 <button
                   type="button"
                   onClick={() => {
@@ -235,7 +236,7 @@ export default function AuthPageClient({ intent = 'login' }: { intent?: 'login' 
                   }}
                   className="mt-2 text-[12px] font-medium text-ink underline underline-offset-4"
                 >
-                  使用手机号登录
+                  改用手机号登录
                 </button>
               </div>
             )}

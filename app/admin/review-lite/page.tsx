@@ -21,8 +21,8 @@ export default async function ReviewLitePage({
   ])
   return (
     <PageShell
-      title="Review Lite"
-      subtitle="轻量审核 Decision Cards。当前页面不进主导航；如配置 ADMIN_KEY，需要带 key 参数访问。"
+      title="轻量审核"
+      subtitle="按原始问题检查草稿方向、答案等级和是否需要专家。"
     >
       <ReviewLiteClient
         cards={cards}

@@ -1,11 +1,9 @@
 import Link from 'next/link'
-import { Bell, CalendarDays, ChevronRight, ClipboardCheck, FileText } from 'lucide-react'
+import { Bell, CalendarDays, Camera, ChevronRight, ClipboardCheck, FileText } from 'lucide-react'
 import AppShell from '@/app/_components/v5/AppShell'
 import TabBar from '@/app/_components/v5/TabBar'
-import TrackedLink from '@/app/_components/v5/TrackedLink'
 import QuestionIntakeBox from '@/app/_components/QuestionIntakeBox'
 import { DeadlineRow, ListRow, ListSection, SectionLabel } from '@/components/ui/tebiq'
-import { EVENT } from '@/lib/analytics/events'
 import { getCurrentUser } from '@/lib/auth/session'
 import { getMemberAccess, getTimelineRetentionCutoff, type MemberAccess } from '@/lib/billing/access'
 import { listNeedsActionDimensions } from '@/lib/db/queries/checkDimensions'
@@ -54,30 +52,18 @@ export default async function HomePage() {
 function NewUserHome() {
   return (
     <>
-      <section className="pt-10 text-center">
-        <h1 className="text-[42px] font-medium leading-none tracking-[0.055em] text-ink">TEBIQ</h1>
-        <p className="mx-auto mt-5 max-w-[280px] text-[16px] font-normal leading-[1.7] text-ink">
+      <section className="pt-6">
+        <h1 className="text-[36px] font-medium leading-none tracking-[0.04em] text-ink">TEBIQ</h1>
+        <p className="mt-3 max-w-[300px] text-[14px] leading-[1.7] text-slate">
           在日生活的日文文书识别和提醒
         </p>
-        <p className="mx-auto mt-3 max-w-[300px] text-[12px] leading-[1.7] text-ash">
-          住民税、年金、在留カード、契約書を整理。
-        </p>
-        <div className="mt-7 grid gap-3">
-          <TrackedLink
-            href="/photo"
-            eventName={EVENT.HOME_PHOTO_CARD_CLICK}
-            className="focus-ring flex min-h-[46px] items-center justify-center rounded-btn bg-ink px-4 py-3 text-[14px] font-medium leading-none text-white"
-          >
-            拍照识别文书
-          </TrackedLink>
-        </div>
       </section>
 
-      <div className="mt-5">
+      <div className="mt-6">
         <QuestionIntakeBox sourcePage="/" />
       </div>
-      <SampleDocumentSection />
       <MoreFeatures />
+      <SampleDocumentSection />
     </>
   )
 }
@@ -111,7 +97,9 @@ function UserHome({
         </section>
       )}
 
-      <ListSection>
+      <QuestionIntakeBox sourcePage="/" />
+
+      <ListSection className="mt-5">
         <OverviewRow label="在留卡" value={visaOverview(user, daysToExpiry)} href="/my/profile" />
         <OverviewRow
           label="准备事项"
@@ -129,11 +117,8 @@ function UserHome({
         </section>
       )}
 
-      <SampleDocumentSection />
-      <div className="mt-5">
-        <QuestionIntakeBox sourcePage="/" />
-      </div>
       <MoreFeatures needsActionCount={needsActionCount} next30Count={next30Count} />
+      <SampleDocumentSection />
 
       <SectionLabel title="接下来30天的期限事项" action="全部" href="/timeline" />
       <ListSection className="mt-3">
@@ -198,8 +183,14 @@ function MoreFeatures({
 }) {
   return (
     <>
-      <SectionLabel title="更多功能" />
+      <SectionLabel title="快捷工具" />
       <ListSection className="mt-3">
+        <ListRow
+          href="/photo"
+          icon={<Camera size={19} strokeWidth={1.5} />}
+          title="拍一份文书试试"
+          subtitle="识别日文文书"
+        />
         <ListRow
           href="/check"
           icon={<ClipboardCheck size={19} strokeWidth={1.5} />}

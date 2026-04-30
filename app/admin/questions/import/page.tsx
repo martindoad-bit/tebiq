@@ -15,8 +15,8 @@ export default async function ImportQuestionsPage({
   }
   return (
     <PageShell
-      title="Import Questions"
-      subtitle="粘贴 300-500 个真实历史问题。默认 source_page=manual_import / match_status=manual_import / status=new / priority=normal。"
+      title="批量导入问题"
+      subtitle="粘贴真实咨询记录。系统按行保存，后续再分流和整理。"
     >
       <ImportQuestionsClient />
     </PageShell>

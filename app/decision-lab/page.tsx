@@ -36,7 +36,7 @@ export default async function DecisionLabPage() {
               可审核的决策卡
             </h1>
             <p className="mt-2 text-[12px] leading-[1.65] text-ash">
-              AI 只做后台起草。前台内容按来源、答案等级和复核状态展示。
+              后台只做起草。前台内容按来源、答案等级和复核状态展示。
             </p>
           </div>
         </div>
