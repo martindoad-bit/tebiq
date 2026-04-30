@@ -108,7 +108,7 @@ export default function AnswerResultView({
           <ActionList title="要带什么" items={action.documents_needed} fallback={defaultConfirmationItems()} />
           <ActionList title="去哪办" items={action.where_to_go} fallback={defaultConfirmationItems()} />
           <ActionList title="期限" items={action.deadline_or_timing} fallback={defaultConfirmationItems()} />
-          <ActionList title="不处理可能怎样" items={action.consequences} />
+          <ActionList title="不做会怎样" items={action.consequences} />
         </div>
       </section>
 
