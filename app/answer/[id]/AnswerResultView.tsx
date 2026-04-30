@@ -41,6 +41,8 @@ export default function AnswerResultView({
   const [copyState, setCopyState] = useState<'idle' | 'copied'>('idle')
   const action = answer.actionAnswer
   const confirmationItems = buildConfirmationItems(action)
+  const urgentItems = action.what_to_do.slice(0, 2)
+  const stepItems = [...action.what_to_do.slice(2), ...action.how_to_do]
   const managerCopy = buildManagerCopy(answer)
 
   async function submitFeedback(type: string, label: string) {
@@ -85,16 +87,14 @@ export default function AnswerResultView({
         <div className="flex flex-wrap items-center gap-2">
           <StatusPill className={answer.statusClassName}>{answer.statusLabel}</StatusPill>
         </div>
-        <p className="mt-4 text-[11px] leading-none text-ash">整理结果</p>
-        <h1 className="mt-2 text-[21px] font-medium leading-[1.45] tracking-[-0.01em] text-ink [overflow-wrap:anywhere]">
+        <h1 className="mt-4 text-[21px] font-medium leading-[1.45] tracking-[-0.01em] text-ink [overflow-wrap:anywhere]">
           {answer.title}
         </h1>
         <div className="mt-4 rounded-[12px] bg-paper px-3 py-3">
-          <SectionHeading>一句话结论</SectionHeading>
           <p className="mt-2 text-[14px] leading-[1.75] text-ink [overflow-wrap:anywhere]">{action.conclusion}</p>
         </div>
         <div className="mt-4 border-t border-hairline pt-4">
-          <ActionList title={answer.primaryActionTitle} items={action.what_to_do} ordered />
+          <ActionList title="最紧的两件" items={urgentItems} ordered fallback={defaultConfirmationItems()} />
         </div>
         <div className="mt-4 border-t border-hairline pt-4">
           <p className="text-[11px] leading-none text-ash">你的问题</p>
@@ -103,46 +103,43 @@ export default function AnswerResultView({
       </section>
 
       <section className="rounded-card border border-hairline bg-surface">
-        <div className="border-b border-hairline px-4 py-3">
-          <SectionTitle title="下一步怎么做" />
-        </div>
         <div className="divide-y divide-hairline px-4">
-          <ActionList title="去哪里办理" items={action.where_to_go} />
-          <ActionList title="怎么做" items={action.how_to_do} />
-          <ActionList title="需要准备什么" items={action.documents_needed} />
-          <ActionList title="期限和时机" items={action.deadline_or_timing} />
+          <ActionList title="步骤" items={stepItems} ordered fallback={defaultConfirmationItems()} />
+          <ActionList title="要带什么" items={action.documents_needed} fallback={defaultConfirmationItems()} />
+          <ActionList title="去哪办" items={action.where_to_go} fallback={defaultConfirmationItems()} />
+          <ActionList title="期限" items={action.deadline_or_timing} fallback={defaultConfirmationItems()} />
           <ActionList title="不处理可能怎样" items={action.consequences} />
         </div>
       </section>
 
       <section className="rounded-card border border-hairline bg-surface px-4 py-4">
-        <ActionList title="需要专家确认的情况" items={action.expert_handoff} />
+        <ActionList title="要找专家的情况" items={action.expert_handoff} />
       </section>
 
       <section className="rounded-card border border-hairline bg-surface px-4 py-4">
-        <SectionTitle title="给客户看的简短说明" />
+        <SectionTitle title="客户版" />
         <p className="mt-3 text-[13px] leading-[1.75] text-slate [overflow-wrap:anywhere]">{managerCopy}</p>
         <button
           type="button"
           onClick={copyManagerText}
           className="mt-3 min-h-[38px] rounded-[10px] border border-hairline bg-canvas px-3 text-[12px] font-medium text-ink active:bg-paper"
         >
-          {copyState === 'copied' ? '已复制' : '复制这段说明'}
+          {copyState === 'copied' ? '已复制' : '复制给客户'}
         </button>
       </section>
 
       <section className="rounded-card border border-hairline bg-surface px-4 py-4">
-        <ActionList title="还需要确认" items={confirmationItems} />
+        <ActionList title="还需要确认" items={confirmationItems} fallback={defaultConfirmationItems()} />
       </section>
 
       <section className="rounded-card border border-hairline bg-surface px-4 py-4">
-        <SectionTitle title="使用边界" />
-        <p className="mt-3 text-[12px] leading-[1.7] text-ash [overflow-wrap:anywhere]">{action.boundary_note}</p>
-        <p className="mt-3 text-[11px] leading-[1.6] text-ash [overflow-wrap:anywhere]">{answer.sourceHint}</p>
+        <SectionTitle title="来源与说明" />
+        <p className="mt-3 text-[12px] leading-[1.7] text-ash [overflow-wrap:anywhere]">{answer.sourceHint}</p>
+        <p className="mt-2 text-[12px] leading-[1.7] text-ash [overflow-wrap:anywhere]">{action.boundary_note}</p>
       </section>
 
       <section className="rounded-card border border-hairline bg-surface px-4 py-4">
-        <SectionTitle title="这条整理是否有用" />
+        <SectionTitle title="这条有用吗" />
         <div className="mt-3 grid grid-cols-2 gap-2">
           {FEEDBACK_OPTIONS.map(option => (
             <button
@@ -185,12 +182,14 @@ function ActionList({
   title,
   items,
   ordered = false,
+  fallback,
 }: {
   title: string
   items: string[]
   ordered?: boolean
+  fallback?: string[]
 }) {
-  const displayItems = items.length > 0 ? items.slice(0, 6) : ['这部分需要进一步确认。']
+  const displayItems = items.length > 0 ? items.slice(0, 6) : (fallback ?? defaultConfirmationItems())
   const content = displayItems.map((item, index) => (
     <li key={`${title}-${item}`} className="grid grid-cols-[24px_1fr] gap-2 text-[12px] leading-[1.65] text-slate">
       <span className="flex h-6 w-6 items-center justify-center rounded-[8px] bg-paper text-[11px] tabular-nums text-ink">
@@ -237,6 +236,10 @@ function buildConfirmationItems(action: ActionAnswer): string[] {
     items.push('最近一次缴纳、资格丧失或督促记录')
   }
   return items.slice(0, 7)
+}
+
+function defaultConfirmationItems(): string[] {
+  return ['还需要确认：你的身份、事情发生日期、是否已经收到通知、是否已经逾期。']
 }
 
 function buildManagerCopy(answer: AnswerResult): string {
