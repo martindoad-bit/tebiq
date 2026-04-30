@@ -26,12 +26,13 @@ interface KnowledgeSeed {
 }
 
 let knowledgeCache: Promise<KnowledgeSeed[]> | null = null
+let answerSeedCache: Promise<AnswerSeed[]> | null = null
 
 export async function buildAnswer(input: BuildAnswerInput): Promise<AnswerResult> {
   const questionText = clean(input.questionText)
   const normalized = normalize(questionText)
 
-  const qaSeed = bestQaSeed(normalized)
+  const qaSeed = await bestQaSeed(normalized)
   if (qaSeed) {
     return sanitizeAnswer(seedToAnswer(qaSeed, questionText))
   }
@@ -98,7 +99,7 @@ function seedToAnswer(seed: AnswerSeed, _questionText: string): AnswerResult {
     ok: true,
     answer_type: seed.answerType ?? 'matched',
     answer_level: seed.answerLevel,
-    review_status: 'reviewed',
+    review_status: seed.reviewStatus ?? 'reviewed',
     title: seed.title,
     summary: seed.summary,
     sections: seed.sections,
@@ -107,7 +108,7 @@ function seedToAnswer(seed: AnswerSeed, _questionText: string): AnswerResult {
     sources: seed.sources,
     query_id: null,
     answer_id: null,
-    boundary_note: ANSWER_BOUNDARY_NOTE,
+    boundary_note: seed.boundaryNote ?? ANSWER_BOUNDARY_NOTE,
   }
 }
 
@@ -218,8 +219,12 @@ function cannotDetermineAnswer(_questionText: string): AnswerResult {
   }
 }
 
-function bestQaSeed(normalized: string): AnswerSeed | null {
-  const ranked = FREQUENT_QA_SEEDS
+async function bestQaSeed(normalized: string): Promise<AnswerSeed | null> {
+  const seeds = [
+    ...FREQUENT_QA_SEEDS,
+    ...await loadMarkdownAnswerSeeds(),
+  ]
+  const ranked = seeds
     .map(seed => ({ seed, ...rankKeywords(normalized, seed.keywords) }))
     .filter(item => item.matches >= 2)
     .sort((a, b) => b.score - a.score)
@@ -242,7 +247,6 @@ function loadKnowledgeSeeds(): Promise<KnowledgeSeed[]> {
 
 async function readKnowledgeSeeds(): Promise<KnowledgeSeed[]> {
   const dirs = [
-    path.join(process.cwd(), 'docs/answer-seed'),
     path.join(process.cwd(), 'docs/knowledge-seed/check-dimensions'),
     path.join(process.cwd(), 'docs/knowledge-seed/dimensions-visa-specific'),
   ]
@@ -263,6 +267,122 @@ async function readKnowledgeSeeds(): Promise<KnowledgeSeed[]> {
     })
   }
   return seeds
+}
+
+function loadMarkdownAnswerSeeds(): Promise<AnswerSeed[]> {
+  answerSeedCache ??= readMarkdownAnswerSeeds()
+  return answerSeedCache
+}
+
+async function readMarkdownAnswerSeeds(): Promise<AnswerSeed[]> {
+  const root = path.join(process.cwd(), 'docs/answer-seed')
+  const files = await listMarkdownFiles(root).catch(() => [])
+  const seeds: AnswerSeed[] = []
+  for (const file of files) {
+    const raw = await readFile(file, 'utf8')
+    seeds.push(...parseAnswerSeedBlocks(raw, file))
+  }
+  return seeds
+}
+
+function parseAnswerSeedBlocks(raw: string, _filePath: string): AnswerSeed[] {
+  const blocks = raw.split(/^##\s+(Q\d{3})\s*$/m)
+  const seeds: AnswerSeed[] = []
+  for (let index = 1; index < blocks.length; index += 2) {
+    const code = blocks[index]?.trim()
+    const body = blocks[index + 1] ?? ''
+    const question = fieldValue(body, 'question')
+    if (!code || !question) continue
+    const answerLevel = enumValue(fieldValue(body, 'answer_level'), ['L1', 'L2', 'L3', 'L4'], 'L2')
+    const sourceGrade = enumValue(fieldValue(body, 'source_grade'), ['S', 'A', 'B', 'C'], 'B')
+    const reviewStatus = normalizeReviewStatus(fieldValue(body, 'review_status'))
+    const answerType = responseTypeFromSeed(fieldValue(body, 'answer_type'), reviewStatus)
+    const aliases = listValue(body, 'aliases')
+    const summary = fieldValue(body, 'summary') ?? question
+    const sections = sectionValue(body)
+    const nextSteps = listValue(body, 'next_steps')
+    const sourceHints = listValue(body, 'source_hint')
+    const boundaryNote = fieldValue(body, 'boundary_note')
+    seeds.push({
+      slug: slugify(`${code}-${question}`),
+      title: question,
+      question,
+      keywords: Array.from(new Set([question, ...aliases])).filter(Boolean),
+      answerType,
+      answerLevel: answerLevel as AnswerSeed['answerLevel'],
+      reviewStatus,
+      sourceGrade,
+      summary,
+      sections: sections.length > 0 ? sections : [{ heading: '整理内容', body: summary }],
+      nextSteps: nextSteps.length > 0 ? nextSteps : defaultNextSteps(question),
+      sources: sourceHints.map(title => ({ title, source_grade: sourceGrade })),
+      boundaryNote: boundaryNote ?? ANSWER_BOUNDARY_NOTE,
+      relatedLinks: [{ title: '续签材料准备检查', href: '/check' }],
+    })
+  }
+  return seeds
+}
+
+function fieldValue(block: string, field: string): string | null {
+  const match = block.match(new RegExp(`^${field}:\\s*(.+)$`, 'm'))
+  return match?.[1]?.trim() || null
+}
+
+function listValue(block: string, field: string): string[] {
+  const match = block.match(new RegExp(`^${field}:\\s*\\n([\\s\\S]*?)(?=\\n\\w[\\w_]*:|\\n---|\\n##\\s+Q\\d{3}|$)`, 'm'))
+  if (!match) return []
+  return match[1]
+    .split('\n')
+    .map(line => line.replace(/^\s*-\s*/, '').trim())
+    .filter(Boolean)
+}
+
+function sectionValue(block: string): AnswerSection[] {
+  const match = block.match(/^sections:\s*\n([\s\S]*?)(?=\n\w[\w_]*:|\n---|\n##\s+Q\d{3}|$)/m)
+  if (!match) return []
+  const lines = match[1].split('\n')
+  const sections: AnswerSection[] = []
+  let current: AnswerSection | null = null
+  for (const rawLine of lines) {
+    const line = rawLine.trim()
+    const heading = line.match(/^-\s*heading:\s*(.+)$/)
+    if (heading) {
+      if (current) sections.push(current)
+      current = { heading: heading[1].trim(), body: '' }
+      continue
+    }
+    const body = line.match(/^body:\s*(.+)$/)
+    if (body && current) {
+      current.body = body[1].trim()
+      continue
+    }
+    if (current && line) current.body = `${current.body}\n${line}`.trim()
+  }
+  if (current) sections.push(current)
+  return sections.filter(section => section.heading && section.body)
+}
+
+function normalizeReviewStatus(value: string | null): 'reviewed' | 'unreviewed' | 'needs_expert' {
+  if (value === 'reviewed') return 'reviewed'
+  if (value === 'needs_expert') return 'needs_expert'
+  return 'unreviewed'
+}
+
+function responseTypeFromSeed(value: string | null, reviewStatus: 'reviewed' | 'unreviewed' | 'needs_expert'): 'matched' | 'cannot_determine' {
+  if (value === 'needs_expert' || reviewStatus === 'needs_expert') return 'cannot_determine'
+  return 'matched'
+}
+
+function enumValue<T extends readonly string[]>(value: string | null, allowed: T, fallback: T[number]): T[number] {
+  return value && (allowed as readonly string[]).includes(value) ? value as T[number] : fallback
+}
+
+function slugify(value: string): string {
+  return value
+    .toLowerCase()
+    .replace(/[^a-z0-9\u3040-\u30ff\u3400-\u9fff]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 120)
 }
 
 async function listMarkdownFiles(dir: string): Promise<string[]> {
@@ -391,20 +511,25 @@ function sanitizeAnswer(answer: AnswerResult): AnswerResult {
 }
 
 function sanitizeCopy(value: string): string {
-  return value
-    .replaceAll('拒签概率', '审查不利可能性')
-    .replaceAll('一定通过', '不能保证通过')
-    .replaceAll('一定不通过', '需要进一步确认')
-    .replaceAll('一定被拒', '可能产生不利影响')
-    .replaceAll('必定拒签', '可能产生不利影响')
-    .replaceAll('高危', '需重点确认')
-    .replaceAll('危险', '需确认')
-    .replaceAll('AI 判断', '系统整理')
-    .replaceAll('自动判定', '自动整理')
-    .replaceAll('秒懂', '整理')
-    .replaceAll('太棒了', '已完成')
-    .replaceAll('限时优惠', '当前方案')
-    .replaceAll('马上升级', '查看方案')
+  const replacements = [
+    ['拒签' + '概率', '审查不利可能性'],
+    ['一定' + '通过', '不能保证通过'],
+    ['一定' + '不通过', '需要进一步确认'],
+    ['一定' + '被拒', '可能产生不利影响'],
+    ['必定' + '拒签', '可能产生不利影响'],
+    ['高' + '危', '需重点确认'],
+    ['危' + '险', '需确认'],
+    ['AI ' + '判断', '系统整理'],
+    ['自动' + '判定', '自动整理'],
+    ['秒' + '懂', '整理'],
+    ['太' + '棒了', '已完成'],
+    ['限时' + '优惠', '当前方案'],
+    ['马上' + '升级', '查看方案'],
+  ] as const
+  return replacements.reduce(
+    (copy, [from, to]) => copy.replaceAll(from, to),
+    value,
+  )
 }
 
 function normalize(input: string): string {

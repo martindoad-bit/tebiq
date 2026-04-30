@@ -62,17 +62,19 @@ export default async function TimelineEventPage({
         <dl className="mt-3 grid gap-2 text-[12px]">
           <InfoRow label="类型" value={event.docType} />
           <InfoRow label="机构" value={event.issuer} />
-          <InfoRow label="期限" value={event.deadline} />
-          <InfoRow label="金额" value={event.amount ? `¥${event.amount}` : null} />
-          <InfoRow label="来源" value={event.sourceRecordType} />
+          <InfoRow label="期限" value={event.deadline} empty="暂未记录期限" />
+          <InfoRow label="金额" value={event.amount ? `¥${event.amount}` : null} empty="暂未记录金额" />
+          <InfoRow label="来源" value={sourceLabel(event.sourceRecordType)} />
         </dl>
       </section>
 
       <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-4">
-        <h2 className="text-[13px] font-medium text-ink">原始结果</h2>
-        <pre className="mt-3 max-h-[360px] overflow-auto whitespace-pre-wrap rounded-[12px] bg-canvas p-3 text-[11px] leading-[1.65] text-slate">
-          {JSON.stringify(event.eventPayload, null, 2)}
-        </pre>
+        <h2 className="text-[13px] font-medium text-ink">记录内容</h2>
+        <div className="mt-3 grid gap-2 text-[12px] leading-[1.7] text-slate">
+          {payloadLines(event.eventPayload).map(line => (
+            <p key={line} className="rounded-[10px] bg-canvas px-3 py-2">{line}</p>
+          ))}
+        </div>
       </section>
 
       <TimelineEventActions
@@ -105,11 +107,41 @@ export default async function TimelineEventPage({
   )
 }
 
-function InfoRow({ label, value }: { label: string; value: string | null }) {
+function InfoRow({ label, value, empty = '未记录' }: { label: string; value: string | null; empty?: string }) {
   return (
     <div className="grid grid-cols-[72px_1fr] gap-3 rounded-[10px] bg-canvas px-3 py-2">
       <dt className="text-ash">{label}</dt>
-      <dd className="min-w-0 truncate text-ink">{value ?? '未记录'}</dd>
+      <dd className="min-w-0 truncate text-ink">{value ?? empty}</dd>
     </div>
   )
+}
+
+function sourceLabel(value: string | null): string {
+  if (value === 'document') return '文书识别'
+  if (value === 'quiz_result') return '材料准备检查'
+  if (value === 'text_understand') return '文字整理'
+  if (value === 'policy_match') return '政策更新'
+  return '手动记录'
+}
+
+function payloadLines(payload: Record<string, unknown>): string[] {
+  const lines = [
+    stringLine(payload.summary),
+    stringLine(payload.meaning),
+    stringLine(payload.translation),
+    stringLine(payload.deadline ? `期限：${String(payload.deadline)}` : null),
+    stringLine(payload.amount ? `金额：${String(payload.amount)}` : null),
+  ].filter((line): line is string => Boolean(line))
+  const actions = Array.isArray(payload.generalActions)
+    ? payload.generalActions.filter((item): item is string => typeof item === 'string')
+    : Array.isArray(payload.nextSteps)
+      ? payload.nextSteps.filter((item): item is string => typeof item === 'string')
+      : []
+  return [...lines, ...actions.slice(0, 5)].length > 0
+    ? [...lines, ...actions.slice(0, 5)]
+    : ['暂无可显示的结构化内容。']
+}
+
+function stringLine(value: unknown): string | null {
+  return typeof value === 'string' && value.trim() ? value.trim() : null
 }
