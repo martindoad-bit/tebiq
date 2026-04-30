@@ -80,7 +80,9 @@ export default function AuthPageClient({ intent = 'login' }: { intent?: 'login' 
         setError(data?.error ?? '发送失败')
         return
       }
-      setMessage(`登录链接已发送到 ${normalized}，10 分钟内有效。`)
+      setMessage(
+        `登录链接已发送到 ${normalized}，10 分钟内有效。请检查收件箱、垃圾箱、广告邮件夹。若仍未收到，可以稍后重试，或使用手机号登录。`,
+      )
     } catch {
       setError('网络错误，请重试')
     } finally {
@@ -247,6 +249,9 @@ export default function AuthPageClient({ intent = 'login' }: { intent?: 'login' 
               <Send size={12} strokeWidth={1.55} />
               链接 10 分钟内有效
             </div>
+            <p className="mt-2 text-center text-[10.5px] leading-relaxed text-ash">
+              收不到邮件时，请检查垃圾箱和广告邮件夹；也可以切换手机号登录。
+            </p>
           </div>
         )}
 

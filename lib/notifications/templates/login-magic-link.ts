@@ -42,7 +42,7 @@ export const template = {
             </tr>
             <tr>
               <td style="font-size:14px;line-height:1.8;color:${COLORS.body};">
-                <p style="margin:0 0 4px;">这是 TEBIQ 的登录链接。</p>
+                <p style="margin:0 0 4px;">点击下方按钮登录 TEBIQ。</p>
                 <p style="margin:0 0 16px;">链接10分钟内有效。</p>
               </td>
             </tr>
@@ -56,7 +56,7 @@ export const template = {
                 <p style="margin:0 0 8px;">このメールに心当たりがない場合は無視してください。</p>
                 <p style="margin:0 0 16px;">如果你没有请求登录，请忽略此邮件。</p>
                 <p style="margin:0 0 6px;word-break:break-all;color:${COLORS.brand};">${data.loginUrl}</p>
-                <p style="margin:16px 0 0;">TEBIQ<br />https://tebiq.jp</p>
+                <p style="margin:16px 0 0;">TEBIQ<br />刺狐合同会社<br />https://tebiq.jp</p>
               </td>
             </tr>
           </table>
@@ -78,7 +78,7 @@ ${data.loginUrl}
 このメールに心当たりがない場合は無視してください。
 
 【中文】
-这是 TEBIQ 的登录链接。
+点击下方按钮登录 TEBIQ。
 链接10分钟内有效。
 
 登录:
@@ -87,6 +87,7 @@ ${data.loginUrl}
 如果你没有请求登录，请忽略此邮件。
 
 TEBIQ
+刺狐合同会社
 https://tebiq.jp
 `
 

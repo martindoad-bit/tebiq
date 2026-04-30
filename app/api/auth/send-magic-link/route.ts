@@ -38,7 +38,7 @@ function clientIp(req: Request): string {
 const SEND_FAILED_MESSAGE =
   '发送失败，请稍后重试。\n送信に失敗しました。後ほどお試しください。'
 const RATE_LIMIT_MESSAGE =
-  '发送次数较多，请稍后再试。\n送信回数が多いため、しばらくしてからお試しください。'
+  '请求过于频繁，请稍后再试。\nリクエストが多すぎます。後ほどお試しください。'
 
 export async function POST(req: Request) {
   let body: Record<string, unknown>

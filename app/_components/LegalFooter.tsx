@@ -19,7 +19,7 @@ export default function LegalFooter() {
           </a>
         </nav>
         <div className="text-xs leading-relaxed text-muted/90">
-          運営：hedgefox合同会社（刺狐合同会社）
+          運営：刺狐合同会社
           <br />
           〒161-0033 東京都新宿区下落合3丁目12-28 目白が丘マンション309号室
           <br />

@@ -20,7 +20,7 @@ function emailProvider(): 'mock' | 'resend' {
   const configured = process.env.NOTIFICATION_EMAIL_CHANNEL
   if (configured === 'resend') return 'resend'
   if (configured === 'mock' && process.env.NODE_ENV !== 'production') return 'mock'
-  if (process.env.RESEND_API_KEY) return 'resend'
+  if (process.env.RESEND_API_KEY && process.env.RESEND_FROM_EMAIL) return 'resend'
   return process.env.NODE_ENV === 'production' ? 'resend' : 'mock'
 }
 
@@ -44,11 +44,16 @@ function emailErrorMessage(error: unknown): string {
     code?: unknown
     name?: unknown
     message?: unknown
+    requestId?: unknown
+    request_id?: unknown
     statusCode?: unknown
   }
   const label = source.code ?? source.statusCode ?? source.name ?? 'email_error'
   const message = source.message ?? 'unknown email error'
-  return `${String(label)}: ${String(message)}`
+  const requestId = source.requestId ?? source.request_id
+  return requestId
+    ? `${String(label)}: ${String(message)} request_id=${String(requestId)}`
+    : `${String(label)}: ${String(message)}`
 }
 
 async function sendMockEmail(input: EmailInput): Promise<EmailOutcome> {
@@ -78,6 +83,9 @@ async function sendResendEmail(input: EmailInput): Promise<EmailOutcome> {
   const apiKey = process.env.RESEND_API_KEY
   if (!apiKey) {
     return { ok: false, provider: 'resend', error: 'RESEND_API_KEY not set' }
+  }
+  if (!process.env.RESEND_FROM_EMAIL?.trim()) {
+    return { ok: false, provider: 'resend', error: 'RESEND_FROM_EMAIL not set' }
   }
 
   try {

@@ -19,7 +19,7 @@ export default function PrivacyPage() {
         <p className="mt-3 text-[11px] text-ash">最終更新日：2026年4月24日</p>
 
         <p className="mt-6 text-[13px] leading-[1.8] text-slate">
-          hedgefox合同会社（以下「当社」といいます）は、お客様の個人情報の重要性を認識し、
+          刺狐合同会社（以下「当社」といいます）は、お客様の個人情報の重要性を認識し、
           以下の方針に基づき適切に取り扱います。
         </p>
 
@@ -37,7 +37,7 @@ export default function PrivacyPage() {
             個人情報の取扱いに関するお問い合わせは、以下までお願いいたします：
           </p>
           <p className="mt-2 text-[12px] leading-[1.75] text-slate">
-            hedgefox合同会社
+            刺狐合同会社
             <br />
             メール：
             <a
@@ -84,7 +84,7 @@ const SECTIONS = [
           <li>電話番号</li>
           <li>在留資格に関する情報</li>
           <li>自己診断の回答内容</li>
-          <li>決済情報（Stripeを通じて処理、当社は保存しません）</li>
+          <li>決済情報（有料機能提供時に決済代行会社を通じて処理、当社はカード情報を保存しません）</li>
         </ul>
       </>
     ),

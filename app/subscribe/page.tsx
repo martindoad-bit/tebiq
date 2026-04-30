@@ -1,12 +1,10 @@
 'use client'
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import AppShell from '@/app/_components/v5/AppShell'
 import AppBar from '@/app/_components/v5/AppBar'
 import Button from '@/app/_components/v5/Button'
 import { StatusBadge } from '@/components/ui/tebiq'
-import { apiPost, ApiError } from '@/lib/api/client'
 
 const PAID_PLANS = [
   {
@@ -28,38 +26,7 @@ const PAID_PLANS = [
 const FREE_FEATURES = ['拍照每天 1 次', '注册赠 7 天试用', '基础提醒']
 
 export default function SubscribePage() {
-  const router = useRouter()
   const [selected, setSelected] = useState<typeof PAID_PLANS[number]['product']>('basic_yearly')
-  const [busy, setBusy] = useState(false)
-  const [err, setErr] = useState<string | null>(null)
-
-  async function handleSubscribe() {
-    if (busy) return
-    setBusy(true)
-    setErr(null)
-    try {
-      const res = await apiPost<{ checkout_url: string }>('/api/stripe/checkout', {
-        product: selected,
-      })
-      if (res.checkout_url) {
-        window.location.href = res.checkout_url
-      } else {
-        setErr('未能创建支付链接')
-      }
-    } catch (e) {
-      if (e instanceof ApiError) {
-        if (e.status === 401) {
-          router.push('/login?next=/subscribe')
-          return
-        }
-        setErr(e.message)
-      } else {
-        setErr('网络异常')
-      }
-    } finally {
-      setBusy(false)
-    }
-  }
 
   const selectedPlan = PAID_PLANS.find(plan => plan.product === selected) ?? PAID_PLANS[1]
 
@@ -69,7 +36,7 @@ export default function SubscribePage() {
         <p className="text-[13px] text-ash">定价</p>
         <h1 className="mt-2 text-[20px] font-medium leading-snug text-ink">文书识别和提醒</h1>
         <p className="mt-2 text-[13px] leading-[1.7] text-ash">
-          识别次数、提醒保留和时间线查询。付款由 Stripe 处理。
+          识别次数、提醒保留和时间线查询。支付接入准备中，正式开通前不会扣款。
         </p>
       </section>
 
@@ -95,10 +62,12 @@ export default function SubscribePage() {
         ))}
       </section>
 
-      {err && <p className="mt-3 text-center text-[12px] text-warning" role="alert">{err}</p>}
-      <Button onClick={handleSubscribe} disabled={busy} className="mt-4 min-h-[46px]">
-        {busy ? '处理中...' : `开通${selectedPlan.name}`}
+      <Button disabled className="mt-4 min-h-[46px]">
+        {`开通${selectedPlan.name}（准备中）`}
       </Button>
+      <p className="mt-2 text-center text-[11px] leading-relaxed text-ash">
+        目前仅展示定价方案。支付方式确定后会在本页和特定商取引法页面同步更新。
+      </p>
 
       <ConsumerProtectionNotice />
 

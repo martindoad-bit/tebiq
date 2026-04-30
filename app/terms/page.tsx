@@ -18,7 +18,7 @@ export default function TermsPage() {
         <p className="mt-3 text-[11px] text-ash">最終更新日：2026年4月24日</p>
 
         <p className="mt-6 text-[13px] leading-[1.8] text-slate">
-          本規約は、hedgefox合同会社（以下「当社」といいます）が提供する
+          本規約は、刺狐合同会社（以下「当社」といいます）が提供する
           TEBIQ（以下「本サービス」といいます）の利用条件を定めるものです。
         </p>
 

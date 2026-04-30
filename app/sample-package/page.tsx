@@ -276,7 +276,7 @@ export default function SamplePackagePage() {
             </TrackedLink>
             <p className="mt-3 flex items-center justify-center gap-1.5 text-center text-[11px] text-ash">
               <ShieldCheck size={13} strokeWidth={1.55} />
-              支払いはStripeにて安全に処理されます · 即時ダウンロード
+              支払い方法は正式公開前に表示します
             </p>
         </div>
       </section>

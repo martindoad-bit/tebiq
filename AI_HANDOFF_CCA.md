@@ -1,22 +1,19 @@
 # AI Handoff - CCA
 
-最后更新: 2026-04-30T13:45:11+09:00
+最后更新: 2026-04-30T13:48:30+09:00
 
 ## CCA(代码)状态
 
-- 当前任务: Auth + Question Intake Production Integration
-- 当前分支: codex/auth-intake-production
-- 当前 worktree: /Users/martin/Documents/tebiq/.claude/worktrees/auth-intake-production
-- 状态: done
-- 最近一次 push: main final report update（以当前 main HEAD 为准）
+- 当前任务: Auth Email + Legal Readiness + Payment Strategy Audit
+- 当前分支: chore/auth-email-readiness
+- 当前 worktree: /Users/martin/Documents/tebiq/.claude/worktrees/auth-email-readiness
+- 状态: awaiting_merge
+- 最近一次 push: 待 push 后以 `chore/auth-email-readiness` HEAD 为准
 - 给其他 AI 的通知:
-  - 已合入 `origin/codex/question-intake-v1`，保留 `/api/questions`、`/admin/questions`、批量导入和 review-lite 衔接。
-  - 已接入 Resend magic link 发送；production 有 `RESEND_API_KEY` 时真发，无 key 不回退 dev。
-  - 非 production dev mode 保留 mock email + server log magic link。
-  - 新增 magic link rate limit：同邮箱 5 分钟 3 次、同 IP 1 小时 10 次。
-  - `0019_cheerful_junta.sql` / `0020_salty_spiral.sql` 已检查为非破坏性；production migration 已执行成功。
-  - production 已验证 `/api/questions` 前台提交、`/admin/questions/import` 批量导入、Resend API 发送和 magic link verify route。
-  - 报告: `AUTH_INTAKE_PRODUCTION_REPORT.md`。
+  - 本轮只收紧登录邮件可达性、法律主体显示和支付策略说明。
+  - 不接 Stripe / PayPay / 微信支付，不改主产品结构。
+  - 报告: `AUTH_EMAIL_READINESS_REPORT.md`。
+  - 支付策略记录: `PAYMENT_STRATEGY_NOTE.md`。
 
 ## Question Intake v1
 

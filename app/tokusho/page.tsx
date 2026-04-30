@@ -53,7 +53,7 @@ function Section({ label, children }: { label: string; children: ReactNode }) {
 const SECTIONS = [
   {
     label: '販売事業者',
-    lines: ['hedgefox合同会社（刺狐合同会社）'],
+    lines: ['刺狐合同会社'],
   },
   {
     label: '代表者',
@@ -84,18 +84,15 @@ const SECTIONS = [
   },
   {
     label: '支払方法',
-    lines: [
-      'クレジットカード決済（Stripe経由）',
-      '対応ブランド：Visa / MasterCard / JCB / American Express',
-    ],
+    lines: ['正式公開前に本ページで表示します（クレジットカード等を検討中）'],
   },
   {
     label: '支払時期',
-    lines: ['ご注文確定時に決済'],
+    lines: ['有料プラン申込時に表示します'],
   },
   {
     label: '商品の引渡時期',
-    lines: ['決済完了後、即時にダウンロード可能'],
+    lines: ['有料機能は決済確認後に利用可能となります'],
   },
   {
     label: '返品・返金について',
