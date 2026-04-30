@@ -30,8 +30,19 @@ export async function POST(req: Request) {
       contactEmail,
       sourcePage: stringValue(row.source_page ?? row.sourcePage) ?? '/question-intake',
     })
-    const { ok: _ok, ...payload } = answer
-    return Response.json({ ok: true, ...payload })
+    return Response.json({
+      ok: true,
+      answer_type: answer.answer_type,
+      answer_level: answer.answer_level,
+      review_status: answer.review_status,
+      title: answer.title,
+      action_answer: answer.action_answer,
+      related_links: answer.related_links,
+      sources: answer.sources,
+      query_id: answer.query_id,
+      answer_id: answer.answer_id,
+      saved: answer.saved,
+    })
   } catch (error) {
     console.warn('[api/questions] answer failed', errorCode(error))
     return errors.internal('整理暂时失败，请稍后再试')

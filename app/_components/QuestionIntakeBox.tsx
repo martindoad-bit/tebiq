@@ -25,7 +25,6 @@ export default function QuestionIntakeBox({
   const router = useRouter()
   const [questionText, setQuestionText] = useState('')
   const [visaType, setVisaType] = useState('')
-  const [contactEmail, setContactEmail] = useState('')
   const [busy, setBusy] = useState(false)
   const [inlineAnswer, setInlineAnswer] = useState<InlineAnswer | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -44,7 +43,6 @@ export default function QuestionIntakeBox({
         body: JSON.stringify({
           question_text: text,
           visa_type: visaType || null,
-          contact_email: contactEmail.trim() || null,
           source_page: sourcePage,
         }),
       })
@@ -54,7 +52,6 @@ export default function QuestionIntakeBox({
         return
       }
       setQuestionText('')
-      setContactEmail('')
       if (json.answer_id) {
         router.push(`/answer/${json.answer_id}`)
       } else {
@@ -86,18 +83,23 @@ export default function QuestionIntakeBox({
           : '把具体情况写下来。TEBIQ 会先给出整理结果，并把问题进入后台复核。'}
       </p>
       {!compact && (
-        <div className="mt-4 flex flex-wrap gap-2">
-          {EXAMPLES.map(example => (
-            <button
-              key={example}
-              type="button"
-              onClick={() => setQuestionText(current => current.trim() ? current : example)}
-              className="min-h-[30px] rounded-[8px] bg-paper px-2.5 text-[12px] text-slate active:bg-hairline"
-            >
-              {example}
-            </button>
-          ))}
-        </div>
+        <>
+          <p className="mt-2 text-[12px] leading-[1.65] text-ash">
+            写下情况后，会返回一份整理结果；不确定时会说明需要补充什么信息。
+          </p>
+          <div className="mt-4 flex flex-wrap gap-2">
+            {EXAMPLES.map(example => (
+              <button
+                key={example}
+                type="button"
+                onClick={() => setQuestionText(current => current.trim() ? current : example)}
+                className="min-h-[30px] rounded-[8px] bg-paper px-2.5 text-[12px] text-slate active:bg-hairline"
+              >
+                {example}
+              </button>
+            ))}
+          </div>
+        </>
       )}
       <form onSubmit={submit} className="mt-4 grid gap-3">
         <textarea
@@ -109,24 +111,15 @@ export default function QuestionIntakeBox({
           placeholder={compact ? '例如：换工作后在留更新要准备什么' : '例：公司下个月搬办公室，我是经营管理签证。需要先办什么，哪些材料会影响续签？'}
           className={`${compact ? 'min-h-[94px]' : 'min-h-[148px]'} w-full resize-none rounded-[12px] border border-hairline bg-canvas px-3.5 py-3 text-[16px] leading-[1.65] text-ink outline-none placeholder:text-haze focus:border-ink`}
         />
-        <div className="grid gap-2 sm:grid-cols-2">
-          <select
-            value={visaType}
-            onChange={event => setVisaType(event.target.value)}
-            className="min-h-[42px] rounded-[12px] border border-hairline bg-canvas px-3 text-[12px] text-ink outline-none focus:border-ink"
-          >
-            {VISA_OPTIONS.map(option => (
-              <option key={option.value || 'none'} value={option.value}>{option.label}</option>
-            ))}
-          </select>
-          <input
-            type="email"
-            value={contactEmail}
-            onChange={event => setContactEmail(event.target.value)}
-            placeholder="邮箱（可选）"
-            className="min-h-[42px] rounded-[12px] border border-hairline bg-canvas px-3 text-[12px] text-ink outline-none placeholder:text-ash focus:border-ink"
-          />
-        </div>
+        <select
+          value={visaType}
+          onChange={event => setVisaType(event.target.value)}
+          className="min-h-[42px] rounded-[12px] border border-hairline bg-canvas px-3 text-[12px] text-ink outline-none focus:border-ink"
+        >
+          {VISA_OPTIONS.map(option => (
+            <option key={option.value || 'none'} value={option.value}>{option.label}</option>
+          ))}
+        </select>
         <button
           type="submit"
           disabled={busy || !questionText.trim()}
@@ -138,10 +131,10 @@ export default function QuestionIntakeBox({
       {inlineAnswer && (
         <div className="mt-3 rounded-[10px] bg-paper px-3 py-3 text-[12px] leading-[1.6] text-slate">
           <p className="font-medium text-ink">{statusLabel(inlineAnswer.answer_type)}</p>
-          <p className="mt-1">{inlineAnswer.summary}</p>
-          {inlineAnswer.next_steps.length > 0 && (
+          <p className="mt-1">{inlineAnswer.action_answer.conclusion}</p>
+          {inlineAnswer.action_answer.what_to_do.length > 0 && (
             <ol className="mt-2 list-decimal pl-4">
-              {inlineAnswer.next_steps.slice(0, 3).map(step => <li key={step}>{step}</li>)}
+              {inlineAnswer.action_answer.what_to_do.slice(0, 3).map(step => <li key={step}>{step}</li>)}
             </ol>
           )}
         </div>
@@ -155,8 +148,10 @@ interface InlineAnswer {
   ok?: boolean
   answer_id?: string | null
   answer_type: 'matched' | 'draft' | 'cannot_determine'
-  summary: string
-  next_steps: string[]
+  action_answer: {
+    conclusion: string
+    what_to_do: string[]
+  }
 }
 
 function statusLabel(type: InlineAnswer['answer_type']) {

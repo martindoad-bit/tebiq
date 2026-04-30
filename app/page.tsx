@@ -189,7 +189,7 @@ function MoreFeatures({
           href="/photo"
           icon={<Camera size={19} strokeWidth={1.5} />}
           title="拍一份文书试试"
-          subtitle="识别日文文书"
+          subtitle="看不懂日文通知时使用"
         />
         <ListRow
           href="/check"

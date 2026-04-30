@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { ChevronRight } from 'lucide-react'
+import type { ActionAnswer } from '@/lib/answer/types'
 
 export type AnswerStatus = 'matched' | 'draft' | 'cannot_determine'
 export type AnswerLevel = 'L1' | 'L2' | 'L3' | 'L4'
@@ -17,13 +17,8 @@ export interface AnswerResult {
   title: string
   question: string
   answerLevel: AnswerLevel
-  answerType: string
-  reviewStatus: string
-  summary: string
-  sections: AnswerSection[]
-  nextSteps: string[]
   sourceHint: string
-  boundaryNote: string
+  actionAnswer: ActionAnswer
 }
 
 const LEVEL_LABELS: Record<AnswerLevel, string> = {
@@ -68,6 +63,7 @@ export default function AnswerResultView({
   const [feedback, setFeedback] = useState<string | null>(null)
   const [busyFeedback, setBusyFeedback] = useState<string | null>(null)
   const meta = STATUS_META[answer.status]
+  const action = answer.actionAnswer
   const cannotDetermine = answer.status === 'cannot_determine'
 
   async function submitFeedback(type: string, label: string) {
@@ -102,78 +98,53 @@ export default function AnswerResultView({
         <div className="flex flex-wrap items-center gap-2">
           <StatusPill className={meta.className}>{meta.label}</StatusPill>
           <StatusPill>{LEVEL_LABELS[answer.answerLevel]}</StatusPill>
-          <StatusPill>{answer.answerType}</StatusPill>
         </div>
-        <h1 className="mt-4 text-[21px] font-medium leading-[1.45] tracking-[-0.01em] text-ink">
+        <h1 className="mt-4 text-[21px] font-medium leading-[1.45] tracking-[-0.01em] text-ink [overflow-wrap:anywhere]">
           {answer.title}
         </h1>
-        <p className="mt-3 rounded-[12px] bg-paper px-3 py-3 text-[12px] leading-[1.65] text-slate">
-          {answer.question}
-        </p>
-        <div className="mt-4 border-t border-hairline pt-4">
-          <p className="text-[11px] leading-none text-ash">回答状态</p>
-          <p className="mt-2 text-[13px] leading-[1.65] text-slate">
-            {answer.reviewStatus}。{meta.detail}
-          </p>
+        <div className="mt-4 rounded-[12px] bg-paper px-3 py-3">
+          <SectionHeading>结论</SectionHeading>
+          <p className="mt-2 text-[14px] leading-[1.75] text-ink [overflow-wrap:anywhere]">{action.conclusion}</p>
         </div>
-      </section>
-
-      <section className="rounded-card border border-hairline bg-surface px-4 py-4">
-        <SectionTitle label="summary" title="概要" />
-        <p className="mt-3 text-[14px] leading-[1.8] text-ink">{answer.summary}</p>
+        <div className="mt-4 border-t border-hairline pt-4">
+          <ActionList title={cannotDetermine ? '先确认什么' : '现在要做什么'} items={action.what_to_do} ordered />
+        </div>
+        <div className="mt-4 border-t border-hairline pt-4">
+          <SectionHeading>边界说明</SectionHeading>
+          <p className="mt-2 text-[12px] leading-[1.7] text-ash [overflow-wrap:anywhere]">{action.boundary_note}</p>
+        </div>
+        <div className="mt-4 border-t border-hairline pt-4">
+          <p className="text-[11px] leading-none text-ash">原始问题</p>
+          <p className="mt-2 text-[12px] leading-[1.65] text-slate [overflow-wrap:anywhere]">{answer.question}</p>
+        </div>
       </section>
 
       <section className="rounded-card border border-hairline bg-surface">
         <div className="border-b border-hairline px-4 py-3">
-          <SectionTitle label="sections" title={cannotDetermine ? '先确认的信息' : '整理内容'} />
+          <SectionTitle title="行动答案" />
         </div>
-        <div className="divide-y divide-hairline">
-          {answer.sections.map(section => (
-            <article key={section.title} className="px-4 py-4">
-              <h2 className="text-[15px] font-medium leading-[1.5] text-ink">{section.title}</h2>
-              <p className="mt-2 text-[13px] leading-[1.75] text-slate">{section.body}</p>
-            </article>
-          ))}
+        <div className="divide-y divide-hairline px-4">
+          <ActionList title="去哪里办" items={action.where_to_go} />
+          <ActionList title="怎么做" items={action.how_to_do} />
+          <ActionList title="需要带什么" items={action.documents_needed} />
+          <ActionList title="大概多久内做" items={action.deadline_or_timing} />
+          <ActionList title="不做可能怎样" items={action.consequences} />
         </div>
       </section>
 
-      <section className="rounded-card border border-hairline bg-surface px-4 py-4">
-        <SectionTitle label="next_steps" title={cannotDetermine ? '你可以先确认这些信息' : '下一步'} />
-        <ol className="mt-3 grid gap-3">
-          {answer.nextSteps.map((step, index) => (
-            <li key={step} className="grid grid-cols-[28px_1fr] gap-2 text-[13px] leading-[1.65] text-slate">
-              <span className="flex h-7 w-7 items-center justify-center rounded-[9px] bg-paper text-[12px] tabular-nums text-ink">
-                {index + 1}
-              </span>
-              <span className="pt-0.5">{step}</span>
-            </li>
-          ))}
-        </ol>
-      </section>
-
-      {cannotDetermine && (
+      {action.expert_handoff.length > 0 && (
         <section className="rounded-card border border-hairline bg-surface px-4 py-4">
-          <SectionTitle label="expert_hint" title="建议咨询的专业人士" />
-          <div className="mt-3 grid gap-2 text-[13px] leading-[1.65] text-slate">
-            <ExpertRow title="在留手续专业人士" body="确认在留资格、材料边界和提交顺序。" />
-            <ExpertRow title="社会保险相关窗口" body="确认社会保険、年金、健康保険的空档处理。" />
-            <ExpertRow title="税务相关窗口" body="确认住民税、源泉徴収票、確定申告相关材料。" />
-          </div>
+          <ActionList title="什么时候要问专家" items={action.expert_handoff} />
         </section>
       )}
 
       <section className="rounded-card border border-hairline bg-surface px-4 py-4">
-        <SectionTitle label="sources" title="来源提示" />
+        <SectionTitle title="来源提示" />
         <p className="mt-3 text-[13px] leading-[1.75] text-slate">{answer.sourceHint}</p>
       </section>
 
-      <section className="rounded-card border border-hairline bg-paper px-4 py-4">
-        <SectionTitle label="boundary" title="边界说明" />
-        <p className="mt-3 text-[12px] leading-[1.7] text-ash">{answer.boundaryNote}</p>
-      </section>
-
       <section className="rounded-card border border-hairline bg-surface px-4 py-4">
-        <SectionTitle label="feedback" title="这条整理是否有用" />
+        <SectionTitle title="这条整理是否有用" />
         <div className="mt-3 grid grid-cols-2 gap-2">
           {FEEDBACK_OPTIONS.map(option => (
             <button
@@ -200,11 +171,39 @@ export default function AnswerResultView({
   )
 }
 
-function SectionTitle({ label, title }: { label: string; title: string }) {
+function SectionTitle({ title }: { title: string }) {
   return (
     <div>
-      <p className="text-[10px] font-normal leading-none tracking-[0.12em] text-ash">{label}</p>
-      <h2 className="mt-1.5 text-[15px] font-medium leading-none text-ink">{title}</h2>
+      <h2 className="text-[15px] font-medium leading-none text-ink">{title}</h2>
+    </div>
+  )
+}
+
+function SectionHeading({ children }: { children: string }) {
+  return <h2 className="text-[13px] font-medium leading-none text-ink">{children}</h2>
+}
+
+function ActionList({
+  title,
+  items,
+  ordered = false,
+}: {
+  title: string
+  items: string[]
+  ordered?: boolean
+}) {
+  const content = items.slice(0, 6).map((item, index) => (
+    <li key={`${title}-${item}`} className="grid grid-cols-[24px_1fr] gap-2 text-[12px] leading-[1.65] text-slate">
+      <span className="flex h-6 w-6 items-center justify-center rounded-[8px] bg-paper text-[11px] tabular-nums text-ink">
+        {ordered ? index + 1 : '·'}
+      </span>
+      <span className="[overflow-wrap:anywhere]">{item}</span>
+    </li>
+  ))
+  return (
+    <div className="py-4 first:pt-0 last:pb-0">
+      <SectionHeading>{title}</SectionHeading>
+      {ordered ? <ol className="mt-3 grid gap-2">{content}</ol> : <ul className="mt-3 grid gap-2">{content}</ul>}
     </div>
   )
 }
@@ -214,17 +213,5 @@ function StatusPill({ children, className = 'bg-paper text-slate' }: { children:
     <span className={`rounded-[9px] px-2.5 py-1 text-[11px] leading-none ${className}`}>
       {children}
     </span>
-  )
-}
-
-function ExpertRow({ title, body }: { title: string; body: string }) {
-  return (
-    <div className="flex items-start gap-2 border-b border-hairline pb-3 last:border-b-0 last:pb-0">
-      <ChevronRight size={16} strokeWidth={1.5} className="mt-0.5 flex-shrink-0 text-haze" />
-      <div>
-        <p className="font-medium text-ink">{title}</p>
-        <p className="mt-1 text-[12px] leading-[1.65] text-ash">{body}</p>
-      </div>
-    </div>
   )
 }
