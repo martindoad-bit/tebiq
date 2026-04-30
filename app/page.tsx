@@ -3,6 +3,7 @@ import { Bell, CalendarDays, ChevronRight, ClipboardCheck, FileText } from 'luci
 import AppShell from '@/app/_components/v5/AppShell'
 import TabBar from '@/app/_components/v5/TabBar'
 import TrackedLink from '@/app/_components/v5/TrackedLink'
+import QuestionIntakeBox from '@/app/_components/QuestionIntakeBox'
 import { DeadlineRow, ListRow, ListSection, SectionLabel } from '@/components/ui/tebiq'
 import { EVENT } from '@/lib/analytics/events'
 import { getCurrentUser } from '@/lib/auth/session'
@@ -72,6 +73,9 @@ function NewUserHome() {
         </div>
       </section>
 
+      <div className="mt-5">
+        <QuestionIntakeBox sourcePage="/" />
+      </div>
       <SampleDocumentSection />
       <MoreFeatures />
     </>
@@ -126,6 +130,9 @@ function UserHome({
       )}
 
       <SampleDocumentSection />
+      <div className="mt-5">
+        <QuestionIntakeBox sourcePage="/" />
+      </div>
       <MoreFeatures needsActionCount={needsActionCount} next30Count={next30Count} />
 
       <SectionLabel title="接下来30天的期限事项" action="全部" href="/timeline" />

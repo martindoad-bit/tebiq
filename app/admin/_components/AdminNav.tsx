@@ -8,6 +8,8 @@ const TABS: Array<{ href: string; label: string }> = [
   { href: '/admin/analytics', label: 'KPI' },
   { href: '/admin/users', label: '用户' },
   { href: '/admin/consultations', label: '咨询' },
+  { href: '/admin/questions', label: '问题' },
+  { href: '/admin/review-lite', label: 'Review' },
   { href: '/admin/knowledge', label: '知识' },
   { href: '/admin/dev-login', label: 'Dev 登录' },
   { href: '/admin/quiz-results', label: '自查记录' },

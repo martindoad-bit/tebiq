@@ -4,7 +4,7 @@ import { db } from '@/lib/db'
 import { loginMagicLinkTokens, type LoginMagicLinkToken } from '@/lib/db/schema'
 import { markDevLoginLinkConsumed } from './devLoginLinks'
 
-const MAGIC_LINK_TTL_MS = 7 * 60 * 1000
+const MAGIC_LINK_TTL_MS = 10 * 60 * 1000
 
 function generateToken(): string {
   return `${createId()}${createId()}`.slice(0, 48)

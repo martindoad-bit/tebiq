@@ -1,54 +1,62 @@
 /**
- * 邮箱登录 magic link — 单次链接，7 分钟有效。
+ * 邮箱登录 magic link — 单次链接，10 分钟有效。
  */
 export interface LoginMagicLinkData {
   loginUrl: string
 }
 
 const COLORS = {
-  brand: '#1E3A5F',
-  accent: '#F6B133',
-  bg: '#FFF5E6',
-  body: '#4A5563',
+  brand: '#0F2544',
+  bg: '#F7F8FA',
+  body: '#334155',
+  muted: '#64748B',
   card: '#FFFFFF',
+  line: '#E2E8F0',
 } as const
 
 export const template = {
   id: 'login_magic_link',
   channel: 'email' as const,
   build(data: LoginMagicLinkData): { subject: string; html: string; text: string } {
-    const subject = '登录 TEBIQ'
+    const subject = 'TEBIQ ログインリンク / TEBIQ 登录链接'
     const html = `<!doctype html>
-<html lang="zh-CN">
-  <body style="margin:0;padding:0;background:${COLORS.bg};font-family:'Noto Sans CJK SC','Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif;color:${COLORS.body};">
+<html lang="ja">
+  <body style="margin:0;padding:0;background:${COLORS.bg};font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans CJK JP','Noto Sans CJK SC','Noto Sans JP','Noto Sans SC',sans-serif;color:${COLORS.body};">
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:${COLORS.bg};padding:32px 16px;">
       <tr>
         <td align="center">
-          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:560px;background:${COLORS.card};border-radius:12px;padding:32px;box-shadow:0 2px 8px rgba(30,58,95,0.06);">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:560px;background:${COLORS.card};border:1px solid ${COLORS.line};border-radius:10px;padding:32px;">
             <tr>
-              <td style="font-size:20px;font-weight:600;color:${COLORS.brand};padding-bottom:8px;">登录 TEBIQ</td>
+              <td style="font-size:18px;font-weight:600;color:${COLORS.brand};padding-bottom:20px;">TEBIQ ログインリンク / TEBIQ 登录链接</td>
             </tr>
             <tr>
-              <td style="font-size:15px;line-height:1.7;color:${COLORS.body};">
-                <p style="margin:0 0 12px;">点击下面的按钮登录。没有账号的话，会自动为你创建一个账号。</p>
-                <p style="margin:0 0 12px;font-size:13px;color:#6B7280;">链接 7 分钟内有效，只能使用一次。</p>
+              <td style="font-size:14px;line-height:1.8;color:${COLORS.body};">
+                <p style="margin:0 0 4px;">TEBIQへのログインリンクです。</p>
+                <p style="margin:0 0 16px;">このリンクは10分間有効です。</p>
               </td>
             </tr>
             <tr>
-              <td align="center" style="padding:16px 0 24px;">
-                <a href="${data.loginUrl}" style="display:inline-block;background:${COLORS.brand};color:#FFFFFF;text-decoration:none;font-size:15px;font-weight:500;padding:12px 28px;border-radius:8px;">登录 / 注册</a>
+              <td align="left" style="padding:0 0 24px;">
+                <a href="${data.loginUrl}" style="display:inline-block;background:${COLORS.brand};color:#FFFFFF;text-decoration:none;font-size:14px;font-weight:600;padding:12px 28px;border-radius:8px;">ログイン</a>
               </td>
             </tr>
             <tr>
-              <td style="font-size:12px;color:#6B7280;line-height:1.6;">
-                <p style="margin:0 0 6px;">如果按钮无法点击，请复制这个链接到浏览器：</p>
-                <p style="margin:0 0 12px;word-break:break-all;color:${COLORS.brand};">${data.loginUrl}</p>
-                <p style="margin:0;">如果这不是你本人操作，请忽略本邮件。</p>
+              <td style="font-size:14px;line-height:1.8;color:${COLORS.body};">
+                <p style="margin:0 0 4px;">这是 TEBIQ 的登录链接。</p>
+                <p style="margin:0 0 16px;">链接10分钟内有效。</p>
               </td>
             </tr>
             <tr>
-              <td style="border-top:1px solid #E6EEF5;padding-top:16px;margin-top:16px;font-size:13px;color:#6B7280;line-height:1.6;">
-                <p style="margin:0 0 4px;">TEBIQ 在日生活のお守り</p>
+              <td align="left" style="padding:0 0 24px;">
+                <a href="${data.loginUrl}" style="display:inline-block;background:${COLORS.brand};color:#FFFFFF;text-decoration:none;font-size:14px;font-weight:600;padding:12px 28px;border-radius:8px;">登录</a>
+              </td>
+            </tr>
+            <tr>
+              <td style="font-size:12px;color:${COLORS.muted};line-height:1.7;border-top:1px solid ${COLORS.line};padding-top:16px;">
+                <p style="margin:0 0 8px;">このメールに心当たりがない場合は無視してください。</p>
+                <p style="margin:0 0 16px;">如果你没有请求登录，请忽略此邮件。</p>
+                <p style="margin:0 0 6px;word-break:break-all;color:${COLORS.brand};">${data.loginUrl}</p>
+                <p style="margin:16px 0 0;">TEBIQ<br />https://tebiq.jp</p>
               </td>
             </tr>
           </table>
@@ -58,18 +66,28 @@ export const template = {
   </body>
 </html>`
 
-    const text = `登录 TEBIQ
+    const text = `TEBIQ ログインリンク / TEBIQ 登录链接
 
-点击下面的链接登录。没有账号的话，会自动为你创建一个账号。
+【日本語】
+TEBIQへのログインリンクです。
+このリンクは10分間有効です。
 
+ログイン:
 ${data.loginUrl}
 
-链接 7 分钟内有效，只能使用一次。
+このメールに心当たりがない場合は無視してください。
 
-如果这不是你本人操作，请忽略本邮件。
+【中文】
+这是 TEBIQ 的登录链接。
+链接10分钟内有效。
 
-—
-TEBIQ 在日生活のお守り
+登录:
+${data.loginUrl}
+
+如果你没有请求登录，请忽略此邮件。
+
+TEBIQ
+https://tebiq.jp
 `
 
     return { subject, html, text }
