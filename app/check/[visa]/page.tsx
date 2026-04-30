@@ -42,7 +42,7 @@ export default async function CheckVisaPage({
   return (
     <>
       <TrackOnMount event={EVENT.QUIZ_VISA_SELECTED} payload={{ visa }} />
-      <CheckDimensionList visa={visa} dimensions={dimensions} />
+      <CheckDimensionList visa={visa} dimensions={dimensions} sourcePage={`/check/${visa}`} />
     </>
   )
 }

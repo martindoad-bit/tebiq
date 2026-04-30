@@ -15,7 +15,23 @@ const FLAGS = [
 
 type Filter = 'all' | 'needs_review' | 'L3_L4' | 'requires_review' | 'weak_source'
 
-export default function ReviewLiteClient({ cards }: { cards: DecisionCard[] }) {
+interface ReviewQuestion {
+  id: string
+  rawQuery: string
+  visaType: string | null
+  sourcePage: string | null
+  status: string
+  priority: string
+  createdAt: string
+}
+
+export default function ReviewLiteClient({
+  cards,
+  question,
+}: {
+  cards: DecisionCard[]
+  question?: ReviewQuestion | null
+}) {
   const [filter, setFilter] = useState<Filter>('needs_review')
   const visibleCards = useMemo(() => cards.filter(card => {
     if (filter === 'needs_review') return card.status === 'needs_review'
@@ -27,6 +43,21 @@ export default function ReviewLiteClient({ cards }: { cards: DecisionCard[] }) {
 
   return (
     <div className="grid gap-4">
+      {question && (
+        <section className="rounded-card border border-hairline bg-paper p-4">
+          <div className="flex flex-wrap items-center gap-2">
+            <h2 className="mr-auto text-sm font-semibold text-ink">原始问题</h2>
+            <Chip>{question.status}</Chip>
+            <Chip>{question.priority}</Chip>
+            {question.visaType && <Chip>{question.visaType}</Chip>}
+          </div>
+          <p className="mt-3 whitespace-pre-line text-sm leading-6 text-slate">{question.rawQuery}</p>
+          <p className="mt-3 text-xs text-ash">
+            暂无草稿。后续可由 AI 或人工生成 Decision Card。
+          </p>
+        </section>
+      )}
+
       <div className="flex flex-wrap gap-2">
         {[
           ['needs_review', 'needs_review'],

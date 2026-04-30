@@ -2,7 +2,7 @@ export type DecisionCardType = 'decision_card' | 'workflow' | 'risk_chain' | 'mi
 export type DecisionAnswerLevel = 'L1' | 'L2' | 'L3' | 'L4'
 export type DecisionStatus = 'draft' | 'needs_review' | 'approved' | 'rejected' | 'deprecated'
 export type DecisionSourceGrade = 'S' | 'A' | 'B' | 'C'
-export type QueryMatchStatus = 'matched' | 'no_match' | 'low_confidence'
+export type QueryMatchStatus = 'matched' | 'no_match' | 'low_confidence' | 'manual_import'
 export type FeedbackType = 'helpful' | 'inaccurate' | 'unclear' | 'my_case_differs'
 
 export interface DecisionOption {

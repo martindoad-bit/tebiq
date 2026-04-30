@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { ArrowRight, DatabaseZap } from 'lucide-react'
 import AppShell from '@/app/_components/v5/AppShell'
 import AppBar from '@/app/_components/v5/AppBar'
+import QuestionIntakeBox from '@/app/_components/QuestionIntakeBox'
 import { listDecisionCards } from '@/lib/decision/cards'
 import {
   ANSWER_LEVEL_LABEL,
@@ -48,6 +49,10 @@ export default async function DecisionLabPage() {
 
       <div className="mt-3">
         <DecisionSearchClient />
+      </div>
+
+      <div className="mt-3">
+        <QuestionIntakeBox sourcePage="/decision-lab" compact />
       </div>
 
       <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-3 shadow-card">

@@ -178,6 +178,7 @@ export const queryMatchStatusEnum = pgEnum('query_match_status', [
   'matched',
   'no_match',
   'low_confidence',
+  'manual_import',
 ])
 
 export const answerFeedbackTypeEnum = pgEnum('answer_feedback_type', [
@@ -779,17 +780,26 @@ export const queryBacklog = pgTable(
   {
     id: idCol(),
     rawQuery: text('raw_query').notNull(),
-    normalizedQuery: text('normalized_query').notNull(),
+    normalizedQuery: text('normalized_query'),
+    visaType: varchar('visa_type', { length: 80 }),
+    contactEmail: varchar('contact_email', { length: 255 }),
     matchedCardId: varchar('matched_card_id', { length: 24 }).references(() => decisionCards.id, {
       onDelete: 'set null',
     }),
     matchStatus: queryMatchStatusEnum('match_status').notNull(),
+    status: varchar('status', { length: 32 }).notNull().default('new'),
+    priority: varchar('priority', { length: 16 }).notNull().default('normal'),
+    note: text('note'),
     userContext: jsonb('user_context').$type<Record<string, unknown>>(),
     sourcePage: varchar('source_page', { length: 200 }),
     createdAt: createdAt(),
+    updatedAt: updatedAt(),
   },
   t => ({
     matchIdx: index('query_backlog_match_status_idx').on(t.matchStatus),
+    statusIdx: index('query_backlog_status_idx').on(t.status),
+    priorityIdx: index('query_backlog_priority_idx').on(t.priority),
+    visaTypeIdx: index('query_backlog_visa_type_idx').on(t.visaType),
     createdIdx: index('query_backlog_created_at_idx').on(t.createdAt),
     matchedCardIdx: index('query_backlog_matched_card_idx').on(t.matchedCardId),
   }),

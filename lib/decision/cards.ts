@@ -17,6 +17,7 @@ import type {
   DecisionCard,
   DecisionOption,
   DecisionQueryMatch,
+  QueryMatchStatus,
   DecisionSourceGrade,
   DecisionStatus,
   FeedbackType,
@@ -58,7 +59,7 @@ export async function recordQuery(input: {
   rawQuery: string
   normalizedQuery: string
   matchedCardId?: string | null
-  matchStatus: 'matched' | 'no_match' | 'low_confidence'
+  matchStatus: QueryMatchStatus
   userContext?: Record<string, unknown> | null
   sourcePage?: string | null
 }): Promise<{ saved: boolean; id: string | null; reason?: string }> {

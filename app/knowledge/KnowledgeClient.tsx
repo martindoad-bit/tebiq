@@ -26,6 +26,7 @@ import type { LucideIcon } from 'lucide-react'
 import AppShell from '@/app/_components/v5/AppShell'
 import AppBar from '@/app/_components/v5/AppBar'
 import TabBar from '@/app/_components/v5/TabBar'
+import QuestionIntakeBox from '@/app/_components/QuestionIntakeBox'
 import { plainTextFromMarkdown } from '@/lib/knowledge/markdown'
 import { sanitizePublicKnowledgeText } from '@/lib/knowledge/public-text'
 import { trackClient } from '@/lib/analytics/client'
@@ -121,6 +122,10 @@ export default function KnowledgeClient({
           placeholder="搜索你想了解的内容"
           className="flex-1 bg-transparent text-[12px] text-ink outline-none placeholder:text-haze"
         />
+      </div>
+
+      <div className="mt-4">
+        <QuestionIntakeBox sourcePage="/knowledge" compact />
       </div>
 
       <div className="mt-4 grid grid-cols-3 gap-2">

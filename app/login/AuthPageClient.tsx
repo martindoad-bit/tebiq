@@ -224,7 +224,21 @@ export default function AuthPageClient({ intent = 'login' }: { intent?: 'login' 
                 />
               </span>
             </label>
-            {error && <p className="mt-3 text-[12px] text-danger" role="alert">{error}</p>}
+            {error && (
+              <div className="mt-3 rounded-[10px] bg-paper px-3 py-2" role="alert">
+                <p className="text-[12px] leading-relaxed text-danger">{error}</p>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMethod('phone')
+                    setError('')
+                  }}
+                  className="mt-2 text-[12px] font-medium text-ink underline underline-offset-4"
+                >
+                  使用手机号登录
+                </button>
+              </div>
+            )}
             {message && <p className="mt-3 text-[12px] leading-relaxed text-slate">{message}</p>}
             <Button onClick={handleSendMagicLink} disabled={loading} className="mt-4">
               {loading ? '处理中...' : '发送登录链接'}
