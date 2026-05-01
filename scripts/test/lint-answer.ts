@@ -21,12 +21,22 @@ const TECHNICAL_USER_TERMS = [
   'summary',
   'sections',
   'next_steps',
+  'answer_level',
+  'review_status',
   'matched',
+  'draft',
+  'cannot_determine',
   'source_grade',
   'unreviewed',
+  'policy_match',
+  'source: document',
+  'deadline: null',
+  'amount: null',
   'raw JSON',
   '原始结果',
 ]
+const EXPERT_TARGET_PATTERN = /(?:行政書士|社労士|税理士|专业人士|专家|会社人事|公司人事|年金事務所|年金事务所)/
+const EXPERT_MATERIAL_PATTERN = /(?:带|持参|准备|材料|记录|資料|资料|証明|证明|在留卡|在留カード|租约|租赁合同|契約書|照片|缴纳|納付|年金)/
 
 function hasEnoughChinese(text: string): boolean {
   return (text.match(/[\u3400-\u9fff]/g) ?? []).length >= 10
@@ -51,6 +61,11 @@ function lintAction(question: string, action: ActionAnswer): string[] {
     if (!hasEnoughChinese(item)) problems.push(`consequences too short: ${item}`)
     if (/[→(（]$/.test(item)) problems.push(`consequences ends with fragment marker: ${item}`)
     if (/^[→(（]/.test(item)) problems.push(`consequences starts with fragment marker: ${item}`)
+  })
+
+  action.expert_handoff.forEach(item => {
+    if (!EXPERT_TARGET_PATTERN.test(item)) problems.push(`expert_handoff missing target: ${item}`)
+    if (!EXPERT_MATERIAL_PATTERN.test(item)) problems.push(`expert_handoff missing material/context: ${item}`)
   })
 
   const confirmationText = [

@@ -22,7 +22,18 @@ const FORBIDDEN = [
   'summary',
   'sections',
   'next_steps',
+  'answer_level',
+  'review_status',
+  'source_grade',
+  'matched',
+  'draft',
+  'cannot_determine',
+  'policy_match',
+  'source: document',
+  'deadline: null',
+  'amount: null',
   'raw JSON',
+  '原始结果',
 ]
 
 async function main() {
@@ -88,12 +99,11 @@ async function main() {
     }
     if (question.includes('办公室搬迁')) {
       const required = [
-        /经营场所|事務所/,
-        /賃貸契約書|租赁合同|合同/,
-        /法務局|登記/,
-        /税務署|税务/,
-        /社保|年金|銀行|银行/,
-        /入管|在留/,
+        /法務局|法务局/,
+        /税務署|税务署|税务/,
+        /入管|出入国/,
+        /賃貸契約書|租赁合同|租约/,
+        /办公室照片|事務所写真|照片/,
         /归档|留存|保存/,
         /不许可|不許可|不利|失效/,
         /行政書士|专家/,

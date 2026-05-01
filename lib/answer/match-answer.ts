@@ -10,6 +10,7 @@ import {
   type AnswerSource,
 } from './types'
 import { formatActionAnswer } from './format-action-answer'
+import { matchIntentGuard } from './intent-guard'
 import { matchDecisionQuery } from '@/lib/decision/cards'
 import type { DecisionCard, DecisionOption, SourceRef } from '@/lib/decision/types'
 
@@ -539,74 +540,6 @@ function normalizeReviewStatus(value: string | null): 'reviewed' | 'unreviewed' 
 function responseTypeFromSeed(value: string | null, reviewStatus: 'reviewed' | 'unreviewed' | 'needs_expert'): 'matched' | 'cannot_determine' {
   if (value === 'needs_expert' || reviewStatus === 'needs_expert') return 'cannot_determine'
   return 'matched'
-}
-
-export function matchIntentGuard(questionText: string, candidateAnswer: AnswerResult): { pass: boolean; reason: string } {
-  const question = normalize(questionText)
-  const answerText = normalize(answerTextForGuard(candidateAnswer))
-
-  if (isPensionDormantQuestion(question)) {
-    const hasPension = countContains(answerText, ['国民年金', '区役所', '市役所', '年金事務所']) >= 1
-    const hasLossOrSwitch = countContains(answerText, ['厚生年金', '資格喪失', '国民健康保険', '健保', '国保', '14 日', '14日']) >= 1
-    const hasDormantContext = countContains(answerText, ['休眠', '倒闭', '倒産', '離職', '离职', '喪失']) >= 1
-    if (!hasPension || !hasLossOrSwitch || !hasDormantContext) return { pass: false, reason: 'pension_dormant_mismatch' }
-  }
-
-  if (isCapitalShortageQuestion(question)) {
-    if (/资本金\s*多少|資本金\s*多少|多少最合适|多少合適|推奨/.test(answerText)) {
-      return { pass: false, reason: 'capital_shortage_matched_generic_amount' }
-    }
-    const required = ['增资', '増資', '资金来源', '資金来源', '借款', '短期借入', '事业计划', '事業計画', '新规', '新規', '续签', '更新申請', '专家复核', '行政書士']
-    const hits = countContains(answerText, required)
-    if (hits < 2) return { pass: false, reason: 'capital_shortage_mismatch' }
-  }
-
-  if (isOfficeRelocationQuestion(question)) {
-    const required = ['法務局', '税務署', '入管', '出入国在留管理庁', '租赁合同', '賃貸契約', '办公室照片', '看板', '本店所在地', '異動届']
-    const hits = countContains(answerText, required)
-    if (hits < 3) return { pass: false, reason: 'office_relocation_mismatch' }
-  }
-
-  return { pass: true, reason: 'pass' }
-}
-
-function answerTextForGuard(answer: AnswerResult): string {
-  const action = answer.action_answer
-  return [
-    answer.title,
-    answer.summary,
-    answer.first_screen_answer,
-    answer.why_not_simple_answer,
-    ...answer.sections.flatMap(section => [section.heading, section.body]),
-    ...answer.next_steps,
-    ...(action ? [
-      action.conclusion,
-      ...action.what_to_do,
-      ...action.where_to_go,
-      ...action.how_to_do,
-      ...action.documents_needed,
-      ...action.deadline_or_timing,
-      ...action.consequences,
-      ...action.expert_handoff,
-    ] : []),
-  ].filter(Boolean).join('\n')
-}
-
-function isPensionDormantQuestion(question: string): boolean {
-  return /(年金|国民年金|厚生年金|社保|社会保险|社会保険)/.test(question)
-    && /(公司休眠|休眠|倒闭|倒産|离职|退职|空白期)/.test(question)
-}
-
-function isCapitalShortageQuestion(question: string): boolean {
-  return /(资本金不够|資本金不足|资金不够|資金不足|3000万不够|3000万円不足|不到3000|不到 3000|增资|増資)/.test(question)
-}
-
-function isOfficeRelocationQuestion(question: string): boolean {
-  return /(办公室搬迁|事務所搬迁|事務所移転|公司换地址|公司搬办公室|本店移転|本店所在地変更)/.test(question)
-}
-
-function countContains(text: string, keywords: string[]): number {
-  return keywords.filter(keyword => text.includes(normalize(keyword))).length
 }
 
 function enumValue<T extends readonly string[]>(value: string | null, allowed: T, fallback: T[number]): T[number] {
