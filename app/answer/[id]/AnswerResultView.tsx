@@ -15,6 +15,7 @@ export interface AnswerResult {
   id: string
   title: string
   question: string
+  intentSummary: string
   statusLabel: string
   statusClassName: string
   sourceHint: string
@@ -25,6 +26,7 @@ const FEEDBACK_OPTIONS = [
   { type: 'helpful', label: '有帮助' },
   { type: 'inaccurate', label: '不准确' },
   { type: 'unclear', label: '看不懂' },
+  { type: 'my_case_differs', label: '理解错了', note: 'intent_wrong' },
   { type: 'my_case_differs', label: '我的情况不一样' },
 ] as const
 
@@ -46,7 +48,7 @@ export default function AnswerResultView({
   )
   const managerCopy = buildManagerCopy(answer)
 
-  async function submitFeedback(type: string, label: string) {
+  async function submitFeedback(type: string, label: string, note?: string) {
     setFeedback(null)
     setBusyFeedback(type)
     if (!answerId) {
@@ -62,6 +64,7 @@ export default function AnswerResultView({
           answer_draft_id: answerId,
           page_path: `/answer/${answerId}`,
           feedback_type: type,
+          note,
         }),
       })
       setFeedback(label)
@@ -92,6 +95,12 @@ export default function AnswerResultView({
         <p className="mt-3 rounded-[12px] bg-paper px-3 py-3 text-[13px] leading-[1.7] text-slate [overflow-wrap:anywhere]">
           {answer.question}
         </p>
+        <div className="mt-3 rounded-[12px] border border-hairline bg-canvas px-3 py-3">
+          <p className="text-[11px] font-medium text-ash">我理解你的问题是</p>
+          <p className="mt-1.5 text-[13px] leading-[1.65] text-ink [overflow-wrap:anywhere]">
+            {answer.intentSummary}
+          </p>
+        </div>
         <div className="mt-4">
           <SectionHeading>结论</SectionHeading>
           <p className="mt-2 text-[15px] leading-[1.7] text-ink [overflow-wrap:anywhere]">{action.conclusion}</p>
@@ -135,9 +144,9 @@ export default function AnswerResultView({
         <div className="mt-3 grid grid-cols-2 gap-2">
           {FEEDBACK_OPTIONS.map(option => (
             <button
-              key={option.type}
+              key={`${option.type}-${option.label}`}
               type="button"
-              onClick={() => submitFeedback(option.type, option.label)}
+              onClick={() => submitFeedback(option.type, option.label, 'note' in option ? option.note : undefined)}
               className={`min-h-[40px] rounded-[10px] border px-3 text-[12px] transition-colors ${
                 feedback === option.label
                   ? 'border-ink bg-ink text-white'

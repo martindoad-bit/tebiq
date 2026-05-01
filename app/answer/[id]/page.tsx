@@ -11,6 +11,7 @@ import {
   type AnswerSource,
 } from '@/lib/answer/types'
 import { formatActionAnswer } from '@/lib/answer/format-action-answer'
+import { classifyAnswerIntent, describeIntent } from '@/lib/answer/intent-router'
 import AnswerResultView, { type AnswerResult, type AnswerStatus } from './AnswerResultView'
 
 export const dynamic = 'force-dynamic'
@@ -212,9 +213,13 @@ export default async function AnswerPage({
     )
   }
 
+  const intent = await classifyAnswerIntent({ question_text: answer.question })
   return (
     <AppShell appBar={<AppBar title="下一步" back="/" />} tabBar={<TabBar />}>
-      <AnswerResultView answer={toViewAnswer(withActionAnswer(answer))} answerId={draft?.id ?? null} />
+      <AnswerResultView
+        answer={toViewAnswer(withActionAnswer(answer), describeIntent(intent, answer.question))}
+        answerId={draft?.id ?? null}
+      />
     </AppShell>
   )
 }
@@ -329,11 +334,12 @@ function withActionAnswer(answer: FullAnswer): FullAnswer {
   }
 }
 
-function toViewAnswer(answer: FullAnswer): AnswerResult {
+function toViewAnswer(answer: FullAnswer, intentSummary: string): AnswerResult {
   return {
     id: answer.id,
     title: answer.title,
     question: answer.question,
+    intentSummary,
     statusLabel: publicStatusLabel(answer.status),
     statusClassName: publicStatusClassName(answer.status),
     sourceHint: answer.sourceHint,

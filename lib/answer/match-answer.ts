@@ -10,6 +10,13 @@ import {
   type AnswerSource,
 } from './types'
 import { formatActionAnswer } from './format-action-answer'
+import {
+  answerMatchesIntent,
+  clarifyAnswerForIntent,
+  classifyAnswerIntent,
+  describeIntent,
+  type AnswerIntent,
+} from './intent-router'
 import { matchDecisionQuery } from '@/lib/decision/cards'
 import type { DecisionCard, DecisionOption, SourceRef } from '@/lib/decision/types'
 
@@ -33,29 +40,42 @@ let answerSeedCache: Promise<AnswerSeed[]> | null = null
 export async function buildAnswer(input: BuildAnswerInput): Promise<AnswerResult> {
   const questionText = clean(input.questionText)
   const normalized = normalize(questionText)
+  const intent = await classifyAnswerIntent({
+    question_text: questionText,
+    visa_type: input.visaType,
+  })
+  let rejectedByIntent = false
 
-  const qaSeed = await bestQaSeed(normalized)
-  if (qaSeed) {
-    return sanitizeAnswer(seedToAnswer(qaSeed, questionText))
+  const qaSeed = await bestQaSeed(normalized, questionText, intent)
+  if (qaSeed.seed) {
+    return withIntent(sanitizeAnswer(seedToAnswer(qaSeed.seed, questionText)), intent)
   }
+  rejectedByIntent ||= qaSeed.rejectedByIntent
 
   const decisionMatch = await matchDecisionQuery(questionText)
   if (decisionMatch.card) {
     const answer = decisionCardToAnswer(decisionMatch.card, questionText)
-    if (matchIntentGuard(questionText, answer).pass) {
-      return sanitizeAnswer(answer)
+    const intentCheck = answerMatchesIntent(intent, answer)
+    if (intentCheck.pass) {
+      return withIntent(sanitizeAnswer(answer), intent)
     }
+    rejectedByIntent = true
   }
 
   const knowledge = await bestKnowledgeSeed(normalized, input.visaType)
   if (knowledge) {
     const answer = knowledgeSeedToAnswer(knowledge, questionText)
-    if (matchIntentGuard(questionText, answer).pass) {
-      return sanitizeAnswer(answer)
+    const intentCheck = answerMatchesIntent(intent, answer)
+    if (intentCheck.pass) {
+      return withIntent(sanitizeAnswer(answer), intent)
     }
+    rejectedByIntent = true
   }
 
-  return sanitizeAnswer(ruleBasedAnswer(questionText, normalized))
+  const fallback = rejectedByIntent || !intent.should_answer
+    ? clarifyAnswerForIntent(questionText, intent)
+    : ruleBasedAnswer(questionText, normalized)
+  return withIntent(sanitizeAnswer(fallback), intent)
 }
 
 function decisionCardToAnswer(card: DecisionCard, questionText: string): AnswerResult {
@@ -261,20 +281,35 @@ function cannotDetermineAnswer(_questionText: string): AnswerResult {
   }
 }
 
-async function bestQaSeed(normalized: string): Promise<AnswerSeed | null> {
+async function bestQaSeed(
+  normalized: string,
+  questionText: string,
+  intent: AnswerIntent,
+): Promise<{ seed: AnswerSeed | null; rejectedByIntent: boolean }> {
   const seeds = [
     ...FREQUENT_QA_SEEDS,
     ...await loadMarkdownAnswerSeeds(),
   ]
   const ranked = seeds
-    .map(seed => ({ seed, ...rankKeywords(normalized, seed.keywords) }))
+    .map(seed => {
+      const rankedKeywords = rankKeywords(normalized, seed.keywords)
+      const intentBonus = scoreIntentSeed(seed, intent)
+      return {
+        seed,
+        matches: rankedKeywords.matches,
+        score: rankedKeywords.score + intentBonus,
+      }
+    })
     .filter(item => item.score >= 4)
     .sort((a, b) => b.score - a.score)
+  let rejectedByIntent = false
   for (const item of ranked) {
-    const answer = seedToAnswer(item.seed, normalized)
-    if (matchIntentGuard(normalized, answer).pass) return item.seed
+    const answer = seedToAnswer(item.seed, questionText)
+    const intentCheck = answerMatchesIntent(intent, answer)
+    if (intentCheck.pass) return { seed: item.seed, rejectedByIntent }
+    rejectedByIntent = true
   }
-  return null
+  return { seed: null, rejectedByIntent }
 }
 
 async function bestKnowledgeSeed(normalized: string, visaType?: string | null): Promise<KnowledgeSeed | null> {
@@ -541,74 +576,6 @@ function responseTypeFromSeed(value: string | null, reviewStatus: 'reviewed' | '
   return 'matched'
 }
 
-export function matchIntentGuard(questionText: string, candidateAnswer: AnswerResult): { pass: boolean; reason: string } {
-  const question = normalize(questionText)
-  const answerText = normalize(answerTextForGuard(candidateAnswer))
-
-  if (isPensionDormantQuestion(question)) {
-    const hasPension = countContains(answerText, ['国民年金', '区役所', '市役所', '年金事務所']) >= 1
-    const hasLossOrSwitch = countContains(answerText, ['厚生年金', '資格喪失', '国民健康保険', '健保', '国保', '14 日', '14日']) >= 1
-    const hasDormantContext = countContains(answerText, ['休眠', '倒闭', '倒産', '離職', '离职', '喪失']) >= 1
-    if (!hasPension || !hasLossOrSwitch || !hasDormantContext) return { pass: false, reason: 'pension_dormant_mismatch' }
-  }
-
-  if (isCapitalShortageQuestion(question)) {
-    if (/资本金\s*多少|資本金\s*多少|多少最合适|多少合適|推奨/.test(answerText)) {
-      return { pass: false, reason: 'capital_shortage_matched_generic_amount' }
-    }
-    const required = ['增资', '増資', '资金来源', '資金来源', '借款', '短期借入', '事业计划', '事業計画', '新规', '新規', '续签', '更新申請', '专家复核', '行政書士']
-    const hits = countContains(answerText, required)
-    if (hits < 2) return { pass: false, reason: 'capital_shortage_mismatch' }
-  }
-
-  if (isOfficeRelocationQuestion(question)) {
-    const required = ['法務局', '税務署', '入管', '出入国在留管理庁', '租赁合同', '賃貸契約', '办公室照片', '看板', '本店所在地', '異動届']
-    const hits = countContains(answerText, required)
-    if (hits < 3) return { pass: false, reason: 'office_relocation_mismatch' }
-  }
-
-  return { pass: true, reason: 'pass' }
-}
-
-function answerTextForGuard(answer: AnswerResult): string {
-  const action = answer.action_answer
-  return [
-    answer.title,
-    answer.summary,
-    answer.first_screen_answer,
-    answer.why_not_simple_answer,
-    ...answer.sections.flatMap(section => [section.heading, section.body]),
-    ...answer.next_steps,
-    ...(action ? [
-      action.conclusion,
-      ...action.what_to_do,
-      ...action.where_to_go,
-      ...action.how_to_do,
-      ...action.documents_needed,
-      ...action.deadline_or_timing,
-      ...action.consequences,
-      ...action.expert_handoff,
-    ] : []),
-  ].filter(Boolean).join('\n')
-}
-
-function isPensionDormantQuestion(question: string): boolean {
-  return /(年金|国民年金|厚生年金|社保|社会保险|社会保険)/.test(question)
-    && /(公司休眠|休眠|倒闭|倒産|离职|退职|空白期)/.test(question)
-}
-
-function isCapitalShortageQuestion(question: string): boolean {
-  return /(资本金不够|資本金不足|资金不够|資金不足|3000万不够|3000万円不足|不到3000|不到 3000|增资|増資)/.test(question)
-}
-
-function isOfficeRelocationQuestion(question: string): boolean {
-  return /(办公室搬迁|事務所搬迁|事務所移転|公司换地址|公司搬办公室|本店移転|本店所在地変更)/.test(question)
-}
-
-function countContains(text: string, keywords: string[]): number {
-  return keywords.filter(keyword => text.includes(normalize(keyword))).length
-}
-
 function enumValue<T extends readonly string[]>(value: string | null, allowed: T, fallback: T[number]): T[number] {
   return value && (allowed as readonly string[]).includes(value) ? value as T[number] : fallback
 }
@@ -699,6 +666,102 @@ function rankKeywords(normalized: string, keywords: string[]): { score: number; 
     score += termMatches.length * 2
   }
   return { score, matches }
+}
+
+function scoreIntentSeed(seed: AnswerSeed, intent: AnswerIntent): number {
+  const text = compactForIntent([
+    seed.slug,
+    seed.title,
+    seed.summary,
+    seed.question,
+    ...seed.keywords,
+    ...(seed.testQueries ?? []),
+    seed.firstScreenAnswer,
+    seed.whyNotSimpleAnswer,
+    seed.actionAnswer?.conclusion,
+    ...(seed.actionAnswer?.what_to_do ?? []),
+  ].filter(Boolean).join('\n'))
+  let score = 0
+
+  if (intent.current_status && intent.target_status) {
+    if (intentStatusInText(intent.current_status, text)) score += 8
+    if (intentStatusInText(intent.target_status, text)) score += 10
+    if (intentStatusInText(intent.current_status, text) && intentStatusInText(intent.target_status, text)) score += 12
+  } else if (intent.target_status && intentStatusInText(intent.target_status, text)) {
+    score += 8
+  }
+
+  if ((intent.domain === 'pension' || intent.domain === 'health_insurance') && /国民年金|厚生年金|年金|国民健康保険|国保|社会保険/.test(text)) {
+    score += 14
+  }
+  if (intent.domain === 'company_registration' && /事務所|办公室|本店|法務局|税務署|入管/.test(text)) {
+    score += 12
+  }
+  if (intent.domain === 'tax' && /住民税|納税|税金|滞納/.test(text)) {
+    score += 10
+  }
+  if (intent.domain === 'employment' && /不法就労|雇用|雇主|老板|従業員|员工/.test(text)) {
+    score += 10
+  }
+
+  if (intent.current_status?.includes('技人国') && /特定技能/.test(text) && !/経営管理|经营管理|經營管理/.test(text)) {
+    score -= 20
+  }
+  if (isHumanitiesToManagementIntent(intent)) {
+    const directPath = /(技人国|人文|工作签|技術人文).{0,30}(経営管理|经营管理|经管|經營管理)|(経営管理|经营管理|经管|經營管理).{0,30}(技人国|人文|工作签|技術人文)/.test(text)
+    const conversionHits = countIntentTerms(text, [
+      '500万',
+      '出資',
+      '会社設立',
+      '公司设立',
+      '事業所',
+      '賃貸契約',
+      '租赁合同',
+      '事業計画',
+      '事业计划',
+      '在留資格変更',
+      '在留资格变更',
+      '変更許可申請',
+      '起業',
+      '开公司',
+    ])
+    if (directPath) score += 24
+    score += Math.min(conversionHits, 5) * 8
+    if (/(契約機関|所属機関|14日|14天|届出|転職|换工作|離職|入職)/.test(text) && conversionHits < 2) {
+      score -= 36
+    }
+  }
+  return score
+}
+
+function isHumanitiesToManagementIntent(intent: AnswerIntent): boolean {
+  return Boolean(
+    intent.current_status
+      && /(技人国|人文|工作签|技術人文)/.test(compactForIntent(intent.current_status))
+      && intent.target_status
+      && /(经营管理|経営管理|经管|經營管理)/.test(compactForIntent(intent.target_status)),
+  )
+}
+
+function countIntentTerms(text: string, terms: string[]): number {
+  return terms.filter(term => text.includes(compactForIntent(term))).length
+}
+
+function intentStatusInText(status: string, text: string): boolean {
+  const compact = compactForIntent(status)
+  if (/技人国|人文|工作签|技術人文/.test(compact)) return /技人国|人文|工作签|技術人文|技術人文知識国際業務|技術人文知識國際業務/.test(text)
+  if (/经营管理|経営管理|经管|經營管理/.test(compact)) return /经营管理|経営管理|经管|經營管理|経営管理/.test(text)
+  if (/特定技能/.test(compact)) return /特定技能/.test(text)
+  if (/留学/.test(compact)) return /留学|留学生/.test(text)
+  if (/永住/.test(compact)) return /永住/.test(text)
+  return text.includes(compact)
+}
+
+function compactForIntent(value: string): string {
+  return value
+    .replace(/\s+/g, '')
+    .replace(/[・･\/／→\-ー—_()（）「」『』【】,，、:：]/g, '')
+    .toLowerCase()
 }
 
 function splitStructured(value: string): string[] {
@@ -830,6 +893,16 @@ function sanitizeAnswer(answer: AnswerResult): AnswerResult {
     ...sanitized,
     action_answer: formatActionAnswer(sanitized),
     intent_guard_pass: answer.intent_guard_pass ?? true,
+  }
+}
+
+function withIntent(answer: AnswerResult, intent: AnswerIntent): AnswerResult {
+  return {
+    ...answer,
+    intent,
+    intent_summary: describeIntent(intent, answer.title),
+    preferred_template: intent.preferred_template,
+    intent_guard_pass: true,
   }
 }
 

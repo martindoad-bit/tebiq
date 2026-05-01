@@ -44,7 +44,9 @@ export async function submitQuestionForAnswer(input: SubmitQuestionInput): Promi
         matchedCardId: answer.matched_card_id ?? null,
         questionText: input.questionText,
         answer,
-        modelUsed: 'rule-engine-v0',
+        modelUsed: answer.preferred_template
+          ? `intent-router-v1:${answer.preferred_template}`
+          : 'intent-router-v1',
       })
       answerId = draft.id
       saved = true
