@@ -10,7 +10,7 @@
     },
     {
       "path": "/api/cron/send-notifications",
-      "schedule": "*/30 * * * *"
+      "schedule": "0 18 * * *"
     }
   ]
 }
