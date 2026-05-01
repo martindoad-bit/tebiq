@@ -25,6 +25,7 @@
     "lint:answer": "tsx scripts/test/lint-answer.ts",
     "test:answer-quality": "tsx scripts/test/test-answer-quality.ts",
     "test:intent-router": "tsx scripts/test/test-intent-router.ts",
+    "test:llm-intent": "tsx scripts/test/test-llm-intent.ts",
     "test": "tsx --test lib/**/*.test.ts"
   },
   "dependencies": {

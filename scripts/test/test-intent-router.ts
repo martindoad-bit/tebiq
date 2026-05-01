@@ -13,6 +13,14 @@ const CASES: Array<{
   template?: string
 }> = [
   {
+    query: '我是经管签，想转人文签',
+    domain: 'visa',
+    intentType: 'eligibility_check',
+    currentStatus: /经营管理/,
+    targetStatus: /技人国|人文/,
+    template: 'eligibility_template',
+  },
+  {
     query: '我想从人文签转为经管签怎么办',
     domain: 'visa',
     intentType: 'procedure_flow',
@@ -170,8 +178,13 @@ async function checkAnswerRedlines(): Promise<Array<Record<string, unknown>>> {
       required: [/经营管理|経営管理|経営・管理|经管/, /技人国|人文|工作签|技術人文/],
     },
     {
+      query: '我是经管签，想转人文签',
+      rejectSeed: /q071|q069|配偶者|经营管理.*申请|経営・管理.*转换|500万|事業所/,
+      required: [/接收公司|雇用契約|雇佣合同|業務内容|学历|学歴|技人国|人文/, /经营管理|経営管理|经管/],
+    },
+    {
       query: '公司休眠了现在要不要交国民年金',
-      rejectTitle: /经营管理公司休眠|在留资格影响|休眠 \/ 解散 在留资格/,
+      rejectTitle: /经营管理公司休眠|在留资格影响|休眠 \/ 解散 在留资格|交不起|免除/,
       required: [/国民年金|厚生年金|年金/, /区役所|市役所|年金事務所|年金事务所/],
     },
     {

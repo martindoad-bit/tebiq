@@ -1,4 +1,5 @@
 import type { AnswerResult } from './types'
+import { parseIntentWithLlm, type LlmIntentParserResult } from './llm-intent-parser'
 
 export type IntentType =
   | 'procedure_flow'
@@ -15,6 +16,7 @@ export type IntentSubject =
   | 'employee'
   | 'employer'
   | 'family'
+  | 'customer_manager'
   | 'unknown'
 
 export type IntentDomain =
@@ -39,6 +41,8 @@ export type PreferredTemplate =
   | 'clarify_template'
 
 export interface AnswerIntent {
+  normalized_question?: string
+  user_goal?: string
   intent_type: IntentType
   current_status?: string
   target_status?: string
@@ -48,6 +52,7 @@ export interface AnswerIntent {
   extracted_entities: {
     current_visa?: string
     target_visa?: string
+    company_status?: string
     procedure?: string
     document?: string
     deadline?: string
@@ -69,22 +74,43 @@ export interface IntentMatchResult {
   reason: string
 }
 
-const DEFAULT_MODEL_ID = 'jp.anthropic.claude-sonnet-4-6'
-const DEFAULT_REGION = 'ap-northeast-1'
-
 export async function classifyAnswerIntent(input: IntentInput): Promise<AnswerIntent> {
   const rule = classifyIntentByRules(input)
-  if (rule.confidence >= 3) return rule
-  if (process.env.ANSWER_INTENT_DISABLE_AI === '1') return rule
+  if (process.env.ANSWER_INTENT_DISABLE_AI === '1' || process.env.LLM_INTENT_DISABLE_AI === '1') return rule
 
-  const ai = await classifyIntentWithAi(input, rule).catch(() => null)
-  return ai ?? rule
+  const ai = await parseIntentWithLlm({
+    question_text: input.question_text,
+    selected_visa_type: input.visa_type,
+  }).catch(() => null)
+  if (!ai) return rule
+
+  const llmIntent = normalizeIntent(input.question_text, { ...ai })
+  return reconcileIntent(input.question_text, rule, llmIntent, ai)
 }
 
 export function classifyIntentByRules(input: IntentInput): AnswerIntent {
   const raw = input.question_text.trim()
   const text = normalize(raw)
   const visaFromInput = normalizeVisa(input.visa_type)
+  const transfer = extractDirectionalVisaTransfer(raw)
+
+  if (transfer) {
+    return buildIntent(raw, {
+      intent_type: transfer.intentType,
+      current_status: transfer.current,
+      target_status: transfer.target,
+      subject: 'individual',
+      domain: 'visa',
+      confidence: 4,
+      extracted_entities: {
+        current_visa: transfer.current,
+        target_visa: transfer.target,
+        procedure: '在留資格変更',
+      },
+      preferred_template: 'eligibility_template',
+      should_answer: true,
+    })
+  }
 
   if (isHumanitiesToManagement(text)) {
     return buildIntent(raw, {
@@ -146,12 +172,28 @@ export function classifyIntentByRules(input: IntentInput): AnswerIntent {
       intent_type: 'risk_assessment',
       current_status: '会社社保空档',
       subject: 'individual',
-      domain: text.includes('健康') || text.includes('国保') ? 'health_insurance' : 'pension',
+      domain: /(健康|国保|社保|社会保险|社会保険)/.test(text) ? 'health_insurance' : 'pension',
       confidence: 4,
       extracted_entities: {
         procedure: '国民年金 / 国民健康保険切换',
       },
       preferred_template: 'risk_template',
+      should_answer: true,
+    })
+  }
+
+  if (/(资本金|資本金).*(多少|标准|標準|合适|適切|目安)|(?:多少|标准|標準|合适|目安).*(资本金|資本金)/.test(text)) {
+    return buildIntent(raw, {
+      intent_type: 'eligibility_check',
+      target_status: '经营管理',
+      subject: 'company',
+      domain: 'visa',
+      confidence: 3,
+      extracted_entities: {
+        target_visa: '经营管理',
+        procedure: '经营管理资本金标准确认',
+      },
+      preferred_template: 'eligibility_template',
       should_answer: true,
     })
   }
@@ -172,9 +214,25 @@ export function classifyIntentByRules(input: IntentInput): AnswerIntent {
     })
   }
 
+  if (/(经营管理|経営管理|经管).*(办公室|事務所|合同|契約|个人名义|個人名義|自宅|住宅)|办公室.*(经营管理|経営管理|经管).*(可以吗|能不能|合同|契約)/.test(text)) {
+    return buildIntent(raw, {
+      intent_type: 'eligibility_check',
+      target_status: '经营管理',
+      subject: 'company',
+      domain: 'visa',
+      confidence: 3,
+      extracted_entities: {
+        target_visa: '经营管理',
+        procedure: '经营管理事業所要件确认',
+      },
+      preferred_template: 'eligibility_template',
+      should_answer: true,
+    })
+  }
+
   if (isOfficeRelocation(text)) {
     return buildIntent(raw, {
-      intent_type: /(哪个先|顺序|先后|流程|步骤)/.test(raw) ? 'scenario_sequence' : 'procedure_flow',
+      intent_type: /(哪个先|顺序|先后|流程|步骤|都不一样|不一致)/.test(raw) ? 'scenario_sequence' : 'procedure_flow',
       current_status: visaFromInput ?? '经营管理',
       subject: 'company',
       domain: 'company_registration',
@@ -182,6 +240,22 @@ export function classifyIntentByRules(input: IntentInput): AnswerIntent {
       extracted_entities: {
         current_visa: visaFromInput ?? '经营管理',
         procedure: '办公室 / 本店地址变更',
+      },
+      preferred_template: 'flow_template',
+      should_answer: true,
+    })
+  }
+
+  if (/(代表|役员|役員).*(变更|変更|入管|届出|报备|报告)|公司代表变更/.test(text)) {
+    return buildIntent(raw, {
+      intent_type: 'procedure_flow',
+      current_status: visaFromInput ?? '经营管理',
+      subject: 'company',
+      domain: 'company_registration',
+      confidence: 3,
+      extracted_entities: {
+        current_visa: visaFromInput ?? '经营管理',
+        procedure: '公司代表 / 役员变更届出',
       },
       preferred_template: 'flow_template',
       should_answer: true,
@@ -204,6 +278,20 @@ export function classifyIntentByRules(input: IntentInput): AnswerIntent {
     })
   }
 
+  if (/(父母|老人).*(短期滞在|短期签|90日|长期住|一直续|更新)|短期滞在.*(父母|老人|一直|长期)/.test(text)) {
+    return buildIntent(raw, {
+      intent_type: 'misconception',
+      subject: 'family',
+      domain: 'visa',
+      confidence: 3,
+      extracted_entities: {
+        procedure: '父母短期滞在 / 长期在留误解',
+      },
+      preferred_template: 'misconception_template',
+      should_answer: true,
+    })
+  }
+
   if (/(老板|雇主|会社|公司).*(签证不符|不法就労|雇错|资格外)|签证不符.*(员工|普通员工|亲属|牵连)/.test(text)) {
     return buildIntent(raw, {
       intent_type: 'risk_assessment',
@@ -218,7 +306,11 @@ export function classifyIntentByRules(input: IntentInput): AnswerIntent {
     })
   }
 
-  if (/(住民税|納税|纳税|税金).*(永住|晚交|滞纳|滞納|影响)/.test(text)) {
+  if (
+    /(住民税|納税|纳税|税金).*(永住|晚交|滞纳|滞納|影响|完整|記録|记录)/.test(text)
+    || /(永住).*(住民税|納税|纳税|税金).*(完整|記録|记录|要|必要|影响)/
+      .test(text)
+  ) {
     return buildIntent(raw, {
       intent_type: 'risk_assessment',
       subject: 'individual',
@@ -279,6 +371,20 @@ export function classifyIntentByRules(input: IntentInput): AnswerIntent {
     })
   }
 
+  if (/(住民票|迁入|転入).*(国保|国民健康).*(地址|住所|变更|変更|改)|国保.*(地址|住所).*(改|变更|変更)/.test(text)) {
+    return buildIntent(raw, {
+      intent_type: 'procedure_flow',
+      subject: 'individual',
+      domain: 'housing',
+      confidence: 3,
+      extracted_entities: {
+        procedure: '住民票迁入后的国保地址变更',
+      },
+      preferred_template: 'flow_template',
+      should_answer: true,
+    })
+  }
+
   if (/(搬家|地址|住所).*(在留卡|在留カード|住民票|14日)/.test(text)) {
     return buildIntent(raw, {
       intent_type: 'procedure_flow',
@@ -293,7 +399,13 @@ export function classifyIntentByRules(input: IntentInput): AnswerIntent {
     })
   }
 
-  if (/(留学生|留学).*(人文|技人国|工作签)|留学.*(就职|就職|内定)/.test(text)) {
+  if (
+    /(留学生|留学).*(人文|技人国|工作签)|留学.*(就职|就職|内定)/
+      .test(text)
+    || /(文学部|文系|大学毕业|大学卒|専門学校|毕业|卒業).*(人文|技人国|工作签|就职|就職)/
+      .test(text)
+    || /人文签.*(学历|学歴|毕业|卒業)/.test(text)
+  ) {
     return buildIntent(raw, {
       intent_type: 'eligibility_check',
       current_status: '留学',
@@ -311,7 +423,14 @@ export function classifyIntentByRules(input: IntentInput): AnswerIntent {
     })
   }
 
-  if (/(收到|来た|来了).*(通知|文书|書類|信封|封筒)|税务署信封|年金信封/.test(text)) {
+  if (
+    /(收到|来た|来了).*(通知|文书|書類|信封|封筒)|税务署信封|年金信封/
+      .test(text)
+    || /(市役所|区役所|入管|日文|日本語).*(通知|文书|書類).*(期限|金额|金額|怎么办|处理|補資料|补资料)/
+      .test(text)
+    || /入管通知.*(補資料|补资料|怎么办)/.test(text)
+    || /通知.*(金额|金額|期限).*(怎么办|处理)/.test(text)
+  ) {
     return buildIntent(raw, {
       intent_type: 'procedure_flow',
       subject: 'individual',
@@ -354,6 +473,38 @@ export function classifyIntentByRules(input: IntentInput): AnswerIntent {
     })
   }
 
+  if (/(特定技能).*(换雇主|换公司|雇主変更|雇用主変更|14日|届出|报备|入管)/.test(text)) {
+    return buildIntent(raw, {
+      intent_type: /(重新申请|変更|变更|能不能|要不要)/.test(text) ? 'eligibility_check' : 'procedure_flow',
+      current_status: '特定技能',
+      subject: 'individual',
+      domain: /(重新申请|変更|变更|能不能|要不要)/.test(text) ? 'visa' : 'employment',
+      confidence: 3,
+      extracted_entities: {
+        current_visa: '特定技能',
+        procedure: '特定技能雇主变更',
+      },
+      preferred_template: /(重新申请|変更|变更|能不能|要不要)/.test(text) ? 'eligibility_template' : 'flow_template',
+      should_answer: true,
+    })
+  }
+
+  if (/(技能实习|技能実習).*(结束后|終了後|満了後|结束|完了|能转什么|转什么签证|转什么在留)/.test(text)) {
+    return buildIntent(raw, {
+      intent_type: 'eligibility_check',
+      current_status: '技能实习',
+      subject: 'individual',
+      domain: 'visa',
+      confidence: 3,
+      extracted_entities: {
+        current_visa: '技能实习',
+        procedure: '技能实习结束后的在留资格选择',
+      },
+      preferred_template: 'eligibility_template',
+      should_answer: true,
+    })
+  }
+
   if (/(刚到|来日本|第一周|初到).*(经营管理|経営管理|经管)/.test(text)) {
     return buildIntent(raw, {
       intent_type: 'scenario_sequence',
@@ -380,6 +531,39 @@ export function classifyIntentByRules(input: IntentInput): AnswerIntent {
       extracted_entities: {
         current_visa: '配偶者',
         procedure: '离婚后在留资格处理',
+      },
+      preferred_template: 'risk_template',
+      should_answer: true,
+    })
+  }
+
+  if (/(永住者|永住).*(离婚|離婚|配偶|入管|届出)/.test(text)) {
+    return buildIntent(raw, {
+      intent_type: 'risk_assessment',
+      current_status: '永住',
+      subject: 'individual',
+      domain: 'visa',
+      confidence: 3,
+      extracted_entities: {
+        current_visa: '永住',
+        procedure: '永住者离婚后届出确认',
+      },
+      preferred_template: 'risk_template',
+      should_answer: true,
+    })
+  }
+
+  if (/(会社休眠|公司休眠|休眠).*(经管|经营管理|経営管理|签证|在留|续签|更新)|(?:经管|经营管理|経営管理).*(会社休眠|公司休眠|休眠)/.test(text)) {
+    return buildIntent(raw, {
+      intent_type: 'risk_assessment',
+      current_status: '经营管理',
+      subject: 'company',
+      domain: 'visa',
+      confidence: 3,
+      extracted_entities: {
+        current_visa: '经营管理',
+        company_status: '休眠',
+        procedure: '经营管理公司休眠对在留更新影响',
       },
       preferred_template: 'risk_template',
       should_answer: true,
@@ -452,6 +636,32 @@ export function answerMatchesIntent(intent: AnswerIntent, answer: AnswerResult):
     return { pass: false, reason: 'answered_as_tokutei_to_work_visa' }
   }
 
+  if (isManagementToHumanitiesIntent(intent)) {
+    const employmentHits = countHits(answerText, [
+      '接收公司',
+      '受入会社',
+      '雇用契約',
+      '雇佣合同',
+      '業務内容',
+      '业务内容',
+      '学歴',
+      '学历',
+      '実務経験',
+      '实务经验',
+      '技人国',
+      '人文',
+      '技術人文',
+      '退任',
+      '役員',
+      '代表',
+    ])
+    const managementStartupHits = countHits(answerText, ['500万', '出資', '事業所', '事业所', '会社設立', '事業計画', '经营管理申请条件'])
+    if (employmentHits < 2) return { pass: false, reason: 'management_to_humanities_not_specific_enough' }
+    if (managementStartupHits >= 2 && employmentHits < 4) {
+      return { pass: false, reason: 'management_to_humanities_answered_as_management_application' }
+    }
+  }
+
   if (isHumanitiesToManagementIntent(intent)) {
     const managementConversionHits = countHits(answerText, [
       '500万',
@@ -498,6 +708,15 @@ function isHumanitiesToManagementIntent(intent: AnswerIntent): boolean {
       && /(技人国|人文|工作签|技術人文)/.test(normalize(intent.current_status))
       && intent.target_status
       && /(经营管理|経営管理|经管)/.test(normalize(intent.target_status)),
+  )
+}
+
+function isManagementToHumanitiesIntent(intent: AnswerIntent): boolean {
+  return Boolean(
+    intent.current_status
+      && /(经营管理|経営管理|经管)/.test(normalize(intent.current_status))
+      && intent.target_status
+      && /(技人国|人文|工作签|技術人文)/.test(normalize(intent.target_status)),
   )
 }
 
@@ -574,52 +793,61 @@ export function clarificationQuestionsForIntent(intent: AnswerIntent): string[] 
   return defaultClarificationQuestions()
 }
 
-async function classifyIntentWithAi(input: IntentInput, fallback: AnswerIntent): Promise<AnswerIntent | null> {
-  const awsKey = process.env.AWS_ACCESS_KEY_ID
-  const awsSecret = process.env.AWS_SECRET_ACCESS_KEY
-  if (!awsKey || !awsSecret) return null
+function reconcileIntent(questionText: string, rule: AnswerIntent, llm: AnswerIntent, raw: LlmIntentParserResult): AnswerIntent {
+  const transfer = extractDirectionalVisaTransfer(questionText)
+  if (transfer) {
+    return normalizeIntent(questionText, {
+      ...llm,
+      intent_type: transfer.intentType,
+      current_status: transfer.current,
+      target_status: transfer.target,
+      subject: 'individual',
+      domain: 'visa',
+      confidence: 4,
+      extracted_entities: {
+        ...llm.extracted_entities,
+        current_visa: transfer.current,
+        target_visa: transfer.target,
+        procedure: '在留資格変更',
+      },
+      preferred_template: 'eligibility_template',
+      should_answer: true,
+      normalized_question: raw.normalized_question,
+      user_goal: raw.user_goal,
+    })
+  }
 
-  const AnthropicBedrock = (await import('@anthropic-ai/bedrock-sdk')).default
-  const client = new AnthropicBedrock({
-    awsAccessKey: awsKey,
-    awsSecretKey: awsSecret,
-    awsRegion: process.env.AWS_REGION ?? DEFAULT_REGION,
+  if (rule.confidence >= 4 && isHardRuleIntent(rule)) {
+    return normalizeIntent(questionText, {
+      ...rule,
+      normalized_question: raw.normalized_question,
+      user_goal: raw.user_goal,
+    })
+  }
+
+  if (llm.confidence < 3 && rule.confidence >= 3) {
+    return normalizeIntent(questionText, {
+      ...rule,
+      normalized_question: raw.normalized_question,
+      user_goal: raw.user_goal,
+    })
+  }
+
+  return normalizeIntent(questionText, {
+    ...llm,
+    normalized_question: raw.normalized_question,
+    user_goal: raw.user_goal,
   })
-  const response = await client.messages.create({
-    model: process.env.ANSWER_INTENT_MODEL_ID ?? process.env.PHOTO_RECOGNITION_MODEL_ID ?? DEFAULT_MODEL_ID,
-    max_tokens: 500,
-    temperature: 0,
-    system: [
-      '你只做意图分类，不生成答案。',
-      '输出 JSON，字段：intent_type,current_status,target_status,subject,domain,confidence,extracted_entities,preferred_template,should_answer,clarification_questions。',
-      '如果不确定，confidence 设为 1 或 2，并选择 clarify_template。',
-      '不要输出法律判断。',
-    ].join('\n'),
-    messages: [{
-      role: 'user',
-      content: `问题：${input.question_text}\n用户选择身份：${input.visa_type ?? '未选择'}`,
-    }],
-  })
-  const text = response.content
-    .map(block => block.type === 'text' ? block.text : '')
-    .join('\n')
-  const parsed = JSON.parse(extractJson(text)) as Record<string, unknown>
-  return normalizeIntent(input.question_text, { ...fallback, ...coerceIntent(parsed) })
 }
 
-function coerceIntent(value: Record<string, unknown>): Partial<AnswerIntent> {
-  return {
-    intent_type: enumValue(value.intent_type, ['procedure_flow', 'eligibility_check', 'material_list', 'scenario_sequence', 'risk_assessment', 'misconception', 'unknown']),
-    current_status: stringValue(value.current_status),
-    target_status: stringValue(value.target_status),
-    subject: enumValue(value.subject, ['individual', 'company', 'employee', 'employer', 'family', 'unknown']),
-    domain: enumValue(value.domain, ['visa', 'pension', 'tax', 'health_insurance', 'company_registration', 'employment', 'school', 'housing', 'document', 'unknown']),
-    confidence: confidenceValue(value.confidence),
-    extracted_entities: recordValue(value.extracted_entities),
-    preferred_template: enumValue(value.preferred_template, ['flow_template', 'eligibility_template', 'material_template', 'sequence_template', 'risk_template', 'misconception_template', 'clarify_template']),
-    should_answer: typeof value.should_answer === 'boolean' ? value.should_answer : undefined,
-    clarification_questions: arrayValue(value.clarification_questions),
-  } as Partial<AnswerIntent>
+function isHardRuleIntent(intent: AnswerIntent): boolean {
+  return Boolean(
+    isHumanitiesToManagementIntent(intent)
+      || isManagementToHumanitiesIntent(intent)
+      || intent.domain === 'pension'
+      || intent.domain === 'health_insurance'
+      || (intent.target_status === '经营管理' && /(资本|資本|资金|資金)/.test(normalize(intent.extracted_entities.procedure ?? ''))),
+  )
 }
 
 function buildIntent(questionText: string, partial: Omit<AnswerIntent, 'understood_as'>): AnswerIntent {
@@ -628,6 +856,8 @@ function buildIntent(questionText: string, partial: Omit<AnswerIntent, 'understo
 
 function normalizeIntent(questionText: string, partial: Partial<AnswerIntent>): AnswerIntent {
   const intent: AnswerIntent = {
+    normalized_question: partial.normalized_question,
+    user_goal: partial.user_goal,
     intent_type: partial.intent_type ?? 'unknown',
     current_status: partial.current_status,
     target_status: partial.target_status,
@@ -702,6 +932,42 @@ function answerTextForIntent(answer: AnswerResult): string {
   ].filter(Boolean).join('\n')
 }
 
+function extractDirectionalVisaTransfer(questionText: string): { current: string; target: string; intentType: IntentType } | null {
+  const text = questionText.replace(/\s+/g, '')
+  const visa = '经管签|经营管理|經營管理|経営管理|経管|技人国|人文签|人文|工作签|技術人文知識国際業務|技術人文|特定技能1号|特定技能|留学签|留学|家族滞在|配偶签|配偶者|永住'
+  const patterns = [
+    new RegExp(`(?:我是|我现在是|我目前是|目前是|持有)?(${visa})(?:签|在留资格|資格)?(?:，|,)?(?:想|要|准备|打算)?(?:转|转为|转到|变更为|変更为|変更|切换到|换成)(${visa})`),
+    new RegExp(`从(${visa})(?:签|在留资格|資格)?(?:转|转为|转到|变更为|変更为|変更|切换到|换成)(${visa})`),
+    new RegExp(`(${visa})(?:签|在留资格|資格)?から(${visa})(?:签|在留资格|資格)?(?:に)?(?:変更|変える|切替)`),
+    new RegExp(`(${visa})(?:签|在留资格|資格)?(?:→|->|转为|转到|转|変更|变更为)(${visa})`),
+  ]
+  for (const pattern of patterns) {
+    const match = text.match(pattern)
+    const current = normalizeVisaLabel(match?.[1])
+    const target = normalizeVisaLabel(match?.[2])
+    if (!current || !target || current === target) continue
+    return {
+      current,
+      target,
+      intentType: /流程|手续|怎么办|步骤|怎么做/.test(questionText) ? 'procedure_flow' : 'eligibility_check',
+    }
+  }
+  return null
+}
+
+function normalizeVisaLabel(value?: string): string | null {
+  if (!value) return null
+  const text = normalize(value)
+  if (/(经营管理|經營管理|経営管理|経管|经管)/.test(text)) return '经营管理'
+  if (/(技人国|人文|工作签|技術人文)/.test(text)) return '技人国 / 人文签'
+  if (/特定技能/.test(text)) return '特定技能'
+  if (/留学/.test(text)) return '留学'
+  if (/家族滞在/.test(text)) return '家族滞在'
+  if (/配偶/.test(text)) return '配偶者'
+  if (/永住/.test(text)) return '永住'
+  return null
+}
+
 function isHumanitiesToManagement(text: string): boolean {
   return /(人文|技人国|技術人文|工作签)/.test(text)
     && /(经营管理|経営管理|经管)/.test(text)
@@ -772,45 +1038,4 @@ function normalize(input: string): string {
     .replace(/\s+/g, '')
     .replace(/[・･\/／→\-ー—_()（）「」『』【】,，、:：]/g, '')
     .toLowerCase()
-}
-
-function stringValue(value: unknown): string | undefined {
-  return typeof value === 'string' && value.trim() ? value.trim().slice(0, 160) : undefined
-}
-
-function arrayValue(value: unknown): string[] | undefined {
-  if (!Array.isArray(value)) return undefined
-  return value.map(item => String(item).trim()).filter(Boolean).slice(0, 8)
-}
-
-function recordValue(value: unknown): AnswerIntent['extracted_entities'] {
-  if (!value || typeof value !== 'object' || Array.isArray(value)) return {}
-  const row = value as Record<string, unknown>
-  return {
-    current_visa: stringValue(row.current_visa),
-    target_visa: stringValue(row.target_visa),
-    procedure: stringValue(row.procedure),
-    document: stringValue(row.document),
-    deadline: stringValue(row.deadline),
-    location: stringValue(row.location),
-  }
-}
-
-function confidenceValue(value: unknown): AnswerIntent['confidence'] | undefined {
-  const number = Number(value)
-  if (number === 1 || number === 2 || number === 3 || number === 4) return number
-  return undefined
-}
-
-function enumValue<T extends readonly string[]>(value: unknown, allowed: T): T[number] | undefined {
-  return typeof value === 'string' && (allowed as readonly string[]).includes(value)
-    ? value as T[number]
-    : undefined
-}
-
-function extractJson(text: string): string {
-  const start = text.indexOf('{')
-  const end = text.lastIndexOf('}')
-  if (start < 0 || end <= start) throw new Error('No JSON object in intent response')
-  return text.slice(start, end + 1)
 }
