@@ -45,12 +45,6 @@ export async function POST(req: Request) {
       intent: answer.intent,
       intent_summary: answer.intent_summary,
       preferred_template: answer.preferred_template,
-      llm_envelope: answer.llm_envelope,
-      engine_version: answer.llm_envelope?.engine_version,
-      answer_mode: answer.llm_envelope?.answer_mode,
-      llm_attempted: answer.llm_envelope?.llm_attempted,
-      fallback_reason: answer.llm_envelope?.fallback_reason,
-      fallback_from: answer.llm_envelope?.fallback_from,
     })
   } catch (error) {
     console.warn('[api/questions] answer failed', errorCode(error))

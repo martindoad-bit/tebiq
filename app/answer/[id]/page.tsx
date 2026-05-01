@@ -2,14 +2,13 @@ import Link from 'next/link'
 import AppShell from '@/app/_components/v5/AppShell'
 import AppBar from '@/app/_components/v5/AppBar'
 import TabBar from '@/app/_components/v5/TabBar'
-import { extractLlmEnvelopeFromSections, getAnswerDraftById } from '@/lib/db/queries/answerDrafts'
+import { getAnswerDraftById } from '@/lib/db/queries/answerDrafts'
 import {
   ANSWER_BOUNDARY_NOTE,
   type ActionAnswer,
   type AnswerLink,
   type AnswerSection,
   type AnswerSource,
-  type LlmAnswerEnvelope,
 } from '@/lib/answer/types'
 import { formatActionAnswer } from '@/lib/answer/format-action-answer'
 import { classifyAnswerIntent, describeIntent } from '@/lib/answer/intent-router'
@@ -36,7 +35,6 @@ type FullAnswer = {
   sourceHint: string
   boundaryNote: string
   actionAnswer: AnswerResult['actionAnswer']
-  llmEnvelope: LlmAnswerEnvelope | null
 }
 
 const DEMO_ANSWERS: Record<string, FullAnswer> = {
@@ -88,7 +86,6 @@ const DEMO_ANSWERS: Record<string, FullAnswer> = {
       answer_id: null,
       boundary_note: ANSWER_BOUNDARY_NOTE,
     }),
-    llmEnvelope: null,
   },
   'demo-draft': {
     id: 'demo-draft',
@@ -140,7 +137,6 @@ const DEMO_ANSWERS: Record<string, FullAnswer> = {
       answer_id: null,
       boundary_note: ANSWER_BOUNDARY_NOTE,
     }),
-    llmEnvelope: null,
   },
   'demo-cannot-determine': {
     id: 'demo-cannot-determine',
@@ -186,7 +182,6 @@ const DEMO_ANSWERS: Record<string, FullAnswer> = {
       answer_id: null,
       boundary_note: ANSWER_BOUNDARY_NOTE,
     }),
-    llmEnvelope: null,
   },
 }
 
@@ -232,8 +227,7 @@ export default async function AnswerPage({
 type AnswerDraftRow = NonNullable<Awaited<ReturnType<typeof getAnswerDraftById>>>
 
 function draftToAnswer(draft: AnswerDraftRow): FullAnswer {
-  const rawSections = draft.sectionsJson as AnswerSection[]
-  const { envelope, rest: sections } = extractLlmEnvelopeFromSections(rawSections)
+  const sections = draft.sectionsJson as AnswerSection[]
   const nextSteps = draft.nextStepsJson as string[]
   const relatedLinks = draft.relatedLinksJson as AnswerLink[]
   const sources = draft.sourcesJson as AnswerSource[]
@@ -273,7 +267,6 @@ function draftToAnswer(draft: AnswerDraftRow): FullAnswer {
       boundary_note: ANSWER_BOUNDARY_NOTE,
       action_answer: storedActionAnswer ?? undefined,
     }),
-    llmEnvelope: (envelope as LlmAnswerEnvelope | null) ?? null,
   }
 }
 
@@ -351,7 +344,6 @@ function toViewAnswer(answer: FullAnswer, intentSummary: string): AnswerResult {
     statusClassName: publicStatusClassName(answer.status),
     sourceHint: answer.sourceHint,
     actionAnswer: answer.actionAnswer,
-    llmEnvelope: answer.llmEnvelope ?? null,
   }
 }
 
