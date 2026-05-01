@@ -60,13 +60,13 @@ export default function QuestionIntakeBox({
 
   return (
     <section className={compact
-      ? 'rounded-card border border-hairline bg-surface px-4 py-4'
-      : 'rounded-[16px] border border-hairline bg-surface px-4 py-4'
+      ? 'rounded-[16px] border border-hairline bg-surface px-4 py-4'
+      : 'rounded-[18px] border border-hairline bg-surface px-4 py-[18px] sm:px-5'
     }>
-      <h2 className={`${compact ? 'text-[15px]' : 'text-[16px]'} font-medium leading-tight text-ink`}>
+      <h2 className={`${compact ? 'text-[15px]' : 'text-[16px]'} font-medium leading-tight tracking-[-0.005em] text-ink`}>
         {compact ? '找不到对应内容？' : '你的问题'}
       </h2>
-      <form onSubmit={submit} className="mt-4 grid gap-3">
+      <form onSubmit={submit} className="mt-3.5 grid gap-3">
         <textarea
           value={questionText}
           onChange={event => setQuestionText(event.target.value)}
@@ -74,26 +74,26 @@ export default function QuestionIntakeBox({
           rows={compact ? 3 : 2}
           maxLength={4000}
           placeholder={compact ? '换工作后在留更新要准备什么？' : '厚生年金截止日期是什么时候？'}
-          className={`${compact ? 'min-h-[94px]' : 'min-h-[76px]'} w-full resize-none rounded-[12px] border border-hairline bg-canvas px-3.5 py-3 text-[16px] leading-[1.55] text-ink outline-none placeholder:text-haze focus:border-ink`}
+          className={`${compact ? 'min-h-[96px]' : 'min-h-[86px]'} w-full resize-none rounded-[14px] border border-hairline bg-canvas px-3.5 py-3 text-[16px] leading-[1.55] text-ink outline-none placeholder:text-haze focus:border-ink`}
         />
         <button
           type="submit"
           disabled={busy || !questionText.trim()}
-          className="min-h-[46px] rounded-btn bg-ink px-4 py-2 text-[14px] font-medium text-white disabled:cursor-not-allowed disabled:opacity-45"
+          className="min-h-[48px] rounded-[12px] bg-ink px-4 py-2 text-[14px] font-medium text-white transition-colors active:bg-[#1A355B] disabled:cursor-not-allowed disabled:opacity-65"
         >
           {busy ? '正在整理...' : '看下一步'}
         </button>
       </form>
       {!compact && (
-        <div className="mt-4">
+        <div className="mt-[18px]">
           <p className="text-[12px] leading-none text-ash">最近常问</p>
-          <div className="mt-2 flex flex-wrap gap-2">
+          <div className="mt-2.5 flex flex-wrap gap-2">
             {RECENT_QUESTIONS.map(example => (
               <button
                 key={example}
                 type="button"
                 onClick={() => setQuestionText(example)}
-                className="min-h-[30px] rounded-[9px] bg-paper px-2.5 text-[12px] text-slate active:bg-hairline"
+                className="min-h-[32px] rounded-[10px] bg-paper px-3 text-[12px] leading-none text-slate active:bg-hairline"
               >
                 {example}
               </button>

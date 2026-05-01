@@ -84,24 +84,24 @@ export default function AnswerResultView({
 
   return (
     <div className="pt-1">
-      <section className="rounded-[16px] border border-hairline bg-surface px-4 py-4">
+      <section className="rounded-[18px] border border-hairline bg-surface px-4 py-[18px]">
         <StatusPill className={answer.statusClassName}>{answer.statusLabel}</StatusPill>
-        <h1 className="mt-4 text-[22px] font-medium leading-[1.38] tracking-[-0.01em] text-ink [overflow-wrap:anywhere]">
+        <h1 className="mt-4 text-[clamp(21px,5.8vw,25px)] font-medium leading-[1.32] tracking-[-0.012em] text-ink [overflow-wrap:anywhere]">
           {answer.title}
         </h1>
-        <p className="mt-3 rounded-[12px] bg-paper px-3 py-3 text-[13px] leading-[1.7] text-slate [overflow-wrap:anywhere]">
+        <p className="mt-3 rounded-[14px] bg-paper px-3.5 py-3 text-[13px] leading-[1.65] text-slate [overflow-wrap:anywhere]">
           {answer.question}
         </p>
         <div className="mt-4">
           <SectionHeading>结论</SectionHeading>
-          <p className="mt-2 text-[15px] leading-[1.7] text-ink [overflow-wrap:anywhere]">{action.conclusion}</p>
+          <p className="mt-2 rounded-[14px] bg-canvas px-3.5 py-3 text-[15px] leading-[1.7] text-ink [overflow-wrap:anywhere]">{action.conclusion}</p>
         </div>
         <div className="mt-4 border-t border-hairline pt-4">
           <TaskList title="最紧的两件" items={firstTwo} ordered emphasis />
         </div>
       </section>
 
-      <section className="mt-5 rounded-[16px] border border-hairline bg-surface px-4">
+      <section className="mt-5 rounded-[18px] border border-hairline bg-surface px-4">
         <div className="divide-y divide-hairline">
           <TaskList title="步骤" items={stepItems} ordered />
           <TaskList title="去哪办" items={action.where_to_go} />
@@ -112,7 +112,7 @@ export default function AnswerResultView({
         </div>
       </section>
 
-      <details className="mt-5 rounded-[14px] border border-hairline bg-surface px-4 py-3">
+      <details className="mt-5 rounded-[14px] border border-hairline bg-surface px-4 py-3.5">
         <summary className="cursor-pointer text-[13px] font-medium text-ink">复制给客户</summary>
         <p className="mt-3 text-[12px] leading-[1.7] text-slate [overflow-wrap:anywhere]">{managerCopy}</p>
         <button
@@ -124,13 +124,13 @@ export default function AnswerResultView({
         </button>
       </details>
 
-      <section className="mt-5 border-t border-hairline pt-4">
+      <section className="mt-5 rounded-[14px] bg-paper px-4 py-3.5">
         <SectionHeading>来源与说明</SectionHeading>
         <p className="mt-2 text-[12px] leading-[1.7] text-ash [overflow-wrap:anywhere]">{answer.sourceHint}</p>
         <p className="mt-2 text-[11px] leading-[1.7] text-ash [overflow-wrap:anywhere]">{action.boundary_note}</p>
       </section>
 
-      <section className="mt-5 rounded-[16px] border border-hairline bg-surface px-4 py-4">
+      <section className="mt-5 rounded-[18px] border border-hairline bg-surface px-4 py-4">
         <SectionTitle title="这个整理有帮助吗？" />
         <div className="mt-3 grid grid-cols-2 gap-2">
           {FEEDBACK_OPTIONS.map(option => (
@@ -138,7 +138,7 @@ export default function AnswerResultView({
               key={option.type}
               type="button"
               onClick={() => submitFeedback(option.type, option.label)}
-              className={`min-h-[40px] rounded-[10px] border px-3 text-[12px] transition-colors ${
+              className={`min-h-[42px] rounded-[11px] border px-3 text-[12px] transition-colors ${
                 feedback === option.label
                   ? 'border-ink bg-ink text-white'
                   : 'border-hairline bg-canvas text-slate active:bg-paper'
@@ -161,13 +161,13 @@ export default function AnswerResultView({
 function SectionTitle({ title }: { title: string }) {
   return (
     <div>
-      <h2 className="text-[15px] font-medium leading-none text-ink">{title}</h2>
+      <h2 className="text-[15px] font-medium leading-none tracking-[-0.005em] text-ink">{title}</h2>
     </div>
   )
 }
 
 function SectionHeading({ children }: { children: string }) {
-  return <h2 className="text-[13px] font-medium leading-none text-ink">{children}</h2>
+  return <h2 className="text-[13px] font-medium leading-none tracking-[-0.005em] text-ink">{children}</h2>
 }
 
 function TaskList({
@@ -183,24 +183,24 @@ function TaskList({
 }) {
   const displayItems = safeItems(items).slice(0, emphasis ? 2 : 6)
   const content = displayItems.map((item, index) => (
-    <li key={`${title}-${item}`} className={`grid grid-cols-[24px_1fr] gap-2 ${emphasis ? 'text-[13px] text-ink' : 'text-[12px] text-slate'} leading-[1.65]`}>
-      <span className="flex h-6 w-6 items-center justify-center rounded-[8px] bg-paper text-[11px] tabular-nums text-ink">
+    <li key={`${title}-${item}`} className={`grid grid-cols-[28px_1fr] gap-2.5 ${emphasis ? 'text-[14px] text-ink' : 'text-[13px] text-slate'} leading-[1.65]`}>
+      <span className={`${emphasis ? 'h-7 w-7 bg-ink text-white' : 'h-7 w-7 bg-paper text-ink'} flex items-center justify-center rounded-[9px] text-[11px] tabular-nums`}>
         {ordered ? index + 1 : '·'}
       </span>
       <span className="[overflow-wrap:anywhere]">{item}</span>
     </li>
   ))
   return (
-    <div className="py-4 first:pt-0 last:pb-0">
+    <div className={`${emphasis ? 'py-0' : 'py-[18px] first:pt-4 last:pb-4'}`}>
       <SectionHeading>{title}</SectionHeading>
-      {ordered ? <ol className="mt-3 grid gap-2">{content}</ol> : <ul className="mt-3 grid gap-2">{content}</ul>}
+      {ordered ? <ol className={`${emphasis ? 'mt-3 gap-2.5' : 'mt-3.5 gap-3'} grid`}>{content}</ol> : <ul className="mt-3.5 grid gap-3">{content}</ul>}
     </div>
   )
 }
 
 function StatusPill({ children, className = 'bg-paper text-slate' }: { children: string; className?: string }) {
   return (
-    <span className={`rounded-[9px] px-2.5 py-1 text-[11px] leading-none ${className}`}>
+    <span className={`inline-flex min-h-[24px] items-center rounded-[9px] px-2.5 text-[11px] leading-none ${className}`}>
       {children}
     </span>
   )

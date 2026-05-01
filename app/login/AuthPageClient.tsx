@@ -158,17 +158,17 @@ export default function AuthPageClient({ intent = 'login' }: { intent?: 'login' 
   return (
     <AppShell appBar={<AppBar back="/" />}>
       <div className="mx-auto w-full min-w-0 max-w-[420px]">
-        <section className="pt-2 pb-5 text-center">
+        <section className="pt-3 pb-5 text-center">
           <div className="flex justify-center">
-            <Logo size="md" />
+            <Logo size="lg" />
           </div>
-          <div className="mx-auto mt-5 inline-flex max-w-full items-center justify-center gap-1.5 rounded-full border border-hairline bg-surface px-3 py-1.5 text-center text-[11px] text-slate shadow-card">
+          <div className="mx-auto mt-5 inline-flex max-w-full items-center justify-center gap-1.5 rounded-[999px] border border-hairline bg-surface px-3 py-1.5 text-center text-[11px] text-slate">
             <ShieldCheck size={13} strokeWidth={1.55} className="text-ink" />
             {inviteCode ? '注册成功后自动领取邀请奖励' : '邮箱和手机号都可以登录'}
           </div>
         </section>
 
-        <h1 className="mb-1.5 text-center text-[22px] font-medium leading-tight text-ink">
+        <h1 className="mb-1.5 text-center text-[22px] font-medium leading-tight tracking-[-0.01em] text-ink">
           {phoneStep === 'otp' && method === 'phone' ? '输入验证码' : title}
         </h1>
         <p className="mb-5 text-center text-[12px] leading-relaxed text-slate">
@@ -179,7 +179,7 @@ export default function AuthPageClient({ intent = 'login' }: { intent?: 'login' 
               : `验证码已发送至 ${phone}`}
         </p>
 
-        <div className="mb-3 grid w-full min-w-0 grid-cols-2 gap-2 rounded-card border border-hairline bg-surface p-1 shadow-card">
+        <div className="mb-3 grid w-full min-w-0 grid-cols-2 gap-2 rounded-[14px] border border-hairline bg-surface p-1">
           <button
             type="button"
             onClick={() => {
@@ -209,7 +209,7 @@ export default function AuthPageClient({ intent = 'login' }: { intent?: 'login' 
         </div>
 
         {method === 'email' && (
-          <div className="w-full min-w-0 rounded-card border border-hairline bg-surface p-4 shadow-card">
+          <div className="w-full min-w-0 rounded-[18px] border border-hairline bg-surface p-4">
             <label className="block">
               <span className="mb-2 block text-[13px] font-medium text-ink">邮箱</span>
               <span className="relative block min-w-0">
@@ -219,7 +219,7 @@ export default function AuthPageClient({ intent = 'login' }: { intent?: 'login' 
                   value={email}
                   onChange={e => setEmail(e.target.value)}
                   placeholder="name@example.com"
-                  className="w-full min-w-0 rounded-btn border border-hairline bg-canvas py-3 pl-11 pr-3 text-[16px] text-ink outline-none transition-colors placeholder:text-ash focus:border-ink"
+                  className="w-full min-w-0 rounded-[12px] border border-hairline bg-canvas py-3.5 pl-11 pr-3 text-[16px] text-ink outline-none transition-colors placeholder:text-ash focus:border-ink"
                   autoFocus
                 />
               </span>
@@ -252,7 +252,7 @@ export default function AuthPageClient({ intent = 'login' }: { intent?: 'login' 
         )}
 
         {method === 'phone' && phoneStep === 'phone' && (
-          <div className="w-full min-w-0 rounded-card border border-hairline bg-surface p-4 shadow-card">
+          <div className="w-full min-w-0 rounded-[18px] border border-hairline bg-surface p-4">
             <label className="block">
               <span className="mb-2 block text-[13px] font-medium text-ink">手机号</span>
               <span className="relative block min-w-0">
@@ -262,7 +262,7 @@ export default function AuthPageClient({ intent = 'login' }: { intent?: 'login' 
                   value={phone}
                   onChange={e => setPhone(e.target.value)}
                   placeholder="例: 08012345678"
-                  className="w-full min-w-0 rounded-btn border border-hairline bg-canvas py-3 pl-11 pr-3 text-[16px] text-ink outline-none transition-colors placeholder:text-ash focus:border-ink"
+                  className="w-full min-w-0 rounded-[12px] border border-hairline bg-canvas py-3.5 pl-11 pr-3 text-[16px] text-ink outline-none transition-colors placeholder:text-ash focus:border-ink"
                   autoFocus
                 />
               </span>
@@ -279,7 +279,7 @@ export default function AuthPageClient({ intent = 'login' }: { intent?: 'login' 
         )}
 
         {method === 'phone' && phoneStep === 'otp' && (
-          <div className="w-full min-w-0 rounded-card border border-hairline bg-surface p-4 shadow-card">
+          <div className="w-full min-w-0 rounded-[18px] border border-hairline bg-surface p-4">
             <label className="block">
               <span className="mb-2 block text-[13px] font-medium text-ink">6 位验证码</span>
               <span className="relative block min-w-0">
@@ -292,7 +292,7 @@ export default function AuthPageClient({ intent = 'login' }: { intent?: 'login' 
                   value={otp}
                   onChange={e => setOtp(e.target.value.replace(/\D/g, ''))}
                   placeholder="000000"
-                  className="w-full min-w-0 rounded-btn border border-hairline bg-canvas py-3 pl-11 pr-3 text-center text-[22px] tracking-[0.32em] text-ink outline-none transition-colors placeholder:text-ash focus:border-ink"
+                  className="w-full min-w-0 rounded-[12px] border border-hairline bg-canvas py-3.5 pl-11 pr-3 text-center text-[22px] tracking-[0.32em] text-ink outline-none transition-colors placeholder:text-ash focus:border-ink"
                   autoFocus
                 />
               </span>

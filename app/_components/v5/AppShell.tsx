@@ -40,11 +40,13 @@ export default function AppShell({
           }}
         >
           {children}
-          <footer className="mt-8 border-t border-hairline pt-4 text-center text-[10.5px] leading-[1.6] text-haze">
-            <Link href="/privacy-policy" className="underline-offset-4 hover:text-ink">
-              隐私政策 / Privacy Policy
-            </Link>
-          </footer>
+          {!tabBar && (
+            <footer className="mt-8 border-t border-hairline pt-4 text-center text-[10.5px] leading-[1.6] text-haze">
+              <Link href="/privacy-policy" className="underline-offset-4 hover:text-ink">
+                隐私政策 / Privacy Policy
+              </Link>
+            </footer>
+          )}
         </main>
         {tabBar}
       </div>

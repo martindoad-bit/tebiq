@@ -15,25 +15,25 @@ export default function PhotoSampleResultPage() {
     <AppShell appBar={<AppBar title="样例结果" back />} tabBar={<TabBar />}>
       <section className="mt-3 border-b border-hairline pb-5">
         <p className="text-[11px] leading-none text-ash">脱敏样例</p>
-        <h1 className="jp-text mt-2 text-[22px] font-medium leading-snug text-ink">住民税 納付通知書</h1>
-        <p className="mt-1 text-[13px] leading-[1.6] text-ash">住民税缴费通知 / 江戸川区役所</p>
+        <h1 className="jp-text mt-2 text-[clamp(22px,6vw,26px)] font-medium leading-snug tracking-[-0.006em] text-ink">住民税 納付通知書</h1>
+        <p className="mt-1.5 text-[13px] leading-[1.6] text-ash">住民税缴费通知 / 江戸川区役所</p>
       </section>
 
-      <section className="mt-3 overflow-hidden rounded-card border border-hairline bg-surface">
+      <section className="mt-4 overflow-hidden rounded-[16px] border border-hairline bg-surface">
         <SampleFact label="文书类型" value="納付通知書" sub="住民税缴费通知" />
         <SampleFact label="发件机构" value="江戸川区役所" sub="市区町村役所" />
         <SampleFact label="期限" value="2026.06.30" sub="到期前加入提醒" />
         <SampleFact label="金额" value="¥38,500" sub="以原文件金额为准" />
       </section>
 
-      <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-4">
+      <section className="mt-4 rounded-[16px] border border-hairline bg-surface px-4 py-4">
         <div className="flex items-start gap-3">
-          <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-[10px] bg-paper text-ink">
+          <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-[12px] bg-paper text-ink">
             <CalendarDays size={17} strokeWidth={1.5} />
           </span>
           <div className="min-w-0 flex-1">
-            <h2 className="text-[13px] font-medium leading-snug text-ink">要做什么</h2>
-            <div className="mt-3 divide-y divide-hairline">
+            <h2 className="text-[14px] font-medium leading-snug text-ink">要做什么</h2>
+            <div className="mt-3.5 divide-y divide-hairline">
               <ActionLine index="1" text="确认通知书上的納付期限。" />
               <ActionLine index="2" text="按原文件金额缴纳。" />
               <ActionLine index="3" text="保留缴费记录。" />
@@ -42,7 +42,7 @@ export default function PhotoSampleResultPage() {
         </div>
       </section>
 
-      <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-3">
+      <section className="mt-4 rounded-[16px] border border-hairline bg-surface px-4 py-3.5">
         <div className="flex items-center gap-2 text-[12px] font-medium text-ink">
           <FileText size={15} strokeWidth={1.5} />
           不处理会怎样
@@ -52,7 +52,7 @@ export default function PhotoSampleResultPage() {
         </p>
       </section>
 
-      <section className="mt-3 rounded-card border border-hairline bg-paper px-4 py-3">
+      <section className="mt-3 rounded-[14px] bg-paper px-4 py-3.5">
         <div className="flex items-center gap-2 text-[12px] font-normal text-ash">
           <Archive size={15} strokeWidth={1.5} />
           实际识别后，金额、期限和发件机构会进入我的提醒。
@@ -69,17 +69,17 @@ export default function PhotoSampleResultPage() {
         <QuestionIntakeBox sourcePage="/photo/sample-result" compact />
       </div>
 
-      <div className="mt-5 grid gap-2">
+      <div className="mt-5 grid gap-2.5">
         <Link
           href="/photo"
-          className="focus-ring flex min-h-[50px] items-center justify-center gap-2 rounded-btn bg-ink px-4 py-3 text-[14px] font-medium text-white"
+          className="focus-ring flex min-h-[50px] items-center justify-center gap-2 rounded-[12px] bg-ink px-4 py-3 text-[14px] font-medium text-white active:bg-[#1A355B]"
         >
           <Camera size={18} strokeWidth={1.5} />
           拍一份文书试试
         </Link>
         <Link
           href="/timeline"
-          className="flex min-h-[44px] items-center justify-center rounded-btn border border-hairline bg-surface px-4 py-3 text-[13px] font-medium text-ink"
+          className="flex min-h-[46px] items-center justify-center rounded-[12px] border border-hairline bg-surface px-4 py-3 text-[13px] font-medium text-ink active:bg-paper"
         >
           查看我的提醒
         </Link>
@@ -98,7 +98,7 @@ function SampleFact({
   sub: string
 }) {
   return (
-    <div className="flex min-h-[64px] items-center justify-between gap-3 border-b border-hairline px-4 last:border-b-0">
+    <div className="flex min-h-[68px] items-center justify-between gap-3 border-b border-hairline px-4 last:border-b-0">
       <span className="flex-shrink-0 text-[12px] text-ash">{label}</span>
       <span className="min-w-0 flex-1 text-right">
         <span className="block text-[15px] font-medium text-ink jp-text">{value}</span>
@@ -110,9 +110,9 @@ function SampleFact({
 
 function ActionLine({ index, text }: { index: string; text: string }) {
   return (
-    <div className="flex min-h-[34px] items-center gap-3 py-1.5">
-      <span className="numeric w-4 flex-shrink-0 text-[11px] text-ash">{index}</span>
-      <span className="text-[12px] leading-[1.6] text-slate">{text}</span>
+    <div className="flex min-h-[38px] items-center gap-3 py-2">
+      <span className="numeric flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-[8px] bg-paper text-[11px] text-ink">{index}</span>
+      <span className="text-[13px] leading-[1.6] text-slate">{text}</span>
     </div>
   )
 }

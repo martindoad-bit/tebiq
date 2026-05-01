@@ -39,19 +39,19 @@ export default function CheckDimensionList({
 
   return (
     <AppShell appBar={<AppBar title="续签材料准备检查" back="/" />}>
-      <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-4 shadow-card">
+      <section className="mt-3 rounded-[18px] border border-hairline bg-surface px-4 py-4">
         <div className="flex items-start gap-3">
-          <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-[13px] bg-cool-blue text-ink">
+          <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-[14px] bg-cool-blue text-ink">
             <ListChecks size={19} strokeWidth={1.55} />
           </span>
           <div className="min-w-0 flex-1">
-            <h1 className="text-[16px] font-medium text-ink">{meta.label}</h1>
+            <h1 className="text-[18px] font-medium leading-tight text-ink">{meta.label}</h1>
             <p className="mt-1 text-[12px] leading-[1.65] text-ash">
               {checked} 项已确认 / {needsAction} 项需要补齐
             </p>
           </div>
         </div>
-        <div className="mt-3 flex items-center justify-between border-t border-hairline pt-3">
+        <div className="mt-4 flex items-center justify-between border-t border-hairline pt-3.5">
           <span className="text-[11px] text-ash">完整检查约 5 分钟</span>
           <Link href={`/check/${visa}/quiz`} className="text-[12px] font-medium text-ink underline-offset-4 hover:underline">
             完整检查
@@ -59,12 +59,12 @@ export default function CheckDimensionList({
         </div>
       </section>
 
-      <nav className="mt-3 flex gap-2 overflow-x-auto pb-1">
+      <nav className="mt-4 flex gap-2 overflow-x-auto pb-1">
         {(Object.entries(CHECK_VISA_META) as Array<[CanonicalCheckVisa, typeof meta]>).map(([key, item]) => (
           <Link
             key={key}
             href={`/check/${key}`}
-            className={`flex-shrink-0 rounded-[10px] border px-3 py-1.5 text-[11px] font-normal ${
+            className={`flex-shrink-0 rounded-[10px] border px-3 py-2 text-[11px] font-normal ${
               key === visa ? 'border-ink bg-ink text-white' : 'border-hairline bg-surface text-slate'
             }`}
           >
@@ -73,8 +73,8 @@ export default function CheckDimensionList({
         ))}
       </nav>
 
-      <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-3 shadow-card">
-        <div className="mb-2 flex items-center gap-2 text-[12px] font-medium text-ink">
+      <section className="mt-4 rounded-[18px] border border-hairline bg-surface px-4 py-3.5">
+        <div className="mb-1 flex items-center gap-2 text-[12px] font-medium text-ink">
           <ClipboardCheck size={15} strokeWidth={1.55} />
           维度清单
         </div>
@@ -82,17 +82,17 @@ export default function CheckDimensionList({
           {dimensions.map(item => {
             const statusLabel = STATUS_LABEL[item.status]
             return (
-              <li key={item.key} className="py-3 first:pt-1 last:pb-1">
+              <li key={item.key} className="py-3.5 first:pt-2 last:pb-2">
                 <Link href={`/check/${visa}/${item.key}`} className="group flex items-center gap-3">
                   <span className="min-w-0 flex-1">
                     <span className="flex flex-wrap items-center gap-1.5">
-                      <span className="text-[13px] font-normal text-ink">{item.title}</span>
+                      <span className="text-[14px] font-normal leading-snug text-ink">{item.title}</span>
                       <StatusBadge status={item.status} />
                       {item.riskFlag && RISK_LABEL[item.riskFlag] !== STATUS_LABEL[item.status] && (
                         <RiskBadge label={RISK_LABEL[item.riskFlag] ?? item.riskFlag} />
                       )}
                     </span>
-                    <span className="mt-1 block text-[11px] leading-[1.55] text-ash">
+                    <span className="mt-1.5 block text-[12px] leading-[1.55] text-ash">
                       {item.reason ?? item.description}
                     </span>
                   </span>

@@ -55,7 +55,7 @@ function NewUserHome() {
     <>
       <HomeHero />
 
-      <div id="question" className="mt-5 scroll-mt-4">
+      <div id="question" className="mt-6 scroll-mt-4">
         <QuestionIntakeBox sourcePage="/" />
       </div>
       <QuickTools />
@@ -94,7 +94,7 @@ function UserHome({
 
       <HomeHero />
 
-      <div id="question" className="mt-5 scroll-mt-4">
+      <div id="question" className="mt-6 scroll-mt-4">
         <QuestionIntakeBox sourcePage="/" />
       </div>
 
@@ -145,11 +145,11 @@ function UserHome({
 
 function HomeHero() {
   return (
-    <section className="pt-4">
-      <h1 className="text-[28px] font-medium leading-[1.18] tracking-[-0.01em] text-ink">
+    <section className="pt-3 sm:pt-5">
+      <h1 className="max-w-[10em] text-[clamp(30px,8.8vw,38px)] font-medium leading-[1.13] tracking-[-0.015em] text-ink">
         材料有问题，问 TEBIQ
       </h1>
-      <p className="mt-2 text-[13px] leading-[1.6] text-ash">
+      <p className="mt-3 text-[13px] leading-[1.65] text-ash">
         拍文书 / 问手续 / 看下一步
       </p>
     </section>
@@ -184,17 +184,17 @@ function QuickTools({
   return (
     <>
       <SectionLabel title="快捷工具" />
-      <section className="mt-3 grid grid-cols-3 gap-2">
+      <section className="mt-3 grid grid-cols-3 gap-2.5">
         {tools.map(tool => (
           <Link
             key={tool.href}
             href={tool.href}
-            className="rounded-card border border-hairline bg-surface px-2.5 py-3 text-center active:bg-paper"
+            className="min-h-[96px] rounded-[16px] border border-hairline bg-surface px-2.5 py-3.5 text-center active:bg-paper"
           >
-            <span className="mx-auto flex h-9 w-9 items-center justify-center rounded-[10px] bg-paper text-ink">
+            <span className="mx-auto flex h-10 w-10 items-center justify-center rounded-[12px] bg-paper text-ink">
               {tool.icon}
             </span>
-            <span className="mt-2 block truncate text-[13px] font-medium leading-none text-ink">{tool.title}</span>
+            <span className="mt-2.5 block truncate text-[13px] font-medium leading-none text-ink">{tool.title}</span>
             <span className="mt-1.5 block truncate text-[11px] leading-none text-ash">{tool.subtitle}</span>
           </Link>
         ))}
@@ -320,20 +320,20 @@ function isUrgent(deadline: string | null): boolean {
 
 function HomeAppBar() {
   return (
-    <header className="flex h-[58px] flex-shrink-0 items-center justify-between bg-canvas px-5">
-      <Logo size="sm" />
+    <header className="flex h-[64px] flex-shrink-0 items-center justify-between bg-canvas px-5">
+      <Logo size="md" />
       <div className="flex items-center gap-2">
         <Link
           href="/timeline"
           aria-label="我的提醒"
-          className="focus-ring flex h-10 w-10 items-center justify-center rounded-full border border-hairline bg-surface text-ink"
+          className="focus-ring flex h-10 w-10 items-center justify-center rounded-[12px] border border-hairline bg-surface text-ink"
         >
           <Bell size={19} strokeWidth={1.5} />
         </Link>
         <Link
           href="/my/account"
           aria-label="我的"
-          className="focus-ring flex h-10 w-10 items-center justify-center rounded-full border border-hairline bg-surface text-ink"
+          className="focus-ring flex h-10 w-10 items-center justify-center rounded-[12px] border border-hairline bg-surface text-ink"
         >
           <UserCircle size={19} strokeWidth={1.5} />
         </Link>

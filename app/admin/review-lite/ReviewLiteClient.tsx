@@ -58,14 +58,14 @@ export default function ReviewLiteClient({
   return (
     <div className="grid gap-4">
       {question && (
-        <section className="rounded-card border border-hairline bg-paper p-4">
+        <section className="rounded-[18px] border border-hairline bg-surface p-4">
           <div className="flex flex-wrap items-center gap-2">
-            <h2 className="mr-auto text-sm font-semibold text-ink">原始问题</h2>
+            <h2 className="mr-auto text-[13px] font-medium text-ink">原始问题</h2>
             <Chip>{question.status}</Chip>
             <Chip>{question.priority}</Chip>
             {question.visaType && <Chip>{question.visaType}</Chip>}
           </div>
-          <p className="mt-3 whitespace-pre-line text-sm leading-6 text-slate">{question.rawQuery}</p>
+          <p className="mt-3 whitespace-pre-line rounded-[14px] bg-paper px-3.5 py-3 text-[16px] leading-7 text-ink">{question.rawQuery}</p>
           <p className="mt-3 text-xs text-ash">
             {answerDrafts.some(draft => draft.questionText === question.rawQuery)
               ? '该问题已有 answer draft，可在下方审核。'
@@ -74,9 +74,9 @@ export default function ReviewLiteClient({
         </section>
       )}
 
-      <section className="rounded-card border border-hairline bg-surface p-4 shadow-card">
+      <section className="rounded-[18px] border border-hairline bg-surface p-4">
         <div className="flex flex-wrap items-center gap-2">
-          <h2 className="mr-auto text-base font-semibold text-ink">Answer Drafts</h2>
+          <h2 className="mr-auto text-base font-medium text-ink">Answer Drafts</h2>
           <Chip>{String(answerDrafts.length)}</Chip>
         </div>
         <div className="mt-3 grid gap-3">
@@ -101,7 +101,7 @@ export default function ReviewLiteClient({
             key={key}
             type="button"
             onClick={() => setFilter(key as Filter)}
-            className={`rounded-[10px] border px-3 py-2 text-xs ${
+            className={`min-h-[36px] rounded-[10px] border px-3 py-2 text-xs ${
               filter === key ? 'border-ink bg-ink text-white' : 'border-hairline bg-surface text-slate'
             }`}
           >
@@ -112,7 +112,7 @@ export default function ReviewLiteClient({
 
       {visibleCards.map(card => <ReviewCard key={card.slug} card={card} />)}
       {visibleCards.length === 0 && (
-        <div className="rounded-card border border-hairline bg-surface p-5 text-sm text-ash">
+        <div className="rounded-[18px] border border-hairline bg-surface p-5 text-sm text-ash">
           当前筛选没有记录。
         </div>
       )}
@@ -149,14 +149,14 @@ function AnswerDraftReviewItem({ draft }: { draft: ReviewAnswerDraft }) {
   }
 
   return (
-    <article className="rounded-[12px] border border-hairline bg-paper p-3">
+    <article className="rounded-[14px] border border-hairline bg-paper p-3.5">
       <div className="flex flex-wrap items-center gap-2">
         <h3 className="mr-auto text-sm font-medium text-ink">{draft.title}</h3>
         <Chip>{draft.answerType}</Chip>
         <Chip>{draft.answerLevel}</Chip>
         <Chip>{draft.reviewStatus}</Chip>
       </div>
-      <p className="mt-2 text-xs leading-6 text-slate">{draft.questionText}</p>
+      <p className="mt-2 text-[13px] leading-6 text-slate">{draft.questionText}</p>
       <p className="mt-2 text-xs leading-6 text-ash">{draft.summary}</p>
       <form onSubmit={submit} className="mt-3 grid gap-2 md:grid-cols-[160px_1fr_120px]">
         <select value={status} onChange={event => setStatus(event.target.value)} className={INPUT_CLASS}>
@@ -174,7 +174,7 @@ function AnswerDraftReviewItem({ draft }: { draft: ReviewAnswerDraft }) {
         <button
           type="submit"
           disabled={busy}
-          className="min-h-[36px] rounded-btn bg-ink px-3 text-xs font-medium text-white disabled:opacity-50"
+          className="min-h-[40px] rounded-[10px] bg-ink px-3 text-xs font-medium text-white disabled:opacity-50"
         >
           {busy ? '处理中...' : '保存'}
         </button>
@@ -224,16 +224,16 @@ function ReviewCard({ card }: { card: DecisionCard }) {
   }
 
   return (
-    <article className="rounded-card border border-hairline bg-surface p-4 shadow-card">
+    <article className="rounded-[18px] border border-hairline bg-surface p-4">
       <div className="flex flex-wrap items-center gap-2">
-        <h2 className="mr-auto text-base font-semibold text-ink">{card.title}</h2>
+        <h2 className="mr-auto text-base font-medium text-ink">{card.title}</h2>
         <Chip>{card.cardType}</Chip>
         <Chip>{card.answerLevel}</Chip>
         <Chip>{card.sourceGrade}</Chip>
         <Chip>{card.requiresReview ? 'requires_review' : 'reviewed'}</Chip>
       </div>
       <div className="mt-3 grid gap-3 md:grid-cols-[1fr_360px]">
-        <div className="rounded-[12px] bg-paper p-3">
+        <div className="rounded-[14px] bg-paper p-3.5">
           <p className="text-xs font-medium text-ink">AI / 内容草稿</p>
           <p className="mt-2 whitespace-pre-line text-xs leading-6 text-slate">
             {card.bodyMarkdown || card.recommendedAction || '未记录'}
@@ -308,7 +308,7 @@ function ReviewCard({ card }: { card: DecisionCard }) {
           <button
             type="submit"
             disabled={busy}
-            className="min-h-[38px] rounded-btn bg-ink px-3 text-xs font-medium text-white disabled:opacity-50"
+            className="min-h-[42px] rounded-[10px] bg-ink px-3 text-xs font-medium text-white disabled:opacity-50"
           >
             {busy ? '处理中...' : '保存 review record'}
           </button>
@@ -355,4 +355,4 @@ function Chip({ children }: { children: string }) {
 }
 
 const INPUT_CLASS =
-  'w-full rounded-[10px] border border-hairline bg-canvas px-3 py-2 text-xs text-ink outline-none focus:border-ink'
+  'w-full rounded-[10px] border border-hairline bg-canvas px-3 py-2.5 text-xs text-ink outline-none focus:border-ink'

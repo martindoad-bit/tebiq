@@ -86,7 +86,7 @@ export default async function TimelinePage({
         )}
       </section>
 
-      <section className="mt-4 rounded-card border border-hairline bg-surface px-3 py-3">
+      <section className="mt-4 rounded-[16px] border border-hairline bg-surface px-3 py-3">
         <div className="mb-2 flex items-center gap-1.5 text-[11px] font-medium text-ash">
           <Filter size={13} strokeWidth={1.5} />
           过滤器
@@ -127,7 +127,7 @@ export default async function TimelinePage({
         )}
       </ListSection>
 
-      <section className="mt-4 border-b border-hairline pb-4">
+      <section className="mt-5 rounded-[14px] bg-paper px-4 py-3.5">
         <h2 className="text-[13px] font-medium text-ink">为你跟踪</h2>
         <p className="mt-1.5 text-[12px] leading-[1.65] text-ash">
           {summary.latestDeadline
@@ -271,11 +271,11 @@ function TimelineEmptyPreview() {
   ]
 
   return (
-    <section className="rounded-card bg-paper px-4 py-4">
+    <section className="rounded-[18px] bg-paper px-4 py-4">
       <p className="text-[12px] leading-none text-ash">这里会显示你的文书提醒</p>
-      <div className="mt-3 overflow-hidden rounded-card border border-hairline bg-surface/70 opacity-60">
+      <div className="mt-3 overflow-hidden rounded-[14px] border border-hairline bg-surface/70 opacity-65">
         {rows.map(row => (
-          <div key={row.title} className="flex min-h-[60px] items-center gap-3 border-b border-hairline px-3 last:border-b-0">
+          <div key={row.title} className="flex min-h-[64px] items-center gap-3 border-b border-hairline px-3 last:border-b-0">
             <span className="w-[58px] flex-shrink-0">
               <span className="block text-[14px] font-light leading-none text-ink numeric">{row.date}</span>
               <span className="mt-1.5 block text-[11px] leading-none text-ash">{row.days}</span>
@@ -290,7 +290,7 @@ function TimelineEmptyPreview() {
           </div>
         ))}
       </div>
-      <Link href="/photo" className="mt-4 flex items-center gap-1.5 text-[13px] font-normal text-ink">
+      <Link href="/photo" className="mt-4 flex min-h-[32px] items-center gap-1.5 text-[13px] font-normal text-ink">
         <Camera size={14} strokeWidth={1.5} />
         拍一份文书开始 →
       </Link>
