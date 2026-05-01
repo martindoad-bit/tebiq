@@ -3,7 +3,9 @@ import { classifyAnswerIntent } from './intent-router'
 import { detectScope } from './answer-scope'
 import { generateLlmAnswer } from './llm-answer-generator'
 import { fallbackEnvelopeFromLegacy, outOfScopeEnvelope } from './llm-answer-fallback'
-import type { AnswerResult, AnswerType, LlmAnswerEnvelope } from './types'
+import { isLegacyAnswerCompatibleWithScope } from './fallback-safety-gate'
+import { deterministicSafeAnswer, genericSafeFallbackEnvelope } from './deterministic-safe-answers'
+import type { AnswerResult, AnswerType, FallbackReason, LlmAnswerEnvelope } from './types'
 import { createAnswerDraft } from '@/lib/db/queries/answerDrafts'
 import { createQuestion, normalizeQuery } from '@/lib/db/queries/questions'
 import type { QuestionMatchStatus } from '@/lib/db/queries/questions'
@@ -99,11 +101,14 @@ async function resolveEnvelope(args: {
   const { intent, scope, legacyAnswer, input } = args
 
   if (!scope.in_scope) {
-    return outOfScopeEnvelope({ questionText: input.questionText, intent })
+    const env = outOfScopeEnvelope({ questionText: input.questionText, intent })
+    return { ...env, llm_attempted: false, fallback_reason: 'out_of_scope', fallback_from: 'llm-answer-v0' }
   }
 
+  // Step 1 — try the LLM.
+  let llmResult: Awaited<ReturnType<typeof generateLlmAnswer>>
   try {
-    const llm = await generateLlmAnswer({
+    llmResult = await generateLlmAnswer({
       questionText: input.questionText,
       visaType: input.visaType,
       intent,
@@ -112,33 +117,75 @@ async function resolveEnvelope(args: {
       candidateSeed: null,
       redlines: redlinesForIntent(intent),
     })
-    if (llm) {
-      // LLM produced a valid envelope. Force domain to the safer of
-      // (LLM-reported, scope-detected) — never widen domain beyond what
-      // scope said is in-scope.
-      return {
-        ...llm,
-        domain: scope.in_scope && llm.domain === 'unknown' ? scope.domain : llm.domain,
-      }
-    }
   } catch (error) {
     console.warn('[answer] llm-generator threw', errorCode(error))
-    return fallbackEnvelopeFromLegacy({
+    llmResult = { envelope: null, attempted: true, reason: 'llm_exception' }
+  }
+
+  if (llmResult.envelope) {
+    // LLM produced a valid envelope. Pin domain to scope when LLM said
+    // "unknown" — never widen beyond what scope said is in-scope.
+    return {
+      ...llmResult.envelope,
+      domain: scope.in_scope && llmResult.envelope.domain === 'unknown'
+        ? scope.domain
+        : llmResult.envelope.domain,
+      llm_attempted: true,
+    }
+  }
+
+  // Step 2 — LLM unavailable / failed. Pick the safest fallback path:
+  //   2a. If a deterministic safe rule matches the question shape, use
+  //       that. (e.g. 配偶离婚 → 定住者)
+  //   2b. Else, run the cross-domain seed swallow gate. If it trips,
+  //       use the generic safe envelope (NOT the legacy answer).
+  //   2c. Else, wrap the legacy answer into the fallback envelope as
+  //       before.
+  const reason: FallbackReason = llmResult.reason ?? 'disabled'
+
+  const deterministic = deterministicSafeAnswer({
+    questionText: input.questionText,
+    intent,
+    scope,
+  })
+  if (deterministic) {
+    return {
+      ...deterministic.envelope,
+      llm_attempted: llmResult.attempted,
+      fallback_reason: deterministic.reason,
+      fallback_from: 'llm-answer-v0',
+    }
+  }
+
+  const compat = isLegacyAnswerCompatibleWithScope({
+    questionText: input.questionText,
+    intent,
+    scope,
+    legacyAnswer,
+  })
+  if (!compat.compatible) {
+    console.warn('[answer] cross-domain seed swallow blocked', compat.triggered_rule, compat.reason)
+    return genericSafeFallbackEnvelope({
       questionText: input.questionText,
-      legacyAnswer,
       intent,
       scope,
-      llmError: true,
+      reason: 'cross_domain_seed_swallow',
     })
   }
 
-  // LLM disabled or returned null — graceful legacy fallback.
-  return fallbackEnvelopeFromLegacy({
+  const legacyEnv = fallbackEnvelopeFromLegacy({
     questionText: input.questionText,
     legacyAnswer,
     intent,
     scope,
+    llmError: reason === 'llm_exception',
   })
+  return {
+    ...legacyEnv,
+    llm_attempted: llmResult.attempted,
+    fallback_reason: reason,
+    fallback_from: 'llm-answer-v0',
+  }
 }
 
 function redlinesForIntent(intent: ReturnType<typeof classifyAnswerIntent> extends Promise<infer T> ? T : never): string[] {

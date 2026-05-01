@@ -5,6 +5,7 @@ import { SUPPORTED_DOMAIN_SUMMARY } from './answer-scope'
 import type {
   AnswerMode,
   AnswerResult,
+  FallbackReason,
   KeyMissingInfo,
   LlmAnswerEnvelope,
   NextAction,
@@ -16,8 +17,9 @@ import type {
 // One LLM call after candidate retrieval. Input: user question, parsed
 // intent, the legacy answer (best deterministic guess), redline warnings,
 // supported domains, optional matching seed/article info. Output: a
-// strict JSON envelope — no free text. Caller is responsible for using
-// the legacy answer as fallback when this generator returns null.
+// strict JSON envelope — no free text. The caller is responsible for
+// using a deterministic safe fallback when this generator returns
+// `envelope: null` and inspecting `reason` for observability.
 
 const DEFAULT_MODEL_ID = 'jp.anthropic.claude-sonnet-4-6'
 const DEFAULT_REGION = 'ap-northeast-1'
@@ -38,10 +40,18 @@ export interface GenerateLlmAnswerInput {
   redlines?: string[]
 }
 
+export interface GenerateLlmAnswerResult {
+  envelope: LlmAnswerEnvelope | null
+  attempted: boolean
+  reason?: FallbackReason
+}
+
 export async function generateLlmAnswer(
   input: GenerateLlmAnswerInput,
-): Promise<LlmAnswerEnvelope | null> {
-  if (!isLlmEnabled()) return null
+): Promise<GenerateLlmAnswerResult> {
+  if (!isLlmEnabled()) {
+    return { envelope: null, attempted: false, reason: 'disabled' }
+  }
 
   let response: { content: Array<{ type: string; text?: string }> }
   try {
@@ -70,23 +80,46 @@ export async function generateLlmAnswer(
       clearTimeout(timer)
     }
   } catch (error) {
-    console.warn('[answer/llm-generator] bedrock call failed', errorCode(error))
-    return null
+    const code = errorCode(error)
+    const isAbort = /abort/i.test(code) || code === 'AbortError'
+    console.warn('[answer/llm-generator] bedrock call failed', code)
+    return {
+      envelope: null,
+      attempted: true,
+      reason: isAbort ? 'timeout' : 'llm_exception',
+    }
   }
 
   const text = response.content
     .map(block => block.type === 'text' ? (block.text ?? '') : '')
     .join('\n')
 
-  let parsed: Record<string, unknown>
-  try {
-    parsed = JSON.parse(extractJson(text)) as Record<string, unknown>
-  } catch (error) {
-    console.warn('[answer/llm-generator] json parse failed', errorCode(error))
-    return null
+  if (!text.trim()) {
+    console.warn('[answer/llm-generator] empty response')
+    return { envelope: null, attempted: true, reason: 'empty_response' }
   }
 
-  return coerceEnvelope(parsed, input.scope)
+  const jsonText = extractJson(text)
+  if (!jsonText) {
+    console.warn('[answer/llm-generator] no JSON object found in response')
+    return { envelope: null, attempted: true, reason: 'json_parse_failed' }
+  }
+
+  let parsed: Record<string, unknown>
+  try {
+    parsed = JSON.parse(jsonText) as Record<string, unknown>
+  } catch (error) {
+    console.warn('[answer/llm-generator] json parse failed', errorCode(error))
+    return { envelope: null, attempted: true, reason: 'json_parse_failed' }
+  }
+
+  const envelope = coerceEnvelope(parsed, input.scope)
+  if (!envelope) {
+    console.warn('[answer/llm-generator] envelope validation failed: missing answer_mode')
+    return { envelope: null, attempted: true, reason: 'validation_failed' }
+  }
+
+  return { envelope, attempted: true }
 }
 
 function isLlmEnabled(): boolean {
@@ -102,17 +135,24 @@ function buildSystemPrompt(): string {
     '你是 TEBIQ 的在留资格答案生成器。',
     '只针对五类在留：技术・人文知识・国际业务（gijinkoku）、经营管理（business_manager）、家族滞在（family_stay）、永住（permanent_resident）、定住者（long_term_resident）。',
     '',
+    '【输出格式（最重要）】',
+    '- 你的回答必须是且只能是一个 JSON object。',
+    '- 不要任何前导文字、不要任何解释、不要 markdown 代码块、不要尾部说明。',
+    '- 第一个字符必须是 {，最后一个字符必须是 }。',
+    '- 不允许多个 JSON object，不允许换行解释，不允许在 JSON 外加注释。',
+    '- 字符串内部不要使用未转义的换行；多行内容请用 \\n。',
+    '- 一旦你不能严格满足上述格式，就改用 answer_mode = clarification_needed 输出最简结构。',
+    '',
     '硬规则（违反任意一条都视为严重错误）：',
     '1. 不要保证签证一定通过 / 一定不通过。',
     '2. 资料不足或事实模糊时，answer_mode 必须是 clarification_needed 或 answer_with_assumptions，绝对不能是 direct_answer。',
     '3. 家族滞在转工作签 ≠ 资格外活动 28 小时；这是「在留資格変更」类问题。',
-    '4. 配偶签离婚后转定住 ≠ 换工作 14 日届出；这是个案稳定性 + 在留路径问题。',
+    '4. 配偶签离婚后转定住 ≠ 换工作 14 日届出 ≠ 经营管理常勤职员；这是个案稳定性 + 在留路径问题。',
     '5. 经管转人文 ≠ 人文转经管，方向不能反转；current_status 和 target_status 必须严格按用户陈述。',
     '6. 信息不足时，给「初步方向 + 关键缺失信息」，不要硬下结论。',
     '7. 如果问题超出五类在留范围，answer_mode 必须是 out_of_scope。',
-    '8. 输出必须是严格 JSON，不允许 markdown、不允许多余说明文字、不允许首尾代码块。',
-    '9. 回答语言用中文，必要日本术语保留日文（如 在留カード、住民税、年金事務所、出入国在留管理庁）。',
-    '10. 不要把 A 路径答成 B 路径。',
+    '8. 回答语言用中文，必要日本术语保留日文（如 在留カード、住民税、年金事務所、出入国在留管理庁）。',
+    '9. 不要把 A 路径答成 B 路径。问的是 long_term_resident（定住者）就不要给 business_manager（経営管理）的答案。',
     '',
     '输出 JSON 必须包含全部字段：',
     'engine_version (固定 "llm-answer-v0"), answer_mode, domain, understood_question, short_answer,',
@@ -180,13 +220,13 @@ function buildUserPayload(input: GenerateLlmAnswerInput): string {
     '=== 红线提醒 ===',
     (input.redlines && input.redlines.length > 0
       ? input.redlines.map(r => `- ${r}`).join('\n')
-      : '- 注意经管/人文方向不能反转\n- 注意家族滞在打工 vs 家族滞在转工作签 是两种不同问题\n- 注意配偶签离婚转定住 不是换工作 14 日届出'),
+      : '- 注意经管/人文方向不能反转\n- 注意家族滞在打工 vs 家族滞在转工作签 是两种不同问题\n- 注意配偶签离婚转定住 不是换工作 14 日届出 也不是经营管理常勤职员'),
     '',
     '=== 当前支持范围 ===',
     SUPPORTED_DOMAIN_SUMMARY,
     `本次系统判定 domain：${input.scope.domain}（in_scope=${input.scope.in_scope}）`,
     '',
-    '现在请输出严格 JSON，不要 markdown，不要多余文字。',
+    '现在请输出严格 JSON：第一个字符 {，最后一个字符 }，无任何额外文字。',
   ].join('\n')
 }
 
@@ -216,12 +256,70 @@ export function coerceEnvelope(value: Record<string, unknown>, scope: ScopeResul
   }
 }
 
-function extractJson(text: string): string {
-  const trimmed = text.trim().replace(/^```(?:json)?/, '').replace(/```$/, '').trim()
-  const first = trimmed.indexOf('{')
-  const last = trimmed.lastIndexOf('}')
-  if (first >= 0 && last > first) return trimmed.slice(first, last + 1)
-  return trimmed
+// JSON extraction with three layers of tolerance:
+//   1. Strip surrounding markdown / fenced code blocks (```json ... ```).
+//   2. Trim leading/trailing prose down to the first `{` / last `}`.
+//   3. Walk the string and return the first balanced top-level object.
+// This handles the most common Claude-on-Bedrock JSON-in-prose failures.
+export function extractJson(text: string): string | null {
+  let body = text.trim()
+  if (!body) return null
+
+  // Strip ```json ... ``` or ``` ... ``` fences.
+  body = body
+    .replace(/^```(?:json|JSON)?\s*\n/, '')
+    .replace(/\n```\s*$/, '')
+    .trim()
+
+  // Try a greedy slice between first `{` and last `}` first — fastest path.
+  const firstBrace = body.indexOf('{')
+  const lastBrace = body.lastIndexOf('}')
+  if (firstBrace < 0 || lastBrace <= firstBrace) return null
+
+  const greedy = body.slice(firstBrace, lastBrace + 1)
+  if (isParseable(greedy)) return greedy
+
+  // Greedy didn't parse — walk the string and return the first balanced
+  // top-level object. Skips braces inside string literals.
+  const balanced = firstBalancedObject(body, firstBrace)
+  return balanced ?? greedy // fall back to greedy so the caller's parse error reports a clearer position
+}
+
+function isParseable(text: string): boolean {
+  try {
+    JSON.parse(text)
+    return true
+  } catch {
+    return false
+  }
+}
+
+function firstBalancedObject(body: string, startIndex: number): string | null {
+  let depth = 0
+  let inString = false
+  let escape = false
+  for (let i = startIndex; i < body.length; i += 1) {
+    const ch = body[i]
+    if (escape) {
+      escape = false
+      continue
+    }
+    if (ch === '\\') {
+      escape = true
+      continue
+    }
+    if (ch === '"') {
+      inString = !inString
+      continue
+    }
+    if (inString) continue
+    if (ch === '{') depth += 1
+    else if (ch === '}') {
+      depth -= 1
+      if (depth === 0) return body.slice(startIndex, i + 1)
+    }
+  }
+  return null
 }
 
 function stringValue(value: unknown, max = 600): string | undefined {

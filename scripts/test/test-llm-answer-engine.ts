@@ -18,6 +18,8 @@ import { detectScope } from '@/lib/answer/answer-scope'
 import { buildAnswer } from '@/lib/answer/match-answer'
 import { fallbackEnvelopeFromLegacy, outOfScopeEnvelope } from '@/lib/answer/llm-answer-fallback'
 import { generateLlmAnswer } from '@/lib/answer/llm-answer-generator'
+import { isLegacyAnswerCompatibleWithScope } from '@/lib/answer/fallback-safety-gate'
+import { deterministicSafeAnswer, genericSafeFallbackEnvelope } from '@/lib/answer/deterministic-safe-answers'
 import type { LlmAnswerEnvelope } from '@/lib/answer/types'
 
 process.env.ANSWER_GENERATION_DISABLE_AI = '1'
@@ -77,7 +79,16 @@ const TESTS: TestCase[] = [
     expectInScope: true,
     redlines: [
       /定住/,
-      { not: /14\s*日内届出|换工作.*14/ },
+      // The wrong framing: treat divorce-to-teiju AS a job-change 14-day
+      // report. Mentioning the legally-required 14-day SPOUSE 届出 is OK;
+      // mentioning it as if the question were about 転職 / 所属機関 is not.
+      { not: /(换工作.*14|転職.*14|所属機関.*14|14\s*日内.*(?:换工作|転職|所属機関))/ },
+      // v0.1 hardening: this exact production P0 must not recur. The
+      // legacy seed swallow that caused the rollback dumped 経営管理
+      // 常勤職員 / 役員 / 代表取締役 / 資本金 content into this question.
+      { not: /(常勤職員|役員報酬|資本金|代表取締役|事業計画|会社設立|事業所要件|経営・管理\s*常勤)/ },
+      // Direction must not be reversed into 転職 / 所属機関 框架.
+      { not: /(転職|所属機関に関する届出)/ },
     ],
   },
   {
@@ -106,7 +117,11 @@ const TESTS: TestCase[] = [
     id: 'P0-representative-change',
     question: '代表取締役换人要通知入管吗',
     expectInScope: true,
-    redlines: [/(代表|役員|登記)/],
+    redlines: [
+      /(代表|役員|登記)/,
+      // v0.1 hardening: must not be misclassified as office relocation.
+      { not: /(本店移転|事務所移転|办公室搬迁|地址変更|地址变更)/ },
+    ],
   },
   // Additional 10 high-error-prone cases
   {
@@ -184,14 +199,37 @@ async function runOne(test: TestCase): Promise<Result> {
   if (!scope.in_scope) {
     envelope = outOfScopeEnvelope({ questionText: test.question, intent })
   } else {
-    const llm = await generateLlmAnswer({
+    const llmResult = await generateLlmAnswer({
       questionText: test.question,
       intent,
       scope,
       legacyAnswer: legacy,
     })
-    envelope = llm
-      ?? fallbackEnvelopeFromLegacy({ questionText: test.question, legacyAnswer: legacy, intent, scope })
+    if (llmResult.envelope) {
+      envelope = llmResult.envelope
+    } else {
+      // Mirror submit-question.ts v0.1 logic: deterministic safe →
+      // safety gate → legacy fallback.
+      const det = deterministicSafeAnswer({ questionText: test.question, intent, scope })
+      if (det) {
+        envelope = det.envelope
+      } else {
+        const compat = isLegacyAnswerCompatibleWithScope({
+          questionText: test.question,
+          intent,
+          scope,
+          legacyAnswer: legacy,
+        })
+        envelope = compat.compatible
+          ? fallbackEnvelopeFromLegacy({ questionText: test.question, legacyAnswer: legacy, intent, scope })
+          : genericSafeFallbackEnvelope({
+            questionText: test.question,
+            intent,
+            scope,
+            reason: 'cross_domain_seed_swallow',
+          })
+      }
+    }
   }
 
   const severity: Result['severity'] = test.id.startsWith('P0') ? 'P0' : 'P1'

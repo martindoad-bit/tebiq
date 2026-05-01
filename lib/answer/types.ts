@@ -18,7 +18,25 @@ export type SupportedDomain =
   | 'long_term_resident'
   | 'unknown'
 
-export type EngineVersion = 'llm-answer-v0' | 'legacy-fallback' | 'out-of-scope-v0'
+export type EngineVersion =
+  | 'llm-answer-v0'
+  | 'legacy-fallback'
+  | 'out-of-scope-v0'
+  | 'safe-fallback-v0-1'
+
+// Why the LLM-generated envelope did not survive (set on the envelope
+// when engine_version != 'llm-answer-v0'). Used for observability + Vercel
+// log correlation. The set is closed; new reasons should be added here.
+export type FallbackReason =
+  | 'disabled'
+  | 'out_of_scope'
+  | 'timeout'
+  | 'empty_response'
+  | 'json_parse_failed'
+  | 'validation_failed'
+  | 'llm_exception'
+  | 'cross_domain_seed_swallow'
+  | 'deterministic_safe_fallback'
 
 export interface KeyMissingInfo {
   field: string
@@ -50,6 +68,17 @@ export interface LlmAnswerEnvelope {
   copy_text: string
   confidence: 'high' | 'medium' | 'low'
   source_article_ids: string[]
+  // Observability — present whenever engine_version != 'llm-answer-v0'.
+  // `llm_attempted` records whether we actually called Bedrock for this
+  // request (false means we short-circuited before the call).
+  // `fallback_reason` says why the LLM result did not survive.
+  // `fallback_from` is always 'llm-answer-v0' when set, recording the
+  // engine that was supposed to produce this envelope.
+  llm_attempted?: boolean
+  fallback_reason?: FallbackReason
+  fallback_from?: 'llm-answer-v0'
+  // Deprecated: kept for compatibility with v0 callers that read
+  // `llm_error`. New code should branch on `fallback_reason`.
   llm_error?: boolean
 }
 
