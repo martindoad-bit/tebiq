@@ -1003,7 +1003,7 @@ function answerTextForIntent(answer: AnswerResult): string {
 
 function extractDirectionalVisaTransfer(questionText: string): { current: string; target: string; intentType: IntentType } | null {
   const text = questionText.replace(/\s+/g, '')
-  const visa = '经管签|经营管理|經營管理|経営管理|経管|技人国|人文签|人文|工作签|技術人文知識国際業務|技術人文|特定技能1号|特定技能|留学签|留学|家族滞在|配偶签|配偶者|永住|定住者|定住'
+  const visa = '经管签|经营管理|經營管理|経営管理|経管|技人国|人文签|人文|工作签|技術人文知識国際業務|技術人文|特定技能1号|特定技能|留学签|留学|家族滞在|配偶签|配偶者|永住'
   const patterns = [
     new RegExp(`(?:我是|我现在是|我目前是|目前是|持有)?(${visa})(?:签|在留资格|資格)?(?:，|,)?(?:想|要|准备|打算)?(?:转|转为|转到|变更为|変更为|変更|切换到|换成)(${visa})`),
     new RegExp(`从(${visa})(?:签|在留资格|資格)?(?:转|转为|转到|变更为|変更为|変更|切换到|换成)(${visa})`),
@@ -1011,8 +1011,6 @@ function extractDirectionalVisaTransfer(questionText: string): { current: string
     new RegExp(`(?:现在|目前|当前)?(${visa})(?:签|在留资格|資格)?(?:，|,)?(?:目标|目標|想变成|想變成|希望变成|希望變成)(${visa})`),
     new RegExp(`(${visa})(?:签|在留资格|資格)?(?:想变成|想變成|希望变成|希望變成)(${visa})`),
     new RegExp(`(${visa})(?:签|在留资格|資格)?(?:→|->|转为|转到|转|変更|变更为)(${visa})`),
-    // Permissive variant: allows short bridging text like "离婚后", "毕业后".
-    new RegExp(`(${visa})(?:签|在留资格|資格)?[^，,。]{0,16}?(?:想|要|打算)?(?:转|转为|转到|变更为|変更为|変更|切换到|换成)(?:为|到|成)?(${visa})`),
   ]
   for (const pattern of patterns) {
     const match = text.match(pattern)
@@ -1038,7 +1036,6 @@ function normalizeVisaLabel(value?: string): string | null {
   if (/家族滞在/.test(text)) return '家族滞在'
   if (/配偶/.test(text)) return '配偶者'
   if (/永住/.test(text)) return '永住'
-  if (/定住/.test(text)) return '定住者'
   return null
 }
 

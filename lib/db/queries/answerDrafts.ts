@@ -19,22 +19,7 @@ export interface CreateAnswerDraftInput {
   modelUsed?: string | null
 }
 
-export const LLM_ENVELOPE_SECTION_HEADING = '__llm_envelope_v0__'
-
 export async function createAnswerDraft(input: CreateAnswerDraftInput): Promise<AnswerDraft> {
-  // Sidecar the LLM envelope into sectionsJson so we can avoid a schema
-  // migration. The frontend strips it on read via
-  // `extractLlmEnvelopeFromSections`.
-  const sections = input.answer.llm_envelope
-    ? [
-      ...input.answer.sections,
-      {
-        heading: LLM_ENVELOPE_SECTION_HEADING,
-        body: JSON.stringify(input.answer.llm_envelope),
-      },
-    ]
-    : input.answer.sections
-
   const values: NewAnswerDraft = {
     id: createId(),
     queryId: input.queryId ?? null,
@@ -45,7 +30,7 @@ export async function createAnswerDraft(input: CreateAnswerDraftInput): Promise<
     reviewStatus: input.answer.review_status,
     title: input.answer.title.slice(0, 220),
     summary: input.answer.summary,
-    sectionsJson: sections,
+    sectionsJson: input.answer.sections,
     nextStepsJson: input.answer.next_steps,
     relatedLinksJson: input.answer.related_links,
     sourcesJson: input.answer.sources,
@@ -53,25 +38,6 @@ export async function createAnswerDraft(input: CreateAnswerDraftInput): Promise<
   }
   const [row] = await db.insert(answerDrafts).values(values).returning()
   return row
-}
-
-export function extractLlmEnvelopeFromSections(
-  sections: Array<{ heading: string; body: string }>,
-): { envelope: unknown | null; rest: Array<{ heading: string; body: string }> } {
-  const rest: Array<{ heading: string; body: string }> = []
-  let envelope: unknown = null
-  for (const section of sections) {
-    if (section.heading === LLM_ENVELOPE_SECTION_HEADING) {
-      try {
-        envelope = JSON.parse(section.body)
-      } catch {
-        envelope = null
-      }
-      continue
-    }
-    rest.push(section)
-  }
-  return { envelope, rest }
 }
 
 export async function getAnswerDraftById(id: string): Promise<AnswerDraft | null> {
