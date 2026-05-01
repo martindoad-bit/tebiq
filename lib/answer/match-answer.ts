@@ -17,6 +17,7 @@ import {
   describeIntent,
   type AnswerIntent,
 } from './intent-router'
+import { judgeAnswer } from './answer-judge'
 import { matchDecisionQuery } from '@/lib/decision/cards'
 import type { DecisionCard, DecisionOption, SourceRef } from '@/lib/decision/types'
 
@@ -44,6 +45,9 @@ export async function buildAnswer(input: BuildAnswerInput): Promise<AnswerResult
     question_text: questionText,
     visa_type: input.visaType,
   })
+  if (intent.confidence <= 2 || !intent.should_answer) {
+    return withIntent(sanitizeAnswer(clarifyAnswerForIntent(questionText, intent)), intent)
+  }
   let rejectedByIntent = false
 
   const qaSeed = await bestQaSeed(normalized, questionText, intent)
@@ -56,7 +60,8 @@ export async function buildAnswer(input: BuildAnswerInput): Promise<AnswerResult
   if (decisionMatch.card) {
     const answer = decisionCardToAnswer(decisionMatch.card, questionText)
     const intentCheck = answerMatchesIntent(intent, answer)
-    if (intentCheck.pass) {
+    const judge = judgeAnswer({ original_question: questionText, parsed_intent: intent, answer })
+    if (intentCheck.pass && judge.should_show) {
       return withIntent(sanitizeAnswer(answer), intent)
     }
     rejectedByIntent = true
@@ -66,13 +71,21 @@ export async function buildAnswer(input: BuildAnswerInput): Promise<AnswerResult
   if (knowledge) {
     const answer = knowledgeSeedToAnswer(knowledge, questionText)
     const intentCheck = answerMatchesIntent(intent, answer)
-    if (intentCheck.pass) {
+    const judge = judgeAnswer({ original_question: questionText, parsed_intent: intent, answer })
+    if (intentCheck.pass && judge.should_show) {
       return withIntent(sanitizeAnswer(answer), intent)
     }
     rejectedByIntent = true
   }
 
-  const fallback = rejectedByIntent || !intent.should_answer
+  const intentAnswer = ruleBasedAnswerForIntent(questionText, intent)
+  if (intentAnswer) {
+    const judge = judgeAnswer({ original_question: questionText, parsed_intent: intent, answer: intentAnswer })
+    if (judge.should_show) return withIntent(sanitizeAnswer(intentAnswer), intent)
+    rejectedByIntent = true
+  }
+
+  const fallback = rejectedByIntent
     ? clarifyAnswerForIntent(questionText, intent)
     : ruleBasedAnswer(questionText, normalized)
   return withIntent(sanitizeAnswer(fallback), intent)
@@ -281,6 +294,120 @@ function cannotDetermineAnswer(_questionText: string): AnswerResult {
   }
 }
 
+function ruleBasedAnswerForIntent(questionText: string, intent: AnswerIntent): AnswerResult | null {
+  if (isManagementToHumanitiesIntent(intent)) {
+    return {
+      ok: true,
+      answer_type: 'draft',
+      answer_level: 'L3',
+      review_status: 'unreviewed',
+      title: '经营管理转技人国 / 人文签先看接收公司和岗位',
+      summary: '主线不是资金或事业所，而是你是否有接收公司、岗位是否属于技人国范围，以及学历/经历能否支撑该岗位。',
+      sections: [
+        {
+          heading: '先看条件',
+          body: '需要先确认接收公司、雇佣合同、业务内容说明、学历或实务经历与岗位的对应关系。经营管理一侧还要确认原公司代表/役员身份如何处理。',
+        },
+        {
+          heading: '下一步',
+          body: '先让接收公司出具雇用契約書和業務内容説明書，再整理学历证明、职历证明、原公司退任或职务调整材料，最后判断是否提交在留資格変更。',
+        },
+      ],
+      next_steps: [
+        '确认接收公司是否已经愿意雇用。',
+        '确认岗位是否属于技術・人文知識・国際業務范围。',
+        '整理学历、职历、雇佣合同和业务内容说明。',
+        '确认原公司代表/役员关系如何结束或调整。',
+      ],
+      related_links: [{ title: '续签检查', href: '/check' }],
+      sources: [{ title: '出入国在留管理庁 在留資格変更許可申請', url: 'https://www.moj.go.jp/isa/' }],
+      query_id: null,
+      answer_id: null,
+      boundary_note: ANSWER_BOUNDARY_NOTE,
+      action_answer: {
+        conclusion: '经营管理转技人国 / 人文签，先看接收公司、岗位内容和本人学历/经历是否匹配；不是再看经营管理的资金或事业所条件。',
+        what_to_do: [
+          '先确认接收公司、岗位名称、业务内容和入职日期。',
+          '确认原公司代表/役员关系是否需要退任、变更或保留说明。',
+        ],
+        where_to_go: ['接收公司人事', '出入国在留管理局', '行政書士事务所'],
+        how_to_do: [
+          '向接收公司索取雇用契約書和業務内容説明書。',
+          '把学历证明、职历证明、资格证和过去业务说明放到同一份材料包。',
+          '整理原经营管理公司代表/役员身份处理记录，再判断在留資格変更材料。',
+        ],
+        documents_needed: ['雇用契約書', '業務内容説明書', '学历证明', '职历证明', '在留カード', '原公司退任或役员变更材料'],
+        deadline_or_timing: ['在留期限前提交在留資格変更申请；入职日确定后尽快整理材料。'],
+        consequences: ['如果岗位与学历/经历不匹配，或原公司代表关系没有说明，变更申请材料会变弱，可能需要补正或重新整理。'],
+        expert_handoff: ['如果仍是原公司代表、接收公司岗位边界不清，或在留期限接近，带雇佣合同、业务说明和原公司登记材料咨询行政書士。'],
+        boundary_note: ANSWER_BOUNDARY_NOTE,
+      },
+    }
+  }
+
+  if (isCompanyDormantPensionIntent(intent)) {
+    return {
+      ok: true,
+      answer_type: 'draft',
+      answer_level: 'L2',
+      review_status: 'unreviewed',
+      title: '公司休眠后先确认厚生年金资格是否已经丧失',
+      summary: '公司休眠不等于个人年金义务消失。关键是厚生年金/健康保险资格丧失日，之后通常要处理国民年金第 1 号和国民健康保险。',
+      sections: [
+        {
+          heading: '先确认',
+          body: '确认公司是否已经停止社会保险、你是否拿到健康保険・厚生年金資格喪失証明書、资格丧失日是哪天。',
+        },
+        {
+          heading: '下一步',
+          body: '拿到资格丧失资料后，带在留卡、マイナンバー和相关证明去居住地市区町村窗口确认国民年金第 1 号和国民健康保险切换。',
+        },
+      ],
+      next_steps: [
+        '确认厚生年金 / 健康保险资格丧失日。',
+        '取得健康保険・厚生年金資格喪失証明書。',
+        '到区役所 / 市役所的国保年金窗口处理国民年金和国民健康保险。',
+      ],
+      related_links: [{ title: '我的提醒', href: '/timeline' }],
+      sources: [{ title: '日本年金機構 資格喪失届', url: 'https://www.nenkin.go.jp/' }],
+      query_id: null,
+      answer_id: null,
+      boundary_note: ANSWER_BOUNDARY_NOTE,
+      action_answer: {
+        conclusion: '公司休眠后，先看厚生年金和健康保险是否已资格丧失；一旦丧失，个人通常要处理国民年金第 1 号和国民健康保险。',
+        what_to_do: ['确认资格丧失日。', '取得资格丧失证明。'],
+        where_to_go: ['区役所', '市役所', '年金事务所'],
+        how_to_do: [
+          '向公司或年金事务所确认健康保険・厚生年金資格喪失証明書。',
+          '带证明、在留卡和マイナンバー去国保年金窗口办理切换。',
+          '如果收入低，再确认免除或猶予是否适用；这不是主线，只是后续选项。',
+        ],
+        documents_needed: ['健康保険・厚生年金資格喪失証明書', '在留カード', 'マイナンバー', '離職票或退職証明書'],
+        deadline_or_timing: ['资格丧失后 14 日内处理国民健康保险和国民年金切换。'],
+        consequences: ['不处理可能产生未加入或未纳空白，之后在更新、永住或实际就医时都需要解释。'],
+        expert_handoff: ['如果公司失联、资格丧失证明拿不到，或已经逾期，带公司资料和年金记录咨询社労士；涉及在留更新时同时咨询行政書士。'],
+        boundary_note: ANSWER_BOUNDARY_NOTE,
+      },
+    }
+  }
+
+  return null
+}
+
+function isManagementToHumanitiesIntent(intent: AnswerIntent): boolean {
+  return Boolean(
+    intent.current_status
+      && /(经营管理|経営管理|经管)/.test(intent.current_status)
+      && intent.target_status
+      && /(技人国|人文|工作签|技術人文)/.test(intent.target_status),
+  )
+}
+
+function isCompanyDormantPensionIntent(intent: AnswerIntent): boolean {
+  return (intent.domain === 'pension' || intent.domain === 'health_insurance')
+    && /(会社社保空档|休眠|倒闭|倒産|会社|公司)/.test(intent.current_status ?? `${intent.extracted_entities.company_status ?? ''}${intent.extracted_entities.procedure ?? ''}`)
+}
+
 async function bestQaSeed(
   normalized: string,
   questionText: string,
@@ -306,7 +433,8 @@ async function bestQaSeed(
   for (const item of ranked) {
     const answer = seedToAnswer(item.seed, questionText)
     const intentCheck = answerMatchesIntent(intent, answer)
-    if (intentCheck.pass) return { seed: item.seed, rejectedByIntent }
+    const judge = judgeAnswer({ original_question: questionText, parsed_intent: intent, answer })
+    if (intentCheck.pass && judge.should_show) return { seed: item.seed, rejectedByIntent }
     rejectedByIntent = true
   }
   return { seed: null, rejectedByIntent }
@@ -730,6 +858,28 @@ function scoreIntentSeed(seed: AnswerSeed, intent: AnswerIntent): number {
     if (/(契約機関|所属機関|14日|14天|届出|転職|换工作|離職|入職)/.test(text) && conversionHits < 2) {
       score -= 36
     }
+  }
+  if (isManagementToHumanitiesIntent(intent)) {
+    const employmentHits = countIntentTerms(text, [
+      '接收公司',
+      '受入会社',
+      '雇用契約',
+      '雇佣合同',
+      '業務内容',
+      '业务内容',
+      '学歴',
+      '学历',
+      '実務経験',
+      '实务经验',
+      '技人国',
+      '人文',
+      '退任',
+      '役員',
+      '代表',
+    ])
+    const managementStartupHits = countIntentTerms(text, ['500万', '出資', '事業所', '会社設立', '事業計画', '起業', '开公司'])
+    score += Math.min(employmentHits, 5) * 8
+    if (managementStartupHits >= 2 && employmentHits < 3) score -= 44
   }
   return score
 }

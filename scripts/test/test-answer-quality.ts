@@ -83,6 +83,9 @@ async function main() {
     if (question.includes('公司休眠') && /经营管理公司休眠|在留资格影响|休眠 \/ 解散 在留资格/.test(answer.title)) {
       problems.push('Q1 matched management visa dormant answer')
     }
+    if (question.includes('公司休眠') && /交不起|免除|猶予/.test(answer.title)) {
+      problems.push('Q1 matched pension exemption answer as main answer')
+    }
     if (question.includes('资本金不够') && /多少最合适|資本金 多少|资本金多少/.test(answer.title)) {
       problems.push('Q9 matched generic capital amount answer')
     }
