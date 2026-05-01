@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import type { ActionAnswer } from '@/lib/answer/types'
+import type { ActionAnswer, LlmAnswerEnvelope } from '@/lib/answer/types'
 
 export type AnswerStatus = 'matched' | 'draft' | 'cannot_determine'
 export type AnswerLevel = 'L1' | 'L2' | 'L3' | 'L4'
@@ -20,6 +20,7 @@ export interface AnswerResult {
   statusClassName: string
   sourceHint: string
   actionAnswer: ActionAnswer
+  llmEnvelope: LlmAnswerEnvelope | null
 }
 
 const FEEDBACK_OPTIONS = [
@@ -40,13 +41,10 @@ export default function AnswerResultView({
   const [feedback, setFeedback] = useState<string | null>(null)
   const [busyFeedback, setBusyFeedback] = useState<string | null>(null)
   const [copyState, setCopyState] = useState<'idle' | 'copied'>('idle')
-  const action = answer.actionAnswer
-  const firstTwo = safeItems(action.what_to_do).slice(0, 2)
-  const stepItems = withoutItems(
-    uniqueItems(action.how_to_do.length > 0 ? action.how_to_do : action.what_to_do.slice(2)),
-    firstTwo,
-  )
-  const managerCopy = buildManagerCopy(answer)
+
+  const envelope = answer.llmEnvelope
+  const mode = envelope?.answer_mode ?? 'direct_answer'
+  const copySource = envelope?.copy_text || buildLegacyCopy(answer)
 
   async function submitFeedback(type: string, label: string, note?: string) {
     setFeedback(null)
@@ -75,9 +73,9 @@ export default function AnswerResultView({
     }
   }
 
-  async function copyManagerText() {
+  async function copyCard() {
     try {
-      await navigator.clipboard.writeText(managerCopy)
+      await navigator.clipboard.writeText(copySource)
       setCopyState('copied')
       window.setTimeout(() => setCopyState('idle'), 1600)
     } catch {
@@ -87,57 +85,46 @@ export default function AnswerResultView({
 
   return (
     <div className="pt-1">
-      <section className="rounded-[16px] border border-hairline bg-surface px-4 py-4">
-        <StatusPill className={answer.statusClassName}>{answer.statusLabel}</StatusPill>
-        <h1 className="mt-4 text-[22px] font-medium leading-[1.38] tracking-[-0.01em] text-ink [overflow-wrap:anywhere]">
-          {answer.title}
-        </h1>
-        <p className="mt-3 rounded-[12px] bg-paper px-3 py-3 text-[13px] leading-[1.7] text-slate [overflow-wrap:anywhere]">
-          {answer.question}
-        </p>
-        <div className="mt-3 rounded-[12px] border border-hairline bg-canvas px-3 py-3">
-          <p className="text-[11px] font-medium text-ash">我理解你的问题是</p>
-          <p className="mt-1.5 text-[13px] leading-[1.65] text-ink [overflow-wrap:anywhere]">
-            {answer.intentSummary}
-          </p>
-        </div>
-        <div className="mt-4">
-          <SectionHeading>结论</SectionHeading>
-          <p className="mt-2 text-[15px] leading-[1.7] text-ink [overflow-wrap:anywhere]">{action.conclusion}</p>
-        </div>
-        <div className="mt-4 border-t border-hairline pt-4">
-          <TaskList title="最紧的两件" items={firstTwo} ordered emphasis />
-        </div>
-      </section>
+      {mode === 'out_of_scope' && envelope ? (
+        <OutOfScopeCard answer={answer} envelope={envelope} />
+      ) : mode === 'clarification_needed' && envelope ? (
+        <ClarificationCard answer={answer} envelope={envelope} />
+      ) : (
+        <DirectOrAssumptionCard
+          answer={answer}
+          envelope={envelope}
+          mode={mode}
+        />
+      )}
 
-      <section className="mt-5 rounded-[16px] border border-hairline bg-surface px-4">
-        <div className="divide-y divide-hairline">
-          <TaskList title="步骤" items={stepItems} ordered />
-          <TaskList title="去哪办" items={action.where_to_go} />
-          <TaskList title="要带什么" items={action.documents_needed} />
-          <TaskList title="期限" items={action.deadline_or_timing} />
-          <TaskList title="不做会怎样" items={action.consequences} />
-          <TaskList title="要找专家的情况" items={action.expert_handoff} />
-        </div>
-      </section>
+      {mode !== 'clarification_needed' && mode !== 'out_of_scope' && (
+        <details className="mt-5 rounded-[14px] border border-hairline bg-surface px-4 py-3">
+          <summary className="cursor-pointer text-[13px] font-medium text-ink">复制 TEBIQ 的建议</summary>
+          <p className="mt-3 text-[12px] leading-[1.7] text-slate [overflow-wrap:anywhere]">{copySource}</p>
+          <button
+            type="button"
+            onClick={copyCard}
+            className="mt-3 min-h-[36px] rounded-[10px] border border-hairline bg-canvas px-3 text-[12px] font-medium text-ink active:bg-paper"
+          >
+            {copyState === 'copied' ? '已复制' : '复制'}
+          </button>
+        </details>
+      )}
 
-      <details className="mt-5 rounded-[14px] border border-hairline bg-surface px-4 py-3">
-        <summary className="cursor-pointer text-[13px] font-medium text-ink">复制给客户</summary>
-        <p className="mt-3 text-[12px] leading-[1.7] text-slate [overflow-wrap:anywhere]">{managerCopy}</p>
-        <button
-          type="button"
-          onClick={copyManagerText}
-          className="mt-3 min-h-[36px] rounded-[10px] border border-hairline bg-canvas px-3 text-[12px] font-medium text-ink active:bg-paper"
-        >
-          {copyState === 'copied' ? '已复制' : '复制'}
-        </button>
-      </details>
-
-      <section className="mt-5 border-t border-hairline pt-4">
-        <SectionHeading>来源与说明</SectionHeading>
-        <p className="mt-2 text-[12px] leading-[1.7] text-ash [overflow-wrap:anywhere]">{answer.sourceHint}</p>
-        <p className="mt-2 text-[11px] leading-[1.7] text-ash [overflow-wrap:anywhere]">{action.boundary_note}</p>
-      </section>
+      {mode !== 'clarification_needed' && mode !== 'out_of_scope' && (
+        <section className="mt-5 border-t border-hairline pt-4">
+          <SectionHeading>来源与说明</SectionHeading>
+          <p className="mt-2 text-[12px] leading-[1.7] text-ash [overflow-wrap:anywhere]">{answer.sourceHint}</p>
+          <p className="mt-2 text-[11px] leading-[1.7] text-ash [overflow-wrap:anywhere]">{answer.actionAnswer.boundary_note}</p>
+          {envelope?.engine_version && (
+            <p className="mt-2 text-[11px] leading-[1.6] text-ash">
+              引擎：{envelope.engine_version}
+              {envelope.confidence ? `（置信度 ${envelope.confidence}）` : ''}
+              {envelope.llm_error ? '（LLM 失败已回退）' : ''}
+            </p>
+          )}
+        </section>
+      )}
 
       <section className="mt-5 rounded-[16px] border border-hairline bg-surface px-4 py-4">
         <SectionTitle title="这个整理有帮助吗？" />
@@ -164,6 +151,178 @@ export default function AnswerResultView({
         )}
       </section>
     </div>
+  )
+}
+
+function DirectOrAssumptionCard({
+  answer,
+  envelope,
+  mode,
+}: {
+  answer: AnswerResult
+  envelope: LlmAnswerEnvelope | null
+  mode: string
+}) {
+  const action = answer.actionAnswer
+  const conclusion = envelope?.short_answer || action.conclusion
+  const understood = envelope?.understood_question || answer.intentSummary
+  const nextActions = envelope?.next_actions ?? []
+  const fallbackFirstTwo = safeItems(action.what_to_do).slice(0, 2)
+  const fallbackSteps = withoutItems(
+    uniqueItems(action.how_to_do.length > 0 ? action.how_to_do : action.what_to_do.slice(2)),
+    fallbackFirstTwo,
+  )
+
+  const firstTwo = nextActions.length > 0
+    ? nextActions.slice(0, 2).map(a => a.title)
+    : fallbackFirstTwo
+  const stepItems = nextActions.length > 2
+    ? nextActions.slice(2).map(a => a.title)
+    : fallbackSteps
+
+  const where = envelope?.where_to_go ? splitList(envelope.where_to_go) : action.where_to_go
+  const docs = envelope?.materials.length ? envelope.materials : action.documents_needed
+  const deadline = envelope?.deadline ? splitList(envelope.deadline) : action.deadline_or_timing
+  const consequences = envelope?.risks.length ? envelope.risks : action.consequences
+  const expert = envelope?.expert_checkpoints.length ? envelope.expert_checkpoints : action.expert_handoff
+
+  return (
+    <>
+      <section className="rounded-[16px] border border-hairline bg-surface px-4 py-4">
+        <StatusPill className={answer.statusClassName}>{answer.statusLabel}</StatusPill>
+        <h1 className="mt-4 text-[22px] font-medium leading-[1.38] tracking-[-0.01em] text-ink [overflow-wrap:anywhere]">
+          {answer.title}
+        </h1>
+        <p className="mt-3 rounded-[12px] bg-paper px-3 py-3 text-[13px] leading-[1.7] text-slate [overflow-wrap:anywhere]">
+          {answer.question}
+        </p>
+        <div className="mt-3 rounded-[12px] border border-hairline bg-canvas px-3 py-3">
+          <p className="text-[11px] font-medium text-ash">我理解你的问题是</p>
+          <p className="mt-1.5 text-[13px] leading-[1.65] text-ink [overflow-wrap:anywhere]">{understood}</p>
+        </div>
+
+        {mode === 'answer_with_assumptions' && (
+          <div className="mt-3 rounded-[12px] border border-hairline bg-[#FFF7E8] px-3 py-3">
+            <p className="text-[11px] font-medium text-ink">我先按以下假设给你一个初步整理。</p>
+            {envelope && envelope.assumptions.length > 0 && (
+              <ul className="mt-2 grid gap-1.5 text-[12px] leading-[1.6] text-slate">
+                {envelope.assumptions.map(item => <li key={item}>· {item}</li>)}
+              </ul>
+            )}
+          </div>
+        )}
+
+        <div className="mt-4">
+          <SectionHeading>结论</SectionHeading>
+          <p className="mt-2 text-[15px] leading-[1.7] text-ink [overflow-wrap:anywhere]">{conclusion}</p>
+        </div>
+        <div className="mt-4 border-t border-hairline pt-4">
+          <TaskList title="最紧的两件" items={firstTwo} ordered emphasis />
+        </div>
+      </section>
+
+      <section className="mt-5 rounded-[16px] border border-hairline bg-surface px-4">
+        <div className="divide-y divide-hairline">
+          <TaskList title="步骤" items={stepItems} ordered />
+          <TaskList title="去哪办" items={where} />
+          <TaskList title="要带什么" items={docs} />
+          <TaskList title="期限" items={deadline} />
+          <TaskList title="不做会怎样" items={consequences} />
+          <TaskList title="要找专家的情况" items={expert} />
+        </div>
+      </section>
+
+      {mode === 'answer_with_assumptions' && envelope && envelope.key_missing_info.length > 0 && (
+        <section className="mt-5 rounded-[16px] border border-hairline bg-surface px-4 py-4">
+          <SectionHeading>关键缺失信息</SectionHeading>
+          <ul className="mt-3 grid gap-3">
+            {envelope.key_missing_info.map(info => (
+              <li key={info.field} className="rounded-[12px] bg-paper px-3 py-3 text-[12px] leading-[1.65] text-slate">
+                <p className="text-[12px] font-medium text-ink">{info.question}</p>
+                {info.why_it_matters && (
+                  <p className="mt-1 text-[11px] leading-[1.6] text-ash">为什么重要：{info.why_it_matters}</p>
+                )}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+    </>
+  )
+}
+
+function ClarificationCard({ answer, envelope }: { answer: AnswerResult; envelope: LlmAnswerEnvelope }) {
+  const understood = envelope.understood_question || answer.intentSummary
+  return (
+    <section className="rounded-[16px] border border-hairline bg-surface px-4 py-4">
+      <StatusPill className="bg-paper text-ink">需先确认</StatusPill>
+      <h1 className="mt-4 text-[20px] font-medium leading-[1.4] text-ink [overflow-wrap:anywhere]">
+        这个问题先确认几件事，TEBIQ 再给具体方向
+      </h1>
+      <p className="mt-3 rounded-[12px] bg-paper px-3 py-3 text-[13px] leading-[1.7] text-slate [overflow-wrap:anywhere]">
+        {answer.question}
+      </p>
+      <div className="mt-3 rounded-[12px] border border-hairline bg-canvas px-3 py-3">
+        <p className="text-[11px] font-medium text-ash">我理解你的问题是</p>
+        <p className="mt-1.5 text-[13px] leading-[1.65] text-ink [overflow-wrap:anywhere]">{understood}</p>
+      </div>
+
+      {envelope.short_answer && (
+        <div className="mt-4">
+          <SectionHeading>初步说明</SectionHeading>
+          <p className="mt-2 text-[14px] leading-[1.7] text-ink [overflow-wrap:anywhere]">{envelope.short_answer}</p>
+        </div>
+      )}
+
+      <div className="mt-4">
+        <SectionHeading>需要先确认</SectionHeading>
+        <ul className="mt-3 grid gap-3">
+          {(envelope.key_missing_info.length > 0
+            ? envelope.key_missing_info
+            : [{ field: 'context', question: '请补充你的在留资格、事情发生日期、是否已收到官方文书。', why_it_matters: '不同前提下手续路径完全不同。' }]
+          ).map(info => (
+            <li key={info.field + info.question} className="rounded-[12px] bg-paper px-3 py-3 text-[13px] leading-[1.65] text-ink">
+              <p className="font-medium">{info.question}</p>
+              {info.why_it_matters && (
+                <p className="mt-1 text-[11px] leading-[1.6] text-ash">为什么重要：{info.why_it_matters}</p>
+              )}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )
+}
+
+function OutOfScopeCard({ answer, envelope }: { answer: AnswerResult; envelope: LlmAnswerEnvelope }) {
+  return (
+    <section className="rounded-[16px] border border-hairline bg-surface px-4 py-4">
+      <StatusPill className="bg-paper text-ink">暂未支持</StatusPill>
+      <h1 className="mt-4 text-[20px] font-medium leading-[1.4] text-ink [overflow-wrap:anywhere]">
+        这个问题暂时不在 TEBIQ v0 支持范围内
+      </h1>
+      <p className="mt-3 rounded-[12px] bg-paper px-3 py-3 text-[13px] leading-[1.7] text-slate [overflow-wrap:anywhere]">
+        {answer.question}
+      </p>
+      <div className="mt-3 rounded-[12px] border border-hairline bg-canvas px-3 py-3">
+        <p className="text-[12px] leading-[1.7] text-ink">{envelope.short_answer}</p>
+      </div>
+      {envelope.key_missing_info.length > 0 && (
+        <div className="mt-4">
+          <SectionHeading>请补充</SectionHeading>
+          <ul className="mt-3 grid gap-3">
+            {envelope.key_missing_info.map(info => (
+              <li key={info.field + info.question} className="rounded-[12px] bg-paper px-3 py-3 text-[13px] leading-[1.65] text-ink">
+                <p className="font-medium">{info.question}</p>
+                {info.why_it_matters && (
+                  <p className="mt-1 text-[11px] leading-[1.6] text-ash">{info.why_it_matters}</p>
+                )}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </section>
   )
 }
 
@@ -237,7 +396,14 @@ function withoutItems(items: string[], excluded: string[]): string[] {
   return result.length > 0 ? result : items
 }
 
-function buildManagerCopy(answer: AnswerResult): string {
+function splitList(value: string): string[] {
+  return value
+    .split(/[／/，,；;]\s*/)
+    .map(item => item.trim())
+    .filter(Boolean)
+}
+
+function buildLegacyCopy(answer: AnswerResult): string {
   const action = answer.actionAnswer
   const firstTodo = action.what_to_do[0] ?? '先确认基本事实'
   const firstDocument = action.documents_needed[0] ?? '准备相关文书和日期记录'
