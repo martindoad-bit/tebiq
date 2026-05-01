@@ -2,6 +2,8 @@ import { readdir, readFile } from 'fs/promises'
 import path from 'path'
 import matter from 'gray-matter'
 import { FREQUENT_QA_SEEDS, type AnswerSeed } from './answer-seeds'
+import { loadGoldAnswerSeeds } from './gold-answer-loader'
+import { isHighRiskGenericSeed, safeCandidateForIntent } from './safe-candidate-retrieval'
 import {
   ANSWER_BOUNDARY_NOTE,
   type ActionAnswer,
@@ -50,11 +52,29 @@ export async function buildAnswer(input: BuildAnswerInput): Promise<AnswerResult
   }
   let rejectedByIntent = false
 
+  if (shouldUseIntentAnswerBeforeSeeds(questionText, intent)) {
+    const direct = ruleBasedAnswerForIntent(questionText, intent)
+    if (direct) return withIntent(sanitizeAnswer(direct), intent)
+  }
+
+  const goldSeed = await bestGoldSeed(normalized, questionText, intent)
+  if (goldSeed.seed) {
+    return withIntent(sanitizeAnswer(seedToAnswer(goldSeed.seed, questionText)), intent)
+  }
+  rejectedByIntent ||= goldSeed.rejectedByIntent
+
   const qaSeed = await bestQaSeed(normalized, questionText, intent)
   if (qaSeed.seed) {
     return withIntent(sanitizeAnswer(seedToAnswer(qaSeed.seed, questionText)), intent)
   }
   rejectedByIntent ||= qaSeed.rejectedByIntent
+
+  const directIntentAnswer = ruleBasedAnswerForIntent(questionText, intent)
+  if (directIntentAnswer) {
+    const judge = judgeAnswer({ original_question: questionText, parsed_intent: intent, answer: directIntentAnswer })
+    if (judge.should_show) return withIntent(sanitizeAnswer(directIntentAnswer), intent)
+    rejectedByIntent = true
+  }
 
   const decisionMatch = await matchDecisionQuery(questionText)
   if (decisionMatch.card) {
@@ -72,7 +92,7 @@ export async function buildAnswer(input: BuildAnswerInput): Promise<AnswerResult
     const answer = knowledgeSeedToAnswer(knowledge, questionText)
     const intentCheck = answerMatchesIntent(intent, answer)
     const judge = judgeAnswer({ original_question: questionText, parsed_intent: intent, answer })
-    if (intentCheck.pass && judge.should_show) {
+    if (knowledgeSafeForIntent(knowledge, questionText, intent) && intentCheck.pass && judge.should_show) {
       return withIntent(sanitizeAnswer(answer), intent)
     }
     rejectedByIntent = true
@@ -295,6 +315,254 @@ function cannotDetermineAnswer(_questionText: string): AnswerResult {
 }
 
 function ruleBasedAnswerForIntent(questionText: string, intent: AnswerIntent): AnswerResult | null {
+  if (intent.intent_type === 'material_list') {
+    const target = intent.target_status ?? intent.extracted_entities.target_visa ?? '当前手续'
+    return {
+      ok: true,
+      answer_type: 'draft',
+      answer_level: 'L2',
+      review_status: 'unreviewed',
+      title: `${target}材料先按官方清单和个人状态拆开确认`,
+      summary: '材料问题先不要套别的风险答案。先确认申请类型、当前身份、提交窗口，再按官方清单补齐证明。',
+      sections: [
+        { heading: '先确认申请类型', body: `这次要准备的是「${target}」相关材料。先确认是新申请、变更、续签还是补资料。` },
+        { heading: '材料主线', body: '通常先分成本人材料、公司/雇主材料、税金/社保材料、说明材料四类。具体清单以入管或窗口最新要求为准。' },
+      ],
+      next_steps: [
+        '确认申请类型和提交期限。',
+        '把本人材料、公司/雇主材料、税金/社保材料分开整理。',
+        '如果是补资料或期限接近，先按通知书期限处理。',
+      ],
+      related_links: [{ title: '续签检查', href: '/check' }],
+      sources: [{ title: '出入国在留管理庁 在留資格関連手続', url: 'https://www.moj.go.jp/isa/' }],
+      query_id: null,
+      answer_id: null,
+      boundary_note: ANSWER_BOUNDARY_NOTE,
+      action_answer: {
+        conclusion: `${target}材料要按申请类型拆开准备，不能直接套用其他风险或转换答案。`,
+        what_to_do: ['先确认申请类型和提交窗口。', '把已有文书、期限、本人状态和公司材料放到同一处。'],
+        where_to_go: ['出入国在留管理局', '公司人事', '行政書士事务所'],
+        how_to_do: ['按本人材料、公司/雇主材料、税金/社保材料、说明材料四类建立清单。', '如果收到补资料通知，先按通知书要求补对应项目。'],
+        documents_needed: ['在留カード', '护照', '申请书', '雇用契約書', '課税証明書', '納税証明書', '公司登記事項証明書'],
+        deadline_or_timing: ['在留期限前或补资料通知指定期限前处理。'],
+        consequences: ['如果材料类别混乱或期限错过，可能需要补正、重新整理材料，审查会变慢。'],
+        expert_handoff: ['如果是补资料、公司状态异常、税/社保记录不完整，带通知书和现有材料咨询行政書士。'],
+        boundary_note: ANSWER_BOUNDARY_NOTE,
+      },
+    }
+  }
+
+  if (isCompanyDormantPensionIntent(intent)) {
+    return {
+      ok: true,
+      answer_type: 'draft',
+      answer_level: 'L2',
+      review_status: 'unreviewed',
+      title: '公司停止或倒闭后，先确认年金和健保资格丧失日',
+      summary: '公司状态变化后，个人年金和健康保险要看资格丧失日，不要把它和其他在留资格问题混在一起。',
+      sections: [
+        { heading: '先确认', body: '确认厚生年金和健康保险是否已经资格丧失、资格丧失日是哪天、是否拿到资格丧失证明。' },
+      ],
+      next_steps: ['确认资格丧失日。', '取得健康保険・厚生年金資格喪失証明書。', '去区役所 / 市役所国保年金窗口确认国民年金和国民健康保险。'],
+      related_links: [{ title: '我的提醒', href: '/timeline' }],
+      sources: [{ title: '日本年金機構 / 市区町村 国保年金課' }],
+      query_id: null,
+      answer_id: null,
+      boundary_note: ANSWER_BOUNDARY_NOTE,
+      action_answer: {
+        conclusion: '先确认厚生年金和健康保险的资格丧失日；丧失后通常要处理国民年金和国民健康保险。',
+        what_to_do: ['确认资格丧失日。', '拿到资格丧失证明。'],
+        where_to_go: ['区役所', '市役所', '年金事务所'],
+        how_to_do: ['向公司或年金事务所确认资格丧失证明。', '带证明、在留卡和マイナンバー去国保年金窗口办理切换。'],
+        documents_needed: ['健康保険・厚生年金資格喪失証明書', '在留カード', 'マイナンバー', '退职或倒闭相关资料'],
+        deadline_or_timing: ['资格丧失后 14 日内处理国民健康保险和国民年金切换。'],
+        consequences: ['不处理可能产生保险和年金空白，之后更新、永住或就医时需要补充说明。'],
+        expert_handoff: ['如果公司失联、证明拿不到或已经逾期，带年金记录和公司资料咨询社労士；涉及在留更新时咨询行政書士。'],
+        boundary_note: ANSWER_BOUNDARY_NOTE,
+      },
+    }
+  }
+
+  if (intent.intent_type === 'scenario_sequence' && /(刚到|来日本|第一周|初到)/.test(questionText)) {
+    return {
+      ok: true,
+      answer_type: 'draft',
+      answer_level: 'L2',
+      review_status: 'unreviewed',
+      title: '刚到日本先把住民登记和生活账户顺序排好',
+      summary: '刚到日本第一周，先处理住民票和地址登记，再处理手机号、银行、公司和保险相关手续。',
+      sections: [
+        { heading: '先做顺序', body: '先确定住址并办理住民登记，再用住民票和在留卡处理手机号、银行、公司或保险相关手续。' },
+      ],
+      next_steps: ['先办理住民票 / 転入届。', '再处理手机号、银行账户和公司入职或经营管理相关手续。', '把在留卡、住居资料和窗口回执归档。'],
+      related_links: [{ title: '我的提醒', href: '/timeline' }],
+      sources: [{ title: '市区町村 転入届 / 住民票手続' }],
+      query_id: null,
+      answer_id: null,
+      boundary_note: ANSWER_BOUNDARY_NOTE,
+      action_answer: {
+        conclusion: '刚到日本第一周，先做住民登记；经营管理签也要先把地址、联系方式、银行和公司手续排成顺序。',
+        what_to_do: ['先确认住所并办理転入届 / 住民票。', '再处理手机号、银行、公司和保险相关手续。'],
+        where_to_go: ['区役所', '市役所', '银行', '手机运营商'],
+        how_to_do: ['带在留卡和住居资料到市区町村窗口办理住民登记。', '拿到住民票后，再处理银行、手机号和公司相关手续。'],
+        documents_needed: ['在留カード', '护照', '住居契约', '住民票', 'マイナンバー通知'],
+        deadline_or_timing: ['确定住所后 14 日内办理転入届 / 住民登记。'],
+        consequences: ['如果住民登记延后，后续银行、手机号、国保年金和公司手续都会被卡住。'],
+        expert_handoff: ['如果经营管理签同时涉及公司设立、办公室或入管补资料，带在留卡、住居资料和公司材料咨询行政書士。'],
+        boundary_note: ANSWER_BOUNDARY_NOTE,
+      },
+    }
+  }
+
+  if (intent.domain === 'employment' && intent.current_status === '特定技能' && /雇主|雇用主|会社|公司|転職|换/.test(questionText)) {
+    return {
+      ok: true,
+      answer_type: 'cannot_determine',
+      answer_level: 'L3',
+      review_status: 'intent_unclear',
+      title: '特定技能换会社需要先确认是换雇主还是换在留资格',
+      summary: '先确认是否只是同一在留资格下换雇主，还是要变更到其他在留资格。',
+      sections: [
+        { heading: '需要先确认', body: '确认你的特定技能分野、现在的支援机构、旧雇主退职日、新雇主雇用开始日、是否已经向入管做届出。' },
+      ],
+      next_steps: ['确认旧雇主退职日和新雇主雇用开始日。', '确认支援机构是否变更。', '确认是否要向入管提交雇用契約相关届出。'],
+      related_links: [{ title: '继续问', href: '/' }],
+      sources: [{ title: '出入国在留管理庁 特定技能相关届出', url: 'https://www.moj.go.jp/isa/' }],
+      query_id: null,
+      answer_id: null,
+      boundary_note: ANSWER_BOUNDARY_NOTE,
+      action_answer: {
+        conclusion: '特定技能 1 号换会社，先确认是不是同一资格下换雇主，再看支援机构、雇用契約和届出。',
+        what_to_do: ['确认旧雇主退职日和新雇主雇用开始日。', '确认支援机构、雇用契約和届出是否需要变更。'],
+        where_to_go: ['新雇主', '支援机构', '出入国在留管理局'],
+        how_to_do: ['让新雇主和支援机构确认雇用契約、支援计划和必要届出。', '把旧雇主退职资料、新雇主合同、支援机构资料放在一起。'],
+        documents_needed: ['在留カード', '旧雇主退职资料', '新雇主雇用契約書', '支援计划相关资料'],
+        deadline_or_timing: ['退职、入职、雇主变更发生后尽快确认届出期限。'],
+        consequences: ['如果换会社后届出或支援计划没有对上，后续更新或变更时需要补充说明。'],
+        expert_handoff: ['如果已经开始新工作但届出未确认，带新旧合同、退职日和支援机构资料咨询行政書士。'],
+        boundary_note: ANSWER_BOUNDARY_NOTE,
+      },
+    }
+  }
+
+  if (intent.domain === 'company_registration' && /代表|役员|役員|取締役/.test(intent.extracted_entities.procedure ?? questionText)) {
+    return {
+      ok: true,
+      answer_type: 'cannot_determine',
+      answer_level: 'L3',
+      review_status: 'intent_unclear',
+      title: '代表者变更要分开确认会社登记和入管届出',
+      summary: '代表取締役或役员变更先确认法务局登记是否已变更，再确认入管侧是否需要说明或届出。',
+      sections: [
+        { heading: '需要先确认', body: '确认变更日期、商業登記是否完成、你本人是否持经营管理在留资格、下一次更新或变更申请是否临近。' },
+      ],
+      next_steps: ['确认代表者变更日期。', '确认法务局商業登記是否完成。', '确认入管侧是否已有通知或下次更新材料要求。'],
+      related_links: [{ title: '续签检查', href: '/check' }],
+      sources: [{ title: '法務局 商業登記 / 出入国在留管理庁', url: 'https://www.moj.go.jp/isa/' }],
+      query_id: null,
+      answer_id: null,
+      boundary_note: ANSWER_BOUNDARY_NOTE,
+      action_answer: {
+        conclusion: '代表取締役换人，先处理会社登记，再确认入管是否需要届出或在下次申请中说明。',
+        what_to_do: ['确认法务局商業登記是否已变更。', '确认本人经营管理在留下的役员关系是否变化。'],
+        where_to_go: ['法务局', '出入国在留管理局', '行政書士事务所'],
+        how_to_do: ['先整理代表变更日期、登記事項証明書和股东/役员决定资料。', '再判断入管侧是立即届出、补资料，还是下次更新时说明。'],
+        documents_needed: ['登記事項証明書', '役员变更记录', '在留カード', '公司定款或决议资料'],
+        deadline_or_timing: ['代表者变更登记完成后尽快确认入管侧处理；如已有补资料通知，以通知期限为准。'],
+        consequences: ['如果公司代表关系和在留材料不一致，后续经营管理更新或变更时可能需要补充说明。'],
+        expert_handoff: ['如果本人仍持经营管理、代表身份已变更或期限接近，带登記事項証明書和在留卡咨询行政書士。'],
+        boundary_note: ANSWER_BOUNDARY_NOTE,
+      },
+    }
+  }
+
+  if (intent.target_status === '经营管理' && /事業所要件|办公室|事務所|住宅|自宅|租约|賃貸|个人名义|個人名義/.test(intent.extracted_entities.procedure ?? questionText)) {
+    return {
+      ok: true,
+      answer_type: 'cannot_determine',
+      answer_level: 'L3',
+      review_status: 'intent_unclear',
+      title: '经营管理办公室要先确认经营场所实态',
+      summary: '办公室或租约问题不能套用资本金或转签答案。先确认合同名义、使用用途、独立性和实际经营状态。',
+      sections: [{ heading: '需要先确认', body: '确认租赁合同名义、用途是否可商用、是否有独立空间、是否能拍摄办公室照片和保存费用支付记录。' }],
+      next_steps: ['确认租赁合同名义和用途。', '保存办公室照片、平面图和费用支付记录。', '如果合同名义或用途有边界，先咨询专业人士。'],
+      related_links: [{ title: '续签检查', href: '/check' }],
+      sources: [{ title: '出入国在留管理庁 経営・管理 在留資格', url: 'https://www.moj.go.jp/isa/' }],
+      query_id: null,
+      answer_id: null,
+      boundary_note: ANSWER_BOUNDARY_NOTE,
+      action_answer: {
+        conclusion: '经营管理办公室问题先看经营场所实态：合同名义、商用用途、独立空间和实际使用记录。',
+        what_to_do: ['确认租赁合同名义和使用用途。', '准备办公室照片和平面图。'],
+        where_to_go: ['出租方或管理会社', '出入国在留管理局', '行政書士事务所'],
+        how_to_do: ['把租赁合同、照片、平面图、费用支付记录放在一起。', '如果是住宅、个人名义或共享空间，先确认能否说明事业使用实态。'],
+        documents_needed: ['賃貸契約書', '办公室照片', '平面图', '费用支付记录', '公司登記事項証明書'],
+        deadline_or_timing: ['新申请、续签或补资料前先整理。'],
+        consequences: ['如果经营场所实态说明不足，经营管理申请或更新材料会变弱，可能需要补资料。'],
+        expert_handoff: ['如果合同是个人名义、住宅用途或共享空间，带合同和照片咨询行政書士。'],
+        boundary_note: ANSWER_BOUNDARY_NOTE,
+      },
+    }
+  }
+
+  if (intent.domain === 'employment' && /HR|人事|员工|外国员工|離職|离职|入職|入职|届出|报备/.test(questionText)) {
+    return {
+      ok: true,
+      answer_type: 'cannot_determine',
+      answer_level: 'L3',
+      review_status: 'intent_unclear',
+      title: '外国员工入退职要先确认公司侧届出对象',
+      summary: 'HR/公司侧问题不能套用个人年金答案。先确认是入职、离职、换雇主还是资格外活动风险。',
+      sections: [{ heading: '需要先确认', body: '确认员工在留资格、入退职日期、雇佣合同、公司是否需要向入管或相关机构做届出。' }],
+      next_steps: ['确认员工在留资格和入退职日期。', '确认雇佣合同和业务内容。', '确认公司侧届出窗口和期限。'],
+      related_links: [{ title: '继续问', href: '/' }],
+      sources: [{ title: '出入国在留管理庁 所属機関等に関する届出', url: 'https://www.moj.go.jp/isa/' }],
+      query_id: null,
+      answer_id: null,
+      boundary_note: ANSWER_BOUNDARY_NOTE,
+      action_answer: {
+        conclusion: '外国员工入退职先确认员工在留资格、入退职日期和公司侧届出对象。',
+        what_to_do: ['确认员工在留资格。', '确认入退职日期和雇佣合同。'],
+        where_to_go: ['公司人事', '出入国在留管理局', 'Hello Work'],
+        how_to_do: ['把雇用契約書、退职资料和业务内容说明放在一起。', '按员工身份确认入管届出和雇佣相关手续。'],
+        documents_needed: ['在留カード', '雇用契約書', '退职证明', '业务内容说明'],
+        deadline_or_timing: ['入退职发生后尽快确认；如涉及 14 日届出，以法定期限优先。'],
+        consequences: ['如果公司侧届出漏掉，后续员工更新或公司雇佣管理可能需要补充说明。'],
+        expert_handoff: ['如果员工身份、业务内容或届出期限不清，带合同和在留卡信息咨询行政書士或社労士。'],
+        boundary_note: ANSWER_BOUNDARY_NOTE,
+      },
+    }
+  }
+
+  if (intent.domain === 'visa' && intent.current_status === '经营管理' && /休眠|倒闭|倒産|公司停|会社停/.test(`${intent.extracted_entities.company_status ?? ''}${intent.extracted_entities.procedure ?? ''}${questionText}`)) {
+    return {
+      ok: true,
+      answer_type: 'cannot_determine',
+      answer_level: 'L4',
+      review_status: 'intent_unclear',
+      title: '经营管理公司休眠是否还能更新，需要先确认经营实态',
+      summary: '这是经营管理在留资格问题，不是年金主线。先确认公司是否仍有经营实态、办公室、税务和活动记录。',
+      sections: [{ heading: '需要先确认', body: '确认休眠日期、是否还有売上/契約/办公室、税务申告、役员状态和在留期限。' }],
+      next_steps: ['整理公司休眠日期和理由。', '整理办公室、税务、合同和银行记录。', '在在留期限前咨询专业人士判断更新或变更路径。'],
+      related_links: [{ title: '续签检查', href: '/check' }],
+      sources: [{ title: '出入国在留管理庁 経営・管理 在留資格', url: 'https://www.moj.go.jp/isa/' }],
+      query_id: null,
+      answer_id: null,
+      boundary_note: ANSWER_BOUNDARY_NOTE,
+      action_answer: {
+        conclusion: '经营管理公司休眠能否更新，先看经营实态是否还能说明；不能只看公司是否还存在。',
+        what_to_do: ['确认休眠日期和公司当前状态。', '整理税务、办公室、合同和银行记录。'],
+        where_to_go: ['税理士', '行政書士事务所', '出入国在留管理局'],
+        how_to_do: ['把法人税申告、登記事項証明書、办公室合同、银行流水和业务合同整理成时间线。', '判断是更新、变更在留资格，还是先处理公司状态。'],
+        documents_needed: ['登記事項証明書', '法人税申告书', '办公室合同', '银行流水', '业务合同', '在留カード'],
+        deadline_or_timing: ['在留期限前尽快确认；如已停止经营，不要等到临近到期才整理。'],
+        consequences: ['如果经营实态无法说明，经营管理更新材料会非常弱，可能需要考虑其他在留路径。'],
+        expert_handoff: ['如果公司已经休眠、赤字或无办公室，带公司税务和登记材料咨询行政書士和税理士。'],
+        boundary_note: ANSWER_BOUNDARY_NOTE,
+      },
+    }
+  }
+
   if (isManagementToHumanitiesIntent(intent)) {
     return {
       ok: true,
@@ -394,6 +662,33 @@ function ruleBasedAnswerForIntent(questionText: string, intent: AnswerIntent): A
   return null
 }
 
+function shouldUseIntentAnswerBeforeSeeds(questionText: string, intent: AnswerIntent): boolean {
+  if (intent.intent_type === 'material_list') return true
+  if (isCompanyDormantPensionIntent(intent)) return true
+  if (intent.intent_type === 'scenario_sequence' && /(刚到|来日本|第一周|初到)/.test(questionText)) return true
+  if (intent.domain === 'employment' && intent.current_status === '特定技能' && /雇主|雇用主|会社|公司|転職|换/.test(questionText)) return true
+  if (intent.domain === 'employment' && /HR|人事|员工|外国员工|離職|离职|入職|入职|届出|报备/.test(questionText)) return true
+  if (intent.domain === 'company_registration' && /代表|役员|役員|取締役/.test(intent.extracted_entities.procedure ?? questionText)) return true
+  if (intent.target_status === '经营管理' && /事業所要件|办公室|事務所|住宅|自宅|租约|賃貸|个人名义|個人名義/.test(intent.extracted_entities.procedure ?? questionText)) return true
+  if (intent.domain === 'visa' && intent.current_status === '经营管理' && /休眠|倒闭|倒産|公司停|会社停/.test(`${intent.extracted_entities.company_status ?? ''}${intent.extracted_entities.procedure ?? ''}${questionText}`)) return true
+  return false
+}
+
+function knowledgeSafeForIntent(seed: KnowledgeSeed, questionText: string, intent: AnswerIntent): boolean {
+  const query = compactForIntent(questionText)
+  const text = compactForIntent(`${seed.title}\n${seed.slug}\n${seed.dimensionKey ?? ''}\n${seed.body.slice(0, 800)}`)
+  if (/特定技能.*(换会社|换公司|転職|雇主変更|雇用主変更)/.test(query) && !/(特定技能|雇用|雇主|会社変更|転職)/.test(text)) return false
+  if (/(代表取締役|取締役|代表|役員|役员).*(换人|変更|变更|入管|届出|通知)/.test(query) && !/(代表|役員|役员|会社|法人|入管|届出)/.test(text)) return false
+  if (intent.intent_type === 'material_list' && !/(材料|書類|资料|清单|証明|证明)/.test(text)) return false
+  if (intent.domain !== 'unknown') {
+    if ((intent.domain === 'pension' || intent.domain === 'health_insurance') && !/(年金|健康保険|国保|社保|社会保険)/.test(text)) return false
+    if (intent.domain === 'tax' && !/(税|納税|住民税|確定申告)/.test(text)) return false
+    if (intent.domain === 'company_registration' && !/(会社|法人|本店|事務所|办公室|法務局|登記|役員|代表)/.test(text)) return false
+    if (intent.domain === 'employment' && !/(雇用|退職|入職|会社|人事|特定技能)/.test(text)) return false
+  }
+  return true
+}
+
 function isManagementToHumanitiesIntent(intent: AnswerIntent): boolean {
   return Boolean(
     intent.current_status
@@ -405,7 +700,7 @@ function isManagementToHumanitiesIntent(intent: AnswerIntent): boolean {
 
 function isCompanyDormantPensionIntent(intent: AnswerIntent): boolean {
   return (intent.domain === 'pension' || intent.domain === 'health_insurance')
-    && /(会社社保空档|休眠|倒闭|倒産|会社|公司)/.test(intent.current_status ?? `${intent.extracted_entities.company_status ?? ''}${intent.extracted_entities.procedure ?? ''}`)
+    && /(会社社保空档|休眠|倒闭|倒産|会社|公司|健保)/.test(intent.current_status ?? `${intent.extracted_entities.company_status ?? ''}${intent.extracted_entities.procedure ?? ''}`)
 }
 
 async function bestQaSeed(
@@ -417,6 +712,24 @@ async function bestQaSeed(
     ...FREQUENT_QA_SEEDS,
     ...await loadMarkdownAnswerSeeds(),
   ]
+  return bestSeedFromList(seeds, normalized, questionText, intent, 4)
+}
+
+async function bestGoldSeed(
+  normalized: string,
+  questionText: string,
+  intent: AnswerIntent,
+): Promise<{ seed: AnswerSeed | null; rejectedByIntent: boolean }> {
+  return bestSeedFromList(await loadGoldAnswerSeeds(), normalized, questionText, intent, 5)
+}
+
+function bestSeedFromList(
+  seeds: AnswerSeed[],
+  normalized: string,
+  questionText: string,
+  intent: AnswerIntent,
+  minScore: number,
+): { seed: AnswerSeed | null; rejectedByIntent: boolean } {
   const ranked = seeds
     .map(seed => {
       const rankedKeywords = rankKeywords(normalized, seed.keywords)
@@ -424,13 +737,22 @@ async function bestQaSeed(
       return {
         seed,
         matches: rankedKeywords.matches,
-        score: rankedKeywords.score + intentBonus,
+        score: rankedKeywords.score + intentBonus + (seed.priority ?? 0),
       }
     })
-    .filter(item => item.score >= 4)
+    .filter(item => item.score >= minScore)
     .sort((a, b) => b.score - a.score)
   let rejectedByIntent = false
   for (const item of ranked) {
+    const safe = safeCandidateForIntent(item.seed, intent, questionText)
+    if (!safe.safe) {
+      rejectedByIntent = true
+      continue
+    }
+    if (isHighRiskGenericSeed(item.seed) && item.score < 18 + (item.seed.priority ?? 0)) {
+      rejectedByIntent = true
+      continue
+    }
     const answer = seedToAnswer(item.seed, questionText)
     const intentCheck = answerMatchesIntent(intent, answer)
     const judge = judgeAnswer({ original_question: questionText, parsed_intent: intent, answer })

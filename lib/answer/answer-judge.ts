@@ -7,6 +7,8 @@ export type AnswerMismatchType =
   | 'subject_mismatch'
   | 'template_mismatch'
   | 'fallback_as_main_answer'
+  | 'material_vs_risk_mismatch'
+  | 'deadline_mismatch'
   | 'too_generic'
 
 export interface AnswerJudgeInput {

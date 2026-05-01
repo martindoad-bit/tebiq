@@ -1,7 +1,7 @@
 import type { DecisionAnswerLevel, FeedbackType } from '@/lib/decision/types'
 
 export type AnswerType = 'matched' | 'draft' | 'cannot_determine'
-export type AnswerReviewStatus = 'reviewed' | 'unreviewed' | 'needs_expert' | 'rejected'
+export type AnswerReviewStatus = 'reviewed' | 'unreviewed' | 'needs_expert' | 'rejected' | 'intent_unclear'
 
 export interface AnswerSection {
   heading: string

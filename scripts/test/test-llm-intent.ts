@@ -64,10 +64,10 @@ const CASES: Case[] = [
   { query: '搬家后在留卡地址要不要改', intent: 'procedure_flow', domain: 'housing' },
   { query: '搬家14日内要去哪里', intent: 'procedure_flow', domain: 'housing' },
   { query: '住民票迁入后国保地址要改吗', intent: 'procedure_flow', domain: 'housing' },
-  { query: '收到税务署信封要做什么', intent: 'procedure_flow', domain: 'document' },
-  { query: '年金信封看不懂怎么办', intent: 'procedure_flow', domain: 'document' },
-  { query: '市役所通知有期限怎么办', intent: 'procedure_flow', domain: 'document' },
-  { query: '日文通知上有金额和期限怎么处理', intent: 'procedure_flow', domain: 'document' },
+  { query: '收到税务署信封要做什么', intent: 'document_notice', domain: 'document', template: 'notice_template' },
+  { query: '年金信封看不懂怎么办', intent: 'document_notice', domain: 'document', template: 'notice_template' },
+  { query: '市役所通知有期限怎么办', intent: 'deadline_emergency', domain: 'document', template: 'deadline_template' },
+  { query: '日文通知上有金额和期限怎么处理', intent: 'deadline_emergency', domain: 'document', template: 'deadline_template' },
   { query: 'HR要给外国员工离职报备吗', intent: 'procedure_flow', domain: 'employment', subject: 'employer' },
   { query: '员工入职公司要去哪里报备', intent: 'procedure_flow', domain: 'employment', subject: 'employer' },
   { query: '老板雇了签证不符的人普通员工会受影响吗', intent: 'risk_assessment', domain: 'employment' },
@@ -92,7 +92,7 @@ const CASES: Case[] = [
   { query: '经管签公司地址法人地址在留卡地址都不一样怎么办', intent: 'scenario_sequence', domain: 'company_registration' },
   { query: '公司代表变更入管要不要报', intent: 'procedure_flow', domain: 'company_registration' },
   { query: '会社休眠经管签证还能续吗', intent: 'risk_assessment', domain: 'visa', current: /经营管理/ },
-  { query: '入管通知要求补资料怎么办', intent: 'procedure_flow', domain: 'document' },
+  { query: '入管通知要求补资料怎么办', intent: 'deadline_emergency', domain: 'document', template: 'deadline_template' },
   { query: '不知道该办什么手续', intent: 'unknown', domain: 'unknown' },
 ]
 
