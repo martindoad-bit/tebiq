@@ -376,13 +376,15 @@ function answerTypeLabel(value: string): string {
 
 function reviewStatusLabel(value: string): string {
   if (value === 'reviewed') return '已整理'
+  if (value === 'intent_unclear') return '需要先确认意图'
   if (value === 'needs_expert') return '需要专家确认'
   if (value === 'rejected') return '已退回'
   return '初步整理，尚未人工复核'
 }
 
-function reviewStatus(value: string): 'reviewed' | 'unreviewed' | 'needs_expert' | 'rejected' {
+function reviewStatus(value: string): 'reviewed' | 'unreviewed' | 'needs_expert' | 'rejected' | 'intent_unclear' {
   if (value === '已整理' || value === 'reviewed') return 'reviewed'
+  if (value === '需要先确认意图' || value === 'intent_unclear') return 'intent_unclear'
   if (value === '需要专家确认' || value === 'needs_expert') return 'needs_expert'
   if (value === '已退回' || value === 'rejected') return 'rejected'
   return 'unreviewed'

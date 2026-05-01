@@ -8,11 +8,13 @@ interface LlmIntentParserInput {
 export interface LlmIntentParserResult {
   normalized_question: string
   user_goal: string
+  understood_question?: string
   intent_type: IntentType
   domain: IntentDomain
   subject: IntentSubject
   current_status?: string
   target_status?: string
+  key_entities?: string[]
   extracted_entities: AnswerIntent['extracted_entities']
   preferred_template: PreferredTemplate
   confidence: 1 | 2 | 3 | 4
@@ -22,13 +24,15 @@ export interface LlmIntentParserResult {
 
 const DEFAULT_MODEL_ID = 'jp.anthropic.claude-sonnet-4-6'
 const DEFAULT_REGION = 'ap-northeast-1'
-const INTENT_TYPES = ['procedure_flow', 'eligibility_check', 'material_list', 'scenario_sequence', 'risk_assessment', 'misconception', 'unknown'] as const
+const INTENT_TYPES = ['procedure_flow', 'eligibility_check', 'material_list', 'scenario_sequence', 'risk_assessment', 'misconception', 'document_notice', 'deadline_emergency', 'unknown'] as const
 const DOMAINS = ['visa', 'pension', 'tax', 'health_insurance', 'company_registration', 'employment', 'school', 'housing', 'document', 'unknown'] as const
 const SUBJECTS = ['individual', 'company', 'employee', 'employer', 'family', 'customer_manager', 'unknown'] as const
-const TEMPLATES = ['flow_template', 'eligibility_template', 'material_template', 'sequence_template', 'risk_template', 'misconception_template', 'clarify_template'] as const
+const TEMPLATES = ['flow_template', 'eligibility_template', 'material_template', 'sequence_template', 'risk_template', 'misconception_template', 'notice_template', 'deadline_template', 'clarify_template'] as const
 
 export async function parseIntentWithLlm(input: LlmIntentParserInput): Promise<LlmIntentParserResult | null> {
-  if (process.env.ANSWER_INTENT_DISABLE_AI === '1' || process.env.LLM_INTENT_DISABLE_AI === '1') return null
+  if (process.env.ANSWER_INTENT_DISABLE_AI === '1' || process.env.LLM_INTENT_DISABLE_AI === '1' || process.env.ANSWER_LLM_ENABLED === '0') return null
+  const provider = process.env.ANSWER_LLM_PROVIDER ?? 'bedrock'
+  if (provider !== 'bedrock') return null
   if (!process.env.AWS_ACCESS_KEY_ID || !process.env.AWS_SECRET_ACCESS_KEY) return null
 
   const AnthropicBedrock = (await import('@anthropic-ai/bedrock-sdk')).default
@@ -39,7 +43,7 @@ export async function parseIntentWithLlm(input: LlmIntentParserInput): Promise<L
   })
 
   const response = await client.messages.create({
-    model: process.env.ANSWER_INTENT_MODEL_ID ?? process.env.PHOTO_RECOGNITION_MODEL_ID ?? DEFAULT_MODEL_ID,
+    model: process.env.ANSWER_LLM_MODEL ?? process.env.ANSWER_INTENT_MODEL_ID ?? process.env.PHOTO_RECOGNITION_MODEL_ID ?? DEFAULT_MODEL_ID,
     max_tokens: 800,
     temperature: 0,
     system: [
@@ -49,7 +53,7 @@ export async function parseIntentWithLlm(input: LlmIntentParserInput): Promise<L
       '如果问题涉及公司休眠 + 年金 / 社保，domain 必须是 pension 或 health_insurance，主目标是个人年金 / 健保义务，不是经营管理续签。',
       '如果问题问「资本金不够怎么办」，user_goal 是补救路径，不是资本金标准金额。',
       'AI 不做法律判断，只分类、抽取实体、选择模板。低置信度时 should_answer=false。',
-      'JSON 字段：normalized_question,user_goal,intent_type,domain,subject,current_status,target_status,extracted_entities,preferred_template,confidence,should_answer,clarification_questions。',
+      'JSON 字段：normalized_question,understood_question,user_goal,intent_type,domain,subject,current_status,target_status,key_entities,extracted_entities,preferred_template,confidence,should_answer,clarification_questions。',
     ].join('\n'),
     messages: [{
       role: 'user',
@@ -70,12 +74,14 @@ export async function parseIntentWithLlm(input: LlmIntentParserInput): Promise<L
 export function coerceLlmIntent(value: Record<string, unknown>, fallbackQuestion: string): LlmIntentParserResult {
   return {
     normalized_question: stringValue(value.normalized_question) ?? fallbackQuestion.trim().slice(0, 160),
-    user_goal: stringValue(value.user_goal) ?? fallbackQuestion.trim().slice(0, 160),
+    user_goal: stringValue(value.user_goal) ?? stringValue(value.understood_question) ?? fallbackQuestion.trim().slice(0, 160),
+    understood_question: stringValue(value.understood_question),
     intent_type: enumValue(value.intent_type, INTENT_TYPES, 'unknown'),
     domain: enumValue(value.domain, DOMAINS, 'unknown'),
     subject: enumValue(value.subject, SUBJECTS, 'unknown'),
     current_status: stringValue(value.current_status),
     target_status: stringValue(value.target_status),
+    key_entities: arrayValue(value.key_entities),
     extracted_entities: recordValue(value.extracted_entities),
     preferred_template: enumValue(value.preferred_template, TEMPLATES, 'clarify_template'),
     confidence: confidenceValue(value.confidence),

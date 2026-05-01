@@ -1,4 +1,5 @@
 import type { DecisionAnswerLevel } from '@/lib/decision/types'
+import type { IntentDomain, IntentType, PreferredTemplate } from './intent-router'
 import type { ActionAnswer, AnswerReviewStatus, AnswerSection, AnswerSource, AnswerType, ExpertHandoff } from './types'
 
 export interface AnswerSeed {
@@ -21,6 +22,14 @@ export interface AnswerSeed {
   expertHandoff?: ExpertHandoff
   testQueries?: string[]
   actionAnswer?: ActionAnswer
+  intent?: string
+  intentType?: IntentType
+  domain?: IntentDomain
+  currentStatus?: string
+  targetStatus?: string
+  preferredTemplate?: PreferredTemplate
+  mustNotMatch?: string[]
+  priority?: number
 }
 
 export const FREQUENT_QA_SEEDS: AnswerSeed[] = [

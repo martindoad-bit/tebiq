@@ -7,7 +7,7 @@ export const runtime = 'nodejs'
 
 const ROLES = ['staff', 'shoshi', 'founder', 'other'] as const
 const DECISIONS = ['approve', 'revise', 'reject', 'escalate'] as const
-const ANSWER_REVIEW_STATUSES = ['reviewed', 'needs_expert', 'rejected', 'unreviewed'] as const
+const ANSWER_REVIEW_STATUSES = ['reviewed', 'needs_expert', 'rejected', 'unreviewed', 'intent_unclear'] as const
 
 export async function POST(req: Request) {
   let body: unknown

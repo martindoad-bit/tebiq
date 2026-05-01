@@ -8,6 +8,8 @@ export type IntentType =
   | 'scenario_sequence'
   | 'risk_assessment'
   | 'misconception'
+  | 'document_notice'
+  | 'deadline_emergency'
   | 'unknown'
 
 export type IntentSubject =
@@ -38,6 +40,8 @@ export type PreferredTemplate =
   | 'sequence_template'
   | 'risk_template'
   | 'misconception_template'
+  | 'notice_template'
+  | 'deadline_template'
   | 'clarify_template'
 
 export interface AnswerIntent {
@@ -46,6 +50,7 @@ export interface AnswerIntent {
   intent_type: IntentType
   current_status?: string
   target_status?: string
+  key_entities?: string[]
   subject: IntentSubject
   domain: IntentDomain
   confidence: 1 | 2 | 3 | 4
@@ -246,7 +251,7 @@ export function classifyIntentByRules(input: IntentInput): AnswerIntent {
     })
   }
 
-  if (/(代表|役员|役員).*(变更|変更|入管|届出|报备|报告)|公司代表变更/.test(text)) {
+  if (/(代表|代表取締役|取締役|役员|役員).*(变更|変更|换人|交代|入管|届出|报备|报告)|公司代表变更/.test(text)) {
     return buildIntent(raw, {
       intent_type: 'procedure_flow',
       current_status: visaFromInput ?? '经营管理',
@@ -353,8 +358,8 @@ export function classifyIntentByRules(input: IntentInput): AnswerIntent {
   }
 
   if (
-    /(材料|書類|资料|清单|何が必要|需要什么).*(续签|更新|永住|经营管理|経営管理|技人国|配偶|特定技能)/.test(text) ||
-    /(续签|更新|永住|经营管理|経営管理|技人国|配偶|特定技能).*(材料|書類|资料|清单|何が必要|需要什么)/.test(text)
+    /(材料|書類|资料|清单|何が必要|需要什么|有哪些).*(续签|更新|永住|经营管理|経営管理|经管|技人国|配偶|特定技能)/.test(text) ||
+    /(续签|更新|永住|经营管理|経営管理|经管|技人国|配偶|特定技能).*(材料|書類|资料|清单|何が必要|需要什么|有哪些)/.test(text)
   ) {
     return buildIntent(raw, {
       intent_type: 'material_list',
@@ -428,11 +433,12 @@ export function classifyIntentByRules(input: IntentInput): AnswerIntent {
       .test(text)
     || /(市役所|区役所|入管|日文|日本語).*(通知|文书|書類).*(期限|金额|金額|怎么办|处理|補資料|补资料)/
       .test(text)
+    || /入管.*(補資料|补资料|追加資料|追加材料|期限|赶不上|間に合わ|怎么办)/.test(text)
     || /入管通知.*(補資料|补资料|怎么办)/.test(text)
     || /通知.*(金额|金額|期限).*(怎么办|处理)/.test(text)
   ) {
     return buildIntent(raw, {
-      intent_type: 'procedure_flow',
+      intent_type: /期限|補資料|补资料|赶不上|間に合わ|逾期/.test(text) ? 'deadline_emergency' : 'document_notice',
       subject: 'individual',
       domain: 'document',
       confidence: 2,
@@ -440,7 +446,7 @@ export function classifyIntentByRules(input: IntentInput): AnswerIntent {
         procedure: '收到文书后的确认步骤',
         document: /信封|封筒/.test(text) ? '信封' : '通知文书',
       },
-      preferred_template: 'flow_template',
+      preferred_template: /期限|補資料|补资料|赶不上|間に合わ|逾期/.test(text) ? 'deadline_template' : 'notice_template',
       should_answer: true,
     })
   }
@@ -473,7 +479,7 @@ export function classifyIntentByRules(input: IntentInput): AnswerIntent {
     })
   }
 
-  if (/(特定技能).*(换雇主|换公司|雇主変更|雇用主変更|14日|届出|报备|入管)/.test(text)) {
+  if (/(特定技能).*(换雇主|换公司|换会社|会社変更|転職|雇主変更|雇用主変更|14日|届出|报备|入管)/.test(text)) {
     return buildIntent(raw, {
       intent_type: /(重新申请|変更|变更|能不能|要不要)/.test(text) ? 'eligibility_check' : 'procedure_flow',
       current_status: '特定技能',
@@ -728,7 +734,7 @@ export function clarifyAnswerForIntent(questionText: string, intent: AnswerInten
     ok: true,
     answer_type: 'cannot_determine',
     answer_level: 'L4',
-    review_status: 'needs_expert',
+    review_status: 'intent_unclear',
     title: '这个情况需要进一步确认',
     summary: '我需要先确认你的问题属于哪一种，避免把别的手续答案套到你的情况上。',
     sections: [
@@ -861,6 +867,7 @@ function normalizeIntent(questionText: string, partial: Partial<AnswerIntent>): 
     intent_type: partial.intent_type ?? 'unknown',
     current_status: partial.current_status,
     target_status: partial.target_status,
+    key_entities: partial.key_entities,
     subject: partial.subject ?? 'unknown',
     domain: partial.domain ?? 'unknown',
     confidence: partial.confidence ?? 1,
@@ -883,6 +890,8 @@ function templateFor(intentType: IntentType): PreferredTemplate {
   if (intentType === 'scenario_sequence') return 'sequence_template'
   if (intentType === 'risk_assessment') return 'risk_template'
   if (intentType === 'misconception') return 'misconception_template'
+  if (intentType === 'document_notice') return 'notice_template'
+  if (intentType === 'deadline_emergency') return 'deadline_template'
   return 'clarify_template'
 }
 
@@ -939,6 +948,8 @@ function extractDirectionalVisaTransfer(questionText: string): { current: string
     new RegExp(`(?:我是|我现在是|我目前是|目前是|持有)?(${visa})(?:签|在留资格|資格)?(?:，|,)?(?:想|要|准备|打算)?(?:转|转为|转到|变更为|変更为|変更|切换到|换成)(${visa})`),
     new RegExp(`从(${visa})(?:签|在留资格|資格)?(?:转|转为|转到|变更为|変更为|変更|切换到|换成)(${visa})`),
     new RegExp(`(${visa})(?:签|在留资格|資格)?から(${visa})(?:签|在留资格|資格)?(?:に)?(?:変更|変える|切替)`),
+    new RegExp(`(?:现在|目前|当前)?(${visa})(?:签|在留资格|資格)?(?:，|,)?(?:目标|目標|想变成|想變成|希望变成|希望變成)(${visa})`),
+    new RegExp(`(${visa})(?:签|在留资格|資格)?(?:想变成|想變成|希望变成|希望變成)(${visa})`),
     new RegExp(`(${visa})(?:签|在留资格|資格)?(?:→|->|转为|转到|转|変更|变更为)(${visa})`),
   ]
   for (const pattern of patterns) {
@@ -982,8 +993,8 @@ function isTokuteiToWorkVisa(text: string): boolean {
 }
 
 function isCompanyDormantPension(text: string): boolean {
-  return /(公司休眠|会社休眠|休眠|公司停|会社停|空白期|入职前|入社前|退职|離職)/.test(text)
-    && /(国民年金|厚生年金|年金|社保|社会保险|社会保険|国保|健康保险|健康保険)/.test(text)
+  return /(公司休眠|会社休眠|休眠|公司停|会社停|公司倒闭|会社倒産|倒闭|倒産|空白期|入职前|入社前|退职|離職)/.test(text)
+    && /(国民年金|厚生年金|年金|社保|社会保险|社会保険|国保|健保|健康保险|健康保険)/.test(text)
 }
 
 function isCapitalShortage(text: string): boolean {
