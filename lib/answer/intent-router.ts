@@ -479,18 +479,41 @@ export function classifyIntentByRules(input: IntentInput): AnswerIntent {
     })
   }
 
-  if (/(特定技能).*(换雇主|换公司|换会社|会社変更|転職|雇主変更|雇用主変更|14日|届出|报备|入管)/.test(text)) {
+  if (isTokuteiCompanyChange(text)) {
     return buildIntent(raw, {
       intent_type: /(重新申请|変更|变更|能不能|要不要)/.test(text) ? 'eligibility_check' : 'procedure_flow',
       current_status: '特定技能',
       subject: 'individual',
-      domain: /(重新申请|変更|变更|能不能|要不要)/.test(text) ? 'visa' : 'employment',
-      confidence: 3,
+      // Block 7+ Hotfix: 永远走 employment domain，避免被「在留資格変更」seed 抢答。
+      // 真正的换会社不是变更 visa type，是雇主変更 + 受入機関 + 支援计划。
+      domain: 'employment',
+      // Hotfix v3: 提高到 4，进入 isHardRuleIntent，防止 LLM 反向覆盖到「技能実習→特定技能」类 seed
+      confidence: 4,
       extracted_entities: {
         current_visa: '特定技能',
-        procedure: '特定技能雇主变更',
+        procedure: '特定技能雇主変更（同一在留資格内）',
       },
       preferred_template: /(重新申请|変更|变更|能不能|要不要)/.test(text) ? 'eligibility_template' : 'flow_template',
+      should_answer: true,
+    })
+  }
+
+  // Hotfix v3: 家族滞在配偶打工问题
+  // 这类问题原本会落到 unknown/unknown，被 LLM 误归为 tax/pension。
+  // 锁成 hard rule（confidence 4，进入 isHardRuleIntent），
+  // domain=visa 让 safe-retrieval / judge 拒绝任何 公的義務 / 滞納 / 年金 / 健保 seed。
+  if (isFamilyWorkPermissionQuestion(text)) {
+    return buildIntent(raw, {
+      intent_type: 'eligibility_check',
+      current_status: '家族滞在',
+      subject: 'individual',
+      domain: 'visa',
+      confidence: 4,
+      extracted_entities: {
+        current_visa: '家族滞在',
+        procedure: '资格外活动许可（家族滞在配偶打工）',
+      },
+      preferred_template: 'eligibility_template',
       should_answer: true,
     })
   }
@@ -705,6 +728,36 @@ export function answerMatchesIntent(intent: AnswerIntent, answer: AnswerResult):
     return { pass: false, reason: 'eligibility_question_without_conditions' }
   }
 
+  // === Hotfix v3: 三条红线硬闸门 ===
+
+  // Gate A: 家族滞在打工问题不能命中 公的義務 / 滞納 / 年金 / 健保 / 住民税
+  if (intent.current_status === '家族滞在'
+    && /(资格外活动|资格外活動|打工|兼职)/.test(normalize(intent.extracted_entities.procedure ?? ''))) {
+    if (/(滞納|滞纳|公的義務|公的义务|年金|国民年金|厚生年金|健康保険|健保|国保|住民税|納税|纳税)/.test(answerText)
+      && !/(家族滞在|资格外活动|资格外活動|28時間|28小时|配偶)/.test(answerText)) {
+      return { pass: false, reason: 'family_work_question_answered_as_public_obligation' }
+    }
+  }
+
+  // Gate B: 特定技能换会社问题不能命中 技能実習 / 良好修了 / 試験免除
+  if (intent.current_status === '特定技能'
+    && /(雇主変更|换会社|换公司|换雇主)/.test(normalize(intent.extracted_entities.procedure ?? ''))) {
+    if (/(技能実習|技能实习|良好修了|試験免除|试验免除)/.test(answerText)
+      && !/(換雇主|换雇主|换会社|雇主変更|受入機関|支援计划|支援計画)/.test(answerText)) {
+      return { pass: false, reason: 'tokutei_company_change_answered_as_jissyu_to_tokutei' }
+    }
+  }
+
+  // Gate C: 公司休眠+国民年金问题，title 不能是「免除/猶予/学生納付特例」作为主答案
+  if ((intent.domain === 'pension' || intent.domain === 'health_insurance')
+    && /(休眠|倒闭|倒産|公司停|会社停)/.test(normalize(intent.extracted_entities.company_status ?? intent.extracted_entities.procedure ?? intent.current_status ?? ''))) {
+    const title = normalize(answer.title)
+    if (/(交不起|免除|猶予|学生納付特例)/.test(title)
+      && !/(資格喪失|资格丧失|休眠|倒闭|倒産|厚生年金)/.test(title)) {
+      return { pass: false, reason: 'pension_exemption_used_as_main_title_for_dormant_company' }
+    }
+  }
+
   return { pass: true, reason: 'pass' }
 }
 
@@ -852,7 +905,14 @@ function isHardRuleIntent(intent: AnswerIntent): boolean {
       || isManagementToHumanitiesIntent(intent)
       || intent.domain === 'pension'
       || intent.domain === 'health_insurance'
-      || (intent.target_status === '经营管理' && /(资本|資本|资金|資金)/.test(normalize(intent.extracted_entities.procedure ?? ''))),
+      || (intent.target_status === '经营管理' && /(资本|資本|资金|資金)/.test(normalize(intent.extracted_entities.procedure ?? '')))
+      // Hotfix v3: lock 特定技能 employment 雇主变更 — 防 LLM 倒退到「技能实习→特定技能」类
+      || (intent.current_status === '特定技能'
+        && intent.domain === 'employment'
+        && /(雇主変更|雇主变更|换会社|换公司|換雇主|换雇主)/.test(normalize(intent.extracted_entities.procedure ?? '')))
+      // Hotfix v3: lock 家族滞在打工 — 防 LLM 误归 tax/pension
+      || (intent.current_status === '家族滞在'
+        && /(资格外活动|资格外活動|打工|兼职)/.test(normalize(intent.extracted_entities.procedure ?? ''))),
   )
 }
 
@@ -1001,6 +1061,34 @@ function isCapitalShortage(text: string): boolean {
   return /(资本金不够|資本金不足|资本金不足|資本金足り|资金不够|資金不足|3000万不够|3000万円不足|3000万不足|经营管理新规|経営管理新規|增资|増資)/.test(text)
 }
 
+/**
+ * 特定技能雇主变更（不是技能实习→特定技能）。
+ * 触发：query 提到 特定技能 + (换会社|换公司|転職|换工作|雇主|雇用主|受入機関)。
+ * 排除：query 提到 技能实习/技能実習（那是另一个分支）。
+ */
+function isTokuteiCompanyChange(text: string): boolean {
+  if (!/(特定技能)/.test(text)) return false
+  if (/(技能实习|技能実習)/.test(text)) return false
+  return /(换雇主|换公司|换会社|换工作|会社変更|転職|雇主変更|雇用主変更|受入機関|14日|届出|报备|入管)/.test(text)
+}
+
+/**
+ * 家族滞在配偶打工问题。
+ * 触发：query 提到 (家族滞在|配偶) + (打工|兼职|工作|资格外活动|资格外活動|アルバイト|バイト)。
+ * 排除：query 同时提到 (税|納税|纳税|年金|社保|社会保险|社会保険|国保|健康保险|健康保険|滞納|滞纳)
+ *       —— 这类是另一个明确的税/年金问题，不是「家族滞在能不能打工」。
+ */
+function isFamilyWorkPermissionQuestion(text: string): boolean {
+  const familyContext = /(家族滞在|配偶者?)/.test(text)
+  const workContext = /(打工|兼职|兼職|工作|资格外活动|资格外活動|アルバイト|バイト|働ける|働けますか|可以工作|可以打工)/.test(text)
+  if (!familyContext || !workContext) return false
+  // 但如果用户明确同时提到税/年金/保险/滞納，那就不是 family work 问题
+  if (/(税金|納税|纳税|住民税|年金|国民年金|厚生年金|社保|社会保险|社会保険|国保|健康保险|健康保険|滞納|滞纳|公的義務)/.test(text)) {
+    return false
+  }
+  return true
+}
+
 function isOfficeRelocation(text: string): boolean {
   return /(办公室搬迁|办公室移転|事務所搬迁|事务所搬迁|事務所移転|公司换地址|法人地址|本店移転|本店所在地)/.test(text)
 }
@@ -1011,6 +1099,7 @@ function statusCompatible(status: string, answerText: string): boolean {
   if (/(经营管理|経営管理|经管)/.test(value)) return /(经营管理|経営管理|经管)/.test(answerText)
   if (/特定技能/.test(value)) return /特定技能/.test(answerText)
   if (/永住/.test(value)) return /永住/.test(answerText)
+  if (/家族滞在/.test(value)) return /(家族滞在|配偶|资格外活动|资格外活動)/.test(answerText)
   return true
 }
 

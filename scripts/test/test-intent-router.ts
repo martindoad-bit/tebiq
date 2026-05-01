@@ -132,6 +132,48 @@ const CASES: Array<{
   { query: '收到税务署信封要做什么', domain: 'document' },
   { query: '公司地址法人地址在留卡地址变更顺序', intentType: 'scenario_sequence', domain: 'company_registration' },
   { query: '技能实习能不能直接转经营管理', intentType: 'misconception', domain: 'visa', targetStatus: /经营管理/ },
+
+  // === Hotfix v3: 方向锁定红线 ===
+  {
+    query: '我现在是经营管理签，想转技人国。',
+    domain: 'visa',
+    intentType: 'eligibility_check',
+    currentStatus: /经营管理/,
+    targetStatus: /技人国|人文/,
+  },
+  {
+    query: '从特定技能1号转技人国。',
+    domain: 'visa',
+    intentType: 'eligibility_check',
+    currentStatus: /特定技能/,
+    targetStatus: /技人国|人文/,
+  },
+  // === Hotfix v3: 家族滞在打工硬规则 ===
+  {
+    query: '家族滞在配偶可以打工吗？',
+    domain: 'visa',
+    intentType: 'eligibility_check',
+    currentStatus: /家族滞在/,
+  },
+  {
+    query: '配偶可以打工吗',
+    domain: 'visa',
+    intentType: 'eligibility_check',
+    currentStatus: /家族滞在/,
+  },
+  // === Hotfix v3: 特定技能换会社硬规则 ===
+  {
+    query: '特定技能1号换会社需要做什么？',
+    domain: 'employment',
+    intentType: 'procedure_flow',
+    currentStatus: /特定技能/,
+  },
+  {
+    query: '特定技能换雇主要不要重新申请',
+    domain: 'employment',
+    intentType: 'eligibility_check',
+    currentStatus: /特定技能/,
+  },
 ]
 
 async function main() {
@@ -191,6 +233,24 @@ async function checkAnswerRedlines(): Promise<Array<Record<string, unknown>>> {
       query: '资本金不够还能续经营管理吗',
       rejectTitle: /多少最合适|資本金 多少|资本金多少/,
       required: [/增资|増資|资金来源|事業計画|事业计划|借款|借入/, /经营管理|経営管理|经管/],
+    },
+    // === Hotfix v3: 5 条线上红线 ===
+    {
+      query: '家族滞在配偶可以打工吗？',
+      rejectTitle: /(滞納|公的義務|年金.*健保|住民税|国民年金.*免除)/,
+      rejectSeed: /q012|滞納|公的義務|健保/,
+      required: [/(家族滞在|配偶|资格外活动|资格外活動)/, /(28|许可|許可|出入国|入管)/],
+    },
+    {
+      query: '特定技能1号换会社需要做什么？',
+      rejectTitle: /(技能実習.*特定技能|技能实习.*特定技能|良好修了|試験免除|试验免除)/,
+      rejectSeed: /jissyu|技能実習|q053/,
+      required: [/特定技能/, /(雇主|雇用主|受入機関|换会社|換雇主|契約機関|14日)/],
+    },
+    {
+      query: '公司休眠了要不要交国民年金？',
+      rejectTitle: /(交不起|想申请免除|学生納付特例)/,
+      required: [/(厚生年金|資格喪失|资格丧失)/, /(国民年金|国民健康保険|区役所|市役所|年金事务所|年金事務所)/],
     },
   ]
   const rows: Array<Record<string, unknown>> = []

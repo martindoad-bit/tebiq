@@ -1,3 +1,6 @@
+// Treat as module so isolated `main` doesn't collide with other tsx scripts
+export {}
+
 interface SmokeRoute {
   path: string
   allow: number[]

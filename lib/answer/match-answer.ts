@@ -315,6 +315,109 @@ function cannotDetermineAnswer(_questionText: string): AnswerResult {
 }
 
 function ruleBasedAnswerForIntent(questionText: string, intent: AnswerIntent): AnswerResult | null {
+  // === Hotfix v3: 家族滞在配偶打工 ===
+  // 直接回答「资格外活动许可 + 28 时间/週 + 在出入国在留管理局申请」，
+  // 不让任何 公的義務 / 滞納 seed 抢答。
+  if (isFamilyWorkPermissionIntent(intent, questionText)) {
+    return {
+      ok: true,
+      answer_type: 'draft',
+      answer_level: 'L2',
+      review_status: 'unreviewed',
+      title: '家族滞在配偶可以打工，但需要先取得资格外活动许可',
+      summary: '家族滞在原则上不允许工作。要打工 / 兼职，需要先到出入国在留管理局申请「资格外活动许可」，许可下来后每周最多 28 小时（学校长假期内放宽）。',
+      sections: [
+        {
+          heading: '基本规则',
+          body: '家族滞在的本身在留资格不含工作权限。要打工 / 兼职，必须先取得「资格外活动许可」（不限定就劳）。许可后每周最多 28 时间，且禁止风俗营业相关工作。',
+        },
+        {
+          heading: '怎么申请',
+          body: '到管辖你居住地的出入国在留管理局窗口提出「資格外活動許可申請」。可以在续签 / 变更在留资格时一并申请，也可以单独申请。',
+        },
+        {
+          heading: '逾时打工的风险',
+          body: '超过 28 小时 / 周 或没有许可就工作，属于资格外活动违反，可能影响下一次续签或在留资格。',
+        },
+      ],
+      next_steps: [
+        '确认是否已经取得资格外活动许可。',
+        '如果未取得，去出入国在留管理局提出「資格外活動許可申請」。',
+        '上岗前向雇主确认每周工时不超过 28 小时。',
+      ],
+      related_links: [{ title: '出入国在留管理庁 資格外活動許可', href: 'https://www.moj.go.jp/isa/applications/procedures/16-8.html' }],
+      sources: [{ title: '出入国在留管理庁 資格外活動許可申請', source_grade: 'A', url: 'https://www.moj.go.jp/isa/applications/procedures/16-8.html' }],
+      query_id: null,
+      answer_id: null,
+      boundary_note: ANSWER_BOUNDARY_NOTE,
+      action_answer: {
+        conclusion: '家族滞在配偶要打工，需要先在出入国在留管理局申请「资格外活动许可」，下来后每周最多 28 小时。',
+        what_to_do: ['确认是否已经取得资格外活动许可。', '没取得就先去申请，再开始上岗。'],
+        where_to_go: ['出入国在留管理局（你居住地管辖局）'],
+        how_to_do: ['填写资格外活动许可申请书。', '随附在留卡、护照、在职证明 / 雇用预定证明（如有）。', '续签 / 变更在留时可一并提交。'],
+        documents_needed: ['在留カード', '护照', '资格外活动许可申请书', '雇用予定证明（如已有）'],
+        deadline_or_timing: ['上岗前完成申请；许可通常即日 / 数周内出。'],
+        consequences: ['未经许可工作或超 28 小时 / 周，属资格外活动违反，可能影响下次续签。'],
+        expert_handoff: ['如果工时复杂、雇主形态特殊（业務委託 / 派遣）、或已经有违反记录，带在留卡和雇用资料咨询行政書士。'],
+        boundary_note: ANSWER_BOUNDARY_NOTE,
+      },
+    }
+  }
+
+  // === Hotfix v3: 特定技能 1 号换会社 ===
+  // 直接回答「同一在留资格内换雇主」的标准流程，
+  // 不让任何 技能実習→特定技能 seed 抢答。
+  if (isTokuteiCompanyChangeIntent(intent, questionText)) {
+    return {
+      ok: true,
+      answer_type: 'draft',
+      answer_level: 'L2',
+      review_status: 'unreviewed',
+      title: '特定技能 1 号换会社的标准流程：终止旧契约 + 找到新受入機関 + 提交届出',
+      summary: '特定技能 1 号换会社是「同一在留资格内换雇主」，不需要重新做技能 / 日语试験，但 14 日内必须做 2 项届出，新雇主还要重做支援计划。',
+      sections: [
+        {
+          heading: '换会社不等于变更在留资格',
+          body: '特定技能 1 号换雇主不是「在留資格変更」，是同一在留资格下的雇主変更。前提是新岗位与你已有的特定技能分野一致。',
+        },
+        {
+          heading: '14 日内必做 2 件事',
+          body: '一、向出入国在留管理局提交「契約機関に関する届出（契約終了 / 契約締結）」，旧 / 新雇主各一份。二、新雇主必须制定新的支援计划并到入管备案。',
+        },
+        {
+          heading: '不需要做的事',
+          body: '不需要重新参加技能試験 / 日本語試験。不需要重新申请在留资格（只要分野一致）。',
+        },
+      ],
+      next_steps: [
+        '确认旧雇主退职日和新雇主入职日。',
+        '14 日内提交契約機関届出（旧契約終了 + 新契約締結）。',
+        '让新雇主提交新的支援计划备案。',
+        '如果分野不同（比如外食业转介護），需要先确认是否需要重新申请在留资格变更。',
+      ],
+      related_links: [{ title: '出入国在留管理庁 特定技能 各种届出', href: 'https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri07_00201.html' }],
+      sources: [{ title: '出入国在留管理庁 特定技能制度 各种届出', source_grade: 'A', url: 'https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri07_00201.html' }],
+      query_id: null,
+      answer_id: null,
+      boundary_note: ANSWER_BOUNDARY_NOTE,
+      action_answer: {
+        conclusion: '特定技能 1 号换会社不是变更在留资格，是同一资格下换雇主。14 日内交 2 份契約機関届出 + 让新雇主重做支援计划。',
+        what_to_do: ['确认新岗位是否仍属于已有的特定技能分野。', '14 日内提交契約機関届出。', '让新雇主重做支援计划。'],
+        where_to_go: ['出入国在留管理局', '新雇主 HR / 登録支援機関'],
+        how_to_do: [
+          '本人或代理人提交「契約機関に関する届出」（契約終了 + 契約締結 各一）。',
+          '新雇主提交支援计划备案。',
+          '如果分野不同，先咨询是否需要在留資格変更。',
+        ],
+        documents_needed: ['在留カード', '旧雇主退职证明', '新雇主雇用契約書', '新支援计划'],
+        deadline_or_timing: ['契約変更後 14 日内提交届出。'],
+        consequences: ['14 日届出超期或没做支援计划，会成为下次续签的减分项；分野不一致还可能直接构成不法就労。'],
+        expert_handoff: ['如果分野不一致、雇主无登録支援機関、或已经超过 14 日，带新旧雇主资料咨询行政書士。'],
+        boundary_note: ANSWER_BOUNDARY_NOTE,
+      },
+    }
+  }
+
   if (intent.intent_type === 'material_list') {
     const target = intent.target_status ?? intent.extracted_entities.target_visa ?? '当前手续'
     return {
@@ -671,7 +774,31 @@ function shouldUseIntentAnswerBeforeSeeds(questionText: string, intent: AnswerIn
   if (intent.domain === 'company_registration' && /代表|役员|役員|取締役/.test(intent.extracted_entities.procedure ?? questionText)) return true
   if (intent.target_status === '经营管理' && /事業所要件|办公室|事務所|住宅|自宅|租约|賃貸|个人名义|個人名義/.test(intent.extracted_entities.procedure ?? questionText)) return true
   if (intent.domain === 'visa' && intent.current_status === '经营管理' && /休眠|倒闭|倒産|公司停|会社停/.test(`${intent.extracted_entities.company_status ?? ''}${intent.extracted_entities.procedure ?? ''}${questionText}`)) return true
+  // Hotfix v3
+  if (isFamilyWorkPermissionIntent(intent, questionText)) return true
+  if (isTokuteiCompanyChangeIntent(intent, questionText)) return true
   return false
+}
+
+function isFamilyWorkPermissionIntent(intent: AnswerIntent, questionText: string): boolean {
+  if (intent.current_status === '家族滞在'
+    && /(资格外活动|资格外活動|打工|兼职)/.test(intent.extracted_entities.procedure ?? '')) {
+    return true
+  }
+  const familyContext = /(家族滞在|配偶者?)/.test(questionText)
+  const workContext = /(打工|兼职|兼職|工作|资格外活动|资格外活動|アルバイト|バイト|働ける|可以工作|可以打工)/.test(questionText)
+  if (!familyContext || !workContext) return false
+  return !/(税金|納税|纳税|住民税|年金|国民年金|厚生年金|社保|社会保险|社会保険|国保|健康保险|健康保険|滞納|滞纳)/.test(questionText)
+}
+
+function isTokuteiCompanyChangeIntent(intent: AnswerIntent, questionText: string): boolean {
+  if (intent.current_status === '特定技能'
+    && /(雇主変更|换会社|换公司|换雇主)/.test(intent.extracted_entities.procedure ?? '')) {
+    return true
+  }
+  if (!/特定技能/.test(questionText)) return false
+  if (/(技能实习|技能実習)/.test(questionText)) return false
+  return /(换会社|换公司|换雇主|換雇主|换工作|転職|雇主変更|雇用主変更|受入機関)/.test(questionText)
 }
 
 function knowledgeSafeForIntent(seed: KnowledgeSeed, questionText: string, intent: AnswerIntent): boolean {
