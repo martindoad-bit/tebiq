@@ -88,6 +88,35 @@ export function judgeAnswer(input: AnswerJudgeInput): AnswerJudgeResult {
     if (hits < 3) return reject('domain_mismatch', 'company_dormant_pension_answer_missing_core_terms', clarificationFor(intent), 4)
   }
 
+  // === Hotfix v3：硬闸门 ===
+
+  // Gate A: 家族滞在打工 → 不能命中 公的義務 / 滞納 / 年金 / 健保 / 住民税 类答案
+  if (isFamilyWorkPermissionQuestion(question, intent)) {
+    if (/(滞納|滞纳|公的義務|公的义务|国民年金|厚生年金|健康保険|国保|住民税|納税|纳税|介護保険)/.test(answerText)
+      && !/(家族滞在|资格外活动|资格外活動|28時間|28小时|週28|配偶.*打工)/.test(answerText)) {
+      return reject(
+        'subject_mismatch',
+        'family_work_permission_answered_as_public_obligation',
+        '你想确认的是「家族滞在配偶可以打工吗 / 资格外活动许可」，还是其他税金 / 年金 / 保险类问题？',
+        4,
+      )
+    }
+  }
+
+  // Gate B: 特定技能换会社 → 不能命中 技能実習 / 良好修了 / 試験免除 类答案
+  if (isTokuteiCompanyChangeQuestion(question, intent)) {
+    const titleNorm = normalize(input.answer.title)
+    if (/(技能実習|技能实习|良好修了|試験免除|试验免除)/.test(titleNorm)
+      && !/(換雇主|换雇主|换会社|雇主変更|受入機関)/.test(answerText)) {
+      return reject(
+        'visa_direction_mismatch',
+        'tokutei_company_change_answered_as_jissyu_to_tokutei',
+        '你想确认的是「特定技能 1 号换会社（同一在留资格内换雇主）」，还是「技能实习转特定技能」？',
+        4,
+      )
+    }
+  }
+
   if (/(资本金不够|資本金不足|资金不够|資金不足|3000万不够|3000万不足)/.test(question)) {
     if (/(资本金多少合适|資本金多少|多少最合适|推奨金額)/.test(answerText)) {
       return reject('template_mismatch', 'capital_shortage_answered_as_amount_standard', clarificationFor(intent), 4)
@@ -160,6 +189,25 @@ function answerTextForJudge(answer: AnswerResult): string {
 function isCompanyDormantPensionQuestion(question: string, intent: AnswerIntent): boolean {
   return (intent.domain === 'pension' || intent.domain === 'health_insurance')
     && /(公司休眠|会社休眠|休眠|公司停|会社停|倒闭|倒産|厚生年金|国民年金|社保)/.test(question)
+}
+
+function isFamilyWorkPermissionQuestion(question: string, intent: AnswerIntent): boolean {
+  if (intent.current_status === '家族滞在') return true
+  const familyContext = /(家族滞在|配偶者?)/.test(question)
+  const workContext = /(打工|兼职|兼職|工作|资格外活动|资格外活動|アルバイト|バイト|働ける|可以工作|可以打工)/.test(question)
+  if (!familyContext || !workContext) return false
+  // 排除明确税/年金问题
+  return !/(税金|納税|纳税|住民税|年金|国民年金|厚生年金|社保|社会保险|社会保険|国保|健康保险|健康保険|滞納|滞纳)/.test(question)
+}
+
+function isTokuteiCompanyChangeQuestion(question: string, intent: AnswerIntent): boolean {
+  if (intent.current_status === '特定技能'
+    && /(雇主変更|换会社|换公司|换雇主)/.test(normalize(intent.extracted_entities.procedure ?? ''))) {
+    return true
+  }
+  if (!/特定技能/.test(question)) return false
+  if (/(技能实习|技能実習)/.test(question)) return false
+  return /(换会社|换公司|换雇主|換雇主|换工作|転職|雇主変更|雇用主変更|受入機関)/.test(question)
 }
 
 function isHumanitiesToManagement(intent: AnswerIntent): boolean {

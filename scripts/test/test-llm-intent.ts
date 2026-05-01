@@ -83,7 +83,9 @@ const CASES: Case[] = [
   { query: '留学毕业还没内定怎么办', intent: 'eligibility_check', domain: 'visa', current: /留学/ },
   { query: '文学部毕业能做人文签吗', intent: 'eligibility_check', domain: 'visa', target: /技人国|工作签/ },
   { query: '特定技能1号能不能转工作签', intent: 'eligibility_check', domain: 'visa', current: /特定技能/, target: /技人国|工作签/ },
-  { query: '特定技能换公司要不要重新申请', intent: 'eligibility_check', domain: 'visa', current: /特定技能/ },
+  // Hotfix v3: 特定技能换会社统一锁到 employment domain，避免被「在留資格変更」类 seed 抢答。
+  // 真换签证类型由其他更明确的 query 触发（如「特定技能转工作签」）。
+  { query: '特定技能换公司要不要重新申请', intent: 'eligibility_check', domain: 'employment', current: /特定技能/ },
   { query: '特定技能换雇主14日内要做什么', intent: 'procedure_flow', domain: 'employment' },
   { query: '技能实习转特定技能要考试吗', intent: 'eligibility_check', domain: 'visa', current: /技能实习/, target: /特定技能/ },
   { query: '技能实习结束后能转什么签证', intent: 'eligibility_check', domain: 'visa', current: /技能实习/ },

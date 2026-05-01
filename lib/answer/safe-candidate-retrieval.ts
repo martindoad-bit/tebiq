@@ -93,7 +93,61 @@ export function safeCandidateForIntent(seed: AnswerSeed, intent: AnswerIntent, q
     return { safe: false, reason: 'first_week_sequence_swallowed_by_material_list' }
   }
 
+  // === Hotfix v3：三条红线候选硬闸门 ===
+
+  // Gate A：家族滞在 / 配偶 + 打工 / 资格外活动 类问题，禁止匹配 公的義務 / 滞納 / 年金 / 健保 / 住民税 类 seed
+  if (isFamilyWorkPermissionQuery(question) && isPublicObligationSeed(seedText)
+    && !mentionsTaxOrInsurance(question)) {
+    return { safe: false, reason: 'family_work_question_swallowed_by_public_obligation_seed' }
+  }
+
+  // Gate B：特定技能换会社（不是技能实习），禁止匹配 技能実習 / 良好修了 / 試験免除 类 seed
+  if (isTokuteiCompanyChangeQueryStrict(question) && isJissyuToTokuteiSeed(seedText)) {
+    return { safe: false, reason: 'tokutei_company_change_swallowed_by_jissyu_seed' }
+  }
+
+  // Gate C：公司休眠+年金类问题，禁止匹配「国民年金 交不起 / 免除 / 猶予」类 seed 作为主答案
+  if (isCompanyDormantPensionQuery(question) && isPensionExemptionSeed(seedText)) {
+    return { safe: false, reason: 'company_dormant_pension_swallowed_by_exemption_seed' }
+  }
+
   return { safe: true, reason: 'pass' }
+}
+
+function isFamilyWorkPermissionQuery(question: string): boolean {
+  const familyContext = /(家族滞在|配偶者?)/.test(question)
+  const workContext = /(打工|兼职|兼職|工作|资格外活动|资格外活動|アルバイト|バイト|働ける|働けますか|可以工作|可以打工)/.test(question)
+  return familyContext && workContext
+}
+
+function mentionsTaxOrInsurance(question: string): boolean {
+  return /(税金|納税|纳税|住民税|年金|社保|社会保险|社会保険|国保|健康保险|健康保険|滞納|滞纳)/.test(question)
+}
+
+function isPublicObligationSeed(seedText: string): boolean {
+  return /(滞納|滞纳|公的義務|公的义务|年金|国民年金|厚生年金|健康保険|健保|国保|住民税|納税|纳税|介護保険|介护保险)/.test(seedText)
+    && !/(家族滞在|资格外活动|资格外活動|28時間|28小时|配偶.*打工)/.test(seedText)
+}
+
+function isTokuteiCompanyChangeQueryStrict(question: string): boolean {
+  if (!/特定技能/.test(question)) return false
+  if (/(技能实习|技能実習)/.test(question)) return false
+  return /(换会社|换公司|换雇主|換雇主|换工作|転職|雇主変更|雇用主変更|受入機関)/.test(question)
+}
+
+function isJissyuToTokuteiSeed(seedText: string): boolean {
+  return /(技能実習|技能实习|良好修了|試験免除|试验免除)/.test(seedText)
+    && !/(換雇主|换雇主|换会社|雇主変更|受入機関|支援计划|支援計画)/.test(seedText)
+}
+
+function isCompanyDormantPensionQuery(question: string): boolean {
+  if (!/(公司休眠|会社休眠|休眠|公司停|会社停|公司倒闭|会社倒産|倒闭|倒産|空白期|入职前|入社前)/.test(question)) return false
+  return /(国民年金|厚生年金|年金|社保|社会保险|社会保険|国保|健保|健康保险|健康保険)/.test(question)
+}
+
+function isPensionExemptionSeed(seedText: string): boolean {
+  return /(交不起|免除|猶予|学生納付特例)/.test(seedText)
+    && !/(資格喪失|资格丧失|休眠|倒闭|倒産|厚生年金から国民年金|从厚生年金切换)/.test(seedText)
 }
 
 export function isHighRiskGenericSeed(seed: AnswerSeed): boolean {
