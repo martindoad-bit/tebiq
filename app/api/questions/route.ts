@@ -42,6 +42,9 @@ export async function POST(req: Request) {
       query_id: answer.query_id,
       answer_id: answer.answer_id,
       saved: answer.saved,
+      intent: answer.intent,
+      intent_summary: answer.intent_summary,
+      preferred_template: answer.preferred_template,
     })
   } catch (error) {
     console.warn('[api/questions] answer failed', errorCode(error))

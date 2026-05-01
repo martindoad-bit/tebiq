@@ -53,6 +53,9 @@ export interface AnswerResult {
   matched_card_id?: string | null
   matched_seed_id?: string | null
   intent_guard_pass?: boolean
+  intent?: unknown
+  intent_summary?: string | null
+  preferred_template?: string | null
   saved?: boolean
   boundary_note?: string
   first_screen_answer?: string | null

@@ -18,11 +18,13 @@
     "sync-production-db": "tsx scripts/dev-utils/sync-production-db.ts",
     "smoke:launch": "tsx scripts/dev-utils/smoke-launch.ts",
     "audit:launch-copy": "tsx scripts/dev-utils/audit-launch-copy.ts",
+    "audit:user-facing-copy": "tsx scripts/dev-utils/audit-user-facing-copy.ts",
     "dev:visual-fixtures": "tsx --env-file=.env.local scripts/dev-utils/visual-fixtures.ts seed",
     "dev:visual-fixtures:cleanup": "tsx --env-file=.env.local scripts/dev-utils/visual-fixtures.ts cleanup",
     "cleanup-kv-stats": "tsx --env-file=.env.local scripts/cleanup-kv-stats.ts",
     "lint:answer": "tsx scripts/test/lint-answer.ts",
     "test:answer-quality": "tsx scripts/test/test-answer-quality.ts",
+    "test:intent-router": "tsx scripts/test/test-intent-router.ts",
     "test": "tsx --test lib/**/*.test.ts"
   },
   "dependencies": {
