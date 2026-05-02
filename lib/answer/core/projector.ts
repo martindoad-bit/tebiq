@@ -59,8 +59,8 @@ export function buildSafeClarificationReplacement(input: {
     status: 'clarification_needed',
     domain: input.domain,
     title: clarificationTitle(input.domain),
-    summary: '原本匹配到的整理与你的问题不完全一致，TEBIQ 已替换为安全澄清版。请补充以下事实，再给具体路径。',
-    conclusion: '需要先确认几个关键事实，才能给你对应的路径。',
+    summary: '需要先了解几个关键事实，TEBIQ 才能给你对应的路径。',
+    conclusion: '需要先了解几个关键事实，TEBIQ 才能给你对应的路径。',
     sections: [
       { heading: '需要先确认', body: defaultClarificationBody(input.domain).join('\n') },
     ],
@@ -206,7 +206,7 @@ function buildOutOfScope(input: ProjectInput): Omit<PublicAnswer, 'visible_text'
   return {
     status: 'out_of_scope',
     domain: 'unknown',
-    title: '这个问题暂时不在 TEBIQ v1 支持范围内',
+    title: '这个问题暂时不在 TEBIQ 当前支持范围内',
     summary: '当前 TEBIQ 主线只支持五类在留：技人国 / 人文签、经营管理、家族滞在、永住、定住者。请补充你的在留资格和具体事项。',
     conclusion: '当前 TEBIQ 主线只支持五类在留。请补充你的在留资格和具体事项。',
     sections: [
@@ -270,7 +270,7 @@ function buildAnsweredSections(source: AnswerSource): PublicAnswer['sections'] {
 
   const risks = source.legacy_consequences ?? []
   if (risks.length > 0) {
-    sections.push({ heading: '不做会怎样', body: risks.map(r => `· ${scrub(r)}`).join('\n') })
+    sections.push({ heading: '需要注意的风险因素', body: risks.map(r => `· ${scrub(r)}`).join('\n') })
   }
 
   const expert = source.legacy_expert_handoff ?? []

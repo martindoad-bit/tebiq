@@ -130,7 +130,11 @@ export function reconstructLegacyRun(input: {
     detected_domain: 'unknown',
     source,
     public_answer: publicAnswer,
-    safety_result: { passed: true, failed_rules: [], hits: [], action: 'pass' },
+    // V1.1: pre-V1 rows are NOT safety-evaluated. `passed` defaults to
+    // `true` so consumers don't false-positive a "failed" status, but
+    // `evaluated: false` tells admin / monitoring to treat this row
+    // as "not checked" rather than "checked and clean".
+    safety_result: { passed: true, failed_rules: [], hits: [], action: 'pass', evaluated: false },
     fallback_reason: null,
     legacy_draft_id: input.legacyDraftId,
     created_at: new Date().toISOString(),

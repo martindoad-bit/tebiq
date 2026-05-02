@@ -20,7 +20,12 @@ export function toViewModel(run: AnswerRun, options: { id: string }): AnswerView
     public: run.public_answer,
     engine_version: run.engine_version,
     fallback_reason: run.fallback_reason,
-    safety_passed: run.safety_result.passed,
     domain: run.detected_domain,
+    safety: {
+      evaluated: run.safety_result.evaluated,
+      passed: run.safety_result.passed,
+      action: run.safety_result.action,
+      failed_rules: run.safety_result.failed_rules,
+    },
   }
 }

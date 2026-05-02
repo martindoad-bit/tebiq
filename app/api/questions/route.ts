@@ -56,7 +56,7 @@ export async function POST(req: Request) {
       engine_version: viewModel.engine_version,
       status: viewModel.status,
       domain: viewModel.domain,
-      safety_passed: viewModel.safety_passed,
+      safety: viewModel.safety,
       fallback_reason: viewModel.fallback_reason,
     })
   } catch (error) {

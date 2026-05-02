@@ -147,6 +147,11 @@ export interface SafetyResult {
   // What the gate did when it failed: replace the PublicAnswer or
   // pass-through with warnings.
   action: 'pass' | 'replaced_with_safe_clarification'
+  // Was the gate actually run for this AnswerRun? Pre-V1 legacy rows
+  // that get reconstructed via `reconstructLegacyRun` set this to
+  // `false` so admin / monitoring can distinguish "passed because we
+  // checked" from "passed because we never checked".
+  evaluated: boolean
 }
 
 // ---------------------------------------------------------------- AnswerRun
@@ -179,6 +184,11 @@ export interface AnswerRun {
 
 // What the answer page consumes. Extracted from AnswerRun so the page
 // has zero direct knowledge of legacy fields.
+//
+// Observability fields (engine_version / domain / safety / fallback)
+// are NOT user-visible by default. The page may surface them in a
+// dev-only debug panel, but production rendering must not leak raw
+// enum strings to end users.
 export interface AnswerViewModel {
   id: string
   question: string
@@ -187,11 +197,16 @@ export interface AnswerViewModel {
   status_label: string
   status_class: string
   public: PublicAnswer
-  // Observability — visible only in dev / admin.
+  // Observability (dev / admin only) ↓
   engine_version: AnswerEngineVersion
   fallback_reason: FallbackReason | null
-  safety_passed: boolean
   domain: SupportedDomain
+  safety: {
+    evaluated: boolean
+    passed: boolean
+    action: 'pass' | 'replaced_with_safe_clarification'
+    failed_rules: string[]
+  }
 }
 
 // ---------------------------------------------------------------- helpers

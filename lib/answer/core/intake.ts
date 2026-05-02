@@ -102,6 +102,7 @@ export async function runAnswerIntake(input: IntakeInput): Promise<AnswerRun> {
       failed_rules: safetyResult.failed_rules, // keep original failure log
       hits: safetyResult.hits,
       action: 'replaced_with_safe_clarification',
+      evaluated: true,
     }
   }
 

@@ -1,13 +1,24 @@
 import type { DetectedIntent, PublicAnswer, SafetyHit, SafetyResult, SupportedDomain } from './types'
 
-// Surface Safety Gate — runs against an already-projected PublicAnswer.
-// It does not look at AnswerSource; the contract is "safety judges
-// what's about to be rendered, regardless of where it came from".
+// Surface Safety Gate — runs against an already-projected PublicAnswer
+// PLUS the surrounding ViewModel-visible text (`understood_question`,
+// rendered in the page's "我理解你的问题是" panel). The contract is
+// "safety judges what's about to render, regardless of where it
+// comes from in the data shape".
+//
+// V1.1 change: previously `understood_question` was rendered by
+// AnswerResultView from `viewModel.understood_question` but never
+// scanned by the gate. ARCH flagged this as a blind spot. Now the
+// gate scans it explicitly.
 
-export function collectVisibleText(p: PublicAnswer): string {
-  // The projector already pre-computed visible_text. Surface it here
-  // so callers don't have to know the field exists.
-  return p.visible_text
+interface VisibleField {
+  name: string
+  text: string
+}
+
+export function collectVisibleText(p: PublicAnswer, understoodQuestion?: string): string {
+  if (!understoodQuestion) return p.visible_text
+  return [understoodQuestion, p.visible_text].filter(Boolean).join('\n')
 }
 
 interface JudgeInput {
@@ -21,31 +32,35 @@ export function judgePublicAnswerSurface(input: JudgeInput): SafetyResult {
   const hits: SafetyHit[] = []
   const failed: Set<string> = new Set()
 
+  // The single source of truth for "what is about to render".
+  // understood_question is the page's "我理解你的问题是" panel — the
+  // page reads it from `viewModel.understood_question`, NOT from
+  // PublicAnswer, so we surface it explicitly here.
+  const fields: VisibleField[] = collectFields(input)
+
   // Universal: literal `unknown` / `null` / `undefined` must never
   // appear in user-visible text. The projector should already strip
   // these via `scrub()`; this is defense-in-depth.
-  scan(input.publicAnswer, hits, failed, 'NO_UNKNOWN_LITERAL', /\bunknown\b/gi)
-  scan(input.publicAnswer, hits, failed, 'NO_UNDEFINED_LITERAL', /\bundefined\b/g)
-  scan(input.publicAnswer, hits, failed, 'NO_NULL_LITERAL', /\bnull\b/g)
+  scan(fields, hits, failed, 'NO_UNKNOWN_LITERAL', /\bunknown\b/i)
+  scan(fields, hits, failed, 'NO_UNDEFINED_LITERAL', /\bundefined\b/)
+  scan(fields, hits, failed, 'NO_NULL_LITERAL', /\bnull\b/)
 
   // Q5 redline: 配偶 + 离婚 + 定住 questions must not show 経営管理
   // family seed swallow.
   if (isSpouseDivorceTeijuQuery(input.query)) {
-    scan(input.publicAnswer, hits, failed, 'Q5_NO_KEIEI', /(経営管理|经营管理|経営・管理|经管(?:签|ビザ)?)/)
-    scan(input.publicAnswer, hits, failed, 'Q5_NO_JOKIN', /常勤職員/)
-    scan(input.publicAnswer, hits, failed, 'Q5_NO_SHIHONKIN', /資本金/)
-    scan(input.publicAnswer, hits, failed, 'Q5_NO_JIGYOUKEIKAKU', /(事業計画|会社設立|事業所要件)/)
-    scan(input.publicAnswer, hits, failed, 'Q5_NO_DAIHYOU', /代表取締役/)
-    scan(input.publicAnswer, hits, failed, 'Q5_NO_TENSHOKU_FRAMING', /(转职|転職).*?(14|十四)/)
-    scan(input.publicAnswer, hits, failed, 'Q5_NO_SHOZOKU', /所属機関に関する届出/)
+    scan(fields, hits, failed, 'Q5_NO_KEIEI', /(経営管理|经营管理|経営・管理|经管(?:签|ビザ)?)/)
+    scan(fields, hits, failed, 'Q5_NO_JOKIN', /常勤職員/)
+    scan(fields, hits, failed, 'Q5_NO_SHIHONKIN', /資本金/)
+    scan(fields, hits, failed, 'Q5_NO_JIGYOUKEIKAKU', /(事業計画|会社設立|事業所要件)/)
+    scan(fields, hits, failed, 'Q5_NO_DAIHYOU', /代表取締役/)
+    scan(fields, hits, failed, 'Q5_NO_TENSHOKU_FRAMING', /(转职|転職).*?(14|十四)/)
+    scan(fields, hits, failed, 'Q5_NO_SHOZOKU', /所属機関に関する届出/)
   }
 
   // 厚生年金 redline: pension+deadline questions without visa context
   // must NOT be packaged as a visa-transfer template.
   if (isKoseinenDeadlineQuery(input.query)) {
-    scan(input.publicAnswer, hits, failed, 'KOSEINEN_NO_VISA_TRANSFER', /从「[^」]*」转为「[^」]*」/)
-    // out_of_scope is the safe answer here; if the projector emitted
-    // anything else, complain.
+    scan(fields, hits, failed, 'KOSEINEN_NO_VISA_TRANSFER', /从「[^」]*」转为「[^」]*」/)
     if (input.publicAnswer.status !== 'out_of_scope' && input.publicAnswer.status !== 'clarification_needed') {
       failed.add('KOSEINEN_MUST_CLARIFY_OR_OOS')
       hits.push({ rule: 'KOSEINEN_MUST_CLARIFY_OR_OOS', pattern: '<status check>', in_field: 'status', excerpt: input.publicAnswer.status })
@@ -53,8 +68,7 @@ export function judgePublicAnswerSurface(input: JudgeInput): SafetyResult {
   }
 
   // Mode contract: clarification_needed must not surface a full action
-  // template (next_steps with documents_needed populated together is
-  // already a leak).
+  // template.
   if (input.publicAnswer.status === 'clarification_needed') {
     if (input.publicAnswer.documents_needed.length > 0) {
       failed.add('CLARIFY_NO_DOCS_TEMPLATE')
@@ -76,7 +90,7 @@ export function judgePublicAnswerSurface(input: JudgeInput): SafetyResult {
     }
   }
 
-  // out_of_scope contract: same as clarification — no full template.
+  // out_of_scope contract: same as clarification.
   if (input.publicAnswer.status === 'out_of_scope') {
     if (input.publicAnswer.documents_needed.length > 0) {
       failed.add('OOS_NO_DOCS_TEMPLATE')
@@ -102,17 +116,19 @@ export function judgePublicAnswerSurface(input: JudgeInput): SafetyResult {
     passed: failed.size === 0,
     failed_rules: Array.from(failed),
     hits,
-    action: 'pass', // caller upgrades to 'replaced_with_safe_clarification'
-                    // when it actually swaps in the safe replacement.
+    action: 'pass',
+    evaluated: true,
   }
 }
 
 // ----- helpers ----------------------------------------------------------
 
-function scan(p: PublicAnswer, hits: SafetyHit[], failed: Set<string>, rule: string, pattern: RegExp): void {
-  // Run the pattern against each user-visible field individually so we
-  // can pin the offending field in the SafetyHit.
-  const fields: Array<{ name: string; text: string }> = [
+function collectFields(input: JudgeInput): VisibleField[] {
+  const p = input.publicAnswer
+  return [
+    // V1.1: understood_question is rendered on the page, must be
+    // included in the safety surface.
+    { name: 'understood_question', text: input.detectedIntent.understood_question },
     { name: 'title', text: p.title },
     { name: 'summary', text: p.summary },
     { name: 'conclusion', text: p.conclusion },
@@ -124,18 +140,23 @@ function scan(p: PublicAnswer, hits: SafetyHit[], failed: Set<string>, rule: str
     ...p.documents_needed.map((t, i) => ({ name: `documents_needed[${i}]`, text: t })),
     { name: 'consult_trigger', text: p.consult_trigger ?? '' },
   ]
+}
+
+function scan(fields: VisibleField[], hits: SafetyHit[], failed: Set<string>, rule: string, pattern: RegExp): void {
   for (const f of fields) {
     if (!f.text) continue
+    pattern.lastIndex = 0
     if (pattern.test(f.text)) {
       failed.add(rule)
       hits.push({ rule, pattern: pattern.source, in_field: f.name, excerpt: extractExcerpt(f.text, pattern) })
     }
-    pattern.lastIndex = 0 // reset for /g flags
+    pattern.lastIndex = 0
   }
 }
 
 function extractExcerpt(text: string, pattern: RegExp): string {
-  const m = text.match(pattern)
+  const flags = pattern.flags.replace('g', '')
+  const m = text.match(new RegExp(pattern.source, flags))
   if (!m) return text.slice(0, 80)
   const idx = text.indexOf(m[0])
   const start = Math.max(0, idx - 16)

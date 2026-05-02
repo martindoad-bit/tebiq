@@ -112,15 +112,24 @@ export default function AnswerResultView({
         )}
       </section>
 
-      {showActionTemplate && p.next_steps.length > 2 && (
+      {showActionTemplate && (
         <section className="mt-5 rounded-[16px] border border-hairline bg-surface px-4">
           <div className="divide-y divide-hairline">
-            <NumberedList title="步骤" items={p.next_steps.slice(2)} />
+            {p.next_steps.length > 2 && (
+              <NumberedList title="步骤" items={p.next_steps.slice(2)} />
+            )}
             {p.documents_needed.length > 0 && (
               <BulletList title="要带什么" items={p.documents_needed} />
             )}
+            {/* Render projector-emitted sections (期限和时机, 办理窗口,
+                etc.) that aren't already covered by the dedicated UI
+                blocks above. PublicAnswer.sections is constructed by
+                the projector — its headings are stable. */}
+            {extraSections(p.sections).map(section => (
+              <SectionBlock key={section.heading} heading={section.heading} body={section.body} />
+            ))}
             {p.risk_warnings.length > 0 && (
-              <BulletList title="不做会怎样" items={p.risk_warnings} />
+              <BulletList title="需要注意的风险因素" items={p.risk_warnings} />
             )}
             {p.consult_trigger && (
               <BulletList title="什么情况下要找专家" items={[p.consult_trigger]} />
@@ -159,11 +168,6 @@ export default function AnswerResultView({
       <section className="mt-5 border-t border-hairline pt-4">
         <SectionHeading>来源与说明</SectionHeading>
         <p className="mt-2 text-[12px] leading-[1.7] text-ash [overflow-wrap:anywhere]">{p.disclaimer}</p>
-        <p className="mt-2 text-[11px] leading-[1.6] text-ash">
-          引擎：{viewModel.engine_version}
-          {viewModel.fallback_reason ? `（${viewModel.fallback_reason}）` : ''}
-          {viewModel.safety_passed ? '' : '（safety 替换为澄清版）'}
-        </p>
       </section>
 
       <section className="mt-5 rounded-[16px] border border-hairline bg-surface px-4 py-4">
@@ -235,6 +239,37 @@ function BulletList({ title, items }: { title: string; items: string[] }) {
           </li>
         ))}
       </ul>
+    </div>
+  )
+}
+
+// Headings already rendered by dedicated UI blocks. The projector emits
+// a fuller `sections` array (including 期限和时机 / 办理窗口 / etc.);
+// we surface those that don't duplicate the dedicated UI.
+const HEADINGS_RENDERED_ELSEWHERE = new Set([
+  '结论', // top-of-card
+  '下一步', // next_steps numbered list
+  '需要材料', // documents_needed bullets
+  '不做会怎样', // (legacy heading) — deduped
+  '需要注意的风险因素', // risk_warnings bullets
+  '什么情况下要找专家', // consult_trigger
+  '需要先确认', // clarification_questions
+  '请补充', // out_of_scope clarifications
+  '我理解你的问题是', // panel above
+  '我先按这些假设整理', // assumptions panel (handled below if added)
+])
+
+function extraSections(sections: PublicAnswer['sections']): PublicAnswer['sections'] {
+  return sections.filter(section => !HEADINGS_RENDERED_ELSEWHERE.has(section.heading.trim()))
+}
+
+function SectionBlock({ heading, body }: { heading: string; body: string }) {
+  return (
+    <div className="py-4 first:pt-0 last:pb-0">
+      <SectionHeading>{heading}</SectionHeading>
+      <p className="mt-3 text-[12px] leading-[1.65] text-slate whitespace-pre-line [overflow-wrap:anywhere]">
+        {body}
+      </p>
     </div>
   )
 }

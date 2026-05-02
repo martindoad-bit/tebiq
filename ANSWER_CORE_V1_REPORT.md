@@ -196,8 +196,16 @@ questions and verify:**
 6. `/answer/{id}` page renders the V1 view (status pill, no legacy
    leak)
 
-If canary surfaces a new P0, rollback is a single `git revert` on
-the merge commit (no schema undo).
+If canary surfaces a new P0, rollback is **two steps**:
+
+1. `git revert -m 1 <merge-commit>` + push (Vercel rebuild).
+2. **DB cleanup** to strip the `__answer_run_v1__` sidecar from
+   `answer_drafts.sections_json` rows written during the V1 deploy
+   window. Without this step, pre-V1 pages would render the sidecar
+   JSON as a visible section.
+
+Full runbook (SQL + tsx alternatives, validation, audit snapshot) at
+[docs/qa/ANSWER_CORE_V1_ROLLBACK.md](docs/qa/ANSWER_CORE_V1_ROLLBACK.md).
 
 ## Not in this PR
 
