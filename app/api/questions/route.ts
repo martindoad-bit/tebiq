@@ -24,27 +24,40 @@ export async function POST(req: Request) {
   }
 
   try {
-    const answer = await submitQuestionForAnswer({
+    const { viewModel, legacy } = await submitQuestionForAnswer({
       questionText,
       visaType: stringValue(row.visa_type ?? row.visaType),
       contactEmail,
       sourcePage: stringValue(row.source_page ?? row.sourcePage) ?? '/question-intake',
     })
+
+    // V1 contract: clients should consume `view_model` for everything
+    // user-visible. Top-level legacy fields are kept for back-compat
+    // but every value here was projected from PublicAnswer (i.e. they
+    // already passed surface safety).
     return Response.json({
       ok: true,
-      answer_type: answer.answer_type,
-      answer_level: answer.answer_level,
-      review_status: answer.review_status,
-      title: answer.title,
-      action_answer: answer.action_answer,
-      related_links: answer.related_links,
-      sources: answer.sources,
-      query_id: answer.query_id,
-      answer_id: answer.answer_id,
-      saved: answer.saved,
-      intent: answer.intent,
-      intent_summary: answer.intent_summary,
-      preferred_template: answer.preferred_template,
+      // Authoritative for user-visible rendering ↓
+      view_model: viewModel,
+      // Back-compat surface (still derived from PublicAnswer) ↓
+      answer_type: legacy.answer_type,
+      answer_level: legacy.answer_level,
+      review_status: legacy.review_status,
+      title: legacy.title,
+      summary: legacy.summary,
+      action_answer: legacy.action_answer,
+      related_links: legacy.related_links,
+      sources: legacy.sources,
+      query_id: legacy.query_id,
+      answer_id: legacy.answer_id,
+      saved: legacy.saved,
+      intent_summary: legacy.intent_summary,
+      // Observability (top-level so QA can see without descending) ↓
+      engine_version: viewModel.engine_version,
+      status: viewModel.status,
+      domain: viewModel.domain,
+      safety_passed: viewModel.safety_passed,
+      fallback_reason: viewModel.fallback_reason,
     })
   } catch (error) {
     console.warn('[api/questions] answer failed', errorCode(error))

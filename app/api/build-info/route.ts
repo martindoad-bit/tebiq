@@ -21,7 +21,7 @@ export async function GET() {
       gitSha: process.env.VERCEL_GIT_COMMIT_SHA ?? 'unknown',
       branch: process.env.VERCEL_GIT_COMMIT_REF ?? 'unknown',
       builtAt: BUILT_AT,
-      version: 'redline-gate-v3',
+      version: 'answer-core-v1',
     },
     {
       status: 200,
