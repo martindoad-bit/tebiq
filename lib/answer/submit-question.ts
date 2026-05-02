@@ -5,6 +5,7 @@ import { generateLlmAnswer } from './llm-answer-generator'
 import { fallbackEnvelopeFromLegacy, outOfScopeEnvelope } from './llm-answer-fallback'
 import { isLegacyAnswerCompatibleWithScope } from './fallback-safety-gate'
 import { deterministicSafeAnswer, genericSafeFallbackEnvelope } from './deterministic-safe-answers'
+import { projectEnvelopeToPublicAnswer } from './envelope-projector'
 import type { AnswerResult, AnswerType, FallbackReason, LlmAnswerEnvelope } from './types'
 import { createAnswerDraft } from '@/lib/db/queries/answerDrafts'
 import { createQuestion, normalizeQuery } from '@/lib/db/queries/questions'
@@ -40,14 +41,17 @@ export async function submitQuestionForAnswer(input: SubmitQuestionInput): Promi
     legacyAnswer,
   })
 
-  const merged: AnswerResult = {
-    ...legacyAnswer,
-    llm_envelope: envelope,
-  }
+  // v0.2 — envelope-first projection. Every user-visible field of the
+  // returned AnswerResult comes from the envelope, not from the legacy
+  // answer. The legacy answer is only consulted for non-user-visible
+  // passthrough (matched_card_id, intent, query/answer ids).
+  const merged: AnswerResult = projectEnvelopeToPublicAnswer({
+    envelope,
+    legacyAnswer,
+    intent,
+    questionText: input.questionText,
+  })
 
-  // For out_of_scope we still persist the legacy answer rows but flag
-  // match_status accordingly. The frontend dispatches on
-  // llm_envelope.answer_mode regardless of legacy answer_type.
   let queryId: string | null = null
   let saved = false
   try {

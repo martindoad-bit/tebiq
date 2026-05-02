@@ -956,8 +956,19 @@ function templateFor(intentType: IntentType): PreferredTemplate {
 }
 
 function buildUnderstoodAs(intent: AnswerIntent, questionText: string): string {
-  if (intent.current_status && intent.target_status) {
-    return `从「${intent.current_status}」转为「${intent.target_status}」需要满足什么条件，以及接下来怎么做。`
+  // v0.2 — never let literal 'unknown' / 'null' / empty strings leak
+  // into user-visible text. `meaningfulStatus` returns null when the
+  // value is missing or set to a debug placeholder.
+  const cur = meaningfulStatus(intent.current_status)
+  const tgt = meaningfulStatus(intent.target_status)
+  if (cur && tgt) {
+    return `从「${cur}」转为「${tgt}」需要满足什么条件，以及接下来怎么做。`
+  }
+  if (cur) {
+    return `你目前持有「${cur}」，TEBIQ 需要你先告知具体想办的手续。`
+  }
+  if (tgt) {
+    return `你想办的目标是「${tgt}」，TEBIQ 需要你先告知现在的在留资格。`
   }
   if (intent.domain === 'pension' || intent.domain === 'health_insurance') {
     return '公司或入职空档期间，个人年金/健康保险需要怎么处理。'
@@ -971,7 +982,15 @@ function buildUnderstoodAs(intent: AnswerIntent, questionText: string): string {
   if (intent.intent_type === 'risk_assessment') {
     return '这件事可能影响谁、先保留什么证据，以及什么情况要找专家。'
   }
-  return questionText || '这个问题需要先确认类型。'
+  return questionText || '我还不能确定你的当前身份和目标手续。'
+}
+
+function meaningfulStatus(value: string | null | undefined): string | null {
+  if (!value) return null
+  const trimmed = value.trim()
+  if (!trimmed) return null
+  if (/^(?:unknown|null|undefined|未知|未定义|n\/a)$/i.test(trimmed)) return null
+  return trimmed
 }
 
 function answerTextForIntent(answer: AnswerResult): string {
