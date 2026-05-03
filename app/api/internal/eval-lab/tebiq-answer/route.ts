@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { isEvalLabEnabled } from '@/lib/eval-lab/auth'
 import { submitQuestionForAnswer } from '@/lib/answer/submit-question'
+import { upsertEvalAnswer } from '@/lib/db/queries/eval-lab'
 
 // POST /api/internal/eval-lab/tebiq-answer
 //
@@ -11,10 +12,10 @@ import { submitQuestionForAnswer } from '@/lib/answer/submit-question'
 // (engine_version / fallback_reason / status / domain) so the Eval
 // Lab can show side-by-side with the DeepSeek raw answer.
 //
-// V0 calls submitQuestionForAnswer directly — same path /api/questions
-// uses, but bypasses the public route's request/response shaping. We
-// surface ALL view-model fields (including internal ones) because
-// this is an internal route.
+// V1: when `question_id` is supplied the result is upserted into
+// eval_answers (answer_type='tebiq_current'). The answer_text field
+// stores the flattened visible_text so golden export has a single
+// place to read from.
 //
 // Internal-only. 404 unless EVAL_LAB_ENABLED=1.
 
@@ -23,6 +24,7 @@ export const runtime = 'nodejs'
 
 interface ReqBody {
   question?: string
+  question_id?: string
   visa_type?: string | null
 }
 
@@ -44,7 +46,9 @@ export async function POST(req: Request) {
   if (question.length > 4000) {
     return NextResponse.json({ error: 'question_too_long' }, { status: 400 })
   }
+  const questionId = body.question_id?.trim() || null
 
+  const startedAt = Date.now()
   try {
     const result = await submitQuestionForAnswer({
       questionText: question,
@@ -53,10 +57,14 @@ export async function POST(req: Request) {
     })
     const vm = result.viewModel
     const pa = vm.public
-    return NextResponse.json({
+    const latencyMs = Date.now() - startedAt
+    const answerId = vm.id || result.legacy.answer_id || null
+    const answerLink = vm.id ? `/answer/${vm.id}` : null
+
+    const responsePayload = {
       ok: true,
-      answer_id: vm.id || result.legacy.answer_id || null,
-      answer_link: vm.id ? `/answer/${vm.id}` : null,
+      answer_id: answerId,
+      answer_link: answerLink,
       // Internal observability — surfaced ON PURPOSE in this route.
       status: vm.status,
       domain: vm.domain,
@@ -73,10 +81,58 @@ export async function POST(req: Request) {
       documents_needed: pa.documents_needed,
       // The detected_intent rendered on /answer/{id}'s "我理解你的问题是" panel.
       understood_question: vm.understood_question,
-    })
+      latency_ms: latencyMs,
+    }
+
+    if (questionId) {
+      try {
+        await upsertEvalAnswer({
+          questionId,
+          answerType: 'tebiq_current',
+          model: vm.engine_version ?? null,
+          promptVersion: 'tebiq-pipeline',
+          answerText: pa.visible_text ?? null,
+          tebiqAnswerId: answerId,
+          tebiqAnswerLink: answerLink,
+          engineVersion: vm.engine_version ?? null,
+          status: vm.status ?? null,
+          domain: vm.domain ?? null,
+          fallbackReason: vm.fallback_reason ?? null,
+          latencyMs,
+          error: null,
+          rawPayloadJson: {
+            title: pa.title ?? null,
+            summary: pa.summary ?? null,
+            understood_question: vm.understood_question ?? null,
+            safety: vm.safety ?? null,
+          },
+        })
+      } catch (persistErr) {
+        const message = persistErr instanceof Error ? persistErr.message : String(persistErr)
+        console.warn('[eval-lab/tebiq-answer] persist failed', message)
+      }
+    }
+
+    return NextResponse.json(responsePayload)
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err)
     console.warn('[eval-lab/tebiq-answer] submit failed', message)
+    if (questionId) {
+      try {
+        await upsertEvalAnswer({
+          questionId,
+          answerType: 'tebiq_current',
+          model: null,
+          promptVersion: 'tebiq-pipeline',
+          answerText: null,
+          error: `pipeline_failed: ${message.slice(0, 500)}`,
+          latencyMs: Date.now() - startedAt,
+        })
+      } catch (persistErr) {
+        const persistMsg = persistErr instanceof Error ? persistErr.message : String(persistErr)
+        console.warn('[eval-lab/tebiq-answer] persistError failed', persistMsg)
+      }
+    }
     return NextResponse.json(
       { error: 'tebiq_pipeline_failed', detail: message },
       { status: 500 },

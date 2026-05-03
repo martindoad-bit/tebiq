@@ -1046,5 +1046,125 @@ export type NewLoginMagicLinkToken = typeof loginMagicLinkTokens.$inferInsert
 export type DevLoginLink = typeof devLoginLinks.$inferSelect
 export type NewDevLoginLink = typeof devLoginLinks.$inferInsert
 
+// =====================================================================
+// Eval Lab V1 — internal annotation tool persistence.
+// Internal-only: all access is gated by EVAL_LAB_ENABLED at the route
+// layer; these tables never serve user-facing flows. Forward-compat is
+// the priority — every row carries `schema_version` and a JSONB column
+// for fields we'll need later.
+// =====================================================================
+
+export const evalAnswerTypeEnum = pgEnum('eval_answer_type', [
+  'deepseek_raw',
+  'tebiq_current',
+])
+
+export const evalSeverityEnum = pgEnum('eval_severity', ['OK', 'P2', 'P1', 'P0'])
+
+export const evalActionEnum = pgEnum('eval_action', [
+  'golden_case',
+  'prompt_rule',
+  'fact_card_candidate',
+  'handoff_rule',
+  'ignore',
+])
+
+// --- eval_questions ---
+export const evalQuestions = pgTable(
+  'eval_questions',
+  {
+    id: idCol(),
+    questionText: text('question_text').notNull(),
+    scenario: varchar('scenario', { length: 80 }), // e.g. 'A_visa_transfer', 'B_keiei', etc.
+    source: varchar('source', { length: 32 }).notNull().default('starter'), // starter | imported | manual
+    starterTag: varchar('starter_tag', { length: 80 }), // e.g. 'eval-lab-v1-Q01'
+    active: boolean('active').notNull().default(true),
+    schemaVersion: varchar('schema_version', { length: 24 }).notNull().default('eval-lab-v1'),
+    metadataJson: jsonb('metadata_json').$type<Record<string, unknown>>().notNull().default(sql`'{}'::jsonb`),
+    createdAt: createdAt(),
+    updatedAt: updatedAt(),
+  },
+  t => ({
+    starterTagUnique: uniqueIndex('eval_questions_starter_tag_unique').on(t.starterTag),
+    activeIdx: index('eval_questions_active_idx').on(t.active),
+    scenarioIdx: index('eval_questions_scenario_idx').on(t.scenario),
+  }),
+)
+
+// --- eval_answers ---
+// Stores BOTH DeepSeek-raw and TEBIQ-current generations per question.
+// One row per (question_id, answer_type). New generation overwrites the
+// older row for the same pair (delete-then-insert).
+export const evalAnswers = pgTable(
+  'eval_answers',
+  {
+    id: idCol(),
+    questionId: varchar('question_id', { length: 24 })
+      .notNull()
+      .references(() => evalQuestions.id, { onDelete: 'cascade' }),
+    answerType: evalAnswerTypeEnum('answer_type').notNull(),
+    model: varchar('model', { length: 64 }), // e.g. 'deepseek-v4-pro', 'answer-core-v1.1-llm'
+    promptVersion: varchar('prompt_version', { length: 32 }), // e.g. 'eval-lab-light-v1'
+    answerText: text('answer_text'), // plain-text; null when error or pending
+    tebiqAnswerId: varchar('tebiq_answer_id', { length: 24 }), // links back to answer_drafts.id
+    tebiqAnswerLink: varchar('tebiq_answer_link', { length: 240 }), // /answer/{id}
+    engineVersion: varchar('engine_version', { length: 64 }),
+    status: varchar('status', { length: 32 }), // direct_answer | preliminary | clarification_needed | out_of_scope
+    domain: varchar('domain', { length: 32 }),
+    fallbackReason: varchar('fallback_reason', { length: 64 }),
+    latencyMs: integer('latency_ms'),
+    error: text('error'), // populated when generation fails
+    rawPayloadJson: jsonb('raw_payload_json').$type<Record<string, unknown>>().default(sql`'{}'::jsonb`),
+    schemaVersion: varchar('schema_version', { length: 24 }).notNull().default('eval-lab-v1'),
+    createdAt: createdAt(),
+  },
+  t => ({
+    questionTypeUnique: uniqueIndex('eval_answers_question_type_unique').on(t.questionId, t.answerType),
+    questionIdx: index('eval_answers_question_idx').on(t.questionId),
+  }),
+)
+
+// --- eval_annotations ---
+// One row per (question_id, reviewer). Update-in-place, latest wins.
+export const evalAnnotations = pgTable(
+  'eval_annotations',
+  {
+    id: idCol(),
+    questionId: varchar('question_id', { length: 24 })
+      .notNull()
+      .references(() => evalQuestions.id, { onDelete: 'cascade' }),
+    reviewer: varchar('reviewer', { length: 64 }).notNull().default('default'),
+    score: integer('score'), // 1-5; nullable until annotated
+    severity: evalSeverityEnum('severity'),
+    launchable: varchar('launchable', { length: 8 }), // 'yes' | 'no' | null
+    directionCorrect: varchar('direction_correct', { length: 8 }),
+    answeredQuestion: varchar('answered_question', { length: 8 }),
+    dangerousClaim: varchar('dangerous_claim', { length: 8 }),
+    hallucination: varchar('hallucination', { length: 8 }),
+    shouldHandoff: varchar('should_handoff', { length: 8 }),
+    mustHave: text('must_have'),
+    mustNotHave: text('must_not_have'),
+    missingPoints: text('missing_points'),
+    reviewerNote: text('reviewer_note'),
+    action: evalActionEnum('action'),
+    annotationJson: jsonb('annotation_json').$type<Record<string, unknown>>().notNull().default(sql`'{}'::jsonb`),
+    schemaVersion: varchar('schema_version', { length: 24 }).notNull().default('eval-lab-v1'),
+    createdAt: createdAt(),
+    updatedAt: updatedAt(),
+  },
+  t => ({
+    questionReviewerUnique: uniqueIndex('eval_annotations_question_reviewer_unique').on(t.questionId, t.reviewer),
+    severityIdx: index('eval_annotations_severity_idx').on(t.severity),
+    actionIdx: index('eval_annotations_action_idx').on(t.action),
+  }),
+)
+
+export type EvalQuestion = typeof evalQuestions.$inferSelect
+export type NewEvalQuestion = typeof evalQuestions.$inferInsert
+export type EvalAnswer = typeof evalAnswers.$inferSelect
+export type NewEvalAnswer = typeof evalAnswers.$inferInsert
+export type EvalAnnotation = typeof evalAnnotations.$inferSelect
+export type NewEvalAnnotation = typeof evalAnnotations.$inferInsert
+
 // re-export sql for callers that want raw helpers without importing drizzle
 export { sql }

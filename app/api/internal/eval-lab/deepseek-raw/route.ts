@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { isEvalLabEnabled } from '@/lib/eval-lab/auth'
+import { upsertEvalAnswer } from '@/lib/db/queries/eval-lab'
 
 // POST /api/internal/eval-lab/deepseek-raw
 //
@@ -9,6 +10,11 @@ import { isEvalLabEnabled } from '@/lib/eval-lab/auth'
 // compare against TEBIQ's pipelined answer side-by-side and tell
 // whether TEBIQ's structure is helping or hurting.
 //
+// V1: when `question_id` is supplied the result (text or error) is
+// upserted into eval_answers (answer_type='deepseek_raw'). The route
+// still returns the live response so the UI can render it without
+// waiting for a refetch.
+//
 // Internal-only. 404 unless EVAL_LAB_ENABLED=1.
 
 export const dynamic = 'force-dynamic'
@@ -16,6 +22,7 @@ export const runtime = 'nodejs'
 
 const DEEPSEEK_ENDPOINT = 'https://api.deepseek.com/chat/completions'
 const MODEL_ID = 'deepseek-v4-pro'
+const PROMPT_VERSION = 'eval-lab-light-v1'
 const TIMEOUT_MS = 25_000
 const MAX_TOKENS = 800
 const TEMPERATURE = 0.2
@@ -30,6 +37,7 @@ const LIGHT_SYSTEM_PROMPT = [
 
 interface ReqBody {
   question?: string
+  question_id?: string
 }
 
 export async function POST(req: Request) {
@@ -50,12 +58,14 @@ export async function POST(req: Request) {
   if (question.length > 4000) {
     return NextResponse.json({ error: 'question_too_long' }, { status: 400 })
   }
+  const questionId = body.question_id?.trim() || null
 
   const apiKey = process.env.DEEPSEEK_API_KEY
   if (!apiKey) {
     return NextResponse.json({ error: 'deepseek_disabled', detail: 'DEEPSEEK_API_KEY not set' }, { status: 503 })
   }
 
+  const startedAt = Date.now()
   const controller = new AbortController()
   const timer = setTimeout(() => controller.abort(), TIMEOUT_MS)
   try {
@@ -78,6 +88,7 @@ export async function POST(req: Request) {
     })
     if (!res.ok) {
       console.warn('[eval-lab/deepseek-raw] HTTP', res.status)
+      await persistError(questionId, `deepseek_http_${res.status}`, Date.now() - startedAt)
       return NextResponse.json({ error: 'deepseek_http', status: res.status }, { status: 502 })
     }
     const json = (await res.json()) as {
@@ -85,21 +96,67 @@ export async function POST(req: Request) {
     }
     const text = json.choices?.[0]?.message?.content?.trim() ?? ''
     if (!text) {
+      await persistError(questionId, 'deepseek_empty', Date.now() - startedAt)
       return NextResponse.json({ error: 'deepseek_empty' }, { status: 502 })
+    }
+    const latencyMs = Date.now() - startedAt
+    if (questionId) {
+      try {
+        await upsertEvalAnswer({
+          questionId,
+          answerType: 'deepseek_raw',
+          model: MODEL_ID,
+          promptVersion: PROMPT_VERSION,
+          answerText: text,
+          latencyMs,
+          error: null,
+        })
+      } catch (persistErr) {
+        const message = persistErr instanceof Error ? persistErr.message : String(persistErr)
+        console.warn('[eval-lab/deepseek-raw] persist failed', message)
+      }
     }
     return NextResponse.json({
       ok: true,
       text,
       model: MODEL_ID,
+      latency_ms: latencyMs,
     })
   } catch (err) {
     const name = (err as { name?: string })?.name
     const isAbort = name === 'AbortError'
+    await persistError(
+      questionId,
+      isAbort ? 'deepseek_timeout' : 'deepseek_exception',
+      Date.now() - startedAt,
+    )
     return NextResponse.json(
       { error: isAbort ? 'deepseek_timeout' : 'deepseek_exception' },
       { status: 504 },
     )
   } finally {
     clearTimeout(timer)
+  }
+}
+
+async function persistError(
+  questionId: string | null,
+  errorCode: string,
+  latencyMs: number,
+): Promise<void> {
+  if (!questionId) return
+  try {
+    await upsertEvalAnswer({
+      questionId,
+      answerType: 'deepseek_raw',
+      model: MODEL_ID,
+      promptVersion: PROMPT_VERSION,
+      answerText: null,
+      error: errorCode,
+      latencyMs,
+    })
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err)
+    console.warn('[eval-lab/deepseek-raw] persistError failed', message)
   }
 }
