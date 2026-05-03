@@ -74,9 +74,15 @@
 
 ---
 
-## 3. PR #5 live QA 10 问
+## 3. Answer Core V1 Regression Gate（原 PR #5 live QA 10 问）
 
-以下 10 问为 PR #5 上线前必须通过的 live QA 矩阵。  
+PR #5 已于 2026-05-03 merge（commit `cbe1d43`）。  
+以下 10 问从"上线前必须通过"转为 **Answer Core V1 回归测试基线**，用于：
+
+- `feat/l0-l2-risk-mvp` 开发过程中的回归验证
+- 任何触碰 answer 路径的 PR 的 QA 前置检查
+- Canary 监控期的基线断言
+
 每题必须逐项检查以下 9 个维度：
 
 | # | 检查项 | 说明 |
