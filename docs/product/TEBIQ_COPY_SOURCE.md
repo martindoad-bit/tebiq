@@ -45,9 +45,13 @@
 - 一键开启专业守护
 - 严重违规
 - 立即预约专家
-- fallback_reason（内部字段，不得出现在页面）
-- safety_gate_replaced（内部字段，不得出现在页面）
-- unknown / null / undefined（任何用户可见位置）
+- `fallback_reason`（内部字段，不得出现在页面）
+- `safety_gate_replaced`（内部字段，不得出现在页面）
+- `no_source_matched`（内部字段，不得出现在页面）
+- `out_of_scope`（内部字段，不得出现在页面）
+- `low_confidence`（内部字段，不得出现在页面）
+- `unknown` / `null` / `undefined`（任何用户可见位置）
+- `__answer_run_v1__`（内部字段，不得出现在页面）
 
 ---
 
