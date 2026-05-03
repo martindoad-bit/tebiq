@@ -14,12 +14,13 @@ export default function Logo({ size = 'md' }: { size?: 'sm' | 'md' | 'lg' }) {
   return (
     <div className="flex items-center gap-2.5" aria-label="TEBIQ">
       <Image
-        src="/logo-icon.png"
+        src="/brand/tebiq-v07/svg/tebiq-v07-app-icon.svg"
         alt=""
         width={dim}
         height={dim}
         priority={size === 'md'}
         className="rounded-[9px]"
+        unoptimized
       />
       <span className="flex flex-col">
         <span className={`${text} font-medium leading-none text-ink tracking-[0.02em]`}>

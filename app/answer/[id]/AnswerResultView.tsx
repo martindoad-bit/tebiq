@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import type { AnswerViewModel, PublicAnswer } from '@/lib/answer/core/types'
+import SaveMatterButton from '@/app/_components/SaveMatterButton'
 
 // Answer Core V1 renderer.
 //
@@ -93,16 +94,40 @@ export default function AnswerResultView({
         </div>
 
         {showActionTemplate ? (
-          // V1.1 — answer body flows as a single unlabelled block.
-          // The projector emits `答案` as the primary section heading
-          // (suppressed in render) so the user reads the 3-paragraph
-          // body as natural prose, not as labelled "结论 / 下一步" cards.
+          // V1.2 — answer body flows as 3 unlabelled paragraphs:
+          //   ¶0 = direct answer to the asked question
+          //   ¶1 = true_focus (the thing that actually matters)
+          //   ¶2 = next_steps (1–3 concrete actions)
+          // Per Context Pack §5: NO labels ("结论 / 下一步 / true_focus"
+          // are forbidden). The middle paragraph gets a subtle visual
+          // emphasis (left hairline + slightly heavier ink) so the
+          // reader's eye lands on it without us telling them why.
+          //
+          // For non-3-段 sources (legacy_seed / rule_based) the body
+          // may be 1 or 2 paragraphs; we render flat without emphasis.
           (() => {
             const primary = p.sections.find(s => s.heading === '答案')
-            const body = primary?.body || p.conclusion
+            const body = (primary?.body || p.conclusion).trim()
+            const paragraphs = body.split(/\n{2,}/).map(s => s.trim()).filter(Boolean)
+            const isThreeStrip = paragraphs.length === 3
             return (
-              <div className="mt-4">
-                <p className="text-[15px] leading-[1.7] text-ink whitespace-pre-line [overflow-wrap:anywhere]">{body}</p>
+              <div className="mt-4 grid gap-4">
+                {paragraphs.map((para, idx) => {
+                  const isTrueFocus = isThreeStrip && idx === 1
+                  return (
+                    <p
+                      key={idx}
+                      data-tebiq-segment={isTrueFocus ? 'true-focus' : isThreeStrip ? (idx === 0 ? 'direct-answer' : 'next-steps') : 'body'}
+                      className={
+                        isTrueFocus
+                          ? 'border-l-2 border-[var(--tebiq-warm-amber,#D4A23A)] pl-3 text-[15px] leading-[1.75] text-ink font-medium whitespace-pre-line [overflow-wrap:anywhere]'
+                          : 'text-[15px] leading-[1.7] text-ink whitespace-pre-line [overflow-wrap:anywhere]'
+                      }
+                    >
+                      {para}
+                    </p>
+                  )
+                })}
               </div>
             )
           })()
@@ -149,6 +174,21 @@ export default function AnswerResultView({
               </li>
             ))}
           </ul>
+        </section>
+      )}
+
+      {/* V0 — Matter Draft save button. Only surfaced for actionable
+          modes (answered / preliminary). clarification / oos don't
+          have a path worth saving yet. */}
+      {showActionTemplate && answerId && (
+        <section className="mt-5 flex justify-end">
+          <SaveMatterButton
+            answer_id={answerId}
+            question={viewModel.question}
+            title={p.title}
+            summary={p.summary || p.conclusion}
+            urgency={status === 'answered' ? 'soon' : 'later'}
+          />
         </section>
       )}
 

@@ -65,6 +65,18 @@ export async function runAnswerIntake(input: IntakeInput): Promise<AnswerRun> {
   if (ruleMatch) {
     source = ruleMatch.source
   } else if (domain !== 'unknown') {
+    // V1.2 — DeepSeek primary path, with no-downgrade guard:
+    //
+    //   1. Call DeepSeek.
+    //   2. If DeepSeek gives a confident matched answer → use it.
+    //   3. Else (DeepSeek hedged with preliminary/clarification, OR
+    //      DeepSeek skipped/failed): also call legacy_seed, and if
+    //      legacy_seed has a `matched` answer, prefer it (no
+    //      downgrade). Otherwise prefer DeepSeek's hedged answer.
+    //
+    // This guarantees that questions with stable legacy answers
+    // (e.g. Q03 家族滞在→工作签 / Q04 经管→人文 etc.) are never
+    // downgraded to clarification when DeepSeek hedges.
     const llmSource = await provideLlmDeepseekSource({
       questionText: input.questionText,
       visaType: input.visaType ?? null,
@@ -73,16 +85,31 @@ export async function runAnswerIntake(input: IntakeInput): Promise<AnswerRun> {
       candidateSeedSnippet: null, // PR-A scope: no candidate grounding yet (deferred)
       redlines: redlinesForDomain(domain, detectedIntent),
     })
-    if (llmSource.kind !== 'none') {
+    const llmIsConfidentMatch = llmSource.kind === 'llm_primary'
+      && (llmSource.legacy_answer_type === 'matched')
+    if (llmIsConfidentMatch) {
       source = llmSource
     } else {
-      // DeepSeek skipped — record the LLM reason so observability can
-      // tell us WHY the fallback happened, then drop to legacy_seed.
-      if (llmSource.skip_reason) fallback_reason = llmSource.skip_reason
-      source = await provideLegacySeedSource({
+      // DeepSeek hedged or skipped — check legacy for a stable answer.
+      if (llmSource.kind === 'none' && llmSource.skip_reason) {
+        fallback_reason = llmSource.skip_reason
+      }
+      const legacySource = await provideLegacySeedSource({
         questionText: input.questionText,
         visaType: input.visaType,
       })
+      const legacyIsMatched = legacySource.kind === 'legacy_seed'
+        && legacySource.legacy_answer_type === 'matched'
+      if (legacyIsMatched) {
+        source = legacySource
+      } else if (llmSource.kind === 'llm_primary') {
+        // DeepSeek gave a hedged answer; legacy didn't have a stable
+        // match either — better to surface DeepSeek's voice than fall
+        // back to legacy's lower-confidence content.
+        source = llmSource
+      } else {
+        source = legacySource
+      }
     }
   } else {
     // Truly off-topic — domain==='unknown'. Don't burn an LLM call.
