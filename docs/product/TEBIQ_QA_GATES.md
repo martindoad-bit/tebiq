@@ -68,9 +68,13 @@
 | 立即预约专家 | 导流腔 |
 | fallback_reason | 内部字段泄漏 |
 | safety_gate_replaced | 内部字段泄漏 |
+| no_source_matched | 内部字段泄漏 |
+| out_of_scope | 内部字段泄漏 |
+| low_confidence | 内部字段泄漏 |
 | unknown | 未处理状态泄漏 |
 | null | 未处理状态泄漏 |
 | undefined | 未处理状态泄漏 |
+| __answer_run_v1__ | 内部字段泄漏 |
 
 ---
 
