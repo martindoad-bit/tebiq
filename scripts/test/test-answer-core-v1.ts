@@ -56,7 +56,11 @@ const CASES: Case[] = [
     must_not_contain: [
       /从「[^」]*」转为「[^」]*」/, // no signature transfer template
     ],
-    allowed_status: ['out_of_scope', 'clarification_needed'],
+    // V1.1 — admin_general now in-scope. May surface preliminary
+    // (hedged answer with disambiguation) or clarification_needed.
+    // 'answered' is forbidden by Surface Safety Gate
+    // (KOSEINEN_MUST_NOT_BE_ANSWERED).
+    allowed_status: ['preliminary', 'clarification_needed', 'out_of_scope'],
   },
   {
     id: 'P0-family-stay-to-work',
@@ -90,10 +94,17 @@ const CASES: Case[] = [
   {
     id: 'P0-immigration-deadline',
     question: '入管让补材料，期限赶不上怎么办',
+    // V1.1 — admin_general; must give a hedged preliminary answer,
+    // not OOS. May also be clarification_needed if intent unclear.
+    allowed_status: ['preliminary', 'clarification_needed'],
   },
   {
     id: 'P0-denial-notice',
     question: '不许可通知书怎么办',
+    // V1.1 — admin_general; needs clarification (which category)
+    // before any definite path can be given. Preliminary OK if
+    // hedged. OOS not allowed.
+    allowed_status: ['preliminary', 'clarification_needed'],
   },
   {
     id: 'P0-permanent-resident-pension',
@@ -207,6 +218,41 @@ async function p1aRegression(): Promise<{ pass: boolean; reason: string }> {
   return { pass: true, reason: 'long current/target clauses correctly suppressed' }
 }
 
+// P1-C regression — Q03 「家族滞在想转工作签」 no-downgrade.
+//
+// In production / Vercel preview the LLM intent parser is enabled, and
+// DeepSeek occasionally hedges and returns
+// `status='clarification_needed'` for questions that have a stable
+// legacy_seed `matched` answer. Per total-control: don't let DeepSeek
+// downgrade.
+//
+// Verifies the intake order produces a `'legacy_seed' + matched`
+// source for Q03 when DeepSeek is disabled (proxy: same fallback chain
+// kicks in when DeepSeek hedges in production).
+async function p1cRegression(): Promise<{ pass: boolean; reason: string }> {
+  const { runAnswerIntake } = await import('@/lib/answer/core/intake')
+  const run = await runAnswerIntake({ questionText: '家族滞在想转工作签' })
+  if (run.public_answer.status !== 'answered' && run.public_answer.status !== 'preliminary') {
+    return {
+      pass: false,
+      reason: `status=${run.public_answer.status} (expected answered or preliminary, NOT clarification/oos)`,
+    }
+  }
+  if (run.detected_domain !== 'gijinkoku') {
+    return {
+      pass: false,
+      reason: `detected_domain=${run.detected_domain} (expected gijinkoku)`,
+    }
+  }
+  if (/28\s*小时|28\s*時間/.test(run.public_answer.visible_text)) {
+    return {
+      pass: false,
+      reason: 'visible_text leaks 28 小时/時間 (Q03 swallowed by 资格外活动 seed)',
+    }
+  }
+  return { pass: true, reason: 'Q03 stays answered/preliminary, no 28-hour leak' }
+}
+
 async function main() {
   const results: ProbeResult[] = []
   for (const c of CASES) {
@@ -236,13 +282,20 @@ async function main() {
   }
 
   // P1-A regression — runs as an extra (11th) check.
-  const reg = await p1aRegression()
-  const regTag = reg.pass ? 'PASS' : 'P1-FAIL'
-  console.log(`${regTag.padEnd(9)} ${'P1A-q10-long-jp-clause-suppression'.padEnd(34)} ${reg.reason}`)
-  if (reg.pass) passes += 1
+  const regA = await p1aRegression()
+  const regATag = regA.pass ? 'PASS' : 'P1-FAIL'
+  console.log(`${regATag.padEnd(9)} ${'P1A-q10-long-jp-clause-suppression'.padEnd(34)} ${regA.reason}`)
+  if (regA.pass) passes += 1
 
-  const failures = results.filter(r => !r.pass).length + (reg.pass ? 0 : 1)
-  console.log(`\nResult: ${passes}/${results.length + 1} pass; failures: ${failures}`)
+  // P1-C regression — runs as an extra (12th) check.
+  const regC = await p1cRegression()
+  const regCTag = regC.pass ? 'PASS' : 'P1-FAIL'
+  console.log(`${regCTag.padEnd(9)} ${'P1C-q03-no-downgrade'.padEnd(34)} ${regC.reason}`)
+  if (regC.pass) passes += 1
+
+  const extras = (regA.pass ? 0 : 1) + (regC.pass ? 0 : 1)
+  const failures = results.filter(r => !r.pass).length + extras
+  console.log(`\nResult: ${passes}/${results.length + 2} pass; failures: ${failures}`)
   if (failures > 0) process.exit(1)
 }
 

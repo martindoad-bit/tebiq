@@ -1,0 +1,65 @@
+{
+  "brand": "TEBIQ",
+  "logo_direction": "V07 Quiet Brow",
+  "asset_mode": "source-locked; no redesign",
+  "colors": {
+    "inkBlue": {
+      "name": "Ink Blue",
+      "hex": "#0D2340",
+      "usage": "Primary logo, text, app icon background"
+    },
+    "deepSlate": {
+      "name": "Deep Slate",
+      "hex": "#3D4F66",
+      "usage": "Secondary UI surfaces / supporting text"
+    },
+    "coolGray": {
+      "name": "Cool Gray",
+      "hex": "#A3AAB5",
+      "usage": "Inactive icons / dividers / supporting lines"
+    },
+    "softGray": {
+      "name": "Soft Gray",
+      "hex": "#E6E9EE",
+      "usage": "Card borders / light backgrounds"
+    },
+    "offWhite": {
+      "name": "Off White",
+      "hex": "#FAF8F5",
+      "usage": "Warm background and reverse mark"
+    },
+    "warmAmber": {
+      "name": "Warm Amber",
+      "hex": "#D4A23A",
+      "usage": "Deadline/focus accent only"
+    }
+  },
+  "typography": {
+    "zh": "Noto Sans CJK SC / Source Han Sans SC",
+    "latinNumeric": "Inter / SF Pro",
+    "weights": {
+      "regular": 400,
+      "medium": 500,
+      "semibold": 600,
+      "bold": 700
+    }
+  },
+  "minimum_sizes": {
+    "horizontal_logo_digital": "120px width",
+    "vertical_logo_digital": "72px width",
+    "app_icon_digital": "32px minimum; 64px recommended",
+    "dialogue_bubble_icon": "24px minimum; 32px recommended",
+    "print_logo": "30mm width minimum",
+    "clearspace": "at least 0.5× symbol width around the logo"
+  },
+  "forbidden": [
+    "不拉伸",
+    "不旋转",
+    "不改眼睛比例",
+    "不加表情",
+    "不改成 TEBIQ君",
+    "不加机器人/动物身体",
+    "不用作可爱 mascot"
+  ],
+  "copy_boundary": "Logo 可以轻拟人化，但产品文案不能拟人化。"
+}

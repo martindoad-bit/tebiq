@@ -42,8 +42,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="zh-CN">
       <head>
-        <link rel="icon" href="/logo-icon.png" />
-        <link rel="apple-touch-icon" href="/logo-icon.png" />
+        {/* V07 Quiet Brow favicon stack — root-level paths so they
+            resolve at any route depth. ICO covers legacy browsers,
+            16/32 PNG cover modern, apple-touch-icon covers iOS home
+            screen. PWA manifest icons live under /brand/tebiq-v07/pwa. */}
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
       </head>
       <body className="bg-canvas text-ink antialiased">{children}</body>
     </html>

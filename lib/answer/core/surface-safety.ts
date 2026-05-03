@@ -61,9 +61,14 @@ export function judgePublicAnswerSurface(input: JudgeInput): SafetyResult {
   // must NOT be packaged as a visa-transfer template.
   if (isKoseinenDeadlineQuery(input.query)) {
     scan(fields, hits, failed, 'KOSEINEN_NO_VISA_TRANSFER', /从「[^」]*」转为「[^」]*」/)
-    if (input.publicAnswer.status !== 'out_of_scope' && input.publicAnswer.status !== 'clarification_needed') {
-      failed.add('KOSEINEN_MUST_CLARIFY_OR_OOS')
-      hits.push({ rule: 'KOSEINEN_MUST_CLARIFY_OR_OOS', pattern: '<status check>', in_field: 'status', excerpt: input.publicAnswer.status })
+    // V1.1 — admin_general now allows hedged `preliminary` answers for
+    // pension/deadline questions; the rule is no longer "must be
+    // clarification or OOS". The remaining hard constraint: must NOT
+    // be `answered`, because pension deadlines are too case-dependent
+    // for a confident yes/no.
+    if (input.publicAnswer.status === 'answered') {
+      failed.add('KOSEINEN_MUST_NOT_BE_ANSWERED')
+      hits.push({ rule: 'KOSEINEN_MUST_NOT_BE_ANSWERED', pattern: '<status check>', in_field: 'status', excerpt: input.publicAnswer.status })
     }
   }
 

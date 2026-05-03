@@ -27,6 +27,12 @@ export type SupportedDomain =
   | 'family_stay'
   | 'permanent_resident'
   | 'long_term_resident'
+  // V1.1 — broader 在留行政 in-scope. Anything DeepSeek can give a
+  // hedged preliminary answer for that isn't one of the 5 visa
+  // categories above: 入管 / 区役所 / 年金 / 税务 / 社保 / 住民票 /
+  // 公司变更 / 补材料 / 不许可 / 期限 etc. Only `'unknown'` (truly
+  // unrelated topics like dieting, stocks, tourism) routes to OOS.
+  | 'admin_general'
   | 'unknown'
 
 export const SUPPORTED_DOMAIN_LABELS: Record<SupportedDomain, string> = {
@@ -35,6 +41,7 @@ export const SUPPORTED_DOMAIN_LABELS: Record<SupportedDomain, string> = {
   family_stay: '家族滞在',
   permanent_resident: '永住',
   long_term_resident: '定住者',
+  admin_general: '在留行政',
   unknown: '在留资格',
 }
 
@@ -59,6 +66,7 @@ export interface DetectedIntent {
 export type AnswerSourceKind =
   | 'legacy_seed'    // matched a seed via match-answer.ts
   | 'rule_based'     // matched a hard rule (e.g. 配偶离婚→定住 deterministic)
+  | 'llm_primary'    // V1.1 — produced by the DeepSeek provider
   | 'none'           // nothing matched; projector will use clarification
 
 export interface AnswerSource {
@@ -87,6 +95,10 @@ export interface AnswerSource {
   source_confidence: 'high' | 'medium' | 'low'
   // For rule_based, the rule id — useful for telemetry.
   rule_id?: string
+  // V1.1 — for `kind === 'none'` produced by a provider that tried but
+  // declined, this carries WHY (e.g. 'llm_timeout', 'llm_parse').
+  // Internal observability only. NEVER user-visible.
+  skip_reason?: FallbackReason
 }
 
 // ---------------------------------------------------------------- PublicAnswer
@@ -157,13 +169,24 @@ export interface SafetyResult {
 // ---------------------------------------------------------------- AnswerRun
 
 // The persisted record of one question → answer cycle.
-export type AnswerEngineVersion = 'answer-core-v1'
+export type AnswerEngineVersion = 'answer-core-v1' | 'answer-core-v1.1-llm'
 
+// FallbackReason values are INTERNAL — never user-visible. The
+// `llm_*` prefix family is added in V1.1 to distinguish DeepSeek
+// failure modes from the original V1 fallback reasons. All of these
+// must NOT appear in any rendered surface (banned by Voice / Surface
+// Safety; also enforced by the Q5 / unknown literals scan).
 export type FallbackReason =
   | 'no_source_matched'
   | 'safety_gate_replaced'
   | 'out_of_scope'
   | 'low_confidence'
+  // V1.1 DeepSeek failure modes (internal, never user-visible) ↓
+  | 'llm_disabled'
+  | 'llm_timeout'
+  | 'llm_parse'
+  | 'llm_validation'
+  | 'llm_exception'
 
 export interface AnswerRun {
   engine_version: AnswerEngineVersion

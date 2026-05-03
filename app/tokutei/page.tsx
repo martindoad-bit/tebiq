@@ -31,7 +31,7 @@ const articleSchema = {
     name: 'TEBIQ',
     logo: {
       '@type': 'ImageObject',
-      url: 'https://tebiq.jp/logo-icon.png',
+      url: 'https://tebiq.jp/brand/tebiq-v07/app-icon/tebiq-v07-app-icon-512.png',
     },
   },
   datePublished: '2026-04-01',

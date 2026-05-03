@@ -23,7 +23,7 @@ export default function AdminNav({ adminKey }: { adminKey: string }) {
     <header className="sticky top-0 z-10 bg-card/95 backdrop-blur border-b border-line">
       <div className="max-w-md md:max-w-6xl mx-auto px-4 h-14 flex items-center justify-between gap-3">
         <Link href={`/${keyParam}`} className="flex items-center gap-3 flex-shrink-0" aria-label="TEBIQ 首页">
-          <Image src="/logo-icon.png" alt="" width={40} height={40} className="rounded-xl" />
+          <Image src="/brand/tebiq-v07/svg/tebiq-v07-app-icon.svg" alt="" width={40} height={40} className="rounded-xl" unoptimized />
           <div className="hidden sm:block">
             <div className="text-lg font-bold text-title leading-none">TEBIQ</div>
             <div className="text-[10px] text-muted leading-tight mt-0.5">てびき · 后台</div>
