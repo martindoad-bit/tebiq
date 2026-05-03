@@ -15,5 +15,11 @@
 // IMPORTANT: never log the env value. Just gate on truthiness.
 
 export function isEvalLabEnabled(): boolean {
-  return process.env.EVAL_LAB_ENABLED === '1'
+  const v = process.env.EVAL_LAB_ENABLED
+  // Diagnostic-only — logs ONLY the type and the comparison result so
+  // we can tell from Vercel function logs whether the env var is
+  // present-but-wrong-shape vs absent entirely. Never logs the
+  // actual value. Remove after Eval Lab Preview gating is verified.
+  console.warn('[eval-lab/auth] EVAL_LAB_ENABLED present:', typeof v, v === '1')
+  return v === '1'
 }
