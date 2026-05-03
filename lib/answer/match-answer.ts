@@ -781,12 +781,21 @@ function shouldUseIntentAnswerBeforeSeeds(questionText: string, intent: AnswerIn
 }
 
 function isFamilyWorkPermissionIntent(intent: AnswerIntent, questionText: string): boolean {
+  // Family stay → work visa (在留資格変更) is a different track. Don't
+  // collapse it to 资格外活动 + 28 hours.
+  if (intent.target_status && /(技人国|人文|工作签|技術人文|经营管理|経営管理|经管)/.test(intent.target_status)) {
+    return false
+  }
+  if (/(转工作签|转技人国|转人文|変更.*工作签|変更.*技人国|転工作)/.test(questionText)) return false
   if (intent.current_status === '家族滞在'
     && /(资格外活动|资格外活動|打工|兼职)/.test(intent.extracted_entities.procedure ?? '')) {
     return true
   }
   const familyContext = /(家族滞在|配偶者?)/.test(questionText)
-  const workContext = /(打工|兼职|兼職|工作|资格外活动|资格外活動|アルバイト|バイト|働ける|可以工作|可以打工)/.test(questionText)
+  // Drop bare 工作 from work-context regex — `工作签` should be handled
+  // by the explicit short-circuit above; without dropping bare 工作 the
+  // regex would match `转工作签` again.
+  const workContext = /(打工|兼职|兼職|资格外活动|资格外活動|アルバイト|バイト|働ける|可以工作|可以打工)/.test(questionText)
   if (!familyContext || !workContext) return false
   return !/(税金|納税|纳税|住民税|年金|国民年金|厚生年金|社保|社会保险|社会保険|国保|健康保险|健康保険|滞納|滞纳)/.test(questionText)
 }
