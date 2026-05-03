@@ -145,7 +145,31 @@ PR 进入 canary 或 merge 的最低条件（全部必须满足）：
 
 ---
 
-## 6. QA 输出格式
+## 6. QA Layer 定义
+
+**两种 QA 任务使用不同的 Layer 定义，不可混用。**
+
+### PR live QA layers
+适用：PR #5 / Answer Core / API / sidecar 审计。**如果任务类型不确定，默认使用本套。**
+
+| Layer | 检查内容 |
+|-------|----------|
+| Layer A | API JSON / response contract（view_model、engine_version、safety、answer_id 等字段） |
+| Layer B | DB sidecar round-trip / `/answer/{id}` reload（sidecar 可见性、持久化） |
+| Layer C | Page visible text / rendered surface（禁用词、串域、内部字段泄漏） |
+
+### Page / copy QA layers
+适用：页面 smoke、文案审计、产品 tone 检查。
+
+| Layer | 检查内容 |
+|-------|----------|
+| Layer A | Page route smoke（路由可访问、不 404、无崩溃） |
+| Layer B | Content / banned words / domain leakage（禁用词、串域、占位符痕迹） |
+| Layer C | Voice / true_focus / placeholders / product tone（文案 tone、true_focus 是否存在、AI 产品腔） |
+
+---
+
+## 7. QA 输出格式
 
 每次 QA 完成后必须输出包含以下结构的报告：
 
@@ -159,16 +183,16 @@ PR #X / branch / feature / page
 branch: ...  commit: ...  preview: ...
 
 ## Test scope
-说明本次 QA 覆盖的范围
+说明本次 QA 覆盖的范围，并注明使用哪套 Layer 定义（PR live QA layers / Page copy QA layers）
 
 ## Layer A result
-(smoke — API 是否可通，view_model 是否存在)
+(根据 Layer 定义填写)
 
 ## Layer B result
-(content — 禁用词、串域、sidecar 可见性)
+(根据 Layer 定义填写)
 
 ## Layer C result
-(voice — true_focus 存在、文案是否像 AI 产品腔、是否有占位符)
+(根据 Layer 定义填写)
 
 ## 10 问矩阵
 | # | 题目 | API | engine | safety | answer_id | /answer/{id} | reload sidecar | 禁用词 | 串域 | 判断 |
