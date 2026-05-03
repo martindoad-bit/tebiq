@@ -63,6 +63,14 @@ function meaningfulStatus(value: string | null | undefined): string | null {
   const trimmed = value.trim()
   if (!trimmed) return null
   if (/^(?:unknown|null|undefined|未知|未定义|n\/a|none)$/i.test(trimmed)) return null
+  // V1.2 P1-A — reject LLM-emitted descriptive clauses (e.g.
+  // "年金未納または納付不足がある状態"). The "从「X」转为「Y」"
+  // template expects short categorical visa labels:
+  //   経営管理 (4), 定住者 (3), 永住 (2), 家族滞在 (4),
+  //   日本人の配偶者等 (8), 技術・人文知識・国際業務 (12).
+  // Anything > 14 chars is not a visa label; fall through to the
+  // natural-language path in rewriteUnderstoodQuestion().
+  if (trimmed.length > 14) return null
   return trimmed
 }
 

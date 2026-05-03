@@ -161,6 +161,52 @@ async function runOne(c: Case): Promise<ProbeResult> {
   }
 }
 
+// P1-A regression — Q10 「永住申请年金没交怎么办」.
+//
+// In production / Vercel preview the LLM intent parser is enabled, and
+// Claude can emit current_status / target_status as a long descriptive
+// clause (e.g. "年金未納または納付不足がある状態"). The legacy
+// `meaningfulStatus()` only filtered literal `unknown` / `null` /
+// `undefined`, so these clauses leaked into the
+// "从「X」转为「Y」需要满足什么条件..." template and surfaced as
+// Japanese-mixed text on the page.
+//
+// The fix is a length cap. This regression directly invokes
+// `buildDetectedIntent` with a synthetic AnswerIntent so we can
+// exercise the cap without standing up the LLM intent parser.
+async function p1aRegression(): Promise<{ pass: boolean; reason: string }> {
+  const { buildDetectedIntent } = await import('@/lib/answer/core/domain')
+  const fakeIntent = {
+    intent_type: 'eligibility_check',
+    subject: 'individual',
+    domain: 'visa',
+    confidence: 4,
+    extracted_entities: {},
+    preferred_template: 'eligibility_template',
+    should_answer: true,
+    understood_as: '',
+    // The exact failure mode reported on Preview: LLM-emitted long JP
+    // clauses landing in current/target_status.
+    current_status: '年金未納または納付不足がある状態',
+    target_status: '年金納付要件を満たして永住申請を行う状態',
+  } as never
+  const detected = buildDetectedIntent({
+    questionText: '永住申请年金没交怎么办',
+    intent: fakeIntent,
+  })
+  const text = detected.understood_question
+
+  // The bad pattern: clause leaked into the 从「X」转为「Y」 template.
+  if (/从「.*?(?:または|を満たして|を行う|がある|状態).*?」转为「.*?(?:または|を満たして|を行う|がある|状態)/.test(text)) {
+    return { pass: false, reason: `long-clause leaked into template: ${text.slice(0, 120)}` }
+  }
+  // The clause itself must not appear verbatim in user-visible text.
+  if (text.includes('年金未納または') || text.includes('を満たして永住申請を行う')) {
+    return { pass: false, reason: `LLM clause verbatim in understood_question: ${text.slice(0, 120)}` }
+  }
+  return { pass: true, reason: 'long current/target clauses correctly suppressed' }
+}
+
 async function main() {
   const results: ProbeResult[] = []
   for (const c of CASES) {
@@ -189,9 +235,15 @@ async function main() {
     if (r.pass) passes += 1
   }
 
-  const failures = results.filter(r => !r.pass)
-  console.log(`\nResult: ${passes}/${results.length} pass; failures: ${failures.length}`)
-  if (failures.length > 0) process.exit(1)
+  // P1-A regression — runs as an extra (11th) check.
+  const reg = await p1aRegression()
+  const regTag = reg.pass ? 'PASS' : 'P1-FAIL'
+  console.log(`${regTag.padEnd(9)} ${'P1A-q10-long-jp-clause-suppression'.padEnd(34)} ${reg.reason}`)
+  if (reg.pass) passes += 1
+
+  const failures = results.filter(r => !r.pass).length + (reg.pass ? 0 : 1)
+  console.log(`\nResult: ${passes}/${results.length + 1} pass; failures: ${failures}`)
+  if (failures > 0) process.exit(1)
 }
 
 main().catch(e => {
