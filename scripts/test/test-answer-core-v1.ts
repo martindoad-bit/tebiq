@@ -56,7 +56,11 @@ const CASES: Case[] = [
     must_not_contain: [
       /从「[^」]*」转为「[^」]*」/, // no signature transfer template
     ],
-    allowed_status: ['out_of_scope', 'clarification_needed'],
+    // V1.1 — admin_general now in-scope. May surface preliminary
+    // (hedged answer with disambiguation) or clarification_needed.
+    // 'answered' is forbidden by Surface Safety Gate
+    // (KOSEINEN_MUST_NOT_BE_ANSWERED).
+    allowed_status: ['preliminary', 'clarification_needed', 'out_of_scope'],
   },
   {
     id: 'P0-family-stay-to-work',
@@ -90,10 +94,17 @@ const CASES: Case[] = [
   {
     id: 'P0-immigration-deadline',
     question: '入管让补材料，期限赶不上怎么办',
+    // V1.1 — admin_general; must give a hedged preliminary answer,
+    // not OOS. May also be clarification_needed if intent unclear.
+    allowed_status: ['preliminary', 'clarification_needed'],
   },
   {
     id: 'P0-denial-notice',
     question: '不许可通知书怎么办',
+    // V1.1 — admin_general; needs clarification (which category)
+    // before any definite path can be given. Preliminary OK if
+    // hedged. OOS not allowed.
+    allowed_status: ['preliminary', 'clarification_needed'],
   },
   {
     id: 'P0-permanent-resident-pension',

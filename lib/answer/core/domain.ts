@@ -28,15 +28,30 @@ export function detectDomain(input: {
 
 function matchDomain(text: string): SupportedDomain {
   if (!text) return 'unknown'
+  // 5 specific visa categories — most-specific match wins.
   if (/(永住|永住権|永住权|永住者)/.test(text)) return 'permanent_resident'
   if (/(经营管理|経営管理|经管|管理签|管理ビザ)/.test(text)) return 'business_manager'
   if (/(家族滞在|家属签|家属簽)/.test(text)) return 'family_stay'
   if (/(定住者|定住資格)/.test(text)) return 'long_term_resident'
-  // Bare "定住" alone (only if not preceded by 永) — broad pattern last.
   if (/(?:^|[^永])定住/.test(text)) return 'long_term_resident'
   if (/(技人国|技術・?人文|人文签|人文簽|国際業務|gijinkoku|技術人文知識)/.test(text)) {
     return 'gijinkoku'
   }
+  // V1.1 — admin_general catches the long tail of 在留行政 questions
+  // that aren't tied to one of the 5 specific visa categories but are
+  // still in-scope for a hedged preliminary answer:
+  //   - 入管 / 出入国在留管理 / 在留卡 / 補資料 / 不许可 / 通知書 / 届出
+  //   - 区役所 / 市役所 / 法务局 / 税务署 / 住民票 / 住民票異動
+  //   - 年金 / 厚生年金 / 国民年金 / 健保 / 国保 / 社保
+  //   - 税务 / 住民税 / 確定申告
+  //   - 公司 / 会社 / 役員変更 / 移転 / 搬迁
+  //   - 期限 / 更新 / 変更 (general 行政 actions)
+  // Only "明显无关" topics (diet / stocks / tourism / unrelated) fall to 'unknown'.
+  if (/(入管|出入国在留管理|在留カード|在留卡|補資料|补资料|补材料|不许可|不許可|通知書|届出|届け出)/.test(text)) return 'admin_general'
+  if (/(区役所|市役所|町役場|村役場|法务局|法務局|税务署|税務署|住民票|住民登録)/.test(text)) return 'admin_general'
+  if (/(厚生年金|国民年金|年金|健康保険|健保|国民健康保险|国保|社会保険|社会保险|社保)/.test(text)) return 'admin_general'
+  if (/(住民税|所得税|確定申告|确定申告|納税|纳税)/.test(text)) return 'admin_general'
+  if (/(役員変更|代表変更|本店移転|事務所移転|公司变更|会社変更|搬迁|搬家.*登记|登記)/.test(text)) return 'admin_general'
   return 'unknown'
 }
 

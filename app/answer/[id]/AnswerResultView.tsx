@@ -93,21 +93,22 @@ export default function AnswerResultView({
         </div>
 
         {showActionTemplate ? (
-          <>
-            <div className="mt-4">
-              <SectionHeading>结论</SectionHeading>
-              <p className="mt-2 text-[15px] leading-[1.7] text-ink [overflow-wrap:anywhere]">{p.conclusion}</p>
-            </div>
-            {p.next_steps.length > 0 && (
-              <div className="mt-4 border-t border-hairline pt-4">
-                <NumberedList title="最紧的两件" items={p.next_steps.slice(0, 2)} emphasis />
+          // V1.1 — answer body flows as a single unlabelled block.
+          // The projector emits `答案` as the primary section heading
+          // (suppressed in render) so the user reads the 3-paragraph
+          // body as natural prose, not as labelled "结论 / 下一步" cards.
+          (() => {
+            const primary = p.sections.find(s => s.heading === '答案')
+            const body = primary?.body || p.conclusion
+            return (
+              <div className="mt-4">
+                <p className="text-[15px] leading-[1.7] text-ink whitespace-pre-line [overflow-wrap:anywhere]">{body}</p>
               </div>
-            )}
-          </>
+            )
+          })()
         ) : (
           <div className="mt-4">
-            <SectionHeading>说明</SectionHeading>
-            <p className="mt-2 text-[14px] leading-[1.7] text-ink [overflow-wrap:anywhere]">{p.summary}</p>
+            <p className="text-[14px] leading-[1.7] text-ink [overflow-wrap:anywhere]">{p.summary}</p>
           </div>
         )}
       </section>
@@ -247,8 +248,10 @@ function BulletList({ title, items }: { title: string; items: string[] }) {
 // a fuller `sections` array (including 期限和时机 / 办理窗口 / etc.);
 // we surface those that don't duplicate the dedicated UI.
 const HEADINGS_RENDERED_ELSEWHERE = new Set([
-  '结论', // top-of-card
-  '下一步', // next_steps numbered list
+  '答案', // V1.1 — primary unlabelled body, rendered above
+  '结论', // legacy V1 heading (kept for backwards compat with old drafts)
+  '下一步', // legacy V1 heading
+  '初步答案', // legacy V0/V0.1 heading
   '需要材料', // documents_needed bullets
   '不做会怎样', // (legacy heading) — deduped
   '需要注意的风险因素', // risk_warnings bullets

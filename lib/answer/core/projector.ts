@@ -84,10 +84,24 @@ function decideStatus(input: ProjectInput): PublicAnswerStatus {
   if (reviewStatus === 'intent_unclear' || answerType === 'cannot_determine') {
     return 'clarification_needed'
   }
+  // V1.1 — admin_general can never be "answered" (per total-control:
+  // these in-行政 questions are inherently case-dependent and we never
+  // have full facts). Cap at "preliminary" even if the source insists
+  // on matched/reviewed.
+  if (input.domain === 'admin_general') {
+    return answerType === 'matched' || answerType === 'draft' ? 'preliminary' : 'clarification_needed'
+  }
+  // legacy_seed match — full visa-category answer.
   if (input.source.kind === 'legacy_seed' && answerType === 'matched') {
     return 'answered'
   }
-  // legacy_seed with draft / rule_based with full content / etc.
+  // V1.1 — llm_primary handled here too. The DeepSeek prompt itself is
+  // instructed not to use status='answered' for admin_general, so this
+  // path is mostly the visa-categories case.
+  if (input.source.kind === 'llm_primary' && answerType === 'matched') {
+    return 'answered'
+  }
+  // rule_based with full content / legacy_seed with draft / llm_primary preliminary.
   return 'preliminary'
 }
 
@@ -116,9 +130,15 @@ function buildPreliminary(input: ProjectInput): Omit<PublicAnswer, 'visible_text
   const { source, domain } = input
   const conclusion = scrub(source.legacy_conclusion ?? source.legacy_summary ?? '') || '我先按已知信息整理一个方向。'
 
-  const sections = source.legacy_sections && source.legacy_sections.length > 0
-    ? source.legacy_sections.map(s => ({ heading: scrub(s.heading), body: scrub(s.body) })).filter(s => s.heading && s.body)
-    : buildAnsweredSections(source)
+  // V1.1 — for llm_primary sources, prefer the projector-built sections
+  // (which already use the new unlabelled "答案" block + materials).
+  // For legacy sources with their own pre-built `legacy_sections`,
+  // keep those headings as-is for backwards compat.
+  const sections = source.kind === 'llm_primary'
+    ? buildAnsweredSections(source)
+    : source.legacy_sections && source.legacy_sections.length > 0
+      ? source.legacy_sections.map(s => ({ heading: scrub(s.heading), body: scrub(s.body) })).filter(s => s.heading && s.body)
+      : buildAnsweredSections(source)
 
   return {
     status: 'preliminary',
@@ -237,21 +257,34 @@ function buildOutOfScope(input: ProjectInput): Omit<PublicAnswer, 'visible_text'
 // ----- helpers ----------------------------------------------------------
 
 function buildAnsweredSections(source: AnswerSource): PublicAnswer['sections'] {
+  // V1.1 — voice anchor (Context Pack §6): the answer body flows as
+  // prose, not as labelled blocks. We no longer emit "结论" / "下一步"
+  // headings; instead the conclusion + step body land as a single
+  // unlabelled "答案" section, the page renderer flattens it into the
+  // primary body. Materials / risks / experts keep dedicated headings
+  // because they are semantically distinct content (lists, not prose).
   const sections: PublicAnswer['sections'] = []
   const conclusion = scrub(source.legacy_conclusion ?? source.legacy_summary ?? '')
-  if (conclusion) sections.push({ heading: '结论', body: conclusion })
 
+  // For LLM-primary sources, `legacy_summary` already contains the
+  // 3-paragraph body. For other sources, we synthesise from
+  // conclusion + next-step lines.
   const next = source.legacy_what_to_do ?? source.legacy_next_steps ?? []
-  if (next.length > 0) {
-    const detail = source.legacy_how_to_do ?? []
-    sections.push({
-      heading: '下一步',
-      body: limit(next, 5).map((title, i) => {
-        const d = detail[i]
-        return d ? `${i + 1}. ${scrub(title)}\n${scrub(d)}` : `${i + 1}. ${scrub(title)}`
-      }).join('\n'),
-    })
-  }
+  const fullBody = source.kind === 'llm_primary'
+    ? scrub(source.legacy_summary ?? conclusion)
+    : (() => {
+      const parts = [conclusion]
+      if (next.length > 0) {
+        const detail = source.legacy_how_to_do ?? []
+        parts.push(limit(next, 5).map((title, i) => {
+          const d = detail[i]
+          return d ? `${i + 1}. ${scrub(title)}\n${scrub(d)}` : `${i + 1}. ${scrub(title)}`
+        }).join('\n'))
+      }
+      return parts.filter(Boolean).join('\n\n')
+    })()
+
+  if (fullBody) sections.push({ heading: '答案', body: fullBody })
 
   const docs = source.legacy_documents_needed ?? []
   if (docs.length > 0) {
@@ -348,6 +381,10 @@ function domainTitle(domain: SupportedDomain, legacyTitle: string | undefined): 
     family_stay: /家族滞在/,
     permanent_resident: /(永住|永住者)/,
     long_term_resident: /(定住|定住者)/,
+    // admin_general matches a broad set; if the legacy title already
+    // mentions any 在留行政 keyword we don't need to prepend the
+    // generic "关于在留行政：" prefix.
+    admin_general: /(入管|区役所|市役所|法务局|法務局|税务署|税務署|年金|健保|国保|社保|住民票|住民税|届出|通知書|不许可|不許可|補資料|补材料|补资料|役員|代表|本店|事務所|期限)/,
     unknown: /^$/,
   }
   if (mention[domain].test(t)) return t
