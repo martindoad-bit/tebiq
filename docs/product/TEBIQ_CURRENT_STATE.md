@@ -9,8 +9,8 @@
 | `last_verified` | 2026-05-05 |
 | `verified_by` | GM |
 | `source_of_truth` | GitHub remote `origin/main` + `gh pr view` (per-branch) + user-provided latest facts |
-| `main_head` | `a62d19c` |
-| `main_head_title` | Merge pull request #23 — feat/routing-safety-r01-r05 (R01-R05) |
+| `main_head` | `cd5cd8e` |
+| `main_head_title` | Merge pull request #25 — DOMAIN 100Q Risk Matrix + Pattern Library |
 
 ---
 
@@ -83,7 +83,8 @@ CEO 当前能看到什么：  https://tebiq.jp + /internal/eval-lab（100 题种
 | TEBIQ_100Q_RISK_MAP.md | ✅ 完成（`ec8ad27`）| P0×20 / P1×60 / P2×20 + 20 P0 详案卡 + 10 高风险场景库 |
 | 7条 OOS routing regression 关联表 | ✅ 完成 | docs/domain/ 内，draft |
 | PR #10 merge | ✅ 完成（`ec8ad27`）| — |
-| Phase 2：7条 routing 回归语义复核 | ⏳ 等待 ENGINE Issue #18 完成 | GM 提供回归数据后 DOMAIN 执行 |
+| DOMAIN_100Q_RISK_MATRIX.md + DOMAIN_RISK_PATTERNS.md | ✅ 完成（PR #25）| docs/domain/ merged |
+| Phase 2：7条 routing 回归语义复核 | 🟡 可开始 | Issue #18 ✅ — GM 已通知 DOMAIN |
 
 ---
 
