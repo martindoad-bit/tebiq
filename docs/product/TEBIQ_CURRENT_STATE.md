@@ -9,8 +9,8 @@
 | `last_verified` | 2026-05-05 |
 | `verified_by` | GM |
 | `source_of_truth` | GitHub remote `origin/main` + `gh pr view` (per-branch) + user-provided latest facts |
-| `main_head` | `cd5cd8e` |
-| `main_head_title` | Merge pull request #25 — DOMAIN 100Q Risk Matrix + Pattern Library |
+| `main_head` | `e9c49c6` |
+| `main_head_title` | merge: PR #28 Console Deblock v2 + PR #30 Preview Stage Feedback |
 
 ---
 
@@ -27,9 +27,9 @@
 | Track | 名称 | 状态 | 阻塞 |
 |-------|------|------|------|
 | **A** | Answer Quality / Eval Round 1A | 🔴 Blocked | DeepSeek API timeout + Routing fix |
-| **B** | Internal Console / 100Q 可視化 | 🟡 Active | **最优先** — ENGINE Issue #19 |
+| **B** | Internal Console / 100Q 可視化 | ✅ v2 上线 | M1 ✅ + Deblock ✅ + VOICE ✅ |
 | **C** | Routing Safety Gate (R01–R05) | 🟡 Active | ENGINE Issue #18 |
-| **D** | User Preview / Matter Draft | ⏸ Standby | M1 ✅ → Work Packet 待产品裁决 |
+| **D** | User Preview / Matter Draft | 🟡 Active | Preview v1 ✅ + Stage Feedback ✅ |
 | **E** | DOMAIN Assets / 100Q Risk Map | 🟡 Active | 不等 FULL_COMPARABLE |
 | **F** | Ops / Release Readiness | 🟡 Active | 按里程碑推進 |
 
