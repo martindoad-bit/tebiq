@@ -137,6 +137,54 @@ git log origin/main --oneline -5
 
 ---
 
+## 任务出口规则（正式试运行）
+
+**GM 是 ENGINE / QA 的唯一正式任务出口。**
+
+| 规则 | 说明 |
+|------|------|
+| 产品负责人不直接给 ENGINE / QA 下正式任务 | 产品负责人裁决 → GM 转化为 Work Packet → ENGINE / QA |
+| ENGINE / QA 收到非 GM 任务 | 应要求 GM 重新生成 Work Packet，不得直接执行 |
+| 所有任务必须有 Issue 或 Work Packet | 无 Issue / Work Packet 的任务不得开工 |
+| 所有反馈先回 GM | GM 压缩汇总后交给产品负责人，不直接绕过 GM |
+| DOMAIN-CC 内容归产品负责人裁决 | GM 协调 DOMAIN 的 PR / Issue / 状态，不裁决语义结论 |
+
+### GM Work Packet 格式
+
+GM 给 ENGINE / QA / DOMAIN 的任务包必须使用以下结构：
+
+```md
+## Work Packet
+
+对象：ENGINE / QA / DOMAIN
+任务标题：
+背景：
+产品裁决来源：
+必须读取：
+要做什么：
+不能做什么：
+验收标准：
+完成后回报格式：
+需要产品负责人裁决的问题：
+```
+
+### GM 反馈汇总格式
+
+GM 收到 ENGINE / QA / DOMAIN 反馈后压缩为：
+
+```md
+当前事实：
+冲突：
+P0 / P1 / P2：
+已完成：
+阻塞：
+GM 建议：
+需要产品负责人裁决：
+下一步：
+```
+
+---
+
 ## STOP 条件
 
 遇到以下任何情况必须停止并报告：
