@@ -1,10 +1,36 @@
 # TEBIQ Output Rubric
 
 **状态**: draft / needs human review
-**版本**: v0.1
+**版本**: v0.2
 **作成**: 2026-05-04
 **作成者**: TEBIQ-DOMAIN-CC
 **用途**: 定义TEBIQ AI答案质量的评分标准，用于Eval Lab标注和人工审查
+
+---
+
+## 快速判断流程（5分钟 Quick Check）
+
+```
+Step 1: 方向反？
+  → YES → P0，停止，不需要看其他维度
+  → NO  → Step 2
+
+Step 2: 存在危险承诺？（"一定能拿" / "不会被拒" / "出国重申比较容易"）
+  → YES → P0
+  → NO  → Step 3
+
+Step 3: 漏掉关键期限？（14日/3个月/30日/6个月 等）
+  → YES → P0（用户可能错过不可逆期限）
+  → NO  → Step 4
+
+Step 4: 高风险场景但没有handoff？
+  → YES → P0
+  → NO  → Step 5
+
+Step 5: 用户看完知道今天该做什么？
+  → NO  → P1（至少）
+  → YES → 进入全维度评分（1-5分）
+```
 
 ---
 

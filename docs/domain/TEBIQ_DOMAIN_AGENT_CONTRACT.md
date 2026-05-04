@@ -1,7 +1,7 @@
 # TEBIQ Domain Agent Contract
 
 **状态**: draft / needs human review
-**版本**: v0.1
+**版本**: v0.2
 **作成**: 2026-05-04
 **作成者**: TEBIQ-DOMAIN-CC（在留语义复核 / 行政书士助理型审查者）
 **审批状态**: 未审批 — 不得作为 production-ready 标准使用
@@ -173,6 +173,41 @@ TEBIQ-DOMAIN-CC 的输出质量不以"看起来专业"为准，而以：
 4. 是否保留了必要的不确定性（不过度承诺）
 
 为评估标准。
+
+---
+
+## 版本管理协议（v0.2新増）
+
+### 版本号规则
+
+```
+v0.x — draft: 初版/迭代。所有内容标注 "draft / needs human review"
+v1.x — reviewed: 行政書士确认后的条目可升级。文件整体仍为 draft 直至全量审查
+v2.x — production: 所有 needs_human_review 条目均已确认，可写入生产系统
+```
+
+### 升级条件
+
+| 升级 | 条件 |
+|------|------|
+| v0.x → v1.x | 至少80%的 needs_human_review 条目已获行政書士确认并标注confirmed |
+| v1.x → v2.x | 100%的P0/P1条目已确认；has_passing_eval_coverage ≥ 90% |
+
+### 条目级别状态标注
+
+```yaml
+review_status: draft            # 初始状态
+review_status: pending_review   # 已提交行政書士，等待回复
+review_status: confirmed        # 行政書士已确认，可信度升级
+review_status: rejected         # 行政書士指出错误，需重写
+```
+
+### 变更记录
+
+```
+v0.1 (2026-05-04): 初版 — 6文件创建，30 golden cases，12 fact cards，handoff triggers，rubric，review guide
+v0.2 (2026-05-04): 升级 — golden cases全量加aliases+eval_method；续签/更新类handoff；4新fact cards（FC-013~016）；prompt_rule_candidates；5分钟快速评分流程
+```
 
 ---
 
