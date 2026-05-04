@@ -9,8 +9,8 @@
 | `last_verified` | 2026-05-04 |
 | `verified_by` | GM |
 | `source_of_truth` | GitHub remote `origin/main` + `gh pr view` (per-branch) + user-provided latest facts |
-| `main_head` | `9571fda` |
-| `main_head_title` | docs(context-os): establish Context OS — AGENTS, workflow, templates, GM principles, product docs |
+| `main_head` | `39f6bae` |
+| `main_head_title` | docs(state): post-merge Current State update — PR #12 merged |
 
 ---
 
