@@ -9,6 +9,23 @@
 
 ---
 
+## 样本分级定义（v0.2 — 2026-05-05 更新）
+
+> v0.1 仅区分 FULL_COMPARABLE / TEBIQ_ONLY / 不可用三类。
+> v0.2 根据 Technical Dry Run 发现增加细粒度分类，明确 fallback 样本的处理规则。
+
+| 分类 | 条件 | 是否可进入 DOMAIN 正式标注 |
+|------|------|--------------------------|
+| **FULL_COMPARABLE** | TEBIQ ok + DeepSeek ok + `fallback_reason` ≠ `llm_timeout` + `status` ≠ `out_of_scope` | ✅ 是 |
+| **TEBIQ_FALLBACK_SAMPLE** | TEBIQ ok + `fallback_reason = llm_timeout` | ❌ 否（LLM 未参与，不代表真实 TEBIQ 输出）|
+| **TEBIQ_OUT_OF_SCOPE_SAMPLE** | TEBIQ ok + `status = out_of_scope` | ❌ 否（进入 out_of_scope 路由专项分析）|
+| **DEEPSEEK_FAILED_SAMPLE** | TEBIQ FULL（非 fallback / 非 OOS）+ DeepSeek 失败 | ❌ 否（无对比基准）|
+| **INVALID_SAMPLE** | TEBIQ 失败 / 无有效数据 | ❌ 否 |
+
+**产品负责人当前只接受 FULL_COMPARABLE 进入正式 DOMAIN 标注。**
+
+---
+
 ## 样本结构原则
 
 - **覆盖关键风险类型**：方向反转、期限紧急、资格外活动、经管合规、永住/税务、家庭身份变化
@@ -123,21 +140,30 @@
 5. 确认每题均有 `tebiq` + `deepseek_raw` 两条 answer 记录
 6. 通过 `/api/internal/eval-lab/export?type=full` 拉取完整数据包存档
 
-### 可比较样本判定
+### 可比较样本判定（v0.2）
 
-| 状态 | 说明 |
-|------|------|
-| ✅ 可比较样本 | 该 question_id 同时有 `deepseek_raw`（success）+ `tebiq`（success/clarification_needed）|
-| ⚠️ 技术样本 | 仅有 `tebiq` success，无 `deepseek_raw`（DeepSeek 临时不可用）|
-| ❌ 不可用 | 两通道均失败，或 `tebiq` status = `tebiq_pipeline_failed` |
+参见文件头部"样本分级定义"表格。
 
-**只有"可比较样本"进入 DOMAIN 标注和产品质量结论。**
+```
+FULL_COMPARABLE 判定：
+  TEBIQ ok=true
+  AND DeepSeek ok=true
+  AND TEBIQ fallback_reason ≠ "llm_timeout"
+  AND TEBIQ status ≠ "out_of_scope"
+```
 
-### DeepSeek 504 处理
+**只有 FULL_COMPARABLE 进入 DOMAIN 正式标注和产品质量结论。**
 
-DeepSeek API 在 2026-05-04 QA 复测时出现 transient 504。  
-处理方案：DeepSeek 通道失败 → 标记为"技术样本"，保留 TEBIQ 输出，稍后重跑 DeepSeek。  
-**不等 DeepSeek 全部成功才开始 TEBIQ 通道，两通道独立执行。**
+### DeepSeek / LLM 不可用处理
+
+不得在未通过 Health Check 的情况下启动批量生成。
+
+执行顺序：
+1. 运行 `scripts/eval/health-check.sh`，确认所有 Gate pass
+2. 通过后运行 `scripts/eval/run-round1-phased.sh`（4 阶段 + 质量门控）
+3. 任何阶段 gate fail → abort，不继续生成无效数据
+
+历史记录：2026-05-04 Technical Dry Run 因 DeepSeek API timeout + 脚本 payload bug 未产出有效样本（见 CURRENT_STATE.md 归档记录）。
 
 ---
 
