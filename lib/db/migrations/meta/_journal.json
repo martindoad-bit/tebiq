@@ -155,6 +155,13 @@
       "when": 1777534370142,
       "tag": "0021_slow_maelstrom",
       "breakpoints": true
+    },
+    {
+      "idx": 22,
+      "version": "7",
+      "when": 1777835234319,
+      "tag": "0022_ancient_vermin",
+      "breakpoints": true
     }
   ]
 }
