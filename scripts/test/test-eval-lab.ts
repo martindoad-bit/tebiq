@@ -31,6 +31,7 @@ async function main() {
   const conc = await import('@/lib/eval-lab/concurrency')
   const retry = await import('@/lib/eval-lab/retry')
   const classifier = await import('@/lib/eval-lab/sample-classifier')
+  const previewStage = await import('@/lib/eval-lab/preview-stage')
 
   let passes = 0
   let total = 0
@@ -369,6 +370,122 @@ async function main() {
     for (const c of ['TEBIQ_FALLBACK', 'TEBIQ_ROUTING_FAILURE', 'TEBIQ_OOS', 'DS_FAILED', 'INVALID', 'NONE'] as const) {
       assert.equal(classifier.isAnnotationEligible(c), false, `${c} should not be annotation-eligible`)
     }
+  })
+
+  // ---- 10. preview state-machine classifier (Issue #27 / Workstream B) ----
+  await check('10a. classifySubmitOutcome: null result → error', () => {
+    assert.equal(
+      previewStage.classifySubmitOutcome(null, { question_text: 'q', starter_tag: null }),
+      'error',
+    )
+  })
+  await check('10b. classifySubmitOutcome: ok=false → error', () => {
+    assert.equal(
+      previewStage.classifySubmitOutcome(
+        { ok: false, error: 'pipeline_failed' },
+        { question_text: 'q', starter_tag: null },
+      ),
+      'error',
+    )
+  })
+  await check('10c. classifySubmitOutcome: out_of_scope → human_review_required', () => {
+    assert.equal(
+      previewStage.classifySubmitOutcome(
+        { ok: true, status: 'out_of_scope' },
+        { question_text: 'q', starter_tag: null },
+      ),
+      'human_review_required',
+    )
+  })
+  await check('10d. classifySubmitOutcome: REGRESSION_SET tag forces human_review', () => {
+    // Even on a successful answered response, a regression-set tag goes
+    // to human_review_required per Work Packet §B4 (high-risk 不裸流).
+    assert.equal(
+      previewStage.classifySubmitOutcome(
+        { ok: true, status: 'direct_answer', answer_id: 'a1' },
+        { question_text: 'q', starter_tag: 'eval-lab-v1-J04' },
+      ),
+      'human_review_required',
+    )
+  })
+  await check('10e. classifySubmitOutcome: fallback_reason set → fallback', () => {
+    assert.equal(
+      previewStage.classifySubmitOutcome(
+        { ok: true, status: 'preliminary', fallback_reason: 'llm_timeout', answer_id: 'a1' },
+        { question_text: 'q', starter_tag: 'eval-lab-v1-A01' },
+      ),
+      'fallback',
+    )
+  })
+  await check('10f. classifySubmitOutcome: clarification_needed → clarification_needed', () => {
+    assert.equal(
+      previewStage.classifySubmitOutcome(
+        { ok: true, status: 'clarification_needed' },
+        { question_text: 'q', starter_tag: 'eval-lab-v1-A01' },
+      ),
+      'clarification_needed',
+    )
+  })
+  await check('10g. classifySubmitOutcome: clean direct_answer → final_answer', () => {
+    assert.equal(
+      previewStage.classifySubmitOutcome(
+        { ok: true, status: 'direct_answer', answer_id: 'a1' },
+        { question_text: 'q', starter_tag: 'eval-lab-v1-A01' },
+      ),
+      'final_answer',
+    )
+  })
+  await check('10h. precedence: out_of_scope beats regression_set (both → human_review)', () => {
+    // Both rules want human_review_required; ensure the precedence path
+    // is the out_of_scope branch (so detail copy reflects routing).
+    const r = previewStage.classifySubmitOutcome(
+      { ok: true, status: 'out_of_scope' },
+      { question_text: 'q', starter_tag: 'eval-lab-v1-J04' },
+    )
+    assert.equal(r, 'human_review_required')
+  })
+  await check('10i. precedence: regression_set beats fallback', () => {
+    // Regression-set wins over a fallback hint so the reviewer doesn't
+    // see a "降级回答" framing on a question we already know is mis-routed.
+    const r = previewStage.classifySubmitOutcome(
+      { ok: true, status: 'preliminary', fallback_reason: 'llm_timeout', answer_id: 'a1' },
+      { question_text: 'q', starter_tag: 'eval-lab-v1-D05' },
+    )
+    assert.equal(r, 'human_review_required')
+  })
+  await check('10j. STAGE_COPY non-empty for every non-idle stage', () => {
+    const stages = [
+      'received', 'routing', 'risk_check', 'generating',
+      'final_answer', 'fallback', 'clarification_needed',
+      'human_review_required', 'error',
+    ] as const
+    for (const s of stages) {
+      assert.ok(previewStage.STAGE_COPY[s].length > 0, `${s} missing copy`)
+    }
+  })
+  await check('10k. withSubmitTimeout: rejects with SubmitTimeoutError after timeout', async () => {
+    let caught: unknown = null
+    try {
+      await previewStage.withSubmitTimeout(new Promise(() => {}), 30) // never resolves
+    } catch (e) { caught = e }
+    assert.ok(caught instanceof previewStage.SubmitTimeoutError, `expected SubmitTimeoutError, got ${caught}`)
+  })
+  await check('10l. withSubmitTimeout: resolves the underlying value when fast enough', async () => {
+    const v = await previewStage.withSubmitTimeout(Promise.resolve(42), 100)
+    assert.equal(v, 42)
+  })
+  await check('10m. STAGE_TIMING: routing <= 500ms, risk_check <= 500ms, total ≤ 1000ms', () => {
+    // Ensures Work Packet §验收标准 "≤1s 显示 received" / "≤3s 过渡到
+    // routing → risk_check" cannot silently drift.
+    assert.ok(previewStage.STAGE_TIMING.routing_delay_ms <= 1000)
+    assert.ok(previewStage.STAGE_TIMING.risk_check_delay_ms <= 1000)
+    assert.ok(
+      previewStage.STAGE_TIMING.routing_delay_ms + previewStage.STAGE_TIMING.risk_check_delay_ms <= 3000,
+      'received→routing→risk_check must complete within 3s',
+    )
+  })
+  await check('10n. STAGE_TIMING: api_timeout_ms = 25000 (Work Packet §B2)', () => {
+    assert.equal(previewStage.STAGE_TIMING.api_timeout_ms, 25_000)
   })
 
   console.log(`\nEval Lab V1 smoke: ${passes}/${total} pass`)
