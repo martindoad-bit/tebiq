@@ -9,14 +9,14 @@
 | `last_verified` | 2026-05-05 |
 | `verified_by` | GM |
 | `source_of_truth` | GitHub remote `origin/main` + `gh pr view` (per-branch) + user-provided latest facts |
-| `main_head` | `5ad36ea` |
-| `main_head_title` | feat(eval): Round 1A recovery — health check, phased batch, dry run archive |
+| `main_head` | `f8051b0` |
+| `main_head_title` | feat(eval): routing safety gate v1 + sample classification v0.3 + phased script v2 |
 
 ---
 
 ## 当前主线
 
-**Eval Round 1A Recovery — LLM Health Check + Routing Safety Gate + Phased Rerun**
+**Eval Round 1A Recovery — Routing Safety Gate + LLM Health**
 
 目标：修复路由 P0 问题，通过 LLM Health Check，完成 Phased Rerun 生成 ≥24 FULL_COMPARABLE 样本，进入 DOMAIN 正式标注。
 
@@ -72,9 +72,11 @@ Production URL：`https://tebiq.jp`（Vercel 部署 `5ad36ea`）
 | Batch script payload 修复 | ✅ 完成 | `question` 字段已补入 DeepSeek payload |
 | Technical Dry Run 归档 | ✅ 完成 | round1-20260504-231231 |
 | PR #16 merge | ✅ 完成（5ad36ea） | 2026-05-05 health-check + phased-batch + dry run archive |
-| Routing Safety Gate Work Packet | ✅ 完成 | `EVAL_ROUTING_SAFETY_GATE_PACK.md` + Issue（ENGINE 待实现）|
+| PR #17 merge | ✅ 完成（f8051b0） | 2026-05-05 routing safety gate + classification v0.3 + phased v2 |
+| Routing Safety Gate Work Packet | ✅ 完成 | Issue [#18](https://github.com/martindoad-bit/tebiq/issues/18)（ENGINE 待实现 R01–R05）|
 | LLM Health Check | ⏳ 等待 DeepSeek API 恢复 | `health-check.sh` 就绪，需 5/5 pass |
-| Routing regression set | ⏳ 等待 ENGINE 实现 R01-R05 | 7 条 OOS 不再路由失败才可进入 Phased Rerun |
+| R01–R05 Routing Fix | ⏳ 等待 ENGINE 实现 Issue #18 | P0: R01/R02/R03/R04；P1: R05（I08 按 P0）|
+| Routing Regression Gate | ⏳ 等待 R01–R05 部署 | Step 1 of `run-round1-phased.sh` 自动验证 |
 | Formal Round 1A Phased Rerun | ⏳ 等待 Health Check + Routing gate | `run-round1-phased.sh`（6 步流程）就绪 |
 | DOMAIN 标注 | ⏳ 等待 FULL_COMPARABLE ≥ 24 | — |
 | Round 1A 决策包 | ⏳ 等待标注完成 | — |
@@ -101,7 +103,8 @@ PR #10（Domain 语义复核基础设施）的任何输出目前为：
 | PR / Branch | 状态 | 等待 |
 |----|------|------|
 | [#16](https://github.com/martindoad-bit/tebiq/pull/16) | ✅ merged（5ad36ea） | — |
-| `claude/eval-routing-gate` | Routing Safety Gate + sample 分类更新 + phased script v2 | PR + merge |
+| [#17](https://github.com/martindoad-bit/tebiq/pull/17) | ✅ merged（f8051b0） | — |
+| [#18](https://github.com/martindoad-bit/tebiq/issues/18) | 🔴 ENGINE: R01–R05 routing fix | 7/7 regression pass → Phased Rerun unlock |
 | [#10](https://github.com/martindoad-bit/tebiq/pull/10) | Domain 语义复核基础设施 v0.1 | 等 Formal Round 1A 完成后激活 |
 | [#11](https://github.com/martindoad-bit/tebiq/pull/11) | Product docs 增量（暂不 merge）| 产品负责人裁决：close or 提取小 patch |
 | [#4](https://github.com/martindoad-bit/tebiq/pull/4) | answer envelope-first v0.2（暂停）| 产品裁决：后续检查是否 stale |

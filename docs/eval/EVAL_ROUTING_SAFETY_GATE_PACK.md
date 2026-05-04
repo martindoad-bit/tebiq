@@ -29,6 +29,20 @@
 
 ---
 
+## 产品负责人优先级裁决（2026-05-05）
+
+| Gate | 裁决 | 优先级 | Issue |
+|------|------|--------|-------|
+| R01 时间敏感问题不得 out_of_scope | 必须修 | **P0** | [#18](https://github.com/martindoad-bit/tebiq/issues/18) |
+| R02 配偶者离婚桥接到定住者/身份変更 | 必须修 | **P0** | [#18](https://github.com/martindoad-bit/tebiq/issues/18) |
+| R03 公司/清算/経営语境推断経管 | 必须修 | **P0** | [#18](https://github.com/martindoad-bit/tebiq/issues/18) |
+| R04 在留+工作不一致/解雇 | 必须修 | **P0/P1** | [#18](https://github.com/martindoad-bit/tebiq/issues/18) |
+| R05 离境/回国识别在留连带风险 | 必须修 | **P1**（I08 按 **P0**）| [#18](https://github.com/martindoad-bit/tebiq/issues/18) |
+
+**ENGINE 建议实现顺序**：R01 → R03 → R05-I08 → R02 → R04（按风险由高到低）。
+
+---
+
 ## 要做什么：5 条路由规则（R01–R05）
 
 ### R01 — 时间敏感在留问题不得路由为 out_of_scope
