@@ -14,17 +14,47 @@
 
 ---
 
-## 当前主线
+## 当前阶段标签
 
 **Eval Round 1A Recovery — Routing Safety Gate + LLM Health**
 
-目标：修复路由 P0 问题，通过 LLM Health Check，完成 Phased Rerun 生成 ≥24 FULL_COMPARABLE 样本，进入 DOMAIN 正式标注。
+规则：多线并行。单线阻塞不等于全项目阻塞。
+
+---
+
+## 并行 Track 状态（v0.2 格式）
+
+```
+哪条 track 在动：    Internal Console / 100 問可视化（ENGINE → Issue #19）
+哪条 track blocked： Eval Round 1A（DeepSeek API timeout + R01-R05 routing fix pending）
+CEO 当前能看到什么：  /internal/eval-lab（100 题种子，TEBIQ 通道 30 题已生成）
+                    Internal Console（目标：可视化 100 题状态 + 分级标签）
+下一步谁自主推进：   GM → ENGINE（Issue #18 routing + Issue #19 console）
+```
+
+### Track A — Internal Console（进行中）
+
+| 任务 | 状态 | 说明 |
+|------|------|------|
+| Issue #19 Internal Console Work Packet | ✅ 已创建 | ENGINE 待实现 |
+| `/internal/eval-console`（或 eval-lab 增强）| ⏳ ENGINE 待实现 | 100 题可视化 + 分级标签 |
+
+### Track B — Eval Round 1A（阻塞中）
+
+| 任务 | 状态 | 说明 |
+|------|------|------|
+| LLM Health Check | ⏳ 等待 DeepSeek API 恢复 | `health-check.sh` 就绪 |
+| R01–R05 Routing Fix | ⏳ ENGINE Issue #18 | P0: R01/R02/R03/R04；P1: R05（I08 P0）|
+| Routing Regression Gate | ⏳ 等待 R01–R05 部署 | `run-round1-phased.sh` Step 1 自动验证 |
+| Formal Round 1A Phased Rerun | ⏳ 等待 Health Check + Routing | `run-round1-phased.sh` 就绪 |
+| DOMAIN 正式标注 | ⏳ 等待 FULL_COMPARABLE ≥ 24 | Work Packet 就绪但未激活 |
+| Round 1A 决策包 | ⏳ 等待标注完成 | — |
 
 参见：
-- `docs/eval/EVAL_ROUND1_SAMPLE_PACK.md` — 30 题选单 + 样本分级定义
-- `docs/eval/EVAL_ROUND1A_RECOVERY_PLAN.md` — 恢复路径 + Option B phased batch
-- `docs/eval/EVAL_ROUTING_SAFETY_GATE_PACK.md` — Routing P0 修复 Work Packet（ENGINE）
-- `docs/eval/EVAL_ROUND1A_OUT_OF_SCOPE_PACK.md` — 7 条 OOS 路由专项分析
+- `docs/eval/EVAL_ROUND1_SAMPLE_PACK.md` — 30 题选单 + 样本分级 v0.3
+- `docs/eval/EVAL_ROUND1A_RECOVERY_PLAN.md` — 恢复路径（Option B 推荐）
+- `docs/eval/EVAL_ROUTING_SAFETY_GATE_PACK.md` — R01–R05 Work Packet（Issue #18）
+- `docs/eval/EVAL_ROUND1A_OUT_OF_SCOPE_PACK.md` — 7 条 OOS 路由专项
 
 ---
 

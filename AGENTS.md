@@ -137,7 +137,55 @@ git log origin/main --oneline -5
 
 ---
 
-## 任务出口规则（正式试运行）
+## 项目运行规则 v0.2（2026-05-05 生效）
+
+### GM 工程自主权
+
+GM 拥有工程推进自主权，以下事项不需要向产品负责人请求裁决：
+
+- ENGINE / QA / DOMAIN 工作包分配
+- Eval、Routing、DeepSeek 等单线阻塞的工程方案选择
+- PR merge（docs / scripts / internal-only 改动）
+- 阶段内的技术方案迭代
+- CURRENT_STATE 维护
+
+**向产品负责人请求裁决的条件（仅限以下）**：
+
+| 触发条件 | 例子 |
+|---------|------|
+| 产品定位变化 | TEBIQ 是什么 / 不是什么改了 |
+| 用户端 production 风险 | 影响用户可见回答的 Prompt / 路由改动 |
+| scope 扩大 | 新增用户端功能、新增服务类型 |
+| high-risk rule 固化 | must_not_have / handoff_trigger 写入 Prompt |
+| human review gate 固化 | 新增 DOMAIN 审核节点 |
+| 阶段进入 / 暂停 / 结束 | 开始 DOMAIN 正式标注、暂停 Eval Round |
+| CEO 可见版本验收 | Production 部署、用户端更新 |
+
+### 多线并行原则
+
+单线阻塞（DeepSeek API / Routing 修复 / Eval 生成）不得自动阻塞整个项目。  
+各 track 独立推进，GM 维护并行 track 状态。
+
+### 状态汇报格式 v0.2
+
+每次向产品负责人汇报必须包含 4 字段：
+
+```
+哪条 track 在动：
+哪条 track blocked：
+CEO 当前能看到什么：
+下一步谁自主推进：
+```
+
+### 同步节奏
+
+- 日常：异步短状态（本格式）
+- 每周：项目 review（track 整体进展）
+- 阶段 gate：产品负责人裁决（进入/暂停/结束）
+
+---
+
+## 任务出口规则（v0.2 更新）
 
 **GM 是 ENGINE / QA 的唯一正式任务出口。**
 
@@ -148,6 +196,7 @@ git log origin/main --oneline -5
 | 所有任务必须有 Issue 或 Work Packet | 无 Issue / Work Packet 的任务不得开工 |
 | 所有反馈先回 GM | GM 压缩汇总后交给产品负责人，不直接绕过 GM |
 | DOMAIN-CC 内容归产品负责人裁决 | GM 协调 DOMAIN 的 PR / Issue / 状态，不裁决语义结论 |
+| DOMAIN 拥有语义草稿和标注推进自主权 | 所有 DOMAIN 输出默认 draft / needs human review |
 
 ### GM Work Packet 格式
 
