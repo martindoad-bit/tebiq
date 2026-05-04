@@ -31,6 +31,8 @@ async function main() {
   const conc = await import('@/lib/eval-lab/concurrency')
   const retry = await import('@/lib/eval-lab/retry')
   const classifier = await import('@/lib/eval-lab/sample-classifier')
+  const riskMatrix = await import('@/lib/eval-lab/risk-matrix-data')
+  const providerHealth = await import('@/lib/eval-lab/provider-health')
 
   let passes = 0
   let total = 0
@@ -369,6 +371,137 @@ async function main() {
     for (const c of ['TEBIQ_FALLBACK', 'TEBIQ_ROUTING_FAILURE', 'TEBIQ_OOS', 'DS_FAILED', 'INVALID', 'NONE'] as const) {
       assert.equal(classifier.isAnnotationEligible(c), false, `${c} should not be annotation-eligible`)
     }
+  })
+
+  // ---- 7. risk-matrix-data (Issue #26 / Workstream A) ----
+  await check('7a. RISK_MATRIX has 100 entries matching Eval Lab seed pack', () => {
+    const matrixKeys = Object.keys(riskMatrix.RISK_MATRIX)
+    assert.equal(matrixKeys.length, 100, `expected 100, got ${matrixKeys.length}`)
+    // Each starter_tag in the seed pack should map to a matrix entry.
+    for (const s of starter.STARTER_QUESTIONS) {
+      assert.ok(
+        matrixKeys.includes(s.starter_tag),
+        `seed tag missing from matrix: ${s.starter_tag}`,
+      )
+    }
+  })
+  await check('7b. risk_level values are HIGH | MEDIUM | LOW only', () => {
+    const allowed = new Set(['HIGH', 'MEDIUM', 'LOW'])
+    for (const [tag, e] of Object.entries(riskMatrix.RISK_MATRIX)) {
+      assert.ok(allowed.has(e.risk_level), `${tag}: bad risk_level ${e.risk_level}`)
+    }
+  })
+  await check('7c. handoff values are yes | conditional | no | null', () => {
+    const allowed = new Set(['yes', 'conditional', 'no', null])
+    for (const [tag, e] of Object.entries(riskMatrix.RISK_MATRIX)) {
+      assert.ok(
+        allowed.has(e.handoff as unknown as string | null),
+        `${tag}: bad handoff ${String(e.handoff)}`,
+      )
+    }
+  })
+  await check('7d. getRiskMatrixEntry returns null for unknown tag', () => {
+    assert.equal(riskMatrix.getRiskMatrixEntry('eval-lab-v1-Z99'), null)
+    assert.equal(riskMatrix.getRiskMatrixEntry(null), null)
+    assert.equal(riskMatrix.getRiskMatrixEntry(undefined), null)
+  })
+  await check('7e. Routing regression set marked HIGH risk in matrix', () => {
+    // The 7 routing-regression tags ought to be HIGH risk in DOMAIN's view.
+    // Matrix is DOMAIN-CC v0.1 draft; this assertion is a tripwire so the
+    // console doesn't quietly start showing low-risk badges on these.
+    for (const tag of Array.from(classifier.REGRESSION_SET)) {
+      const e = riskMatrix.getRiskMatrixEntry(tag)
+      assert.ok(e, `regression tag ${tag} not in matrix`)
+      assert.equal(e!.risk_level, 'HIGH', `regression tag ${tag} should be HIGH, got ${e!.risk_level}`)
+    }
+  })
+
+  // ---- 8. extended badges (Issue #26 §A2) ----
+  await check('8a. extendedBadges: HIGH risk + yes-handoff + non-FULL → P0+DOMAIN+BLOCKED', () => {
+    const b = classifier.extendedBadges({
+      sampleClass: 'TEBIQ_FALLBACK',
+      riskLevel: 'HIGH',
+      handoff: 'yes',
+    })
+    assert.deepEqual(Array.from(b).sort(), ['annotation_blocked', 'domain_review_needed', 'p0_candidate'])
+  })
+  await check('8b. extendedBadges: MEDIUM + conditional + FULL → P1+DOMAIN only (no BLOCKED)', () => {
+    const b = classifier.extendedBadges({
+      sampleClass: 'FULL_COMPARABLE',
+      riskLevel: 'MEDIUM',
+      handoff: 'conditional',
+    })
+    assert.deepEqual(Array.from(b).sort(), ['domain_review_needed', 'p1_candidate'])
+  })
+  await check('8c. extendedBadges: LOW + no-handoff + FULL → empty (no badges)', () => {
+    const b = classifier.extendedBadges({
+      sampleClass: 'FULL_COMPARABLE',
+      riskLevel: 'LOW',
+      handoff: 'no',
+    })
+    assert.deepEqual(Array.from(b), [])
+  })
+  await check('8d. annotationBlockReason: null for FULL, non-null for others', () => {
+    assert.equal(classifier.annotationBlockReason('FULL_COMPARABLE'), null)
+    for (const c of ['TEBIQ_FALLBACK', 'TEBIQ_ROUTING_FAILURE', 'TEBIQ_OOS', 'DS_FAILED', 'INVALID', 'NONE'] as const) {
+      const reason = classifier.annotationBlockReason(c)
+      assert.ok(reason && reason.length > 0, `${c}: missing block reason`)
+    }
+  })
+
+  // ---- 9. provider health (Issue #26 §A1) ----
+  const now = new Date('2026-05-05T12:00:00Z')
+  const recent = (offsetMins: number) =>
+    new Date(now.getTime() - offsetMins * 60_000).toISOString()
+  await check('9a. inferDeepseekHealth: empty → unknown', () => {
+    const h = providerHealth.inferDeepseekHealth([], { now })
+    assert.equal(h.status, 'unknown')
+    assert.equal(h.last_checked_at, null)
+    assert.equal(h.sample_size, 0)
+  })
+  await check('9b. inferDeepseekHealth: latest is success → healthy', () => {
+    const h = providerHealth.inferDeepseekHealth(
+      [
+        { answer_type: 'deepseek_raw', answer_text: 'ok', error: null, created_at: recent(60) },
+        { answer_type: 'deepseek_raw', answer_text: null, error: 'deepseek_http_502', created_at: recent(120) },
+      ],
+      { now },
+    )
+    assert.equal(h.status, 'healthy')
+    assert.equal(h.sample_size, 2)
+  })
+  await check('9c. inferDeepseekHealth: latest is timeout → timeout', () => {
+    const h = providerHealth.inferDeepseekHealth(
+      [
+        { answer_type: 'deepseek_raw', answer_text: null, error: 'deepseek_timeout', created_at: recent(30) },
+        { answer_type: 'deepseek_raw', answer_text: 'ok', error: null, created_at: recent(120) },
+      ],
+      { now },
+    )
+    assert.equal(h.status, 'timeout')
+  })
+  await check('9d. inferDeepseekHealth: latest is non-timeout error → unavailable', () => {
+    const h = providerHealth.inferDeepseekHealth(
+      [{ answer_type: 'deepseek_raw', answer_text: null, error: 'deepseek_unknown', created_at: recent(30) }],
+      { now },
+    )
+    assert.equal(h.status, 'unavailable')
+  })
+  await check('9e. inferDeepseekHealth: only outside-lookback rows → unknown', () => {
+    const h = providerHealth.inferDeepseekHealth(
+      [{ answer_type: 'deepseek_raw', answer_text: 'ok', error: null, created_at: recent(60 * 48) }],
+      { now, lookbackHours: 24 },
+    )
+    assert.equal(h.status, 'unknown')
+  })
+  await check('9f. inferDeepseekHealth: ignores tebiq_current rows', () => {
+    const h = providerHealth.inferDeepseekHealth(
+      [
+        { answer_type: 'tebiq_current', answer_text: null, error: 'tebiq_pipeline_failed', created_at: recent(10) },
+      ],
+      { now },
+    )
+    assert.equal(h.status, 'unknown')
   })
 
   console.log(`\nEval Lab V1 smoke: ${passes}/${total} pass`)
