@@ -9,8 +9,8 @@
 | `last_verified` | 2026-05-05 |
 | `verified_by` | GM |
 | `source_of_truth` | GitHub remote `origin/main` + `gh pr view` (per-branch) + user-provided latest facts |
-| `main_head` | `572b0e3` |
-| `main_head_title` | chore(state): main_head→6166cf8 + Issue #19 in active table |
+| `main_head` | `ec8ad27` |
+| `main_head_title` | feat(domain): semantic review infrastructure v0.1 + 100Q risk map |
 
 ---
 
@@ -38,7 +38,7 @@
 哪条 track blocked： A（DeepSeek API timeout + R01-R05 pending）
 CEO 当前能看到什么：  https://tebiq.jp + /internal/eval-lab（100 题种子）
                     目标：CEO 能打开 Internal Console，看见 100 问和每题状态
-下一步谁自主推进：   GM → ENGINE（Issue #18 + #19）；GM → DOMAIN（Track E Work Packet）
+下一步谁自主推进：   ENGINE → Issue #19（最優先）→ Issue #18 完成後 DOMAIN Track E Phase 2
 ```
 
 ---
@@ -75,13 +75,15 @@ CEO 当前能看到什么：  https://tebiq.jp + /internal/eval-lab（100 题种
 - `docs/eval/EVAL_ROUTING_SAFETY_GATE_PACK.md` — R01–R05 Work Packet（Issue #18）
 - `docs/eval/EVAL_ROUND1A_OUT_OF_SCOPE_PACK.md` — 7 条 OOS 路由专项
 
-## Track E — DOMAIN Assets（并行推进）
+## Track E — DOMAIN Assets（Phase 1 完成）
 
 | 任务 | 状态 | 说明 |
 |------|------|------|
 | 100Q 风险图谱 Work Packet | ✅ 完成 | `docs/eval/EVAL_DOMAIN_100Q_PACK.md` |
-| 在留 pattern 梳理 | ⏳ DOMAIN 待执行 | 不依赖 FULL_COMPARABLE |
-| Pre-Eval Hypothesis Pack | ⏳ 活跃假设包 | PR #10（未激活为正式标注）|
+| TEBIQ_100Q_RISK_MAP.md | ✅ 完成（`ec8ad27`）| P0×20 / P1×60 / P2×20 + 20 P0 详案卡 + 10 高风险场景库 |
+| 7条 OOS routing regression 关联表 | ✅ 完成 | docs/domain/ 内，draft |
+| PR #10 merge | ✅ 完成（`ec8ad27`）| — |
+| Phase 2：7条 routing 回归语义复核 | ⏳ 等待 ENGINE Issue #18 完成 | GM 提供回归数据后 DOMAIN 执行 |
 
 ---
 
@@ -138,7 +140,7 @@ Production URL：`https://tebiq.jp`（Vercel 部署 `572b0e3`）
 |----|------|------|
 | [#19](https://github.com/martindoad-bit/tebiq/issues/19) | 🟡 ENGINE: Internal Console v1（**最優先**）| 100 题可视化 + 重跑按钮 |
 | [#18](https://github.com/martindoad-bit/tebiq/issues/18) | 🔴 ENGINE: R01–R05 routing fix | 7/7 regression pass → Phased Rerun unlock |
-| [#10](https://github.com/martindoad-bit/tebiq/pull/10) | Domain 语义复核基础设施 v0.1 | 等 Formal Round 1A 完成后激活 |
+| [#10](https://github.com/martindoad-bit/tebiq/pull/10) | ✅ merged（`ec8ad27`）| Track E Phase 1 完成 |
 | [#11](https://github.com/martindoad-bit/tebiq/pull/11) | Product docs 增量（暂不 merge）| 产品负责人裁决：close or 提取小 patch |
 | [#4](https://github.com/martindoad-bit/tebiq/pull/4) | answer envelope-first v0.2（暂停）| 产品裁决：后续检查是否 stale |
 
