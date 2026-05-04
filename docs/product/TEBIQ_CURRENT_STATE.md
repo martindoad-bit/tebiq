@@ -9,8 +9,8 @@
 | `last_verified` | 2026-05-04 |
 | `verified_by` | GM |
 | `source_of_truth` | GitHub remote `origin/main` + `gh pr view` (per-branch) + user-provided latest facts |
-| `main_head` | `39f6bae` |
-| `main_head_title` | docs(state): post-merge Current State update — PR #12 merged |
+| `main_head` | `c83093f` |
+| `main_head_title` | docs(ops): GM 正式试运行组织模式 — 任务出口规则、Work Packet 格式、反馈汇总格式 |
 
 ---
 
