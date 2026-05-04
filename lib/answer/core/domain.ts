@@ -37,6 +37,45 @@ function matchDomain(text: string): SupportedDomain {
   if (/(技人国|技術・?人文|人文签|人文簽|国際業務|gijinkoku|技術人文知識)/.test(text)) {
     return 'gijinkoku'
   }
+
+  // ─── Routing Safety Gate v1 (Issue #18, R01–R05) ───────────────────
+  // Targeted regressions: 7 high-risk questions that were mis-routed
+  // to `out_of_scope` because none of the visa-keyword regexes above
+  // matched their phrasing. We resolve them to a *broader* domain
+  // (long_term_resident / family_stay / business_manager / admin_general)
+  // so the orchestrator stops short-circuiting to OOS — downstream
+  // projector then produces clarification_needed / preliminary, which
+  // is the correct safety stance per the Work Packet.
+  //
+  // These rules are intentionally narrow and conjunctive (multiple
+  // signals required) to avoid scope creep into questions that should
+  // still legitimately fall to 'unknown'. They run BEFORE the
+  // admin_general broad patterns so a specific domain wins when it can.
+
+  // R02 — 配偶 + 离婚 → 身份変更 / 定住者 path
+  //   Targets: D05 (日本人配偶签离婚后还能留在日本吗？)
+  //            D06 (配偶签离婚后多久要处理在留问题？)
+  if (/(配偶|配偶者|日本人.*配偶)/.test(text) && /(离婚|離婚|りこん)/.test(text)) {
+    return 'long_term_resident'
+  }
+
+  // D09 — 家人 + 在留 / 签证 → 家族 path (R02 family-side)
+  //   Target: D09 (家人的在留资格跟我有关，我换签证会影响他们吗？)
+  if (/(家人|家族|家属)/.test(text) && /(在留|签证|簽證|ビザ|资格|資格)/.test(text)) {
+    return 'family_stay'
+  }
+
+  // R03 — 公司 / 法人 + 清算 / 解散 → 経管 path
+  //   R05 (overlap) — 回国 / 帰国 / 出境 + 公司 / 経営 → 経管 path
+  //   Target: I08 (公司还没清算，我可以直接回国吗？)
+  if (/(公司|会社|法人|商社|有限会社|株式会社)/.test(text) && /(清算|解散|閉店|注销|閉鎖|破産)/.test(text)) {
+    return 'business_manager'
+  }
+  if (/(回国|帰国|出境|離日|帰るとき|帰国時)/.test(text) && /(公司|会社|法人|経営|経管|经营|经管|清算)/.test(text)) {
+    return 'business_manager'
+  }
+  // ──────────────────────────────────────────────────────────────────
+
   // V1.1 — admin_general catches the long tail of 在留行政 questions
   // that aren't tied to one of the 5 specific visa categories but are
   // still in-scope for a hedged preliminary answer:
@@ -52,6 +91,28 @@ function matchDomain(text: string): SupportedDomain {
   if (/(厚生年金|国民年金|年金|健康保険|健保|国民健康保险|国保|社会保険|社会保险|社保)/.test(text)) return 'admin_general'
   if (/(住民税|所得税|確定申告|确定申告|納税|纳税)/.test(text)) return 'admin_general'
   if (/(役員変更|代表変更|本店移転|事務所移転|公司变更|会社変更|搬迁|搬家.*登记|登記)/.test(text)) return 'admin_general'
+
+  // ─── Routing Safety Gate v1 (continued) ────────────────────────────
+  // R01 — 时间敏感 + 在留 / 签证 → admin_general (clarification_needed)
+  //   Target: J03 (签证快到期了但材料还没准备好怎么办？)
+  if (
+    /(在留|签证|簽證|ビザ|资格|資格|入管|永住|更新|変更|変更許可)/.test(text) &&
+    /(到期|快到期|期限|截止|過期|过期|赶不上|過ぎ|期日|締切|時限)/.test(text)
+  ) {
+    return 'admin_general'
+  }
+
+  // R04 — 解雇 / 失业 / 在留+工作不一致 → admin_general (clarification_needed)
+  //   Targets: J04 (我被公司解雇了，在留怎么办？)
+  //            J08 (我的在留资格和现在实际工作不一致怎么办？)
+  if (/(解雇|失业|失業|解職|離職|クビ|首になった)/.test(text) && /(在留|签证|簽證|ビザ|资格|資格)/.test(text)) {
+    return 'admin_general'
+  }
+  if (/在留资格|在留資格/.test(text) && /(工作|仕事|職|職業|労働)/.test(text)) {
+    return 'admin_general'
+  }
+  // ──────────────────────────────────────────────────────────────────
+
   return 'unknown'
 }
 
