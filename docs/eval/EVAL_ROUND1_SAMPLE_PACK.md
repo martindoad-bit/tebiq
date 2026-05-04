@@ -1,26 +1,34 @@
 # Eval Round 1 — 30-Question Sample Pack
 
 > **用途**：TEBIQ Answer Quality Baseline v0.1 首批可比较样本集。
-> **版本**：v0.1（2026-05-04，GM 组织）
-> **状态**：待 PR #9 merge 后执行生成
+> **版本**：v0.3（2026-05-05，GM 组织）
+> **状态**：等待 Routing Safety Gate v1 通过 + LLM Health Check 通过后执行正式重跑
 >
-> 每题必须同时完成 DeepSeek raw + TEBIQ output 才算"可比较样本"。
-> 仅有 TEBIQ-only 的题视为"技术样本"，不进产品质量结论。
+> 每题必须同时完成 DeepSeek raw + TEBIQ output，且 TEBIQ 无 llm_timeout 降级、无路由错误，才算"正式可比较样本"。
 
 ---
 
-## 样本分级定义（v0.2 — 2026-05-05 更新）
+## 样本分级定义（v0.3 — 2026-05-05 更新）
 
-> v0.1 仅区分 FULL_COMPARABLE / TEBIQ_ONLY / 不可用三类。
-> v0.2 根据 Technical Dry Run 发现增加细粒度分类，明确 fallback 样本的处理规则。
+> v0.2 增加 fallback / OOS / DS_FAILED / INVALID 分类。
+> v0.3 进一步区分 OOS 的两种子类型：已知路由错误（regression set）vs. 待确认。
 
-| 分类 | 条件 | 是否可进入 DOMAIN 正式标注 |
-|------|------|--------------------------|
-| **FULL_COMPARABLE** | TEBIQ ok + DeepSeek ok + `fallback_reason` ≠ `llm_timeout` + `status` ≠ `out_of_scope` | ✅ 是 |
-| **TEBIQ_FALLBACK_SAMPLE** | TEBIQ ok + `fallback_reason = llm_timeout` | ❌ 否（LLM 未参与，不代表真实 TEBIQ 输出）|
-| **TEBIQ_OUT_OF_SCOPE_SAMPLE** | TEBIQ ok + `status = out_of_scope` | ❌ 否（进入 out_of_scope 路由专项分析）|
-| **DEEPSEEK_FAILED_SAMPLE** | TEBIQ FULL（非 fallback / 非 OOS）+ DeepSeek 失败 | ❌ 否（无对比基准）|
-| **INVALID_SAMPLE** | TEBIQ 失败 / 无有效数据 | ❌ 否 |
+| 分类 | 条件 | 可进 DOMAIN 正式标注 | 下一步处理 |
+|------|------|---------------------|-----------|
+| **FULL_COMPARABLE** | TEBIQ ok + DS ok + no `llm_timeout` + not `out_of_scope` | ✅ 是 | 正式标注 |
+| **TEBIQ_FALLBACK_SAMPLE** | TEBIQ ok + `fallback_reason = llm_timeout` | ❌ 否 | 等 LLM 恢复后重跑 |
+| **TEBIQ_ROUTING_FAILURE** | TEBIQ ok + `out_of_scope` + 题目在 regression set | ❌ 否 | Routing Safety Gate 修复后重跑 |
+| **TEBIQ_OUT_OF_SCOPE_SAMPLE** | TEBIQ ok + `out_of_scope` + 题目不在 regression set | ❌ 否 | DOMAIN 专项路由判断 |
+| **TEBIQ_OUT_OF_SCOPE_CORRECT** | DOMAIN 确认 out_of_scope 为正确路由 | ❌ 否 | 记录 scope boundary，不重跑 |
+| **DEEPSEEK_FAILED_SAMPLE** | TEBIQ FULL（非 fallback / 非 OOS）+ DS 失败 | ❌ 否 | DS 恢复后补跑 |
+| **INVALID_SAMPLE** | TEBIQ 失败 / 无有效数据 | ❌ 否 | 重跑 |
+
+**Routing Regression Set（已知路由错误，修复前不得进入正式批量）**：
+
+```
+eval-lab-v1-J04  eval-lab-v1-J08  eval-lab-v1-J03
+eval-lab-v1-I08  eval-lab-v1-D05  eval-lab-v1-D06  eval-lab-v1-D09
+```
 
 **产品负责人当前只接受 FULL_COMPARABLE 进入正式 DOMAIN 标注。**
 

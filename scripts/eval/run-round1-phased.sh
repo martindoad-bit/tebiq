@@ -1,25 +1,32 @@
 #!/usr/bin/env bash
-# Eval Round 1 — Phased Batch Generation
+# Eval Round 1 — Phased Batch Generation (v2)
 #
-# Generates FULL_COMPARABLE samples in 4 phases with quality gates.
-# Each phase must pass before the next begins.
+# Execution flow:
+#   Step 0: (external) health-check.sh 5/5 pass — run before this script
+#   Step 1: Routing regression gate — 7 known OOS tags must NOT return out_of_scope
+#   Step 2: Probe 3 FULL_COMPARABLE
+#   Step 3: Mini batch 5
+#   Step 4: Batch 10
+#   Step 5: Complete to 30
 #
 # Sample classification (per question):
-#   FULL_COMPARABLE         — TEBIQ ok + DS ok + no llm_timeout + not out_of_scope
-#   TEBIQ_FALLBACK_SAMPLE   — TEBIQ ok + fallback_reason=llm_timeout
-#   TEBIQ_OUT_OF_SCOPE_SAMPLE — TEBIQ ok + status=out_of_scope
-#   DEEPSEEK_FAILED_SAMPLE  — TEBIQ FULL (non-fallback, non-oos) + DS failed
-#   INVALID_SAMPLE          — TEBIQ failed entirely
+#   FULL_COMPARABLE              — TEBIQ ok + DS ok + no llm_timeout + not out_of_scope
+#   TEBIQ_FALLBACK_SAMPLE        — TEBIQ ok + fallback_reason=llm_timeout
+#   TEBIQ_ROUTING_FAILURE        — TEBIQ ok + out_of_scope + tag in regression set
+#   TEBIQ_OUT_OF_SCOPE_SAMPLE    — TEBIQ ok + out_of_scope + tag NOT in regression set
+#   DEEPSEEK_FAILED_SAMPLE       — TEBIQ FULL (non-fallback, non-oos) + DS failed
+#   INVALID_SAMPLE               — TEBIQ failed entirely
 #
 # Only FULL_COMPARABLE samples are eligible for formal DOMAIN annotation.
+# TEBIQ_ROUTING_FAILURE in regression set → abort immediately (routing fix required).
 #
 # Usage:
 #   BASE_URL=https://tebiq.jp bash scripts/eval/run-round1-phased.sh
 #
-# Prerequisites (run health-check.sh first):
-#   1. DeepSeek raw: 3/3 pass in health-check.sh
-#   2. TEBIQ LLM: 3/3 pass, 0 llm_timeout fallback
-#   3. FULL_COMPARABLE pairs confirmed in probe
+# Prerequisites:
+#   1. Run health-check.sh first — must pass all 5 gates
+#   2. Routing Safety Gate v1 must be deployed (R01-R05)
+#   3. Phased script will self-verify routing in Step 1
 
 set -euo pipefail
 
@@ -34,8 +41,22 @@ LOG="$OUTPUT_DIR/run.log"
 log() { echo "[$(date +%H:%M:%S)] $*" | tee -a "$LOG"; }
 abort() { log ""; log "❌ ABORT: $*"; log "Output: $OUTPUT_DIR"; exit 1; }
 
+# ---- Routing regression set ----
+# These 7 tags were incorrectly routed to out_of_scope in the Technical Dry Run.
+# They MUST NOT return out_of_scope after Routing Safety Gate v1 is deployed.
+# If any return out_of_scope here → TEBIQ_ROUTING_FAILURE → abort before formal batch.
+REGRESSION_TAGS=(
+  "eval-lab-v1-J04"
+  "eval-lab-v1-J08"
+  "eval-lab-v1-J03"
+  "eval-lab-v1-I08"
+  "eval-lab-v1-D05"
+  "eval-lab-v1-D06"
+  "eval-lab-v1-D09"
+)
+
 # ---- Phase definitions ----
-# Phase 1: 3 probe questions (lowest-risk, previously confirmed LLM-capable)
+# Phase 2 (probe): 3 probe questions (lowest-risk, previously confirmed LLM-capable)
 PHASE1_TAGS=(
   "eval-lab-v1-G04"
   "eval-lab-v1-H05"
@@ -130,6 +151,12 @@ run_deepseek() {
     --max-time 65 2>/dev/null || echo '{"ok":false,"error":"curl_failed"}'
 }
 
+is_regression_tag() {
+  local TAG="$1"
+  for R in "${REGRESSION_TAGS[@]}"; do [[ "$R" == "$TAG" ]] && return 0; done
+  return 1
+}
+
 classify_sample() {
   local TAG="$1"
   local T_FILE="$OUTPUT_DIR/tebiq_${TAG}.json"
@@ -146,7 +173,11 @@ classify_sample() {
   elif $T_OK && [[ "$T_FB" == "llm_timeout" ]]; then
     echo "TEBIQ_FALLBACK_SAMPLE"
   elif $T_OK && [[ "$T_STS" == "out_of_scope" ]]; then
-    echo "TEBIQ_OUT_OF_SCOPE_SAMPLE"
+    if is_regression_tag "$TAG"; then
+      echo "TEBIQ_ROUTING_FAILURE"
+    else
+      echo "TEBIQ_OUT_OF_SCOPE_SAMPLE"
+    fi
   elif $T_OK && ! $D_OK; then
     echo "DEEPSEEK_FAILED_SAMPLE"
   else
@@ -234,47 +265,83 @@ run_phase() {
 
 PHASE_FC=0; PHASE_TFB=0; PHASE_TOTAL=0
 
-# ---- Phase 1: Probe (3 questions) ----
+# ---- Step 1: Routing Regression Gate ----
+# Run the 7 known routing-failure tags through TEBIQ only.
+# None must return out_of_scope. If any do → TEBIQ_ROUTING_FAILURE → abort.
+log ""
+log "=== Step 1: Routing Regression Gate (${#REGRESSION_TAGS[@]} tags) ==="
+ROUTING_PASS=0; ROUTING_FAIL=0; ROUTING_FAIL_TAGS=""
+
+for TAG in "${REGRESSION_TAGS[@]}"; do
+  RESP=$(run_tebiq "$TAG")
+  echo "$RESP" > "$OUTPUT_DIR/regression_${TAG}.json"
+  STS=$(echo "$RESP" | jq -r '.status // "?"' 2>/dev/null)
+  FB=$(echo "$RESP" | jq -r '.fallback_reason // ""' 2>/dev/null)
+  EV=$(echo "$RESP" | jq -r '.engine_version // "?"' 2>/dev/null)
+
+  if echo "$RESP" | jq -e '.ok == true' >/dev/null 2>&1 && [[ "$STS" != "out_of_scope" ]]; then
+    log "  ✅ $TAG → $STS ($EV, fallback='$FB')"
+    ROUTING_PASS=$((ROUTING_PASS + 1))
+  elif echo "$RESP" | jq -e '.ok == true' >/dev/null 2>&1 && [[ "$STS" == "out_of_scope" ]]; then
+    log "  ❌ ROUTING_FAILURE $TAG → out_of_scope (routing fix not deployed)"
+    ROUTING_FAIL=$((ROUTING_FAIL + 1))
+    ROUTING_FAIL_TAGS="$ROUTING_FAIL_TAGS $TAG"
+  else
+    ERR=$(echo "$RESP" | jq -r '.error // "unknown"' 2>/dev/null)
+    log "  ⚠️  $TAG → TEBIQ error: $ERR"
+    ROUTING_FAIL=$((ROUTING_FAIL + 1))
+    ROUTING_FAIL_TAGS="$ROUTING_FAIL_TAGS $TAG"
+  fi
+done
+
+if [[ $ROUTING_FAIL -gt 0 ]]; then
+  abort "Step 1 ROUTING REGRESSION FAIL — $ROUTING_FAIL/${#REGRESSION_TAGS[@]} tags:$ROUTING_FAIL_TAGS. Deploy Routing Safety Gate v1 (R01-R05) first."
+fi
+log ""
+log "  ✅ Step 1 PASS: All ${#REGRESSION_TAGS[@]} regression tags routed correctly — proceeding"
+
+# ---- Step 2–5: Phased batch ----
+# ---- Phase 2/Step 2: Probe (3 questions) ----
 # Gate: 3/3 FULL_COMPARABLE (strict — any fallback/DS fail = abort)
-run_phase "1-PROBE" "${PHASE1_TAGS[@]}"
+run_phase "2-PROBE" "${PHASE1_TAGS[@]}"
 P1_FC=$PHASE_FC; P1_TFB=$PHASE_TFB; P1_TOTAL=$PHASE_TOTAL
 if [[ $P1_FC -lt $P1_TOTAL ]]; then
   log ""
-  log "Phase 1 gate: $P1_FC/$P1_TOTAL FULL_COMPARABLE"
+  log "Phase 2-PROBE gate: $P1_FC/$P1_TOTAL FULL_COMPARABLE"
   if [[ $P1_TFB -gt 0 ]]; then
-    abort "Phase 1 FAIL — $P1_TFB llm_timeout fallback(s). DeepSeek LLM not available. Re-run health-check.sh."
+    abort "Phase 2 FAIL — $P1_TFB llm_timeout fallback(s). DeepSeek LLM not available. Re-run health-check.sh."
   else
-    abort "Phase 1 FAIL — $P1_FC/$P1_TOTAL FULL_COMPARABLE. Check DeepSeek API. Re-run health-check.sh."
+    abort "Phase 2 FAIL — $P1_FC/$P1_TOTAL FULL_COMPARABLE. Check DeepSeek API. Re-run health-check.sh."
   fi
 fi
 log ""
-log "  ✅ Phase 1 gate PASS: $P1_FC/$P1_TOTAL FULL_COMPARABLE — proceeding to Phase 2"
+log "  ✅ Phase 2 gate PASS: $P1_FC/$P1_TOTAL FULL_COMPARABLE — proceeding to Phase 3"
 
-# ---- Phase 2: Mini-batch (5 questions) ----
+# ---- Phase 3/Step 3: Mini-batch (5 questions) ----
 # Gate: ≥4/5 FULL_COMPARABLE
-run_phase "2-MINI" "${PHASE2_TAGS[@]}"
+run_phase "3-MINI" "${PHASE2_TAGS[@]}"
 P2_FC=$PHASE_FC; P2_TFB=$PHASE_TFB; P2_TOTAL=$PHASE_TOTAL
 MIN_P2=$(( (P2_TOTAL * 4 + 4) / 5 ))  # ceil(4/5)
 if [[ $P2_FC -lt $MIN_P2 ]]; then
-  abort "Phase 2 FAIL — $P2_FC/$P2_TOTAL FULL_COMPARABLE (need ≥$MIN_P2). Stopping."
+  abort "Phase 3 FAIL — $P2_FC/$P2_TOTAL FULL_COMPARABLE (need ≥$MIN_P2). Stopping."
 fi
 log ""
-log "  ✅ Phase 2 gate PASS: $P2_FC/$P2_TOTAL FULL_COMPARABLE — proceeding to Phase 3"
+log "  ✅ Phase 3 gate PASS: $P2_FC/$P2_TOTAL FULL_COMPARABLE — proceeding to Phase 4"
 
-# ---- Phase 3: Batch-10 ----
+# ---- Phase 4/Step 4: Batch-10 ----
 # Gate: ≥8/10 FULL_COMPARABLE
-run_phase "3-BATCH10" "${PHASE3_TAGS[@]}"
+run_phase "4-BATCH10" "${PHASE3_TAGS[@]}"
 P3_FC=$PHASE_FC; P3_TFB=$PHASE_TFB; P3_TOTAL=$PHASE_TOTAL
 MIN_P3=$(( (P3_TOTAL * 8 + 9) / 10 ))  # ceil(8/10)
 if [[ $P3_FC -lt $MIN_P3 ]]; then
-  abort "Phase 3 FAIL — $P3_FC/$P3_TOTAL FULL_COMPARABLE (need ≥$MIN_P3). Stopping."
+  abort "Phase 4 FAIL — $P3_FC/$P3_TOTAL FULL_COMPARABLE (need ≥$MIN_P3). Stopping."
 fi
 log ""
-log "  ✅ Phase 3 gate PASS: $P3_FC/$P3_TOTAL FULL_COMPARABLE — proceeding to Phase 4"
+log "  ✅ Phase 4 gate PASS: $P3_FC/$P3_TOTAL FULL_COMPARABLE — proceeding to Phase 5"
 
-# ---- Phase 4: Complete to 30 ----
+# ---- Phase 5/Step 5: Complete to 30 ----
 # No gate (already validated enough)
-run_phase "4-COMPLETE" "${PHASE4_TAGS[@]}"
+run_phase "5-COMPLETE" "${PHASE4_TAGS[@]}"
 P4_FC=$PHASE_FC
 
 # ---- Export ----
@@ -289,17 +356,18 @@ log "Full export: q=$EXP_Q a=$EXP_A"
 
 # ---- Final summary ----
 ALL_TAGS=("${PHASE1_TAGS[@]}" "${PHASE2_TAGS[@]}" "${PHASE3_TAGS[@]}" "${PHASE4_TAGS[@]}")
-TOTAL_FC=0; TOTAL_TFB=0; TOTAL_OOS=0; TOTAL_DSF=0; TOTAL_INV=0
-FC_LIST=""; TFB_LIST=""; OOS_LIST=""; DSF_LIST=""
+TOTAL_FC=0; TOTAL_TFB=0; TOTAL_RF=0; TOTAL_OOS=0; TOTAL_DSF=0; TOTAL_INV=0
+FC_LIST=""; TFB_LIST=""; RF_LIST=""; OOS_LIST=""; DSF_LIST=""
 
 for TAG in "${ALL_TAGS[@]}"; do
   CLS=$(classify_sample "$TAG")
   case "$CLS" in
-    FULL_COMPARABLE)           TOTAL_FC=$((TOTAL_FC + 1)); FC_LIST="$FC_LIST $TAG" ;;
-    TEBIQ_FALLBACK_SAMPLE)     TOTAL_TFB=$((TOTAL_TFB + 1)); TFB_LIST="$TFB_LIST $TAG" ;;
-    TEBIQ_OUT_OF_SCOPE_SAMPLE) TOTAL_OOS=$((TOTAL_OOS + 1)); OOS_LIST="$OOS_LIST $TAG" ;;
-    DEEPSEEK_FAILED_SAMPLE)    TOTAL_DSF=$((TOTAL_DSF + 1)); DSF_LIST="$DSF_LIST $TAG" ;;
-    INVALID_SAMPLE)            TOTAL_INV=$((TOTAL_INV + 1)) ;;
+    FULL_COMPARABLE)              TOTAL_FC=$((TOTAL_FC + 1)); FC_LIST="$FC_LIST $TAG" ;;
+    TEBIQ_FALLBACK_SAMPLE)        TOTAL_TFB=$((TOTAL_TFB + 1)); TFB_LIST="$TFB_LIST $TAG" ;;
+    TEBIQ_ROUTING_FAILURE)        TOTAL_RF=$((TOTAL_RF + 1)); RF_LIST="$RF_LIST $TAG" ;;
+    TEBIQ_OUT_OF_SCOPE_SAMPLE)    TOTAL_OOS=$((TOTAL_OOS + 1)); OOS_LIST="$OOS_LIST $TAG" ;;
+    DEEPSEEK_FAILED_SAMPLE)       TOTAL_DSF=$((TOTAL_DSF + 1)); DSF_LIST="$DSF_LIST $TAG" ;;
+    INVALID_SAMPLE)               TOTAL_INV=$((TOTAL_INV + 1)) ;;
   esac
 done
 
@@ -311,11 +379,13 @@ jq -n \
   --argjson target ${#ALL_TAGS[@]} \
   --argjson full_comparable "$TOTAL_FC" \
   --argjson tebiq_fallback "$TOTAL_TFB" \
+  --argjson tebiq_routing_failure "$TOTAL_RF" \
   --argjson tebiq_out_of_scope "$TOTAL_OOS" \
   --argjson deepseek_failed "$TOTAL_DSF" \
   --argjson invalid "$TOTAL_INV" \
   --arg fc_tags "${FC_LIST# }" \
   --arg tfb_tags "${TFB_LIST# }" \
+  --arg rf_tags "${RF_LIST# }" \
   --arg oos_tags "${OOS_LIST# }" \
   --arg dsf_tags "${DSF_LIST# }" \
   '{
@@ -327,12 +397,14 @@ jq -n \
     sample_classification: {
       FULL_COMPARABLE: $full_comparable,
       TEBIQ_FALLBACK_SAMPLE: $tebiq_fallback,
+      TEBIQ_ROUTING_FAILURE: $tebiq_routing_failure,
       TEBIQ_OUT_OF_SCOPE_SAMPLE: $tebiq_out_of_scope,
       DEEPSEEK_FAILED_SAMPLE: $deepseek_failed,
       INVALID_SAMPLE: $invalid
     },
     full_comparable_tags: ($fc_tags | split(" ") | map(select(length > 0))),
     tebiq_fallback_tags: ($tfb_tags | split(" ") | map(select(length > 0))),
+    tebiq_routing_failure_tags: ($rf_tags | split(" ") | map(select(length > 0))),
     tebiq_out_of_scope_tags: ($oos_tags | split(" ") | map(select(length > 0))),
     deepseek_failed_tags: ($dsf_tags | split(" ") | map(select(length > 0)))
   }' > "$OUTPUT_DIR/summary.json"
@@ -340,11 +412,12 @@ jq -n \
 log ""
 log "=== ROUND 1 PHASED BATCH COMPLETE ==="
 log "Output: $OUTPUT_DIR"
-log "  Target:                    ${#ALL_TAGS[@]}"
-log "  FULL_COMPARABLE:           $TOTAL_FC"
-log "  TEBIQ_FALLBACK_SAMPLE:     $TOTAL_TFB"
-log "  TEBIQ_OUT_OF_SCOPE_SAMPLE: $TOTAL_OOS"
-log "  DEEPSEEK_FAILED_SAMPLE:    $TOTAL_DSF"
-log "  INVALID_SAMPLE:            $TOTAL_INV"
+log "  Target:                       ${#ALL_TAGS[@]}"
+log "  FULL_COMPARABLE:              $TOTAL_FC"
+log "  TEBIQ_FALLBACK_SAMPLE:        $TOTAL_TFB"
+log "  TEBIQ_ROUTING_FAILURE:        $TOTAL_RF"
+log "  TEBIQ_OUT_OF_SCOPE_SAMPLE:    $TOTAL_OOS"
+log "  DEEPSEEK_FAILED_SAMPLE:       $TOTAL_DSF"
+log "  INVALID_SAMPLE:               $TOTAL_INV"
 log ""
 log "Summary: $OUTPUT_DIR/summary.json"
