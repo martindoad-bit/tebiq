@@ -105,9 +105,12 @@ for TAG in "${TAGS[@]}"; do
     continue
   fi
 
+  QTEXT=$(get_question_text "$TAG")
+  DS_PAYLOAD=$(jq -n --arg q "$QTEXT" --arg qid "$QID" --arg r "$REVIEWER" \
+    '{"question":$q,"question_id":$qid,"reviewer":$r}')
   RESP=$(curl -sf -X POST "$BASE_URL/api/internal/eval-lab/deepseek-raw" \
     -H "Content-Type: application/json" \
-    -d "{\"question_id\":\"$QID\",\"reviewer\":\"$REVIEWER\"}" \
+    -d "$DS_PAYLOAD" \
     --max-time 90 2>/dev/null) || RESP='{"ok":false,"error":"curl_failed"}'
 
   echo "$RESP" > "$OUTPUT_DIR/deepseek_${TAG}.json"
