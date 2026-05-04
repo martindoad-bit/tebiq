@@ -9,8 +9,8 @@
 | `last_verified` | 2026-05-05 |
 | `verified_by` | GM |
 | `source_of_truth` | GitHub remote `origin/main` + `gh pr view` (per-branch) + user-provided latest facts |
-| `main_head` | `f8051b0` |
-| `main_head_title` | feat(eval): routing safety gate v1 + sample classification v0.3 + phased script v2 |
+| `main_head` | `6166cf8` |
+| `main_head_title` | chore(governance): project rules v0.2 + multi-track state + internal console work packet |
 
 ---
 
@@ -135,6 +135,7 @@ PR #10（Domain 语义复核基础设施）的任何输出目前为：
 | [#16](https://github.com/martindoad-bit/tebiq/pull/16) | ✅ merged（5ad36ea） | — |
 | [#17](https://github.com/martindoad-bit/tebiq/pull/17) | ✅ merged（f8051b0） | — |
 | [#18](https://github.com/martindoad-bit/tebiq/issues/18) | 🔴 ENGINE: R01–R05 routing fix | 7/7 regression pass → Phased Rerun unlock |
+| [#19](https://github.com/martindoad-bit/tebiq/issues/19) | 🟡 ENGINE: Internal Console v1 | 100 题可视化 + 重跑按钮 |
 | [#10](https://github.com/martindoad-bit/tebiq/pull/10) | Domain 语义复核基础设施 v0.1 | 等 Formal Round 1A 完成后激活 |
 | [#11](https://github.com/martindoad-bit/tebiq/pull/11) | Product docs 增量（暂不 merge）| 产品负责人裁决：close or 提取小 patch |
 | [#4](https://github.com/martindoad-bit/tebiq/pull/4) | answer envelope-first v0.2（暂停）| 产品裁决：后续检查是否 stale |
