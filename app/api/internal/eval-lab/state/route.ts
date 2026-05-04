@@ -10,9 +10,33 @@ import {
 //
 // Returns the full DB-backed view of the Eval Lab: every active
 // question, every answer (latest per (question, answer_type)), and
-// every annotation for the requesting reviewer (default 'default').
+// every annotation for the requesting reviewer.
 //
-// The shape here is deliberately flat — questions[], answers[],
+// Query parameters:
+//   ?reviewer=<string>   — Optional. Identifies whose annotations to
+//                          return. Maps 1:1 to the `reviewer` column on
+//                          eval_annotations and to the unique index
+//                          (question_id, reviewer). Capped at 64 chars
+//                          (longer values are silently truncated).
+//                          DEFAULT: 'default' — when the parameter is
+//                          omitted or blank, the route reads the
+//                          'default' reviewer slot. Callers writing
+//                          annotations from a non-default reviewer must
+//                          pass this both here and to the
+//                          /annotation POST route, otherwise the read
+//                          and write target different rows.
+//
+// Response shape:
+//   {
+//     ok: true,
+//     schema_version: 'eval-lab-v1',
+//     reviewer: <effective reviewer string>,  // echoed back for clarity
+//     questions: EvalQuestionRow[],
+//     answers: EvalAnswerRow[],               // both answer_types
+//     annotations: EvalAnnotationRow[],       // ONLY for the resolved reviewer
+//   }
+//
+// The shape is deliberately flat — questions[], answers[],
 // annotations[] — so the client can normalize them itself. The page
 // joins client-side by question_id so adding fields later doesn't
 // invalidate cached responses.

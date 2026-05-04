@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { isEvalLabEnabled } from '@/lib/eval-lab/auth'
-import { upsertEvalAnswer } from '@/lib/db/queries/eval-lab'
+import { getEvalQuestionById, upsertEvalAnswer } from '@/lib/db/queries/eval-lab'
 import { isLikelyTransient, withRetry } from '@/lib/eval-lab/retry'
 
 // POST /api/internal/eval-lab/deepseek-raw
@@ -24,12 +24,17 @@ import { isLikelyTransient, withRetry } from '@/lib/eval-lab/retry'
 
 export const dynamic = 'force-dynamic'
 export const runtime = 'nodejs'
+// Vercel Hobby cap. Default would be 10s, which is too tight when retry
+// budget kicks in (worst-case 3 × 30s + backoff). 60s is the Hobby max
+// and matches the existing cron handlers.
+export const maxDuration = 60
 
 const DEEPSEEK_ENDPOINT = 'https://api.deepseek.com/chat/completions'
 const MODEL_ID = 'deepseek-v4-pro'
 const PROMPT_VERSION = 'eval-lab-light-v1'
-const PER_ATTEMPT_TIMEOUT_MS = 30_000
-const MAX_ATTEMPTS = 3
+// 25s per attempt × 2 attempts + ~1s backoff = ~51s, fits inside 60s cap.
+const PER_ATTEMPT_TIMEOUT_MS = 25_000
+const MAX_ATTEMPTS = 2
 const RETRY_BASE_DELAY_MS = 800
 const MAX_TOKENS = 800
 const TEMPERATURE = 0.2
@@ -139,6 +144,19 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'question_too_long' }, { status: 400 })
   }
   const questionId = body.question_id?.trim() || null
+
+  // P2.1: when a question_id is supplied, verify it exists BEFORE
+  // calling DeepSeek. Otherwise upsertEvalAnswer would FK-fail silently
+  // and the route would return ok:true with no persisted row.
+  if (questionId) {
+    const exists = await getEvalQuestionById(questionId)
+    if (!exists) {
+      return NextResponse.json(
+        { error: 'unknown_question_id', question_id: questionId },
+        { status: 400 },
+      )
+    }
+  }
 
   const apiKey = process.env.DEEPSEEK_API_KEY
   if (!apiKey) {

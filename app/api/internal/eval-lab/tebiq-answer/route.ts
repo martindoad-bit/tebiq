@@ -1,8 +1,7 @@
 import { NextResponse } from 'next/server'
 import { isEvalLabEnabled } from '@/lib/eval-lab/auth'
 import { submitQuestionForAnswer } from '@/lib/answer/submit-question'
-import { upsertEvalAnswer } from '@/lib/db/queries/eval-lab'
-import { isLikelyTransient, withRetry } from '@/lib/eval-lab/retry'
+import { getEvalQuestionById, upsertEvalAnswer } from '@/lib/db/queries/eval-lab'
 
 // POST /api/internal/eval-lab/tebiq-answer
 //
@@ -13,61 +12,46 @@ import { isLikelyTransient, withRetry } from '@/lib/eval-lab/retry'
 // (engine_version / fallback_reason / status / domain) so the Eval
 // Lab can show side-by-side with the DeepSeek raw answer.
 //
-// V1 + Issue #14:
-//   - per-attempt timeout (Promise.race with 30s)
-//   - retry ≤ 3 attempts on TRANSIENT errors only (timeout / network).
-//     Pipeline-internal failures (validation, intent detection, missing
-//     domain) are NOT retried — they won't get better.
-//   - never writes eval_annotations
+// Hardening notes:
+//
+// The previous version (77dbc2c) wrapped submitQuestionForAnswer in
+// withTimeout(30s) + withRetry(3). That introduced a regression on
+// Vercel Hobby:
+//
+//   - The pipeline already has its own internal DeepSeek timeout
+//     (DEEPSEEK_TIMEOUT_MS = 18s). Stacking a 30s outer wrapper creates
+//     two competing clocks; Promise.race rejects the outer wrapper but
+//     the underlying pipeline keeps running, leaving orphaned writes.
+//   - Vercel Hobby caps function duration at 60s. With retry-of-3 each
+//     attempt potentially 30s, total budget can reach 90s + backoffs,
+//     well past the ceiling. The function gets killed mid-flight; the
+//     UI sees an empty/aborted response (or our 30s timer fires first
+//     and writes `tebiq_timeout` to eval_answers).
+//   - Pipeline-level failures aren't transient — retrying doesn't help
+//     and creates orphan answer_drafts rows.
+//
+// Resolution:
+//   - Remove the outer timeout/retry. Trust the pipeline's own internal
+//     timeouts.
+//   - Set `maxDuration = 60` explicitly so Vercel uses the Hobby ceiling
+//     instead of the 10s default.
+//   - On failure, persist a structured error and return 500 — the
+//     reviewer can re-trigger via the per-question 重跑失败 button.
 //
 // Internal-only. 404 unless EVAL_LAB_ENABLED=1.
 
 export const dynamic = 'force-dynamic'
 export const runtime = 'nodejs'
-
-const PER_ATTEMPT_TIMEOUT_MS = 30_000
-const MAX_ATTEMPTS = 3
-const RETRY_BASE_DELAY_MS = 800
+// Vercel Hobby cap is 60s; default for unspecified routes is 10s, which
+// is too tight for the TEBIQ pipeline (intent + DeepSeek-LLM up to 18s
+// + projection + DB writes). 60s gives the pipeline room without
+// retrying.
+export const maxDuration = 60
 
 interface ReqBody {
   question?: string
   question_id?: string
   visa_type?: string | null
-}
-
-class TebiqTimeoutError extends Error {
-  constructor() {
-    super('tebiq_timeout')
-    this.name = 'TebiqTimeoutError'
-  }
-}
-
-function withTimeout<T>(p: Promise<T>, ms: number): Promise<T> {
-  return new Promise<T>((resolve, reject) => {
-    const t = setTimeout(() => reject(new TebiqTimeoutError()), ms)
-    p.then(
-      v => {
-        clearTimeout(t)
-        resolve(v)
-      },
-      err => {
-        clearTimeout(t)
-        reject(err)
-      },
-    )
-  })
-}
-
-function shouldRetry(err: unknown): boolean {
-  if (err instanceof TebiqTimeoutError) return true
-  return isLikelyTransient(err)
-}
-
-function classifyError(err: unknown): string {
-  if (err instanceof TebiqTimeoutError) return 'tebiq_timeout'
-  const name = (err as { name?: string }).name
-  if (name === 'AbortError') return 'tebiq_timeout'
-  return 'tebiq_pipeline_failed'
 }
 
 export async function POST(req: Request) {
@@ -90,33 +74,26 @@ export async function POST(req: Request) {
   }
   const questionId = body.question_id?.trim() || null
 
+  // P2.1: when a question_id is supplied, verify it exists BEFORE running
+  // the (expensive) pipeline. Otherwise upsertEvalAnswer would FK-fail
+  // silently and the route would still return ok:true.
+  if (questionId) {
+    const exists = await getEvalQuestionById(questionId)
+    if (!exists) {
+      return NextResponse.json(
+        { error: 'unknown_question_id', question_id: questionId },
+        { status: 400 },
+      )
+    }
+  }
+
   const startedAt = Date.now()
-  let attemptsTried = 0
   try {
-    const result = await withRetry(
-      attempt => {
-        attemptsTried = attempt
-        return withTimeout(
-          submitQuestionForAnswer({
-            questionText: question,
-            visaType: body.visa_type ?? null,
-            sourcePage: '/internal/eval-lab',
-          }),
-          PER_ATTEMPT_TIMEOUT_MS,
-        )
-      },
-      {
-        maxAttempts: MAX_ATTEMPTS,
-        baseDelayMs: RETRY_BASE_DELAY_MS,
-        shouldRetry,
-        onRetry: (err, attempt, delayMs) => {
-          const code = classifyError(err)
-          console.warn(
-            `[eval-lab/tebiq-answer] attempt ${attempt} failed (${code}); retrying in ${delayMs}ms`,
-          )
-        },
-      },
-    )
+    const result = await submitQuestionForAnswer({
+      questionText: question,
+      visaType: body.visa_type ?? null,
+      sourcePage: '/internal/eval-lab',
+    })
 
     const vm = result.viewModel
     const pa = vm.public
@@ -145,7 +122,6 @@ export async function POST(req: Request) {
       // The detected_intent rendered on /answer/{id}'s "我理解你的问题是" panel.
       understood_question: vm.understood_question,
       latency_ms: latencyMs,
-      attempts: attemptsTried,
     }
 
     if (questionId) {
@@ -169,7 +145,6 @@ export async function POST(req: Request) {
             summary: pa.summary ?? null,
             understood_question: vm.understood_question ?? null,
             safety: vm.safety ?? null,
-            attempts: attemptsTried,
           },
         })
       } catch (persistErr) {
@@ -181,8 +156,7 @@ export async function POST(req: Request) {
     return NextResponse.json(responsePayload)
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err)
-    const code = classifyError(err)
-    console.warn(`[eval-lab/tebiq-answer] submit failed (${code})`, message)
+    console.warn('[eval-lab/tebiq-answer] submit failed', message)
     if (questionId) {
       try {
         await upsertEvalAnswer({
@@ -191,19 +165,17 @@ export async function POST(req: Request) {
           model: null,
           promptVersion: 'tebiq-pipeline',
           answerText: null,
-          error: `${code}: ${message.slice(0, 500)}`,
+          error: `tebiq_pipeline_failed: ${message.slice(0, 500)}`,
           latencyMs: Date.now() - startedAt,
-          rawPayloadJson: { attempts: attemptsTried },
         })
       } catch (persistErr) {
         const persistMsg = persistErr instanceof Error ? persistErr.message : String(persistErr)
         console.warn('[eval-lab/tebiq-answer] persistError failed', persistMsg)
       }
     }
-    const status = code === 'tebiq_timeout' ? 504 : 500
     return NextResponse.json(
-      { error: code, detail: message, attempts: attemptsTried },
-      { status },
+      { error: 'tebiq_pipeline_failed', detail: message },
+      { status: 500 },
     )
   }
 }

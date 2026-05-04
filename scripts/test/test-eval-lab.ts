@@ -115,6 +115,7 @@ async function main() {
     assert.equal(typeof queries.addManualQuestion, 'function')
     assert.equal(typeof queries.deactivateQuestion, 'function')
     assert.equal(typeof queries.getQuestionByStarterTag, 'function')
+    assert.equal(typeof queries.getEvalQuestionById, 'function')
     assert.equal(typeof queries.importQuestions, 'function')
   })
 

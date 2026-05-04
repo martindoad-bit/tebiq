@@ -278,6 +278,17 @@ export async function deactivateQuestion(id: string): Promise<void> {
     .where(eq(evalQuestions.id, id))
 }
 
+export async function getEvalQuestionById(
+  id: string,
+): Promise<EvalQuestionRow | null> {
+  const rows = await db
+    .select()
+    .from(evalQuestions)
+    .where(eq(evalQuestions.id, id))
+    .limit(1)
+  return rows[0] ?? null
+}
+
 export async function getQuestionByStarterTag(
   starterTag: string,
 ): Promise<EvalQuestionRow | null> {
