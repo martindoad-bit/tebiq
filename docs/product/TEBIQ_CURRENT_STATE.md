@@ -9,14 +9,14 @@
 | `last_verified` | 2026-05-05 |
 | `verified_by` | GM |
 | `source_of_truth` | GitHub remote `origin/main` + `gh pr view` (per-branch) + user-provided latest facts |
-| `main_head` | `0c9e481` |
-| `main_head_title` | Merge pull request #22 — feat/eval-console-v1 (Internal Console v1) |
+| `main_head` | `a62d19c` |
+| `main_head_title` | Merge pull request #23 — feat/routing-safety-r01-r05 (R01-R05) |
 
 ---
 
 ## 当前阶段标签
 
-**Multi-Track Parallel Mode v0.2 — M1 ✅ 完成 → M2 Routing Safety Gate**
+**Multi-Track Parallel Mode v0.2 — M1 ✅ M2 ✅ → M3 Answer Quality Baseline**
 
 规则：单线阻塞不等于全项目阻塞。6 track 独立推进。
 
@@ -57,8 +57,8 @@ CEO 当前能看到什么：  https://tebiq.jp + /internal/eval-lab（100 题种
 |------|------|------|
 | Work Packet 发布 | ✅ 完成 | `docs/eval/EVAL_ROUTING_SAFETY_GATE_PACK.md` |
 | Issue #18 创建 | ✅ 完成 | ENGINE 待实现 |
-| R01–R05 实现 | ⏳ ENGINE | P0: R01/R02/R03/R04；P1: R05（I08 按 P0）|
-| 7/7 回归测试通过 | ⏳ 等待 ENGINE | Step 1 of `run-round1-phased.sh` |
+| R01–R05 实现 | ✅ 完成（PR #23）| 7/7 pass，0 new regression |
+| 7/7 回归测试通过 | ✅ 完成 | `run-round1-phased.sh` Step 1 解锁 |
 
 ## Track A — Eval Round 1A（阻塞中）
 
@@ -93,7 +93,7 @@ CEO 当前能看到什么：  https://tebiq.jp + /internal/eval-lab（100 题种
 |--------|------|------|
 | M0 | 项目规则重置 + 并行模式启动 | ✅ 完成 |
 | M1 | Internal Console Alpha（CEO 可見 100 題）| ✅ 完成（`0c9e481`）|
-| M2 | Routing Safety Gate（7/7 回归通过）| ⏳ ENGINE |
+| M2 | Routing Safety Gate（7/7 回归通过）| ✅ 完成（`a62d19c`）|
 | M3 | Answer Quality Baseline（≥24 FULL_COMPARABLE）| ⏳ 等待 |
 | M4 | User Preview Alpha（CEO 可操作）| ⏳ M1 后 |
 | M5 | Matter v0（风险评估 + 行动路径）| ⏳ M3 后 |
