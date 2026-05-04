@@ -1,17 +1,19 @@
 'use client'
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { pLimit } from '@/lib/eval-lab/concurrency'
 
 // TEBIQ Eval Lab V1 — DB-backed internal annotation tool.
 //
-// Three-column layout:
-//   left   — question list with filters
-//   center — DeepSeek raw vs TEBIQ pipeline output, side-by-side
-//   right  — annotation form (auto-saved to DB)
-//
-// All persistence is server-side. localStorage is used only as a
-// short-lived draft buffer for the currently-edited annotation in case
-// the user reloads before the auto-save round-trip lands.
+// Issue #14 hardening:
+//   - Per-question generation status: pending / running / success / failed,
+//     tracked separately for DeepSeek raw and TEBIQ current
+//   - Batch generation runs through a concurrency limiter (≤ 3 in flight)
+//   - Failed-only rerun button (don't touch success rows)
+//   - Skip-annotated toggle on batch (don't re-generate answers under a
+//     reviewer's already-finalised annotation unless the user opts in).
+//     Annotation rows themselves are owned by the reviewer and live in a
+//     separate table — the batch path never writes eval_annotations.
 
 // ---------- types (mirror DB row shape, snake_case from /state) ----------
 
@@ -114,6 +116,66 @@ const EMPTY_EDIT: EditableAnnotation = {
   action: '',
 }
 
+// ---------- per-question generation status (Issue #14) ----------
+
+type GenState = 'pending' | 'running' | 'success' | 'failed'
+
+interface QuestionGenStatus {
+  deepseek: GenState
+  deepseekError: string | null
+  deepseekAttempts: number | null
+  tebiq: GenState
+  tebiqError: string | null
+  tebiqAttempts: number | null
+}
+
+const EMPTY_GEN_STATUS: QuestionGenStatus = {
+  deepseek: 'pending',
+  deepseekError: null,
+  deepseekAttempts: null,
+  tebiq: 'pending',
+  tebiqError: null,
+  tebiqAttempts: null,
+}
+
+/**
+ * Hydrate initial gen-status from server-side answer rows.
+ * - has answer_text → success
+ * - has error       → failed
+ * - neither         → pending
+ */
+function hydrateGenStatus(
+  questions: QuestionRow[],
+  ans: Record<string, { deepseek_raw?: AnswerRow; tebiq_current?: AnswerRow }>,
+): Record<string, QuestionGenStatus> {
+  const out: Record<string, QuestionGenStatus> = {}
+  for (const q of questions) {
+    const slot = ans[q.id]
+    out[q.id] = {
+      deepseek: classify(slot?.deepseek_raw),
+      deepseekError: slot?.deepseek_raw?.error ?? null,
+      deepseekAttempts: getAttempts(slot?.deepseek_raw),
+      tebiq: classify(slot?.tebiq_current),
+      tebiqError: slot?.tebiq_current?.error ?? null,
+      tebiqAttempts: getAttempts(slot?.tebiq_current),
+    }
+  }
+  return out
+}
+
+function classify(row: AnswerRow | undefined): GenState {
+  if (!row) return 'pending'
+  if (row.answer_text) return 'success'
+  if (row.error) return 'failed'
+  return 'pending'
+}
+
+function getAttempts(row: AnswerRow | undefined): number | null {
+  if (!row?.raw_payload_json) return null
+  const v = (row.raw_payload_json as { attempts?: unknown }).attempts
+  return typeof v === 'number' ? v : null
+}
+
 function annotationToEdit(a: AnnotationRow | null): EditableAnnotation {
   if (!a) return { ...EMPTY_EDIT }
   return {
@@ -140,6 +202,7 @@ type FilterMode =
   | 'p1'
   | 'launchable_no'
   | 'ungenerated'
+  | 'failed'
   | 'golden'
 
 const DRAFT_KEY = 'tebiq_eval_lab_v1_drafts'
@@ -180,6 +243,10 @@ function clearDraft(id: string): void {
   }
 }
 
+// ---------- batch concurrency cap (Issue #14: ≤ 3) ----------
+
+const BATCH_CONCURRENCY = 3
+
 export default function EvalLabClient() {
   const [questions, setQuestions] = useState<QuestionRow[]>([])
   const [answersByQuestion, setAnswersByQuestion] = useState<
@@ -188,14 +255,15 @@ export default function EvalLabClient() {
   const [annotationByQuestion, setAnnotationByQuestion] = useState<Record<string, AnnotationRow>>({})
   const [edits, setEdits] = useState<Record<string, EditableAnnotation>>({})
   const [saveState, setSaveState] = useState<Record<string, 'idle' | 'saving' | 'saved' | 'error'>>({})
+  const [genStatus, setGenStatus] = useState<Record<string, QuestionGenStatus>>({})
+  const [batchProgress, setBatchProgress] = useState<{ done: number; total: number } | null>(null)
+  const [skipAnnotatedOnBatch, setSkipAnnotatedOnBatch] = useState(true)
 
   const [loaded, setLoaded] = useState(false)
   const [loadError, setLoadError] = useState<string | null>(null)
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [filter, setFilter] = useState<FilterMode>('all')
   const [scenarioFilter, setScenarioFilter] = useState<string>('all')
-  const [busyDeepseek, setBusyDeepseek] = useState<Set<string>>(new Set())
-  const [busyTebiq, setBusyTebiq] = useState<Set<string>>(new Set())
   const [batchBusy, setBatchBusy] = useState(false)
   const [seedBusy, setSeedBusy] = useState(false)
   const [importText, setImportText] = useState('')
@@ -203,6 +271,18 @@ export default function EvalLabClient() {
 
   const reviewer = 'default'
   const debounceTimers = useRef<Record<string, ReturnType<typeof setTimeout>>>({})
+  const cancelBatchRef = useRef(false)
+
+  // ---- helpers ----
+  const updateGenStatus = useCallback(
+    (qid: string, patch: Partial<QuestionGenStatus>) => {
+      setGenStatus(prev => {
+        const cur = prev[qid] ?? EMPTY_GEN_STATUS
+        return { ...prev, [qid]: { ...cur, ...patch } }
+      })
+    },
+    [],
+  )
 
   // ---- initial load ----
   const loadAll = useCallback(async () => {
@@ -243,6 +323,25 @@ export default function EvalLabClient() {
         initialEdits[q.id] = drafts[q.id] ?? annotationToEdit(annMap[q.id] ?? null)
       }
       setEdits(initialEdits)
+      // Hydrate genStatus from existing answer rows. Never demote a row
+      // that's currently 'running' on the client (request still in flight).
+      setGenStatus(prev => {
+        const fresh = hydrateGenStatus(j.questions, ans)
+        const merged: Record<string, QuestionGenStatus> = {}
+        for (const q of j.questions) {
+          const old = prev[q.id]
+          const next = fresh[q.id]
+          merged[q.id] = {
+            deepseek: old?.deepseek === 'running' ? 'running' : next.deepseek,
+            deepseekError: next.deepseekError,
+            deepseekAttempts: next.deepseekAttempts,
+            tebiq: old?.tebiq === 'running' ? 'running' : next.tebiq,
+            tebiqError: next.tebiqError,
+            tebiqAttempts: next.tebiqAttempts,
+          }
+        }
+        return merged
+      })
       setLoaded(true)
       setLoadError(null)
       if (j.questions.length > 0 && !selectedId) {
@@ -267,12 +366,14 @@ export default function EvalLabClient() {
   }, [questions])
 
   const filtered = useMemo(
-    () => filterQuestions(questions, answersByQuestion, annotationByQuestion, filter, scenarioFilter),
-    [questions, answersByQuestion, annotationByQuestion, filter, scenarioFilter],
+    () => filterQuestions(questions, answersByQuestion, annotationByQuestion, genStatus, filter, scenarioFilter),
+    [questions, answersByQuestion, annotationByQuestion, genStatus, filter, scenarioFilter],
   )
   const selected = questions.find(q => q.id === selectedId) ?? null
   const selectedAnswers = selectedId ? answersByQuestion[selectedId] : undefined
   const selectedEdit = selectedId ? edits[selectedId] ?? EMPTY_EDIT : EMPTY_EDIT
+  const selectedStatus = selectedId ? genStatus[selectedId] ?? EMPTY_GEN_STATUS : EMPTY_GEN_STATUS
+
   const counts = useMemo(() => {
     const total = questions.length
     let annotated = 0
@@ -280,19 +381,24 @@ export default function EvalLabClient() {
     let p1 = 0
     let golden = 0
     let ungen = 0
+    let failed = 0
+    let running = 0
     for (const q of questions) {
       const a = annotationByQuestion[q.id]
       if (a?.score != null) annotated += 1
       if (a?.severity === 'P0') p0 += 1
       if (a?.severity === 'P1') p1 += 1
       if (a?.action === 'golden_case') golden += 1
+      const s = genStatus[q.id]
+      if (s?.deepseek === 'failed' || s?.tebiq === 'failed') failed += 1
+      if (s?.deepseek === 'running' || s?.tebiq === 'running') running += 1
       const ans = answersByQuestion[q.id]
       if (!ans?.deepseek_raw?.answer_text || !ans?.tebiq_current?.answer_text) ungen += 1
     }
-    return { total, annotated, p0, p1, golden, ungen }
-  }, [questions, annotationByQuestion, answersByQuestion])
+    return { total, annotated, p0, p1, golden, ungen, failed, running }
+  }, [questions, annotationByQuestion, answersByQuestion, genStatus])
 
-  // ---- annotation auto-save ----
+  // ---- annotation auto-save (unchanged behaviour) ----
   const persistAnnotation = useCallback(
     async (questionId: string, edit: EditableAnnotation) => {
       setSaveState(prev => ({ ...prev, [questionId]: 'saving' }))
@@ -347,7 +453,6 @@ export default function EvalLabClient() {
         const next = { ...prev[questionId] ?? EMPTY_EDIT, ...patch }
         saveDraft(questionId, next)
         const merged = { ...prev, [questionId]: next }
-        // schedule debounced persist
         const existing = debounceTimers.current[questionId]
         if (existing) clearTimeout(existing)
         debounceTimers.current[questionId] = setTimeout(() => {
@@ -359,106 +464,232 @@ export default function EvalLabClient() {
     [persistAnnotation],
   )
 
-  // ---- generation ----
+  // ---- generation (per-question) ----
+
+  /**
+   * Single-question DeepSeek generation. Returns true on success, false on
+   * failure. Status updates flow through `genStatus`. The route persists
+   * the result to eval_answers; we then refresh that row from the server
+   * so all derived UI (filters, counts, AnswerColumn) stays in sync.
+   */
   const generateDeepseek = useCallback(
-    async (q: QuestionRow) => {
-      setBusyDeepseek(prev => new Set(prev).add(q.id))
+    async (q: QuestionRow): Promise<boolean> => {
+      updateGenStatus(q.id, {
+        deepseek: 'running',
+        deepseekError: null,
+        deepseekAttempts: null,
+      })
       try {
         const r = await fetch('/api/internal/eval-lab/deepseek-raw', {
           method: 'POST',
           headers: { 'content-type': 'application/json' },
           body: JSON.stringify({ question: q.question_text, question_id: q.id }),
         })
-        const j = (await r.json()) as { ok?: boolean; text?: string; error?: string; latency_ms?: number }
-        // Reload just this question's answer row from server to stay in sync.
-        await refreshAnswer(q.id, 'deepseek_raw')
-        if (!j.ok) {
-          setHeaderMessage(`DeepSeek 失败: ${j.error ?? `HTTP ${r.status}`}`)
+        const j = (await r.json()) as {
+          ok?: boolean
+          text?: string
+          error?: string
+          attempts?: number
         }
-      } catch (err) {
-        setHeaderMessage(`DeepSeek 异常: ${err instanceof Error ? err.message : String(err)}`)
-      } finally {
-        setBusyDeepseek(prev => {
-          const next = new Set(prev)
-          next.delete(q.id)
-          return next
+        if (j.ok && j.text) {
+          updateGenStatus(q.id, {
+            deepseek: 'success',
+            deepseekError: null,
+            deepseekAttempts: j.attempts ?? null,
+          })
+          return true
+        }
+        updateGenStatus(q.id, {
+          deepseek: 'failed',
+          deepseekError: j.error ?? `HTTP ${r.status}`,
+          deepseekAttempts: j.attempts ?? null,
         })
+        return false
+      } catch (err) {
+        updateGenStatus(q.id, {
+          deepseek: 'failed',
+          deepseekError: err instanceof Error ? err.message : String(err),
+          deepseekAttempts: null,
+        })
+        return false
       }
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [],
+    [updateGenStatus],
   )
 
   const generateTebiq = useCallback(
-    async (q: QuestionRow) => {
-      setBusyTebiq(prev => new Set(prev).add(q.id))
+    async (q: QuestionRow): Promise<boolean> => {
+      updateGenStatus(q.id, {
+        tebiq: 'running',
+        tebiqError: null,
+        tebiqAttempts: null,
+      })
       try {
         const r = await fetch('/api/internal/eval-lab/tebiq-answer', {
           method: 'POST',
           headers: { 'content-type': 'application/json' },
           body: JSON.stringify({ question: q.question_text, question_id: q.id }),
         })
-        const j = (await r.json()) as { ok?: boolean; error?: string }
-        await refreshAnswer(q.id, 'tebiq_current')
-        if (!j.ok) {
-          setHeaderMessage(`TEBIQ 失败: ${j.error ?? `HTTP ${r.status}`}`)
+        const j = (await r.json()) as { ok?: boolean; error?: string; attempts?: number }
+        if (j.ok) {
+          updateGenStatus(q.id, {
+            tebiq: 'success',
+            tebiqError: null,
+            tebiqAttempts: j.attempts ?? null,
+          })
+          return true
         }
+        updateGenStatus(q.id, {
+          tebiq: 'failed',
+          tebiqError: j.error ?? `HTTP ${r.status}`,
+          tebiqAttempts: j.attempts ?? null,
+        })
+        return false
       } catch (err) {
-        setHeaderMessage(`TEBIQ 异常: ${err instanceof Error ? err.message : String(err)}`)
-      } finally {
-        setBusyTebiq(prev => {
-          const next = new Set(prev)
-          next.delete(q.id)
-          return next
+        updateGenStatus(q.id, {
+          tebiq: 'failed',
+          tebiqError: err instanceof Error ? err.message : String(err),
+          tebiqAttempts: null,
         })
+        return false
       }
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [],
+    [updateGenStatus],
   )
 
-  const refreshAnswer = useCallback(
-    async (_questionId: string, _kind: AnswerType) => {
-      // Simplest correct: refetch the whole state. Cheap for ~100 questions.
-      try {
-        const r = await fetch(`/api/internal/eval-lab/state?reviewer=${encodeURIComponent(reviewer)}`, {
-          cache: 'no-store',
-        })
-        if (!r.ok) return
-        const j = (await r.json()) as { ok: boolean; answers: AnswerRow[] }
-        if (!j.ok) return
-        const ans: Record<string, { deepseek_raw?: AnswerRow; tebiq_current?: AnswerRow }> = {}
-        for (const a of j.answers) {
-          const slot = ans[a.question_id] ?? {}
-          slot[a.answer_type] = a
-          ans[a.question_id] = slot
-        }
-        setAnswersByQuestion(ans)
-      } catch {
-        /* ignore */
-      }
-    },
-    [reviewer],
-  )
-
-  const batchGenerate = async () => {
-    setBatchBusy(true)
+  /** Refresh the answers slice of state from the server. Used after a batch
+   *  finishes so the persisted answer rows hydrate into UI. */
+  const refreshAnswers = useCallback(async () => {
     try {
-      const todo = questions.filter(q => {
-        const a = answersByQuestion[q.id]
-        return !a?.deepseek_raw?.answer_text || !a?.tebiq_current?.answer_text
+      const r = await fetch(`/api/internal/eval-lab/state?reviewer=${encodeURIComponent(reviewer)}`, {
+        cache: 'no-store',
       })
-      // Sequential to avoid rate-limit on DeepSeek + pipeline.
-      for (const q of todo) {
-        const a = answersByQuestion[q.id]
-        if (!a?.deepseek_raw?.answer_text) await generateDeepseek(q)
-        if (!a?.tebiq_current?.answer_text) await generateTebiq(q)
+      if (!r.ok) return
+      const j = (await r.json()) as { ok: boolean; answers: AnswerRow[] }
+      if (!j.ok) return
+      const ans: Record<string, { deepseek_raw?: AnswerRow; tebiq_current?: AnswerRow }> = {}
+      for (const a of j.answers) {
+        const slot = ans[a.question_id] ?? {}
+        slot[a.answer_type] = a
+        ans[a.question_id] = slot
       }
-    } finally {
-      setBatchBusy(false)
+      setAnswersByQuestion(ans)
+    } catch {
+      /* ignore */
     }
-  }
+  }, [reviewer])
 
+  // ---- batch (Issue #14: ≤ 3 concurrent, failed-rerun, skip-annotated) ----
+
+  type BatchScope = 'missing' | 'failed-only'
+
+  /**
+   * Decide whether `kind` should be (re)generated for `q` given the scope.
+   * - 'missing':  generate when status is pending OR (failed if you ran the
+   *               batch button — so failed gets retried at batch-time).
+   *               Don't touch already-success rows.
+   * - 'failed-only': generate only when status === 'failed'.
+   *
+   * In addition, when `skipAnnotatedOnBatch` is true and the question is
+   * already annotated (score set), skip it entirely. Annotation rows are
+   * not touched here regardless — they live in eval_annotations.
+   */
+  const shouldGenerate = useCallback(
+    (qid: string, kind: 'deepseek' | 'tebiq', scope: BatchScope, skipAnnotated: boolean): boolean => {
+      if (skipAnnotated) {
+        const ann = annotationByQuestion[qid]
+        if (ann?.score != null) return false
+      }
+      const s = genStatus[qid] ?? EMPTY_GEN_STATUS
+      const slot = kind === 'deepseek' ? s.deepseek : s.tebiq
+      if (slot === 'running') return false
+      if (scope === 'failed-only') return slot === 'failed'
+      // missing scope: generate unless already success
+      return slot !== 'success'
+    },
+    [annotationByQuestion, genStatus],
+  )
+
+  const runBatch = useCallback(
+    async (scope: BatchScope) => {
+      if (batchBusy) return
+      cancelBatchRef.current = false
+      setBatchBusy(true)
+
+      // Build the task list under current state. Two tasks per question
+      // (one per kind) so concurrency cap applies across BOTH endpoints
+      // — the cap protects DeepSeek and the TEBIQ pipeline equally.
+      type Task = { q: QuestionRow; kind: 'deepseek' | 'tebiq' }
+      const tasks: Task[] = []
+      const skipAnn = skipAnnotatedOnBatch
+      for (const q of questions) {
+        if (shouldGenerate(q.id, 'deepseek', scope, skipAnn)) tasks.push({ q, kind: 'deepseek' })
+        if (shouldGenerate(q.id, 'tebiq', scope, skipAnn)) tasks.push({ q, kind: 'tebiq' })
+      }
+      if (tasks.length === 0) {
+        setBatchBusy(false)
+        setHeaderMessage(scope === 'failed-only' ? '没有失败题需要重跑' : '没有需要生成的题')
+        return
+      }
+
+      // Mark all queued tasks as 'pending' so the UI shows the queue depth.
+      setGenStatus(prev => {
+        const next = { ...prev }
+        for (const t of tasks) {
+          const cur = next[t.q.id] ?? EMPTY_GEN_STATUS
+          if (t.kind === 'deepseek' && cur.deepseek !== 'running') {
+            next[t.q.id] = { ...cur, deepseek: 'pending', deepseekError: null }
+          }
+          if (t.kind === 'tebiq' && cur.tebiq !== 'running') {
+            next[t.q.id] = { ...cur, tebiq: 'pending', tebiqError: null }
+          }
+        }
+        return next
+      })
+
+      const limit = pLimit(BATCH_CONCURRENCY)
+      let done = 0
+      setBatchProgress({ done: 0, total: tasks.length })
+
+      const promises = tasks.map(t =>
+        limit(async () => {
+          if (cancelBatchRef.current) return
+          if (t.kind === 'deepseek') await generateDeepseek(t.q)
+          else await generateTebiq(t.q)
+          done += 1
+          setBatchProgress({ done, total: tasks.length })
+        }),
+      )
+      try {
+        await Promise.all(promises)
+      } finally {
+        setBatchBusy(false)
+        setBatchProgress(null)
+        await refreshAnswers()
+      }
+    },
+    [batchBusy, questions, shouldGenerate, skipAnnotatedOnBatch, generateDeepseek, generateTebiq, refreshAnswers],
+  )
+
+  const cancelBatch = useCallback(() => {
+    cancelBatchRef.current = true
+  }, [])
+
+  // ---- single-question rerun for the failed-only flow ----
+  const rerunFailed = useCallback(
+    async (q: QuestionRow) => {
+      const s = genStatus[q.id] ?? EMPTY_GEN_STATUS
+      const tasks: Promise<unknown>[] = []
+      if (s.deepseek === 'failed') tasks.push(generateDeepseek(q))
+      if (s.tebiq === 'failed') tasks.push(generateTebiq(q))
+      if (tasks.length === 0) return
+      await Promise.all(tasks)
+      await refreshAnswers()
+    },
+    [genStatus, generateDeepseek, generateTebiq, refreshAnswers],
+  )
+
+  // ---- seed / import ----
   const onSeed = async () => {
     setSeedBusy(true)
     try {
@@ -478,7 +709,6 @@ export default function EvalLabClient() {
   const onImport = async () => {
     const trimmed = importText.trim()
     if (!trimmed) return
-    // Try JSON full-shape first; if fails, treat as line-per-question.
     let body: unknown = null
     try {
       const parsed = JSON.parse(trimmed) as unknown
@@ -489,7 +719,7 @@ export default function EvalLabClient() {
         }
       }
     } catch {
-      /* fall through to line-mode */
+      /* fall through */
     }
     if (!body) {
       const lines = trimmed.split(/\r?\n/).map(s => s.trim()).filter(Boolean)
@@ -541,8 +771,14 @@ export default function EvalLabClient() {
         <div className="text-xs text-slate-500">
           {counts.total} 题 · 已标 {counts.annotated} ·
           P0 {counts.p0} · P1 {counts.p1} ·
-          golden {counts.golden} · 未生成 {counts.ungen}
+          golden {counts.golden} · 未生成 {counts.ungen} · 失败 {counts.failed}
+          {counts.running > 0 ? ` · 运行中 ${counts.running}` : ''}
         </div>
+        {batchProgress && (
+          <span className="text-xs text-slate-700 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded">
+            批量进度: {batchProgress.done}/{batchProgress.total} · 并发 ≤ {BATCH_CONCURRENCY}
+          </span>
+        )}
         {loadError && <span className="text-xs text-red-600">载入错误: {loadError}</span>}
         {headerMessage && (
           <span className="text-xs text-slate-700 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded">
@@ -550,7 +786,16 @@ export default function EvalLabClient() {
             <button onClick={() => setHeaderMessage(null)} className="ml-2 text-slate-400">×</button>
           </span>
         )}
-        <div className="ml-auto flex flex-wrap gap-2">
+        <div className="ml-auto flex flex-wrap items-center gap-2">
+          <label className="text-[11px] text-slate-600 flex items-center gap-1 select-none">
+            <input
+              type="checkbox"
+              checked={skipAnnotatedOnBatch}
+              onChange={e => setSkipAnnotatedOnBatch(e.target.checked)}
+              className="accent-blue-600"
+            />
+            批量时跳过已标注题
+          </label>
           {counts.total === 0 && (
             <button
               onClick={onSeed}
@@ -570,12 +815,27 @@ export default function EvalLabClient() {
             </button>
           )}
           <button
-            onClick={batchGenerate}
+            onClick={() => runBatch('missing')}
             disabled={batchBusy}
             className="text-xs px-3 py-1.5 border border-slate-400 rounded bg-white hover:bg-slate-100 disabled:opacity-50"
           >
-            {batchBusy ? '批量生成中…' : '批量生成未生成'}
+            {batchBusy ? '批量生成中…' : `批量生成未生成 (≤ ${BATCH_CONCURRENCY} 并发)`}
           </button>
+          <button
+            onClick={() => runBatch('failed-only')}
+            disabled={batchBusy || counts.failed === 0}
+            className="text-xs px-3 py-1.5 border border-orange-300 rounded bg-orange-50 text-orange-700 hover:bg-orange-100 disabled:opacity-50"
+          >
+            重跑失败 ({counts.failed})
+          </button>
+          {batchBusy && (
+            <button
+              onClick={cancelBatch}
+              className="text-xs px-3 py-1.5 border border-red-300 rounded bg-white text-red-600 hover:bg-red-50"
+            >
+              取消
+            </button>
+          )}
           <a
             href="/api/internal/eval-lab/export?type=full"
             className="text-xs px-3 py-1.5 border border-slate-400 rounded bg-white hover:bg-slate-100"
@@ -607,6 +867,7 @@ export default function EvalLabClient() {
               <option value="all">全部</option>
               <option value="unannotated">未标</option>
               <option value="ungenerated">未生成</option>
+              <option value="failed">失败</option>
               <option value="p0">P0</option>
               <option value="p1">P1</option>
               <option value="launchable_no">不可上线</option>
@@ -639,9 +900,7 @@ export default function EvalLabClient() {
                 sev === 'P2' ? 'text-amber-700 bg-amber-50' :
                 sev === 'OK' ? 'text-emerald-700 bg-emerald-50' :
                 'text-slate-400'
-              const ans = answersByQuestion[q.id]
-              const hasD = !!ans?.deepseek_raw?.answer_text
-              const hasT = !!ans?.tebiq_current?.answer_text
+              const s = genStatus[q.id] ?? EMPTY_GEN_STATUS
               return (
                 <li key={q.id}>
                   <button
@@ -657,10 +916,8 @@ export default function EvalLabClient() {
                       >
                         {sev || (ann?.score != null ? '·' : ' ')}
                       </span>
-                      <span className="text-slate-400 text-[10px]">
-                        {hasD ? 'D' : '·'}
-                        {hasT ? 'T' : '·'}
-                      </span>
+                      <StatusDot kind="D" state={s.deepseek} />
+                      <StatusDot kind="T" state={s.tebiq} />
                       <span className="truncate flex-1" title={q.question_text}>
                         {q.question_text}
                       </span>
@@ -712,13 +969,17 @@ export default function EvalLabClient() {
               <div className="grid grid-cols-2 gap-3">
                 <AnswerColumn
                   label="DeepSeek 裸答"
-                  busy={busyDeepseek.has(selected.id)}
+                  state={selectedStatus.deepseek}
+                  liveError={selectedStatus.deepseekError}
+                  attempts={selectedStatus.deepseekAttempts}
                   onGenerate={() => generateDeepseek(selected)}
                   row={selectedAnswers?.deepseek_raw}
                 />
                 <AnswerColumn
                   label="TEBIQ 当前输出"
-                  busy={busyTebiq.has(selected.id)}
+                  state={selectedStatus.tebiq}
+                  liveError={selectedStatus.tebiqError}
+                  attempts={selectedStatus.tebiqAttempts}
                   onGenerate={() => generateTebiq(selected)}
                   row={selectedAnswers?.tebiq_current}
                   showMeta
@@ -726,6 +987,14 @@ export default function EvalLabClient() {
               </div>
 
               <div className="flex gap-2 text-[11px]">
+                {(selectedStatus.deepseek === 'failed' || selectedStatus.tebiq === 'failed') && (
+                  <button
+                    onClick={() => rerunFailed(selected)}
+                    className="px-2 py-1 border border-orange-300 rounded bg-orange-50 text-orange-700 hover:bg-orange-100"
+                  >
+                    重跑失败
+                  </button>
+                )}
                 <button
                   onClick={goNext}
                   className="ml-auto px-2 py-1 border border-slate-300 rounded bg-white hover:bg-slate-100"
@@ -760,33 +1029,70 @@ export default function EvalLabClient() {
 
 // ---------- subcomponents ----------
 
+function StatusDot({ kind, state }: { kind: 'D' | 'T'; state: GenState }) {
+  const cls =
+    state === 'success' ? 'text-emerald-600' :
+    state === 'running' ? 'text-blue-600 animate-pulse' :
+    state === 'failed' ? 'text-red-600' :
+    'text-slate-300'
+  const label =
+    state === 'success' ? `${kind}✓` :
+    state === 'running' ? `${kind}…` :
+    state === 'failed' ? `${kind}✗` :
+    `${kind}·`
+  return (
+    <span className={`text-[10px] font-mono ${cls}`} style={{ minWidth: 14, textAlign: 'center' }}>
+      {label}
+    </span>
+  )
+}
+
 function AnswerColumn({
   label,
-  busy,
+  state,
+  liveError,
+  attempts,
   onGenerate,
   row,
   showMeta,
 }: {
   label: string
-  busy: boolean
+  state: GenState
+  liveError: string | null
+  attempts: number | null
   onGenerate: () => void
   row?: AnswerRow
   showMeta?: boolean
 }) {
   const has = !!row?.answer_text
+  const busy = state === 'running'
+  const stateBadge =
+    state === 'running' ? <span className="text-[10px] text-blue-600">running</span> :
+    state === 'failed' ? <span className="text-[10px] text-red-600">failed</span> :
+    state === 'success' ? <span className="text-[10px] text-emerald-600">success</span> :
+    <span className="text-[10px] text-slate-400">pending</span>
   return (
     <div className="border border-slate-200 rounded p-2">
-      <div className="flex items-center justify-between mb-2">
+      <div className="flex items-center justify-between mb-2 gap-2">
         <span className="text-[10px] uppercase tracking-wider text-slate-500">{label}</span>
+        {stateBadge}
         <button
           onClick={onGenerate}
           disabled={busy}
-          className="text-[11px] px-2 py-0.5 border border-slate-300 rounded bg-white hover:bg-slate-100 disabled:opacity-50"
+          className="text-[11px] px-2 py-0.5 border border-slate-300 rounded bg-white hover:bg-slate-100 disabled:opacity-50 ml-auto"
         >
           {busy ? '生成中…' : has ? '重新生成' : '生成'}
         </button>
       </div>
-      {row?.error && <p className="text-[11px] text-red-600">err: {row.error}</p>}
+      {liveError && state === 'failed' && (
+        <p className="text-[11px] text-red-600">live err: {liveError}</p>
+      )}
+      {row?.error && state !== 'success' && (
+        <p className="text-[11px] text-red-600">err: {row.error}</p>
+      )}
+      {attempts != null && attempts > 1 && (
+        <p className="text-[10px] text-slate-400">attempts: {attempts}</p>
+      )}
       {showMeta && row?.tebiq_answer_id && (
         <div className="text-[11px] text-slate-600 space-y-0.5 mb-2 border-b border-slate-100 pb-2">
           <p>
@@ -983,6 +1289,7 @@ function filterQuestions(
   qs: QuestionRow[],
   answers: Record<string, { deepseek_raw?: AnswerRow; tebiq_current?: AnswerRow }>,
   annotations: Record<string, AnnotationRow>,
+  status: Record<string, QuestionGenStatus>,
   mode: FilterMode,
   scenario: string,
 ): QuestionRow[] {
@@ -1003,6 +1310,11 @@ function filterQuestions(
       return byScenario.filter(q => {
         const a = answers[q.id]
         return !a?.deepseek_raw?.answer_text || !a?.tebiq_current?.answer_text
+      })
+    case 'failed':
+      return byScenario.filter(q => {
+        const s = status[q.id]
+        return s?.deepseek === 'failed' || s?.tebiq === 'failed'
       })
     case 'golden':
       return byScenario.filter(q => annotations[q.id]?.action === 'golden_case')
