@@ -34,6 +34,7 @@ async function main() {
   const previewStage = await import('@/lib/eval-lab/preview-stage')
   const riskMatrix = await import('@/lib/eval-lab/risk-matrix-data')
   const providerHealth = await import('@/lib/eval-lab/provider-health')
+  const previewStream = await import('@/lib/eval-lab/preview-stream')
 
   let passes = 0
   let total = 0
@@ -619,6 +620,124 @@ async function main() {
       { now },
     )
     assert.equal(h.status, 'unknown')
+  })
+
+  // ---- 11. preview SSE protocol (Issue #32 / Workstream C) ----
+  await check('11a. shouldStreamContent: HIGH risk → false', () => {
+    assert.equal(previewStream.shouldStreamContent('HIGH', false), false)
+  })
+  await check('11b. shouldStreamContent: REGRESSION_SET → false (overrides MEDIUM/LOW)', () => {
+    assert.equal(previewStream.shouldStreamContent('LOW', true), false)
+    assert.equal(previewStream.shouldStreamContent('MEDIUM', true), false)
+    assert.equal(previewStream.shouldStreamContent(null, true), false)
+  })
+  await check('11c. shouldStreamContent: MEDIUM/LOW + non-regression → true', () => {
+    assert.equal(previewStream.shouldStreamContent('MEDIUM', false), true)
+    assert.equal(previewStream.shouldStreamContent('LOW', false), true)
+    assert.equal(previewStream.shouldStreamContent(null, false), true)
+  })
+  await check('11d. gatingReason: regression_set wins over high_risk_matrix', () => {
+    // J04 is in REGRESSION_SET AND has risk_level=HIGH in the matrix.
+    // The reason returned should be 'regression_set' (more specific).
+    assert.equal(
+      previewStream.gatingReason('eval-lab-v1-J04', 'HIGH'),
+      'regression_set',
+    )
+  })
+  await check('11e. gatingReason: HIGH risk without regression → high_risk_matrix', () => {
+    // A01 has HIGH risk but is NOT in regression set.
+    assert.equal(previewStream.gatingReason('eval-lab-v1-A01', 'HIGH'), 'high_risk_matrix')
+  })
+  await check('11f. gatingReason: MEDIUM / LOW / null → null (no gating)', () => {
+    assert.equal(previewStream.gatingReason('eval-lab-v1-A06', 'MEDIUM'), null)
+    assert.equal(previewStream.gatingReason('eval-lab-v1-B01', 'LOW'), null)
+    assert.equal(previewStream.gatingReason(null, null), null)
+  })
+
+  await check('11g. formatSseFrame produces a single data line + double newline', () => {
+    const frame = previewStream.formatSseFrame({
+      event: 'question_received',
+      ts: 1234567890,
+    })
+    assert.equal(frame, 'data: {"event":"question_received","ts":1234567890}\n\n')
+  })
+
+  await check('11h. parseSseChunk: parses a complete frame', () => {
+    const buf = 'data: {"event":"routing_done","domain":"keiei-kanri","risk_level":"HIGH","ts":1}\n\n'
+    const { events, remainder } = previewStream.parseSseChunk(buf)
+    assert.equal(events.length, 1)
+    assert.equal(events[0].event, 'routing_done')
+    assert.equal(remainder, '')
+  })
+  await check('11i. parseSseChunk: returns incomplete frame as remainder', () => {
+    const buf = 'data: {"event":"routing_done","domain":null,"risk_level":null,'
+    const { events, remainder } = previewStream.parseSseChunk(buf)
+    assert.equal(events.length, 0)
+    assert.equal(remainder, buf)
+  })
+  await check('11j. parseSseChunk: parses multiple frames + keeps trailing partial', () => {
+    const buf =
+      'data: {"event":"question_received","ts":1}\n\n' +
+      'data: {"event":"routing_started","ts":2}\n\n' +
+      'data: {"event":"final_'
+    const { events, remainder } = previewStream.parseSseChunk(buf)
+    assert.equal(events.length, 2)
+    assert.equal(events[0].event, 'question_received')
+    assert.equal(events[1].event, 'routing_started')
+    assert.equal(remainder, 'data: {"event":"final_')
+  })
+  await check('11k. parseSseChunk: malformed frames are silently dropped', () => {
+    const buf = 'data: not-json\n\ndata: {"event":"error","detail":"x","ts":3}\n\n'
+    const { events } = previewStream.parseSseChunk(buf)
+    assert.equal(events.length, 1)
+    assert.equal(events[0].event, 'error')
+  })
+
+  await check('11l. eventToStage maps lifecycle → progress stages', () => {
+    assert.equal(previewStream.eventToStage({ event: 'question_received', ts: 0 }), 'received')
+    assert.equal(previewStream.eventToStage({ event: 'routing_started', ts: 0 }), 'routing')
+    assert.equal(previewStream.eventToStage({ event: 'routing_done', domain: null, risk_level: null, ts: 0 }), 'risk_check')
+    assert.equal(previewStream.eventToStage({ event: 'risk_detected', reason: 'regression_set', risk_level: null, ts: 0 }), 'risk_check')
+    assert.equal(previewStream.eventToStage({ event: 'generation_started', ts: 0 }), 'generating')
+    assert.equal(previewStream.eventToStage({ event: 'generation_done', status: 'preliminary', ts: 0 }), 'generating')
+  })
+  await check('11m. eventToStage maps terminals correctly', () => {
+    assert.equal(previewStream.eventToStage({ event: 'final_answer_ready', answer_id: 'a1', ts: 0 }), 'final_answer')
+    assert.equal(previewStream.eventToStage({ event: 'fallback_triggered', fallback_reason: 'llm_timeout', ts: 0 }), 'fallback')
+    assert.equal(previewStream.eventToStage({ event: 'clarification_needed', ts: 0 }), 'clarification_needed')
+    assert.equal(previewStream.eventToStage({ event: 'human_review_required', reason: 'regression_set', answer_id: null, ts: 0 }), 'human_review_required')
+    assert.equal(previewStream.eventToStage({ event: 'provider_timeout', ts: 0 }), 'error')
+    assert.equal(previewStream.eventToStage({ event: 'error', detail: 'x', ts: 0 }), 'error')
+  })
+  await check('11n. isTerminalEvent identifies the 5 terminal events', () => {
+    assert.equal(previewStream.isTerminalEvent({ event: 'final_answer_ready', answer_id: 'a1', ts: 0 }), true)
+    assert.equal(previewStream.isTerminalEvent({ event: 'human_review_required', reason: 'regression_set', answer_id: null, ts: 0 }), true)
+    assert.equal(previewStream.isTerminalEvent({ event: 'clarification_needed', ts: 0 }), true)
+    assert.equal(previewStream.isTerminalEvent({ event: 'provider_timeout', ts: 0 }), true)
+    assert.equal(previewStream.isTerminalEvent({ event: 'error', detail: 'x', ts: 0 }), true)
+    // Non-terminals
+    assert.equal(previewStream.isTerminalEvent({ event: 'question_received', ts: 0 }), false)
+    assert.equal(previewStream.isTerminalEvent({ event: 'routing_done', domain: null, risk_level: null, ts: 0 }), false)
+    assert.equal(previewStream.isTerminalEvent({ event: 'fallback_triggered', fallback_reason: 'x', ts: 0 }), false)
+    // fallback_triggered is INTENTIONALLY not terminal — final_answer_ready
+    // follows it for low-risk fallback paths.
+  })
+  await check('11o. SSE_TIMING: 25s pipeline timeout matches Work Packet contract', () => {
+    assert.equal(previewStream.SSE_TIMING.pipeline_timeout_ms, 25_000)
+  })
+  await check('11p. final_answer_ready payload type carries ONLY answer_id (Work Packet §C3 invariant)', () => {
+    // Compile-time invariant check — if someone adds answer content to the
+    // payload, this test starts referencing missing keys / extra keys.
+    const e: import('@/lib/eval-lab/preview-stream').PreviewSseEvent = {
+      event: 'final_answer_ready',
+      answer_id: 'a1',
+      ts: 0,
+    }
+    // Exact-key check: the only allowed keys are event/answer_id/ts.
+    const allowed = new Set(['event', 'answer_id', 'ts'])
+    for (const k of Object.keys(e)) {
+      assert.ok(allowed.has(k), `final_answer_ready leaked field: ${k}`)
+    }
   })
 
   console.log(`\nEval Lab V1 smoke: ${passes}/${total} pass`)

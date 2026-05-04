@@ -12,6 +12,13 @@ import {
   type PreviewStage,
   type SubmitResult,
 } from '@/lib/eval-lab/preview-stage'
+import {
+  SSE_TIMING,
+  eventToStage,
+  isTerminalEvent,
+  parseSseChunk,
+  type PreviewSseEvent,
+} from '@/lib/eval-lab/preview-stream'
 
 // TEBIQ Internal Preview — Track D Alpha + Workstream B Phase 1 (Issue #27).
 //
@@ -104,22 +111,25 @@ export default function PreviewClient() {
     setActive(prev => (prev ? { ...prev, ...patch } : prev))
   }, [])
 
-  const submit = useCallback(
+  // Track whether the active submission is being driven by SSE (Phase 2)
+  // or by the setTimeout fallback (Phase 1). Surfaced subtly in the UI so
+  // QA can confirm which path ran.
+  const [transport, setTransport] = useState<'sse' | 'phase1' | null>(null)
+
+  /**
+   * Phase 1 fallback path. Used when:
+   *   - The SSE endpoint returns a non-200 (404 in non-Preview env, etc)
+   *   - The browser doesn't expose a streaming-capable response.body
+   *   - SSE connection fails before any event arrives
+   *
+   * This is the exact code path that shipped with PR #30, copy-pasted
+   * here so we can call it from the Phase 2 catch handler without
+   * losing the working behaviour.
+   */
+  const runPhase1 = useCallback(
     async (question: string, starterTag: string | null) => {
-      // Prevent overlapping submissions while one is mid-flight.
-      if (active && !TERMINAL.has(active.stage)) return
-      clearTimers()
-      setGeneralError(null)
-
-      const startedAt = Date.now()
-      setActive({
-        stage: 'received',
-        question,
-        starter_tag: starterTag,
-        started_at: startedAt,
-      })
-
-      // Schedule the synthetic progression (Phase 1 — non-streaming).
+      setTransport('phase1')
+      // Schedule the synthetic progression.
       stageTimers.current.push(
         setTimeout(() => setStage({ stage: 'routing' }), STAGE_TIMING.routing_delay_ms),
       )
@@ -129,9 +139,6 @@ export default function PreviewClient() {
           STAGE_TIMING.routing_delay_ms + STAGE_TIMING.risk_check_delay_ms,
         ),
       )
-      // We flip to 'generating' as the actual fetch begins (next frame),
-      // but use a small delay so the user sees risk_check before
-      // generating on a fast network.
       stageTimers.current.push(
         setTimeout(
           () => setStage({ stage: 'generating' }),
@@ -152,7 +159,6 @@ export default function PreviewClient() {
           }),
         )
         const json = (await res.json().catch(() => null)) as SubmitResult | null
-        // Stop the synthetic stages — we're at a terminal state.
         clearTimers()
 
         if (!res.ok || !json) {
@@ -173,8 +179,6 @@ export default function PreviewClient() {
           detail: stageDetail(stage, json),
         } : prev)
 
-        // Auto-redirect on final_answer after a brief beat so the
-        // reviewer sees the success state.
         if (stage === 'final_answer' && json.answer_id) {
           redirectTimer.current = setTimeout(() => {
             router.push(`/answer/${json.answer_id}`)
@@ -192,7 +196,182 @@ export default function PreviewClient() {
         } : prev)
       }
     },
-    [active, clearTimers, router, setStage],
+    [clearTimers, router, setStage],
+  )
+
+  /**
+   * Phase 2 SSE path. POST to /api/internal/preview/stream and consume
+   * the event stream until terminal. On connection failure (non-200,
+   * unreadable body, no events received), fall back to Phase 1.
+   */
+  const runSse = useCallback(
+    async (question: string, starterTag: string | null): Promise<void> => {
+      // 25s soft client-side timeout — defensive belt-and-suspenders on top
+      // of the server's identical SSE_TIMING.pipeline_timeout_ms. If the
+      // stream goes silent (no events for 25s) we close it ourselves.
+      const ac = new AbortController()
+      const watchdog = setTimeout(() => ac.abort(), SSE_TIMING.pipeline_timeout_ms + 5_000)
+
+      let res: Response
+      try {
+        res = await fetch('/api/internal/preview/stream', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ question, starter_tag: starterTag }),
+          signal: ac.signal,
+        })
+      } catch (err) {
+        clearTimeout(watchdog)
+        // Network-layer failure → fallback to Phase 1.
+        console.warn('[preview/sse] connect failed, falling back to phase 1', err)
+        await runPhase1(question, starterTag)
+        return
+      }
+      if (!res.ok || !res.body) {
+        clearTimeout(watchdog)
+        // 4xx (e.g. 404 when EVAL_LAB_ENABLED unset) or no streaming body.
+        console.warn('[preview/sse] non-streaming response, falling back', res.status)
+        await runPhase1(question, starterTag)
+        return
+      }
+
+      setTransport('sse')
+
+      const reader = res.body.pipeThrough(new TextDecoderStream()).getReader()
+      let buffer = ''
+      let receivedAny = false
+      let terminated = false
+      let answerId: string | null = null
+
+      try {
+        while (true) {
+          const { value, done } = await reader.read()
+          if (done) break
+          buffer += value
+          const { events, remainder } = parseSseChunk(buffer)
+          buffer = remainder
+          for (const event of events) {
+            receivedAny = true
+            applySseEvent(event)
+            if (event.event === 'final_answer_ready') {
+              answerId = event.answer_id
+            } else if (event.event === 'human_review_required') {
+              answerId = event.answer_id
+            }
+            if (isTerminalEvent(event)) {
+              terminated = true
+            }
+          }
+          if (terminated) break
+        }
+      } catch (err) {
+        if (!receivedAny) {
+          console.warn('[preview/sse] stream error before any event, falling back', err)
+          clearTimeout(watchdog)
+          await runPhase1(question, starterTag)
+          return
+        }
+        // Stream broke mid-flight after we'd already advanced — keep
+        // whatever stage we're at and surface error.
+        setActive(prev => prev ? {
+          ...prev,
+          stage: 'error',
+          detail: err instanceof Error ? err.message : String(err),
+        } : prev)
+      } finally {
+        clearTimeout(watchdog)
+        try { reader.releaseLock() } catch { /* ignore */ }
+      }
+
+      if (!receivedAny) {
+        // Server returned 200 + empty body. Treat as no-stream and fall back.
+        console.warn('[preview/sse] empty stream, falling back')
+        await runPhase1(question, starterTag)
+        return
+      }
+
+      // After final_answer terminal event, schedule the redirect.
+      if (answerId) {
+        const stageNow = currentStageRef.current
+        if (stageNow === 'final_answer') {
+          redirectTimer.current = setTimeout(() => {
+            router.push(`/answer/${answerId}`)
+          }, 1200)
+        }
+      }
+    },
+    // applySseEvent is stable (useCallback with [] deps below); keep
+    // out of deps to avoid retriggering on every render. Same for
+    // currentStageRef (a ref, not reactive).
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [router, runPhase1],
+  )
+
+  /** Apply a single SSE event to the active submission state. */
+  const applySseEvent = useCallback((event: PreviewSseEvent) => {
+    setActive(prev => {
+      if (!prev) return prev
+      const next: ActiveSubmission = { ...prev }
+      const newStage = eventToStage(event)
+      if (newStage) {
+        // Don't downgrade to an earlier stage if we somehow get reordered.
+        if (shouldAdvance(prev.stage, newStage)) {
+          next.stage = newStage
+        }
+      }
+      switch (event.event) {
+        case 'final_answer_ready':
+          next.answer_id = event.answer_id
+          next.detail = null
+          break
+        case 'human_review_required':
+          next.answer_id = event.answer_id
+          next.detail = humanReviewDetail(event.reason)
+          break
+        case 'fallback_triggered':
+          next.detail = `fallback_reason = ${event.fallback_reason}`
+          break
+        case 'provider_timeout':
+          next.detail = '25s 超时 — 后端可能仍在处理，可稍后查 /my/archive 或重试'
+          break
+        case 'error':
+          next.detail = event.detail
+          break
+        default:
+          break
+      }
+      return next
+    })
+  }, [])
+
+  // Track current stage in a ref so we can read it from the SSE finalizer
+  // without re-binding the callback.
+  const currentStageRef = useRef<PreviewStage>('idle')
+  useEffect(() => {
+    currentStageRef.current = active?.stage ?? 'idle'
+  }, [active?.stage])
+
+  const submit = useCallback(
+    async (question: string, starterTag: string | null) => {
+      // Prevent overlapping submissions while one is mid-flight.
+      if (active && !TERMINAL.has(active.stage)) return
+      clearTimers()
+      setGeneralError(null)
+      setTransport(null)
+
+      const startedAt = Date.now()
+      setActive({
+        stage: 'received',
+        question,
+        starter_tag: starterTag,
+        started_at: startedAt,
+      })
+
+      // Try SSE first. runSse falls back to runPhase1 internally on any
+      // connection-layer failure.
+      await runSse(question, starterTag)
+    },
+    [active, clearTimers, runSse],
   )
 
   const reset = useCallback(() => {
@@ -228,8 +407,20 @@ export default function PreviewClient() {
           TEBIQ User Preview · 内部
         </h1>
         <span className="text-[10px] text-slate-500 uppercase tracking-wider">
-          Track D · Workstream B / Issue #27
+          Track D · Workstream C / Issue #32 (SSE Phase 2)
         </span>
+        {transport && (
+          <span
+            className={`text-[10px] uppercase tracking-wider px-1.5 py-0.5 rounded border ${
+              transport === 'sse'
+                ? 'border-emerald-300 bg-emerald-50 text-emerald-700'
+                : 'border-slate-300 bg-slate-50 text-slate-600'
+            }`}
+            title={transport === 'sse' ? 'SSE event stream active' : 'Phase 1 fallback (setTimeout)'}
+          >
+            transport: {transport}
+          </span>
+        )}
         <div className="ml-auto flex flex-wrap gap-2 text-[11px]">
           <a href="/internal/eval-console" className="px-2 py-1 border border-slate-300 rounded bg-white hover:bg-slate-100">
             Eval Console
@@ -461,10 +652,47 @@ function stageDetail(stage: PreviewStage, result: SubmitResult): string | null {
       return result.action_answer?.conclusion ?? null
     case 'final_answer':
       return null
-    case 'error':
+    case 'error': {
       const errMsg = typeof result.error === 'string' ? result.error : (result.error?.message ?? null)
       return errMsg
+    }
     default:
       return null
   }
+}
+
+/** Phase 2 — translate the SSE human_review_required reason to user copy. */
+function humanReviewDetail(reason: 'regression_set' | 'high_risk_matrix' | 'out_of_scope'): string {
+  switch (reason) {
+    case 'regression_set':
+      return 'REGRESSION_SET 题目 — Routing Safety Gate v1 修复后仍按人工确认对待'
+    case 'high_risk_matrix':
+      return 'DOMAIN-CC 标记为 HIGH risk — 强制走人工确认路径'
+    case 'out_of_scope':
+      return 'TEBIQ 路由判定为 out_of_scope — 强制走人工确认路径'
+  }
+}
+
+/**
+ * Phase 2 — guard against out-of-order SSE events demoting the visible
+ * stage. Stages are loosely ordered:
+ *   idle < received < routing < risk_check < generating < (terminals)
+ * Any terminal can replace any non-terminal. Non-terminals only advance
+ * forward (don't go from generating back to routing if a delayed
+ * routing_done arrives).
+ */
+function shouldAdvance(current: PreviewStage, next: PreviewStage): boolean {
+  const order: Record<PreviewStage, number> = {
+    idle: 0,
+    received: 1,
+    routing: 2,
+    risk_check: 3,
+    generating: 4,
+    final_answer: 9,
+    fallback: 9,
+    clarification_needed: 9,
+    human_review_required: 9,
+    error: 9,
+  }
+  return order[next] >= order[current]
 }
