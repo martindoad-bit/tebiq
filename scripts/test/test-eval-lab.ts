@@ -30,6 +30,7 @@ async function main() {
   const queries = await import('@/lib/db/queries/eval-lab')
   const conc = await import('@/lib/eval-lab/concurrency')
   const retry = await import('@/lib/eval-lab/retry')
+  const classifier = await import('@/lib/eval-lab/sample-classifier')
 
   let passes = 0
   let total = 0
@@ -267,6 +268,107 @@ async function main() {
     assert.equal(retry.isLikelyTransient({ message: 'invalid input' }), false)
     assert.equal(retry.isLikelyTransient(null), false)
     assert.equal(retry.isLikelyTransient(undefined), false)
+  })
+
+  // ---- 6. sample classifier (Issue #19 / Internal Console v1) ----
+  // Helper: minimal answer-shape factory. The classifier reads only these
+  // four fields; defaults match "successful answer".
+  const ans = (
+    o: Partial<{ answer_text: string | null; error: string | null; status: string | null; fallback_reason: string | null }> = {},
+  ) => ({
+    answer_text: 'ok-text',
+    error: null,
+    status: 'direct_answer',
+    fallback_reason: null,
+    ...o,
+  })
+
+  await check('6a. classifySample: NONE when tebiq missing', () => {
+    assert.equal(classifier.classifySample(null, ans(), 'eval-lab-v1-A01'), 'NONE')
+    assert.equal(classifier.classifySample(undefined, ans(), 'eval-lab-v1-A01'), 'NONE')
+  })
+  await check('6b. classifySample: INVALID when tebiq has error column', () => {
+    assert.equal(
+      classifier.classifySample(ans({ error: 'tebiq_pipeline_failed: x' }), ans(), 'eval-lab-v1-A01'),
+      'INVALID',
+    )
+  })
+  await check('6c. classifySample: INVALID when tebiq has no answer_text', () => {
+    assert.equal(
+      classifier.classifySample(ans({ answer_text: null }), ans(), 'eval-lab-v1-A01'),
+      'INVALID',
+    )
+  })
+  await check('6d. classifySample: TEBIQ_FALLBACK on llm_timeout regardless of DS', () => {
+    assert.equal(
+      classifier.classifySample(ans({ fallback_reason: 'llm_timeout' }), ans(), 'eval-lab-v1-A01'),
+      'TEBIQ_FALLBACK',
+    )
+    // Even if DS also failed, fallback wins (precedence).
+    assert.equal(
+      classifier.classifySample(
+        ans({ fallback_reason: 'llm_timeout' }),
+        ans({ error: 'deepseek_http_500', answer_text: null }),
+        'eval-lab-v1-A01',
+      ),
+      'TEBIQ_FALLBACK',
+    )
+  })
+  await check('6e. classifySample: TEBIQ_ROUTING_FAILURE for OOS in regression set', () => {
+    for (const tag of ['eval-lab-v1-J03', 'eval-lab-v1-J04', 'eval-lab-v1-J08', 'eval-lab-v1-I08', 'eval-lab-v1-D05', 'eval-lab-v1-D06', 'eval-lab-v1-D09']) {
+      assert.equal(
+        classifier.classifySample(ans({ status: 'out_of_scope' }), ans(), tag),
+        'TEBIQ_ROUTING_FAILURE',
+        `expected ROUTING for ${tag}`,
+      )
+    }
+  })
+  await check('6f. classifySample: TEBIQ_OOS for OOS NOT in regression set', () => {
+    assert.equal(
+      classifier.classifySample(ans({ status: 'out_of_scope' }), ans(), 'eval-lab-v1-A01'),
+      'TEBIQ_OOS',
+    )
+    // Null tag treated as not-in-set.
+    assert.equal(
+      classifier.classifySample(ans({ status: 'out_of_scope' }), ans(), null),
+      'TEBIQ_OOS',
+    )
+  })
+  await check('6g. classifySample: DS_FAILED when TEBIQ ok but DS failed/missing', () => {
+    assert.equal(classifier.classifySample(ans(), null, 'eval-lab-v1-A01'), 'DS_FAILED')
+    assert.equal(
+      classifier.classifySample(ans(), ans({ error: 'deepseek_http_500', answer_text: null }), 'eval-lab-v1-A01'),
+      'DS_FAILED',
+    )
+    assert.equal(
+      classifier.classifySample(ans(), ans({ answer_text: null }), 'eval-lab-v1-A01'),
+      'DS_FAILED',
+    )
+  })
+  await check('6h. classifySample: FULL_COMPARABLE when both ok and no fallback/OOS', () => {
+    assert.equal(classifier.classifySample(ans(), ans(), 'eval-lab-v1-A01'), 'FULL_COMPARABLE')
+    // Other fallback_reason values (not llm_timeout) don't disqualify; product
+    // owner only excludes llm_timeout per v0.3.
+    assert.equal(
+      classifier.classifySample(ans({ fallback_reason: 'llm_parse' }), ans(), 'eval-lab-v1-A01'),
+      'FULL_COMPARABLE',
+    )
+  })
+  await check('6i. REGRESSION_SET has exactly the 7 known mis-routed tags', () => {
+    const expected = [
+      'eval-lab-v1-J03', 'eval-lab-v1-J04', 'eval-lab-v1-J08',
+      'eval-lab-v1-I08', 'eval-lab-v1-D05', 'eval-lab-v1-D06', 'eval-lab-v1-D09',
+    ]
+    assert.equal(classifier.REGRESSION_SET.size, 7)
+    for (const t of expected) {
+      assert.ok(classifier.REGRESSION_SET.has(t), `regression set missing ${t}`)
+    }
+  })
+  await check('6j. isAnnotationEligible only true for FULL_COMPARABLE', () => {
+    assert.equal(classifier.isAnnotationEligible('FULL_COMPARABLE'), true)
+    for (const c of ['TEBIQ_FALLBACK', 'TEBIQ_ROUTING_FAILURE', 'TEBIQ_OOS', 'DS_FAILED', 'INVALID', 'NONE'] as const) {
+      assert.equal(classifier.isAnnotationEligible(c), false, `${c} should not be annotation-eligible`)
+    }
   })
 
   console.log(`\nEval Lab V1 smoke: ${passes}/${total} pass`)
