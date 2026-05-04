@@ -87,7 +87,61 @@ export function isAnnotationEligible(c: SampleClass): boolean {
   return c === 'FULL_COMPARABLE'
 }
 
-/** Human-readable Chinese label for a sample class. */
+/**
+ * Workstream A — extended status badges (Issue #26). These are NOT
+ * mutually exclusive with the SampleClass; a question can simultaneously
+ * be `DS_FAILED` (sample class) and `annotation_blocked` + `p0_candidate`
+ * (extended badges). The console renders both.
+ */
+export type ExtendedBadge =
+  | 'p0_candidate'         // risk_level === HIGH
+  | 'p1_candidate'         // risk_level === MEDIUM
+  | 'domain_review_needed' // handoff !== null and handoff !== 'no'
+  | 'annotation_blocked'   // sample class is anything other than FULL_COMPARABLE
+
+export interface BadgeContext {
+  sampleClass: SampleClass
+  riskLevel?: 'HIGH' | 'MEDIUM' | 'LOW' | null
+  handoff?: 'yes' | 'conditional' | 'no' | null
+}
+
+/** Compute the set of extended badges for a question row. */
+export function extendedBadges(ctx: BadgeContext): ReadonlyArray<ExtendedBadge> {
+  const out: ExtendedBadge[] = []
+  if (ctx.riskLevel === 'HIGH') out.push('p0_candidate')
+  else if (ctx.riskLevel === 'MEDIUM') out.push('p1_candidate')
+  if (ctx.handoff === 'yes' || ctx.handoff === 'conditional') {
+    out.push('domain_review_needed')
+  }
+  if (ctx.sampleClass !== 'FULL_COMPARABLE') out.push('annotation_blocked')
+  return out
+}
+
+/**
+ * Human-readable explanation for why a sample is not annotation-eligible.
+ * Returns null when the sample IS eligible.
+ */
+export function annotationBlockReason(c: SampleClass): string | null {
+  switch (c) {
+    case 'FULL_COMPARABLE': return null
+    case 'TEBIQ_FALLBACK': return 'TEBIQ 降级为 fallback（llm_timeout）— LLM 恢复后重跑'
+    case 'TEBIQ_ROUTING_FAILURE': return 'Routing 错误（regression set）— 修复后重跑'
+    case 'TEBIQ_OOS': return 'TEBIQ 判定为 out_of_scope — 等 DOMAIN 复核或 routing 修复'
+    case 'DS_FAILED': return 'DeepSeek 失败 — DS 恢复后补跑'
+    case 'INVALID': return 'TEBIQ 生成失败 — 重跑'
+    case 'NONE': return '尚未生成 — 触发 TEBIQ + DeepSeek 重跑'
+  }
+}
+
+/** Human-readable label for an extended badge. */
+export const BADGE_LABEL: Record<ExtendedBadge, string> = {
+  p0_candidate: 'P0',
+  p1_candidate: 'P1',
+  domain_review_needed: 'DOMAIN',
+  annotation_blocked: 'BLOCKED',
+}
+
+/** Human-readable label for a sample class. */
 export const SAMPLE_CLASS_LABEL: Record<SampleClass, string> = {
   FULL_COMPARABLE: 'FULL',
   TEBIQ_FALLBACK: 'FALLBACK',
