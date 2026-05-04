@@ -9,14 +9,14 @@
 | `last_verified` | 2026-05-05 |
 | `verified_by` | GM |
 | `source_of_truth` | GitHub remote `origin/main` + `gh pr view` (per-branch) + user-provided latest facts |
-| `main_head` | `ec8ad27` |
-| `main_head_title` | feat(domain): semantic review infrastructure v0.1 + 100Q risk map |
+| `main_head` | `0c9e481` |
+| `main_head_title` | Merge pull request #22 — feat/eval-console-v1 (Internal Console v1) |
 
 ---
 
 ## 当前阶段标签
 
-**Multi-Track Parallel Mode v0.2 — M1 Internal Console Alpha**
+**Multi-Track Parallel Mode v0.2 — M1 ✅ 完成 → M2 Routing Safety Gate**
 
 规则：单线阻塞不等于全项目阻塞。6 track 独立推进。
 
@@ -29,7 +29,7 @@
 | **A** | Answer Quality / Eval Round 1A | 🔴 Blocked | DeepSeek API timeout + Routing fix |
 | **B** | Internal Console / 100Q 可視化 | 🟡 Active | **最优先** — ENGINE Issue #19 |
 | **C** | Routing Safety Gate (R01–R05) | 🟡 Active | ENGINE Issue #18 |
-| **D** | User Preview / Matter Draft | ⏸ Standby | M1 完成後啟動 |
+| **D** | User Preview / Matter Draft | ⏸ Standby | M1 ✅ → Work Packet 待产品裁决 |
 | **E** | DOMAIN Assets / 100Q Risk Map | 🟡 Active | 不等 FULL_COMPARABLE |
 | **F** | Ops / Release Readiness | 🟡 Active | 按里程碑推進 |
 
@@ -49,7 +49,7 @@ CEO 当前能看到什么：  https://tebiq.jp + /internal/eval-lab（100 题种
 |------|------|------|
 | Work Packet 发布 | ✅ 完成 | `docs/eval/EVAL_INTERNAL_CONSOLE_PACK.md` |
 | Issue #19 创建 | ✅ 完成 | ENGINE 待实现 |
-| `/internal/eval-console` 实现 | ⏳ ENGINE | 100 题可视化 + 分级标签 + 重跑按钮 |
+| `/internal/eval-console` 实现 | ✅ 完成（PR #22）| 100 题可视化 + 分级标签 + 重跑按钮 |
 
 ## Track C — Routing Safety Gate
 
@@ -92,7 +92,7 @@ CEO 当前能看到什么：  https://tebiq.jp + /internal/eval-lab（100 题种
 | 里程碑 | 名称 | 状态 |
 |--------|------|------|
 | M0 | 项目规则重置 + 并行模式启动 | ✅ 完成 |
-| M1 | Internal Console Alpha（CEO 可見 100 題）| ⏳ ENGINE |
+| M1 | Internal Console Alpha（CEO 可見 100 題）| ✅ 完成（`0c9e481`）|
 | M2 | Routing Safety Gate（7/7 回归通过）| ⏳ ENGINE |
 | M3 | Answer Quality Baseline（≥24 FULL_COMPARABLE）| ⏳ 等待 |
 | M4 | User Preview Alpha（CEO 可操作）| ⏳ M1 后 |
