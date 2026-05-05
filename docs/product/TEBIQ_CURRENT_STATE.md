@@ -9,8 +9,8 @@
 | `last_verified` | 2026-05-05 |
 | `verified_by` | GM |
 | `source_of_truth` | GitHub remote `origin/main` + `gh pr view` + 用户最新事实 |
-| `main_head` | `1ba2fea` |
-| `main_head_title` | Merge PR #38 — P0 hotfix: LLM timeout no longer falls through to legacy matcher (Issue #37) |
+| `main_head` | `e81a095`（pending push: brand docs + landing gaps）|
+| `main_head_title` | docs(domain): 1.0 Alpha fact anchors v0.1 — 15 conditions (Issue #42) |
 
 ---
 
@@ -126,6 +126,21 @@ DeepSeek:
 | `https://tebiq.jp/internal/eval-console` | ✅ | M1 — 100 题状态总览 |
 | `https://tebiq.jp/internal/eval-lab` | ✅ | 标注工具（不要混淆为 console）|
 | `https://tebiq.jp/internal/preview` | ✅ | M4 Phase 1+2 — 阶段反馈 + SSE |
+
+---
+
+## UI Brand Source Status
+
+| 项 | 值 |
+|----|-----|
+| Brand direction | **V07 Quiet Brow（locked，不重设计）** |
+| Tokens canonical | `docs/product/tebiq-v07-tokens.json`（colors / typography / sizes / forbidden）|
+| Logo / Icon canonical | `public/brand/tebiq-v07/`（svg/ + app-icon/ + android/ ios/ pwa/）|
+| Code-level tokens | `components/ui/design-tokens.ts` + `tailwind.config.ts` |
+| Brand docs index | `docs/brand/`（4 files: PACKAGE / LOGO_USAGE / COLOR_TOKENS / TYPOGRAPHY，新建 2026-05-05）|
+| Registry updated | yes — Brand 资产区块 |
+| CODEXUI can enter visual implementation | **yes**，前提：只读 Registry 标记的 canonical；不发明色 / 字体 / logo；derived tokens 必须 `needs review` |
+| Known gaps | state colors（hover/active/focus/error）/ elevation+shadow / typography scale / dark mode 全色板 / print guideline — CODEXUI 在 1.0 UI Phase 2 提派生 token 提案，**不直接当 production token 使用** |
 
 ---
 

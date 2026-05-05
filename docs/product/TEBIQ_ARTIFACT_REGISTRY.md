@@ -99,6 +99,29 @@
 | 1.0 Learning Console Pack | `docs/ops/WORKSTREAM_1_0_LEARNING_CONSOLE_PACK.md` | GM | active (Issue #41) | ENGINE | — | 2026-05-05 |
 | 1.0 Fact Anchors Pack | `docs/ops/WORKSTREAM_1_0_FACT_ANCHORS_PACK.md` | GM | active (Issue #42) | DOMAIN | — | 2026-05-05 |
 | 1.0 QA Alpha Smoke Pack | `docs/ops/QA_1_0_ALPHA_SMOKE_PACK.md` | GM | active (Issue #43) | QA | — | 2026-05-05 |
+| **1.0 Fact Anchors v0.1** | `docs/domain/DOMAIN_FACT_ANCHORS_v0.1.md` | DOMAIN-CC | draft / needs human review (Issue #42 ✅)| ENGINE / VOICE | `e81a095` | 2026-05-05 |
+| **1.0 QA Alpha Smoke Report v0.1** | `docs/qa/QA_1_0_ALPHA_SMOKE_REPORT_v0.1.md` | QA | partial — §3.1 PASS 7/7; §3.2-3.9 BLOCKED (waiting #39)| GM / ENGINE | `b8088c3` | 2026-05-05 |
+
+---
+
+## Brand 资产（docs/brand/ + public/brand/ + 现有 token 文件）
+
+> V07 Quiet Brow 已锁定方向。资产 source-locked，no redesign。
+> CODEXUI / ENGINE / QA **必须**只消费本区块登记的 canonical 文件。聊天内容不算 brand source of truth。
+
+| 资产名称 | 路径 | Owner | Status | 消费方 | Canonical for CODEXUI |
+|---------|------|-------|--------|--------|----------------------|
+| Brand Package Index | `docs/brand/TEBIQ_BRAND_PACKAGE.md` | GM | draft / canonical / not production redesign | CODEXUI / ENGINE / QA | yes |
+| Logo Usage | `docs/brand/TEBIQ_LOGO_USAGE.md` | GM | draft / canonical / not production redesign | CODEXUI / ENGINE | yes |
+| Color Tokens (doc) | `docs/brand/TEBIQ_COLOR_TOKENS.md` | GM | draft / canonical / not production redesign | CODEXUI / ENGINE | yes |
+| Typography (doc) | `docs/brand/TEBIQ_TYPOGRAPHY.md` | GM | draft / canonical / not production redesign | CODEXUI / ENGINE | yes |
+| Tokens JSON (canonical source) | `docs/product/tebiq-v07-tokens.json` | Project Lead + GM | canonical | CODEXUI / ENGINE | yes |
+| Logo / Icon SVG + PNG | `public/brand/tebiq-v07/` | Project Lead | canonical / source-locked | ENGINE | yes |
+| design-tokens.ts | `components/ui/design-tokens.ts` | ENGINE | code-canonical | ENGINE / CODEXUI | yes |
+| tailwind.config.ts | `tailwind.config.ts` | ENGINE | code-canonical | ENGINE | yes |
+| favicon / apple-touch | `public/favicon.ico` / `public/apple-touch-icon.png` | ENGINE | canonical | ENGINE | yes |
+
+> **规则**：CODEXUI / ENGINE 不在 `docs/ui/` 中内联 hex / 字体名 / 自定义 logo；必须引用本区块路径或 token name。
 
 ---
 
