@@ -271,3 +271,45 @@ production 解锁前置条件未满足：M3-C 未完成；QA 未完整补位；D
 ### Impact
 
 VOICE / DOMAIN / ENGINE 任何 production-facing 改动需先经过 QA 正式补位 + 产品负责人裁决。
+
+---
+
+## DL-010 · M3-A baseline methodology revised — routing-only PASS ≠ M3-A PASS
+
+| 字段 | 值 |
+|------|-----|
+| date | 2026-05-05 |
+| owner | 产品负责人 / Project Lead |
+| status | active |
+
+### Background
+
+GM 在 Sprint v0.3 输出 M3A_ROUTING_SAFETY_BASELINE_v0.1.md 标记 PASS 7/7。判定仅基于 routing 字段（domain ≠ unknown / status ≠ out_of_scope / fallback_reason）。
+
+QA Issue #35 在 production live curl 复现 P0：D05/D06 在 LLM timeout 后落到 `answer-core-v1` legacy matcher，返回与原问题完全无关的 cached answer（divorce → "换工作半年"），且 status=answered，无降级标记。
+
+DOMAIN 在 7 行确认中给出 2 pass + 5 partial 的判定（含 D05/D06 partial），方法学上比 GM 的 routing-only PASS 更准确。
+
+### Decision
+
+M3-A 评价标准修订：
+
+1. **Routing structure pass** ≠ **M3-A pass**。
+2. M3-A 必须同时验证：
+   - routing 字段（domain / status / fallback_reason）正确
+   - answer_text 内容与 original_question 相关
+   - fallback 路径不得返回 unrelated cached content
+3. DOMAIN 的「partial」判定（routing 正确但内容未验证）正式纳入 M3-A 评价标准。
+4. GM 后续不得再以 routing-only 标准声明 M3-A PASS；仅可标记 "routing-structure pass"。
+5. 真 M3-A PASS = routing-structure pass + content safety pass + fallback-no-pollution pass + DOMAIN/QA 复核。
+
+### Rationale
+
+routing 字段正确不等于用户看到的内容正确。fallback 路径如果命中 legacy matcher 返回任意 cached answer，对用户的实际危害（被错误指引）反而比 out_of_scope 更高（用户不知道答案错了）。M3-A 的 "Safety" 必须涵盖到内容层。
+
+### Impact
+
+- M3A_ROUTING_SAFETY_BASELINE_v0.1.md 已加 corrigendum，状态修订为 routing PASS / content BLOCK
+- M3-A 在 Issue #37 修复 + QA / DOMAIN 复核完成前不得标 PASS
+- M3-B 通过标准（v0.3 §5 临时口径）需在 #37 修复后重评估（fallback 不污染前提下）
+- 后续所有 M3-x baseline 必须包含 answer_text 内容验证步骤

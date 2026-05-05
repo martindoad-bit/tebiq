@@ -31,9 +31,9 @@
 | M0 | accepted | Artifact-first + Context OS |
 | M1 Internal Console | **accepted / monitoring** | CEO 验收 2026-05-05；camelCase fix in main |
 | M2 Routing Safety | **implemented + semantic draft / E2E PASSED** | code merged (PR #23) + DOMAIN 7/7 ✅ + E2E 7/7 ✅（2026-05-05 rerun）|
-| **M3-A** Routing Safety Baseline | **routing PASS / content BLOCK** | 修订：QA #35 + GM 复现 P0；DOMAIN 2 pass + 5 partial 是更准确判定；P0 ticket #37 |
-| **M3-B** TEBIQ Self-output Baseline | **PASS（临时标准，scope: VOICE 合规层）** | 报告：`docs/eval/M3B_TEBIQ_SELFOUTPUT_BASELINE_v0.1.md`；P0 #37 修复后需重新评估 |
-| **M3-C** DeepSeek Comparison Baseline | **infra ready / 等 P0 #37 修复** | PR #36 merged `98474c9`；DS raw route 已 90s；m3c-phased-run.sh 骨架 ready |
+| **M3-A** Routing Safety Baseline | routing structure: pass · **answer_text content safety: BLOCK by #37** | DL-010 修订方法学；不再标 PASS 直至 #37 修复 + QA/DOMAIN 复核 |
+| **M3-B** TEBIQ Self-output Baseline | **BLOCK by #37** | fallback 路径会产生 unrelated answered content，临时通过标准失效 |
+| **M3-C** DeepSeek Comparison Baseline | infra ready · **DO NOT RUN until #37 fixed** | PR #36 merged `98474c9`；DS raw route 90s；执行会被 fallback 污染 |
 | M4 Phase 1 (Stage Feedback) | **accepted** | PR #30 in main |
 | M4 Phase 2 (SSE) | **merged / QA pending** | PR #33 in main `501c147` |
 | M5 Matter v0 | ⏳ 等 M3 结论 | — |
