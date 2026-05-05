@@ -445,7 +445,7 @@ export default function AiConsultationEntryClient() {
                 <button
                   type="submit"
                   disabled={!question.trim() || photo.kind === 'recognizing'}
-                  className="px-4 py-2 rounded bg-slate-900 text-white text-sm font-medium hover:bg-slate-800 disabled:opacity-50"
+                  className="px-4 py-2 rounded bg-ink text-white text-sm font-medium hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed"
                 >
                   {photo.kind === 'recognizing' ? '识别中…' : '开始咨询'}
                 </button>
