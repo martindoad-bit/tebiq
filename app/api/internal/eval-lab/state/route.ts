@@ -4,7 +4,48 @@ import {
   listEvalAnnotations,
   listEvalAnswers,
   listEvalQuestions,
+  type EvalQuestionRow,
+  type EvalAnswerRow,
 } from '@/lib/db/queries/eval-lab'
+
+// Drizzle returns camelCase TypeScript names. The client + lib layer (sample-classifier,
+// provider-health) were written expecting snake_case. Map here so downstream stays stable.
+function toSnakeQuestion(q: EvalQuestionRow) {
+  return {
+    id: q.id,
+    question_text: q.questionText,
+    scenario: q.scenario,
+    starter_tag: q.starterTag,
+    source: q.source,
+    active: q.active,
+    schema_version: q.schemaVersion,
+    metadata_json: q.metadataJson,
+    created_at: q.createdAt,
+    updated_at: q.updatedAt,
+  }
+}
+
+function toSnakeAnswer(a: EvalAnswerRow) {
+  return {
+    id: a.id,
+    question_id: a.questionId,
+    answer_type: a.answerType,
+    model: a.model,
+    prompt_version: a.promptVersion,
+    answer_text: a.answerText,
+    tebiq_answer_id: a.tebiqAnswerId,
+    tebiq_answer_link: a.tebiqAnswerLink,
+    engine_version: a.engineVersion,
+    status: a.status,
+    domain: a.domain,
+    fallback_reason: a.fallbackReason,
+    latency_ms: a.latencyMs,
+    error: a.error,
+    raw_payload_json: a.rawPayloadJson,
+    schema_version: a.schemaVersion,
+    created_at: a.createdAt,
+  }
+}
 
 // GET /api/internal/eval-lab/state
 //
@@ -63,8 +104,8 @@ export async function GET(req: Request) {
       ok: true,
       schema_version: 'eval-lab-v1',
       reviewer,
-      questions,
-      answers,
+      questions: questions.map(toSnakeQuestion),
+      answers: answers.map(toSnakeAnswer),
       annotations,
     })
   } catch (err) {
