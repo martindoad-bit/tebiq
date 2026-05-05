@@ -9,14 +9,16 @@
 | `last_verified` | 2026-05-05 |
 | `verified_by` | GM |
 | `source_of_truth` | GitHub remote `origin/main` + `gh pr view` + 用户最新事实 |
-| `main_head` | `b114810` |
-| `main_head_title` | feat(stabilization): Sprint v0.3 — M3-A/B reports + QA + ENGINE work packets |
+| `main_head` | `98474c9` |
+| `main_head_title` | Merge PR #36 — M3-C DS batch readiness (timeout 25→90s, scripts, skeleton) |
 
 ---
 
 ## 当前阶段标签
 
-**Project Stabilization Sprint v0.3 完成 — M3-A PASS / M3-B PASS（临时）/ M3-C 工作包就位 / QA 工作包就位**
+**Stabilization Sprint v0.3 完成 + QA P0 finding active — Issue #37 P0 hotfix 待 ENGINE 处理**
+
+**关键变化（2026-05-05）**：QA Issue #35 发现 P0 — D05/D06 LLM timeout fallback 命中 `answer-core-v1` legacy matcher 返回不相关内容。M3-A 修订为「routing PASS / content BLOCK」。Production 仍 blocked（DL-009）。
 
 规则：单线阻塞不等于全项目阻塞。6 track 独立推进。
 
@@ -29,9 +31,9 @@
 | M0 | accepted | Artifact-first + Context OS |
 | M1 Internal Console | **accepted / monitoring** | CEO 验收 2026-05-05；camelCase fix in main |
 | M2 Routing Safety | **implemented + semantic draft / E2E PASSED** | code merged (PR #23) + DOMAIN 7/7 ✅ + E2E 7/7 ✅（2026-05-05 rerun）|
-| **M3-A** Routing Safety Baseline | **PASS** | 报告：`docs/eval/M3A_ROUTING_SAFETY_BASELINE_v0.1.md`；7/7 regression E2E 验证 |
-| **M3-B** TEBIQ Self-output Baseline | **PASS（临时标准）** | 报告：`docs/eval/M3B_TEBIQ_SELFOUTPUT_BASELINE_v0.1.md`；37 checked / 8 valid / 0 P0 / 0 P1 真实命中 |
-| **M3-C** DeepSeek Comparison Baseline | **blocked / Work Packet 就位** | Issue #34 + `docs/ops/WORKSTREAM_M3C_DS_BATCH_PACK.md`；等 ENGINE 调整 timeout |
+| **M3-A** Routing Safety Baseline | **routing PASS / content BLOCK** | 修订：QA #35 + GM 复现 P0；DOMAIN 2 pass + 5 partial 是更准确判定；P0 ticket #37 |
+| **M3-B** TEBIQ Self-output Baseline | **PASS（临时标准，scope: VOICE 合规层）** | 报告：`docs/eval/M3B_TEBIQ_SELFOUTPUT_BASELINE_v0.1.md`；P0 #37 修复后需重新评估 |
+| **M3-C** DeepSeek Comparison Baseline | **infra ready / 等 P0 #37 修复** | PR #36 merged `98474c9`；DS raw route 已 90s；m3c-phased-run.sh 骨架 ready |
 | M4 Phase 1 (Stage Feedback) | **accepted** | PR #30 in main |
 | M4 Phase 2 (SSE) | **merged / QA pending** | PR #33 in main `501c147` |
 | M5 Matter v0 | ⏳ 等 M3 结论 | — |
@@ -57,19 +59,22 @@ DOMAIN:
   production allowed: no
 
 QA:
-  M1 Console:        PASS (GM curl 验证 + CEO 验收)
-  M4 Preview Phase1: PASS (HTTP 200, stage states 可见)
-  M4 Preview Phase2: PASS at code level (76/76 tests); browser SSE QA pending — Issue #35
-  Routing E2E:       PASS (GM rerun 7/7, 2026-05-05 04:37-04:41 UTC); QA E2E 复验 — Issue #35
-  VOICE Compliance:  PASS B-layer (GM 扫描)；QA 正式复验 — Issue #35
-  formal QA cycle:   Work Packet docs/ops/QA_STABILIZATION_PACK_V02.md (Issue #35)
-  Issue #13 audit:   pending (PR #12 Context OS audit 待激活)
+  Issue #35 verdict:    BLOCK (P0 active in production)
+  M1 Console:           CONDITIONAL PASS (静态 ✅ / browser smoke 待 CEO)
+  M4 Preview Phase1+2:  CONDITIONAL PASS (静态 ✅ / SSE EventStream browser 验收 pending)
+  Routing E2E:          BLOCK (5/7 pass / 2/7 P0: D05+D06 命中错误 cached answer)
+  VOICE Compliance:     BLOCK (S-02 + S-07 fired due to P0 content pollution)
+  P0 ticket:            Issue #37 (ENGINE answer-core-v1 fallback hotfix)
+  P1 ticket:            VOICE S-07 fallback marker (含在 #37 acceptance §2.3)
+  formal report:        docs/qa/QA_STABILIZATION_REPORT_v0.2.md (commit daa7b18)
+  Issue #13 audit:      pending (PR #12 Context OS audit 待激活)
 
 DeepSeek:
-  fast health (25s):  slow_not_interactive (1/5 ok in 5-probe sample)
-  batch health (90s): healthy_batch (1+ confirmed; J03/J04 通过 60s 完成)
-  UX health:          ✅ preview shows received/routing/generating/fallback states
+  fast health (25s):  slow_not_interactive (1/5 ok)
+  batch health (90s): healthy_batch (PR #36 merged — DS raw route now 90s)
+  UX health:          ✅ preview shows stages
   recommended:        interactive=25s+fallback；batch eval=90s；concurrency=1
+  status:             infra-ready, M3-C 阻塞改为「等 P0 #37 修复」（修复前重跑 100Q 仍被 fallback bug 污染）
 ```
 
 ---
@@ -78,12 +83,12 @@ DeepSeek:
 
 | Track | 名称 | 状态 | 阻塞 |
 |-------|------|------|------|
-| **A** Eval | M3-A ✅ / M3-B 可推进 / M3-C 等 batch timeout | 🟡 推进中 | M3-C: ENGINE eval-lab DS route timeout 调整 |
+| **A** Eval | 🔴 P0 #37 阻塞 M3 升级 | M3-A routing ✅ / content BLOCK | answer-core-v1 fallback hotfix |
 | **B** Internal Console | ✅ 稳定 (M1 accepted) | ✅ | — |
-| **C** Routing Safety | ✅ E2E 7/7 PASS | ✅ | — |
-| **D** User Preview | ✅ Phase 1+2 in main | 🟡 | browser SSE QA |
-| **E** DOMAIN | ✅ Phase 1+2+3 in main (16 文件 draft) | ✅ | — |
-| **F** Ops/Release | 🔴 production blocked | DL-009 | M3-C + QA + 产品负责人裁决 |
+| **C** Routing Safety | ✅ routing 层 / 🔴 内容层 P0 | M2 视为「routing implemented + semantic draft」，E2E 待 #37 修复后复跑 | #37 |
+| **D** User Preview | ✅ Phase 1+2 in main / browser SSE QA pending | 🟡 | CEO/operator browser smoke |
+| **E** DOMAIN | ✅ Phase 1+2+3 in main (16+1 文件 draft) | ✅ | — |
+| **F** Ops/Release | 🔴 production blocked | DL-009 + #37 P0 | #37 + 产品负责人裁决 |
 
 ---
 
@@ -91,16 +96,17 @@ DeepSeek:
 
 | PR | 状态 | 说明 |
 |----|------|------|
-| 无 open PR | — | 上轮 5 个 open PR：#29 ✅ #33 ✅ #4 ✗ #11 ✗ #31 ✗ |
+| 无 open PR | — | 上轮 6 个 open PR：#29 ✅ #33 ✅ #36 ✅ #4 ✗ #11 ✗ #31 ✗ |
 
 ## 当前 Active Issues
 
 | Issue | 类型 | 说明 |
 |-------|------|------|
-| [#34](https://github.com/martindoad-bit/tebiq/issues/34) | ENGINE Work Packet | M3-C DS Batch Readiness — `docs/ops/WORKSTREAM_M3C_DS_BATCH_PACK.md` |
-| [#35](https://github.com/martindoad-bit/tebiq/issues/35) | QA Work Packet | Stabilization Audit v0.2 — `docs/ops/QA_STABILIZATION_PACK_V02.md` |
-| [#15](https://github.com/martindoad-bit/tebiq/issues/15) | Eval Round 1 | 30Q baseline，依赖 M3-C 完成后启动 |
+| [#37](https://github.com/martindoad-bit/tebiq/issues/37) | **P0 ENGINE Hotfix** | answer-core-v1 LLM timeout fallback 返回不相关 cached answer (D05/D06 reproducible) |
+| [#15](https://github.com/martindoad-bit/tebiq/issues/15) | Eval Round 1 | 30Q baseline，依赖 #37 + M3-C 完成 |
 | [#13](https://github.com/martindoad-bit/tebiq/issues/13) | QA audit pending | PR #12 Context OS audit，待产品负责人激活 |
+
+已 close：[#34](https://github.com/martindoad-bit/tebiq/issues/34) (PR #36 merged) · [#35](https://github.com/martindoad-bit/tebiq/issues/35) (QA report landed)
 
 ---
 

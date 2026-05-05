@@ -1,10 +1,17 @@
 ---
-status: GM-verified / PASS
+status: GM-verified / Routing layer PASS / **Content layer BLOCK** （QA Issue #35 补充发现 P0）
 owner: GM
 date: 2026-05-05
 version: v0.1
 scope: M3-A Routing / Safety Baseline — 不依赖 DeepSeek
+corrigendum: 2026-05-05 — QA Issue #35 + GM live curl 复现确认 D05/D06 在 fallback path 返回不相关内容（answer-core-v1 legacy 匹配 bug，Issue #37 P0）
 ---
+
+> **CORRIGENDUM 2026-05-05**：本基线最初判定 PASS 7/7 仅基于 routing 字段（domain/status/fallback_reason）。
+> QA Issue #35 + GM live curl 复现确认：D05/D06 在 LLM timeout 后落到 `answer-core-v1` legacy matcher 返回不相关 cached answer（divorce → job-change advice）。
+> 修订：**routing 层 PASS 7/7；内容/匹配层 BLOCK**（D05/D06 active P0 in production）。
+> P0 ticket: [#37](https://github.com/martindoad-bit/tebiq/issues/37)。
+> 后续 baseline 必须包含 answer_text 内容验证，不只验证 routing 字段。
 
 # M3-A Routing Safety Baseline Report v0.1
 
