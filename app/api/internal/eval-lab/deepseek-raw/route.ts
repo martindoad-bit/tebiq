@@ -11,30 +11,46 @@ import { isLikelyTransient, withRetry } from '@/lib/eval-lab/retry'
 // compare against TEBIQ's pipelined answer side-by-side and tell
 // whether TEBIQ's structure is helping or hurting.
 //
-// V1 + Issue #14:
-//   - timeout 30s per attempt
-//   - retry ≤ 3 attempts on transient failures (timeout / network / 5xx),
-//     exponential backoff
-//   - on terminal failure, persist error row to eval_answers (so the UI
-//     can render `failed` status without a separate fetch)
-//   - never writes eval_annotations — annotation fields are owned by the
-//     reviewer, batch path is answer-only
+// History:
+//   - V1 (Issue #14): 30s timeout × 3 attempts (interactive)
+//   - Stabilization (Issue #14 P1): 25s × 2 attempts (interactive,
+//     Vercel Hobby maxDuration=60 fit)
+//   - M3-C (Issue #34, this commit): 90s × 1 attempt (batch eval).
+//     Per Project Lead Directive v0.3 §3 + Work Packet
+//     `docs/ops/WORKSTREAM_M3C_DS_BATCH_PACK.md`, this route serves
+//     batch eval ONLY (the user-facing pipeline lives behind
+//     `lib/answer/` and `app/api/questions/`, both unchanged).
+//
+// Why 90s + 1 attempt instead of retry:
+//   - Batch eval wants clean latency data; retry skews the distribution.
+//   - 90s × 2 = 180s blows past any reasonable Vercel function cap.
+//   - If a batch call fails, GM/QA reruns manually via
+//     scripts/eval/m3c-phased-run.sh — we don't need automatic retry.
+//
+// Vercel function maxDuration:
+//   - Set to 90s here per Work Packet §3.1.
+//   - Hobby plan caps maxDuration at 60s; Pro at 300s. If the deployment
+//     environment is Hobby and Vercel rejects the 90s declaration, this
+//     route's deploy will fail (fail loud, don't silently truncate).
+//     This is a Project Lead / GM call — the spec mandates 90s.
+//   - The cap applies per-route. user-facing routes (e.g.
+//     /api/questions, /api/internal/eval-lab/tebiq-answer) keep their
+//     own maxDuration; this change does not propagate to them.
 //
 // Internal-only. 404 unless EVAL_LAB_ENABLED=1.
 
 export const dynamic = 'force-dynamic'
 export const runtime = 'nodejs'
-// Vercel Hobby cap. Default would be 10s, which is too tight when retry
-// budget kicks in (worst-case 3 × 30s + backoff). 60s is the Hobby max
-// and matches the existing cron handlers.
-export const maxDuration = 60
+// 90s per Work Packet §3.1. See note above.
+export const maxDuration = 90
 
 const DEEPSEEK_ENDPOINT = 'https://api.deepseek.com/chat/completions'
 const MODEL_ID = 'deepseek-v4-pro'
 const PROMPT_VERSION = 'eval-lab-light-v1'
-// 25s per attempt × 2 attempts + ~1s backoff = ~51s, fits inside 60s cap.
-const PER_ATTEMPT_TIMEOUT_MS = 25_000
-const MAX_ATTEMPTS = 2
+// 90s per attempt × 1 attempt = 90s wall-clock. Internal batch eval
+// only — see route header comment for rationale.
+const PER_ATTEMPT_TIMEOUT_MS = 90_000
+const MAX_ATTEMPTS = 1
 const RETRY_BASE_DELAY_MS = 800
 const MAX_TOKENS = 800
 const TEMPERATURE = 0.2
@@ -125,6 +141,18 @@ function classifyError(err: unknown): string {
   return 'deepseek_exception'
 }
 
+/**
+ * Per Work Packet §3.1: response carries `provider_status` ∈ {healthy,
+ * timeout, error} for the DeepSeek diagnostic dashboard / health probe.
+ */
+type ProviderStatus = 'healthy' | 'timeout' | 'error'
+
+function classifyProviderStatus(errorCode: string | null): ProviderStatus {
+  if (errorCode === null) return 'healthy'
+  if (errorCode === 'deepseek_timeout') return 'timeout'
+  return 'error'
+}
+
 export async function POST(req: Request) {
   if (!isEvalLabEnabled()) {
     return NextResponse.json({ error: 'not_found' }, { status: 404 })
@@ -184,6 +212,7 @@ export async function POST(req: Request) {
       },
     )
     const latencyMs = Date.now() - startedAt
+    const providerStatus = classifyProviderStatus(null)
     if (questionId) {
       try {
         await upsertEvalAnswer({
@@ -194,7 +223,11 @@ export async function POST(req: Request) {
           answerText: result.text,
           latencyMs,
           error: null,
-          rawPayloadJson: { attempts: attemptsTried },
+          rawPayloadJson: {
+            attempts: attemptsTried,
+            timeout_ms: PER_ATTEMPT_TIMEOUT_MS,
+            provider_status: providerStatus,
+          },
         })
       } catch (persistErr) {
         const message = persistErr instanceof Error ? persistErr.message : String(persistErr)
@@ -206,17 +239,27 @@ export async function POST(req: Request) {
       text: result.text,
       model: MODEL_ID,
       latency_ms: latencyMs,
+      timeout_ms: PER_ATTEMPT_TIMEOUT_MS,
+      provider_status: providerStatus,
       attempts: attemptsTried,
     })
   } catch (err) {
     const code = classifyError(err)
     const latencyMs = Date.now() - startedAt
-    await persistError(questionId, code, latencyMs, attemptsTried)
+    const providerStatus = classifyProviderStatus(code)
+    await persistError(questionId, code, latencyMs, attemptsTried, providerStatus)
     const status = err instanceof DeepseekHttpError ? 502
       : code === 'deepseek_timeout' ? 504
       : 502
     return NextResponse.json(
-      { error: code, attempts: attemptsTried },
+      {
+        ok: false,
+        error: code,
+        latency_ms: latencyMs,
+        timeout_ms: PER_ATTEMPT_TIMEOUT_MS,
+        provider_status: providerStatus,
+        attempts: attemptsTried,
+      },
       { status },
     )
   }
@@ -227,6 +270,7 @@ async function persistError(
   errorCode: string,
   latencyMs: number,
   attempts: number,
+  providerStatus: ProviderStatus,
 ): Promise<void> {
   if (!questionId) return
   try {
@@ -238,7 +282,11 @@ async function persistError(
       answerText: null,
       error: errorCode,
       latencyMs,
-      rawPayloadJson: { attempts },
+      rawPayloadJson: {
+        attempts,
+        timeout_ms: PER_ATTEMPT_TIMEOUT_MS,
+        provider_status: providerStatus,
+      },
     })
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err)
