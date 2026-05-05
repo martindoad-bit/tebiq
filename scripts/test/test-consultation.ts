@@ -16,6 +16,7 @@ async function main() {
   const riskMod = await import('@/lib/consultation/risk-keywords')
   const filterMod = await import('@/lib/consultation/forbidden-phrases')
   const protoMod = await import('@/lib/consultation/stream-protocol')
+  const anchorMod = await import('@/lib/consultation/fact-anchors')
 
   let passes = 0
   let total = 0
@@ -35,8 +36,9 @@ async function main() {
   }
 
   // ---- 1. System prompt constants ----
-  check('1a. CONSULTATION_ALPHA_PROMPT_VERSION is "consultation_alpha_v1"', () => {
-    assert.equal(promptMod.CONSULTATION_ALPHA_PROMPT_VERSION, 'consultation_alpha_v1')
+  check('1a. CONSULTATION_ALPHA_PROMPT_VERSION is "consultation_alpha_v2"', () => {
+    // VOICE bumped v1→v2 in commit bcd28ca; test follows.
+    assert.equal(promptMod.CONSULTATION_ALPHA_PROMPT_VERSION, 'consultation_alpha_v2')
   })
   check('1b. CONSULTATION_ALPHA_MODEL is "deepseek-v4-pro"', () => {
     assert.equal(promptMod.CONSULTATION_ALPHA_MODEL, 'deepseek-v4-pro')
@@ -401,6 +403,145 @@ async function main() {
     // No DROP / DELETE / UPDATE / ALTER TABLE / CREATE TABLE.
     for (const banned of ['DROP', 'DELETE', 'UPDATE ', 'CREATE TABLE', 'ALTER TABLE']) {
       assert.ok(!sql.toUpperCase().includes(banned), `migration ${files[0]} contains banned op: ${banned}`)
+    }
+  })
+
+  // ---- 7. Issue #54 — Fact Anchor matching + prompt injection ----
+  //
+  // Pack §2.3 minimums: 5+ keyword→anchor cases, empty match, multi-anchor,
+  // prompt injection contract. Section is numbered §7 so it doesn't
+  // collide with #51's §6 (completion_status mapping) when both PRs land.
+  check('7a. FACT_ANCHORS has exactly 15 entries (Pack §1)', () => {
+    assert.equal(anchorMod.FACT_ANCHORS.length, 15)
+  })
+  check('7b. FACT_ANCHORS anchor_ids match DOMAIN file order (FA-01..FA-15)', () => {
+    const ids = anchorMod.FACT_ANCHORS.map(a => a.anchorId)
+    assert.deepEqual(ids, [
+      'bm_to_humanities',
+      'humanities_to_pr',
+      'pension_pr',
+      'tax_pr',
+      'spouse_divorce',
+      'bm_dissolution',
+      'work_mismatch',
+      'supplemental_request',
+      'denial_notice',
+      'visa_expiring',
+      'family_change_impact',
+      'family_to_work',
+      'humanities_job_change',
+      're_entry',
+      'card_lost',
+    ])
+  })
+  check('7c. matchAnchors: empty / blank input returns empty array', () => {
+    assert.deepEqual(anchorMod.matchAnchors(''), [])
+    assert.deepEqual(anchorMod.matchAnchors('   '), [])
+    assert.deepEqual(anchorMod.matchAnchors('', null), [])
+  })
+  check('7d. matchAnchors: 简体 "我配偶离婚后能不能继续留" hits spouse_divorce (Pack acceptance B)', () => {
+    const hits = anchorMod.matchAnchors('我配偶离婚后能不能继续留')
+    const ids = hits.map(a => a.anchorId)
+    assert.ok(ids.includes('spouse_divorce'), `expected spouse_divorce, got ${JSON.stringify(ids)}`)
+  })
+  check('7e. matchAnchors: 日本語 "離婚後の在留" also hits spouse_divorce (DOMAIN-form)', () => {
+    const hits = anchorMod.matchAnchors('離婚後の在留はどうなりますか？')
+    const ids = hits.map(a => a.anchorId)
+    assert.ok(ids.includes('spouse_divorce'), `expected spouse_divorce, got ${JSON.stringify(ids)}`)
+  })
+  check('7f. matchAnchors: "公司清算" hits bm_dissolution', () => {
+    const hits = anchorMod.matchAnchors('公司清算之后还能继续经营吗？')
+    assert.ok(hits.some(a => a.anchorId === 'bm_dissolution'))
+  })
+  check('7g. matchAnchors: "在留期限快到了" hits visa_expiring', () => {
+    const hits = anchorMod.matchAnchors('我的在留期限快到了，怎么办？')
+    assert.ok(hits.some(a => a.anchorId === 'visa_expiring'))
+  })
+  check('7h. matchAnchors: "永住申请年金没交全" hits BOTH humanities_to_pr AND pension_pr', () => {
+    // Multi-anchor case — single question triggers two anchors via two
+    // independent keyword sets. Order matches FACT_ANCHORS declaration
+    // order (humanities_to_pr is FA-02, pension_pr is FA-03).
+    const hits = anchorMod.matchAnchors('我想申请永住，但年金有几个月没交')
+    const ids = hits.map(a => a.anchorId)
+    assert.ok(ids.includes('humanities_to_pr'), `expected humanities_to_pr in ${JSON.stringify(ids)}`)
+    assert.ok(ids.includes('pension_pr'), `expected pension_pr in ${JSON.stringify(ids)}`)
+    // Order assertion: FACT_ANCHORS-declaration order is preserved
+    assert.ok(
+      ids.indexOf('humanities_to_pr') < ids.indexOf('pension_pr'),
+      `expected humanities_to_pr before pension_pr, got ${JSON.stringify(ids)}`,
+    )
+  })
+  check('7i. matchAnchors: "今天东京天气怎么样" returns empty array (no anchor)', () => {
+    const hits = anchorMod.matchAnchors('今天东京天气怎么样？')
+    assert.deepEqual(hits, [])
+  })
+  check('7j. matchAnchors: same anchor with multiple keyword hits is recorded ONCE only (Pack §2.1)', () => {
+    // Two FA-01 triggers in one question: 経営管理 + 転換 + 経管 → still
+    // counted as 1 anchor entry, no duplicates.
+    const hits = anchorMod.matchAnchors('経営管理から技術人文への転換、経管をやめたい')
+    const bmCount = hits.filter(a => a.anchorId === 'bm_to_humanities').length
+    assert.equal(bmCount, 1, `expected exactly 1 bm_to_humanities entry, got ${bmCount}`)
+  })
+  check('7k. matchAnchors: image_summary keywords also count toward triggers', () => {
+    // Question has nothing visa-related; image_summary mentions 通知書 +
+    // 補完要求. Should hit supplemental_request via image_summary path.
+    const hits = anchorMod.matchAnchors(
+      '想咨询一下',
+      '看起来是入管发的通知書，里面提到補完要求和提出期限',
+    )
+    assert.ok(hits.some(a => a.anchorId === 'supplemental_request'))
+  })
+  check('7l. anchorsToPromptContext: each anchor yields one {id, text} with all 4 fields', () => {
+    const hits = anchorMod.matchAnchors('我配偶离婚')
+    const ctx = anchorMod.anchorsToPromptContext(hits)
+    assert.ok(ctx.length > 0)
+    for (const c of ctx) {
+      assert.ok(typeof c.id === 'string' && c.id.length > 0)
+      assert.ok(c.text.includes('必考虑：'))
+      assert.ok(c.text.includes('不得说：'))
+      assert.ok(c.text.includes('建议追问：'))
+      assert.ok(c.text.includes('Human review hint：'))
+    }
+  })
+  check('7m. buildConsultationMessages: anchors injected as system context with anchor_id citation', () => {
+    // Charter §6 / Pack §2.2 wiring — the LLM sees the anchor as part of
+    // a system message, including the anchor_id in parentheses for
+    // attribution. Empty anchors → no extra system message.
+    const hits = anchorMod.matchAnchors('我配偶离婚')
+    const ctx = anchorMod.anchorsToPromptContext(hits)
+    const messages = promptMod.buildConsultationMessages({
+      userQuestion: 'q',
+      factAnchors: ctx,
+    })
+    const sysMessages = messages.filter(m => m.role === 'system')
+    // Should be at least 2 system messages: base prompt + anchor block
+    assert.ok(sysMessages.length >= 2, `expected ≥2 system msgs, got ${sysMessages.length}`)
+    const anchorBlock = sysMessages.find(m => m.content.includes('事实锚点'))
+    assert.ok(anchorBlock, 'no system message contains 事实锚点 marker')
+    // anchor_id citation present
+    assert.ok(
+      (anchorBlock?.content ?? '').includes('(spouse_divorce)'),
+      `anchor_id citation missing in: ${anchorBlock?.content?.slice(0, 200)}`,
+    )
+  })
+  check('7n. buildConsultationMessages: empty anchors → NO 事实锚点 system message', () => {
+    const messages = promptMod.buildConsultationMessages({
+      userQuestion: '今天东京天气怎么样？',
+      factAnchors: [],
+    })
+    const sysMessages = messages.filter(m => m.role === 'system')
+    assert.ok(!sysMessages.some(m => m.content.includes('事实锚点')))
+  })
+  check('7o. matchAnchors: matched anchors carry must_consider / must_not_say / suggestedNextQuestion / humanConfirmHint', () => {
+    // Lock the FactAnchor shape: every anchor in FACT_ANCHORS must have
+    // all four DOMAIN-canonical fields populated. Catches any future
+    // accidental empty-string transcription.
+    for (const a of anchorMod.FACT_ANCHORS) {
+      assert.ok(a.mustConsider.length > 0, `${a.anchorId} mustConsider empty`)
+      assert.ok(a.mustNotSay.length > 0, `${a.anchorId} mustNotSay empty`)
+      assert.ok(a.suggestedNextQuestion.length > 0, `${a.anchorId} suggestedNextQuestion empty`)
+      assert.ok(a.humanConfirmHint.length > 0, `${a.anchorId} humanConfirmHint empty`)
+      assert.ok(a.triggerKeywords.length > 0, `${a.anchorId} no triggerKeywords`)
     }
   })
 

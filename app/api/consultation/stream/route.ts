@@ -3,6 +3,7 @@ import {
   CONSULTATION_ALPHA_PROMPT_VERSION,
   buildConsultationMessages,
 } from '@/lib/answer/prompt/consultation-alpha-v1'
+import { anchorsToPromptContext, matchAnchors } from '@/lib/consultation/fact-anchors'
 import { createForbiddenFilter } from '@/lib/consultation/forbidden-phrases'
 import { detectRiskKeywords } from '@/lib/consultation/risk-keywords'
 import {
@@ -123,9 +124,17 @@ export async function POST(req: Request) {
   // Risk keywords run on the user input synchronously — no LLM needed.
   const riskHits = detectRiskKeywords(question)
 
+  // Fact-anchor matching (Issue #54 / 0.5 Sprint Workstream D). Pure
+  // substring keyword match across 15 anchors transcribed from
+  // docs/domain/DOMAIN_FACT_ANCHORS_v0.1.md. Each match seeds prompt
+  // context AND records the anchor_id list in fact_anchor_ids for the
+  // Learning Console row.
+  const trimmedImageSummary = (body.image_summary ?? '').trim()
+  const matchedAnchors = matchAnchors(question, trimmedImageSummary || null)
+  const anchorIds = matchedAnchors.map(a => a.anchorId)
+
   // Create the row before opening the stream so the consultation_id is
   // emitted in the very first 'received' frame.
-  const trimmedImageSummary = (body.image_summary ?? '').trim()
   const consultation = await createAiConsultation({
     viewerId,
     userQuestionText: question,
@@ -133,6 +142,7 @@ export async function POST(req: Request) {
     imageSummary: trimmedImageSummary || null,
     imageStorageRef: body.image_storage_ref?.slice(0, 240) ?? null,
     riskKeywordHits: riskHits,
+    factAnchorIds: anchorIds,
   })
 
   const encoder = new TextEncoder()
@@ -227,7 +237,10 @@ export async function POST(req: Request) {
       const messages = buildConsultationMessages({
         userQuestion: question,
         imageSummary: body.image_summary ?? null,
-        // factAnchors will land via DOMAIN Pack #42; left empty for #39.
+        // Issue #54: fact-anchor injection (Pack §2.2). Empty array when
+        // no anchor triggers fired; the prompt builder only emits the
+        // anchor system message when factAnchors.length > 0.
+        factAnchors: anchorsToPromptContext(matchedAnchors),
       })
 
       try {
