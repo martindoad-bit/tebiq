@@ -3,9 +3,35 @@ import { buildDetectedIntent, detectDomain } from './domain'
 import { provideLegacySeedSource } from './legacy-seed-provider'
 import { provideLlmDeepseekSource } from './llm-deepseek-provider'
 import { tryRuleBasedSource } from './rule-based-provider'
-import { buildSafeClarificationReplacement, projectLegacyToPublicAnswer } from './projector'
+import {
+  buildProviderTimeoutFallback,
+  buildSafeClarificationReplacement,
+  projectLegacyToPublicAnswer,
+} from './projector'
 import { judgePublicAnswerSurface } from './surface-safety'
 import type { AnswerEngineVersion, AnswerRun, AnswerSource, FallbackReason } from './types'
+
+/**
+ * Issue #37 P0 — provider-failure skip reasons that MUST NOT fall through
+ * to legacy_seed. The legacy matcher does fuzzy text matching that can
+ * return wrong-topic content with `legacy_answer_type='matched'` (D05/D06
+ * 配偶离婚 bug returned a "换工作" themed cached answer). For these reasons
+ * we emit a clean voice-canonical fallback instead.
+ *
+ * - llm_timeout / llm_exception: provider-side failure. No LLM output
+ *   exists; legacy is not a safe substitute for the user's actual question.
+ * - llm_parse / llm_validation: LLM produced something but it failed our
+ *   parsing/validation; we shouldn't smuggle in unrelated legacy content.
+ *
+ * `llm_disabled` is excluded — it means DEEPSEEK_API_KEY is missing
+ * (typically dev mode), where legacy is the intentional fallback path.
+ */
+function isProviderFailure(reason: FallbackReason | null): boolean {
+  return reason === 'llm_timeout'
+    || reason === 'llm_exception'
+    || reason === 'llm_parse'
+    || reason === 'llm_validation'
+}
 
 // The Answer Core V1.1 orchestrator.
 //
@@ -90,10 +116,58 @@ export async function runAnswerIntake(input: IntakeInput): Promise<AnswerRun> {
     if (llmIsConfidentMatch) {
       source = llmSource
     } else {
-      // DeepSeek hedged or skipped — check legacy for a stable answer.
+      // DeepSeek hedged or skipped.
       if (llmSource.kind === 'none' && llmSource.skip_reason) {
         fallback_reason = llmSource.skip_reason
       }
+      // Issue #37 P0 hotfix — when LLM fully failed for a provider-side
+      // reason (timeout/exception/parse/validation), DO NOT call
+      // legacy_seed. The legacy fuzzy matcher returns
+      // `legacy_answer_type='matched'` based on lexical similarity that's
+      // not topic-aware; a 配偶离婚 question returned a 换工作 cached
+      // answer (D05/D06 P0 reproduction 2026-05-05). Emit a clean
+      // voice-canonical fallback instead and short-circuit.
+      if (llmSource.kind === 'none' && isProviderFailure(fallback_reason)) {
+        const fallbackPublicAnswer = buildProviderTimeoutFallback({
+          domain,
+          detectedIntent,
+          questionText: input.questionText,
+        })
+        const safetyResult = judgePublicAnswerSurface({
+          query: input.questionText,
+          detectedIntent,
+          domain,
+          publicAnswer: fallbackPublicAnswer,
+        })
+        return {
+          // Issue #37 P0 — dedicated 'fallback' engine_version so the
+          // frontend can distinguish a controlled fallback from a normal
+          // LLM answer ('-llm') or a legacy_seed answer ('v1'). Per
+          // Project Lead 2026-05-05: "engine_version 不得让前端误认为
+          // 正常 LLM answer".
+          engine_version: 'answer-core-v1.1-fallback',
+          raw_query: input.questionText,
+          normalized_query: normalize(input.questionText),
+          detected_intent: detectedIntent,
+          detected_domain: domain,
+          // Synthetic source so AnswerRun shape stays valid; consumers
+          // that want to know "was there a real source" check `kind`.
+          source: {
+            kind: 'none',
+            source_confidence: 'low',
+            skip_reason: fallback_reason ?? undefined,
+          },
+          public_answer: fallbackPublicAnswer,
+          safety_result: safetyResult,
+          fallback_reason,
+          legacy_draft_id: null,
+          created_at: new Date().toISOString(),
+        }
+      }
+      // Non-provider-failure paths (e.g. llm_disabled, or LLM returned
+      // a hedged/non-matched answer): keep the existing no-downgrade
+      // guard. legacy_seed is still consulted; if it has a `matched`
+      // entry it wins, otherwise fall back to whatever the LLM hedged.
       const legacySource = await provideLegacySeedSource({
         questionText: input.questionText,
         visaType: input.visaType,

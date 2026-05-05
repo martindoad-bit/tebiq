@@ -169,7 +169,16 @@ export interface SafetyResult {
 // ---------------------------------------------------------------- AnswerRun
 
 // The persisted record of one question → answer cycle.
-export type AnswerEngineVersion = 'answer-core-v1' | 'answer-core-v1.1-llm'
+//
+// Issue #37 P0 — added 'answer-core-v1.1-fallback' so the frontend can
+// distinguish a controlled fallback (no LLM output, voice-canonical
+// copy emitted) from a normal LLM answer ('-llm') or a legacy_seed
+// answer ('v1'). Per Project Lead 2026-05-05: engine_version must not
+// make the frontend think a fallback is a normal LLM answer.
+export type AnswerEngineVersion =
+  | 'answer-core-v1'
+  | 'answer-core-v1.1-llm'
+  | 'answer-core-v1.1-fallback'
 
 // FallbackReason values are INTERNAL — never user-visible. The
 // `llm_*` prefix family is added in V1.1 to distinguish DeepSeek
