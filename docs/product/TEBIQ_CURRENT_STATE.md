@@ -9,14 +9,14 @@
 | `last_verified` | 2026-05-05 |
 | `verified_by` | GM |
 | `source_of_truth` | GitHub remote `origin/main` + `gh pr view` + 用户最新事实 |
-| `main_head` | `6dd0f5d` |
-| `main_head_title` | docs(decision): DL-007/008/009 — M3 split + VOICE canonical + production blocked |
+| `main_head` | TBD（pending push）|
+| `main_head_title` | Stabilization Sprint v0.3 — M3-A/B reports + QA + ENGINE work packets |
 
 ---
 
 ## 当前阶段标签
 
-**Project Stabilization Sprint v0.2 完成 — M3-A E2E 7/7 PASS / Production blocked**
+**Project Stabilization Sprint v0.3 完成 — M3-A PASS / M3-B PASS（临时）/ M3-C 工作包就位 / QA 工作包就位**
 
 规则：单线阻塞不等于全项目阻塞。6 track 独立推进。
 
@@ -29,9 +29,9 @@
 | M0 | accepted | Artifact-first + Context OS |
 | M1 Internal Console | **accepted / monitoring** | CEO 验收 2026-05-05；camelCase fix in main |
 | M2 Routing Safety | **implemented + semantic draft / E2E PASSED** | code merged (PR #23) + DOMAIN 7/7 ✅ + E2E 7/7 ✅（2026-05-05 rerun）|
-| **M3-A** Routing Safety Baseline | **PASS** | 7/7 regression E2E 验证；domain != unknown；DOMAIN 复核一致 |
-| **M3-B** TEBIQ Self-output Baseline | **可推进** | 25 非 fallback + 7 routing-clean 答案可评 |
-| **M3-C** DeepSeek Comparison Baseline | **blocked**（DS interactive timeout） | DS batch 90s 健康；等 ENGINE 调整 eval-lab DS route timeout |
+| **M3-A** Routing Safety Baseline | **PASS** | 报告：`docs/eval/M3A_ROUTING_SAFETY_BASELINE_v0.1.md`；7/7 regression E2E 验证 |
+| **M3-B** TEBIQ Self-output Baseline | **PASS（临时标准）** | 报告：`docs/eval/M3B_TEBIQ_SELFOUTPUT_BASELINE_v0.1.md`；37 checked / 8 valid / 0 P0 / 0 P1 真实命中 |
+| **M3-C** DeepSeek Comparison Baseline | **blocked / Work Packet 就位** | Issue #34 + `docs/ops/WORKSTREAM_M3C_DS_BATCH_PACK.md`；等 ENGINE 调整 timeout |
 | M4 Phase 1 (Stage Feedback) | **accepted** | PR #30 in main |
 | M4 Phase 2 (SSE) | **merged / QA pending** | PR #33 in main `501c147` |
 | M5 Matter v0 | ⏳ 等 M3 结论 | — |
@@ -57,13 +57,13 @@ DOMAIN:
   production allowed: no
 
 QA:
-  M1 Console:        PASS (CEO 验收 + curl 验证 + API 100Q snake_case ✅)
+  M1 Console:        PASS (GM curl 验证 + CEO 验收)
   M4 Preview Phase1: PASS (HTTP 200, stage states 可见)
-  M4 Preview Phase2: PASS at code level (76/76 tests, no P0); browser SSE QA pending
-  Routing E2E:       PASS (7/7 regression 重跑 2026-05-05 04:37-04:41 UTC)
-  VOICE Compliance:  PASS B-layer (no承诺/no 内部标签外露/no 销售导流)
-  Issue #13 audit:   pending (QA audit on PR #12 待激活)
-  status:            partial — M3-B 启动后再做正式 audit cycle
+  M4 Preview Phase2: PASS at code level (76/76 tests); browser SSE QA pending — Issue #35
+  Routing E2E:       PASS (GM rerun 7/7, 2026-05-05 04:37-04:41 UTC); QA E2E 复验 — Issue #35
+  VOICE Compliance:  PASS B-layer (GM 扫描)；QA 正式复验 — Issue #35
+  formal QA cycle:   Work Packet docs/ops/QA_STABILIZATION_PACK_V02.md (Issue #35)
+  Issue #13 audit:   pending (PR #12 Context OS audit 待激活)
 
 DeepSeek:
   fast health (25s):  slow_not_interactive (1/5 ok in 5-probe sample)
@@ -92,6 +92,15 @@ DeepSeek:
 | PR | 状态 | 说明 |
 |----|------|------|
 | 无 open PR | — | 上轮 5 个 open PR：#29 ✅ #33 ✅ #4 ✗ #11 ✗ #31 ✗ |
+
+## 当前 Active Issues
+
+| Issue | 类型 | 说明 |
+|-------|------|------|
+| [#34](https://github.com/martindoad-bit/tebiq/issues/34) | ENGINE Work Packet | M3-C DS Batch Readiness — `docs/ops/WORKSTREAM_M3C_DS_BATCH_PACK.md` |
+| [#35](https://github.com/martindoad-bit/tebiq/issues/35) | QA Work Packet | Stabilization Audit v0.2 — `docs/ops/QA_STABILIZATION_PACK_V02.md` |
+| [#15](https://github.com/martindoad-bit/tebiq/issues/15) | Eval Round 1 | 30Q baseline，依赖 M3-C 完成后启动 |
+| [#13](https://github.com/martindoad-bit/tebiq/issues/13) | QA audit pending | PR #12 Context OS audit，待产品负责人激活 |
 
 ---
 

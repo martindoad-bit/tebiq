@@ -77,6 +77,8 @@
 | OOS Pack | `docs/eval/EVAL_ROUND1A_OUT_OF_SCOPE_PACK.md` | GM | active | — | DOMAIN / ENGINE | `f8051b0` | 2026-05-05 |
 | DOMAIN Work Packet | `docs/eval/EVAL_ROUND1A_DOMAIN_WORK_PACKET.md` | GM | pending (awaiting FULL_COMPARABLE) | GM | DOMAIN | `5ad36ea` | 2026-05-05 |
 | Round 1 Annotation Rubric | `docs/eval/EVAL_ROUND1_ANNOTATION_RUBRIC.md` | GM | active | GM / DOMAIN / QA | — | 2026-05-05 |
+| M3-A Routing Safety Baseline v0.1 | `docs/eval/M3A_ROUTING_SAFETY_BASELINE_v0.1.md` | GM | PASS（2026-05-05）| GM / DOMAIN / QA | — | 2026-05-05 |
+| M3-B TEBIQ Self-output Baseline v0.1 | `docs/eval/M3B_TEBIQ_SELFOUTPUT_BASELINE_v0.1.md` | GM | PASS 临时标准（2026-05-05）| GM / DOMAIN / QA | — | 2026-05-05 |
 
 ---
 
@@ -86,7 +88,9 @@
 |---------|------|-------|--------|--------|--------------|-------------|
 | Workstream A Console Deblock | `docs/ops/WORKSTREAM_A_CONSOLE_DEBLOCK_PACK.md` | GM | ✅ done (PR #28) | ENGINE | `2d9ecaa` | 2026-05-05 |
 | Workstream B Preview Feedback | `docs/ops/WORKSTREAM_B_PREVIEW_STAGE_FEEDBACK_PACK.md` | GM | ✅ done (PR #30) | ENGINE | `2d9ecaa` | 2026-05-05 |
-| Workstream C SSE Phase 2 | `docs/ops/WORKSTREAM_C_PREVIEW_PHASE2_SSE_PACK.md` | GM | active (Issue #32 / PR #33) | ENGINE | `ab019ca` | 2026-05-05 |
+| Workstream C SSE Phase 2 | `docs/ops/WORKSTREAM_C_PREVIEW_PHASE2_SSE_PACK.md` | GM | ✅ done (Issue #32 / PR #33) | ENGINE | `ab019ca` | 2026-05-05 |
+| QA Stabilization Pack v0.2 | `docs/ops/QA_STABILIZATION_PACK_V02.md` | GM | active (Issue #35) | QA | — | 2026-05-05 |
+| M3-C DS Batch Readiness Pack | `docs/ops/WORKSTREAM_M3C_DS_BATCH_PACK.md` | GM | active (Issue #34) | ENGINE | — | 2026-05-05 |
 | Track D User Preview Pack | `docs/ops/TRACK_D_USER_PREVIEW_PACK.md` | GM | ✅ done (PR #24) | ENGINE | `7d378fd` | 2026-05-05 |
 | Project Milestones | `docs/ops/TEBIQ_PROJECT_MILESTONES.md` | GM | active | all | `60a591a` | 2026-05-05 |
 | Agent Workflow | `docs/ops/TEBIQ_AGENT_WORKFLOW.md` | GM | active | all | `6166cf8` | 2026-05-05 |
