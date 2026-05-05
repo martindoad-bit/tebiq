@@ -98,7 +98,10 @@
 | 1.0 Photo Lite Pack | `docs/ops/WORKSTREAM_1_0_PHOTO_LITE_PACK.md` | GM | ✅ done (PR #47 `a6b22a3`) | ENGINE | — | 2026-05-05 |
 | 1.0 Learning Console Pack | `docs/ops/WORKSTREAM_1_0_LEARNING_CONSOLE_PACK.md` | GM | ✅ done (PR #48 `b6ffbe9`) | ENGINE | — | 2026-05-05 |
 | 1.0 Fact Anchors Pack | `docs/ops/WORKSTREAM_1_0_FACT_ANCHORS_PACK.md` | GM | active (Issue #42) | DOMAIN | — | 2026-05-05 |
-| 1.0 QA Alpha Smoke Pack | `docs/ops/QA_1_0_ALPHA_SMOKE_PACK.md` | GM | active (Issue #43) | QA | — | 2026-05-05 |
+| 1.0 QA Alpha Smoke Pack | `docs/ops/QA_1_0_ALPHA_SMOKE_PACK.md` | GM | ✅ done (Issue #43 closed) | QA | — | 2026-05-05 |
+| Alpha Polish State Mapping Pack | `docs/ops/WORKSTREAM_ALPHA_POLISH_STATE_MAPPING_PACK.md` | GM | active (Issue #51) | ENGINE | — | 2026-05-05 |
+| 0.5 Fact Anchor Integration Pack | `docs/ops/WORKSTREAM_05_FACT_ANCHOR_INTEGRATION_PACK.md` | GM | active (Issue #54) | ENGINE | — | 2026-05-05 |
+| 0.5 Observation Report Template | `docs/ops/TEBIQ_05_OBSERVATION_REPORT_TEMPLATE.md` | GM | template / 0.5 Sprint Workstream F | GM | — | 2026-05-05 |
 | **1.0 Fact Anchors v0.1** | `docs/domain/DOMAIN_FACT_ANCHORS_v0.1.md` | DOMAIN-CC | draft / needs human review (Issue #42 ✅)| ENGINE / VOICE | `e81a095` | 2026-05-05 |
 | **1.0 QA Alpha Smoke Report v0.1** | `docs/qa/QA_1_0_ALPHA_SMOKE_REPORT_v0.1.md` | QA | partial — §3.1 PASS 7/7; §3.2-3.9 BLOCKED (waiting #39)| GM / ENGINE | `b8088c3` | 2026-05-05 |
 
