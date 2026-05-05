@@ -54,6 +54,14 @@ export default async function ConsultationDetailPage({ params }: PageProps) {
           <p className="mt-1 text-sm text-slate-800 leading-relaxed">{row.userQuestionText}</p>
         </section>
 
+        {row.hasImage && row.imageSummary && (
+          <section className="rounded border border-slate-200 bg-white p-3">
+            <p className="text-[10px] uppercase tracking-wider text-slate-400">图片摘要（仅供咨询参考）</p>
+            <p className="mt-1 text-[12px] text-slate-700 leading-relaxed">{row.imageSummary}</p>
+            <p className="mt-1 text-[10px] text-slate-400">原图未保存；只保留识别摘要供这条咨询参考。</p>
+          </section>
+        )}
+
         {riskHits.length > 0 && (
           <div className="rounded border border-amber-300 bg-amber-50 px-3 py-2 text-[12px] text-amber-900 leading-relaxed">
             这个问题可能涉及在留风险，建议不要只靠 AI 回答做最终决定。

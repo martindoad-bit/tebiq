@@ -80,6 +80,9 @@ export default async function MyConsultationsPage() {
                   <p className="mt-1 text-sm text-slate-800 line-clamp-2 leading-snug">
                     {row.userQuestionText}
                   </p>
+                  {row.hasImage && (
+                    <p className="mt-1 text-[10px] text-slate-500">附图片</p>
+                  )}
                   {(row.riskKeywordHits ?? []).length > 0 && (
                     <p className="mt-1 text-[10px] text-amber-700">
                       风险关键词：{(row.riskKeywordHits as string[]).join(' · ')}

@@ -6,11 +6,13 @@ import {
   type ConsultationEvent,
 } from '@/lib/consultation/stream-protocol'
 
-// 1.0 Alpha entry + streaming view (Issue #39 §4.1 + §4.2 + §4.4 + §4.5 + §4.6).
+// 1.0 Alpha entry + streaming view (Issue #39 §4.1 + §4.2 + §4.4 + §4.5 + §4.6
+// + Issue #40 Photo Lite §1.1 / §1.4).
 //
-// Single-page flow: entry form → in-place streaming view → feedback / save.
-// No redirect during streaming (avoids double-stream waste). After save,
-// link to /c/[id] read-only view for revisiting + /me/consultations list.
+// Single-page flow: entry form (text + optional photo) → in-place streaming
+// view → feedback / save. No redirect during streaming (avoids
+// double-stream waste). After save, link to /c/[id] read-only view for
+// revisiting + /me/consultations list.
 //
 // All UX rules per Charter §7:
 //   - Alpha banner persistent at top
@@ -19,6 +21,14 @@ import {
 //   - 25s "still generating" hint surfaced
 //   - 90s timeout → voice-canonical fallback (NOT legacy matcher)
 //   - 5 feedback buttons + save question button after completion
+//
+// Photo Lite UX rules (Pack §5):
+//   - Photo is optional; question text is still required
+//   - Recognition runs first via /api/consultation/upload (independent of
+//     the streaming endpoint) so the user sees the consultation-voice
+//     summary BEFORE the streaming answer starts
+//   - Summary is shown as "看起来涉及…" voice (NOT "意味着…" assertion)
+//   - On photo failure, user can still submit the text-only question
 
 const ALPHA_BANNER =
   'TEBIQ 1.0 Alpha — 以下回答用于整理问题和下一步，不是最终专业判断。'
@@ -46,9 +56,18 @@ type Phase =
   | 'timeout'
   | 'failed'
 
+type PhotoState =
+  | { kind: 'idle' }
+  | { kind: 'recognizing'; preview: string; filename: string }
+  | { kind: 'ready'; preview: string; filename: string; summary: string; storageRef: string; confidence: string }
+  | { kind: 'error'; message: string }
+
 interface ActiveConsultation {
   id: string
   question: string
+  /** Photo summary at submit time, frozen for this consultation. */
+  photoSummary: string | null
+  photoPreview: string | null
   answer: string
   risk_keywords: string[]
   phase: Phase
@@ -79,24 +98,97 @@ export default function AiConsultationEntryClient() {
   const [active, setActive] = useState<ActiveConsultation | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [viewerId, setViewerId] = useState<string>('')
+  const [photo, setPhoto] = useState<PhotoState>({ kind: 'idle' })
+  const fileInputRef = useRef<HTMLInputElement | null>(null)
   const abortRef = useRef<AbortController | null>(null)
 
   useEffect(() => {
     setViewerId(ensureViewerCookie())
   }, [])
 
-  // Cleanup on unmount
-  useEffect(() => () => { abortRef.current?.abort() }, [])
+  // Cleanup on unmount — abort in-flight stream + revoke object URLs.
+  useEffect(() => () => {
+    abortRef.current?.abort()
+    if (photo.kind === 'recognizing' || photo.kind === 'ready') {
+      try { URL.revokeObjectURL(photo.preview) } catch { /* ignore */ }
+    }
+  }, [photo])
+
+  async function onPickFile(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (!file) return
+    // Revoke any previous preview URL before swapping.
+    if (photo.kind === 'recognizing' || photo.kind === 'ready') {
+      try { URL.revokeObjectURL(photo.preview) } catch { /* ignore */ }
+    }
+    if (file.size > 10 * 1024 * 1024) {
+      setPhoto({ kind: 'error', message: '图片超过 10MB，请压缩后再上传。' })
+      e.target.value = ''
+      return
+    }
+    const preview = URL.createObjectURL(file)
+    setPhoto({ kind: 'recognizing', preview, filename: file.name })
+    setError(null)
+
+    try {
+      const fd = new FormData()
+      fd.append('file', file)
+      const r = await fetch('/api/consultation/upload', { method: 'POST', body: fd })
+      const j = (await r.json().catch(() => ({}))) as {
+        image_summary?: string
+        image_storage_ref?: string
+        recognition?: { confidence?: string }
+        error?: string
+        detail?: string
+      }
+      if (!r.ok || !j.image_summary || !j.image_storage_ref) {
+        const msg = j.detail || j.error || `识别失败 HTTP ${r.status}`
+        setPhoto({ kind: 'error', message: msg })
+        return
+      }
+      setPhoto({
+        kind: 'ready',
+        preview,
+        filename: file.name,
+        summary: j.image_summary,
+        storageRef: j.image_storage_ref,
+        confidence: j.recognition?.confidence ?? 'unknown',
+      })
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err)
+      setPhoto({ kind: 'error', message: msg })
+    } finally {
+      // Allow picking the same file again later.
+      e.target.value = ''
+    }
+  }
+
+  function clearPhoto() {
+    if (photo.kind === 'recognizing' || photo.kind === 'ready') {
+      try { URL.revokeObjectURL(photo.preview) } catch { /* ignore */ }
+    }
+    setPhoto({ kind: 'idle' })
+  }
 
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     const text = question.trim()
     if (!text) return
     if (active && !isTerminal(active.phase)) return
+    if (photo.kind === 'recognizing') return // wait for vision to finish
     setError(null)
+
+    // Snapshot photo summary at submit time so the streaming view doesn't
+    // shift if the user edits the photo state after submitting.
+    const photoSummary = photo.kind === 'ready' ? photo.summary : null
+    const photoStorageRef = photo.kind === 'ready' ? photo.storageRef : null
+    const photoPreview = photo.kind === 'ready' ? photo.preview : null
+
     setActive({
       id: '',
       question: text,
+      photoSummary,
+      photoPreview,
       answer: '',
       risk_keywords: [],
       phase: 'idle',
@@ -117,7 +209,12 @@ export default function AiConsultationEntryClient() {
       res = await fetch('/api/consultation/stream', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ question: text, viewer_id: viewerId }),
+        body: JSON.stringify({
+          question: text,
+          viewer_id: viewerId,
+          image_summary: photoSummary,
+          image_storage_ref: photoStorageRef,
+        }),
         signal: ac.signal,
       })
     } catch (err) {
@@ -228,6 +325,7 @@ export default function AiConsultationEntryClient() {
     setActive(null)
     setQuestion('')
     setError(null)
+    clearPhoto()
   }
 
   return (
@@ -258,14 +356,98 @@ export default function AiConsultationEntryClient() {
                 className="w-full p-3 text-sm border border-slate-300 rounded bg-white"
                 required
               />
+
+              {/* Photo Lite (Issue #40) — optional. Vision recognizes the
+                  document and produces a consultation-voice summary that
+                  is shown here BEFORE submit, so the user can decide
+                  whether to proceed with this image attached. */}
+              <div className="rounded border border-slate-200 bg-white p-3 text-[12px] text-slate-700 space-y-2">
+                <div className="flex items-baseline justify-between gap-2">
+                  <p className="text-[10px] uppercase tracking-wider text-slate-400">
+                    可选：相关图片（通知书 / 入管材料 / 年金税金 / 雇佣相关）
+                  </p>
+                  {photo.kind === 'ready' && (
+                    <button
+                      type="button"
+                      onClick={clearPhoto}
+                      className="text-[11px] text-slate-500 hover:underline"
+                    >
+                      移除图片
+                    </button>
+                  )}
+                </div>
+
+                {photo.kind === 'idle' && (
+                  <div>
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept="image/*,application/pdf"
+                      capture="environment"
+                      onChange={onPickFile}
+                      className="hidden"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => fileInputRef.current?.click()}
+                      className="px-3 py-1.5 rounded border border-slate-400 bg-white hover:bg-slate-100 text-[12px]"
+                    >
+                      上传 / 拍照
+                    </button>
+                    <span className="ml-2 text-[11px] text-slate-400">
+                      不强制；图片只用于这次咨询的识别提示，不会公开。
+                    </span>
+                  </div>
+                )}
+
+                {photo.kind === 'recognizing' && (
+                  <div className="flex items-center gap-3">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={photo.preview} alt="预览" className="w-16 h-16 object-cover rounded border border-slate-200" />
+                    <div>
+                      <p className="text-[12px] text-slate-700">{photo.filename}</p>
+                      <p className="text-[11px] text-slate-500 mt-0.5">正在识别图片内容…</p>
+                    </div>
+                  </div>
+                )}
+
+                {photo.kind === 'ready' && (
+                  <div className="flex gap-3">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={photo.preview} alt="预览" className="w-20 h-20 object-cover rounded border border-slate-200 shrink-0" />
+                    <div className="text-[12px] leading-relaxed">
+                      <p className="text-slate-800">{photo.summary}</p>
+                      <p className="mt-1 text-[10px] text-slate-400">
+                        识别可信度：{photo.confidence}
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {photo.kind === 'error' && (
+                  <div className="space-y-2">
+                    <p className="text-[12px] text-amber-800 bg-amber-50 border border-amber-200 rounded px-2 py-1.5">
+                      {photo.message}
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => setPhoto({ kind: 'idle' })}
+                      className="text-[11px] text-slate-600 hover:underline"
+                    >
+                      重新选择图片
+                    </button>
+                  </div>
+                )}
+              </div>
+
               <div className="flex items-center justify-between">
                 <span className="text-[11px] text-slate-400">{question.length} / 4000</span>
                 <button
                   type="submit"
-                  disabled={!question.trim()}
+                  disabled={!question.trim() || photo.kind === 'recognizing'}
                   className="px-4 py-2 rounded bg-slate-900 text-white text-sm font-medium hover:bg-slate-800 disabled:opacity-50"
                 >
-                  开始咨询
+                  {photo.kind === 'recognizing' ? '识别中…' : '开始咨询'}
                 </button>
               </div>
               {error && (
@@ -281,6 +463,23 @@ export default function AiConsultationEntryClient() {
               <p className="text-[10px] uppercase tracking-wider text-slate-400">你的问题</p>
               <p className="mt-1 text-slate-800 leading-relaxed">{active.question}</p>
             </div>
+
+            {active.photoSummary && (
+              <div className="rounded border border-slate-200 bg-white p-3 flex gap-3 items-start">
+                {active.photoPreview && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={active.photoPreview}
+                    alt="提交的图片"
+                    className="w-16 h-16 object-cover rounded border border-slate-200 shrink-0"
+                  />
+                )}
+                <div className="text-[12px] leading-relaxed">
+                  <p className="text-[10px] uppercase tracking-wider text-slate-400">图片摘要（仅供咨询参考）</p>
+                  <p className="mt-1 text-slate-700">{active.photoSummary}</p>
+                </div>
+              </div>
+            )}
 
             {active.risk_keywords.length > 0 && (
               <div className="rounded border border-amber-300 bg-amber-50 px-3 py-2 text-[12px] text-amber-900 leading-relaxed">

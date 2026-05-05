@@ -73,6 +73,10 @@ const MAX_TOKENS = 1200
 interface ReqBody {
   question?: string
   image_summary?: string | null
+  /** Synthetic ref like 'bedrock://<sha256-prefix>'. The raw bytes are NOT
+   * stored anywhere; this is only a dedup / observability marker. Set by
+   * /api/consultation/upload (Issue #40 Photo Lite). */
+  image_storage_ref?: string | null
   /** Optional cookie-derived viewer id. Persisted for /me/consultations scoping. */
   viewer_id?: string | null
 }
@@ -121,11 +125,13 @@ export async function POST(req: Request) {
 
   // Create the row before opening the stream so the consultation_id is
   // emitted in the very first 'received' frame.
+  const trimmedImageSummary = (body.image_summary ?? '').trim()
   const consultation = await createAiConsultation({
     viewerId,
     userQuestionText: question,
-    hasImage: !!(body.image_summary && body.image_summary.trim()),
-    imageSummary: body.image_summary ?? null,
+    hasImage: trimmedImageSummary.length > 0,
+    imageSummary: trimmedImageSummary || null,
+    imageStorageRef: body.image_storage_ref?.slice(0, 240) ?? null,
     riskKeywordHits: riskHits,
   })
 
