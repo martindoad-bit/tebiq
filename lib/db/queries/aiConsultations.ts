@@ -131,7 +131,10 @@ export async function completeAiConsultation(
 
 export interface FailAiConsultationInput {
   id: string
-  status: 'timeout' | 'failed'
+  /** Issue #51: 'partial' added so 90s cutoff with partial text writes a
+   *  distinct DB status from silent-provider 'timeout'. 'failed' is
+   *  reserved for non-timeout errors (network / parse / etc). */
+  status: 'partial' | 'timeout' | 'failed'
   reason: string
   partialText?: string | null
 }

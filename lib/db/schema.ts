@@ -1179,7 +1179,8 @@ export type NewEvalAnnotation = typeof evalAnnotations.$inferInsert
 export const aiConsultationStatusEnum = pgEnum('ai_consultation_status', [
   'streaming',  // first row state — DS streaming in flight
   'completed',  // DS finished cleanly
-  'timeout',   // 90-120s real-failure threshold reached
+  'partial',   // 90s hard timeout WITH partial answer text already streamed
+  'timeout',   // 90s hard timeout with NO answer text (provider truly silent)
   'failed',    // non-timeout error (network / parse / etc)
 ])
 

@@ -169,6 +169,13 @@
       "when": 1777983058176,
       "tag": "0023_useful_firelord",
       "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "7",
+      "when": 1777992291426,
+      "tag": "0024_aspiring_trauma",
+      "breakpoints": true
     }
   ]
 }
