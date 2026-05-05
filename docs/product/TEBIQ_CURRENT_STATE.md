@@ -9,8 +9,8 @@
 | `last_verified` | 2026-05-05 |
 | `verified_by` | GM |
 | `source_of_truth` | GitHub remote `origin/main` + `gh pr view` + 用户最新事实 |
-| `main_head` | `4de9eda` |
-| `main_head_title` | Merge PR #44 — 1.0 Alpha streaming consultation pipeline (Issue #39, migration 0023 pre-applied) |
+| `main_head` | `b6ffbe9` |
+| `main_head_title` | Merge PR #48 — 1.0 Alpha Learning Console (Issue #41) |
 
 ---
 
@@ -107,13 +107,12 @@ DeepSeek:
 
 | Issue | 类型 | 说明 |
 |-------|------|------|
-| [#40](https://github.com/martindoad-bit/tebiq/issues/40) | ENGINE 1.0 Alpha | Photo Lite — **#39 已 merge，可启动** |
-| [#41](https://github.com/martindoad-bit/tebiq/issues/41) | ENGINE 1.0 Alpha | Learning Console — **#39 已 merge，可启动** |
-| [#43](https://github.com/martindoad-bit/tebiq/issues/43) | QA 1.0 Alpha | §3.1 PASS 7/7；§3.2-3.9 **可启动**（GM 已 live smoke 10/10 PASS）|
+| [#43](https://github.com/martindoad-bit/tebiq/issues/43) | QA 1.0 Alpha | §3.1-3.3 / 3.5-3.8 PASS；§3.4 (image) + §3.9 (learning console) ready to run |
+| [#49](https://github.com/martindoad-bit/tebiq/issues/49) | P1 | DeepSeek 90s timeout rate ~60% (Alpha UX issue, not P0) |
 | [#46](https://github.com/martindoad-bit/tebiq/issues/46) | DEBT P1 | Production DB Migration Runbook / Automation Strategy |
 | [#13](https://github.com/martindoad-bit/tebiq/issues/13) | QA audit pending | PR #12 Context OS audit，待激活 |
 
-已 close：[#34](https://github.com/martindoad-bit/tebiq/issues/34) · [#35](https://github.com/martindoad-bit/tebiq/issues/35) · [#37](https://github.com/martindoad-bit/tebiq/issues/37) · [#39](https://github.com/martindoad-bit/tebiq/issues/39)（PR #44 merged `4de9eda`）· [#42](https://github.com/martindoad-bit/tebiq/issues/42) · [#15](https://github.com/martindoad-bit/tebiq/issues/15)
+已 close：#34 · #35 · #37 · #39（PR #44 `4de9eda`）· [#40](https://github.com/martindoad-bit/tebiq/issues/40)（PR #47 `a6b22a3`）· [#41](https://github.com/martindoad-bit/tebiq/issues/41)（PR #48 `b6ffbe9`）· #42 · #15
 
 ## 当前 Open PR
 
@@ -132,9 +131,10 @@ DeepSeek:
 | 用户已保存列表 `/me/consultations` | ✅ HTTP 200 |
 | 受控查看 `/c/[id]` | ✅ 404 for fake id（正确）|
 | feedback / save routes | ✅ 400 for invalid（正确） |
-| Photo Lite (#40) | 🟡 ready to start |
-| Learning Console (#41) | 🟡 ready to start |
-| QA §3.2-3.9 (#43) | 🟡 ready to start |
+| Photo Lite (#40) | ✅ merged PR #47 `a6b22a3`（vision via Bedrock; hash-only ephemeral storage; 0 PII bytes persisted; 10 contract tests + 154 regression）|
+| Learning Console (#41) | ✅ merged PR #48 `b6ffbe9`（7 Tab + KPI；EVAL_LAB_ENABLED=1 gate；零 DS 依赖；17 contract tests + 154 regression）|
+| QA §3.1-3.3, 3.5-3.8 | ✅ PASS（report `31f5e50`）|
+| QA §3.4 (image) + §3.9 (console) | 🟡 ready to run（PR #47/#48 已 deploy）|
 
 ---
 
