@@ -163,11 +163,14 @@ function Field({ k, v, mono = false }: { k: string; v: string; mono?: boolean })
   )
 }
 
-function statusLabel(status: 'streaming' | 'completed' | 'timeout' | 'failed'): string {
+// Issue #51: 'partial' added so console reflects DB-level distinction
+// between silent-provider 'timeout' and partial-answer 'partial'.
+function statusLabel(status: 'streaming' | 'completed' | 'partial' | 'timeout' | 'failed'): string {
   switch (status) {
     case 'streaming': return '进行中'
     case 'completed': return '完成'
-    case 'timeout':   return '超时'
+    case 'partial':   return '部分回答'
+    case 'timeout':   return '超时（无答案）'
     case 'failed':    return '失败'
   }
 }

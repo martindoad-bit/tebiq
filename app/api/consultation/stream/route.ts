@@ -175,26 +175,46 @@ export async function POST(req: Request) {
         }
       }, CONSULTATION_TIMING.still_generating_at_ms)
 
-      // 4. hard timeout watchdog (90s)
+      // 4. hard timeout watchdog (90s) — Issue #51 Alpha Polish §2.
+      //
+      // 90s hard cutoff branches on whether ANY answer text streamed:
+      //   - Some text streamed → completion_status='partial', reason
+      //     'hard_timeout_90s_with_partial'. UI renders the streamed
+      //     text + "回答可能不完整" hint (NOT [降级回答]).
+      //   - Zero text streamed → completion_status='timeout', reason
+      //     'hard_timeout_90s_no_partial'. UI renders [降级回答]
+      //     canonical fallback copy.
+      //
+      // Both still emit the same SSE `event: 'timeout'` frame; the
+      // `completion_status` field on the frame disambiguates. We do
+      // NOT introduce a new 'partial' SSE event name because client
+      // parsers already pin on the 8-name union — adding a new event
+      // name would break the protocol contract. Adding a field to an
+      // existing event is backward compatible (test 11l-style invariant).
       let hardTimedOut = false
       const hardTimer = setTimeout(async () => {
         if (closed) return
         hardTimedOut = true
         try { dsAbort.abort() } catch { /* ignore */ }
         const partial = totalText
-        // Emit voice-canonical timeout frame (NEVER falls through to legacy)
+        const hasPartial = partial.length > 0
+        const status: 'partial' | 'timeout' = hasPartial ? 'partial' : 'timeout'
+        const reason = hasPartial ? 'hard_timeout_90s_with_partial' : 'hard_timeout_90s_no_partial'
+        // Emit voice-canonical timeout frame with completion_status so
+        // CODEXUI can render the right copy (NEVER falls through to legacy).
         emit({
           event: 'timeout',
           ts: Date.now(),
-          partial_answer_saved: partial.length > 0,
+          partial_answer_saved: hasPartial,
           fallback_text: CONSULTATION_TIMEOUT_FALLBACK_TEXT,
+          completion_status: status,
         })
         try {
           await failAiConsultation({
             id: consultation.id,
-            status: 'timeout',
-            reason: 'hard_timeout_90s',
-            partialText: partial.length > 0 ? partial : null,
+            status,
+            reason,
+            partialText: hasPartial ? partial : null,
           })
         } catch (err) {
           console.warn('[consultation/stream] failAiConsultation persist failed', err)

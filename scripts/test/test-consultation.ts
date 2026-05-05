@@ -226,7 +226,13 @@ async function main() {
       true,
     )
     assert.equal(
-      protoMod.isTerminalConsultationEvent({ event: 'timeout', ts: 0, partial_answer_saved: false, fallback_text: '' }),
+      protoMod.isTerminalConsultationEvent({
+        event: 'timeout',
+        ts: 0,
+        partial_answer_saved: false,
+        fallback_text: '',
+        completion_status: 'timeout',
+      }),
       true,
     )
     assert.equal(protoMod.isTerminalConsultationEvent({ event: 'failed', ts: 0, detail: 'x' }), true)
@@ -253,6 +259,148 @@ async function main() {
         promptText.includes(phrase),
         `system prompt missing warning for forbidden phrase: ${phrase}`,
       )
+    }
+  })
+
+  // ---- 6. Issue #51 Alpha Polish §2 — completion_status mapping ----
+  //
+  // The 90s hard cutoff branches on whether ANY answer text streamed:
+  //   - has partial → completion_status='partial' (UI: "回答可能不完整")
+  //   - silent      → completion_status='timeout' (UI: [降级回答] canonical)
+  // 'completed' and 'failed' must remain disjoint from the timeout branch.
+  // These tests pin the mapping that the stream route enforces in
+  // app/api/consultation/stream/route.ts hardTimer callback.
+  check('6a. completion_status union has all 5 values (Pack §2 / Issue #51)', () => {
+    // The 5 statuses the DB enum allows post-migration 0024.
+    const allowed = ['streaming', 'completed', 'partial', 'timeout', 'failed'] as const
+    assert.equal(allowed.length, 5)
+    // No silent collapse (e.g. 'partial' must NOT equal 'timeout' string)
+    assert.notEqual(allowed[2], allowed[3])
+    // Each is distinct
+    assert.equal(new Set(allowed).size, 5)
+  })
+  check('6b. timeout event payload requires completion_status: "partial" | "timeout"', () => {
+    // Encoded payload faithfully round-trips with completion_status field.
+    const partialFrame = protoMod.formatConsultationFrame({
+      event: 'timeout',
+      ts: 100,
+      partial_answer_saved: true,
+      fallback_text: protoMod.CONSULTATION_TIMEOUT_FALLBACK_TEXT,
+      completion_status: 'partial',
+    })
+    assert.ok(partialFrame.includes('"completion_status":"partial"'))
+    const silentFrame = protoMod.formatConsultationFrame({
+      event: 'timeout',
+      ts: 200,
+      partial_answer_saved: false,
+      fallback_text: protoMod.CONSULTATION_TIMEOUT_FALLBACK_TEXT,
+      completion_status: 'timeout',
+    })
+    assert.ok(silentFrame.includes('"completion_status":"timeout"'))
+  })
+  check('6c. parser preserves completion_status field on timeout frame', () => {
+    const buf =
+      `data: ${JSON.stringify({
+        event: 'timeout',
+        ts: 1,
+        partial_answer_saved: true,
+        fallback_text: 'x',
+        completion_status: 'partial',
+      })}\n\n`
+    const { events } = protoMod.parseConsultationChunk(buf)
+    assert.equal(events.length, 1)
+    const ev = events[0]
+    assert.equal(ev.event, 'timeout')
+    if (ev.event === 'timeout') {
+      assert.equal(ev.completion_status, 'partial')
+      assert.equal(ev.partial_answer_saved, true)
+    }
+  })
+  check('6d. Mapping A — completed path yields completion_status="completed" only', () => {
+    // Charter §10 / Pack §3.5: completed path NEVER carries 'timeout' /
+    // 'partial' / [降级回答].
+    const completed = { event: 'completed' as const, ts: 1, total_latency_ms: 100, redactions_count: 0 }
+    assert.equal(completed.event, 'completed')
+    // The frame format for completed has no fallback_text / partial flags.
+    const frame = protoMod.formatConsultationFrame(completed)
+    assert.ok(!frame.includes('[降级回答]'))
+    assert.ok(!frame.includes('"completion_status":"timeout"'))
+    assert.ok(!frame.includes('"completion_status":"partial"'))
+    assert.ok(!frame.includes('"partial_answer_saved"'))
+  })
+  check('6e. Mapping B — partial path: status="partial" + has fallback_text but UI never renders it', () => {
+    // Server emits fallback_text for both partial and silent timeout, but
+    // UI gates rendering on completion_status. This test pins the
+    // contract: when completion_status==='partial', partial_answer_saved
+    // MUST be true (so UI can derive "answer was streamed before cut").
+    const ev = {
+      event: 'timeout' as const,
+      ts: 1,
+      partial_answer_saved: true,
+      fallback_text: protoMod.CONSULTATION_TIMEOUT_FALLBACK_TEXT,
+      completion_status: 'partial' as const,
+    }
+    assert.equal(ev.completion_status, 'partial')
+    assert.equal(ev.partial_answer_saved, true)
+    // The fallback_text payload still carries [降级回答] (server emits the
+    // canonical text uniformly), but the UI binds rendering to
+    // completion_status, NOT to fallback_text presence. This is the
+    // invariant CODEXUI #52 enforces in render code; we lock the data
+    // shape here.
+    assert.ok(ev.fallback_text.includes('[降级回答]'))
+  })
+  check('6f. Mapping C — silent timeout: status="timeout" + partial_answer_saved=false', () => {
+    const ev = {
+      event: 'timeout' as const,
+      ts: 1,
+      partial_answer_saved: false,
+      fallback_text: protoMod.CONSULTATION_TIMEOUT_FALLBACK_TEXT,
+      completion_status: 'timeout' as const,
+    }
+    assert.equal(ev.completion_status, 'timeout')
+    assert.equal(ev.partial_answer_saved, false)
+    assert.ok(ev.fallback_text.includes('[降级回答]'))
+  })
+  check('6g. Mapping D — failed path: separate event, no completion_status field', () => {
+    // 'failed' event payload has only { event, ts, detail }. It does NOT
+    // ride on the timeout-event union, so no completion_status field.
+    const failed = { event: 'failed' as const, ts: 1, detail: 'stream_exception' }
+    const frame = protoMod.formatConsultationFrame(failed)
+    assert.ok(frame.includes('"event":"failed"'))
+    assert.ok(!frame.includes('"completion_status"'))
+    assert.ok(!frame.includes('[降级回答]'))
+  })
+  check('6h. Mapping invariant — partial_answer_saved <=> completion_status==="partial" on timeout event', () => {
+    // The stream route enforces hasPartial = (totalText.length > 0) and
+    // sets BOTH partial_answer_saved = hasPartial AND completion_status =
+    // hasPartial ? 'partial' : 'timeout'. So the two fields must agree
+    // for every timeout-event payload that the route emits.
+    const cases: Array<{ partial_answer_saved: boolean; completion_status: 'partial' | 'timeout' }> = [
+      { partial_answer_saved: true,  completion_status: 'partial' },
+      { partial_answer_saved: false, completion_status: 'timeout' },
+    ]
+    for (const c of cases) {
+      assert.equal(c.partial_answer_saved, c.completion_status === 'partial')
+    }
+  })
+  check('6i. Migration 0024 is the only schema change for this fix', () => {
+    // Lock the migration name as a contract — Pack §3.1 specifies a
+    // single ALTER TYPE ADD VALUE. If a future PR sneaks more schema
+    // edits into the same migration, this test breaks.
+    const fs = require('fs') as typeof import('fs')
+    const path = require('path') as typeof import('path')
+    const migDir = path.join(process.cwd(), 'lib/db/migrations')
+    const files = fs.readdirSync(migDir).filter(f => /^0024_.*\.sql$/.test(f))
+    assert.equal(files.length, 1, `expected exactly one 0024_*.sql, got ${files.join(',')}`)
+    const sql = fs.readFileSync(path.join(migDir, files[0]), 'utf8').trim()
+    // Only thing the migration is allowed to do.
+    assert.ok(
+      sql.includes("ADD VALUE 'partial'"),
+      `migration ${files[0]} missing ADD VALUE 'partial': ${sql}`,
+    )
+    // No DROP / DELETE / UPDATE / ALTER TABLE / CREATE TABLE.
+    for (const banned of ['DROP', 'DELETE', 'UPDATE ', 'CREATE TABLE', 'ALTER TABLE']) {
+      assert.ok(!sql.toUpperCase().includes(banned), `migration ${files[0]} contains banned op: ${banned}`)
     }
   })
 

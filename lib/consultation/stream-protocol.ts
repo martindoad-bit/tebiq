@@ -9,6 +9,14 @@
 // Events stream lifecycle stages PLUS the actual answer tokens. Token
 // chunks ride on `answer_chunk` events; lifecycle markers (started /
 // first_token / risk_hint / completed / timeout / failed) bracket them.
+//
+// Issue #51 (Alpha Polish §2 state mapping): the 'timeout' event now
+// carries a `completion_status` field so the client can distinguish
+// "true silent provider timeout" (status='timeout' → fallback canonical
+// rendering) from "provider streamed some text then we cut at 90s"
+// (status='partial' → "回答可能不完整" rendering, NOT [降级回答]).
+// `partial_answer_saved` is preserved for backward compat but UI should
+// prefer `completion_status` since it's the canonical mapping.
 
 export type ConsultationEventName =
   | 'received'           // immediately after server creates the row
@@ -17,8 +25,25 @@ export type ConsultationEventName =
   | 'first_token'        // first DS token observed
   | 'answer_chunk'       // streaming token chunk
   | 'completed'          // DS stream done; final answer written
-  | 'timeout'            // 90-120s real failure
+  | 'timeout'            // 90s hard cutoff (carries completion_status to disambiguate partial vs silent)
   | 'failed'             // non-timeout error
+
+/**
+ * The 5 DB-level completion statuses. Mirrors `ai_consultation_status`
+ * pgEnum in lib/db/schema.ts. Issue #51: 'partial' added so partial-
+ * with-answer at 90s is distinguishable from silent-provider timeout.
+ *
+ * NOTE: 'streaming' never appears in a terminal SSE event — it's the
+ * row default while DS is in flight. Only the 4 terminal values
+ * (completed / partial / timeout / failed) ever ride on the
+ * 'timeout' or 'completed' frame's `completion_status` field.
+ */
+export type ConsultationCompletionStatus =
+  | 'streaming'
+  | 'completed'
+  | 'partial'
+  | 'timeout'
+  | 'failed'
 
 export type ConsultationEvent =
   | { event: 'received'; ts: number; consultation_id: string }
@@ -27,7 +52,21 @@ export type ConsultationEvent =
   | { event: 'first_token'; ts: number; first_token_latency_ms: number }
   | { event: 'answer_chunk'; ts: number; chunk: string }
   | { event: 'completed'; ts: number; total_latency_ms: number; redactions_count: number }
-  | { event: 'timeout'; ts: number; partial_answer_saved: boolean; fallback_text: string }
+  | {
+      event: 'timeout';
+      ts: number;
+      /** True iff completion_status==='partial' (i.e. some answer text already streamed). */
+      partial_answer_saved: boolean;
+      /** Voice-canonical [降级回答] copy. Client should ONLY render this
+       *  text when `completion_status === 'timeout'` (silent provider).
+       *  When `completion_status === 'partial'`, client renders the
+       *  streamed text + a "回答可能不完整" hint instead. */
+      fallback_text: string;
+      /** Pack §3.4 (Issue #51): canonical DB status for this terminal
+       *  event. 'partial' = some text streamed before 90s cut.
+       *  'timeout' = provider truly silent (no token ever arrived). */
+      completion_status: 'partial' | 'timeout';
+    }
   | { event: 'failed'; ts: number; detail: string }
 
 export function formatConsultationFrame(event: ConsultationEvent): string {

@@ -102,10 +102,13 @@ export default async function MyConsultationsPage() {
   )
 }
 
-function statusBadge(status: 'streaming' | 'completed' | 'timeout' | 'failed'): string {
+// Issue #51: 'partial' added. Placeholder label only — CODEXUI Polish
+// PR (#52) owns the polished rendering for partial-answer state.
+function statusBadge(status: 'streaming' | 'completed' | 'partial' | 'timeout' | 'failed'): string {
   switch (status) {
     case 'streaming': return '进行中'
     case 'completed': return '完成'
+    case 'partial':   return '部分'
     case 'timeout':   return '超时'
     case 'failed':    return '失败'
   }

@@ -121,10 +121,13 @@ export default async function ConsultationDetailPage({ params }: PageProps) {
   )
 }
 
-function statusLabel(status: 'streaming' | 'completed' | 'timeout' | 'failed'): string {
+// Issue #51: 'partial' added. Placeholder label only — CODEXUI Polish
+// PR (#52) owns the polished rendering for partial-answer state.
+function statusLabel(status: 'streaming' | 'completed' | 'partial' | 'timeout' | 'failed'): string {
   switch (status) {
     case 'streaming': return '进行中'
     case 'completed': return '完成'
+    case 'partial':   return '回答可能不完整'
     case 'timeout':   return '超时'
     case 'failed':    return '失败'
   }

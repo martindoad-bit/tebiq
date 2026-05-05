@@ -32,7 +32,7 @@ export interface LearningConsoleRow {
   completedAt: string | null
   firstTokenLatencyMs: number | null
   totalLatencyMs: number | null
-  completionStatus: 'streaming' | 'completed' | 'timeout' | 'failed'
+  completionStatus: 'streaming' | 'completed' | 'partial' | 'timeout' | 'failed'
   partialAnswerSaved: boolean
   timeoutReason: string | null
   feedbackType: 'helpful' | 'inaccurate' | 'add_context' | 'human_review' | 'saved' | null
@@ -240,16 +240,20 @@ function Tag({ className = '', children }: { className?: string; children: React
   )
 }
 
-function StatusBadge({ status }: { status: 'streaming' | 'completed' | 'timeout' | 'failed' }) {
+// Issue #51: 'partial' added — distinct from 'timeout' for the 90s
+// hard-cutoff branch where some answer text already streamed.
+function StatusBadge({ status }: { status: 'streaming' | 'completed' | 'partial' | 'timeout' | 'failed' }) {
   const map: Record<typeof status, string> = {
     streaming: 'bg-blue-50 text-blue-700 border-blue-200',
     completed: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+    partial:   'bg-yellow-50 text-yellow-700 border-yellow-200',
     timeout:   'bg-amber-50 text-amber-700 border-amber-200',
     failed:    'bg-rose-50 text-rose-700 border-rose-200',
   }
   const label: Record<typeof status, string> = {
     streaming: '进行中',
     completed: '完成',
+    partial:   '部分',
     timeout: '超时',
     failed: '失败',
   }
