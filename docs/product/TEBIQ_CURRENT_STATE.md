@@ -9,8 +9,8 @@
 | `last_verified` | 2026-05-05 |
 | `verified_by` | GM |
 | `source_of_truth` | GitHub remote `origin/main` + `gh pr view` + 用户最新事实 |
-| `main_head` | `e81a095`（pending push: brand docs + landing gaps）|
-| `main_head_title` | docs(domain): 1.0 Alpha fact anchors v0.1 — 15 conditions (Issue #42) |
+| `main_head` | `3718588` |
+| `main_head_title` | Merge PR #45 — CODEXUI Phase 1 UI specs (8 docs/ui/ files + Registry) |
 
 ---
 
@@ -107,15 +107,19 @@ DeepSeek:
 
 | Issue | 类型 | 说明 |
 |-------|------|------|
-| [#39](https://github.com/martindoad-bit/tebiq/issues/39) | **ENGINE 1.0 Alpha P0** | Streaming Consultation Pipeline (text + DS V4 Pro stream + system prompt + risk + feedback + save) |
-| [#40](https://github.com/martindoad-bit/tebiq/issues/40) | ENGINE 1.0 Alpha | Photo Lite Consultation |
-| [#41](https://github.com/martindoad-bit/tebiq/issues/41) | ENGINE 1.0 Alpha | Learning Console (`/internal/learning-console`) |
-| [#42](https://github.com/martindoad-bit/tebiq/issues/42) | DOMAIN 1.0 Alpha | 15 Fact Anchors |
-| [#43](https://github.com/martindoad-bit/tebiq/issues/43) | QA 1.0 Alpha | Alpha Smoke (含 8 项 streaming 测试 + #37 回归) |
-| [#15](https://github.com/martindoad-bit/tebiq/issues/15) | 0.7+ deferred | Eval Round 1 — 不阻塞 1.0 Alpha |
+| [#39](https://github.com/martindoad-bit/tebiq/issues/39) | **ENGINE 1.0 Alpha P0** | Streaming Consultation Pipeline — **PR #44 OPEN，等 Vercel + GM merge** |
+| [#40](https://github.com/martindoad-bit/tebiq/issues/40) | ENGINE 1.0 Alpha | Photo Lite — **gated on #39 merge** |
+| [#41](https://github.com/martindoad-bit/tebiq/issues/41) | ENGINE 1.0 Alpha | Learning Console — **gated on #39 merge** |
+| [#43](https://github.com/martindoad-bit/tebiq/issues/43) | QA 1.0 Alpha | §3.1 PASS 7/7（landed `b8088c3`）；§3.2-3.9 等 #39 merge 解锁 |
 | [#13](https://github.com/martindoad-bit/tebiq/issues/13) | QA audit pending | PR #12 Context OS audit，待激活 |
 
-已 close：[#34](https://github.com/martindoad-bit/tebiq/issues/34) · [#35](https://github.com/martindoad-bit/tebiq/issues/35) · [#37](https://github.com/martindoad-bit/tebiq/issues/37) (PR #38 merged `1ba2fea`)
+已 close：[#34](https://github.com/martindoad-bit/tebiq/issues/34) · [#35](https://github.com/martindoad-bit/tebiq/issues/35) · [#37](https://github.com/martindoad-bit/tebiq/issues/37)（PR #38 `1ba2fea`）· [#42](https://github.com/martindoad-bit/tebiq/issues/42)（DOMAIN fact anchors `e81a095`）· [#15](https://github.com/martindoad-bit/tebiq/issues/15)（0.7+ deferred）
+
+## 当前 Open PR
+
+| PR | 状态 | 说明 |
+|----|------|------|
+| [#44](https://github.com/martindoad-bit/tebiq/pull/44) | OPEN / Vercel PENDING | ENGINE Issue #39 streaming consultation pipeline；17 files / +7499 -0；migration 0023 additive only；33/33 tests pass |
 
 ---
 
