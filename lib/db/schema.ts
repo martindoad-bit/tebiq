@@ -1166,5 +1166,91 @@ export type NewEvalAnswer = typeof evalAnswers.$inferInsert
 export type EvalAnnotation = typeof evalAnnotations.$inferSelect
 export type NewEvalAnnotation = typeof evalAnnotations.$inferInsert
 
+// =====================================================================
+// AI Consultation (TEBIQ 1.0 Alpha) — Charter §6 / Issue #39
+//
+// Distinct from the legacy `consultations` table (which is human-contact
+// requests). This table records every AI consultation the streaming
+// pipeline produces. Schema follows the Charter §6 field list verbatim,
+// plus a few internal-observability columns (forbidden_redactions,
+// viewer_id) that don't escape the user surface.
+// =====================================================================
+
+export const aiConsultationStatusEnum = pgEnum('ai_consultation_status', [
+  'streaming',  // first row state — DS streaming in flight
+  'completed',  // DS finished cleanly
+  'timeout',   // 90-120s real-failure threshold reached
+  'failed',    // non-timeout error (network / parse / etc)
+])
+
+export const aiConsultationFeedbackEnum = pgEnum('ai_consultation_feedback', [
+  'helpful',         // 有帮助
+  'inaccurate',      // 不准确
+  'add_context',     // 我想补充情况
+  'human_review',    // 想找人工确认
+  'saved',           // 保存这个问题（也置 saved_question=true）
+])
+
+export const aiConsultations = pgTable(
+  'ai_consultations',
+  {
+    id: idCol(),
+    // Cookie-derived viewer id so /me/consultations can scope per-browser
+    // without full auth in Alpha. Nullable when caller didn't send a cookie.
+    viewerId: varchar('viewer_id', { length: 64 }),
+
+    // Charter §6 — user input
+    userQuestionText: text('user_question_text').notNull(),
+    hasImage: boolean('has_image').notNull().default(false),
+    imageSummary: text('image_summary'),
+    imageStorageRef: varchar('image_storage_ref', { length: 240 }),
+
+    // Charter §6 — model output (partial during stream, final at completion)
+    aiAnswerText: text('ai_answer_text'),
+    finalAnswerText: text('final_answer_text'),
+
+    // Charter §6 — model + prompt
+    model: varchar('model', { length: 64 }).notNull().default('deepseek-v4-pro'),
+    promptVersion: varchar('prompt_version', { length: 32 }).notNull().default('consultation_alpha_v1'),
+
+    // Charter §6 — anchor + risk telemetry (all internal; users never see)
+    factAnchorIds: jsonb('fact_anchor_ids').$type<string[]>().notNull().default(sql`'[]'::jsonb`),
+    riskKeywordHits: jsonb('risk_keyword_hits').$type<string[]>().notNull().default(sql`'[]'::jsonb`),
+    /** Tokens redacted by the forbidden-phrase filter. Telemetry only. */
+    forbiddenRedactions: jsonb('forbidden_redactions').$type<string[]>().notNull().default(sql`'[]'::jsonb`),
+
+    // Charter §6 — streaming timestamps + latency
+    streamStartedAt: timestamp('stream_started_at', { withTimezone: true }),
+    firstTokenAt: timestamp('first_token_at', { withTimezone: true }),
+    completedAt: timestamp('completed_at', { withTimezone: true }),
+    firstTokenLatencyMs: integer('first_token_latency_ms'),
+    totalLatencyMs: integer('total_latency_ms'),
+
+    // Charter §6 — completion + fallback signal
+    completionStatus: aiConsultationStatusEnum('completion_status').notNull().default('streaming'),
+    partialAnswerSaved: boolean('partial_answer_saved').notNull().default(false),
+    timeoutReason: varchar('timeout_reason', { length: 64 }),
+
+    // Charter §6 — feedback + saving
+    feedbackType: aiConsultationFeedbackEnum('feedback_type'),
+    savedQuestion: boolean('saved_question').notNull().default(false),
+    humanConfirmClicked: boolean('human_confirm_clicked').notNull().default(false),
+    followUpCount: integer('follow_up_count').notNull().default(0),
+
+    schemaVersion: varchar('schema_version', { length: 24 }).notNull().default('ai-consultation-v1'),
+    createdAt: createdAt(),
+    updatedAt: updatedAt(),
+  },
+  t => ({
+    completionStatusIdx: index('ai_consultations_completion_status_idx').on(t.completionStatus),
+    savedIdx: index('ai_consultations_saved_idx').on(t.savedQuestion),
+    viewerIdx: index('ai_consultations_viewer_idx').on(t.viewerId),
+    createdIdx: index('ai_consultations_created_at_idx').on(t.createdAt),
+  }),
+)
+
+export type AiConsultation = typeof aiConsultations.$inferSelect
+export type NewAiConsultation = typeof aiConsultations.$inferInsert
+
 // re-export sql for callers that want raw helpers without importing drizzle
 export { sql }
