@@ -149,6 +149,13 @@
 |---------|------|-------|--------|--------|-------------|
 | UI Directory README | `docs/ui/README.md` | CODEXUI + GM | active | CODEXUI / ENGINE / QA | 2026-05-05 |
 | 1.0 UI Role | `docs/ui/TEBIQ_1_0_UI_ROLE.md` | CODEXUI + GM | draft / Alpha-only | CODEXUI / ENGINE / QA | 2026-05-05 |
+| 1.0 UI Scope | `docs/ui/TEBIQ_1_0_UI_SCOPE.md` | TEBIQ-CODEXUI | draft / internal / preview-only | GM / ENGINE / QA / VOICE / DOMAIN | 2026-05-05 |
+| 1.0 UI Wireframe | `docs/ui/TEBIQ_1_0_UI_WIREFRAME.md` | TEBIQ-CODEXUI | draft / internal / preview-only | GM / ENGINE / QA | 2026-05-05 |
+| 1.0 UI State Machine | `docs/ui/TEBIQ_1_0_UI_STATE_MACHINE.md` | TEBIQ-CODEXUI | draft / internal / preview-only | ENGINE / QA | 2026-05-05 |
+| 1.0 UI Component Map | `docs/ui/TEBIQ_1_0_UI_COMPONENT_MAP.md` | TEBIQ-CODEXUI | draft / internal / preview-only | ENGINE / QA | 2026-05-05 |
+| 1.0 UI Data Mapping | `docs/ui/TEBIQ_1_0_UI_DATA_MAPPING.md` | TEBIQ-CODEXUI | draft / internal / preview-only | GM / ENGINE / QA | 2026-05-05 |
+| 1.0 UI QA Checklist | `docs/ui/TEBIQ_1_0_UI_QA_CHECKLIST.md` | TEBIQ-CODEXUI | draft / internal / preview-only | QA / GM | 2026-05-05 |
+| 1.0 UI Handoff | `docs/ui/TEBIQ_1_0_UI_HANDOFF.md` | TEBIQ-CODEXUI | draft / internal / preview-only | GM / ENGINE / QA | 2026-05-05 |
 | Track D User Preview Pack | `docs/ops/TRACK_D_USER_PREVIEW_PACK.md` | GM | ✅ done (PR #24) | ENGINE | `7d378fd` | 2026-05-05 |
 | Project Milestones | `docs/ops/TEBIQ_PROJECT_MILESTONES.md` | GM | active | all | `60a591a` | 2026-05-05 |
 | Agent Workflow | `docs/ops/TEBIQ_AGENT_WORKFLOW.md` | GM | active | all | `6166cf8` | 2026-05-05 |
