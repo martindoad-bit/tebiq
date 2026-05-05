@@ -183,3 +183,91 @@ Answer Core V1 的定位是安全外壳（cross-domain gate / parser hardening /
 ### Rationale
 
 DeepSeek 的自然回答能力通常优于规则包装后的输出。过度包装导致"把好答案包坏"——这是 P0（见 `TEBIQ_QA_GATES.md §3.7`）。
+
+---
+
+## DL-007 · M3 拆分为 A/B/C 三层，DeepSeek 不再单一阻塞 M3
+
+| 字段 | 值 |
+|------|-----|
+| date | 2026-05-05 |
+| owner | 产品负责人 / Project Lead |
+| status | active |
+
+### Background
+
+M3 Answer Quality Baseline 原定义为 ≥24 FULL_COMPARABLE。DeepSeek API 在 25s timeout 下大量超时，整个 M3 被错误标为 blocked，多个独立子任务被搁置。DS 90s batch 探测确认健康（实测返回 2480 字符正确答案）。
+
+### Decision
+
+M3 拆为三层独立推进：
+- **M3-A** Routing / Safety Baseline — 不依赖 DeepSeek
+- **M3-B** TEBIQ Self-output Baseline — 不依赖 DeepSeek raw
+- **M3-C** DeepSeek Comparison Baseline — 依赖 DeepSeek raw
+
+正确说法："M3-C blocked by DS interactive timeout；M3-A/B 可推进；M3-C 等 batch timeout 调整"。
+
+### Rationale
+
+M3-A 已有 unit test 7/7 + DOMAIN 7/7 语义复核 + E2E 验证 3/7（J03/J04/I08 PASS）。M3-B 有 25 条非 fallback TEBIQ 答案可评。仅 M3-C 等 DS batch timeout。
+
+### Impact
+
+- Track A 从 🔴 Blocked 改为 🟡 M3-A/B 可推进
+- ENGINE 需调整 eval-lab `deepseek-raw` 路由 timeout 从 25s 至 90s（不影响前台 interactive）
+- 前台 interactive 保持 25s + fallback；只 batch eval 用 90s
+- Production 仍 blocked
+
+---
+
+## DL-008 · VOICE canonical 锁定为 main `docs/voice/TEBIQ_*.md`，PR #31 关闭
+
+| 字段 | 值 |
+|------|-----|
+| date | 2026-05-05 |
+| owner | 产品负责人 + GM |
+| status | active |
+
+### Background
+
+main `docs/voice/TEBIQ_*.md`（14 文件，`02b8e59`）与 PR #31 `*_v0.1.md`（13 文件）并存。前者更长更完整且已集成 5 项 patch；后者为更早草稿。
+
+### Decision
+
+锁定 main `TEBIQ_*.md` 为唯一 canonical。PR #31 已关闭。delta 项（VOICE_SYSTEM_INDEX、HUMAN_REVIEW_TRIGGER_LIBRARY 10场景 L1/L2）登记为 Registry gap，未来若提取必须以小 patch 形式合并到现有 TEBIQ_ 文件，不得新建第二套命名。
+
+### Rationale
+
+避免 ENGINE/QA 在两套不一致命名间游走。命名分裂是 source of truth 不稳定的根本原因之一。
+
+### Impact
+
+- ENGINE / QA 只读 `TEBIQ_*.md`
+- VOICE 后续不写 `_v0.1.md` 命名
+- 任何 voice 增量必须以小 PR 修改 TEBIQ_ 文件
+
+---
+
+## DL-009 · Internal Alpha 阶段 production 仍 blocked
+
+| 字段 | 值 |
+|------|-----|
+| date | 2026-05-05 |
+| owner | 产品负责人 / Project Lead |
+| status | active |
+
+### Background
+
+M1 ✅ M2 ✅ M4 Phase1+2 ✅ 后，可能产生"准备 production"的误判。
+
+### Decision
+
+不进入 public launch。不解锁 production copy。不做外部用户开放。当前目标：Internal Alpha 稳定 + Preview 验收 + M3-A/B 启动 + M3-C 等 DS batch。
+
+### Rationale
+
+production 解锁前置条件未满足：M3-C 未完成；QA 未完整补位；DOMAIN/VOICE 仍 draft；production copy none approved。
+
+### Impact
+
+VOICE / DOMAIN / ENGINE 任何 production-facing 改动需先经过 QA 正式补位 + 产品负责人裁决。
