@@ -9,8 +9,8 @@
 | `last_verified` | 2026-05-05 |
 | `verified_by` | GM |
 | `source_of_truth` | GitHub remote `origin/main` + `gh pr view` + 用户最新事实 |
-| `main_head` | TBD（pending push）|
-| `main_head_title` | Stabilization Sprint v0.3 — M3-A/B reports + QA + ENGINE work packets |
+| `main_head` | `b114810` |
+| `main_head_title` | feat(stabilization): Sprint v0.3 — M3-A/B reports + QA + ENGINE work packets |
 
 ---
 
