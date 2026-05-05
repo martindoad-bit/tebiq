@@ -8,17 +8,69 @@
 |------|-----|
 | `last_verified` | 2026-05-05 |
 | `verified_by` | GM |
-| `source_of_truth` | GitHub remote `origin/main` + `gh pr view` (per-branch) + user-provided latest facts |
-| `main_head` | `501c147` |
-| `main_head_title` | Merge PR #33 SSE Phase 2 + PR #29 DOMAIN Phase 3 + eval-console camelCase fix |
+| `source_of_truth` | GitHub remote `origin/main` + `gh pr view` + 用户最新事实 |
+| `main_head` | `6dd0f5d` |
+| `main_head_title` | docs(decision): DL-007/008/009 — M3 split + VOICE canonical + production blocked |
 
 ---
 
 ## 当前阶段标签
 
-**Project State Stabilization Sprint v0.1 完成 — M1 ✅ M2 ✅ M4-Phase1 ✅ → M3-A/B 可推进，M3-C 等 DS batch**
+**Project Stabilization Sprint v0.2 完成 — M3-A E2E 7/7 PASS / Production blocked**
 
 规则：单线阻塞不等于全项目阻塞。6 track 独立推进。
+
+---
+
+## 里程碑状态（v0.2 精确格式）
+
+| Milestone | Status | 备注 |
+|-----------|--------|------|
+| M0 | accepted | Artifact-first + Context OS |
+| M1 Internal Console | **accepted / monitoring** | CEO 验收 2026-05-05；camelCase fix in main |
+| M2 Routing Safety | **implemented + semantic draft / E2E PASSED** | code merged (PR #23) + DOMAIN 7/7 ✅ + E2E 7/7 ✅（2026-05-05 rerun）|
+| **M3-A** Routing Safety Baseline | **PASS** | 7/7 regression E2E 验证；domain != unknown；DOMAIN 复核一致 |
+| **M3-B** TEBIQ Self-output Baseline | **可推进** | 25 非 fallback + 7 routing-clean 答案可评 |
+| **M3-C** DeepSeek Comparison Baseline | **blocked**（DS interactive timeout） | DS batch 90s 健康；等 ENGINE 调整 eval-lab DS route timeout |
+| M4 Phase 1 (Stage Feedback) | **accepted** | PR #30 in main |
+| M4 Phase 2 (SSE) | **merged / QA pending** | PR #33 in main `501c147` |
+| M5 Matter v0 | ⏳ 等 M3 结论 | — |
+| M6 Private Beta Readiness | ⏳ M2+M4 ✅, 等 QA + M3-C | — |
+| M7 Public Soft Launch | ⏳ — | — |
+
+---
+
+## VOICE / DOMAIN / QA / DeepSeek 状态（v0.2 格式）
+
+```
+VOICE:
+  canonical source: docs/voice/TEBIQ_*.md (14 files, commit 02b8e59)
+  superseded:       PR #31 closed (DL-008)
+  production:       none approved
+  delta gaps:       VOICE_SYSTEM_INDEX, HUMAN_REVIEW_TRIGGER_LIBRARY (待裁决)
+
+DOMAIN:
+  merged assets:    docs/domain/ 16 files (Phase 1+2+3 in main)
+  open assets:      none
+  draft status:     all 16 files draft / needs human review
+  formal annotation: blocked (awaiting M3-C FULL_COMPARABLE)
+  production allowed: no
+
+QA:
+  M1 Console:        PASS (CEO 验收 + curl 验证 + API 100Q snake_case ✅)
+  M4 Preview Phase1: PASS (HTTP 200, stage states 可见)
+  M4 Preview Phase2: PASS at code level (76/76 tests, no P0); browser SSE QA pending
+  Routing E2E:       PASS (7/7 regression 重跑 2026-05-05 04:37-04:41 UTC)
+  VOICE Compliance:  PASS B-layer (no承诺/no 内部标签外露/no 销售导流)
+  Issue #13 audit:   pending (QA audit on PR #12 待激活)
+  status:            partial — M3-B 启动后再做正式 audit cycle
+
+DeepSeek:
+  fast health (25s):  slow_not_interactive (1/5 ok in 5-probe sample)
+  batch health (90s): healthy_batch (1+ confirmed; J03/J04 通过 60s 完成)
+  UX health:          ✅ preview shows received/routing/generating/fallback states
+  recommended:        interactive=25s+fallback；batch eval=90s；concurrency=1
+```
 
 ---
 
@@ -26,112 +78,42 @@
 
 | Track | 名称 | 状态 | 阻塞 |
 |-------|------|------|------|
-| **A** | Answer Quality / Eval | 🟡 M3-A/B 可推进 | M3-C：DS fast(25s) down；batch(90s) ✅ |
-| **B** | Internal Console | ✅ 稳定 | M1 CEO 验收 2026-05-05 |
-| **C** | Routing Safety Gate | ✅ 完成 | R01-R05 ✅ DOMAIN 复核 ✅ |
-| **D** | User Preview | ✅ Phase 1+2 上线 | PR #33 SSE merged `501c147` |
-| **E** | DOMAIN Assets | ✅ Phase 1+2+3 in main | PR #29 merged `f41618c` |
-| **F** | Ops / Release Readiness | 🟡 Internal Alpha 稳定 | 不进 production（QA 未完整补位） |
-
-```
-哪条 track 在动：    A（M3-A/B 可开始）+ F（QA 补位 Issue #13）
-哪条 track blocked： A-M3-C（DS fast timeout）
-CEO 当前能看到什么：  /internal/eval-console（100题 ✅）+ /internal/eval-lab（标注）
-                    + /internal/preview（SSE Phase 2 ✅）
-下一步 GM 自主推进：  Issue #13 QA audit 激活；M3-A/B 启动；DS batch 健康检查
-```
+| **A** Eval | M3-A ✅ / M3-B 可推进 / M3-C 等 batch timeout | 🟡 推进中 | M3-C: ENGINE eval-lab DS route timeout 调整 |
+| **B** Internal Console | ✅ 稳定 (M1 accepted) | ✅ | — |
+| **C** Routing Safety | ✅ E2E 7/7 PASS | ✅ | — |
+| **D** User Preview | ✅ Phase 1+2 in main | 🟡 | browser SSE QA |
+| **E** DOMAIN | ✅ Phase 1+2+3 in main (16 文件 draft) | ✅ | — |
+| **F** Ops/Release | 🔴 production blocked | DL-009 | M3-C + QA + 产品负责人裁决 |
 
 ---
 
-## Track B — Internal Console ✅
+## 当前 Active PR
 
-| 任务 | 状态 | 说明 |
-|------|------|------|
-| `/internal/eval-console` | ✅ CEO 验收（2026-05-05）| 100 题 + stats + provider health |
-| camelCase fix | ✅ `469e2ea` | Drizzle→snake_case 映射修复 |
-
-## Track C — Routing Safety Gate ✅
-
-| 任务 | 状态 | 说明 |
-|------|------|------|
-| R01–R05 实现 | ✅ PR #23 `a62d19c` | 7/7 pass |
-| DOMAIN 语义复核 | ✅ PR #29 `f41618c` | 7/7 pass，DOMAIN_ROUTING_REGRESSION_REVIEW.md |
-
-## Track D — User Preview ✅ Phase 1+2
-
-| 任务 | 状态 | 说明 |
-|------|------|------|
-| Phase 1 Stage Feedback | ✅ PR #30 `e9c49c6` | received→routing→generating→final |
-| Phase 2 SSE | ✅ PR #33 `501c147` | 11 events + gating + fallback |
-
-## Track E — DOMAIN Assets ✅
-
-| 任务 | 状态 | 说明 |
-|------|------|------|
-| Phase 1（100Q Risk Map）| ✅ PR #10 + #25 | docs/domain/ 9 文件 |
-| Phase 2（routing 复核）| ✅ PR #29 | 7/7 pass |
-| Phase 3（semantic interface）| ✅ PR #29 `f41618c` | 7 new files in docs/domain/ |
-
-## Track A — Eval / M3（重新分层）
-
-| 层级 | 名称 | 状态 | 依赖 |
-|------|------|------|------|
-| M3-A | Routing / Safety Baseline | 🟢 可推进 | 无 DS 依赖 |
-| M3-B | TEBIQ Self-output Baseline | 🟢 可推进 | 37 答案可用（31 fallback + 6 full）|
-| M3-C | DeepSeek Comparison Baseline | 🟡 等 batch | DS batch(90s) ✅；需调高 eval 超时 |
-
----
-
-## 里程碑状态
-
-| 里程碑 | 名称 | 状态 |
-|--------|------|------|
-| M0 | 项目规则重置 + 并行模式启动 | ✅ 完成 |
-| M1 | Internal Console Alpha | ✅ CEO 验收 2026-05-05 |
-| M2 | Routing Safety Gate（7/7）| ✅ 完成 + DOMAIN 复核 ✅ |
-| M3-A | Routing / Safety Baseline | 🟢 可推进 |
-| M3-B | TEBIQ Self-output Baseline | 🟢 可推进 |
-| M3-C | DeepSeek Comparison Baseline | 🟡 DS batch(90s) 可用 |
-| M4 | User Preview Alpha（Phase 1+2）| ✅ Phase 1+2 完成 |
-| M5 | Matter v0 | ⏳ 等 M3 结论 |
-| M6 | Private Beta Readiness | ⏳ M2+M4 ✅，等 QA 补位 |
-| M7 | Public Soft Launch | ⏳ M5+M6 |
-
----
-
-## 当前 Active PR / Branch
-
-| PR / Branch | 状态 | 等待 |
+| PR | 状态 | 说明 |
 |----|------|------|
-| 无 open PR | — | — |
-
-已关闭：PR #4（stale）、PR #11（stale）、PR #31（VOICE 命名冲突，main canonical）
+| 无 open PR | — | 上轮 5 个 open PR：#29 ✅ #33 ✅ #4 ✗ #11 ✗ #31 ✗ |
 
 ---
 
-## 当前 Production 状态
+## CEO 可见 Surface
 
-main（`501c147`）已包含：
-
-- Eval Console M1（EVAL_LAB_ENABLED=1 已设置）
-- Eval Lab 标注工具
-- User Preview SSE Phase 2（11 events）
-- Routing Safety Gate v1（R01-R05）
-- DeepSeek V4 Pro 主回答源（需 90s+ timeout for batch）
-- DOMAIN Phase 3 semantic interface assets
-- VOICE System v0.1（14 TEBIQ_*.md canonical files）
+| URL | 状态 | 用途 |
+|-----|------|------|
+| `https://tebiq.jp/internal/eval-console` | ✅ | M1 — 100 题状态总览 |
+| `https://tebiq.jp/internal/eval-lab` | ✅ | 标注工具（不要混淆为 console）|
+| `https://tebiq.jp/internal/preview` | ✅ | M4 Phase 1+2 — 阶段反馈 + SSE |
 
 ---
 
-## 待产品负责人裁决
+## 待产品负责人裁决（P1）
 
-| 事项 | 优先级 |
-|------|--------|
-| VOICE gap：INDEX + HUMAN_REVIEW_TRIGGER_LIBRARY 是否提取入 main | P1 |
-| REGRESSION_SET force human_review 何时放开 | P1 |
-| Issue #13 QA audit 是否激活 | P1 |
-| M3-B 启动标准（GM 自主 or 需 PL 裁决）| P1 |
-| DS batch timeout 调整（25s → 90s for eval routes）| P1 |
+| # | 事项 |
+|---|------|
+| P1-01 | DS eval route timeout 调整（25s → 90s）— 启动 M3-C |
+| P1-02 | M3-B 通过标准（routing+VOICE 合规 vs 完整 LLM 答案） |
+| P1-03 | VOICE delta（INDEX + HUMAN_REVIEW_TRIGGER_LIBRARY）是否提取 |
+| P1-04 | REGRESSION_SET force human_review 何时放开 |
+| P1-05 | Issue #13 QA audit 正式激活时机 |
 
 ---
 
@@ -142,5 +124,4 @@ main（`501c147`）已包含：
 | PR merge → 立即更新 | GM 负责 |
 | 未确认状态 → 写 unknown | 宁可 unknown，不写错 |
 | last_verified > 3 天 | 标注 stale，向 GM 报告 |
-| last_verified > 7 天 | 管理类窗口必须停止 |
 | remote 与本文件冲突 | 以 remote + 用户最新事实为准 |
