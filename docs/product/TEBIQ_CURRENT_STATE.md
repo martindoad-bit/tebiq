@@ -9,16 +9,27 @@
 | `last_verified` | 2026-05-05 |
 | `verified_by` | GM |
 | `source_of_truth` | GitHub remote `origin/main` + `gh pr view` + 用户最新事实 |
-| `main_head` | `29b369e` |
-| `main_head_title` | docs(qa): QA 1.0 Alpha Smoke Report — §3.4/§3.9 complete, PASS all 9 sections |
+| `main_head` | `323ce91` |
+| `main_head_title` | Merge PR #50 — submit button hotfix (bg-slate-900 → bg-ink) + 1.0 Alpha Polish Sprint v0.1 active |
 
 ---
 
 ## 当前阶段标签
 
-**TEBIQ 1.0 Alpha Sprint — 全交付完成（2026-05-05）**
+**TEBIQ 1.0 Alpha Polish Sprint v0.1 — 进行中（PL directive 2026-05-05）**
 
-**Charter §10 13 项标准全部 ✅**。Production `b6ffbe9` 包含：
+Polish Sprint 目标：1.0 Alpha 已可内部使用，进入 UI / 体验 / 状态一致性打磨。不暂停现有客户使用。
+
+**Polish Sprint 在飞 Issues**：
+- [#51](https://github.com/martindoad-bit/tebiq/issues/51) ENGINE — 状态一致性（partial enum + stream route 分支 + migration 0024）
+- [#52](https://github.com/martindoad-bit/tebiq/issues/52) CODEXUI — Alpha UI Polish（PL 已直接 dispatch）
+- [#53](https://github.com/martindoad-bit/tebiq/issues/53) QA — Polish smoke（gated on #51 + #52）
+
+---
+
+**1.0 Alpha Sprint v1（基线）— 已完成（2026-05-05 早）**
+
+Charter §10 13 项标准全部 ✅。Production `b6ffbe9` 包含：
 - 文字咨询 + 流式回答（first_token 4-7s typical）
 - 图片咨询 Lite（Bedrock vision，hash-only ephemeral storage，0 PII bytes）
 - 13 风险关键词轻提示 + 5 反馈按钮 + 保存问题
@@ -119,9 +130,12 @@ DeepSeek:
 
 | Issue | 类型 | 说明 |
 |-------|------|------|
-| [#49](https://github.com/martindoad-bit/tebiq/issues/49) | P1 | DeepSeek 90s timeout rate ~60% (Alpha UX issue, not P0) |
-| [#46](https://github.com/martindoad-bit/tebiq/issues/46) | DEBT P1 | Production DB Migration Runbook / Automation Strategy |
-| [#13](https://github.com/martindoad-bit/tebiq/issues/13) | QA audit pending | PR #12 Context OS audit，待激活 |
+| [#51](https://github.com/martindoad-bit/tebiq/issues/51) | **ENGINE Polish P0 UX** | 状态一致性（partial enum + migration 0024）|
+| [#52](https://github.com/martindoad-bit/tebiq/issues/52) | **CODEXUI Polish** | Alpha UI Polish（PL 已 dispatch）|
+| [#53](https://github.com/martindoad-bit/tebiq/issues/53) | **QA Polish smoke** | gated on #51 + #52 |
+| [#49](https://github.com/martindoad-bit/tebiq/issues/49) | P1 | DS 90s timeout rate ~60%（observability work）|
+| [#46](https://github.com/martindoad-bit/tebiq/issues/46) | DEBT P1 | Production DB Migration Runbook |
+| [#13](https://github.com/martindoad-bit/tebiq/issues/13) | QA audit pending | PR #12 Context OS audit |
 
 已 close：#34 · #35 · #37 · #39（PR #44）· #40（PR #47）· #41（PR #48）· #42 · [#43](https://github.com/martindoad-bit/tebiq/issues/43)（QA 9/9 PASS `29b369e`）· #15
 
