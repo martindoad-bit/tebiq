@@ -73,6 +73,50 @@ export function buildSafeClarificationReplacement(input: {
   })
 }
 
+/**
+ * Issue #37 P0 hotfix — build a clean fallback PublicAnswer for the
+ * provider-timeout path. Used when DeepSeek-LLM times out / errors and
+ * we MUST NOT fall through to the legacy_seed matcher (which can return
+ * unrelated cached content; D05/D06 confirmed bug).
+ *
+ * Copy is sourced verbatim from `docs/voice/TEBIQ_STATUS_LANGUAGE_TEMPLATES.md`
+ * STATE: provider_timeout (canonical voice asset). The status='clarification_needed'
+ * choice keeps the answer rendering path simple — the "[降级回答]" marker
+ * lives in the title prefix per VOICE S-07 / TEBIQ_PREVIEW_STATE_COPY_MAP.md
+ * "fallback_banner_required: yes — 显示「⚠️ 降级回答 · 不能作为正式判断」".
+ *
+ * NEVER pass DeepSeek raw text or legacy match content into this builder.
+ * Anything routed here means we have no trustworthy source.
+ */
+export function buildProviderTimeoutFallback(input: {
+  domain: SupportedDomain
+  detectedIntent: DetectedIntent
+  questionText: string
+}): PublicAnswer {
+  const headline = '当前模型响应超时，不是你的输入问题。'
+  const subtext = '你可以稍后重试；如果已识别出相关事项，也可以先保存继续处理。'
+  return finalize({
+    status: 'clarification_needed',
+    domain: input.domain,
+    // VOICE S-07 marker — "[降级回答]" prefix so this row is visually
+    // distinguishable from a normal answered/clarification result. The
+    // marker is also surfaced via fallback_reason on the run side.
+    title: '[降级回答] ' + headline,
+    summary: headline + subtext,
+    conclusion: headline + subtext,
+    sections: [
+      { heading: '我理解你的问题是', body: input.detectedIntent.understood_question },
+      { heading: '当前状态', body: headline + '\n' + subtext },
+    ],
+    next_steps: ['稍后重试', '若已识别出事项可先保存为「待确认事项」'],
+    risk_warnings: [],
+    clarification_questions: [],
+    documents_needed: [],
+    consult_trigger: null,
+    disclaimer: ANSWER_CORE_DISCLAIMER,
+  })
+}
+
 // ----- decideStatus -----------------------------------------------------
 
 function decideStatus(input: ProjectInput): PublicAnswerStatus {
