@@ -32,14 +32,36 @@
 | DOMAIN Input Request | `docs/voice/TEBIQ_DOMAIN_INPUT_REQUEST.md` | TEBIQ-VOICE | draft / preview-only | DOMAIN | DOMAIN / GM | `02b8e59` | 2026-05-05 |
 | Voice README | `docs/voice/README.md` | GM | active | — | ENGINE / QA / DOMAIN | `02b8e59` | 2026-05-05 |
 
+> **VOICE canonical 决策（2026-05-05 Stabilization Sprint）**：
+> main `docs/voice/TEBIQ_*.md`（14 文件）为唯一 canonical。
+> PR #31 `_v0.1.md` 文件已 close（main 版本更完整，patches 已集成）。
+> ENGINE / QA 只消费 `TEBIQ_*.md`，不消费 PR #31 文件。
+> Gap 登记：`VOICE_SYSTEM_INDEX`（索引导航）+ `HUMAN_REVIEW_TRIGGER_LIBRARY`（L1/L2 10场景）为 PR #31 唯一增量，待产品负责人决定是否提取。
+
 ---
 
 ## DOMAIN 资产
 
+> 消费规则：所有 DOMAIN 文件保持 draft / needs human review。不得视为 production-ready。
+
 | 资产名称 | 路径 | Owner | Status | Review Required | 消费方 | Source Commit | Last Updated |
 |---------|------|-------|--------|----------------|--------|--------------|-------------|
+| 100Q Risk Map | `docs/domain/TEBIQ_100Q_RISK_MAP.md` | DOMAIN-CC | draft / needs review | Project Lead | VOICE / ENGINE / QA | `ec8ad27` | 2026-05-05 |
+| Domain Agent Contract | `docs/domain/TEBIQ_DOMAIN_AGENT_CONTRACT.md` | DOMAIN-CC | draft | GM | GM / DOMAIN | `ec8ad27` | 2026-05-05 |
+| Domain Review Guide | `docs/domain/TEBIQ_DOMAIN_REVIEW_GUIDE.md` | DOMAIN-CC | draft | GM | DOMAIN | `ec8ad27` | 2026-05-05 |
+| Fact Card Candidates | `docs/domain/TEBIQ_FACT_CARD_CANDIDATES.md` | DOMAIN-CC | draft / needs review | Project Lead | DOMAIN / QA | `ec8ad27` | 2026-05-05 |
+| Golden Cases Seed | `docs/domain/TEBIQ_GOLDEN_CASES_SEED.md` | DOMAIN-CC | draft | DOMAIN | QA / ENGINE | `ec8ad27` | 2026-05-05 |
+| Handoff Triggers | `docs/domain/TEBIQ_HANDOFF_TRIGGERS.md` | DOMAIN-CC | draft / needs review | Project Lead | ENGINE / QA | `ec8ad27` | 2026-05-05 |
+| Output Rubric | `docs/domain/TEBIQ_OUTPUT_RUBRIC.md` | DOMAIN-CC | draft / needs review | Project Lead | QA / DOMAIN | `ec8ad27` | 2026-05-05 |
 | 100Q Risk Matrix | `docs/domain/DOMAIN_100Q_RISK_MATRIX.md` | DOMAIN-CC | draft / needs human review | Project Lead | VOICE / ENGINE / QA | `cd5cd8e` | 2026-05-05 |
 | Risk Patterns | `docs/domain/DOMAIN_RISK_PATTERNS.md` | DOMAIN-CC | draft / needs human review | Project Lead | VOICE / ENGINE / QA | `cd5cd8e` | 2026-05-05 |
+| 100Q Coverage Gap | `docs/domain/DOMAIN_100Q_COVERAGE_GAP.md` | DOMAIN-CC | draft | GM | GM / QA | `f41618c` | 2026-05-05 |
+| Annotation Readiness | `docs/domain/DOMAIN_ANNOTATION_READINESS.md` | DOMAIN-CC | draft | GM | GM / QA | `f41618c` | 2026-05-05 |
+| Console Labels | `docs/domain/DOMAIN_CONSOLE_LABELS.md` | DOMAIN-CC | draft | GM | ENGINE / QA | `f41618c` | 2026-05-05 |
+| QA Gate Candidates | `docs/domain/DOMAIN_QA_GATE_CANDIDATES.md` | DOMAIN-CC | draft / needs QA | QA + Project Lead | QA | `f41618c` | 2026-05-05 |
+| Routing Regression Review | `docs/domain/DOMAIN_ROUTING_REGRESSION_REVIEW.md` | DOMAIN-CC | draft — 7/7 pass | GM | GM / QA / ENGINE | `f41618c` | 2026-05-05 |
+| VOICE Input Pack | `docs/domain/DOMAIN_VOICE_INPUT_PACK.md` | DOMAIN-CC | draft | VOICE | VOICE | `f41618c` | 2026-05-05 |
+| VOICE P0 Input Response | `docs/domain/DOMAIN_VOICE_P0_INPUT_RESPONSE.md` | DOMAIN-CC | draft | VOICE | VOICE | `f41618c` | 2026-05-05 |
 
 ---
 
@@ -54,6 +76,7 @@
 | Round 1A Recovery Plan | `docs/eval/EVAL_ROUND1A_RECOVERY_PLAN.md` | GM | active | — | GM / ENGINE | `f8051b0` | 2026-05-05 |
 | OOS Pack | `docs/eval/EVAL_ROUND1A_OUT_OF_SCOPE_PACK.md` | GM | active | — | DOMAIN / ENGINE | `f8051b0` | 2026-05-05 |
 | DOMAIN Work Packet | `docs/eval/EVAL_ROUND1A_DOMAIN_WORK_PACKET.md` | GM | pending (awaiting FULL_COMPARABLE) | GM | DOMAIN | `5ad36ea` | 2026-05-05 |
+| Round 1 Annotation Rubric | `docs/eval/EVAL_ROUND1_ANNOTATION_RUBRIC.md` | GM | active | GM / DOMAIN / QA | — | 2026-05-05 |
 
 ---
 
@@ -61,11 +84,14 @@
 
 | 资产名称 | 路径 | Owner | Status | 消费方 | Source Commit | Last Updated |
 |---------|------|-------|--------|--------|--------------|-------------|
-| Workstream A Console Deblock | `docs/ops/WORKSTREAM_A_CONSOLE_DEBLOCK_PACK.md` | GM | active (Issue #26) | ENGINE | `2d9ecaa` | 2026-05-05 |
-| Workstream B Preview Feedback | `docs/ops/WORKSTREAM_B_PREVIEW_STAGE_FEEDBACK_PACK.md` | GM | active (Issue #27) | ENGINE | `2d9ecaa` | 2026-05-05 |
-| Track D User Preview Pack | `docs/ops/TRACK_D_USER_PREVIEW_PACK.md` | GM | active (Issue #21) | ENGINE | `7d378fd` | 2026-05-05 |
+| Workstream A Console Deblock | `docs/ops/WORKSTREAM_A_CONSOLE_DEBLOCK_PACK.md` | GM | ✅ done (PR #28) | ENGINE | `2d9ecaa` | 2026-05-05 |
+| Workstream B Preview Feedback | `docs/ops/WORKSTREAM_B_PREVIEW_STAGE_FEEDBACK_PACK.md` | GM | ✅ done (PR #30) | ENGINE | `2d9ecaa` | 2026-05-05 |
+| Workstream C SSE Phase 2 | `docs/ops/WORKSTREAM_C_PREVIEW_PHASE2_SSE_PACK.md` | GM | active (Issue #32 / PR #33) | ENGINE | `ab019ca` | 2026-05-05 |
+| Track D User Preview Pack | `docs/ops/TRACK_D_USER_PREVIEW_PACK.md` | GM | ✅ done (PR #24) | ENGINE | `7d378fd` | 2026-05-05 |
 | Project Milestones | `docs/ops/TEBIQ_PROJECT_MILESTONES.md` | GM | active | all | `60a591a` | 2026-05-05 |
 | Agent Workflow | `docs/ops/TEBIQ_AGENT_WORKFLOW.md` | GM | active | all | `6166cf8` | 2026-05-05 |
+| Context Bootstrap | `docs/ops/TEBIQ_CONTEXT_BOOTSTRAP.md` | GM | active | all | — | 2026-05-05 |
+| GM Operating Principles | `docs/ops/TEBIQ_GM_OPERATING_PRINCIPLES.md` | GM | active | GM | — | 2026-05-05 |
 
 ---
 
