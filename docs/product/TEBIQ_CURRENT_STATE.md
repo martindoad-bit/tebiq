@@ -9,8 +9,8 @@
 | `last_verified` | 2026-05-05 |
 | `verified_by` | GM |
 | `source_of_truth` | GitHub remote `origin/main` + `gh pr view` + 用户最新事实 |
-| `main_head` | `3718588` |
-| `main_head_title` | Merge PR #45 — CODEXUI Phase 1 UI specs (8 docs/ui/ files + Registry) |
+| `main_head` | `4de9eda` |
+| `main_head_title` | Merge PR #44 — 1.0 Alpha streaming consultation pipeline (Issue #39, migration 0023 pre-applied) |
 
 ---
 
@@ -107,19 +107,34 @@ DeepSeek:
 
 | Issue | 类型 | 说明 |
 |-------|------|------|
-| [#39](https://github.com/martindoad-bit/tebiq/issues/39) | **ENGINE 1.0 Alpha P0** | Streaming Consultation Pipeline — **PR #44 OPEN，等 Vercel + GM merge** |
-| [#40](https://github.com/martindoad-bit/tebiq/issues/40) | ENGINE 1.0 Alpha | Photo Lite — **gated on #39 merge** |
-| [#41](https://github.com/martindoad-bit/tebiq/issues/41) | ENGINE 1.0 Alpha | Learning Console — **gated on #39 merge** |
-| [#43](https://github.com/martindoad-bit/tebiq/issues/43) | QA 1.0 Alpha | §3.1 PASS 7/7（landed `b8088c3`）；§3.2-3.9 等 #39 merge 解锁 |
+| [#40](https://github.com/martindoad-bit/tebiq/issues/40) | ENGINE 1.0 Alpha | Photo Lite — **#39 已 merge，可启动** |
+| [#41](https://github.com/martindoad-bit/tebiq/issues/41) | ENGINE 1.0 Alpha | Learning Console — **#39 已 merge，可启动** |
+| [#43](https://github.com/martindoad-bit/tebiq/issues/43) | QA 1.0 Alpha | §3.1 PASS 7/7；§3.2-3.9 **可启动**（GM 已 live smoke 10/10 PASS）|
+| [#46](https://github.com/martindoad-bit/tebiq/issues/46) | DEBT P1 | Production DB Migration Runbook / Automation Strategy |
 | [#13](https://github.com/martindoad-bit/tebiq/issues/13) | QA audit pending | PR #12 Context OS audit，待激活 |
 
-已 close：[#34](https://github.com/martindoad-bit/tebiq/issues/34) · [#35](https://github.com/martindoad-bit/tebiq/issues/35) · [#37](https://github.com/martindoad-bit/tebiq/issues/37)（PR #38 `1ba2fea`）· [#42](https://github.com/martindoad-bit/tebiq/issues/42)（DOMAIN fact anchors `e81a095`）· [#15](https://github.com/martindoad-bit/tebiq/issues/15)（0.7+ deferred）
+已 close：[#34](https://github.com/martindoad-bit/tebiq/issues/34) · [#35](https://github.com/martindoad-bit/tebiq/issues/35) · [#37](https://github.com/martindoad-bit/tebiq/issues/37) · [#39](https://github.com/martindoad-bit/tebiq/issues/39)（PR #44 merged `4de9eda`）· [#42](https://github.com/martindoad-bit/tebiq/issues/42) · [#15](https://github.com/martindoad-bit/tebiq/issues/15)
 
 ## 当前 Open PR
 
 | PR | 状态 | 说明 |
 |----|------|------|
-| [#44](https://github.com/martindoad-bit/tebiq/pull/44) | OPEN / Vercel PENDING | ENGINE Issue #39 streaming consultation pipeline；17 files / +7499 -0；migration 0023 additive only；33/33 tests pass |
+| 无 open PR | — | 上轮 6 PR：#29 ✅ #33 ✅ #36 ✅ #38 ✅ #44 ✅ #45 ✅ |
+
+## 1.0 Alpha 状态
+
+| 项 | 状态 |
+|----|------|
+| user-facing 入口 `/ai-consultation` | ✅ HTTP 200 |
+| streaming `/api/consultation/stream` | ✅ SSE token-by-token，first_token 实测 7.1s |
+| TEBIQ system prompt 体感 | ✅ 咨询语气，给下一步，不长篇 |
+| DB `ai_consultations` 表 | ✅ migration 0023 pre-applied 5/5 verified |
+| 用户已保存列表 `/me/consultations` | ✅ HTTP 200 |
+| 受控查看 `/c/[id]` | ✅ 404 for fake id（正确）|
+| feedback / save routes | ✅ 400 for invalid（正确） |
+| Photo Lite (#40) | 🟡 ready to start |
+| Learning Console (#41) | 🟡 ready to start |
+| QA §3.2-3.9 (#43) | 🟡 ready to start |
 
 ---
 

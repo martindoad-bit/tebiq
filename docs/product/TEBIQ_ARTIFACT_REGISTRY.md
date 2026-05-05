@@ -94,7 +94,7 @@
 | QA Stabilization Pack v0.2 | `docs/ops/QA_STABILIZATION_PACK_V02.md` | GM | active (Issue #35) | QA | — | 2026-05-05 |
 | M3-C DS Batch Readiness Pack | `docs/ops/WORKSTREAM_M3C_DS_BATCH_PACK.md` | GM | ✅ done (PR #36 merged `98474c9`)| ENGINE | — | 2026-05-05 |
 | **1.0 Alpha Charter** | `docs/product/TEBIQ_1_0_ALPHA_CHARTER.md` | Project Lead + GM | active / Alpha sprint | all windows | — | 2026-05-05 |
-| 1.0 Streaming Consultation Pack | `docs/ops/WORKSTREAM_1_0_STREAMING_CONSULTATION_PACK.md` | GM | active (Issue #39) | ENGINE | — | 2026-05-05 |
+| 1.0 Streaming Consultation Pack | `docs/ops/WORKSTREAM_1_0_STREAMING_CONSULTATION_PACK.md` | GM | ✅ done (PR #44 merged `4de9eda`) | ENGINE | — | 2026-05-05 |
 | 1.0 Photo Lite Pack | `docs/ops/WORKSTREAM_1_0_PHOTO_LITE_PACK.md` | GM | active (Issue #40) | ENGINE | — | 2026-05-05 |
 | 1.0 Learning Console Pack | `docs/ops/WORKSTREAM_1_0_LEARNING_CONSOLE_PACK.md` | GM | active (Issue #41) | ENGINE | — | 2026-05-05 |
 | 1.0 Fact Anchors Pack | `docs/ops/WORKSTREAM_1_0_FACT_ANCHORS_PACK.md` | GM | active (Issue #42) | DOMAIN | — | 2026-05-05 |
