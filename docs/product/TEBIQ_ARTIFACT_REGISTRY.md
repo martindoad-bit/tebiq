@@ -99,6 +99,33 @@
 | 1.0 Learning Console Pack | `docs/ops/WORKSTREAM_1_0_LEARNING_CONSOLE_PACK.md` | GM | active (Issue #41) | ENGINE | — | 2026-05-05 |
 | 1.0 Fact Anchors Pack | `docs/ops/WORKSTREAM_1_0_FACT_ANCHORS_PACK.md` | GM | active (Issue #42) | DOMAIN | — | 2026-05-05 |
 | 1.0 QA Alpha Smoke Pack | `docs/ops/QA_1_0_ALPHA_SMOKE_PACK.md` | GM | active (Issue #43) | QA | — | 2026-05-05 |
+
+---
+
+## Roles 资产（docs/roles/）
+
+> 各窗口正式角色定义。所有文件状态：draft / internal coordination / not production。
+
+| 资产名称 | 路径 | Owner | Status | 消费方 | Last Updated |
+|---------|------|-------|--------|--------|-------------|
+| Project Lead Role | `docs/roles/TEBIQ_PROJECT_LEAD_ROLE.md` | GM | draft | all windows | 2026-05-05 |
+| GM Role | `docs/roles/TEBIQ_GM_ROLE.md` | GM | draft | all windows | 2026-05-05 |
+| ENGINE Role | `docs/roles/TEBIQ_ENGINE_ROLE.md` | GM | draft | ENGINE / GM | 2026-05-05 |
+| QA Role | `docs/roles/TEBIQ_QA_ROLE.md` | GM | draft | QA / GM | 2026-05-05 |
+| DOMAIN Role | `docs/roles/TEBIQ_DOMAIN_ROLE.md` | GM | draft | DOMAIN / GM | 2026-05-05 |
+| VOICE Role | `docs/roles/TEBIQ_VOICE_ROLE.md` | GM | draft | VOICE / GM | 2026-05-05 |
+| CODEXUI Role | `docs/roles/TEBIQ_CODEXUI_ROLE.md` | GM | draft | CODEXUI / GM | 2026-05-05 |
+
+---
+
+## UI 资产（docs/ui/）
+
+> CODEXUI 窗口的 UI 设计资产。区别于 `docs/voice/`（copy）和 `docs/product/`（charter）。
+
+| 资产名称 | 路径 | Owner | Status | 消费方 | Last Updated |
+|---------|------|-------|--------|--------|-------------|
+| UI Directory README | `docs/ui/README.md` | CODEXUI + GM | active | CODEXUI / ENGINE / QA | 2026-05-05 |
+| 1.0 UI Role | `docs/ui/TEBIQ_1_0_UI_ROLE.md` | CODEXUI + GM | draft / Alpha-only | CODEXUI / ENGINE / QA | 2026-05-05 |
 | Track D User Preview Pack | `docs/ops/TRACK_D_USER_PREVIEW_PACK.md` | GM | ✅ done (PR #24) | ENGINE | `7d378fd` | 2026-05-05 |
 | Project Milestones | `docs/ops/TEBIQ_PROJECT_MILESTONES.md` | GM | active | all | `60a591a` | 2026-05-05 |
 | Agent Workflow | `docs/ops/TEBIQ_AGENT_WORKFLOW.md` | GM | active | all | `6166cf8` | 2026-05-05 |
