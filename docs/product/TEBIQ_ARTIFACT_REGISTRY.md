@@ -78,7 +78,9 @@
 | DOMAIN Work Packet | `docs/eval/EVAL_ROUND1A_DOMAIN_WORK_PACKET.md` | GM | pending (awaiting FULL_COMPARABLE) | GM | DOMAIN | `5ad36ea` | 2026-05-05 |
 | Round 1 Annotation Rubric | `docs/eval/EVAL_ROUND1_ANNOTATION_RUBRIC.md` | GM | active | GM / DOMAIN / QA | — | 2026-05-05 |
 | M3-A Routing Safety Baseline v0.1 | `docs/eval/M3A_ROUTING_SAFETY_BASELINE_v0.1.md` | GM | PASS（2026-05-05）| GM / DOMAIN / QA | — | 2026-05-05 |
-| M3-B TEBIQ Self-output Baseline v0.1 | `docs/eval/M3B_TEBIQ_SELFOUTPUT_BASELINE_v0.1.md` | GM | PASS 临时标准（2026-05-05）| GM / DOMAIN / QA | — | 2026-05-05 |
+| M3-B TEBIQ Self-output Baseline v0.1 | `docs/eval/M3B_TEBIQ_SELFOUTPUT_BASELINE_v0.1.md` | GM | superseded by 1.0 Alpha pivot (DL-011) | — | — | 2026-05-05 |
+| DOMAIN M3-A/B Confirmation v0.1 | `docs/domain/DOMAIN_M3A_M3B_CONFIRMATION_v0.1.md` | DOMAIN | draft / 2 pass + 5 partial | GM | `28403df` | 2026-05-05 |
+| QA Stabilization Report v0.2 | `docs/qa/QA_STABILIZATION_REPORT_v0.2.md` | QA | done / found P0 #37 | GM | `daa7b18` | 2026-05-05 |
 
 ---
 
@@ -90,7 +92,13 @@
 | Workstream B Preview Feedback | `docs/ops/WORKSTREAM_B_PREVIEW_STAGE_FEEDBACK_PACK.md` | GM | ✅ done (PR #30) | ENGINE | `2d9ecaa` | 2026-05-05 |
 | Workstream C SSE Phase 2 | `docs/ops/WORKSTREAM_C_PREVIEW_PHASE2_SSE_PACK.md` | GM | ✅ done (Issue #32 / PR #33) | ENGINE | `ab019ca` | 2026-05-05 |
 | QA Stabilization Pack v0.2 | `docs/ops/QA_STABILIZATION_PACK_V02.md` | GM | active (Issue #35) | QA | — | 2026-05-05 |
-| M3-C DS Batch Readiness Pack | `docs/ops/WORKSTREAM_M3C_DS_BATCH_PACK.md` | GM | active (Issue #34) | ENGINE | — | 2026-05-05 |
+| M3-C DS Batch Readiness Pack | `docs/ops/WORKSTREAM_M3C_DS_BATCH_PACK.md` | GM | ✅ done (PR #36 merged `98474c9`)| ENGINE | — | 2026-05-05 |
+| **1.0 Alpha Charter** | `docs/product/TEBIQ_1_0_ALPHA_CHARTER.md` | Project Lead + GM | active / Alpha sprint | all windows | — | 2026-05-05 |
+| 1.0 Streaming Consultation Pack | `docs/ops/WORKSTREAM_1_0_STREAMING_CONSULTATION_PACK.md` | GM | active (Issue #39) | ENGINE | — | 2026-05-05 |
+| 1.0 Photo Lite Pack | `docs/ops/WORKSTREAM_1_0_PHOTO_LITE_PACK.md` | GM | active (Issue #40) | ENGINE | — | 2026-05-05 |
+| 1.0 Learning Console Pack | `docs/ops/WORKSTREAM_1_0_LEARNING_CONSOLE_PACK.md` | GM | active (Issue #41) | ENGINE | — | 2026-05-05 |
+| 1.0 Fact Anchors Pack | `docs/ops/WORKSTREAM_1_0_FACT_ANCHORS_PACK.md` | GM | active (Issue #42) | DOMAIN | — | 2026-05-05 |
+| 1.0 QA Alpha Smoke Pack | `docs/ops/QA_1_0_ALPHA_SMOKE_PACK.md` | GM | active (Issue #43) | QA | — | 2026-05-05 |
 | Track D User Preview Pack | `docs/ops/TRACK_D_USER_PREVIEW_PACK.md` | GM | ✅ done (PR #24) | ENGINE | `7d378fd` | 2026-05-05 |
 | Project Milestones | `docs/ops/TEBIQ_PROJECT_MILESTONES.md` | GM | active | all | `60a591a` | 2026-05-05 |
 | Agent Workflow | `docs/ops/TEBIQ_AGENT_WORKFLOW.md` | GM | active | all | `6166cf8` | 2026-05-05 |

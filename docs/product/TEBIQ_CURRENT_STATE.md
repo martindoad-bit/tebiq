@@ -9,16 +9,21 @@
 | `last_verified` | 2026-05-05 |
 | `verified_by` | GM |
 | `source_of_truth` | GitHub remote `origin/main` + `gh pr view` + 用户最新事实 |
-| `main_head` | `98474c9` |
-| `main_head_title` | Merge PR #36 — M3-C DS batch readiness (timeout 25→90s, scripts, skeleton) |
+| `main_head` | `1ba2fea` |
+| `main_head_title` | Merge PR #38 — P0 hotfix: LLM timeout no longer falls through to legacy matcher (Issue #37) |
 
 ---
 
 ## 当前阶段标签
 
-**Stabilization Sprint v0.3 完成 + QA P0 finding active — Issue #37 P0 hotfix 待 ENGINE 处理**
+**TEBIQ 1.0 Alpha Sprint — 方向切换（DL-011）+ #37 P0 fix verified**
 
-**关键变化（2026-05-05）**：QA Issue #35 发现 P0 — D05/D06 LLM timeout fallback 命中 `answer-core-v1` legacy matcher 返回不相关内容。M3-A 修订为「routing PASS / content BLOCK」。Production 仍 blocked（DL-009）。
+**关键变化（2026-05-05）**：
+1. PL 切换 1.0 定义为 **AI 在留咨询 Alpha**（不是完整 Risk Management）。Charter: `docs/product/TEBIQ_1_0_ALPHA_CHARTER.md`。
+2. PR #38 merged（`1ba2fea`），#37 P0 fix **verified on production**：D05 现返回 `engine_version=answer-core-v1.1-fallback` + `status=clarification_needed` + `[降级回答]` 标记。
+3. Streaming 升 P0：1.0 Alpha 用户端必须真流式正文，不允许只做 loading（PL 补充指令）。
+4. M3-A/B/C 不再阻塞 1.0；改为 Alpha 数据回流后再做。
+5. 5 Issues 下发：#39 (ENGINE streaming) / #40 (ENGINE photo) / #41 (ENGINE console) / #42 (DOMAIN anchors) / #43 (QA smoke)。
 
 规则：单线阻塞不等于全项目阻塞。6 track 独立推进。
 
@@ -96,17 +101,21 @@ DeepSeek:
 
 | PR | 状态 | 说明 |
 |----|------|------|
-| 无 open PR | — | 上轮 6 个 open PR：#29 ✅ #33 ✅ #36 ✅ #4 ✗ #11 ✗ #31 ✗ |
+| 无 open PR | — | 上轮 7 个 open PR：#29 ✅ #33 ✅ #36 ✅ #38 ✅ #4 ✗ #11 ✗ #31 ✗ |
 
 ## 当前 Active Issues
 
 | Issue | 类型 | 说明 |
 |-------|------|------|
-| [#37](https://github.com/martindoad-bit/tebiq/issues/37) | **P0 ENGINE Hotfix** | answer-core-v1 LLM timeout fallback 返回不相关 cached answer (D05/D06 reproducible) |
-| [#15](https://github.com/martindoad-bit/tebiq/issues/15) | Eval Round 1 | 30Q baseline，依赖 #37 + M3-C 完成 |
-| [#13](https://github.com/martindoad-bit/tebiq/issues/13) | QA audit pending | PR #12 Context OS audit，待产品负责人激活 |
+| [#39](https://github.com/martindoad-bit/tebiq/issues/39) | **ENGINE 1.0 Alpha P0** | Streaming Consultation Pipeline (text + DS V4 Pro stream + system prompt + risk + feedback + save) |
+| [#40](https://github.com/martindoad-bit/tebiq/issues/40) | ENGINE 1.0 Alpha | Photo Lite Consultation |
+| [#41](https://github.com/martindoad-bit/tebiq/issues/41) | ENGINE 1.0 Alpha | Learning Console (`/internal/learning-console`) |
+| [#42](https://github.com/martindoad-bit/tebiq/issues/42) | DOMAIN 1.0 Alpha | 15 Fact Anchors |
+| [#43](https://github.com/martindoad-bit/tebiq/issues/43) | QA 1.0 Alpha | Alpha Smoke (含 8 项 streaming 测试 + #37 回归) |
+| [#15](https://github.com/martindoad-bit/tebiq/issues/15) | 0.7+ deferred | Eval Round 1 — 不阻塞 1.0 Alpha |
+| [#13](https://github.com/martindoad-bit/tebiq/issues/13) | QA audit pending | PR #12 Context OS audit，待激活 |
 
-已 close：[#34](https://github.com/martindoad-bit/tebiq/issues/34) (PR #36 merged) · [#35](https://github.com/martindoad-bit/tebiq/issues/35) (QA report landed)
+已 close：[#34](https://github.com/martindoad-bit/tebiq/issues/34) · [#35](https://github.com/martindoad-bit/tebiq/issues/35) · [#37](https://github.com/martindoad-bit/tebiq/issues/37) (PR #38 merged `1ba2fea`)
 
 ---
 

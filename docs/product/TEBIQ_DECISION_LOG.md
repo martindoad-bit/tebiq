@@ -313,3 +313,51 @@ routing 字段正确不等于用户看到的内容正确。fallback 路径如果
 - M3-A 在 Issue #37 修复 + QA / DOMAIN 复核完成前不得标 PASS
 - M3-B 通过标准（v0.3 §5 临时口径）需在 #37 修复后重评估（fallback 不污染前提下）
 - 后续所有 M3-x baseline 必须包含 answer_text 内容验证步骤
+
+---
+
+## DL-011 · TEBIQ 1.0 重新定义为 AI 在留咨询 Alpha（不是完整 Risk Management）
+
+| 字段 | 值 |
+|------|-----|
+| date | 2026-05-05 |
+| owner | 产品负责人 / Project Lead |
+| status | active |
+
+### Background
+
+在 M3-C / DOMAIN formal annotation / 完整 Matter / Pro 后台 / Risk Triage 等多线推进过程中，1.0 完成路径变得不可控。同时真实用户咨询数据缺失，闭环无法启动。
+
+### Decision
+
+TEBIQ 1.0 重新定义为 **AI 在留咨询 Alpha**。
+
+产品公式：
+DeepSeek V4 Pro + TEBIQ 咨询风格 system prompt + 轻事实锚点 + 文字/拍照咨询入口 + 高风险轻提示 + 用户反馈 + 保存问题 + 咨询记录中台。
+
+目标：让真实用户开始问问题，开始收集真实咨询数据。
+
+**不作为 1.0 blocker**（保留 0.7 / 0.9 / 1.0+）：
+- 完整 M3-C DeepSeek Comparison
+- 完整 DOMAIN formal annotation
+- 完整 Risk Triage
+- 完整 Matter
+- 完整 Human Review Gate
+- Pro 后台 / Partner Workspace
+- OCR 完整文书系统
+
+**仍是 1.0 blocker**：Issue #37 P0（LLM timeout legacy fallback 修复）。
+
+Charter：`docs/product/TEBIQ_1_0_ALPHA_CHARTER.md`
+
+### Rationale
+
+1.0 必须可上线、可让用户体验、可让 CEO 看到真实问题。完整 Risk Management 路径在缺真实用户数据情况下无法验证设计假设。先发 Alpha 收集数据，再驱动 0.7+ 的完整功能设计。
+
+### Impact
+
+- M3-A/B/C 不再阻塞 1.0；改为 Alpha 数据 → 后续路线
+- DOMAIN formal annotation / Matter v0 / Pro 后台 全部推迟到 0.7+
+- 1.0 Sprint Work Packets 落地：用户端文字+拍照咨询 / Learning Console / Fact Anchors / QA Smoke
+- production 状态：Alpha / limited release / **not final professional judgment**（不解锁 production copy 完全）
+- VOICE / DOMAIN canonical 仍 draft，但允许用于 Alpha（user-visible copy 须含 Alpha 提示）
