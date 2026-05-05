@@ -9,21 +9,33 @@
 | `last_verified` | 2026-05-05 |
 | `verified_by` | GM |
 | `source_of_truth` | GitHub remote `origin/main` + `gh pr view` + 用户最新事实 |
-| `main_head` | `b6ffbe9` |
-| `main_head_title` | Merge PR #48 — 1.0 Alpha Learning Console (Issue #41) |
+| `main_head` | `29b369e` |
+| `main_head_title` | docs(qa): QA 1.0 Alpha Smoke Report — §3.4/§3.9 complete, PASS all 9 sections |
 
 ---
 
 ## 当前阶段标签
 
-**TEBIQ 1.0 Alpha Sprint — 方向切换（DL-011）+ #37 P0 fix verified**
+**TEBIQ 1.0 Alpha Sprint — 全交付完成（2026-05-05）**
 
-**关键变化（2026-05-05）**：
-1. PL 切换 1.0 定义为 **AI 在留咨询 Alpha**（不是完整 Risk Management）。Charter: `docs/product/TEBIQ_1_0_ALPHA_CHARTER.md`。
-2. PR #38 merged（`1ba2fea`），#37 P0 fix **verified on production**：D05 现返回 `engine_version=answer-core-v1.1-fallback` + `status=clarification_needed` + `[降级回答]` 标记。
-3. Streaming 升 P0：1.0 Alpha 用户端必须真流式正文，不允许只做 loading（PL 补充指令）。
-4. M3-A/B/C 不再阻塞 1.0；改为 Alpha 数据回流后再做。
-5. 5 Issues 下发：#39 (ENGINE streaming) / #40 (ENGINE photo) / #41 (ENGINE console) / #42 (DOMAIN anchors) / #43 (QA smoke)。
+**Charter §10 13 项标准全部 ✅**。Production `b6ffbe9` 包含：
+- 文字咨询 + 流式回答（first_token 4-7s typical）
+- 图片咨询 Lite（Bedrock vision，hash-only ephemeral storage，0 PII bytes）
+- 13 风险关键词轻提示 + 5 反馈按钮 + 保存问题
+- DOMAIN 15 fact anchors + Voice canonical fallback
+- Learning Console 中台（7 Tab + KPI，零 DS 依赖）
+- QA 9/9 PASS（0 P0）
+
+**关键决策与里程碑**：
+1. DL-011 — 1.0 重定义为 AI 在留咨询 Alpha（Charter `docs/product/TEBIQ_1_0_ALPHA_CHARTER.md`）
+2. DL-009 — production 仍 blocked beyond Alpha（不解锁 production copy）
+3. DL-008 — VOICE canonical = main `TEBIQ_*.md`
+4. DL-007 — M3-A/B/C 拆分（已 superseded by 1.0 Alpha pivot）
+
+**未结项（不阻塞 Alpha 上线，进 0.7+ 路线）**：
+- Issue #49 P1: DS 90s timeout 率 60%（observability work）
+- Issue #46 DEBT: Production DB migration runbook
+- Issue #13: PR #12 Context OS QA audit pending
 
 规则：单线阻塞不等于全项目阻塞。6 track 独立推进。
 
@@ -107,12 +119,11 @@ DeepSeek:
 
 | Issue | 类型 | 说明 |
 |-------|------|------|
-| [#43](https://github.com/martindoad-bit/tebiq/issues/43) | QA 1.0 Alpha | §3.1-3.3 / 3.5-3.8 PASS；§3.4 (image) + §3.9 (learning console) ready to run |
 | [#49](https://github.com/martindoad-bit/tebiq/issues/49) | P1 | DeepSeek 90s timeout rate ~60% (Alpha UX issue, not P0) |
 | [#46](https://github.com/martindoad-bit/tebiq/issues/46) | DEBT P1 | Production DB Migration Runbook / Automation Strategy |
 | [#13](https://github.com/martindoad-bit/tebiq/issues/13) | QA audit pending | PR #12 Context OS audit，待激活 |
 
-已 close：#34 · #35 · #37 · #39（PR #44 `4de9eda`）· [#40](https://github.com/martindoad-bit/tebiq/issues/40)（PR #47 `a6b22a3`）· [#41](https://github.com/martindoad-bit/tebiq/issues/41)（PR #48 `b6ffbe9`）· #42 · #15
+已 close：#34 · #35 · #37 · #39（PR #44）· #40（PR #47）· #41（PR #48）· #42 · [#43](https://github.com/martindoad-bit/tebiq/issues/43)（QA 9/9 PASS `29b369e`）· #15
 
 ## 当前 Open PR
 
@@ -133,8 +144,7 @@ DeepSeek:
 | feedback / save routes | ✅ 400 for invalid（正确） |
 | Photo Lite (#40) | ✅ merged PR #47 `a6b22a3`（vision via Bedrock; hash-only ephemeral storage; 0 PII bytes persisted; 10 contract tests + 154 regression）|
 | Learning Console (#41) | ✅ merged PR #48 `b6ffbe9`（7 Tab + KPI；EVAL_LAB_ENABLED=1 gate；零 DS 依赖；17 contract tests + 154 regression）|
-| QA §3.1-3.3, 3.5-3.8 | ✅ PASS（report `31f5e50`）|
-| QA §3.4 (image) + §3.9 (console) | 🟡 ready to run（PR #47/#48 已 deploy）|
+| QA Issue #43 | ✅ **9/9 PASS**（report `29b369e`）— §3.1-3.9 全完成，0 P0 |
 
 ---
 
