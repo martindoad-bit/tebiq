@@ -9,8 +9,8 @@
 | `last_verified` | 2026-05-05 |
 | `verified_by` | GM |
 | `source_of_truth` | GitHub remote `origin/main` + `gh pr view` + 用户最新事实 |
-| `main_head` | `7fb65d7` |
-| `main_head_title` | docs(decision): DL-012 — blanket additive migration auth + PR #56 merged + VOICE consultation_alpha_v2 |
+| `main_head` | `f8f85e6` |
+| `main_head_title` | Merge PR #58 — 0.5 WS-D ENGINE light fact anchor integration (Issue #54) |
 
 ---
 
@@ -27,9 +27,9 @@
 | A | Runtime Stabilization | [#51](https://github.com/martindoad-bit/tebiq/issues/51) | ✅ done — PR #56 merged `64eedb8`, migration 0024 applied 5/5 verified |
 | B | UI Polish (User-facing + Internal) | [#52](https://github.com/martindoad-bit/tebiq/issues/52) | CODEXUI 在跑 |
 | C | Learning Console 0.5 | 部分在 #52；schema OK | gated by #52 |
-| D | Light Fact Anchors | [#54](https://github.com/martindoad-bit/tebiq/issues/54) ENGINE | ENGINE 待执行 |
-| D | Prompt Polish | [#55](https://github.com/martindoad-bit/tebiq/issues/55) VOICE | ✅ done — consultation_alpha_v2 merged `bcd28ca` |
-| E | QA 0.5 Smoke | [#53](https://github.com/martindoad-bit/tebiq/issues/53) | gated on #52 + #54 |
+| D | Light Fact Anchors | [#54](https://github.com/martindoad-bit/tebiq/issues/54) ENGINE | ✅ done — PR #58 merged `f8f85e6`，15 anchors + matcher + injection live |
+| D | Prompt Polish | [#55](https://github.com/martindoad-bit/tebiq/issues/55) VOICE | ✅ done — consultation_alpha_v2 (commit `bcd28ca` / VOICE branch `6a7a626`)|
+| E | QA 0.5 Smoke | [#53](https://github.com/martindoad-bit/tebiq/issues/53) | gated on #52 (CODEXUI Polish) only |
 | F | Observation Readiness | template | ready |
 
 **最终验收包**：TEBIQ 0.5 Safe Consultation Acceptance Report（GM 完成所有 WS 后唯一一次回报 PL）
@@ -141,7 +141,7 @@ DeepSeek:
 |-------|--------|------|
 | [#52](https://github.com/martindoad-bit/tebiq/issues/52) | **WS-B + WS-C** | CODEXUI UI Polish — 在跑 |
 | [#53](https://github.com/martindoad-bit/tebiq/issues/53) | **WS-E** | QA 0.5 Smoke — gated on #52 + #54 |
-| [#54](https://github.com/martindoad-bit/tebiq/issues/54) | **WS-D** | ENGINE Light Fact Anchor — 待 ENGINE 执行 |
+| ~~#54~~ | WS-D | ✅ closed — PR #58 merged `f8f85e6` |
 | [#49](https://github.com/martindoad-bit/tebiq/issues/49) | observability | DS 90s timeout 率 ~60%（不阻塞 0.5）|
 | [#46](https://github.com/martindoad-bit/tebiq/issues/46) | DEBT P1 | Production DB Migration Runbook (DL-012 部分缓解) |
 | [#13](https://github.com/martindoad-bit/tebiq/issues/13) | QA audit pending | PR #12 Context OS audit |
