@@ -361,3 +361,45 @@ Charter：`docs/product/TEBIQ_1_0_ALPHA_CHARTER.md`
 - 1.0 Sprint Work Packets 落地：用户端文字+拍照咨询 / Learning Console / Fact Anchors / QA Smoke
 - production 状态：Alpha / limited release / **not final professional judgment**（不解锁 production copy 完全）
 - VOICE / DOMAIN canonical 仍 draft，但允许用于 Alpha（user-visible copy 须含 Alpha 提示）
+
+---
+
+## DL-012 · 加性 DB migration 默认授权 GM 在 PL 机器执行
+
+| 字段 | 值 |
+|------|-----|
+| date | 2026-05-06 |
+| owner | 产品负责人 / Project Lead |
+| status | active |
+
+### Background
+
+Issue #46（Production DB Migration Runbook debt）未消。当前每次 schema PR 都需要 PL 一次性授权 GM 用 `.env.local` 跑 `db:migrate`（PR #44 / PR #56 两次先例）。0.5 Safe Consultation Sprint 推进过程中可能多次 schema 变更，逐次询问 PL 与 PL "最大放权 + 不做中间汇报" 矛盾。
+
+### Decision
+
+**默认授权 GM 在 PL 机器一次性运行所有未来 additive migration**（仅 additive — 包括 ALTER TYPE ADD VALUE / CREATE TABLE / CREATE INDEX / 加 nullable column / 加 enum value 等不动现有数据的操作）。
+
+**仍需 PL 显式授权**：
+- destructive migration（DROP / ALTER COLUMN type 改 / 删 enum value / 改 NOT NULL 约束 / TRUNCATE / DELETE / UPDATE-SET 等会动现有数据的操作）
+- 任何 PL 0.5 Sprint §4 escalation list 中的事项
+
+### Rationale
+
+- additive migration 风险极低（最坏 → revert PR + DROP 新建 object）
+- 每次询问 PL 增加 GM 操作摩擦 + PL 中断成本
+- PL 已通过 Issue #46 debt 流程明示信任 GM 在其机器跑 migration
+- Issue #46 自动化方案落地前，blanket authorization 是最优 stopgap
+
+### Impact
+
+- GM 自驱：发现 additive migration → 走 GM 自己审 + 在 PL 机器执行 + 验证 + merge 流程
+- ENGINE 仍按 Issue #46 §流程发 PR（不擅自 db:migrate / 在 CI 跑）
+- 验证流程（5 项 SQL）保持不变
+- 凭据使用：仍只在执行的临时 worktree 内 cp .env.local + 立即 cleanup
+- Audit：每次 GM 执行都在 commit message / CURRENT_STATE 留痕（migration sha + verification PASS 记录）
+
+### Out of Scope
+
+- destructive migration 仍要 PL 显式审批
+- DEBT Issue #46（最终自动化方案）继续保持 open，blanket auth 不替代自动化设计
