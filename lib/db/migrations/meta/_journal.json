@@ -162,6 +162,13 @@
       "when": 1777835234319,
       "tag": "0022_ancient_vermin",
       "breakpoints": true
+    },
+    {
+      "idx": 23,
+      "version": "7",
+      "when": 1777983058176,
+      "tag": "0023_useful_firelord",
+      "breakpoints": true
     }
   ]
 }
