@@ -9,8 +9,8 @@
 | `last_verified` | 2026-05-05 |
 | `verified_by` | GM |
 | `source_of_truth` | GitHub remote `origin/main` + `gh pr view` + 用户最新事实 |
-| `main_head` | `f8f85e6` |
-| `main_head_title` | Merge PR #58 — 0.5 WS-D ENGINE light fact anchor integration (Issue #54) |
+| `main_head` | `13ba029` |
+| `main_head_title` | Merge PR #59 — 0.5 WS-B/C CODEXUI Polish (5 pages + consultation-alpha component) |
 
 ---
 
@@ -25,11 +25,11 @@
 | WS | 名称 | Issue | Status |
 |----|------|-------|--------|
 | A | Runtime Stabilization | [#51](https://github.com/martindoad-bit/tebiq/issues/51) | ✅ done — PR #56 merged `64eedb8`, migration 0024 applied 5/5 verified |
-| B | UI Polish (User-facing + Internal) | [#52](https://github.com/martindoad-bit/tebiq/issues/52) | CODEXUI 在跑 |
-| C | Learning Console 0.5 | 部分在 #52；schema OK | gated by #52 |
+| B | UI Polish (User-facing + Internal) | [#52](https://github.com/martindoad-bit/tebiq/issues/52) | ✅ done — PR #59 merged `13ba029` |
+| C | Learning Console 0.5 | 含在 #52 | ✅ done |
 | D | Light Fact Anchors | [#54](https://github.com/martindoad-bit/tebiq/issues/54) ENGINE | ✅ done — PR #58 merged `f8f85e6`，15 anchors + matcher + injection live |
 | D | Prompt Polish | [#55](https://github.com/martindoad-bit/tebiq/issues/55) VOICE | ✅ done — consultation_alpha_v2 (commit `bcd28ca` / VOICE branch `6a7a626`)|
-| E | QA 0.5 Smoke | [#53](https://github.com/martindoad-bit/tebiq/issues/53) | gated on #52 (CODEXUI Polish) only |
+| E | QA 0.5 Smoke | [#53](https://github.com/martindoad-bit/tebiq/issues/53) | **🟢 ready to dispatch**（all gates released）|
 | F | Observation Readiness | template | ready |
 
 **最终验收包**：TEBIQ 0.5 Safe Consultation Acceptance Report（GM 完成所有 WS 后唯一一次回报 PL）

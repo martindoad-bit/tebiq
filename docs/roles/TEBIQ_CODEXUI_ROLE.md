@@ -53,6 +53,40 @@ version: v0.1
 - **不**写最终 user-visible copy（占位用 `{{voice:state_code}}` 引用 VOICE canonical）
 - 通过 GM 派发 Work Packet 给 ENGINE 实现
 
+## 完成回报必须含字段（强约束 — PL feedback 2026-05-06）
+
+CODEXUI 完成任何 Work Packet 后回报 GM 时，必须使用结构化 markdown 模板（防同步问题）：
+
+```
+## CODEXUI Work Packet Completion — <Issue / Pack name>
+
+| 字段 | 值 |
+|------|----|
+| **PR** | #XX (URL) |
+| **Branch** | <branch name> |
+| **Base commit** | <main HEAD when branched, sha7> |
+| **Latest commit** | <sha7> |
+| **Vercel preview** | SUCCESS / FAILED / PENDING |
+| **mergeable** | MERGEABLE / CONFLICTING |
+| **rebase 是否需要** | yes (列冲突文件) / no |
+| **本地校验** | tsc / lint / build clean |
+| **touched files** | <list with +N/-M> |
+| **page URLs changed** | <list> |
+| **screenshots** | mobile + desktop paths（绝对路径或 PR 内附图）|
+| **VI / brand canonical** | 引用了哪些（如 `tebiq-v07-tokens.json`）|
+| **derived UI tokens proposed** | 列出 `needs review` 项 |
+| **state UI 处理状态** | completed/partial/streaming/timeout/failed/fallback 各做了什么 |
+| **mobile breakpoint check** | 通过的视窗（如 390x900）|
+| **desktop breakpoint check** | 通过的视窗 |
+| **out of scope confirmed untouched** | 列禁区文件确认未触 |
+| **known gaps** | 局限 / 需 GM 后续协调 |
+| **production status claim** | alpha / preview-only / not final professional judgment |
+
+如缺任一字段，GM 视为同步不完整，可能要求重交。
+```
+
+**理由**：CODEXUI 历史交付出现过 Artifact Landing Gap（PR 在不同 Codex workspace 而非主 repo）+ 文件命名分裂（`_v0.1.md` vs `TEBIQ_*`）+ rebase 冲突（如 PR #59 与 PR #56），结构化回报防止 GM 一对一追问。
+
 ## Downstream Consumers
 
 - ENGINE（UI 实现）
