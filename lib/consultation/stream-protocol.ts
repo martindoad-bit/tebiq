@@ -113,13 +113,25 @@ export function isTerminalConsultationEvent(event: ConsultationEvent): boolean {
 // 90s     hard cutoff — emit 'timeout' frame with voice canonical fallback
 //         (PR #38 buildProviderTimeoutFallback content) and close stream.
 //
-// Rationale for 90s vs 120s: Charter says 90-120s; we pick 90 to leave
-// some headroom under Vercel function maxDuration (we set 120 on the
-// route to stay below Pro plan ceiling). Server's 90s timer fires before
-// the function hits maxDuration, giving us a clean shutdown.
+// Rationale: 0.5 Polish Sprint v0.2 hotfix — original 90s wall-clock
+// hard cap aborted productive long answers (PL bug 2026-05-06).
+// New design: idle-token detection.
+//
+// - first_token_hard_ms (90s): if NO first_token by 90s, real timeout
+//   (DS likely stuck or dead — preserve original behavior)
+// - idle_after_chunk_ms (60s): once chunks are flowing, only timeout
+//   if no new chunk for 60s (catches genuine stalls, not productive
+//   long answers)
+// - wall_clock_cap_ms (270s): ultimate safety. Stays below Vercel
+//   function maxDuration=300, leaves clean-shutdown headroom.
+//
+// Stream route resets the hard timer on every chunk to enforce idle
+// detection. See app/api/consultation/stream/route.ts.
 export const CONSULTATION_TIMING = {
   still_generating_at_ms: 25_000,
-  hard_timeout_ms: 90_000,
+  hard_timeout_ms: 90_000, // pre-first-token cap (legacy name kept; semantics now "first-token deadline")
+  idle_after_chunk_ms: 60_000, // post-first-token idle deadline
+  wall_clock_cap_ms: 270_000, // ultimate cap below Vercel maxDuration=300
 } as const
 
 /**
