@@ -1,12 +1,18 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import { getAiConsultationById } from '@/lib/db/queries/aiConsultations'
-
-// /c/[id] — read-only view of a past AI consultation (Issue #39 / Charter §4).
-//
-// This page is for revisiting / sharing a completed consultation. Live
-// streaming happens on /ai-consultation directly; once the row exists
-// in DB the user can navigate here for a stable URL.
+import { ArrowLeft, Camera, MessageSquarePlus } from 'lucide-react'
+import {
+  BrandHeader,
+  ConsultationShell,
+  FeedbackLabel,
+  MetaPill,
+  RiskHintBanner,
+  SectionLabel,
+  StatusBadge,
+  Surface,
+  type AlphaDisplayState,
+} from '@/components/ui/consultation-alpha'
+import { getAiConsultationById, type AiConsultation } from '@/lib/db/queries/aiConsultations'
 
 export const dynamic = 'force-dynamic'
 
@@ -14,9 +20,6 @@ export const metadata = {
   title: 'TEBIQ — 咨询记录 (Alpha)',
   robots: { index: false, follow: false },
 }
-
-const ALPHA_BANNER =
-  'TEBIQ 1.0 Alpha — 以下回答用于整理问题和下一步，不是最终专业判断。'
 
 interface PageProps { params: { id: string } }
 
@@ -27,118 +30,102 @@ export default async function ConsultationDetailPage({ params }: PageProps) {
   if (!row) notFound()
 
   const answer = row.finalAnswerText ?? row.aiAnswerText ?? ''
-  const status = row.completionStatus
   const riskHits = (row.riskKeywordHits ?? []) as string[]
+  const displayState = displayStateForRow(row)
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900">
-      <div className="bg-amber-100 border-b border-amber-300 text-amber-900 px-4 py-2 text-[12px] flex items-start gap-2 sticky top-0 z-10">
-        <span aria-hidden>⚠️</span>
-        <span><strong>{ALPHA_BANNER}</strong></span>
-      </div>
-      <main className="max-w-3xl mx-auto p-6 space-y-4">
-        <header className="flex items-baseline justify-between gap-3">
-          <div>
-            <p className="text-[10px] uppercase tracking-wider text-slate-400">咨询记录</p>
-            <h1 className="text-lg font-semibold mt-0.5">
-              {new Date(row.createdAt).toLocaleString('zh-CN')}
-            </h1>
-          </div>
-          <Link href="/ai-consultation" className="text-[12px] text-blue-600 hover:underline">
-            ← 再问一题
-          </Link>
-        </header>
+    <ConsultationShell>
+      <div className="space-y-5">
+        <BrandHeader
+          eyebrow="咨询记录详情"
+          title="这次问了什么"
+          description="记录页用于回看问题、回答、图片摘要和状态。它不是 Matter，也不是正式案件。"
+          action={
+            <Link
+              href="/ai-consultation"
+              className="inline-flex h-9 items-center gap-1.5 rounded-btn bg-[var(--tebiq-ink-blue)] px-3 text-[12px] font-medium text-[var(--tebiq-off-white)]"
+            >
+              <MessageSquarePlus className="h-3.5 w-3.5" strokeWidth={1.6} />
+              再问
+            </Link>
+          }
+        />
 
-        <section className="rounded border border-slate-200 bg-white p-3">
-          <p className="text-[10px] uppercase tracking-wider text-slate-400">你的问题</p>
-          <p className="mt-1 text-sm text-slate-800 leading-relaxed">{row.userQuestionText}</p>
-        </section>
+        <Surface className="space-y-2">
+          <div className="flex items-center justify-between gap-3">
+            <SectionLabel>你的问题</SectionLabel>
+            <StatusBadge state={displayState} />
+          </div>
+          <p className="text-[15px] leading-relaxed text-[var(--tebiq-ink-blue)]">{row.userQuestionText}</p>
+        </Surface>
 
         {row.hasImage && row.imageSummary && (
-          <section className="rounded border border-slate-200 bg-white p-3">
-            <p className="text-[10px] uppercase tracking-wider text-slate-400">图片摘要（仅供咨询参考）</p>
-            <p className="mt-1 text-[12px] text-slate-700 leading-relaxed">{row.imageSummary}</p>
-            <p className="mt-1 text-[10px] text-slate-400">原图未保存；只保留识别摘要供这条咨询参考。</p>
-          </section>
+          <Surface className="space-y-2">
+            <div className="flex items-center gap-2">
+              <Camera className="h-4 w-4 text-[var(--tebiq-ink-blue)]" strokeWidth={1.6} />
+              <SectionLabel>图片摘要</SectionLabel>
+            </div>
+            <p className="text-[13px] leading-relaxed text-[var(--tebiq-deep-slate)]">{row.imageSummary}</p>
+            <p className="text-[11px] text-[var(--tebiq-cool-gray)]">原图未保存；这里只保留识别摘要供这条咨询参考。</p>
+          </Surface>
         )}
 
-        {riskHits.length > 0 && (
-          <div className="rounded border border-amber-300 bg-amber-50 px-3 py-2 text-[12px] text-amber-900 leading-relaxed">
-            这个问题可能涉及在留风险，建议不要只靠 AI 回答做最终决定。
-            <span className="block mt-1 text-[10px] text-amber-700">
-              关键词：{riskHits.join(' · ')}
-            </span>
-          </div>
-        )}
+        <RiskHintBanner hits={riskHits} />
 
-        <section className="rounded border border-slate-200 bg-white p-4">
-          <div className="flex items-baseline gap-2">
-            <p className="text-[10px] uppercase tracking-wider text-slate-400">回答</p>
-            <span className="text-[10px] text-slate-400">{statusLabel(status)}</span>
+        <Surface className="space-y-3">
+          <div className="flex items-center justify-between gap-3">
+            <SectionLabel>AI 回答</SectionLabel>
+            <StatusBadge state={displayState} />
           </div>
-          {status === 'timeout' && (
-            <p className="mt-2 text-[12px] text-amber-800 italic">
-              [降级回答] 当前模型响应超时，不是你的输入问题。你可以稍后重试；如果已识别出相关事项，也可以先保存继续处理。
-            </p>
+          {(displayState === 'partial' || displayState === 'fallback' || displayState === 'timeout' || displayState === 'failed') && (
+            <div className="rounded-card border border-[var(--tebiq-warm-amber)] px-3 py-2 text-[12px] leading-relaxed text-[var(--tebiq-ink-blue)]">
+              {displayState === 'partial' && '这条记录有部分回答，但没有完整完成。'}
+              {displayState === 'fallback' && '这条记录使用了安全降级文案，不应看作完整回答。'}
+              {displayState === 'timeout' && '这条记录没有生成可用完整回答。'}
+              {displayState === 'failed' && '这条记录生成失败。'}
+              {row.timeoutReason ? ` 原因：${row.timeoutReason}` : ''}
+            </div>
           )}
-          {status === 'failed' && (
-            <p className="mt-2 text-[12px] text-rose-800 italic">
-              这次回答生成失败。{row.timeoutReason ? `（原因：${row.timeoutReason}）` : ''}
-              你可以稍后重试或保存这个问题继续处理。
-            </p>
-          )}
-          {answer && (
-            <article className="mt-2 text-sm leading-relaxed text-slate-800 whitespace-pre-wrap">
+          {answer ? (
+            <article className="whitespace-pre-wrap text-[15px] leading-[1.75] text-[var(--tebiq-ink-blue)]">
               {answer}
             </article>
+          ) : (
+            <p className="text-[13px] text-[var(--tebiq-deep-slate)]">还没有可显示的回答正文。</p>
           )}
-          {!answer && status === 'streaming' && (
-            <p className="mt-2 text-[12px] text-slate-500">
-              这条咨询仍在生成。回到「再问一题」可以发起新会话。
-            </p>
-          )}
-        </section>
+        </Surface>
 
-        <section className="text-[11px] text-slate-500 grid grid-cols-2 gap-x-4 gap-y-1 pt-2">
-          <span>状态：{statusLabel(status)}</span>
-          {row.firstTokenLatencyMs != null && <span>first_token: {row.firstTokenLatencyMs}ms</span>}
-          {row.totalLatencyMs != null && <span>total_latency: {row.totalLatencyMs}ms</span>}
-          {row.feedbackType && <span>反馈：{feedbackLabel(row.feedbackType)}</span>}
-          {row.savedQuestion && <span>已保存</span>}
-          {row.humanConfirmClicked && <span>已点击「想找人工确认」</span>}
-        </section>
+        <Surface className="space-y-3">
+          <SectionLabel>记录信号</SectionLabel>
+          <div className="flex flex-wrap gap-2">
+            <MetaPill>{new Date(row.createdAt).toLocaleString('zh-CN')}</MetaPill>
+            <MetaPill>{row.model}</MetaPill>
+            <MetaPill>{row.promptVersion}</MetaPill>
+            {row.feedbackType && <MetaPill>反馈：<FeedbackLabel type={row.feedbackType} /></MetaPill>}
+            {row.savedQuestion && <MetaPill>已保存</MetaPill>}
+            {row.humanConfirmClicked && <MetaPill tone="focus">想人工确认</MetaPill>}
+            {row.firstTokenLatencyMs != null && <MetaPill>first token {row.firstTokenLatencyMs}ms</MetaPill>}
+            {row.totalLatencyMs != null && <MetaPill>total {row.totalLatencyMs}ms</MetaPill>}
+          </div>
+        </Surface>
 
-        <footer className="text-[11px] text-slate-500 pt-4 border-t border-slate-200">
-          <p>涉及具体期限、手续、个案审查时，建议向行政書士或入管确认。</p>
-          <p className="mt-1">
-            <Link href="/me/consultations" className="text-blue-600 hover:underline">
-              查看我所有已保存的咨询 →
-            </Link>
-          </p>
+        <footer className="flex flex-wrap items-center justify-between gap-3 border-t border-[var(--tebiq-soft-gray)] pt-4 text-[12px]">
+          <Link href="/me/consultations" className="inline-flex items-center gap-1 text-[var(--tebiq-deep-slate)]">
+            <ArrowLeft className="h-3.5 w-3.5" strokeWidth={1.6} />
+            返回记录
+          </Link>
+          <p className="text-[var(--tebiq-deep-slate)]">涉及具体期限、手续、个案审查时，建议向行政書士或入管确认。</p>
         </footer>
-      </main>
-    </div>
+      </div>
+    </ConsultationShell>
   )
 }
 
-// Issue #51: 'partial' added. Placeholder label only — CODEXUI Polish
-// PR (#52) owns the polished rendering for partial-answer state.
-function statusLabel(status: 'streaming' | 'completed' | 'partial' | 'timeout' | 'failed'): string {
-  switch (status) {
-    case 'streaming': return '进行中'
-    case 'completed': return '完成'
-    case 'partial':   return '回答可能不完整'
-    case 'timeout':   return '超时'
-    case 'failed':    return '失败'
-  }
-}
-
-function feedbackLabel(t: 'helpful' | 'inaccurate' | 'add_context' | 'human_review' | 'saved'): string {
-  switch (t) {
-    case 'helpful':      return '有帮助'
-    case 'inaccurate':   return '不准确'
-    case 'add_context':  return '想补充情况'
-    case 'human_review': return '想找人工确认'
-    case 'saved':        return '已保存'
-  }
+function displayStateForRow(row: AiConsultation): AlphaDisplayState {
+  if (row.completionStatus === 'completed') return 'completed'
+  if (row.completionStatus === 'streaming') return 'streaming'
+  if (row.completionStatus === 'failed') return 'failed'
+  if (row.partialAnswerSaved) return 'partial'
+  if (row.timeoutReason) return 'fallback'
+  return 'timeout'
 }
