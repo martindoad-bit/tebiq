@@ -29,6 +29,14 @@ export interface CreateAiConsultationInput {
   imageStorageRef?: string | null
   riskKeywordHits?: string[]
   factAnchorIds?: string[]
+  /** Issue #60: caller passes the live prompt version constant so the DB
+   *  row reflects what the LLM actually saw. Falls back to the schema
+   *  default ('consultation_alpha_v1') when undefined — useful for
+   *  back-compat callers but production should always pass it. */
+  promptVersion?: string
+  /** Issue #60 companion: same pattern for model. Falls back to schema
+   *  default ('deepseek-v4-pro') when undefined. */
+  model?: string
 }
 
 export async function createAiConsultation(
@@ -48,6 +56,10 @@ export async function createAiConsultation(
       imageStorageRef: input.imageStorageRef ?? null,
       riskKeywordHits: input.riskKeywordHits ?? [],
       factAnchorIds: input.factAnchorIds ?? [],
+      // Only override schema defaults when caller passes the value.
+      // Spread keeps the field absent → drizzle uses the column default.
+      ...(input.promptVersion !== undefined ? { promptVersion: input.promptVersion } : {}),
+      ...(input.model !== undefined ? { model: input.model } : {}),
       streamStartedAt: new Date(),
       completionStatus: 'streaming',
     } satisfies NewAiConsultation)

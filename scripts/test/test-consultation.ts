@@ -17,6 +17,7 @@ async function main() {
   const filterMod = await import('@/lib/consultation/forbidden-phrases')
   const protoMod = await import('@/lib/consultation/stream-protocol')
   const anchorMod = await import('@/lib/consultation/fact-anchors')
+  const queriesMod = await import('@/lib/db/queries/aiConsultations')
 
   let passes = 0
   let total = 0
@@ -115,8 +116,8 @@ async function main() {
   })
 
   // ---- 3. Forbidden phrases ----
-  check('3a. FORBIDDEN_PHRASES has exactly 7 entries (Pack §G)', () => {
-    assert.equal(filterMod.FORBIDDEN_PHRASES.length, 7)
+  check('3a. FORBIDDEN_PHRASES has exactly 9 entries (Issue #61: +大丈夫 +应该没问题)', () => {
+    assert.equal(filterMod.FORBIDDEN_PHRASES.length, 9)
   })
   check('3b. redactForbiddenPhrases: removes 一定可以', () => {
     const r = filterMod.redactForbiddenPhrases('这种情况一定可以申请永住')
@@ -176,11 +177,14 @@ async function main() {
     assert.ok(!out.includes('100%'))
     assert.ok(f.redactions().includes('100%'))
   })
-  check('3j. createForbiddenFilter: Japanese 必ず + 絶対 both redacted', () => {
+  check('3j. createForbiddenFilter: Japanese 必ず + 絶対 + 大丈夫 all redacted', () => {
+    // Issue #61 added 大丈夫 to the list, so this input now triggers 3
+    // redactions instead of 2. The phrase is post-#61 voice canonical.
     const r = filterMod.redactForbiddenPhrases('必ず通る。絶対大丈夫。')
     assert.ok(!r.text.includes('必ず'))
     assert.ok(!r.text.includes('絶対'))
-    assert.equal(r.redactions.length, 2)
+    assert.ok(!r.text.includes('大丈夫'))
+    assert.equal(r.redactions.length, 3)
   })
 
   // ---- 4. SSE protocol ----
@@ -543,6 +547,98 @@ async function main() {
       assert.ok(a.humanConfirmHint.length > 0, `${a.anchorId} humanConfirmHint empty`)
       assert.ok(a.triggerKeywords.length > 0, `${a.anchorId} no triggerKeywords`)
     }
+  })
+
+  // ---- 8. Issue #61 — FORBIDDEN_PHRASES backstop for v2 voice ----
+  //
+  // VOICE consultation_alpha_v2 prompt-level forbids 大丈夫 and 应该没问题
+  // (Japanese soft-promise + Chinese soft-promise). Runtime filter must
+  // match — defense in depth against LLM regression.
+  check('8a. FORBIDDEN_PHRASES contains 大丈夫', () => {
+    assert.ok(filterMod.FORBIDDEN_PHRASES.includes('大丈夫'))
+  })
+  check('8b. FORBIDDEN_PHRASES contains 应该没问题', () => {
+    assert.ok(filterMod.FORBIDDEN_PHRASES.includes('应该没问题'))
+  })
+  check('8c. redactForbiddenPhrases: "你的情况大丈夫" → 大丈夫 redacted', () => {
+    const r = filterMod.redactForbiddenPhrases('你的情况大丈夫')
+    assert.ok(!r.text.includes('大丈夫'), `expected 大丈夫 gone, got "${r.text}"`)
+    assert.ok(r.redactions.includes('大丈夫'))
+  })
+  check('8d. redactForbiddenPhrases: "应该没问题" → entire 5-char phrase redacted (not just 没问题)', () => {
+    // Critical ordering invariant: 应该没问题 must precede 没问题 in the
+    // FORBIDDEN_PHRASES array. Otherwise 没问题 matches first and leaves
+    // a dangling "应该" residue. This test pins that the longer phrase
+    // wins, producing a cleaner output.
+    const r = filterMod.redactForbiddenPhrases('你的情况应该没问题')
+    assert.ok(!r.text.includes('应该没问题'))
+    assert.ok(!r.text.includes('应该'), `expected dangling 应该 gone, got "${r.text}"`)
+    assert.ok(!r.text.includes('没问题'))
+    assert.ok(r.redactions.includes('应该没问题'))
+  })
+  check('8e. createForbiddenFilter streaming: 大丈夫 split across chunks redacted', () => {
+    const f = filterMod.createForbiddenFilter()
+    let out = ''
+    out += f.push('你的情况')
+    out += f.push('大')
+    out += f.push('丈夫')
+    out += f.flush()
+    assert.ok(!out.includes('大丈夫'), `streaming missed 大丈夫 split; got "${out}"`)
+    assert.ok(f.redactions().includes('大丈夫'))
+  })
+  check('8f. FORBIDDEN_PHRASES ordering: 应该没问题 precedes 没问题 (Issue #61)', () => {
+    // If this test breaks, applyReplace() will produce dangling "应该"
+    // when the input contains "应该没问题". See note above 8d.
+    const list = filterMod.FORBIDDEN_PHRASES
+    const longIdx = list.indexOf('应该没问题')
+    const shortIdx = list.indexOf('没问题')
+    assert.ok(longIdx >= 0 && shortIdx >= 0, 'both phrases must exist')
+    assert.ok(longIdx < shortIdx, `expected 应该没问题 at idx ${longIdx} before 没问题 at idx ${shortIdx}`)
+  })
+
+  // ---- 9. Issue #60 — prompt_version threading ----
+  //
+  // The DB row's `prompt_version` column must reflect what the LLM
+  // actually saw. Pre-#60 the route never passed promptVersion, so
+  // every row defaulted to the schema default and got stuck at v1
+  // even after VOICE bumped to v2. Fix is in lib/db/queries/aiConsultations.ts:
+  // CreateAiConsultationInput.promptVersion is now wired through to
+  // the INSERT, and the stream route passes the live constant.
+  //
+  // We do NOT exercise the DB here (DB-free contract suite); we just
+  // pin the type-shape of the input + the schema default + the
+  // route's commitment to pass the constant through. Live verification
+  // is part of the GM smoke after merge.
+  check('9a. CONSULTATION_ALPHA_PROMPT_VERSION is exposed for the route to pass through', () => {
+    assert.equal(typeof promptMod.CONSULTATION_ALPHA_PROMPT_VERSION, 'string')
+    assert.ok(promptMod.CONSULTATION_ALPHA_PROMPT_VERSION.length > 0)
+  })
+  check('9b. createAiConsultation export is callable (module loads)', () => {
+    // We can't actually insert from this DB-free contract test. The
+    // compile-time guarantee that `.promptVersion` is accepted in
+    // CreateAiConsultationInput lives in the stream route call site,
+    // which tsc would reject if the field were unknown — covered by
+    // `npx tsc --noEmit`. This test just pins the export surface.
+    assert.equal(typeof queriesMod.createAiConsultation, 'function')
+  })
+  check('9c. stream route call site references CONSULTATION_ALPHA_PROMPT_VERSION constant (Issue #60)', () => {
+    // Source-level check that the route imports + uses the constant.
+    // If a future PR strips the import or stops passing the value,
+    // this test fails before live smoke catches the regression.
+    const fs = require('fs') as typeof import('fs')
+    const path = require('path') as typeof import('path')
+    const src = fs.readFileSync(
+      path.join(process.cwd(), 'app/api/consultation/stream/route.ts'),
+      'utf8',
+    )
+    assert.ok(
+      src.includes('CONSULTATION_ALPHA_PROMPT_VERSION'),
+      'stream route does not import/reference CONSULTATION_ALPHA_PROMPT_VERSION',
+    )
+    assert.ok(
+      src.includes('promptVersion: CONSULTATION_ALPHA_PROMPT_VERSION'),
+      'stream route does not pass promptVersion: CONSULTATION_ALPHA_PROMPT_VERSION to createAiConsultation',
+    )
   })
 
   console.log(`\n1.0 Alpha consultation contract: ${passes}/${total} pass`)

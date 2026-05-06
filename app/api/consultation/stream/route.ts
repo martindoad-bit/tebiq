@@ -135,6 +135,11 @@ export async function POST(req: Request) {
 
   // Create the row before opening the stream so the consultation_id is
   // emitted in the very first 'received' frame.
+  // Issue #60: pass the live prompt-version + model constants so the DB
+  // row reflects what the LLM actually saw. Without this, the schema
+  // default ('consultation_alpha_v1') was being written even when the
+  // route had been bumped to v2 — the Learning Console showed stale
+  // version data.
   const consultation = await createAiConsultation({
     viewerId,
     userQuestionText: question,
@@ -143,6 +148,8 @@ export async function POST(req: Request) {
     imageStorageRef: body.image_storage_ref?.slice(0, 240) ?? null,
     riskKeywordHits: riskHits,
     factAnchorIds: anchorIds,
+    promptVersion: CONSULTATION_ALPHA_PROMPT_VERSION,
+    model: CONSULTATION_ALPHA_MODEL,
   })
 
   const encoder = new TextEncoder()
