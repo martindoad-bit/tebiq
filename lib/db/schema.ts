@@ -1210,9 +1210,14 @@ export const aiConsultations = pgTable(
     aiAnswerText: text('ai_answer_text'),
     finalAnswerText: text('final_answer_text'),
 
-    // Charter §6 — model + prompt
+    // Charter §6 — model + prompt.
+    // Issue #60: route now passes the live constants explicitly via
+    // createAiConsultation, so these defaults are a fallback only. We
+    // still bump the prompt_version default to v2 to match production —
+    // if any future caller forgets to pass promptVersion, the recorded
+    // value should reflect the actual prompt the LLM saw, not stale v1.
     model: varchar('model', { length: 64 }).notNull().default('deepseek-v4-pro'),
-    promptVersion: varchar('prompt_version', { length: 32 }).notNull().default('consultation_alpha_v1'),
+    promptVersion: varchar('prompt_version', { length: 32 }).notNull().default('consultation_alpha_v2'),
 
     // Charter §6 — anchor + risk telemetry (all internal; users never see)
     factAnchorIds: jsonb('fact_anchor_ids').$type<string[]>().notNull().default(sql`'[]'::jsonb`),

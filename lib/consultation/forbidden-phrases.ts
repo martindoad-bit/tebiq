@@ -15,14 +15,21 @@
 // Reference: redactForbiddenPhrases() unit tests pin the
 // straddle-boundary edge cases (3c / 3g / 3i in test-consultation.ts).
 
+// Issue #61: 大丈夫 / 应该没问题 added — runtime backstop for the
+// VOICE consultation_alpha_v2 prompt that already forbids these. The
+// longer "应该没问题" must precede the shorter "没问题" in the array so
+// applyReplace consumes it whole; otherwise "没问题" matches first and
+// leaves a dangling "应该" prefix in the output.
 export const FORBIDDEN_PHRASES: ReadonlyArray<string> = Object.freeze([
   '一定可以',
+  '应该没问题',
   '没问题',
   '不会影响',
   '保证',
   '必ず',
   '絶対',
   '100%',
+  '大丈夫',
 ])
 
 const MAX_PHRASE_LEN = FORBIDDEN_PHRASES.reduce((m, p) => Math.max(m, p.length), 0)
