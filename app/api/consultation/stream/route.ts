@@ -65,7 +65,7 @@ export const runtime = 'nodejs'
 // kills the function. Hobby plan caps at 60s; if deploy rejects, GM
 // should upgrade to Pro (Charter §9 — Alpha is limited release, lower
 // volume than 100Q M3-C batch but needs the full streaming budget).
-export const maxDuration = 120
+export const maxDuration = 300
 
 const DEEPSEEK_ENDPOINT = 'https://api.deepseek.com/chat/completions'
 const TEMPERATURE = 0.3
@@ -185,33 +185,32 @@ export async function POST(req: Request) {
         }
       }, CONSULTATION_TIMING.still_generating_at_ms)
 
-      // 4. hard timeout watchdog (90s) — Issue #51 Alpha Polish §2.
+      // 4. timeout watchdog — Polish Sprint v0.2 hotfix (PL bug 2026-05-06).
       //
-      // 90s hard cutoff branches on whether ANY answer text streamed:
-      //   - Some text streamed → completion_status='partial', reason
-      //     'hard_timeout_90s_with_partial'. UI renders the streamed
-      //     text + "回答可能不完整" hint (NOT [降级回答]).
-      //   - Zero text streamed → completion_status='timeout', reason
-      //     'hard_timeout_90s_no_partial'. UI renders [降级回答]
-      //     canonical fallback copy.
+      // Original 90s wall-clock hard cap was aborting productive long
+      // answers mid-stream. New design uses idle detection:
       //
-      // Both still emit the same SSE `event: 'timeout'` frame; the
-      // `completion_status` field on the frame disambiguates. We do
-      // NOT introduce a new 'partial' SSE event name because client
-      // parsers already pin on the 8-name union — adding a new event
-      // name would break the protocol contract. Adding a field to an
-      // existing event is backward compatible (test 11l-style invariant).
+      //   - If NO first_token by hard_timeout_ms (90s) → real timeout
+      //   - Once chunks are flowing → reset timer to idle_after_chunk_ms
+      //     (60s) on each chunk. Only fires if NO new chunk for 60s.
+      //   - Wall clock cap (270s) as ultimate safety, set once on stream
+      //     start, never reset. Stays under Vercel maxDuration=300.
+      //
+      // On timeout fire, branch on partial.length to set status:
+      //   - partial.length > 0 → completion_status='partial' (UI shows
+      //     "回答可能不完整", NOT [降级回答])
+      //   - partial.length === 0 → completion_status='timeout' (UI shows
+      //     [降级回答] canonical fallback copy)
       let hardTimedOut = false
-      const hardTimer = setTimeout(async () => {
-        if (closed) return
+
+      async function fireTimeout(triggerReason: string) {
+        if (closed || hardTimedOut) return
         hardTimedOut = true
         try { dsAbort.abort() } catch { /* ignore */ }
         const partial = totalText
         const hasPartial = partial.length > 0
         const status: 'partial' | 'timeout' = hasPartial ? 'partial' : 'timeout'
-        const reason = hasPartial ? 'hard_timeout_90s_with_partial' : 'hard_timeout_90s_no_partial'
-        // Emit voice-canonical timeout frame with completion_status so
-        // CODEXUI can render the right copy (NEVER falls through to legacy).
+        const reason = hasPartial ? `${triggerReason}_with_partial` : `${triggerReason}_no_partial`
         emit({
           event: 'timeout',
           ts: Date.now(),
@@ -230,7 +229,29 @@ export async function POST(req: Request) {
           console.warn('[consultation/stream] failAiConsultation persist failed', err)
         }
         close()
-      }, CONSULTATION_TIMING.hard_timeout_ms)
+      }
+
+      // Pre-first-token deadline (90s); replaced by idle timer once first chunk arrives.
+      let hardTimer: NodeJS.Timeout = setTimeout(
+        () => { void fireTimeout('hard_timeout_pre_first_token_90s') },
+        CONSULTATION_TIMING.hard_timeout_ms,
+      )
+
+      // Post-first-token idle reset: each chunk resets the timer to 60s.
+      // Productive long answers extend naturally; truly stuck streams fire after 60s idle.
+      function resetIdleTimer() {
+        clearTimeout(hardTimer)
+        hardTimer = setTimeout(
+          () => { void fireTimeout('hard_timeout_idle_60s') },
+          CONSULTATION_TIMING.idle_after_chunk_ms,
+        )
+      }
+
+      // Wall clock ultimate cap (270s) — never reset. Below Vercel maxDuration=300.
+      const wallClockTimer = setTimeout(
+        () => { void fireTimeout('hard_timeout_wall_clock_270s') },
+        CONSULTATION_TIMING.wall_clock_cap_ms,
+      )
 
       // 5. Open DS streaming connection
       const dsAbort = new AbortController()
@@ -263,6 +284,7 @@ export async function POST(req: Request) {
         if (!dsRes.ok || !dsRes.body) {
           clearTimeout(stillGenTimer)
           clearTimeout(hardTimer)
+          clearTimeout(wallClockTimer)
           if (!closed) {
             emit({
               event: 'failed',
@@ -325,6 +347,8 @@ export async function POST(req: Request) {
                   if (safeChunk.length > 0) {
                     totalText += safeChunk
                     emit({ event: 'answer_chunk', ts: Date.now(), chunk: safeChunk })
+                    // Reset idle timer — productive stream extends timeout (Polish v0.2 hotfix)
+                    resetIdleTimer()
                     // Live-tail persistence — append to DB so a partial
                     // is captured even if the connection drops mid-stream
                     try { await appendPartialAnswer(consultation.id, safeChunk) } catch (err) {
@@ -387,6 +411,7 @@ export async function POST(req: Request) {
       } finally {
         clearTimeout(stillGenTimer)
         clearTimeout(hardTimer)
+        clearTimeout(wallClockTimer)
         // Suppress unused-var warnings on still_generating watchdog flag
         void stillGeneratingEmitted
         close()
