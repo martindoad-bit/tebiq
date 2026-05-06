@@ -7,9 +7,88 @@ downstream_consumers: GM / ENGINE / QA / VOICE / DOMAIN
 
 # TEBIQ 1.0 UI Handoff
 
-This is the Phase 1 docs-first handoff.
+This file now includes Phase 1 docs-first handoff plus Alpha UI Polish implementation notes.
 
-No runtime UI implementation has been started in this phase.
+Runtime UI polish has started for internal Alpha surfaces only.
+
+## Alpha UI Polish Update
+
+| Field | Value |
+|---|---|
+| status | alpha / preview-only / not final professional judgment |
+| branch | `codex/alpha-ui-polish` |
+| origin/main at start | `323ce91` `Merge pull request #50 from martindoad-bit/hotfix/alpha-submit-button` |
+| scope | UI polish only; no API changes, no new product features |
+| production claim | none |
+
+### Runtime Pages Updated
+
+| Page | Update |
+|---|---|
+| `/ai-consultation` | Reworked entry + answer surface into consultation-product layout; clearer text/photo entry, persistent Alpha notice, clearer streaming/partial/fallback/failed states, stronger feedback/save/follow-up actions |
+| `/me/consultations` | Reworked saved consultation list; clearer saved count, image marker, feedback, risk keywords, status, and detail entry |
+| `/c/[id]` | Reworked consultation detail; clearer question/answer/image summary/risk/status/meta hierarchy |
+| `/internal/learning-console` | Reworked list/overview; added scan-friendly metrics, tabs, answer/image previews, risk/feedback/save/human-confirm/model/prompt/latency/failure fields |
+| `/internal/learning-console/[id]` | Reworked detail; clearer primary content and side metadata while keeping all required fields visible |
+
+### Runtime Components Added
+
+| Component / Helper | Path | Purpose |
+|---|---|---|
+| Alpha consultation UI primitives | `components/ui/consultation-alpha.tsx` | Shared Alpha notice, shell, brand header, status badge, risk hint, surfaces, meta pills, feedback label helpers |
+
+### Status UI Mapping
+
+| Product State | Runtime Handling |
+|---|---|
+| `completed` | Displayed as complete answer only when `completionStatus === completed` or active stream completes |
+| `streaming` | Displayed during received / streaming lifecycle with body text as chunks arrive |
+| `timeout_waiting` | Active UI uses this for 25s still-generating state |
+| `partial` | Derived when timeout has saved partial answer or visible partial answer text |
+| `timeout` | Derived when no usable answer is available and no fallback marker exists |
+| `failed` | Displayed when generation fails |
+| `fallback` | Derived when timeout/failure path has safety fallback text or timeout reason without partial answer |
+
+### Mock vs Real
+
+| Area | Status |
+|---|---|
+| Consultation stream | Real existing API retained |
+| Photo upload / image summary | Real existing API retained |
+| Save / feedback | Real existing API retained |
+| User history | Real existing DB query retained |
+| Learning Console | Real existing DB query retained |
+| New UI data | No new backend fields introduced |
+
+### Brand / VI Handling
+
+| Rule | Handling |
+|---|---|
+| No logo redesign | Uses canonical logo asset path only |
+| No new color system | Runtime polish uses existing V07 CSS variables / token aliases already present in app globals |
+| No new font | Uses existing app typography setup |
+| warmAmber usage | Reserved for risk / focus / incomplete state accent |
+| Derived state colors | Still a gap; no production token claim |
+
+### QA Needed For Polish
+
+| Area | QA Check |
+|---|---|
+| `/ai-consultation` mobile | Text entry, photo entry, stream status, completed state, timeout/fallback/partial display, feedback, save, follow-up |
+| `/me/consultations` | Saved records list, image marker, feedback, risk keywords, status label |
+| `/c/[id]` | Completed record does not show fallback/timeout; partial/fallback/failed remain distinct |
+| `/internal/learning-console` | All seven tabs, overview metrics, row scan fields, empty state |
+| `/internal/learning-console/[id]` | Required field coverage and no Matter/Pro workflow implication |
+
+### Known Polish Gaps
+
+| Gap | Status |
+|---|---|
+| State colors remain derived from current V07 variables rather than canonical reviewed state tokens | needs review |
+| Elevation / shadow remains intentionally minimal because canonical shadow tokens are missing | needs review |
+| Typography scale remains runtime-derived from existing app setup | needs review |
+| Dark mode not implemented | out of scope |
+| Screens with no DB data rely on empty states; real visual density depends on seeded / production records | QA should check with data |
 
 ## Context Stamp
 
@@ -221,4 +300,3 @@ Priority checks:
 | Confirm risk keyword source | Needed for RiskHintBanner and Console tabs |
 | Confirm photo upload constraints | Needed for PhotoUploadCard behavior |
 | Resolve code token naming alignment | Needed before runtime visual implementation |
-
