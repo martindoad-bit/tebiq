@@ -62,6 +62,16 @@ GM 负责接收、整理、落 repo）。
 不要在窗口内做：QA 回归测试、ENGINE 代码、publish gate（DOMAIN 抽检）、
 直接 commit 到 repo 的任何操作。
 
+**Autopilot 模式（PL 2026-05-07 后续指令）**：
+你不需要每张卡都问 PL 下一步。每批默认产 3 张，按 §7 顺序自主推进。
+不需要问 PL：下一张做什么 / 是否继续 / 事实字段怎么写 / 普通 needs_review 如何处理。
+完成一批后，提交 Batch Report 给 GM（详情见 §11）。
+
+第一批（PL 指定）3 张：
+1. eijuu-nenkin-zeikin
+2. gijinkoku-work-scope
+3. spouse-divorce-separation
+
 第一张卡（worked example）: keiei-kanri-2025-10 已完成。
 第二张（GM 主窗口已交付）: keiei-kanri-existing-holder-update。
 请你从 §7 P1 清单第 1 项开始: 「eijuu-nenkin-zeikin」。
@@ -553,8 +563,101 @@ FACT 遇到以下情况立即停止本卡，向 GM 报告：
 
 ---
 
+## 11. Autopilot 模式 — Batch 生产 + Batch Report (PL v1.1 update)
+
+### 默认节奏
+
+- 一批 = 3 张卡
+- 一批做完后，提交一次 Batch Report 给 GM；不要每张卡都中断问 PL
+- 上一批 GM 落 repo 期间，FACT 可以继续准备下一批
+- 不需要等 PR #71 / 工程层 deploy 才开始产卡
+
+### Autopilot 不允许跨界
+
+FACT autopilot **不**意味着 FACT 可以：
+
+- 自己改 source whitelist
+- 自己改命名规则
+- 自己决定 `state: human_reviewed`
+- 自己设 `controlled_alpha_eligible: true`
+- 自动跳过 needs_review_flag 自评
+- 把 `low confidence` 卡硬升 `ai_verified`
+
+这些边界仍然有效。Autopilot 只去掉"每张卡问下一步做什么"。
+
+### Batch Report 格式
+
+每批 3 张完成后，FACT 给 GM 发一份 Batch Report，结构如下：
+
+```text
+TEBIQ FACT Batch Report — Batch #N (YYYY-MM-DD)
+
+# Batch summary
+cards_in_batch: 3
+ai_verified_count: <int>
+ai_extracted_count: <int>
+needs_review_count: <int>
+conflict_count: <int>
+
+# Per-card deliverable (×3)
+## Card 1 of 3 — <slug>
+[10 项 deliverable per §0]
+
+## Card 2 of 3 — <slug>
+[10 项 deliverable per §0]
+
+## Card 3 of 3 — <slug>
+[10 项 deliverable per §0]
+
+# Cross-batch notes
+- common sources hit
+- common keyword overlaps (suggest matcher tuning?)
+- any source whitelist gaps encountered (PL gate to add new sources)
+- any cards waiting on PDF cross-check (note PDF URL)
+```
+
+### GM 接收 Batch Report 后的处理
+
+1. 检查 batch 中每张卡格式是否符合 `docs/fact-cards/README.md`
+2. 检查 source 是否在 whitelist 内
+3. 检查 direct_fact / ai_inference / needs_review 是否拆开
+4. 写文件到 `docs/fact-cards/<slug>.md`（一张卡一个独立文件）
+5. 一批一个 PR（不是一卡一个 PR；减少 review burden）
+6. high / critical / needs_review / conflict 卡 → 整理 review packet 给 DOMAIN
+7. ai_verified 且符合 gate 的卡 → 通知 ENGINE 接入（待 fact_layer 工程层落地后自动 sync）
+8. QA cases → 派给 QA 做回归（详 `docs/qa/0.6-fact-layer-qa-protocol.md`）
+
+### 批次频率建议
+
+- 第一周：1-2 批 / 周
+- 稳定后：根据 source 更新频率与 incident 反馈调整
+- DOMAIN 抽检 backlog 超过 5 张未处理 → FACT 暂停新批，等 backlog 消化
+
+### FACT 何时该停止 autopilot 主动找 GM
+
+- 同一概念在两个 official_sources 出现核心冲突 → 停在该卡，标 `state: conflict`，在 Batch Report 单独提示
+- source whitelist 不够（需要新来源类型）→ 在 Batch Report 提"建议 GM 转报 PL 加 source"
+- 自我检测发现 confidence 整批偏 low → 提"是否调整 batch 主题选择"
+- 同一卡在不同 P1 主题中重复出现（边界模糊）→ 让 GM 决定合并/拆分
+
+### GM 何时该停止 autopilot 上报 PL
+
+PL 指定的 6 个上报触发：
+
+1. 需要改变 fact layer 状态机
+2. critical 卡是否进入 production 存在争议
+3. 官方来源冲突且 DOMAIN 无法裁决
+4. 事实层错误已影响前台用户
+5. 需要扩大到完整 RAG / 爬虫系统
+6. 需要新增工程大范围 schema / pipeline
+
+其他情况 GM 自决。
+
+---
+
 **本 Pack 版本控制**：
 
 | version | date | actor | change |
 |---|---|---|---|
 | v1.0 | 2026-05-07 | GM | 初版，PL §6 指令交付 |
+| v1.1 | 2026-05-07 | GM | 添加 §11 Autopilot 模式（PL 后续指令）；Batch Report 格式；GM↔FACT 双向触发 |
