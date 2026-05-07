@@ -25,10 +25,12 @@ export type ConsultationEventName =
   | 'fact_cards_injected' // 0.6 ENGINE Pack 2.2: fact-layer audit announcement
   | 'still_generating'   // 25s elapsed without first_token
   | 'first_token'        // first DS token observed
+  | 'fact_cards_injected' // 0.6 Pack 2.2/2.3: fact layer marker, user UI treats as no-op
   | 'answer_chunk'       // streaming token chunk
   | 'completed'          // DS stream done; final answer written
   | 'timeout'            // 90s hard cutoff (carries completion_status to disambiguate partial vs silent)
   | 'failed'             // non-timeout error
+  | 'follow_up_limit_reached' // 0.6 Pack 2.3: controlled follow-up limit
 
 /**
  * 0.6 Sprint Workstream B (ENGINE Pack 1): two-layer routing-status
@@ -124,6 +126,12 @@ export type ConsultationEvent =
     }
   | { event: 'still_generating'; ts: number }
   | { event: 'first_token'; ts: number; first_token_latency_ms: number }
+  | {
+      event: 'fact_cards_injected';
+      ts: number;
+      fact_anchor_ids?: ReadonlyArray<string>;
+      fact_card_ids?: ReadonlyArray<string>;
+    }
   | { event: 'answer_chunk'; ts: number; chunk: string }
   | { event: 'completed'; ts: number; total_latency_ms: number; redactions_count: number }
   | {
@@ -142,6 +150,7 @@ export type ConsultationEvent =
       completion_status: 'partial' | 'timeout';
     }
   | { event: 'failed'; ts: number; detail: string }
+  | { event: 'follow_up_limit_reached'; ts: number; message: string }
 
 export function formatConsultationFrame(event: ConsultationEvent): string {
   return `data: ${JSON.stringify(event)}\n\n`
@@ -178,6 +187,7 @@ export function isTerminalConsultationEvent(event: ConsultationEvent): boolean {
   return event.event === 'completed'
     || event.event === 'timeout'
     || event.event === 'failed'
+    || event.event === 'follow_up_limit_reached'
 }
 
 // ---- Timing budget (Charter §7 + Pack §3) ----
