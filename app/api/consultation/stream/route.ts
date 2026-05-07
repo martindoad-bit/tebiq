@@ -13,7 +13,6 @@ import {
   type ConsultationEvent,
 } from '@/lib/consultation/stream-protocol'
 import {
-  appendPartialAnswer,
   completeAiConsultation,
   createAiConsultation,
   failAiConsultation,
@@ -356,11 +355,13 @@ export async function POST(req: Request) {
                     emit({ event: 'answer_chunk', ts: Date.now(), chunk: safeChunk })
                     // Reset idle timer — productive stream extends timeout (Polish v0.2 hotfix)
                     resetIdleTimer()
-                    // Live-tail persistence — append to DB so a partial
-                    // is captured even if the connection drops mid-stream
-                    try { await appendPartialAnswer(consultation.id, safeChunk) } catch (err) {
-                      console.warn('[consultation/stream] appendPartialAnswer failed', err)
-                    }
+                    // PL hotfix 2026-05-07: per-chunk awaited appendPartialAnswer
+                    // removed. Supabase pooler roundtrip ~296ms per chunk × 250 chunks
+                    // = 74s of DB-bound delay that was blocking DS reader. totalText
+                    // accumulates in memory and is persisted by completeAiConsultation
+                    // (success path) / failAiConsultation (timeout/failure paths).
+                    // Trade-off: browser disconnect mid-stream → no partial in DB.
+                    // Alpha-acceptable per PL.
                   }
                 }
               } catch {
@@ -378,7 +379,8 @@ export async function POST(req: Request) {
           if (tail.length > 0) {
             totalText += tail
             emit({ event: 'answer_chunk', ts: Date.now(), chunk: tail })
-            try { await appendPartialAnswer(consultation.id, tail) } catch { /* ignore */ }
+            // No DB write here either — completeAiConsultation below writes
+            // finalAnswerText with the full totalText (incl. tail).
           }
           const redactions = filter.redactions()
           const totalLatency = Date.now() - consultation.streamStartedAt!.getTime()
