@@ -288,6 +288,7 @@ needs_review_flags:
 | date | actor | action | from_state | to_state | note |
 |---|---|---|---|---|---|
 | 2026-05-07 | AI (claude-sonnet-4-6 / FACT-OPS Batch 2) | initial extraction from moj-isa-nyuukoku07-00001 + moj-isa-03-00097; METI page fetch timeout | — | ai_extracted | 最長2年・起業完了後変更申請の枠組みのみ確認; 核心条件は needs_review; FACT 自律遵守 §5 — confidence medium 卡禁止升 ai_verified |
+| 2026-05-07 | DOMAIN-CC (audit-full-20260507) | DOMAIN professional resolution of transition_conditions_post_2025_10: スタートアップビザ→経営管理は「在留資格変更許可申請」= 既存保持者の「更新申請」ではないため、既存保持者過渡措置 NOT applicable。2025-10-16以降の変更申請には新基準（3,000万円・常勤1名・N2等）が完全適用と判断。FACT指示: ai_inferred_fields に追加・body記載。METI page未解決 (meti_page_source_gap + kigyou_kanryo_definition) のため state: ai_extracted 維持。 | ai_extracted | ai_extracted | NOT UPGRADED — METI page required for ai_verified |
 
 ## Audit assignment
 

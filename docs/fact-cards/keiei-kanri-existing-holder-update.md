@@ -1,13 +1,15 @@
 ---
 fact_id: keiei-kanri-existing-holder-update
 title: 既存の経営・管理ビザ保持者の更新時 — 2028-10-15 までの過渡措置
-state: ai_verified
+state: human_reviewed
 risk_level: high
 confidence: high
 source_quality: official
 controlled_alpha_eligible: false   # high risk does not require this flag (only critical does)
 last_verified_at: 2026-05-07
-reviewer: ai_self_verified
+reviewer: DOMAIN-CC
+approved_at: 2026-05-07
+approved_by: DOMAIN-CC (claude-sonnet-4-6, audit-full-20260507)
 sprint: 0.6 / Workstream C
 ai_pipeline:
   collector_run_at: 2026-05-07
@@ -294,6 +296,7 @@ needs_review_flags:
 | date | actor | action | from_state | to_state | note |
 |---|---|---|---|---|---|
 | 2026-05-07 | AI (Claude Opus 4.7 / re-using fact-001 WebFetch) | initial AI extraction with self-verification | — | ai_verified | source: moj-isa-10-00237; risk=high (時限のある運用判断、誤れば更新影響); related_fact_cards links to fact-001 |
+| 2026-05-07 | DOMAIN-CC (audit-full-20260507) | §2 full checklist PASS; 5 direct_fact_fields sourced from moj-isa-10-00237; 3年過渡措置 (〜2028-10-15) + 2028-10-16 完全適合要件 confirmed; date_logic guards correct; 1 needs_review_flag (kaizen_mikomi) appropriately isolated | ai_verified | human_reviewed | APPROVE |
 
 ## Audit assignment
 

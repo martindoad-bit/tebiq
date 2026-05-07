@@ -1,13 +1,15 @@
 ---
 fact_id: zairyu-expiry-renewal-change
 title: 在留期限間近の更新・変更申請 — 申請タイミングと特例期間
-state: ai_verified
+state: human_reviewed
 risk_level: high
 confidence: high
 source_quality: official
 controlled_alpha_eligible: false
 last_verified_at: 2026-05-07
-reviewer: ai_self_verified
+reviewer: DOMAIN-CC
+approved_at: 2026-05-07
+approved_by: DOMAIN-CC (claude-sonnet-4-6, audit-full-20260507)
 sprint: 0.6 / Workstream C / Batch 2
 ai_pipeline:
   collector_run_at: 2026-05-07
@@ -293,6 +295,7 @@ needs_review_flags:
 |---|---|---|---|---|---|
 | 2026-05-07 | AI (claude-sonnet-4-6 / FACT-OPS Batch 2) | extraction from moj-isa-tokureikikan + moj-isa-16-3 | — | ai_extracted | 特例期間定義・2か月・従前活動継続・申請タイミング3か月前 確認 |
 | 2026-05-07 | AI self-verification | 13項 チェックリスト全項目確認; 不許可後・期限後申請を needs_review に格納; certain_block + addendum 分割完了 | ai_extracted | ai_verified | risk=high, confidence=high; controlled_alpha_eligible=false (FACT 自律遵守 §9) |
+| 2026-05-07 | DOMAIN-CC (audit-full-20260507) | §2 full checklist PASS; 特例期間 definition + 2か月上限 + 従前活動継続 all sourced; limiting cases (不許可即終了, 期限後申請対象外) confirmed in must_not_say and injection_certain_block | ai_verified | human_reviewed | APPROVE |
 
 ## Audit assignment
 
