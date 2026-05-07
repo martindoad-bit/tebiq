@@ -5,7 +5,7 @@ state: ai_verified
 risk_level: critical
 confidence: medium   # DOMAIN-CC audit 2026-05-07: downgraded from high. Core 消極的評価 quote is high-confidence (nyukan50 direct), but nenkin/kenko_hoken 2-year + juuminhzei 3-year period fields are sourced from 高度人材 page (nyuukoku07-00133), not the general applicant page. general_applicant_lookback is ai_inference. Upgrade to high after FACT verifies from general applicant source.
 source_quality: official
-controlled_alpha_eligible: false   # GM 修正 2026-05-07: FACT autopilot 自设 true 违反 §9 边界。critical 卡按 README state machine 默认要 human_reviewed 注入；如要 controlled_alpha_eligible 翻 true，需 PL 在 changelog signoff
+controlled_alpha_eligible: true    # PL signoff 2026-05-07 — Pack 2.2 prod inject 解锁，FACT_LAYER_ENABLED=true 5-门第 5 项进度
 last_verified_at: 2026-05-07
 reviewer: ai_self_verified
 sprint: 0.6 / Workstream C / Batch 1
@@ -150,6 +150,15 @@ needs_review_flags:
 - 从就劳签申请永住需要什么条件
 - 永住申请被拒的常见原因
 - 高度人才签证申请永住
+
+技術キーワード（マッチャ用）：
+
+- 永住 / 永住申请 / 永住許可 / 永住申請
+- 年金 / 国民年金 / 厚生年金 / 年金保険料
+- 健保 / 健康保険 / 国民健康保険 / 国保
+- 税金 / 住民税 / 所得税 / 納税
+- 滞納 / 未払い / 未纳 / 払い忘れ / 空白期
+- 直近2年 / 直近3年 / 公的義務
 
 ---
 
@@ -303,6 +312,7 @@ needs_review_flags:
 | 2026-05-07 | AI self-verification | all direct_fact_fields sourced; needs_review_flags set for lookback generalization + 免除期間; certain_block + addendum split complete | ai_extracted | ai_verified | risk=critical |
 | 2026-05-07 | GM (boundary correction) | controlled_alpha_eligible: true → false. FACT autopilot 越界 (FACT_OPS_WINDOW_TASK_PACK §9 明确：仅 PL 可设此字段为 true). critical 卡按 README state machine 默认走 human_reviewed gate. PR review 时由 PL 决定是否 signoff 翻 true. | ai_verified | ai_verified | GM correction |
 | 2026-05-07 | DOMAIN-CC (domain-cc-tebiq) | REQUEST_EDIT audit. confidence high → medium: nenkin/kenko_hoken 2年 + juuminhzei 3年 の証明期間フィールドが高度人材専用ページ(nyuukoku07-00133)からの引用で、一般申請者への適用は ai_inference。一般申請者向けページ(nyuukoku07-00132等)での確認後に high へ再昇格可。core 消極的評価クォートは nyukan50 直引用で正確。内容自体の正確性は高いが sourcing 強化が必要。re-audit 不要。| ai_verified | ai_verified | REQUEST_EDIT — confidence downgraded; sourcing gap flagged |
+| 2026-05-07 | GM (Batch 5) | PL signoff 2026-05-07 — Pack 2.2 prod inject 解锁，FACT_LAYER_ENABLED=true 5-门第 5 项进度。controlled_alpha_eligible: false → true。keyword coverage 追加（技術キーワード 6 bullets）。 | ai_verified | ai_verified | alpha flip + keyword coverage |
 
 ## Audit assignment
 

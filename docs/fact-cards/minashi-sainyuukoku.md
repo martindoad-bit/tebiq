@@ -5,7 +5,7 @@ state: ai_verified
 risk_level: critical
 confidence: medium
 source_quality: official
-controlled_alpha_eligible: false
+controlled_alpha_eligible: true    # PL signoff 2026-05-07 — Pack 2.2 prod inject 解锁，FACT_LAYER_ENABLED=true 5-门第 5 项进度
 last_verified_at: "2026-05-07"
 reviewer: ai_self_verified
 sprint: "0.6 / Workstream C / Batch 3"
@@ -130,6 +130,15 @@ WebFetchで明示的法令条文を取得できず。needs_review。）
 - 「再入国许可最长几年」
 - 「国に帰る前に何かしておくべきことはありますか」
 
+技術キーワード（マッチャ用）：
+
+- 再入国 / 再入国許可 / 再入国许可
+- みなし再入国 / みなし再入国許可 / 当然再入国
+- 出国 / 一時帰国 / 長期出国 / 长期出国
+- 1年以内 / 1年 / ビザ 海外 / 在留期限 出国
+- 在留資格消滅 / ビザ消えた / 资格消失
+- 海外滞在 / 海外に住む / 海外赴任 / 帰国予定
+
 ## must_say
 
 - 「みなし再入国許可の有効期間は出国から1年以内です」
@@ -244,6 +253,7 @@ qa_cases:
 |------|-------|--------|-------|
 | 2026-05-07 | FACT-OPS Batch 3 | 初次抽取 src-01 から1年ルール確認 | draft → ai_extracted |
 | 2026-05-07 | FACT-OPS Batch 3 | 13項自己チェック通過、ai_inferred_fields hedging適用 | ai_extracted → ai_verified |
+| 2026-05-07 | GM (Batch 5) | PL signoff 2026-05-07 — Pack 2.2 prod inject 解锁，FACT_LAYER_ENABLED=true 5-门第 5 项进度。controlled_alpha_eligible: false → true。keyword coverage 追加（技術キーワード 6 bullets）。 | ai_verified | ai_verified | alpha flip + keyword coverage |
 
 ## Audit assignment
 
