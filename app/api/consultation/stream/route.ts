@@ -284,6 +284,13 @@ export async function POST(req: Request) {
             temperature: TEMPERATURE,
             max_tokens: MAX_TOKENS,
             messages,
+            // Thinking-off speed test (PL 2026-05-07): explicitly disable
+            // hybrid reasoning. DS V4 Pro defaults to thinking enabled,
+            // adding latency. We pass both common API param shapes so
+            // whichever the DS endpoint recognizes will take effect; the
+            // other is silently ignored.
+            chat_template_kwargs: { thinking: false },
+            thinking: false,
           }),
           signal: dsAbort.signal,
         })
