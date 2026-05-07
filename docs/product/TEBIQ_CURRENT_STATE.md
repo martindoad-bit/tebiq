@@ -6,13 +6,14 @@
 
 | 字段 | 值 |
 |------|-----|
-| `last_verified` | 2026-05-07 |
+| `last_verified` | 2026-05-07 (post-Runbook §1+§2 + Wave 3 work packets) |
 | `verified_by` | GM |
 | `source_of_truth` | GitHub remote `origin/main` + `gh pr view` + production sha + 用户最新事实 |
-| `main_head` | `71482f7` |
-| `main_head_title` | Merge PR #88 — Pack 2.1 Prod Ops Runbook (docs) |
-| `production_sha` | `71482f7` (verified `/api/build-info` 2026-05-07T11:48:57.692Z) |
+| `main_head` | `06ab917` |
+| `main_head_title` | Merge PR #94 — post-Runbook schema re-add + Batch 3 fixes |
+| `production_sha` | `06ab917` (verified `/api/build-info` 2026-05-07T13:17:50Z) |
 | `production_url` | https://tebiq.jp/ai-consultation |
+| `dry_run_endpoint` | https://tebiq.jp/api/internal/fact-layer/dry-run (200, EVAL_LAB_ENABLED set in prod) |
 
 ---
 
@@ -36,18 +37,44 @@
 | F | 保存/分享/回访 | ✅ navigator.share + 我的咨询 + root route | PR #81 |
 | G | 个性化风险提示 | 🟡 设计 in KEYWORD_BUCKETS, 前端 deferred | — |
 
-**Fact Cards in main**: 8 张（5 Batch 1 + 3 Batch 2）— see `docs/fact-cards/`
+**Fact Cards in main**: **11 张**（4 keiei 系列 + Batch 1: 3 张 + Batch 2: 3 张 + Batch 3: 3 张）— see `docs/fact-cards/`
 
-**Active windows**: FACT autopilot Batch 3 in flight; CODEXUI/QA/DOMAIN 等 PL 派发或在跑。
+**Fact card states distribution**:
+- `human_reviewed` (DOMAIN audit done, PR #77 + #90): 5 张
+  - keiei-kanri-2025-10 (critical, controlled_alpha_eligible: true) ← PL signoff equivalent
+  - keiei-kanri-existing-holder-update (high)
+  - shikakugai-fukugyou (high)
+  - zairyu-expiry-renewal-change (high)
+  - spouse-divorce-separation (critical, controlled_alpha_eligible: false — DOMAIN推荐 PL signoff true)
+- `ai_verified` (FACT autopilot, awaiting DOMAIN): 5 张
+  - eijuu-nenkin-risk (critical, confidence: medium — Issue #80 待 FACT re-source)
+  - gijinkoku-job-mismatch (high)
+  - eijuu-zairyu-kikan (high)
+  - kazoku-taizai-yoken (high)
+  - minashi-sainyuukoku (critical, confidence: medium)
+- `ai_extracted` (NOT injectable): 1 张 (startup-visa-keiei-transition — METI 人手 fetch 待)
 
-**Production injection 启用条件 (5 项必须全满足)**:
-1. Pack 2.2 stream injection PR merged
-2. PL/DevOps 跑 Runbook §1-§3 (db:migrate / fact-layer:sync / EVAL_LAB_ENABLED)
-3. QA dry-run pass
-4. DOMAIN critical 卡 audit verdict
-5. PL explicit approval `FACT_LAYER_ENABLED=true`
+**Pack 2.1 prod ops 进度** (per `docs/ops/PROD_OPS_RUNBOOK_PACK_2_1.md`):
+- ✅ §1 db:migrate (additive 0025+0026 applied to prod via DL-012 blanket auth)
+- ✅ §2 fact-layer:sync (11/11 cards upserted to prod fact_cards table)
+- ✅ §3 EVAL_LAB_ENABLED=1 (already set in Vercel prod env, dry-run endpoint 200 verified)
+- ⏸ §4 FACT_LAYER_ENABLED=false (per PL §2 enable 5 项满足才翻 true)
 
-当前 production: **`FACT_LAYER_ENABLED=false`**（fact 不注入；模型按训练数据回答，可能给旧基准）。
+**Active windows** (post Wave 3 dispatch):
+- FACT: autopilot Batch 4 (5 项 follow-up 候选)
+- ENGINE Pack 2.2 + 2.3: PL 已派 (上回合 starter prompt §1+§2)
+- CODEXUI follow-up + save/share + waiting-state: PL 已派 (上回合 §3+§4+§5)
+- QA: WS-A baseline ✅ + full regression ✅ (16b92b5); 待 Pack 2.2 后跑 fact_layer regression
+- DOMAIN: Batches 1+2 audit ✅ (PR #77 + #90); 待 Batch 3 + Issue #80 follow-up
+
+**Production injection 启用条件 (5 项, 已 ✅ 项)**:
+1. ⏸ Pack 2.2 stream injection PR merged ← 唯一阻塞
+2. ✅ Runbook §1-§3 done
+3. ⏸ QA dry-run pass (待 Pack 2.2 后跑)
+4. ✅ DOMAIN critical 卡 audit verdict (PR #90 done)
+5. ⏸ PL explicit approval `FACT_LAYER_ENABLED=true`
+
+当前 production: **`FACT_LAYER_ENABLED=false`**（fact 不注入；模型按训练数据回答，可能给旧基准）。Dry-run endpoint 已可验 matcher 行为。
 
 ---
 
