@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, BookOpen, Camera, ExternalLink, MessageSquarePlus } from 'lucide-react'
+import { ArrowLeft, BookOpen, Camera, ExternalLink, GitBranch, MessageSquarePlus } from 'lucide-react'
 import {
   BrandHeader,
   ConsultationShell,
@@ -13,7 +13,11 @@ import {
   type AlphaDisplayState,
 } from '@/components/ui/consultation-alpha'
 import type { ConsultationFactCardAuditEntry } from '@/lib/consultation/stream-protocol'
-import { getAiConsultationById, type AiConsultation } from '@/lib/db/queries/aiConsultations'
+import {
+  getAiConsultationById,
+  getFollowUpChain,
+  type AiConsultation,
+} from '@/lib/db/queries/aiConsultations'
 
 export const dynamic = 'force-dynamic'
 
@@ -34,6 +38,12 @@ export default async function ConsultationDetailPage({ params }: PageProps) {
   const riskHits = (row.riskKeywordHits ?? []) as string[]
   const displayState = displayStateForRow(row)
   const factCardAudit = parseFactCardAudit(row)
+  // 0.6 Pack 2.3: when this consultation is part of a multi-round
+  // chain, load every sibling row so we can render the chain inline.
+  // Single-row chains (no follow-ups, no parent) still load fine —
+  // getFollowUpChain returns just the one row.
+  const chain = await getFollowUpChain(row.id)
+  const isChain = chain.length > 1
 
   return (
     <ConsultationShell>
@@ -98,6 +108,8 @@ export default async function ConsultationDetailPage({ params }: PageProps) {
         </Surface>
 
         <FactCardsBlock audit={factCardAudit} />
+
+        {isChain && <ChainBlock chain={chain} currentId={row.id} />}
 
         <Surface className="space-y-3">
           <SectionLabel>保存信息</SectionLabel>
@@ -263,4 +275,64 @@ function hostnameOf(url: string): string {
   } catch {
     return url.slice(0, 32)
   }
+}
+
+// 0.6 Pack 2.3 — follow-up chain display.
+//
+// Renders the rounds of a multi-turn consultation in chronological
+// order with the current row visually marked. Each non-current row is
+// a Link to its own /c/[id] view so users can jump back to read a
+// specific round in isolation.
+function ChainBlock({ chain, currentId }: { chain: AiConsultation[]; currentId: string }) {
+  if (chain.length <= 1) return null
+  return (
+    <Surface className="space-y-3">
+      <div className="flex items-center gap-2">
+        <GitBranch className="h-4 w-4 text-[var(--tebiq-ink-blue)]" strokeWidth={1.6} />
+        <SectionLabel>
+          这条咨询包含 {chain.length} 轮（原问题 + {chain.length - 1} 次补充）
+        </SectionLabel>
+      </div>
+      <ol className="space-y-2">
+        {chain.map((entry, idx) => {
+          const isCurrent = entry.id === currentId
+          const labelPrefix = idx === 0 ? '原问题' : `第 ${idx + 1} 轮 · 补充 ${idx}`
+          const inner = (
+            <div className={
+              `rounded-card border px-3 py-2 ${
+                isCurrent
+                  ? 'border-[var(--tebiq-ink-blue)] bg-[var(--tebiq-soft-gray)]/50'
+                  : 'border-[var(--tebiq-soft-gray)]'
+              }`
+            }>
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="text-[11px] uppercase tracking-wide text-[var(--tebiq-deep-slate)]">
+                  {labelPrefix}
+                </span>
+                <span className="text-[10px] text-[var(--tebiq-cool-gray)]">
+                  {new Date(entry.createdAt).toLocaleString('zh-CN')}
+                </span>
+                {isCurrent && (
+                  <span className="rounded-full border border-[var(--tebiq-ink-blue)] px-2 py-0.5 text-[10px] font-medium text-[var(--tebiq-ink-blue)]">
+                    当前查看
+                  </span>
+                )}
+              </div>
+              <p className="mt-1 line-clamp-2 text-[13px] leading-relaxed text-[var(--tebiq-ink-blue)]">
+                {entry.userQuestionText}
+              </p>
+            </div>
+          )
+          return (
+            <li key={entry.id}>
+              {isCurrent ? inner : <Link href={`/c/${encodeURIComponent(entry.id)}`}>{inner}</Link>}
+            </li>
+          )
+        })}
+      </ol>
+      <p className="text-[11px] text-[var(--tebiq-cool-gray)]">
+        每一轮都是独立咨询记录；它们之间通过 parent_consultation_id 链接，方便事后回看。
+      </p>
+    </Surface>
+  )
 }

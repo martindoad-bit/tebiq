@@ -16,11 +16,13 @@ import {
   type ConsultationEvent,
   type ConsultationFactCardAuditEntry,
 } from '@/lib/consultation/stream-protocol'
+import { buildConsultationSummary } from '@/lib/answer/followup/summary-builder'
 import {
   completeAiConsultation,
   createAiConsultation,
   failAiConsultation,
   markFirstToken,
+  setConsultationSummary,
 } from '@/lib/db/queries/aiConsultations'
 
 // POST /api/consultation/stream
@@ -557,6 +559,18 @@ export async function POST(req: Request) {
           } catch (err) {
             console.warn('[consultation/stream] completeAiConsultation failed', err)
           }
+          // 0.6 Pack 2.3: kick off the post-completion summary build
+          // for round 0 so the first /api/consultation/follow-up
+          // request has a digest to read. Fire-and-forget — the user's
+          // stream has already closed; this only delays the persisted
+          // summary, never the answer itself. Errors are logged but
+          // don't surface to the user (the follow-up endpoint
+          // tolerates a missing summary gracefully).
+          void buildAndPersistInitialSummary({
+            consultationId: consultation.id,
+            rootQuestion: question,
+            answerText: totalText,
+          })
         }
       } catch (err) {
         if (hardTimedOut) {
@@ -609,6 +623,41 @@ export async function POST(req: Request) {
 }
 
 // ---- helpers ----
+
+/**
+ * 0.6 Pack 2.3: post-completion summary build for round 0. Runs
+ * detached from the user-facing stream so the user's response time is
+ * unaffected. Errors are logged and the summary stays unset (the
+ * follow-up endpoint reads summary defensively and falls back to
+ * passing only the latest user_addition + root question).
+ */
+async function buildAndPersistInitialSummary(input: {
+  consultationId: string
+  rootQuestion: string
+  answerText: string
+}): Promise<void> {
+  if (!input.answerText || !input.answerText.trim()) return
+  try {
+    const result = await buildConsultationSummary({
+      rootQuestion: input.rootQuestion,
+      userMessage: input.rootQuestion,
+      answerText: input.answerText,
+      priorSummary: null,
+      roundIndex: 0,
+    })
+    if (result.summary) {
+      await setConsultationSummary(input.consultationId, result.summary)
+    } else if (result.fallback_reason) {
+      console.warn(
+        '[consultation/stream] initial summary build skipped:',
+        result.fallback_reason,
+        `(latency=${result.latency_ms}ms)`,
+      )
+    }
+  } catch (err) {
+    console.warn('[consultation/stream] buildAndPersistInitialSummary error', err)
+  }
+}
 
 function parseCookie(cookieHeader: string, name: string): string | null {
   if (!cookieHeader) return null

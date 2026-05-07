@@ -1269,6 +1269,30 @@ export const aiConsultations = pgTable(
     factCardIds: jsonb('fact_card_ids').$type<string[]>().notNull().default(sql`'[]'::jsonb`),
     factCardAudit: jsonb('fact_card_audit').$type<unknown[]>().notNull().default(sql`'[]'::jsonb`),
 
+    // 0.6 Pack 2.3 — Follow-up chain (migration 0027).
+    //
+    // Each follow-up round is a NEW ai_consultations row (so feedback,
+    // fact_card_audit, latency telemetry all stay per-row), linked back
+    // to the original by `parentConsultationId`. The original row has
+    // parentConsultationId=null and follow_up_count=0; rounds 2/3/4 of
+    // the same chain set parentConsultationId = root row id and
+    // follow_up_count = 1/2/3 respectively. The 5th attempt (3rd
+    // follow-up if you count from 0) is rejected with a
+    // `follow_up_limit_reached` SSE event before it ever creates a row.
+    //
+    // `consultationSummary` holds the rolling structured digest the
+    // follow-up endpoint feeds back to the LLM in lieu of raw history.
+    // Shape (loosely typed because the writer / reader are colocated in
+    // lib/answer/followup/):
+    //   {
+    //     user_goal: string,
+    //     known_facts: string[],
+    //     missing_facts: string[],
+    //     last_answer_key_points: string[]
+    //   }
+    parentConsultationId: text('parent_consultation_id'),
+    consultationSummary: jsonb('consultation_summary').$type<unknown>(),
+
     createdAt: createdAt(),
     updatedAt: updatedAt(),
   },
@@ -1277,6 +1301,8 @@ export const aiConsultations = pgTable(
     savedIdx: index('ai_consultations_saved_idx').on(t.savedQuestion),
     viewerIdx: index('ai_consultations_viewer_idx').on(t.viewerId),
     createdIdx: index('ai_consultations_created_at_idx').on(t.createdAt),
+    // 0.6 Pack 2.3 — fast lookup of all follow-ups for a given root row.
+    parentIdx: index('ai_consultations_parent_idx').on(t.parentConsultationId),
   }),
 )
 
