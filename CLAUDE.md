@@ -16,11 +16,12 @@ TEBIQ 不是 AI 签证问答 App、不是签证知识库、不是行政书士官
 | 步骤 | 文件 | 场景 |
 |------|------|------|
 | 1 | 本文件（CLAUDE.md） | 所有窗口 |
-| 2 | `docs/ops/TEBIQ_CURRENT_STATE.md` | 所有窗口（当前工程快照）|
-| 3 | `docs/product/TEBIQ_CONTEXT_PACK.md` | 所有窗口（长期产品原则）|
-| 4 | `docs/product/TEBIQ_QA_GATES.md` | QA / PR 审计 |
-| 5 | `docs/product/TEBIQ_COPY_SOURCE.md` | 文案相关任务 |
-| 6 | `docs/ops/TEBIQ_ROLES.md` | 不确定自己任务边界时 |
+| 2 | `docs/ops/TEBIQ_DELEGATION_PRINCIPLES.md` | **所有窗口（多窗口协作通用原则；任何 Work Packet 底层规则）** |
+| 3 | `docs/ops/TEBIQ_CURRENT_STATE.md` | 所有窗口（当前工程快照）|
+| 4 | `docs/product/TEBIQ_CONTEXT_PACK.md` | 所有窗口（长期产品原则）|
+| 5 | `docs/product/TEBIQ_QA_GATES.md` | QA / PR 审计 |
+| 6 | `docs/product/TEBIQ_COPY_SOURCE.md` | 文案相关任务 |
+| 7 | `docs/ops/TEBIQ_ROLES.md` | 不确定自己任务边界时 |
 
 ## 事实源优先级
 
