@@ -641,6 +641,118 @@ async function main() {
     )
   })
 
+  // ---- 10. 0.6 ENGINE Pack 1 — routing_status SSE event ----
+  //
+  // Lock the SSE protocol shape + stream-route wiring so the CODEXUI
+  // Workstream B consumer doesn't break when the route gets touched.
+  check('10a. ConsultationEvent union accepts routing_status with initial level', () => {
+    const frame = protoMod.formatConsultationFrame({
+      event: 'routing_status',
+      ts: 1,
+      level: 'initial',
+      buckets: ['keiei_kanri'],
+      status_label: '已收到，正在整理这个问题涉及的在留方向。',
+    })
+    assert.ok(frame.includes('"event":"routing_status"'))
+    assert.ok(frame.includes('"level":"initial"'))
+    assert.ok(frame.includes('"keiei_kanri"'))
+  })
+  check('10b. ConsultationEvent union accepts routing_status with specific level', () => {
+    const frame = protoMod.formatConsultationFrame({
+      event: 'routing_status',
+      ts: 100,
+      level: 'specific',
+      buckets: ['nenkin_zeikin', 'gijinkoku'],
+      status_label: '正在核对缴纳记录、更新/永住影响和下一步处理。',
+    })
+    assert.ok(frame.includes('"level":"specific"'))
+    assert.ok(frame.includes('"nenkin_zeikin"'))
+    assert.ok(frame.includes('正在核对缴纳记录'))
+  })
+  check('10c. parser preserves routing_status frame round-trip', () => {
+    const buf = `data: ${JSON.stringify({
+      event: 'routing_status',
+      ts: 5,
+      level: 'specific',
+      buckets: ['spouse_divorce'],
+      status_label: '正在核对身份变化、届出和在留衔接风险。',
+    })}\n\n`
+    const { events } = protoMod.parseConsultationChunk(buf)
+    assert.equal(events.length, 1)
+    const ev = events[0]
+    assert.equal(ev.event, 'routing_status')
+    if (ev.event === 'routing_status') {
+      assert.equal(ev.level, 'specific')
+      assert.deepEqual([...ev.buckets], ['spouse_divorce'])
+    }
+  })
+  check('10d. routing_status is NOT a terminal event', () => {
+    assert.equal(
+      protoMod.isTerminalConsultationEvent({
+        event: 'routing_status',
+        ts: 1,
+        level: 'initial',
+        buckets: ['keiei_kanri'],
+        status_label: 'x',
+      }),
+      false,
+    )
+  })
+  check('10e. ConsultationEventName union includes routing_status', () => {
+    // Compile-time witness — assignable means the name is valid.
+    const name: import('@/lib/consultation/stream-protocol').ConsultationEventName = 'routing_status'
+    assert.equal(name, 'routing_status')
+  })
+  check('10f. stream/route.ts wiring: imports KEYWORD_BUCKETS + matchBuckets', () => {
+    const fs = require('fs') as typeof import('fs')
+    const path = require('path') as typeof import('path')
+    const src = fs.readFileSync(
+      path.join(process.cwd(), 'app/api/consultation/stream/route.ts'),
+      'utf8',
+    )
+    assert.ok(
+      src.includes("from '@/lib/answer/intent/keyword-buckets'"),
+      'route does not import keyword-buckets',
+    )
+    assert.ok(
+      src.includes("from '@/lib/answer/intent/match-buckets'"),
+      'route does not import match-buckets',
+    )
+  })
+  check('10g. stream/route.ts wiring: emits initial routing_status when buckets matched', () => {
+    const fs = require('fs') as typeof import('fs')
+    const path = require('path') as typeof import('path')
+    const src = fs.readFileSync(
+      path.join(process.cwd(), 'app/api/consultation/stream/route.ts'),
+      'utf8',
+    )
+    assert.ok(
+      src.includes("level: 'initial'"),
+      'route does not emit routing_status with level=initial',
+    )
+    assert.ok(
+      src.includes("level: 'specific'"),
+      'route does not emit routing_status with level=specific',
+    )
+    assert.ok(
+      src.includes('ROUTING_STATUS_SPECIFIC_DELAY_MS'),
+      'route does not declare ROUTING_STATUS_SPECIFIC_DELAY_MS constant',
+    )
+  })
+  check('10h. stream/route.ts wiring: routing_status timer cancelled at first_token', () => {
+    const fs = require('fs') as typeof import('fs')
+    const path = require('path') as typeof import('path')
+    const src = fs.readFileSync(
+      path.join(process.cwd(), 'app/api/consultation/stream/route.ts'),
+      'utf8',
+    )
+    assert.ok(
+      src.includes('clearTimeout(routingSpecificTimer)') ||
+        src.includes('routingSpecificTimer'),
+      'route does not appear to cancel routing_status timer',
+    )
+  })
+
   console.log(`\n1.0 Alpha consultation contract: ${passes}/${total} pass`)
   if (fails.length > 0) {
     console.log('Failures:')

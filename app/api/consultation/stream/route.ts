@@ -1,3 +1,5 @@
+import { KEYWORD_BUCKETS, STATUS_LABEL_INITIAL_DEFAULT } from '@/lib/answer/intent/keyword-buckets'
+import { matchBuckets, topBucket } from '@/lib/answer/intent/match-buckets'
 import {
   CONSULTATION_ALPHA_MODEL,
   CONSULTATION_ALPHA_PROMPT_VERSION,
@@ -70,6 +72,11 @@ const DEEPSEEK_ENDPOINT = 'https://api.deepseek.com/chat/completions'
 const TEMPERATURE = 0.3
 const MAX_TOKENS = 1200
 
+// 0.6 ENGINE Pack 1: routing_status `specific` layer fires after this
+// delay if first_token still hasn't arrived. PL §3 spec: "3-5s 仍无正文";
+// 3000ms is the lower bound for the most informative UX.
+const ROUTING_STATUS_SPECIFIC_DELAY_MS = 3000
+
 interface ReqBody {
   question?: string
   image_summary?: string | null
@@ -132,6 +139,15 @@ export async function POST(req: Request) {
   const matchedAnchors = matchAnchors(question, trimmedImageSummary || null)
   const anchorIds = matchedAnchors.map(a => a.anchorId)
 
+  // 0.6 Sprint Workstream B (ENGINE Pack 1): keyword-bucket routing.
+  // Run synchronously alongside risk + anchor scans so the UI can show
+  // "正在核对 X、Y、Z" the moment `received` lands. The bucket scan
+  // matches against question only — image summary is intentionally
+  // excluded here because the routing label is about the user's
+  // residency-status intent, not the document context.
+  const bucketMatches = matchBuckets(question)
+  const bucketTop = topBucket(bucketMatches)
+
   // Create the row before opening the stream so the consultation_id is
   // emitted in the very first 'received' frame.
   // Issue #60: pass the live prompt-version + model constants so the DB
@@ -181,6 +197,43 @@ export async function POST(req: Request) {
       // 2. risk_hint — fire when any keyword matched
       if (riskHits.length > 0) {
         emit({ event: 'risk_hint', ts: Date.now(), risk_keyword_hits: riskHits })
+      }
+
+      // 2b. routing_status (initial) — 0.6 ENGINE Pack 1 / Workstream B.
+      // Fired immediately after received/risk_hint when matchBuckets
+      // returned ANY buckets. Status label is the shared 0-1s default;
+      // the bucket id list is included so a multi-bucket UI can show
+      // "经营管理 + 年金 + 技人国" while the model is thinking. Skipped
+      // entirely on zero matches (e.g. small-talk / off-topic input).
+      if (bucketMatches.length > 0) {
+        emit({
+          event: 'routing_status',
+          ts: Date.now(),
+          level: 'initial',
+          buckets: bucketMatches.map(m => m.bucket_id),
+          status_label: STATUS_LABEL_INITIAL_DEFAULT,
+        })
+      }
+
+      // 2c. routing_status (specific) — 3000ms timer.
+      // Fires only when first_token still hasn't arrived after 3000ms
+      // AND there's a top-1 bucket. Uses that bucket's
+      // status_label_specific so the UI surfaces a more concrete
+      // "正在核对经营管理、在留资格变更和当前基准。" line.
+      // Cancelled when first_token lands or stream ends.
+      let routingSpecificTimer: NodeJS.Timeout | null = null
+      if (bucketTop) {
+        routingSpecificTimer = setTimeout(() => {
+          if (firstTokenSeen || closed) return
+          const topBucketDef = KEYWORD_BUCKETS[bucketTop.bucket_id]
+          emit({
+            event: 'routing_status',
+            ts: Date.now(),
+            level: 'specific',
+            buckets: bucketMatches.map(m => m.bucket_id),
+            status_label: topBucketDef.status_label_specific,
+          })
+        }, ROUTING_STATUS_SPECIFIC_DELAY_MS)
       }
 
       // 3. still_generating watchdog (25s)
@@ -291,6 +344,7 @@ export async function POST(req: Request) {
           clearTimeout(stillGenTimer)
           clearTimeout(hardTimer)
           clearTimeout(wallClockTimer)
+          if (routingSpecificTimer) clearTimeout(routingSpecificTimer)
           if (!closed) {
             emit({
               event: 'failed',
@@ -338,6 +392,14 @@ export async function POST(req: Request) {
                   // First-token telemetry
                   if (!firstTokenSeen) {
                     firstTokenSeen = true
+                    // 0.6 Pack 1: cancel routing_status `specific` timer
+                    // if it hasn't fired yet — once we have first_token,
+                    // the bucket-specific copy would arrive late and
+                    // race the answer chunks.
+                    if (routingSpecificTimer) {
+                      clearTimeout(routingSpecificTimer)
+                      routingSpecificTimer = null
+                    }
                     const ftLatency = Date.now() - consultation.streamStartedAt!.getTime()
                     emit({
                       event: 'first_token',
@@ -421,6 +483,7 @@ export async function POST(req: Request) {
         clearTimeout(stillGenTimer)
         clearTimeout(hardTimer)
         clearTimeout(wallClockTimer)
+        if (routingSpecificTimer) clearTimeout(routingSpecificTimer)
         // Suppress unused-var warnings on still_generating watchdog flag
         void stillGeneratingEmitted
         close()
