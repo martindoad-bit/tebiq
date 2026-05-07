@@ -23,6 +23,8 @@
     "dev:visual-fixtures:cleanup": "tsx --env-file=.env.local scripts/dev-utils/visual-fixtures.ts cleanup",
     "cleanup-kv-stats": "tsx --env-file=.env.local scripts/cleanup-kv-stats.ts",
     "lint:answer": "tsx scripts/test/lint-answer.ts",
+    "fact-layer:sync": "tsx --env-file=.env.local scripts/fact-layer-sync.ts",
+    "fact-layer:sync:dry": "tsx scripts/fact-layer-sync.ts --dry-run",
     "test:answer-quality": "tsx scripts/test/test-answer-quality.ts",
     "test:intent-router": "tsx scripts/test/test-intent-router.ts",
     "test:llm-intent": "tsx scripts/test/test-llm-intent.ts",

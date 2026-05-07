@@ -1,0 +1,2 @@
+ALTER TABLE "ai_consultations" ADD COLUMN "fact_card_ids" jsonb DEFAULT '[]'::jsonb NOT NULL;--> statement-breakpoint
+ALTER TABLE "ai_consultations" ADD COLUMN "fact_card_audit" jsonb DEFAULT '[]'::jsonb NOT NULL;
