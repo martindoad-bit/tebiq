@@ -1,6 +1,5 @@
 import type { ReactNode } from 'react'
 import {
-  AlertTriangle,
   Archive,
   Camera,
   CheckCircle2,
@@ -10,6 +9,7 @@ import {
   MessageSquareText,
   RefreshCcw,
   ShieldCheck,
+  TriangleAlert,
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
@@ -55,8 +55,8 @@ export function ConsultationShell({ children, wide = false }: { children: ReactN
 
 export function AlphaNotice({ compact = false }: { compact?: boolean }) {
   return (
-    <div className="sticky top-0 z-20 border-b border-[var(--tebiq-soft-gray)] bg-[var(--tebiq-off-white)]/95 px-4 py-2 backdrop-blur">
-      <div className="mx-auto flex max-w-6xl items-start gap-2 text-[12px] leading-relaxed text-[var(--tebiq-deep-slate)]">
+    <div className="sticky top-0 z-20 border-b border-[var(--tebiq-soft-gray)] bg-[var(--tebiq-off-white)]/95 px-4 py-1.5 backdrop-blur">
+      <div className="mx-auto flex max-w-6xl items-start gap-2 text-[11.5px] leading-[1.55] text-[var(--tebiq-deep-slate)] sm:text-[12px]">
         <ShieldCheck className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[var(--tebiq-ink-blue)]" strokeWidth={1.6} />
         <span className={cx('min-w-0 flex-1 break-words', compact ? 'line-clamp-2' : '')}>{ALPHA_NOTICE}</span>
       </div>
@@ -76,9 +76,9 @@ export function BrandHeader({
   action?: ReactNode
 }) {
   return (
-    <header className="space-y-4">
-      <div className="flex flex-col items-start justify-between gap-4 sm:flex-row">
-        <div className="space-y-3">
+    <header className="space-y-3.5">
+      <div className="flex flex-col items-start justify-between gap-3.5 sm:flex-row">
+        <div className="space-y-2.5">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/brand/tebiq-v07/svg/tebiq-v07-logo-horizontal.svg"
@@ -89,15 +89,15 @@ export function BrandHeader({
             <p className="text-[11px] font-medium uppercase tracking-normal text-[var(--tebiq-cool-gray)]">
               {eyebrow}
             </p>
-            <h1 className="mt-1 text-[24px] font-semibold leading-[1.18] tracking-normal text-[var(--tebiq-ink-blue)]">
+            <h1 className="mt-1 text-[24px] font-semibold leading-[1.16] tracking-normal text-[var(--tebiq-ink-blue)] sm:text-[26px]">
               {title}
             </h1>
           </div>
         </div>
-        {action && <div className="shrink-0">{action}</div>}
+        {action && <div className="w-full shrink-0 sm:w-auto">{action}</div>}
       </div>
       {description && (
-        <p className="max-w-[34rem] break-words text-[14px] leading-relaxed text-[var(--tebiq-deep-slate)]">
+        <p className="max-w-[34rem] break-words text-[14.5px] leading-[1.75] text-[var(--tebiq-deep-slate)] sm:text-[15px]">
           {description}
         </p>
       )}
@@ -117,7 +117,7 @@ export function Surface({
   const Component = as
   return (
     <Component className={cx(
-      'min-w-0 max-w-full overflow-hidden rounded-card border border-[var(--tebiq-soft-gray)] bg-[var(--tebiq-off-white)] p-4',
+      'min-w-0 max-w-full overflow-hidden rounded-card border border-[var(--tebiq-soft-gray)] bg-[var(--tebiq-off-white)] p-4 sm:p-5',
       className,
     )}>
       {children}
@@ -160,12 +160,12 @@ export function MetaPill({
 export function StatusBadge({ state }: { state: AlphaDisplayState }) {
   const config: Record<AlphaDisplayState, { label: string; icon: LucideIcon; focus?: boolean }> = {
     completed: { label: '完整回答', icon: CheckCircle2 },
-    partial: { label: '回答可能不完整', icon: AlertTriangle, focus: true },
+    partial: { label: '回答可能不完整', icon: TriangleAlert, focus: true },
     streaming: { label: '回答生成中', icon: Loader2 },
     timeout_waiting: { label: '仍在生成', icon: Clock3, focus: true },
     timeout: { label: '未生成完整回答', icon: Clock3, focus: true },
     failed: { label: '生成失败', icon: RefreshCcw },
-    fallback: { label: '降级回答', icon: AlertTriangle, focus: true },
+    fallback: { label: '降级回答', icon: TriangleAlert, focus: true },
   }
   const item = config[state]
   return (
@@ -178,9 +178,9 @@ export function StatusBadge({ state }: { state: AlphaDisplayState }) {
 export function RiskHintBanner({ hits }: { hits: string[] }) {
   if (hits.length === 0) return null
   return (
-    <div className="rounded-card border border-[var(--tebiq-warm-amber)] bg-[var(--tebiq-off-white)] px-4 py-3 text-[13px] leading-relaxed text-[var(--tebiq-ink-blue)]">
-      <div className="flex gap-2">
-        <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-[var(--tebiq-warm-amber)]" strokeWidth={1.6} />
+    <div className="rounded-card border border-[var(--tebiq-warm-amber)] bg-[var(--tebiq-off-white)] px-3.5 py-3 text-[13px] leading-[1.65] text-[var(--tebiq-ink-blue)]">
+      <div className="flex gap-2.5">
+        <TriangleAlert className="mt-0.5 h-4 w-4 shrink-0 text-[var(--tebiq-warm-amber)]" strokeWidth={1.55} />
         <div>
           <p>{RISK_HINT}</p>
           <p className="mt-1 text-[11px] text-[var(--tebiq-deep-slate)]">

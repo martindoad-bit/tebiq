@@ -314,36 +314,47 @@ export default function AiConsultationEntryClient() {
           description={
             active
               ? '回答会按咨询记录保存状态展示。完整、部分、超时和失败会明确区分。'
-              : '文字或日文材料照片都可以先问。TEBIQ 会帮你整理方向、风险提示和下一步确认点。'
+              : '文字或日文材料照片都可以先问。TEBIQ 会整理方向、风险提示和下一步确认点。'
           }
           action={
             <a
               href="/me/consultations"
-              className="inline-flex h-9 items-center gap-1.5 rounded-btn border border-[var(--tebiq-soft-gray)] px-3 text-[12px] text-[var(--tebiq-deep-slate)]"
+              className="inline-flex h-9 w-full items-center justify-center gap-1.5 rounded-btn border border-[var(--tebiq-soft-gray)] px-3 text-[12px] text-[var(--tebiq-deep-slate)] sm:w-auto"
             >
               <Archive className="h-3.5 w-3.5" strokeWidth={1.6} />
-              记录
+              我的咨询记录
             </a>
           }
         />
 
         {!active && (
-          <form onSubmit={submit} className="space-y-4">
-            <Surface className="space-y-3">
-              <div className="flex items-center gap-2">
-                <MessageSquarePlus className="h-4 w-4 text-[var(--tebiq-ink-blue)]" strokeWidth={1.6} />
-                <div>
-                  <SectionLabel>文字咨询</SectionLabel>
-                  <p className="text-[13px] text-[var(--tebiq-deep-slate)]">把现在的情况直接写下来。</p>
+          <form onSubmit={submit} className="space-y-3.5">
+            <Surface className="space-y-3.5">
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex min-w-0 items-center gap-2">
+                  <MessageSquarePlus className="h-4 w-4 shrink-0 text-[var(--tebiq-ink-blue)]" strokeWidth={1.6} />
+                  <div className="min-w-0">
+                    <SectionLabel>文字咨询</SectionLabel>
+                    <p className="text-[13.5px] leading-[1.65] text-[var(--tebiq-deep-slate)]">把现在的情况直接写下来。已有日文材料时，也可以先加一张照片。</p>
+                  </div>
                 </div>
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={photo.kind === 'recognizing'}
+                  className="inline-flex shrink-0 items-center gap-1.5 rounded-btn border border-[var(--tebiq-soft-gray)] px-2.5 py-2 text-[12px] font-medium text-[var(--tebiq-ink-blue)] disabled:opacity-50"
+                >
+                  {photo.kind === 'ready' ? <CheckCircle2 className="h-3.5 w-3.5" strokeWidth={1.6} /> : <Camera className="h-3.5 w-3.5" strokeWidth={1.6} />}
+                  {photo.kind === 'ready' ? '已加图片' : '拍照'}
+                </button>
               </div>
               <textarea
                 value={question}
                 onChange={e => setQuestion(e.target.value)}
                 maxLength={4000}
-                rows={7}
+                rows={5}
                 placeholder="例：我是经管签，公司还没清算，能不能直接回国？"
-                className="min-h-[168px] w-full resize-y rounded-card border border-[var(--tebiq-soft-gray)] bg-[var(--tebiq-off-white)] p-3 text-[16px] leading-relaxed text-[var(--tebiq-ink-blue)] outline-none focus-visible:shadow-focus"
+                className="min-h-[132px] w-full resize-y rounded-card border border-[var(--tebiq-soft-gray)] bg-[var(--tebiq-off-white)] p-3.5 text-[16px] leading-[1.7] text-[var(--tebiq-ink-blue)] outline-none focus-visible:shadow-focus"
                 required
               />
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -377,10 +388,10 @@ export default function AiConsultationEntryClient() {
               </Surface>
             )}
 
-            <Surface className="flex items-center justify-between gap-3 text-[13px] text-[var(--tebiq-deep-slate)]">
+            <Surface className="flex items-center justify-between gap-3 p-3.5 text-[13px] text-[var(--tebiq-deep-slate)] sm:p-4">
               <span>最近保存的咨询可以从记录页找回。</span>
               <a href="/me/consultations" className="inline-flex items-center gap-1 font-medium text-[var(--tebiq-ink-blue)]">
-                查看记录
+                我的咨询记录
                 <ArrowRight className="h-3.5 w-3.5" strokeWidth={1.6} />
               </a>
             </Surface>
@@ -420,13 +431,13 @@ function PhotoLiteCard({
   resetPhoto: () => void
 }) {
   return (
-    <Surface className="space-y-3">
+    <Surface className="space-y-3 p-3.5 sm:p-4">
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-2">
           <Camera className="h-4 w-4 text-[var(--tebiq-ink-blue)]" strokeWidth={1.6} />
           <div>
             <SectionLabel>拍照咨询 Lite</SectionLabel>
-            <p className="text-[13px] text-[var(--tebiq-deep-slate)]">可以上传入管通知、年金税金、雇佣相关材料。</p>
+            <p className="text-[13px] leading-[1.6] text-[var(--tebiq-deep-slate)]">适合入管通知、年金税金、雇佣相关材料。</p>
           </div>
         </div>
         {photo.kind === 'ready' && (
@@ -437,7 +448,7 @@ function PhotoLiteCard({
       </div>
 
       {photo.kind === 'idle' && (
-        <div className="rounded-card border border-dashed border-[var(--tebiq-cool-gray)] p-4">
+        <div className="rounded-card border border-dashed border-[var(--tebiq-cool-gray)] p-3.5">
           <input
             ref={fileInputRef}
             type="file"
@@ -454,7 +465,7 @@ function PhotoLiteCard({
             <Upload className="h-4 w-4" strokeWidth={1.6} />
             上传 / 拍照
           </button>
-          <p className="mt-2 text-[12px] leading-relaxed text-[var(--tebiq-cool-gray)]">
+          <p className="mt-2 text-[12px] leading-[1.65] text-[var(--tebiq-cool-gray)]">
             图片只用于这次咨询的识别摘要，不做 OCR 档案系统。
           </p>
         </div>
@@ -521,7 +532,7 @@ function ActiveConsultationView({
     <section className="space-y-4">
       <Surface className="space-y-2">
         <SectionLabel>你的问题</SectionLabel>
-        <p className="text-[15px] leading-relaxed text-[var(--tebiq-ink-blue)]">{active.question}</p>
+        <p className="text-[16px] leading-[1.75] text-[var(--tebiq-ink-blue)]">{active.question}</p>
       </Surface>
 
       {active.photoSummary && (
@@ -530,7 +541,7 @@ function ActiveConsultationView({
             // eslint-disable-next-line @next/next/no-img-element
             <img src={active.photoPreview} alt="提交的图片" className="h-16 w-16 shrink-0 rounded-card border border-[var(--tebiq-soft-gray)] object-cover" />
           )}
-          <div className="min-w-0 text-[13px] leading-relaxed">
+          <div className="min-w-0 text-[13.5px] leading-[1.7]">
             <SectionLabel>图片摘要</SectionLabel>
             <p className="mt-1 text-[var(--tebiq-deep-slate)]">{active.photoSummary}</p>
             <p className="mt-1 text-[11px] text-[var(--tebiq-cool-gray)]">只作为本次咨询上下文，不是文书判断。</p>
@@ -538,9 +549,7 @@ function ActiveConsultationView({
         </Surface>
       )}
 
-      <RiskHintBanner hits={active.risk_keywords} />
-
-      <Surface className="space-y-3">
+      <Surface className="space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="flex items-center gap-2">
             <FileText className="h-4 w-4 text-[var(--tebiq-ink-blue)]" strokeWidth={1.6} />
@@ -549,27 +558,29 @@ function ActiveConsultationView({
           <StatusBadge state={displayState} />
         </div>
 
+        <RiskHintBanner hits={active.risk_keywords} />
+
         {(displayState === 'partial' || displayState === 'fallback' || displayState === 'timeout') && (
-          <div className="rounded-card border border-[var(--tebiq-warm-amber)] px-3 py-2 text-[12px] leading-relaxed text-[var(--tebiq-ink-blue)]">
+          <div className="rounded-card border border-[var(--tebiq-warm-amber)] px-3 py-2 text-[12.5px] leading-[1.65] text-[var(--tebiq-ink-blue)]">
             {displayState === 'partial' && '回答中断，下面只保留已生成部分。'}
             {displayState === 'fallback' && '模型响应超时，下面是安全降级提示，不是完整咨询回答。'}
             {displayState === 'timeout' && '没有生成可用完整回答。'}
           </div>
         )}
 
-        <article className="min-h-[7.5rem] whitespace-pre-wrap text-[15px] leading-[1.75] text-[var(--tebiq-ink-blue)]">
+        <article className="min-h-[7.5rem] text-[16px] leading-[1.78] text-[var(--tebiq-ink-blue)]">
           {displayState === 'fallback' && active.fallback_text && (
-            <span className="block text-[var(--tebiq-deep-slate)]">{active.fallback_text}</span>
+            <p className="mb-3 text-[15px] leading-[1.7] text-[var(--tebiq-deep-slate)]">{active.fallback_text}</p>
           )}
-          {active.answer}
+          {active.answer.trim() && <AnswerProse text={active.answer} />}
           {active.phase === 'received' && (
-            <span className="inline-flex items-center gap-2 text-[var(--tebiq-deep-slate)]">
+            <span className="inline-flex items-center gap-2 text-[15px] leading-[1.7] text-[var(--tebiq-deep-slate)]">
               <Loader2 className="h-4 w-4 animate-spin" strokeWidth={1.6} />
-              正在生成咨询方向
+              已收到，正在整理咨询方向
             </span>
           )}
           {active.phase === 'still_generating' && active.answer === '' && (
-            <span className="text-[var(--tebiq-deep-slate)]">回答仍在生成。25 秒不是失败线，你可以继续等待。</span>
+            <span className="text-[15px] leading-[1.7] text-[var(--tebiq-deep-slate)]">回答仍在生成，可以继续等待。</span>
           )}
           {active.phase === 'streaming' && (
             <span className="ml-1 inline-block h-4 w-1.5 animate-pulse rounded-full bg-[var(--tebiq-cool-gray)] align-middle" />
@@ -587,7 +598,7 @@ function ActiveConsultationView({
         <Surface className="space-y-3">
           <div>
             <SectionLabel>反馈与保存</SectionLabel>
-            <p className="mt-1 text-[12px] text-[var(--tebiq-deep-slate)]">你的反馈会进入 Learning Console，帮助团队判断回答质量。</p>
+            <p className="mt-1 text-[12.5px] leading-[1.65] text-[var(--tebiq-deep-slate)]">这次咨询可以先保存。反馈会进入 Learning Console，用于判断回答质量。</p>
           </div>
           <div className="grid grid-cols-2 gap-2">
             {FEEDBACK_BUTTONS.map(b => (
@@ -657,16 +668,116 @@ function ActiveConsultationView({
         </Surface>
       )}
 
-      {(active.first_token_latency_ms != null || active.total_latency_ms != null || active.feedback_sent || error) && (
+      {(active.feedback_sent || error) && (
         <div className="flex flex-wrap gap-2">
-          {active.first_token_latency_ms != null && <MetaPill>first token {active.first_token_latency_ms}ms</MetaPill>}
-          {active.total_latency_ms != null && <MetaPill>total {active.total_latency_ms}ms</MetaPill>}
           {active.feedback_sent && <MetaPill>反馈：{feedbackLabel(active.feedback_sent)}</MetaPill>}
           {error && <MetaPill tone="focus">{error}</MetaPill>}
         </div>
       )}
     </section>
   )
+}
+
+type AnswerBlock =
+  | { kind: 'heading'; text: string }
+  | { kind: 'paragraph'; lines: string[] }
+  | { kind: 'list'; items: string[] }
+
+function AnswerProse({ text }: { text: string }) {
+  const blocks = buildAnswerBlocks(text)
+  return (
+    <div className="space-y-4">
+      {blocks.map((block, index) => {
+        if (block.kind === 'heading') {
+          return (
+            <h2 key={index} className="border-l-2 border-[var(--tebiq-warm-amber)] pl-3 text-[15px] font-semibold leading-[1.55] text-[var(--tebiq-ink-blue)]">
+              {renderInline(block.text)}
+            </h2>
+          )
+        }
+        if (block.kind === 'list') {
+          return (
+            <ul key={index} className="space-y-2.5 pl-1">
+              {block.items.map((item, itemIndex) => (
+                <li key={itemIndex} className="flex gap-2.5 text-[15.5px] leading-[1.75] text-[var(--tebiq-ink-blue)]">
+                  <span className="mt-[0.72em] h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--tebiq-cool-gray)]" />
+                  <span className="min-w-0">{renderInline(item)}</span>
+                </li>
+              ))}
+            </ul>
+          )
+        }
+        return (
+          <p key={index} className="whitespace-pre-wrap text-[16px] leading-[1.82] text-[var(--tebiq-ink-blue)]">
+            {renderInline(block.lines.join('\n'))}
+          </p>
+        )
+      })}
+    </div>
+  )
+}
+
+function buildAnswerBlocks(text: string): AnswerBlock[] {
+  const blocks: AnswerBlock[] = []
+  let paragraph: string[] = []
+  let list: string[] = []
+
+  const flushParagraph = () => {
+    if (paragraph.length > 0) {
+      blocks.push({ kind: 'paragraph', lines: paragraph })
+      paragraph = []
+    }
+  }
+  const flushList = () => {
+    if (list.length > 0) {
+      blocks.push({ kind: 'list', items: list })
+      list = []
+    }
+  }
+
+  for (const rawLine of text.split(/\r?\n/)) {
+    const line = rawLine.trim()
+    if (!line) {
+      flushParagraph()
+      flushList()
+      continue
+    }
+
+    const heading = line.match(/^#{1,3}\s+(.+)$/)
+    if (heading) {
+      flushParagraph()
+      flushList()
+      blocks.push({ kind: 'heading', text: heading[1] })
+      continue
+    }
+
+    const bullet = line.match(/^(?:[-*]|\d+[.)])\s+(.+)$/)
+    if (bullet) {
+      flushParagraph()
+      list.push(bullet[1])
+      continue
+    }
+
+    flushList()
+    paragraph.push(line)
+  }
+
+  flushParagraph()
+  flushList()
+  return blocks
+}
+
+function renderInline(text: string) {
+  return text.split(/(\*\*[^*]+\*\*)/g).map((part, index) => {
+    if (part.startsWith('**') && part.endsWith('**')) {
+      return (
+        <strong key={index} className="font-semibold text-[var(--tebiq-ink-blue)]">
+          {part.slice(2, -2)}
+        </strong>
+      )
+    }
+    return part
+  })
 }
 
 function getDisplayState(active: ActiveConsultation): AlphaDisplayState {
