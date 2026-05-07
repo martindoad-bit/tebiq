@@ -54,6 +54,7 @@ interface ActiveConsultation {
   id: string
   question: string
   photoSummary: string | null
+  photoStorageRef: string | null
   photoPreview: string | null
   answer: string
   risk_keywords: string[]
@@ -72,6 +73,15 @@ interface ActiveConsultation {
   feedback_sent: FeedbackType | null
   saved: boolean
 }
+
+type ConsultationStartPayload = {
+  text: string
+  photoSummary: string | null
+  photoStorageRef: string | null
+  photoPreview: string | null
+}
+
+type WaitingStage = 'early' | 'long' | 'escape'
 
 const FEEDBACK_BUTTONS: Array<{ type: FeedbackType; label: string }> = [
   { type: 'helpful', label: '有帮助' },
@@ -100,6 +110,7 @@ export default function AiConsultationEntryClient() {
   const [photo, setPhoto] = useState<PhotoState>({ kind: 'idle' })
   const fileInputRef = useRef<HTMLInputElement | null>(null)
   const abortRef = useRef<AbortController | null>(null)
+  const streamRunRef = useRef(0)
 
   useEffect(() => {
     setViewerId(ensureViewerCookie())
@@ -170,16 +181,30 @@ export default function AiConsultationEntryClient() {
     if (!text) return
     if (active && !isTerminal(active.phase)) return
     if (photo.kind === 'recognizing') return
-    setError(null)
 
     const photoSummary = photo.kind === 'ready' ? photo.summary : null
     const photoStorageRef = photo.kind === 'ready' ? photo.storageRef : null
     const photoPreview = photo.kind === 'ready' ? photo.preview : null
 
+    await startConsultation({ text, photoSummary, photoStorageRef, photoPreview })
+  }
+
+  async function startConsultation({
+    text,
+    photoSummary,
+    photoStorageRef,
+    photoPreview,
+  }: ConsultationStartPayload) {
+    abortRef.current?.abort()
+    const runId = streamRunRef.current + 1
+    streamRunRef.current = runId
+    setError(null)
+
     setActive({
       id: '',
       question: text,
       photoSummary,
+      photoStorageRef,
       photoPreview,
       answer: '',
       risk_keywords: [],
@@ -212,12 +237,16 @@ export default function AiConsultationEntryClient() {
         signal: ac.signal,
       })
     } catch (err) {
-      setActive(prev => prev ? { ...prev, phase: 'failed', detail: err instanceof Error ? err.message : String(err) } : prev)
+      if (streamRunRef.current === runId) {
+        setActive(prev => prev ? { ...prev, phase: 'failed', detail: err instanceof Error ? err.message : String(err) } : prev)
+      }
       return
     }
     if (!res.ok || !res.body) {
       const j = (await res.json().catch(() => ({}))) as { error?: string; detail?: string }
-      setActive(prev => prev ? { ...prev, phase: 'failed', detail: j.detail ?? j.error ?? `HTTP ${res.status}` } : prev)
+      if (streamRunRef.current === runId) {
+        setActive(prev => prev ? { ...prev, phase: 'failed', detail: j.detail ?? j.error ?? `HTTP ${res.status}` } : prev)
+      }
       return
     }
 
@@ -230,19 +259,22 @@ export default function AiConsultationEntryClient() {
         buffer += value
         const { events, remainder } = parseConsultationChunk(buffer)
         buffer = remainder
-        for (const ev of events) applyEvent(ev)
+        for (const ev of events) applyEvent(ev, runId)
       }
     } catch (err) {
       if ((err as { name?: string })?.name === 'AbortError') return
-      setActive(prev => prev ? { ...prev, phase: 'failed', detail: err instanceof Error ? err.message : String(err) } : prev)
+      if (streamRunRef.current === runId) {
+        setActive(prev => prev ? { ...prev, phase: 'failed', detail: err instanceof Error ? err.message : String(err) } : prev)
+      }
     } finally {
       try { reader.releaseLock() } catch { /* ignore */ }
     }
   }
 
-  function applyEvent(ev: ConsultationEvent) {
+  function applyEvent(ev: ConsultationEvent, runId: number) {
     setActive(prev => {
       if (!prev) return prev
+      if (streamRunRef.current !== runId) return prev
       switch (ev.event) {
         case 'received':
           return { ...prev, id: ev.consultation_id, phase: 'received' }
@@ -314,11 +346,22 @@ export default function AiConsultationEntryClient() {
   }
 
   function reset() {
+    streamRunRef.current += 1
     abortRef.current?.abort()
     setActive(null)
     setQuestion('')
     setError(null)
     clearPhoto()
+  }
+
+  async function retryActiveConsultation() {
+    if (!active) return
+    await startConsultation({
+      text: active.question,
+      photoSummary: active.photoSummary,
+      photoStorageRef: active.photoStorageRef,
+      photoPreview: active.photoPreview,
+    })
   }
 
   return (
@@ -421,6 +464,7 @@ export default function AiConsultationEntryClient() {
             onFeedback={sendFeedback}
             onSave={saveQuestion}
             onReset={reset}
+            onRetry={retryActiveConsultation}
           />
         )}
 
@@ -533,19 +577,27 @@ function ActiveConsultationView({
   onFeedback,
   onSave,
   onReset,
+  onRetry,
 }: {
   active: ActiveConsultation
   error: string | null
   onFeedback: (type: FeedbackType) => void
   onSave: () => void
   onReset: () => void
+  onRetry: () => void
 }) {
-  const displayState = getDisplayState(active)
   const canAct = active.phase === 'completed'
   const canRecover = active.phase === 'timeout' || active.phase === 'failed'
+  const answerHasStarted = active.answer.trim().length > 0 || active.phase === 'streaming' || isTerminal(active.phase)
+  const isWaitingForAnswer = !answerHasStarted
+  const [waitingStage, setWaitingStage] = useState<WaitingStage>('early')
+  const [waitingChoice, setWaitingChoice] = useState<'idle' | 'continue' | 'saved'>('idle')
+  const baseDisplayState = getDisplayState(active)
+  const displayState: AlphaDisplayState =
+    isWaitingForAnswer && waitingStage !== 'early' ? 'timeout_waiting' : baseDisplayState
   const waitingStatus =
-    active.phase === 'received' || active.phase === 'still_generating'
-      ? getWaitingStatus(active)
+    isWaitingForAnswer
+      ? getWaitingStatus(active, waitingStage)
       : null
   const [copyState, setCopyState] = useState<'idle' | 'copied' | 'failed'>('idle')
   const [shareState, setShareState] = useState<'idle' | 'shared' | 'copied' | 'failed'>('idle')
@@ -554,6 +606,19 @@ function ActiveConsultationView({
     typeof window === 'undefined'
       ? detailPath
       : new URL(detailPath, window.location.origin).toString()
+
+  useEffect(() => {
+    setWaitingStage('early')
+    setWaitingChoice('idle')
+    if (!isWaitingForAnswer) return
+
+    const longTimer = window.setTimeout(() => setWaitingStage('long'), 17_000)
+    const escapeTimer = window.setTimeout(() => setWaitingStage('escape'), 35_000)
+    return () => {
+      window.clearTimeout(longTimer)
+      window.clearTimeout(escapeTimer)
+    }
+  }, [active.id, isWaitingForAnswer])
 
   async function writeClipboardText(text: string) {
     if (navigator.clipboard?.writeText) {
@@ -640,6 +705,11 @@ function ActiveConsultationView({
             {displayState === 'timeout' && '没有生成可用完整回答。'}
           </div>
         )}
+        {displayState === 'failed' && (
+          <div className="rounded-card border border-[var(--tebiq-warm-amber)] px-3 py-2 text-[12.5px] leading-[1.65] text-[var(--tebiq-ink-blue)]">
+            这次请求没有完成。可以直接重新生成这次回答，不需要重新输入问题。
+          </div>
+        )}
 
         <article className="min-h-[7.5rem] text-[16px] leading-[1.78] text-[var(--tebiq-ink-blue)]">
           {displayState === 'fallback' && active.fallback_text && (
@@ -648,16 +718,60 @@ function ActiveConsultationView({
           {active.answer.trim() && <AnswerProse text={active.answer} />}
           {waitingStatus && active.answer === '' && (
             <div className="rounded-card border border-[var(--tebiq-soft-gray)] px-3 py-2 text-[13.5px] leading-[1.65] text-[var(--tebiq-deep-slate)]">
-              <span className="inline-flex items-center gap-2">
-                {waitingStatus.showSpinner && (
-                  <Loader2 className="h-4 w-4 animate-spin" strokeWidth={1.6} />
+              <div>
+                <span className="inline-flex items-center gap-2">
+                  {waitingStatus.showSpinner && (
+                    <Loader2 className="h-4 w-4 animate-spin" strokeWidth={1.6} />
+                  )}
+                  {waitingStatus.main}
+                </span>
+                {waitingStatus.sub && (
+                  <p className="mt-1 pl-6 text-[12px] leading-[1.6] text-[var(--tebiq-cool-gray)]">
+                    {waitingStatus.sub}
+                  </p>
                 )}
-                {waitingStatus.main}
-              </span>
-              {waitingStatus.sub && (
-                <p className="mt-1 pl-6 text-[12px] leading-[1.6] text-[var(--tebiq-cool-gray)]">
-                  {waitingStatus.sub}
-                </p>
+              </div>
+              {waitingStatus.stage === 'escape' && (
+                <div className="mt-3 space-y-2 border-t border-[var(--tebiq-soft-gray)] pt-3">
+                  <div className="grid gap-2 sm:grid-cols-3">
+                    <button
+                      type="button"
+                      onClick={() => setWaitingChoice('continue')}
+                      className="inline-flex min-h-10 items-center justify-center rounded-btn bg-[var(--tebiq-ink-blue)] px-3 py-2 text-[13px] font-medium text-[var(--tebiq-off-white)]"
+                    >
+                      继续等待
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        onSave()
+                        setWaitingChoice('saved')
+                      }}
+                      disabled={!active.id || active.saved}
+                      className="inline-flex min-h-10 items-center justify-center gap-1.5 rounded-btn border border-[var(--tebiq-soft-gray)] px-3 py-2 text-[13px] font-medium text-[var(--tebiq-ink-blue)] disabled:opacity-60"
+                    >
+                      {active.saved ? '已保存' : '稍后回来'}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={onRetry}
+                      className="inline-flex min-h-10 items-center justify-center gap-1.5 rounded-btn border border-[var(--tebiq-soft-gray)] px-3 py-2 text-[13px] font-medium text-[var(--tebiq-ink-blue)]"
+                    >
+                      <RefreshCcw className="h-3.5 w-3.5" strokeWidth={1.6} />
+                      重新生成
+                    </button>
+                  </div>
+                  {waitingChoice === 'continue' && (
+                    <p className="text-[12px] leading-[1.6] text-[var(--tebiq-cool-gray)]">
+                      会继续在这里等待，正文一出现就会自动显示。
+                    </p>
+                  )}
+                  {waitingChoice === 'saved' && (
+                    <p className="text-[12px] leading-[1.6] text-[var(--tebiq-cool-gray)]">
+                      已保存到咨询记录。稍后可以从记录页回来查看。
+                    </p>
+                  )}
+                </div>
               )}
             </div>
           )}
@@ -778,14 +892,29 @@ function ActiveConsultationView({
 
       {canRecover && (
         <Surface className="space-y-3">
-          <SectionLabel>这次没有完整回答</SectionLabel>
+          <div>
+            <SectionLabel>
+              {displayState === 'partial'
+                ? '这次回答可能不完整'
+                : displayState === 'failed'
+                  ? '这次生成失败'
+                  : '这次没有完整回答'}
+            </SectionLabel>
+            <p className="mt-1 text-[12.5px] leading-[1.65] text-[var(--tebiq-deep-slate)]">
+              {displayState === 'partial'
+                ? '已生成的内容会保留；如果要完整回答，可以重新生成这次回答。'
+                : displayState === 'failed'
+                  ? '请求没有完成。重试会保留原问题重新发起，不是新问题。'
+                  : '这次没有拿到可用完整回答。可以继续保存问题，或重新生成这次回答。'}
+            </p>
+          </div>
           <div className="grid gap-2 sm:grid-cols-2">
             <button
-              onClick={onReset}
+              onClick={onRetry}
               className="inline-flex items-center justify-center gap-2 rounded-btn bg-[var(--tebiq-ink-blue)] px-3 py-2 text-[13px] font-medium text-[var(--tebiq-off-white)]"
             >
               <RefreshCcw className="h-4 w-4" strokeWidth={1.6} />
-              重试 / 重新开始
+              重新生成这次回答
             </button>
             {active.id && (
               <button
@@ -797,6 +926,13 @@ function ActiveConsultationView({
               </button>
             )}
           </div>
+          <button
+            type="button"
+            onClick={onReset}
+            className="text-left text-[12px] font-medium text-[var(--tebiq-deep-slate)]"
+          >
+            改成新问题
+          </button>
         </Surface>
       )}
 
@@ -849,22 +985,43 @@ function AnswerProse({ text }: { text: string }) {
   )
 }
 
-function getWaitingStatus(active: ActiveConsultation): {
+function getWaitingStatus(active: ActiveConsultation, waitingStage: WaitingStage): {
   main: string
   sub: string | null
   showSpinner: boolean
+  stage: WaitingStage
 } {
-  if (active.phase === 'still_generating') {
+  if (waitingStage === 'escape') {
     return {
-      main: '仍在生成，可以继续等待。',
-      sub: active.routingStatus?.level === 'specific' ? active.routingStatus.label : null,
+      main: '仍在生成，没有卡死。',
+      sub: '可以继续等待，也可以先保存问题稍后回来，或重新生成这次回答。',
       showSpinner: true,
+      stage: 'escape',
+    }
+  }
+  if (waitingStage === 'long' || active.phase === 'still_generating') {
+    return {
+      main: '还在生成，请再等一下。',
+      sub: active.routingStatus?.level === 'specific'
+        ? `${active.routingStatus.label}。复杂问题可能需要更久一点。`
+        : '复杂问题可能需要更久一点。',
+      showSpinner: true,
+      stage: 'long',
+    }
+  }
+  if (active.phase === 'idle') {
+    return {
+      main: '正在连接咨询服务...',
+      sub: null,
+      showSpinner: true,
+      stage: 'early',
     }
   }
   return {
     main: active.routingStatus?.label ?? '已收到，正在整理这个问题涉及的在留方向。',
     sub: null,
     showSpinner: true,
+    stage: 'early',
   }
 }
 
