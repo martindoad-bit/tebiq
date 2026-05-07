@@ -68,8 +68,11 @@ async function main() {
       factId: norm.factId,
       state: norm.state,
       riskLevel: norm.riskLevel,
-      controlledAlphaEligible: norm.controlledAlphaEligible,
-      triggerKeywords: norm.triggerKeywords,
+      // Drizzle's `$inferInsert` types boolean columns with defaults as
+      // `boolean | undefined`. Coalesce to the same default the DB
+      // applies (false) so InMemoryCard stays strict.
+      controlledAlphaEligible: norm.controlledAlphaEligible ?? false,
+      triggerKeywords: norm.triggerKeywords ?? [],
     })
   }
 
