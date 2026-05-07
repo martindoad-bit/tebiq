@@ -21,12 +21,31 @@
 export type ConsultationEventName =
   | 'received'           // immediately after server creates the row
   | 'risk_hint'          // 0 or 1 — risk_keyword_hits[] non-empty
+  | 'routing_status'     // 0.6 ENGINE Pack 1: keyword-bucket label (initial / specific)
   | 'still_generating'   // 25s elapsed without first_token
   | 'first_token'        // first DS token observed
   | 'answer_chunk'       // streaming token chunk
   | 'completed'          // DS stream done; final answer written
   | 'timeout'            // 90s hard cutoff (carries completion_status to disambiguate partial vs silent)
   | 'failed'             // non-timeout error
+
+/**
+ * 0.6 Sprint Workstream B (ENGINE Pack 1): two-layer routing-status
+ * payload that surfaces "which residency-status bucket is being
+ * processed" between `received` and `first_token`.
+ *
+ *   - level='initial' fires immediately after `received` (within 100ms),
+ *     when matchBuckets() returns ANY buckets. status_label is the
+ *     shared "已收到，正在整理 …" copy.
+ *   - level='specific' fires only if `first_token` hasn't arrived
+ *     within 3000ms AND there is a top-1 bucket. status_label is that
+ *     bucket's status_label_specific.
+ *
+ * `buckets` is the full list of matched bucket ids in score order so
+ * the UI can render multi-bucket cases (e.g. "经营管理 + 年金").
+ * `status_label` is the single line of copy the UI should display.
+ */
+export type ConsultationRoutingStatusLevel = 'initial' | 'specific'
 
 /**
  * The 5 DB-level completion statuses. Mirrors `ai_consultation_status`
@@ -48,6 +67,20 @@ export type ConsultationCompletionStatus =
 export type ConsultationEvent =
   | { event: 'received'; ts: number; consultation_id: string }
   | { event: 'risk_hint'; ts: number; risk_keyword_hits: ReadonlyArray<string> }
+  | {
+      event: 'routing_status';
+      ts: number;
+      level: ConsultationRoutingStatusLevel;
+      /** Matched bucket ids in score-descending order (declaration-order
+       *  tiebreak). Empty when no buckets match — but in that case the
+       *  server SHOULD NOT emit the event at all, so this should never
+       *  be empty in practice. */
+      buckets: ReadonlyArray<string>;
+      /** UI-ready single-line copy. For level='initial' this is the
+       *  shared STATUS_LABEL_INITIAL_DEFAULT; for level='specific' this
+       *  is the top-1 bucket's status_label_specific. */
+      status_label: string;
+    }
   | { event: 'still_generating'; ts: number }
   | { event: 'first_token'; ts: number; first_token_latency_ms: number }
   | { event: 'answer_chunk'; ts: number; chunk: string }

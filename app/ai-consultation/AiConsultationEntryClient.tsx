@@ -243,6 +243,12 @@ export default function AiConsultationEntryClient() {
           return { ...prev, id: ev.consultation_id, phase: 'received' }
         case 'risk_hint':
           return { ...prev, risk_keywords: ev.risk_keyword_hits.slice() }
+        case 'routing_status':
+          // 0.6 ENGINE Pack 1: bucket-routing copy. CODEXUI Workstream
+          // B owns the UI rendering; this client doesn't surface it
+          // yet. Returning `prev` keeps the existing UX while making
+          // the switch exhaustive over the new event.
+          return prev
         case 'still_generating':
           return prev.phase === 'received' ? { ...prev, phase: 'still_generating' } : prev
         case 'first_token':
