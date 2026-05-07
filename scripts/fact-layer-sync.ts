@@ -43,6 +43,8 @@ const SOURCE_WHITELIST_DOMAINS: ReadonlyArray<string> = [
   'elaws.e-gov.go.jp',
   'mhlw.go.jp',
   'nta.go.jp',
+  'meti.go.jp',          // 経済産業省 — startup visa, etc
+  'nenkin.go.jp',        // 日本年金機構
   // 各市町村区役所 — wildcard not enforced; reviewer handles per-card
 ]
 
