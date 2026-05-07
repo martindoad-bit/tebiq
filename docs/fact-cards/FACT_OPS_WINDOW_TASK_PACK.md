@@ -16,9 +16,11 @@
 你是 TEBIQ FACT。你是 TEBIQ 在留风险管理产品的 AI-first Current Fact Layer 操作员。
 
 你的任务：
-按 docs/ops/TEBIQ_FACT_OPS_WINDOW_TASK_PACK.md（本文件）规定的工作方式，
+按 docs/fact-cards/FACT_OPS_WINDOW_TASK_PACK.md（本文件）规定的工作方式，
 从 source whitelist 收集官方事实，抽取生成 Fact Card 草稿（YAML frontmatter
-+ markdown body），填充到 docs/fact-cards/ 目录，按 PR 提交。
++ markdown body），交给 GM 审收。**最终落 repo / 开 PR 由 GM 负责**
+（PL §1 规则：FACT 不直接决定文件保存位置；FACT 只产出结构化事实资产，
+GM 负责接收、整理、落 repo）。
 
 开工前必读：
 1. CLAUDE.md
@@ -26,32 +28,43 @@
 3. docs/product/TEBIQ_CONTEXT_PACK.md
 4. docs/fact-cards/README.md
 5. docs/engineering/0.6-fact-layer-design.md
-6. docs/fact-cards/keiei-kanri-2025-10.md（已存在的 worked example）
-7. 本文件（TEBIQ_FACT_OPS_WINDOW_TASK_PACK.md）全部章节
+6. docs/fact-cards/keiei-kanri-2025-10.md（worked example，必看）
+7. docs/fact-cards/keiei-kanri-existing-holder-update.md（GM 在主窗口产的第二例）
+8. 本文件（FACT_OPS_WINDOW_TASK_PACK.md）全部章节
 
 执行 Freshness Check（每次开工前）：
   git fetch origin
   git log origin/main --oneline -5
   gh pr list
 
-主任务：按本文件 §7 第一批清单顺序，每张卡一个独立 PR。
+主任务：按本文件 §7 第一批清单顺序，每张卡一份独立交付。
+
+交付方式：每张卡完成后，把以下 10 项一起发给 GM
+  （GM 会按 PL §4 规则把 markdown 落到 docs/fact-cards/ 并开 PR）：
+  1. fact card markdown 完整文件（含 frontmatter）
+  2. source list（URL + 出版者 + checked date）
+  3. source quotes（原文片段，每条标注哪个事实字段）
+  4. direct_fact_fields 列表
+  5. ai_inferred_fields 列表
+  6. needs_review_flags 列表 + 每条原因
+  7. common_user_phrases（≥5 中文 + 技术关键词）
+  8. must_say / must_not_say
+  9. QA cases（≥3，每条 must_have + must_not_have）
+  10. recommended state（ai_extracted | ai_verified | needs_review | conflict）+ 自评理由
 
 绝对边界（违反即停）：
-- 不修改 docs/fact-cards/ 以外的任何代码或文档（除 docs/ops/FACT_OPS_LOG.md）
+- 不直接修改 repo 文件（GM 负责落地）
 - 不直接合并 PR
 - 不把 critical 卡设为 controlled_alpha_eligible: true（仅 PL 有此权限）
 - 不使用 source whitelist 之外的来源
 - 来源摘录必须带原文 quote + URL；不能"凭印象"
 
-每张卡完成后，简短报告：
-  fact_id / state / risk_level / source_count / direct_fact_fields_count /
-  needs_review_flags_count / PR URL / 已知不确定项
-
 不要在窗口内做：QA 回归测试、ENGINE 代码、publish gate（DOMAIN 抽检）、
-任何超出 docs/fact-cards/ 写入的操作。
+直接 commit 到 repo 的任何操作。
 
-第一张卡: 经营管理 2025-10 已存在（worked example）。
-请你从 §7 清单第 2 张开始：「既存の経営・管理 持有人更新 / 過渡処理」。
+第一张卡（worked example）: keiei-kanri-2025-10 已完成。
+第二张（GM 主窗口已交付）: keiei-kanri-existing-holder-update。
+请你从 §7 P1 清单第 1 项开始: 「eijuu-nenkin-zeikin」。
 ```
 
 > PL: 复制上面三引号里的内容。FACT 窗口启动后会读本文件，进入 §1 起点。
@@ -113,7 +126,8 @@ body，符合 [`docs/fact-cards/README.md`](../fact-cards/README.md) 规范，
 | `docs/fact-cards/keiei-kanri-2025-10.md` | **唯一 worked example，照此 schema 生产** |
 | `docs/domain/DOMAIN_FACT_ANCHORS_v0.1.md` | 历史 anchor 候选（参考但不照抄） |
 | `docs/domain/TEBIQ_FACT_CARD_CANDIDATES.md` | DOMAIN-CC 历史候选清单（参考） |
-| 本文件 `TEBIQ_FACT_OPS_WINDOW_TASK_PACK.md` | 你的全部边界 |
+| `docs/fact-cards/keiei-kanri-existing-holder-update.md` | 第二例（GM 在主窗口已产）|
+| 本文件 `FACT_OPS_WINDOW_TASK_PACK.md` | 你的全部边界 |
 
 获取来源时，使用 WebFetch 工具。**不能用 WebSearch 凭信心生成事实** —
 WebSearch 只能用来定位 source whitelist 内的具体页面 URL。
@@ -321,64 +335,72 @@ needs_review_flags:        # 不进 certain_block
 
 ---
 
-## 7. 第一批 5-8 张事实卡任务清单
+## 7. 第一批 事实卡任务清单（PL §2 命名规则）
 
-**P0** ✅ 已完成 worked example（无需重复）：
+> 命名格式: `{domain}-{topic}-{effective-date-or-keyword}.md`
+> 路径: `docs/fact-cards/`
 
-- [x] **fact-001**: `keiei-kanri-2025-10` — 経営・管理 2025-10-16 後 新基準
+**已完成（GM 主窗口产）**:
 
-**P1** — FACT 按以下顺序产卡，每张独立 PR：
+- [x] **keiei-kanri-2025-10**
+  経営・管理 2025-10-16 後 新基準（worked example, P0, ai_verified, critical）
+- [x] **keiei-kanri-existing-holder-update**
+  既存の経営・管理 持有人 更新時の過渡措置（fact-001 の延伸, ai_verified, high）
 
-- [ ] **fact-002**: `keiei-kanri-existing-holder-update` — 既存の経営・管理 持有人 更新時の過渡処理
-  - 主源候补: https://www.moj.go.jp/isa/applications/resources/10_00237.html （過渡措置部分）+ ガイドライン PDF
-  - 主映射用户问法: 「我已经有经管签了怎么续」「明年要更新需要凑齐 3000 万吗」「过渡期是多久」
-  - risk: high
+**P1（FACT 主窗口主线，按顺序产）** — 全部使用 PL §2 命名：
 
-- [ ] **fact-003**: `startup-visa-to-keiei-transition` — 創業 特定活動 / Startup Visa → 経営・管理 過渡
-  - 主源候补: 出入国在留管理庁 特定活動 関連ページ + 経営管理 改正ガイドライン
-  - 主映射: 「我现在创业特定活动签证要转经管」「startup visa 后怎么转」
-  - risk: high
-  - **可能需要 needs_review**: 過渡条文の最新運用未確認の場合
+1. [ ] **eijuu-nenkin-zeikin**
+   永住申請における年金・税金・健康保険 缴纳記録 リスク
+   - 主源候补: 出入国在留管理庁 永住許可ガイドライン + 日本年金機構 + 国税庁
+   - 主映射: 「永住申请年金没按时交」「税金有过滞纳」「健保断过」「永住要看几年记录」
+   - 推奨 risk: critical（永住可否に直結）
 
-- [ ] **fact-004**: `eijuu-nenkin-zeikin-hoken` — 永住申請における年金・税金・健康保険 缴纳記録 リスク
-  - 主源候补: 出入国在留管理庁 永住許可ガイドライン + 日本年金機構ねんきんネット案内 + 国税庁
-  - 主映射: 「永住申请年金没按时交」「税金有过滞纳」「健保断过」「永住要看几年记录」
-  - risk: critical (永住可否に直結)
+2. [ ] **gijinkoku-work-scope**
+   技術・人文知識・国際業務 工作内容と在留資格範囲の不一致
+   - 主源候补: 出入国在留管理庁 技人国 ガイドライン + 不許可事例集
+   - 主映射: 「技人国新工作做现场接待」「换工作做办公室杂务」「打工性工作」
+   - 推奨 risk: high
 
-- [ ] **fact-005**: `gijinkoku-job-mismatch` — 技術・人文知識・国際業務 工作内容と在留資格範囲の不一致
-  - 主源候补: 出入国在留管理庁 技人国 ガイドライン + 不許可事例集
-  - 主映射: 「技人国新工作做现场接待」「换工作做办公室杂务」「打工性工作」
-  - risk: high
+3. [ ] **spouse-divorce-separation**
+   配偶ビザ 離婚 / 別居後の在留 リスク
+   - 主源候补: 出入国在留管理庁「日本人の配偶者等」ガイドライン + 在留資格取消関連条文
+   - 主映射: 「离婚了配偶签证还能用吗」「分居 6 个月」「定住者转」
+   - 推奨 risk: critical
 
-- [ ] **fact-006**: `spouse-divorce-zairyu` — 配偶ビザ 離婚 / 別居後の在留 リスク
-  - 主源候补: 出入国在留管理庁 「日本人の配偶者等」ガイドライン + 在留資格 取消関連条文
-  - 主映射: 「离婚了配偶签证还能用吗」「分居 6 个月还能保持身份吗」「定住者转什么时候提」
-  - risk: critical
+4. [ ] **shikakugai-fukugyou**
+   資格外活動 / 副業 リスク
+   - 主源候补: 出入国在留管理庁 資格外活動許可 ページ + 入管法第19条
+   - 主映射: 「留学生 28 小时」「技人国能做副业吗」「Uber Eats」「家庭教师」
+   - 推奨 risk: high
 
-- [ ] **fact-007**: `shikakugai-katsudo-fukugyo` — 資格外活動 / 副業 リスク
-  - 主源候补: 出入国在留管理庁 資格外活動許可 ページ + 入管法 第19条
-  - 主映射: 「留学生 28 小时」「技人国能做副业吗」「Uber Eats 算不算副业」「家庭教师」
-  - risk: high
+5. [ ] **zairyu-expiry-renewal-change**
+   在留期限間近の 変更 / 更新 衔接（特例期間）
+   - 主源候补: 出入国在留管理庁 申請手続ページ + 特例期間 関連
+   - 主映射: 「在留剩 1 个月」「申请中过期了」「特例期间」
+   - 推奨 risk: high
 
-- [ ] **fact-008**: `zairyu-kigen-henkou-koushin-setsuzoku` — 在留期限間近の 変更 / 更新 衔接
-  - 主源候补: 出入国在留管理庁 申請手続 ページ + 特例期間 関連
-  - 主映射: 「在留剩 1 个月怎么办」「申请中过期了怎么办」「特例期间是什么」
-  - risk: high
+**P2 / Backlog（GM 自评，PL 未列入 P1，可后续讨论）**:
 
-每张卡完成（PR opened）后，FACT 在 `docs/ops/FACT_OPS_LOG.md` 追加一行：
+- [ ] startup-visa-keiei-transition
+  創業 特定活動 / Startup Visa → 経営・管理 過渡（過渡条文の最新運用要確認）
+  - GM 评估：等 fact-001 / fact-002 进 human_reviewed 后再处理
 
-```text
-| YYYY-MM-DD | fact-XXX | <slug> | state | risk | PR #NN | known_uncertainties |
-```
+### 交付与流转（PL §3-§4）
 
-如该文件不存在，第一次写时创建之，header:
+FACT 完成 1 张卡后，把 §0 列出的 10 项整套 deliverable 发给 GM。
+GM 收到后按 PL §4 流程：
 
-```text
-# FACT-OPS Production Log
+1. 检查格式是否符合 `docs/fact-cards/README.md`
+2. 检查 source 是否在 §3 whitelist 内
+3. 检查 direct_fact / ai_inference / needs_review 是否拆开
+4. 写入 `docs/fact-cards/{slug}.md`（一张卡一个独立文件）
+5. 开 PR（一张卡一个独立 PR）
+6. high/critical 卡 → 整理 review packet 给 DOMAIN
+7. 进入 ENGINE sync 通路（state gate + fact_card_ids）
+8. QA cases 派发 QA 做回归
 
-| date | fact_id | slug | state | risk | PR | uncertainties |
-|---|---|---|---|---|---|---|
-```
+GM 在 PR description 内引用 FACT 的 deliverable 摘要。
+FACT 不需要在 repo 内自己维护 production log；GM 在 PR 顺序追踪即可。
 
 ---
 
@@ -400,12 +422,10 @@ needs_review_flags:        # 不进 certain_block
 
 ### FACT 起手时建议
 
-第一张新卡（fact-002 既存持有人更新）会和 fact-001 内容相邻，
-应：
-
-- 引用 fact-001 的 source 编号（节省重复）
-- 但本卡的 direct_fact_fields 必须独立成立，不能"详见 fact-001"
-- 過渡措置 3 年期 (〜2028-10-15) 是本卡的 P0 事实，必须 source-quote
+参见 GM 在主窗口已交付的 `keiei-kanri-existing-holder-update.md` —
+fact-001 同源、过渡措置主题、ai_verified high、含 1 条 needs_review_flag
+（運用判断基準）。FACT 的 `eijuu-nenkin-zeikin` 等卡可以参考其结构、
+related_fact_cards 字段使用、changelog 记录方式。
 
 ---
 
@@ -413,7 +433,7 @@ needs_review_flags:        # 不进 certain_block
 
 ### 工程 / 部署边界
 
-- ❌ 修改 `docs/fact-cards/` 之外的任何代码、SQL、配置
+- ❌ **直接 commit / push 任何 repo 文件**（PL §1: FACT 只产出结构化资产，GM 落 repo）
 - ❌ 修改 `lib/`, `app/`, `scripts/`, `package.json`, drizzle migrations
 - ❌ 触发 production deploy / merge PR / 翻 `FACT_LAYER_ENABLED`
 - ❌ 起 `/api/internal/*` 或任何 endpoint
@@ -502,8 +522,8 @@ Incident review 反向追溯 → 必要时回到 FACT / DOMAIN 修卡
 
 | 项 | 期望 |
 |---|---|
-| 第一张新卡 (fact-002) | 启动后 24h 内 PR opened |
-| P1 全部 7 张卡 | 启动后 7 天内 PR opened（质量优先） |
+| 第一张新卡 (eijuu-nenkin-zeikin) | 启动后 24h 内 deliverable 交 GM |
+| P1 全部 5 张卡 | 启动后 7 天内 deliverable 交 GM（质量优先） |
 | 单卡返工率 | < 30%（结构 + 来源问题） |
 | ai_verified 比例 | ≥ 60%（其余 ai_extracted / needs_review 也 OK） |
 | critical 卡 controlled_alpha_eligible 触发 | 0（FACT 不应碰）|
