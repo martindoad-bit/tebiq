@@ -1247,19 +1247,23 @@ export const aiConsultations = pgTable(
 
     // 0.6 Pack 2.1 — Fact Layer audit columns (migration 0026).
     //
-    // `factCardIds` is the deduplicated list of fact_id strings injected
-    // (or hint-only) for this consultation. Used by Learning Console for
-    // weekly aggregation; populated at completion time on the success
-    // and timeout/failed branches alike.
+    // ⚠️ HOTFIX 2026-05-07: temporarily REMOVED from schema declaration
+    // because PR #84 merged the schema lines into main BEFORE migration
+    // 0026 was applied to prod DB. drizzle's `.returning()` /
+    // `.select()` (no projection) issued SQL referencing nonexistent
+    // columns → "column \"fact_card_ids\" does not exist" → HTTP 500
+    // on every /api/consultation/stream request.
     //
-    // `factCardAudit` is one entry per matched card with full provenance
-    // metadata. Schema (per Pack §2 / design doc §"Injection point"):
-    //   { fact_id, fact_card_state, risk_level, confidence,
-    //     source_quality, official_sources[], injected_fields[],
-    //     needs_review_flags[], decision: 'inject'|'hint_only'|'drop' }
-    // Required for incident review when a user / 書士 reports a wrong fact.
-    factCardIds: jsonb('fact_card_ids').$type<string[]>().notNull().default(sql`'[]'::jsonb`),
-    factCardAudit: jsonb('fact_card_audit').$type<unknown[]>().notNull().default(sql`'[]'::jsonb`),
+    // To restore prod, GM hotfix removes the schema declaration so
+    // drizzle stops projecting the columns. Migrations 0025 + 0026 stay
+    // in lib/db/migrations/ ready for `npm run db:migrate` to apply.
+    //
+    // POST-MIGRATION: re-add the two columns below + revert this comment.
+    // See PR #88 PROD_OPS_RUNBOOK_PACK_2_1.md for migrate procedure.
+    //
+    // Original (re-add after migrate):
+    //   factCardIds: jsonb('fact_card_ids').$type<string[]>().notNull().default(sql`'[]'::jsonb`),
+    //   factCardAudit: jsonb('fact_card_audit').$type<unknown[]>().notNull().default(sql`'[]'::jsonb`),
 
     createdAt: createdAt(),
     updatedAt: updatedAt(),
