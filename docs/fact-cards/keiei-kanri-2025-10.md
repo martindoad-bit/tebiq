@@ -1,13 +1,15 @@
 ---
 fact_id: keiei-kanri-2025-10
 title: 経営・管理ビザ 2025年10月16日 改正後 新基準
-state: ai_verified
+state: human_reviewed
 risk_level: critical
 confidence: high
 source_quality: official
 controlled_alpha_eligible: true   # PL §7+§11 (2026-05-07): 確定字段允许 controlled Alpha 使用
 last_verified_at: 2026-05-07
-reviewer: ai_self_verified
+reviewer: DOMAIN-CC
+approved_at: 2026-05-07
+approved_by: DOMAIN-CC (claude-sonnet-4-6, audit-full-20260507)
 sprint: 0.6 / Workstream C
 ai_pipeline:
   collector_run_at: 2026-05-07
@@ -408,6 +410,7 @@ is a frontend-side conservative hint only.
 |---|---|---|---|---|---|
 | 2026-05-07 | AI (Claude Opus 4.7 via WebFetch + manual extraction) | initial AI extraction | — | ai_extracted | source: moj-isa-10-00237 |
 | 2026-05-07 | AI self-verification (post PL §11 update) | split certain vs needs_review fields; populated direct_fact_fields, ai_inferred_fields, needs_review_flags; defined certain_block + needs_review_addendum | ai_extracted | ai_verified | risk=critical, controlled_alpha_eligible=true per PL §7 + §11 explicit allowance |
+| 2026-05-07 | DOMAIN-CC (audit-full-20260507) | §2 full checklist PASS; all 5 core 2025-10-16 改正 requirements sourced; 3 needs_review_flags appropriately isolated to PDF; injection_certain_block confirmed safe | ai_verified | human_reviewed | APPROVE — controlled_alpha_eligible:true confirmed for Alpha injection |
 
 ## Audit assignment
 

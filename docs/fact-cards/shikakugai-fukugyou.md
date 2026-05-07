@@ -1,13 +1,15 @@
 ---
 fact_id: shikakugai-fukugyou
 title: 資格外活動・副業 — 許可なき就労活動のリスク
-state: ai_verified
+state: human_reviewed
 risk_level: high
 confidence: high
 source_quality: official
 controlled_alpha_eligible: false
 last_verified_at: 2026-05-07
-reviewer: ai_self_verified
+reviewer: DOMAIN-CC
+approved_at: 2026-05-07
+approved_by: DOMAIN-CC (claude-sonnet-4-6, audit-full-20260507)
 sprint: 0.6 / Workstream C / Batch 2
 ai_pipeline:
   collector_run_at: 2026-05-07
@@ -323,6 +325,7 @@ needs_review_flags:
 |---|---|---|---|---|---|
 | 2026-05-07 | AI (claude-sonnet-4-6 / FACT-OPS Batch 2) | extraction from moj-isa-shikakugai-00001 + moj-isa-nyuukoku07-00003 | — | ai_extracted | 入管法19条原則・別表2例外・28時間ルール・休業中1日8時間 確認 |
 | 2026-05-07 | AI self-verification | 13項 チェックリスト全項目確認; 罰則・技人国副業条件を needs_review に格納; certain_block + addendum 分割完了 | ai_extracted | ai_verified | risk=high, confidence=high; controlled_alpha_eligible=false (FACT 自律遵守 §9) |
+| 2026-05-07 | DOMAIN-CC (audit-full-20260507) | §2 full checklist PASS; 6 direct_fact_fields all sourced; 週28h/1日8h dual rule confirmed; 別表2 holders exception confirmed; injection_certain_block clean | ai_verified | human_reviewed | APPROVE |
 
 ## Audit assignment
 

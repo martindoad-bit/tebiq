@@ -284,6 +284,7 @@ needs_review_flags:
 | 2026-05-07 | AI (claude-sonnet-4-6 / FACT-OPS Batch 1) | initial extraction from moj-isa-gijinkoku, moj-isa-torikeshi, moj-isa-todokedeguchi | — | ai_extracted | 14日届出義務・3か月取消しルール・除外業務リスト確認 |
 | 2026-05-07 | AI self-verification | direct_fact_fields sourced; language_skill_2025 を needs_review に格納; certain_block + addendum split complete | ai_extracted | ai_verified | risk=high |
 | 2026-05-07 | GM (boundary correction) | controlled_alpha_eligible: true → false. FACT autopilot 越界。high 卡 ai_verified 不需要此 flag (only critical does). | ai_verified | ai_verified | GM correction |
+| 2026-05-07 | DOMAIN-CC (audit-full-20260507) | §2 checklist: PHANTOM FIELD detected — kaijo_jitsurei_rule_6months_haiguusha listed in direct_fact_fields but has no body content with source citation; 6か月ルールは配偶者ビザ (22条の4第7号) のルールであり技人国には適用なし。REQUEST_EDIT: remove from direct_fact_fields (Option A) or add body section with 配偶者/技人国 distinction and move to ai_inferred_fields (Option B). Core content (3か月・14日・業務外リスト) is solid. State stays ai_verified pending FACT fix. | ai_verified | ai_verified | REQUEST_EDIT |
 
 ## Audit assignment
 
