@@ -455,7 +455,7 @@ related_fact_cards 字段使用、changelog 记录方式。
 - ❌ 把任意中文中介 / 行政書士 / 自媒体内容 当作 source
 - ❌ 把 AI 训练知识当作 source（即使你"记得"是对的，必须 WebFetch official source）
 - ❌ 编造原文 quote 或 URL
-- ❌ 把 `controlled_alpha_eligible` 设为 `true`（这只 PL 在 changelog 中可写）
+- ❌ 把 `controlled_alpha_eligible` 设为 `true` (PL §3 2026-05-07 明确：critical 卡的 true 只能来自 ① DOMAIN audit verdict + GM review，或 ② PL explicit signoff。**FACT 可以在 Batch Report 里 propose recommendation，但不能在 frontmatter 里自己写 true**。GM 收到带 true 的卡会一律改 false 并 changelog 留痕。)
 - ❌ 把 `state` 直接设为 `human_reviewed`（这是 DOMAIN/PL 操作，不是 FACT）
 - ❌ 修改其他 FACT 已交付的卡（除非该卡的 needs_review_flag 已被 DOMAIN 解决，此时 FACT 可补字段，但需新 PR）
 
@@ -579,11 +579,25 @@ FACT autopilot **不**意味着 FACT 可以：
 - 自己改 source whitelist
 - 自己改命名规则
 - 自己决定 `state: human_reviewed`
-- 自己设 `controlled_alpha_eligible: true`
+- 自己设 `controlled_alpha_eligible: true`（critical 卡的 true 只能来自 DOMAIN audit + GM review，或 PL explicit signoff — 见 §9）
 - 自动跳过 needs_review_flag 自评
 - 把 `low confidence` 卡硬升 `ai_verified`
 
 这些边界仍然有效。Autopilot 只去掉"每张卡问下一步做什么"。
+
+### controlled_alpha_eligible 的正确表达方式（critical 卡）
+
+如 FACT 在 autopilot 中评估某张 critical 卡的 certain_block 已足够稳健、source 完整、needs_review_flags 已收紧，FACT **可以在 Batch Report 的 cross-batch notes 段提出 recommendation**：
+
+```text
+recommendation_for_GM:
+  card: <fact_id>
+  current_state: ai_verified
+  recommend: PL signoff for controlled_alpha_eligible: true
+  basis: <为什么 certain_block 已足够、direct_fact 全部 source-quoted、needs_review_flags 已收紧>
+```
+
+但 **frontmatter 里仍然写 `controlled_alpha_eligible: false`**。GM 收到 Batch Report 后会判断是否升 PL 决定。FACT 不能在 frontmatter 里自己写 true。
 
 ### Batch Report 格式
 
@@ -661,3 +675,4 @@ PL 指定的 6 个上报触发：
 |---|---|---|---|
 | v1.0 | 2026-05-07 | GM | 初版，PL §6 指令交付 |
 | v1.1 | 2026-05-07 | GM | 添加 §11 Autopilot 模式（PL 后续指令）；Batch Report 格式；GM↔FACT 双向触发 |
+| v1.2 | 2026-05-07 | GM | PL §3 (post-Batch-1): 明确 critical 卡 controlled_alpha_eligible 仅由 DOMAIN audit + GM review 或 PL signoff 翻 true；FACT 可在 Batch Report 提 recommendation 但 frontmatter 必须保持 false；§9 + §11 同步更新 |
