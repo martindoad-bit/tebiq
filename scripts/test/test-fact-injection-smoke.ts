@@ -175,15 +175,9 @@ async function main() {
     {
       id: 'B3.eijuu-纳税年限',
       question: '永住申请需要交几年的年金',
-      // eijuu-nenkin-risk is state=ai_verified, risk=critical with
-      // controlled_alpha_eligible=false → gate maps to hint_only, NOT
-      // inject (per docs/fact-cards/README.md state machine). The
-      // matcher correctly surfaces it as a hint so the UI can render
-      // a conservative "需要确认" marker without injecting unverified
-      // facts. PL/FACT-OPS would need to flip controlled_alpha_eligible
-      // (with changelog signoff) for this to inject.
-      expect_inject_includes: [],
-      expect_hint_only_includes: ['eijuu-nenkin-risk'],
+      // PL signoff 2026-05-07 (Batch 5 / Pack 2.2): controlled_alpha_eligible
+      // flipped true → gate now maps to inject for this ai_verified critical card.
+      expect_inject_includes: ['eijuu-nenkin-risk'],
     },
     {
       id: 'B4.keiei-existing',
@@ -210,11 +204,9 @@ async function main() {
     {
       id: 'C4.minashi-再入国许可',
       question: '再入国许可不要的情况是什么',
-      // Same gating as eijuu-nenkin-risk: ai_verified + critical +
-      // controlled_alpha_eligible=false → hint_only. The card surfaces
-      // for the UI hint but does not inject facts.
-      expect_inject_includes: [],
-      expect_hint_only_includes: ['minashi-sainyuukoku'],
+      // PL signoff 2026-05-07 (Batch 5 / Pack 2.2): controlled_alpha_eligible
+      // flipped true → gate now maps to inject.
+      expect_inject_includes: ['minashi-sainyuukoku'],
     },
     {
       id: 'C5.kazoku-家族滞在签证',
