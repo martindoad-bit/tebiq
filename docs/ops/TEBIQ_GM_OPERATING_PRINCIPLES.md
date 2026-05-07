@@ -146,6 +146,67 @@ GM 负责把需要裁决的问题清楚地交回来。
 
 ---
 
+## GM 派工：标准复制粘贴 starter prompt 模板（强制）
+
+> PL 反复要求 (2026-05-07): "派活为什么不给我标准复制的东西？？？每次都忘？？？"
+> 此规则编入 GM principles 防止再忘。
+
+GM 起 work packet（在 `docs/ops/` 或 `docs/codexui/` 等）后，**必须同时**给 PL 一段或多段 starter prompt — 用三引号包裹的纯文本块，PL 复制即用。**不要让 PL 自己拼 starter**。
+
+### 标准 starter 模板（每个窗口一段）
+
+```text
+你是 TEBIQ <ROLE> 窗口。
+
+任务：执行 <work packet 完整文件路径>。
+
+开工：
+1. git fetch origin && git checkout main && git pull
+2. 读 CLAUDE.md → docs/ops/TEBIQ_DELEGATION_PRINCIPLES.md → docs/roles/TEBIQ_<ROLE>_ROLE.md → <work packet>（全部章节）
+3. Freshness check: git log origin/main --oneline -5 && gh pr list
+
+任务范围（关键 3-5 项 bullets）:
+- ...
+
+不做（关键禁区）:
+- ...
+- 不绕过 GM 联系其他窗口
+
+完成后开 PR (branch: <suggested-branch-name>) + <ROLE 特定完成报告模板> + tag GM。
+```
+
+### 给 CODEXUI 的特殊要求 (per PL §3.4)
+
+CODEXUI starter 必须额外含 "PR description 顶端 5 问 UX 判断" 段：
+
+```text
+任务前必做：在 PR description 顶端写 5 问 UX 判断：
+1. <packet 第 1 问>
+2. <packet 第 2 问>
+3. ...
+
+然后才动 UI 代码。
+```
+
+### 派工前 GM self-check (10 项之外的额外 6 项)
+
+- [ ] Work packet 已 commit + PR + merged (或正在 merge — 在 starter 里说明 dependency)
+- [ ] 每个窗口给一段独立的 starter prompt
+- [ ] starter 用三引号纯文本块包裹（不混入 markdown 标题）
+- [ ] starter 含必读列表 / 任务范围 / 边界 / 完成报告
+- [ ] CODEXUI starter 含 5 问 UX 判断段
+- [ ] 多窗口派发时按编号 (1️⃣ 2️⃣ 3️⃣...) 让 PL 一眼看到分块
+
+### 反例（不要再犯）
+
+- ❌ 只给 PR 链接 + "请 PL 派 X 窗口" → PL 还要自己拼 starter
+- ❌ 起 work packet 但不附 starter prompt → PL 要看完整 packet 才能派
+- ❌ Starter 混入 markdown 标题 / table → PL 复制时拿到错误格式
+- ❌ 一段 starter 涵盖多窗口任务 → PL 要拆分
+- ❌ Starter 提及 GM 内部决策细节 (PR 编号 / commit sha) 而对窗口无意义 → 增加噪音
+
+---
+
 ## 更新规则
 
 本文件仅在 GM 角色定义、能力边界、工作信条发生原则级变化时更新。
