@@ -73,15 +73,6 @@ const FEEDBACK_BUTTONS: Array<{ type: FeedbackType; label: string }> = [
   { type: 'saved', label: '保存这个问题' },
 ]
 
-// Stream display smoothing constants (PL 2026-05-07).
-// FLUSH_END_PUNCT: chinese sentence terminators + line break.
-// Pretty conservative — flush on first occurrence of any terminator
-// inside the buffered chunk (not just at end-of-buffer) to keep cadence
-// natural across multi-clause chunks like "...，但...。"
-const STREAM_FLUSH_END_PUNCT_RE = /[。？！；\n]/
-const STREAM_FLUSH_MAX_CHARS = 60
-const STREAM_FLUSH_IDLE_MS = 400
-
 function ensureViewerCookie(): string {
   if (typeof document === 'undefined') return ''
   const existing = document.cookie
@@ -104,45 +95,12 @@ export default function AiConsultationEntryClient() {
   const fileInputRef = useRef<HTMLInputElement | null>(null)
   const abortRef = useRef<AbortController | null>(null)
 
-  // Stream display smoothing (PL 2026-05-07): buffer SSE answer_chunks and
-  // flush by sentence/segment instead of per-character. Improves UX feel
-  // (looks like the AI thinks in phrases, not types one char at a time).
-  // Flush triggers (whichever first):
-  //   1. chunk ends with sentence punctuation (。？！； newline)
-  //   2. buffer >= FLUSH_MAX_CHARS chinese chars
-  //   3. FLUSH_IDLE_MS no new chunk
-  //   4. terminal event arrives (completed / timeout / failed)
-  // Final answer text is identical to raw stream (no loss/dup/reorder).
-  const pendingBufferRef = useRef<string>('')
-  const flushTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-
-  function flushPendingBuffer() {
-    if (flushTimerRef.current) {
-      clearTimeout(flushTimerRef.current)
-      flushTimerRef.current = null
-    }
-    const buf = pendingBufferRef.current
-    if (buf.length === 0) return
-    pendingBufferRef.current = ''
-    setActive(prev => (prev ? { ...prev, answer: prev.answer + buf } : prev))
-  }
-
-  function scheduleIdleFlush() {
-    if (flushTimerRef.current) clearTimeout(flushTimerRef.current)
-    flushTimerRef.current = setTimeout(flushPendingBuffer, STREAM_FLUSH_IDLE_MS)
-  }
-
   useEffect(() => {
     setViewerId(ensureViewerCookie())
   }, [])
 
   useEffect(() => () => {
     abortRef.current?.abort()
-    // Clear pending buffer + timer on unmount to avoid stale setActive calls
-    if (flushTimerRef.current) {
-      clearTimeout(flushTimerRef.current)
-      flushTimerRef.current = null
-    }
     if (photo.kind === 'recognizing' || photo.kind === 'ready') {
       try { URL.revokeObjectURL(photo.preview) } catch { /* ignore */ }
     }
@@ -276,25 +234,6 @@ export default function AiConsultationEntryClient() {
   }
 
   function applyEvent(ev: ConsultationEvent) {
-    // answer_chunk: route through display buffer (smoothing). Other events:
-    // for terminals, flush remaining buffer first so users see all content
-    // before the state badge changes.
-    if (ev.event === 'answer_chunk') {
-      pendingBufferRef.current += ev.chunk
-      const buf = pendingBufferRef.current
-      // Flush conditions
-      const hitsPunct = STREAM_FLUSH_END_PUNCT_RE.test(buf)
-      const hitsMaxChars = buf.length >= STREAM_FLUSH_MAX_CHARS
-      if (hitsPunct || hitsMaxChars) {
-        flushPendingBuffer()
-      } else {
-        scheduleIdleFlush()
-      }
-      return
-    }
-    if (ev.event === 'completed' || ev.event === 'timeout' || ev.event === 'failed') {
-      flushPendingBuffer()
-    }
     setActive(prev => {
       if (!prev) return prev
       switch (ev.event) {
@@ -306,6 +245,8 @@ export default function AiConsultationEntryClient() {
           return prev.phase === 'received' ? { ...prev, phase: 'still_generating' } : prev
         case 'first_token':
           return { ...prev, phase: 'streaming', first_token_latency_ms: ev.first_token_latency_ms }
+        case 'answer_chunk':
+          return { ...prev, answer: prev.answer + ev.chunk }
         case 'completed':
           return {
             ...prev,
