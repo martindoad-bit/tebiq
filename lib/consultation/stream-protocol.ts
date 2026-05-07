@@ -25,7 +25,6 @@ export type ConsultationEventName =
   | 'fact_cards_injected' // 0.6 ENGINE Pack 2.2: fact-layer audit announcement
   | 'still_generating'   // 25s elapsed without first_token
   | 'first_token'        // first DS token observed
-  | 'fact_cards_injected' // 0.6 Pack 2.2/2.3: fact layer marker, user UI treats as no-op
   | 'answer_chunk'       // streaming token chunk
   | 'completed'          // DS stream done; final answer written
   | 'timeout'            // 90s hard cutoff (carries completion_status to disambiguate partial vs silent)
@@ -126,12 +125,6 @@ export type ConsultationEvent =
     }
   | { event: 'still_generating'; ts: number }
   | { event: 'first_token'; ts: number; first_token_latency_ms: number }
-  | {
-      event: 'fact_cards_injected';
-      ts: number;
-      fact_anchor_ids?: ReadonlyArray<string>;
-      fact_card_ids?: ReadonlyArray<string>;
-    }
   | { event: 'answer_chunk'; ts: number; chunk: string }
   | { event: 'completed'; ts: number; total_latency_ms: number; redactions_count: number }
   | {
