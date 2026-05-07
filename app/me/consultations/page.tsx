@@ -1,6 +1,6 @@
 import { cookies } from 'next/headers'
 import Link from 'next/link'
-import { ArrowRight, Camera, MessageSquarePlus } from 'lucide-react'
+import { ArrowRight, BookOpen, Camera, MessageSquarePlus } from 'lucide-react'
 import {
   BrandHeader,
   ConsultationShell,
@@ -93,6 +93,9 @@ export default async function MyConsultationsPage() {
                       {row.hasImage && <MetaPill icon={Camera}>图片咨询</MetaPill>}
                       {row.feedbackType && <MetaPill>反馈：<FeedbackLabel type={row.feedbackType} /></MetaPill>}
                       {row.savedQuestion && <MetaPill>已保存</MetaPill>}
+                      {(row.factCardIds ?? []).length > 0 && (
+                        <MetaPill icon={BookOpen}>事实卡 ×{(row.factCardIds as string[]).length}</MetaPill>
+                      )}
                       {(row.riskKeywordHits ?? []).length > 0 && (
                         <MetaPill tone="focus">风险词：{(row.riskKeywordHits as string[]).join(' · ')}</MetaPill>
                       )}

@@ -257,6 +257,13 @@ export default function AiConsultationEntryClient() {
               buckets: ev.buckets.slice(),
             },
           }
+        case 'fact_cards_injected':
+          // 0.6 ENGINE Pack 2.2: matcher audit announcement. CODEXUI
+          // Workstream G owns the UI rendering ("今日有效事实命中"
+          // hint); this client doesn't surface it yet. Returning
+          // `prev` keeps the existing UX while making the switch
+          // exhaustive over the new event.
+          return prev
         case 'still_generating':
           return prev.phase === 'received' ? { ...prev, phase: 'still_generating' } : prev
         case 'first_token':

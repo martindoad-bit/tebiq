@@ -113,6 +113,15 @@ export interface CompleteAiConsultationInput {
   id: string
   finalAnswerText: string
   forbiddenRedactions: string[]
+  /** 0.6 Pack 2.2: dedup'd list of fact_id strings the matcher surfaced
+   *  for this consultation (any decision — inject / hint_only). Empty
+   *  array when fact-layer is disabled or zero matches. */
+  factCardIds?: string[]
+  /** 0.6 Pack 2.2: per-card audit entries with full provenance metadata.
+   *  Shape: ConsultationFactCardAuditEntry from stream-protocol. We store
+   *  as `unknown[]` here to keep the queries module decoupled from the
+   *  protocol module — the route already type-checks the shape upstream. */
+  factCardAudit?: unknown[]
 }
 
 export async function completeAiConsultation(
@@ -137,6 +146,10 @@ export async function completeAiConsultation(
       completedAt: now,
       totalLatencyMs,
       completionStatus: 'completed',
+      // Spread keys only when the route passed them so we don't blow
+      // away a row's existing fact-card data on accidental misuse.
+      ...(input.factCardIds !== undefined ? { factCardIds: input.factCardIds } : {}),
+      ...(input.factCardAudit !== undefined ? { factCardAudit: input.factCardAudit } : {}),
     })
     .where(eq(aiConsultations.id, input.id))
 }
@@ -149,6 +162,14 @@ export interface FailAiConsultationInput {
   status: 'partial' | 'timeout' | 'failed'
   reason: string
   partialText?: string | null
+  /** 0.6 Pack 2.2: matched fact-card ids — same semantics as the
+   *  completeAiConsultation field. The matcher ran before the LLM
+   *  even started, so its output is preserved on the timeout/fail
+   *  path so Learning Console still shows what cards would have
+   *  informed the answer. */
+  factCardIds?: string[]
+  /** 0.6 Pack 2.2: per-card audit entries (same shape as completion). */
+  factCardAudit?: unknown[]
 }
 
 export async function failAiConsultation(input: FailAiConsultationInput): Promise<void> {
@@ -171,6 +192,8 @@ export async function failAiConsultation(input: FailAiConsultationInput): Promis
       timeoutReason: input.reason.slice(0, 64),
       partialAnswerSaved: !!(input.partialText && input.partialText.length > 0),
       finalAnswerText: input.partialText ?? null,
+      ...(input.factCardIds !== undefined ? { factCardIds: input.factCardIds } : {}),
+      ...(input.factCardAudit !== undefined ? { factCardAudit: input.factCardAudit } : {}),
     })
     .where(eq(aiConsultations.id, input.id))
 }

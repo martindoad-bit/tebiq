@@ -22,6 +22,7 @@ export type ConsultationEventName =
   | 'received'           // immediately after server creates the row
   | 'risk_hint'          // 0 or 1 — risk_keyword_hits[] non-empty
   | 'routing_status'     // 0.6 ENGINE Pack 1: keyword-bucket label (initial / specific)
+  | 'fact_cards_injected' // 0.6 ENGINE Pack 2.2: fact-layer audit announcement
   | 'still_generating'   // 25s elapsed without first_token
   | 'first_token'        // first DS token observed
   | 'answer_chunk'       // streaming token chunk
@@ -64,6 +65,37 @@ export type ConsultationCompletionStatus =
   | 'timeout'
   | 'failed'
 
+/**
+ * 0.6 Sprint Workstream C (ENGINE Pack 2.2): per-card audit row that
+ * rides on the `fact_cards_injected` SSE event AND is persisted on
+ * `ai_consultations.fact_card_audit`. CODEXUI Workstream G consumes
+ * the SSE form to render "今日有效事实命中" hints; Learning Console
+ * `/c/[id]` reads the DB form to show what cards informed the answer.
+ *
+ * Shape MUST stay in lockstep with `lib/answer/fact-layer/matcher.ts`
+ * `FactCardMatch` shape and the audit jsonb column. Adding fields is
+ * safe; removing or renaming requires a coordinated UI change.
+ */
+export interface ConsultationFactCardAuditEntry {
+  fact_id: string
+  fact_card_state: string
+  risk_level: string
+  confidence: string
+  source_quality: string
+  /** Verbatim source URLs from the card's `official_sources`. */
+  official_sources: ReadonlyArray<string>
+  /** Field IDs that ENGINE counts as "this card actually contributed
+   *  these facts to the prompt". For decision='inject' this is the
+   *  card's `direct_fact_fields` list (sync derives them); for
+   *  decision='hint_only' / 'drop' this is `[]`. */
+  injected_fields: ReadonlyArray<string>
+  /** Field IDs the card declared as withheld (`needs_review_flags`).
+   *  Always passed through regardless of decision so audit trail is
+   *  honest about what was deliberately not asserted. */
+  needs_review_flags: ReadonlyArray<string>
+  decision: 'inject' | 'hint_only' | 'drop'
+}
+
 export type ConsultationEvent =
   | { event: 'received'; ts: number; consultation_id: string }
   | { event: 'risk_hint'; ts: number; risk_keyword_hits: ReadonlyArray<string> }
@@ -80,6 +112,15 @@ export type ConsultationEvent =
        *  shared STATUS_LABEL_INITIAL_DEFAULT; for level='specific' this
        *  is the top-1 bucket's status_label_specific. */
       status_label: string;
+    }
+  | {
+      event: 'fact_cards_injected';
+      ts: number;
+      /** All matched cards in matcher score order, including hint_only
+       *  rows. Empty array is allowed (server may emit anyway when matcher
+       *  ran but produced zero usable matches; it tells the UI "we
+       *  checked and there's nothing"). */
+      items: ReadonlyArray<ConsultationFactCardAuditEntry>;
     }
   | { event: 'still_generating'; ts: number }
   | { event: 'first_token'; ts: number; first_token_latency_ms: number }

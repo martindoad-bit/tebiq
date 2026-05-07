@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, Camera, MessageSquarePlus } from 'lucide-react'
+import { ArrowLeft, BookOpen, Camera, ExternalLink, MessageSquarePlus } from 'lucide-react'
 import {
   BrandHeader,
   ConsultationShell,
@@ -12,6 +12,7 @@ import {
   Surface,
   type AlphaDisplayState,
 } from '@/components/ui/consultation-alpha'
+import type { ConsultationFactCardAuditEntry } from '@/lib/consultation/stream-protocol'
 import { getAiConsultationById, type AiConsultation } from '@/lib/db/queries/aiConsultations'
 
 export const dynamic = 'force-dynamic'
@@ -32,6 +33,7 @@ export default async function ConsultationDetailPage({ params }: PageProps) {
   const answer = row.finalAnswerText ?? row.aiAnswerText ?? ''
   const riskHits = (row.riskKeywordHits ?? []) as string[]
   const displayState = displayStateForRow(row)
+  const factCardAudit = parseFactCardAudit(row)
 
   return (
     <ConsultationShell>
@@ -95,6 +97,8 @@ export default async function ConsultationDetailPage({ params }: PageProps) {
           )}
         </Surface>
 
+        <FactCardsBlock audit={factCardAudit} />
+
         <Surface className="space-y-3">
           <SectionLabel>记录信号</SectionLabel>
           <div className="flex flex-wrap gap-2">
@@ -128,4 +132,139 @@ function displayStateForRow(row: AiConsultation): AlphaDisplayState {
   if (row.partialAnswerSaved) return 'partial'
   if (row.timeoutReason) return 'fallback'
   return 'timeout'
+}
+
+// 0.6 Pack 2.2 — fact-card audit display.
+//
+// The `fact_card_audit` jsonb column on ai_consultations stores rows
+// matching the `ConsultationFactCardAuditEntry` shape from the SSE
+// protocol. We keep the parse defensive — older rows pre-Pack 2.2 will
+// have an empty array; never throw on unexpected shape.
+function parseFactCardAudit(row: AiConsultation): ConsultationFactCardAuditEntry[] {
+  const raw = row.factCardAudit
+  if (!Array.isArray(raw)) return []
+  const out: ConsultationFactCardAuditEntry[] = []
+  for (const entry of raw) {
+    if (!entry || typeof entry !== 'object') continue
+    const e = entry as Record<string, unknown>
+    if (typeof e.fact_id !== 'string') continue
+    out.push({
+      fact_id: e.fact_id,
+      fact_card_state: typeof e.fact_card_state === 'string' ? e.fact_card_state : 'unknown',
+      risk_level: typeof e.risk_level === 'string' ? e.risk_level : 'unknown',
+      confidence: typeof e.confidence === 'string' ? e.confidence : 'unknown',
+      source_quality: typeof e.source_quality === 'string' ? e.source_quality : 'unknown',
+      official_sources: Array.isArray(e.official_sources)
+        ? (e.official_sources as unknown[]).filter((u): u is string => typeof u === 'string')
+        : [],
+      injected_fields: Array.isArray(e.injected_fields)
+        ? (e.injected_fields as unknown[]).filter((f): f is string => typeof f === 'string')
+        : [],
+      needs_review_flags: Array.isArray(e.needs_review_flags)
+        ? (e.needs_review_flags as unknown[]).filter((f): f is string => typeof f === 'string')
+        : [],
+      decision: e.decision === 'inject' || e.decision === 'hint_only' || e.decision === 'drop'
+        ? e.decision
+        : 'drop',
+    })
+  }
+  return out
+}
+
+function FactCardsBlock({ audit }: { audit: ConsultationFactCardAuditEntry[] }) {
+  if (audit.length === 0) return null
+  const injected = audit.filter(a => a.decision === 'inject')
+  const hintOnly = audit.filter(a => a.decision === 'hint_only')
+  // No "drop" rows surface (server can omit them) — but be tolerant
+  // either way and just show what's there.
+  if (injected.length === 0 && hintOnly.length === 0) return null
+  return (
+    <Surface className="space-y-3">
+      <div className="flex items-center gap-2">
+        <BookOpen className="h-4 w-4 text-[var(--tebiq-ink-blue)]" strokeWidth={1.6} />
+        <SectionLabel>本回答参考的事实卡</SectionLabel>
+      </div>
+      {injected.length > 0 && (
+        <div className="space-y-2">
+          <p className="text-[12px] text-[var(--tebiq-deep-slate)]">
+            注入了 {injected.length} 张事实卡（已合入回答）：
+          </p>
+          <ul className="space-y-1.5">
+            {injected.map(card => <FactCardRow key={card.fact_id} card={card} />)}
+          </ul>
+        </div>
+      )}
+      {hintOnly.length > 0 && (
+        <div className="space-y-2">
+          <p className="text-[12px] text-[var(--tebiq-deep-slate)]">
+            另有 {hintOnly.length} 张相关事实卡触发了「需进一步确认」标记，未作为事实直接注入：
+          </p>
+          <ul className="space-y-1.5">
+            {hintOnly.map(card => <FactCardRow key={card.fact_id} card={card} />)}
+          </ul>
+        </div>
+      )}
+      <p className="text-[11px] text-[var(--tebiq-cool-gray)]">
+        事实卡来源：本仓库 docs/fact-cards/ 公开审核档；具体期限/手续仍建议与行政書士或入管确认。
+      </p>
+    </Surface>
+  )
+}
+
+function FactCardRow({ card }: { card: ConsultationFactCardAuditEntry }) {
+  // GitHub permalink at the consultation's git_sha is ideal but the row
+  // doesn't carry git_sha (would require Pack 2.3 schema add). For now
+  // link to the file path on main; consumers can checkout history if
+  // they need an exact-version snapshot.
+  const repoUrl =
+    `https://github.com/martindoad-bit/tebiq/blob/main/docs/fact-cards/${encodeURIComponent(card.fact_id)}.md`
+  return (
+    <li className="flex flex-col gap-1 rounded-card border border-[var(--tebiq-soft-gray)] bg-[var(--tebiq-soft-gray)]/30 px-3 py-2">
+      <div className="flex flex-wrap items-center gap-2">
+        <a
+          href={repoUrl}
+          target="_blank"
+          rel="noreferrer noopener"
+          className="inline-flex items-center gap-1 text-[13px] font-medium text-[var(--tebiq-ink-blue)] hover:underline"
+        >
+          {card.fact_id}
+          <ExternalLink className="h-3 w-3" strokeWidth={1.6} />
+        </a>
+        <span className="rounded-full border border-[var(--tebiq-cool-gray)] px-2 py-0.5 text-[10px] uppercase tracking-wide text-[var(--tebiq-deep-slate)]">
+          {card.risk_level}
+        </span>
+        <span className="rounded-full border border-[var(--tebiq-cool-gray)] px-2 py-0.5 text-[10px] uppercase tracking-wide text-[var(--tebiq-deep-slate)]">
+          {card.fact_card_state}
+        </span>
+        <span className="rounded-full border border-[var(--tebiq-cool-gray)] px-2 py-0.5 text-[10px] uppercase tracking-wide text-[var(--tebiq-deep-slate)]">
+          {card.source_quality}
+        </span>
+      </div>
+      {card.official_sources.length > 0 && (
+        <div className="flex flex-wrap gap-x-3 gap-y-0.5 text-[11px] text-[var(--tebiq-cool-gray)]">
+          {card.official_sources.slice(0, 3).map(url => (
+            <a key={url} href={url} target="_blank" rel="noreferrer noopener" className="hover:underline truncate">
+              {hostnameOf(url)}
+            </a>
+          ))}
+          {card.official_sources.length > 3 && (
+            <span>+{card.official_sources.length - 3} more</span>
+          )}
+        </div>
+      )}
+      {card.needs_review_flags.length > 0 && (
+        <p className="text-[11px] text-[var(--tebiq-cool-gray)]">
+          以下细节卡未注入为事实，需进一步确认：{card.needs_review_flags.join('、')}
+        </p>
+      )}
+    </li>
+  )
+}
+
+function hostnameOf(url: string): string {
+  try {
+    return new URL(url).hostname
+  } catch {
+    return url.slice(0, 32)
+  }
 }
