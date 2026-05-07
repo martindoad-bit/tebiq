@@ -1,3 +1,4 @@
+import { matchFactCards, type FactCardMatch } from '@/lib/answer/fact-layer/matcher'
 import { KEYWORD_BUCKETS, STATUS_LABEL_INITIAL_DEFAULT } from '@/lib/answer/intent/keyword-buckets'
 import { matchBuckets, topBucket } from '@/lib/answer/intent/match-buckets'
 import {
@@ -13,6 +14,7 @@ import {
   CONSULTATION_TIMING,
   formatConsultationFrame,
   type ConsultationEvent,
+  type ConsultationFactCardAuditEntry,
 } from '@/lib/consultation/stream-protocol'
 import {
   completeAiConsultation,
@@ -148,6 +150,25 @@ export async function POST(req: Request) {
   const bucketMatches = matchBuckets(question)
   const bucketTop = topBucket(bucketMatches)
 
+  // 0.6 Sprint Workstream C (ENGINE Pack 2.2): fact-layer matcher.
+  // Kick off the DB read NOW (before stream open) so its latency hides
+  // under the routing_status `initial` emission and the DS connect
+  // setup. We await the result inside the stream body, just before
+  // assembling the LLM messages. The `FACT_LAYER_ENABLED` env flag is
+  // the kill switch — when unset/false, the matcher is never called and
+  // the stream behaves exactly as Pack 1 + 2.1 (zero user-facing diff).
+  const factLayerEnabled = process.env.FACT_LAYER_ENABLED === 'true'
+  // matchFactCards returns a Promise; not awaited here so it runs in
+  // parallel with the routing_status emission below.
+  const factMatchesPromise: Promise<FactCardMatch[]> = factLayerEnabled
+    ? matchFactCards(question).catch(err => {
+        // Fail soft: log and proceed with empty matches. Pack §"何时停下"
+        // doesn't gate matcher errors — they shouldn't block answers.
+        console.warn('[consultation/stream] matchFactCards failed', err)
+        return [] as FactCardMatch[]
+      })
+    : Promise.resolve([] as FactCardMatch[])
+
   // Create the row before opening the stream so the consultation_id is
   // emitted in the very first 'received' frame.
   // Issue #60: pass the live prompt-version + model constants so the DB
@@ -176,6 +197,11 @@ export async function POST(req: Request) {
       let stillGeneratingEmitted = false
       let totalText = '' // for final persistence
       const filter = createForbiddenFilter()
+      // 0.6 Pack 2.2: declared up here so the timeout/fail closures
+      // (fireTimeout below) capture by reference. Filled in below
+      // after `await factMatchesPromise` resolves.
+      let factCardIds: string[] = []
+      let factCardAudit: ConsultationFactCardAuditEntry[] = []
 
       const close = () => {
         if (closed) return
@@ -283,6 +309,8 @@ export async function POST(req: Request) {
             status,
             reason,
             partialText: hasPartial ? partial : null,
+            factCardIds,
+            factCardAudit,
           })
         } catch (err) {
           console.warn('[consultation/stream] failAiConsultation persist failed', err)
@@ -312,16 +340,80 @@ export async function POST(req: Request) {
         CONSULTATION_TIMING.wall_clock_cap_ms,
       )
 
+      // 4b. fact_cards_injected (0.6 ENGINE Pack 2.2 / Workstream C).
+      //
+      // Resolve the matcher promise that was kicked off pre-stream.
+      // Build the audit payload + the fact-block system message, emit
+      // the SSE event, and stash the audit for terminal-write
+      // persistence. When FACT_LAYER_ENABLED=false, factMatches is `[]`
+      // and we never emit the SSE event nor add a system message —
+      // bit-for-bit identical to Pack 1 + 2.1 behavior.
+      const factMatches = await factMatchesPromise
+      const todayIso = new Date().toISOString().slice(0, 10)
+      factCardAudit = factMatches.map(m => ({
+        fact_id: m.fact_id,
+        fact_card_state: m.state,
+        risk_level: m.risk_level,
+        confidence: m.confidence,
+        source_quality: m.source_quality,
+        official_sources: m.official_sources,
+        // Pack §5 reserves `injected_fields` for direct_fact_field names.
+        // The Pack 2.1 schema doesn't surface those (no column on
+        // fact_cards table); a future migration may add them. For now
+        // the audit row carries an empty array on every decision so the
+        // shape is stable and consumers don't need to handle `undefined`.
+        injected_fields: [],
+        needs_review_flags: m.needs_review_flags,
+        decision: m.decision,
+      }))
+      factCardIds = factMatches.map(m => m.fact_id)
+      // Build the fact-block system message text from the inject-decision
+      // cards. Each card contributes one block separated by a divider so
+      // the LLM treats them as discrete cited sources, not blended prose.
+      const injectBlocks = factMatches
+        .filter(m => m.decision === 'inject')
+        .map(m => m.injection_certain_block.replaceAll('{{TODAY_ISO}}', todayIso))
+      const factSystemMessage = injectBlocks.length > 0
+        ? injectBlocks.join('\n\n---\n\n')
+        : null
+      // Always emit the SSE event when fact-layer is enabled, even with
+      // zero matches — gives the UI a positive "we checked" signal so
+      // the absence of matches isn't ambiguous with "feature off".
+      // When the feature is off we skip the event entirely (Pack 2.2
+      // §"不能做什么": "FACT_LAYER_ENABLED=false 时影响任何 user-facing 行为").
+      if (factLayerEnabled) {
+        emit({ event: 'fact_cards_injected', ts: Date.now(), items: factCardAudit })
+      }
+
       // 5. Open DS streaming connection
       const dsAbort = new AbortController()
-      const messages = buildConsultationMessages({
+      const baseMessages = buildConsultationMessages({
         userQuestion: question,
         imageSummary: body.image_summary ?? null,
-        // Issue #54: fact-anchor injection (Pack §2.2). Empty array when
-        // no anchor triggers fired; the prompt builder only emits the
-        // anchor system message when factAnchors.length > 0.
+        // Issue #54: fact-anchor injection. Empty array when no anchor
+        // triggers fired; the prompt builder only emits the anchor
+        // system message when factAnchors.length > 0.
         factAnchors: anchorsToPromptContext(matchedAnchors),
       })
+      // 0.6 Pack 2.2: append the fact-card system message AFTER the
+      // anchor block so the LLM reads them in priority order:
+      //   (1) base voice prompt
+      //   (2) image summary (if any)
+      //   (3) fact anchors (DOMAIN-curated soft guidance)
+      //   (4) fact cards (FACT-published hard facts) — most authoritative
+      //   (5) user message
+      // The order matters: the LLM weights later system context higher
+      // when there's tension. Pack §"不能做什么" prohibits modifying the
+      // alpha v1 prompt body itself, but appending an additional system
+      // message is explicitly the sanctioned injection mechanism per
+      // Pack §2 / design doc §"Injection point".
+      const messages = factSystemMessage
+        ? [
+            ...baseMessages.slice(0, -1), // everything except the trailing user message
+            { role: 'system' as const, content: factSystemMessage },
+            baseMessages[baseMessages.length - 1], // re-append user message LAST
+          ]
+        : baseMessages
 
       try {
         const dsRes = await fetch(DEEPSEEK_ENDPOINT, {
@@ -357,6 +449,8 @@ export async function POST(req: Request) {
                 status: 'failed',
                 reason: `deepseek_http_${dsRes.status}`,
                 partialText: null,
+                factCardIds,
+                factCardAudit,
               })
             } catch (err) {
               console.warn('[consultation/stream] persist on http error failed', err)
@@ -457,6 +551,8 @@ export async function POST(req: Request) {
               id: consultation.id,
               finalAnswerText: totalText,
               forbiddenRedactions: redactions.slice(),
+              factCardIds,
+              factCardAudit,
             })
           } catch (err) {
             console.warn('[consultation/stream] completeAiConsultation failed', err)
@@ -474,6 +570,8 @@ export async function POST(req: Request) {
               status: 'failed',
               reason: 'stream_exception',
               partialText: totalText.length > 0 ? totalText : null,
+              factCardIds,
+              factCardAudit,
             })
           } catch (persistErr) {
             console.warn('[consultation/stream] persist on exception failed', persistErr)
