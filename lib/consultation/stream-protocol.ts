@@ -30,6 +30,7 @@ export type ConsultationEventName =
   | 'completed'          // DS stream done; final answer written
   | 'timeout'            // 90s hard cutoff (carries completion_status to disambiguate partial vs silent)
   | 'failed'             // non-timeout error
+  | 'follow_up_limit_reached' // 0.6 Pack 2.3: controlled follow-up limit
 
 /**
  * 0.6 Sprint Workstream B (ENGINE Pack 1): two-layer routing-status
@@ -184,6 +185,7 @@ export type ConsultationEvent =
       completion_status: 'partial' | 'timeout';
     }
   | { event: 'failed'; ts: number; detail: string }
+  | { event: 'follow_up_limit_reached'; ts: number; message: string }
 
 export function formatConsultationFrame(event: ConsultationEvent): string {
   return `data: ${JSON.stringify(event)}\n\n`
@@ -220,6 +222,7 @@ export function isTerminalConsultationEvent(event: ConsultationEvent): boolean {
   return event.event === 'completed'
     || event.event === 'timeout'
     || event.event === 'failed'
+    || event.event === 'follow_up_limit_reached'
 }
 
 // ---- Timing budget (Charter §7 + Pack §3) ----

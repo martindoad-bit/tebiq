@@ -50,6 +50,28 @@ type PhotoState =
 
 type FeedbackType = 'helpful' | 'inaccurate' | 'add_context' | 'human_review' | 'saved'
 
+type FollowUpPhase = Phase | 'limit_reached'
+
+interface FollowUpTurn {
+  localId: string
+  id: string
+  addition: string
+  answer: string
+  risk_keywords: string[]
+  routingStatus: {
+    label: string
+    level: 'initial' | 'specific'
+    buckets: string[]
+  } | null
+  phase: FollowUpPhase
+  first_token_latency_ms: number | null
+  total_latency_ms: number | null
+  redactions_count: number | null
+  fallback_text: string | null
+  partial_answer_saved: boolean
+  detail: string | null
+}
+
 interface ActiveConsultation {
   id: string
   question: string
@@ -72,6 +94,10 @@ interface ActiveConsultation {
   detail: string | null
   feedback_sent: FeedbackType | null
   saved: boolean
+  followUps: FollowUpTurn[]
+  followUpCount: number
+  followUpLimitReached: boolean
+  followUpLimitMessage: string | null
 }
 
 type ConsultationStartPayload = {
@@ -218,6 +244,10 @@ export default function AiConsultationEntryClient() {
       detail: null,
       feedback_sent: null,
       saved: false,
+      followUps: [],
+      followUpCount: 0,
+      followUpLimitReached: false,
+      followUpLimitMessage: null,
     })
 
     const ac = new AbortController()
@@ -330,7 +360,159 @@ export default function AiConsultationEntryClient() {
           }
         case 'failed':
           return { ...prev, phase: 'failed', detail: ev.detail }
+        case 'follow_up_limit_reached':
+          return {
+            ...prev,
+            followUpLimitReached: true,
+            followUpLimitMessage: ev.message,
+          }
       }
+    })
+  }
+
+  async function submitFollowUp(addition: string) {
+    if (!active?.id) return
+    if (active.followUpLimitReached || active.followUpCount >= 3) {
+      setActive(prev => prev ? {
+        ...prev,
+        followUpLimitReached: true,
+        followUpLimitMessage: '这次咨询已经补充过几轮。建议先保存，或把关键点给人工确认；如果是另一个事项，可以重新开始。',
+      } : prev)
+      return
+    }
+    if (active.followUps.some(turn => !isFollowUpTerminal(turn.phase))) return
+
+    const text = addition.trim()
+    if (!text) return
+    setError(null)
+
+    const localId = 'fu_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7)
+    const turn = createFollowUpTurn(localId, text)
+    setActive(prev => prev ? { ...prev, followUps: [...prev.followUps, turn] } : prev)
+
+    const ac = new AbortController()
+    abortRef.current = ac
+
+    let res: Response
+    try {
+      res = await fetch('/api/consultation/follow-up', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          parent_consultation_id: active.id,
+          user_addition: text,
+        }),
+        signal: ac.signal,
+      })
+    } catch (err) {
+      applyFollowUpError(localId, err instanceof Error ? err.message : String(err))
+      return
+    }
+
+    if (!res.ok || !res.body) {
+      const j = (await res.json().catch(() => ({}))) as { error?: string; detail?: string }
+      applyFollowUpError(localId, j.detail ?? j.error ?? `HTTP ${res.status}`)
+      return
+    }
+
+    const reader = res.body.pipeThrough(new TextDecoderStream()).getReader()
+    let buffer = ''
+    try {
+      while (true) {
+        const { value, done } = await reader.read()
+        if (done) break
+        buffer += value
+        const { events, remainder } = parseConsultationChunk(buffer)
+        buffer = remainder
+        for (const ev of events) applyFollowUpEvent(localId, ev)
+      }
+    } catch (err) {
+      if ((err as { name?: string })?.name === 'AbortError') return
+      applyFollowUpError(localId, err instanceof Error ? err.message : String(err))
+    } finally {
+      try { reader.releaseLock() } catch { /* ignore */ }
+    }
+  }
+
+  function applyFollowUpError(localId: string, detail: string) {
+    setActive(prev => prev ? {
+      ...prev,
+      followUps: prev.followUps.map((turn): FollowUpTurn => (
+        turn.localId === localId
+          ? { ...turn, phase: 'failed' as const, detail }
+          : turn
+      )),
+    } : prev)
+  }
+
+  function applyFollowUpEvent(localId: string, ev: ConsultationEvent) {
+    setActive(prev => {
+      if (!prev) return prev
+      let completedTurnIndex = -1
+      const followUps = prev.followUps.map((turn, index): FollowUpTurn => {
+        if (turn.localId !== localId) return turn
+        switch (ev.event) {
+          case 'received':
+            return { ...turn, id: ev.consultation_id, phase: 'received' }
+          case 'risk_hint':
+            return { ...turn, risk_keywords: ev.risk_keyword_hits.slice() }
+          case 'routing_status':
+            return {
+              ...turn,
+              routingStatus: {
+                label: ev.status_label,
+                level: ev.level,
+                buckets: ev.buckets.slice(),
+              },
+            }
+          case 'still_generating':
+            return turn.phase === 'received' ? { ...turn, phase: 'still_generating' } : turn
+          case 'first_token':
+            return { ...turn, phase: 'streaming', first_token_latency_ms: ev.first_token_latency_ms }
+          case 'fact_cards_injected':
+            return turn
+          case 'answer_chunk':
+            return { ...turn, answer: turn.answer + ev.chunk }
+          case 'completed':
+            completedTurnIndex = index
+            return {
+              ...turn,
+              phase: 'completed',
+              total_latency_ms: ev.total_latency_ms,
+              redactions_count: ev.redactions_count,
+            }
+          case 'timeout':
+            return {
+              ...turn,
+              phase: 'timeout',
+              fallback_text: ev.fallback_text,
+              partial_answer_saved: ev.partial_answer_saved,
+              detail: ev.partial_answer_saved
+                ? '已保留部分回答；这条不能当作完整回答。'
+                : '没有生成可用完整回答。',
+            }
+          case 'failed':
+            return { ...turn, phase: 'failed', detail: ev.detail }
+          case 'follow_up_limit_reached':
+            return { ...turn, phase: 'limit_reached', detail: ev.message }
+        }
+      })
+      if (ev.event === 'follow_up_limit_reached') {
+        return {
+          ...prev,
+          followUps,
+          followUpLimitReached: true,
+          followUpLimitMessage: ev.message,
+        }
+      }
+      if (completedTurnIndex >= 0) {
+        return {
+          ...prev,
+          followUps,
+          followUpCount: Math.max(prev.followUpCount, completedTurnIndex + 1),
+        }
+      }
+      return { ...prev, followUps }
     })
   }
 
@@ -481,6 +663,7 @@ export default function AiConsultationEntryClient() {
             onSave={saveQuestion}
             onReset={reset}
             onRetry={retryActiveConsultation}
+            onFollowUp={submitFollowUp}
           />
         )}
 
@@ -594,6 +777,7 @@ function ActiveConsultationView({
   onSave,
   onReset,
   onRetry,
+  onFollowUp,
 }: {
   active: ActiveConsultation
   error: string | null
@@ -601,6 +785,7 @@ function ActiveConsultationView({
   onSave: () => void
   onReset: () => void
   onRetry: () => void
+  onFollowUp: (addition: string) => void
 }) {
   const canAct = active.phase === 'completed'
   const canRecover = active.phase === 'timeout' || active.phase === 'failed'
@@ -611,6 +796,8 @@ function ActiveConsultationView({
   const baseDisplayState = getDisplayState(active)
   const displayState: AlphaDisplayState =
     isWaitingForAnswer && waitingStage !== 'early' ? 'timeout_waiting' : baseDisplayState
+  const hasRunningFollowUp = active.followUps.some(turn => !isFollowUpTerminal(turn.phase))
+  const followUpLocked = active.followUpLimitReached || active.followUpCount >= 3
   const waitingStatus =
     isWaitingForAnswer
       ? getWaitingStatus(active, waitingStage)
@@ -823,45 +1010,77 @@ function ActiveConsultationView({
         )}
       </Surface>
 
+      {active.followUps.map((turn, index) => (
+        <FollowUpTurnCard key={turn.localId} turn={turn} index={index} />
+      ))}
+
       {canAct && (
         <Surface className="space-y-4">
-          <div>
-            <SectionLabel>保存和下次查看</SectionLabel>
+          <div className="rounded-card border border-[var(--tebiq-soft-gray)] bg-[var(--tebiq-off-white)] px-3 py-3">
+            <SectionLabel>继续这个咨询</SectionLabel>
             <p className="mt-1 text-[13.5px] leading-[1.7] text-[var(--tebiq-deep-slate)]">
-              觉得这条回答有用，先保存。也可以复制链接发给自己，之后从已保存咨询里打开。
+              当前主题仍然是：<span className="font-medium text-[var(--tebiq-ink-blue)]">{compactText(active.question, 54)}</span>
+            </p>
+            <p className="mt-1 text-[12.5px] leading-[1.65] text-[var(--tebiq-cool-gray)]">
+              补充会接在上面的回答后继续整理，不是重新开一个问题。
             </p>
           </div>
-          <div className="grid gap-2 sm:grid-cols-2">
-            <button
-              onClick={onSave}
-              disabled={active.saved}
-              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-btn bg-[var(--tebiq-ink-blue)] px-3 py-2 text-[14px] font-medium text-[var(--tebiq-off-white)] disabled:opacity-70"
-            >
-              {active.saved ? <CheckCircle2 className="h-4 w-4" strokeWidth={1.6} /> : <Archive className="h-4 w-4" strokeWidth={1.6} />}
-              {active.saved ? '已保存' : '保存这次咨询'}
-            </button>
-            <button
-              onClick={copyConsultationLink}
-              disabled={!active.id}
-              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-btn border border-[var(--tebiq-soft-gray)] px-3 py-2 text-[13px] font-medium text-[var(--tebiq-ink-blue)] disabled:opacity-50"
-            >
-              {copyState === 'copied' ? <ClipboardCheck className="h-4 w-4" strokeWidth={1.6} /> : <Copy className="h-4 w-4" strokeWidth={1.6} />}
-              {copyState === 'copied' ? '已复制链接' : copyState === 'failed' ? '复制失败' : '复制咨询链接'}
-            </button>
+
+          {followUpLocked ? (
+            <FollowUpLimitCard
+              message={active.followUpLimitMessage}
+              onSave={onSave}
+              onHumanReview={() => onFeedback('human_review')}
+              onNewQuestion={onReset}
+            />
+          ) : (
+            <FollowUpComposer
+              disabled={hasRunningFollowUp}
+              nextIndex={active.followUpCount + 1}
+              onSubmit={onFollowUp}
+            />
+          )}
+
+          <div className="space-y-3 border-t border-[var(--tebiq-soft-gray)] pt-3">
+            <div>
+              <SectionLabel>保存和下次查看</SectionLabel>
+              <p className="mt-1 text-[13.5px] leading-[1.7] text-[var(--tebiq-deep-slate)]">
+                觉得这条回答有用，先保存。也可以复制链接发给自己，之后从已保存咨询里打开。
+              </p>
+            </div>
+            <div className="grid gap-2 sm:grid-cols-2">
+              <button
+                onClick={onSave}
+                disabled={active.saved}
+                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-btn bg-[var(--tebiq-ink-blue)] px-3 py-2 text-[14px] font-medium text-[var(--tebiq-off-white)] disabled:opacity-70"
+              >
+                {active.saved ? <CheckCircle2 className="h-4 w-4" strokeWidth={1.6} /> : <Archive className="h-4 w-4" strokeWidth={1.6} />}
+                {active.saved ? '已保存' : '保存这次咨询'}
+              </button>
+              <button
+                onClick={copyConsultationLink}
+                disabled={!active.id}
+                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-btn border border-[var(--tebiq-soft-gray)] px-3 py-2 text-[13px] font-medium text-[var(--tebiq-ink-blue)] disabled:opacity-50"
+              >
+                {copyState === 'copied' ? <ClipboardCheck className="h-4 w-4" strokeWidth={1.6} /> : <Copy className="h-4 w-4" strokeWidth={1.6} />}
+                {copyState === 'copied' ? '已复制链接' : copyState === 'failed' ? '复制失败' : '复制咨询链接'}
+              </button>
+            </div>
+            <p className="text-[12px] leading-[1.65] text-[var(--tebiq-cool-gray)]">
+              {shareContext.isWechat
+                ? '微信里也可以用右上角菜单发送给自己。复制链接仍然是最稳的方式。'
+                : shareContext.isDesktop
+                  ? '桌面端要发到微信或邮件时，建议先复制链接，再粘贴过去。'
+                  : '手机浏览器可以复制链接；支持系统分享时，也可以用系统分享。'}
+            </p>
           </div>
-          <p className="text-[12px] leading-[1.65] text-[var(--tebiq-cool-gray)]">
-            {shareContext.isWechat
-              ? '微信里也可以用右上角菜单发送给自己。复制链接仍然是最稳的方式。'
-              : shareContext.isDesktop
-                ? '桌面端要发到微信或邮件时，建议先复制链接，再粘贴过去。'
-                : '手机浏览器可以复制链接；支持系统分享时，也可以用系统分享。'}
-          </p>
+
           <details className="rounded-card border border-[var(--tebiq-soft-gray)] px-3 py-2.5 text-[12.5px] leading-[1.65] text-[var(--tebiq-deep-slate)]">
             <summary className="cursor-pointer font-medium text-[var(--tebiq-ink-blue)]">
               更多保存方式
             </summary>
             <div className="mt-3 space-y-3">
-              <p>如果要发给自己，复制链接最稳定。微信内也可以使用右上角菜单。</p>
+              <p>如果要发给自己，复制链接最稳定。微信内也可以使用右上角菜单。如果已经换成另一件事，可以重新开始。</p>
               <div className="grid gap-2 sm:grid-cols-2">
                 {canUseNativeShare && (
                   <button
@@ -888,6 +1107,14 @@ function ActiveConsultationView({
                 </button>
               </div>
               <div className="flex flex-wrap gap-x-4 gap-y-2 text-[12px]">
+                <button
+                  type="button"
+                  onClick={onReset}
+                  className="inline-flex items-center gap-1 font-medium text-[var(--tebiq-deep-slate)]"
+                >
+                  提出新的问题
+                  <ArrowRight className="h-3.5 w-3.5" strokeWidth={1.6} />
+                </button>
                 <a href="/me/consultations" className="inline-flex items-center gap-1 font-medium text-[var(--tebiq-deep-slate)]">
                   已保存咨询
                   <ArrowRight className="h-3.5 w-3.5" strokeWidth={1.6} />
@@ -983,6 +1210,176 @@ function ActiveConsultationView({
   )
 }
 
+function FollowUpTurnCard({ turn, index }: { turn: FollowUpTurn; index: number }) {
+  const displayState = turn.phase === 'limit_reached' ? 'timeout' : getFollowUpDisplayState(turn)
+  const waitingStatus =
+    turn.phase === 'received' || turn.phase === 'still_generating'
+      ? getFollowUpWaitingStatus(turn)
+      : null
+
+  return (
+    <Surface className="space-y-4 border-l-2 border-l-[var(--tebiq-soft-gray)]">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <div>
+          <SectionLabel>补充 {index + 1}</SectionLabel>
+          <p className="mt-1 text-[13.5px] leading-[1.7] text-[var(--tebiq-ink-blue)]">{turn.addition}</p>
+        </div>
+        <StatusBadge state={displayState} />
+      </div>
+
+      <div className="rounded-card border border-[var(--tebiq-soft-gray)] bg-[var(--tebiq-off-white)] px-3 py-2 text-[12.5px] leading-[1.65] text-[var(--tebiq-deep-slate)]">
+        这条补充沿用上面的咨询主题和已生成回答，不作为新的咨询事项。
+      </div>
+
+      <RiskHintBanner hits={turn.risk_keywords} />
+
+      {(displayState === 'partial' || displayState === 'fallback' || displayState === 'timeout') && (
+        <div className="rounded-card border border-[var(--tebiq-warm-amber)] px-3 py-2 text-[12.5px] leading-[1.65] text-[var(--tebiq-ink-blue)]">
+          {turn.phase === 'limit_reached' && (turn.detail || '这次咨询的补充轮数已到上限。')}
+          {turn.phase !== 'limit_reached' && displayState === 'partial' && '回答中断，下面只保留已生成部分。'}
+          {turn.phase !== 'limit_reached' && displayState === 'fallback' && '模型响应超时，下面是安全降级提示，不是完整咨询回答。'}
+          {turn.phase !== 'limit_reached' && displayState === 'timeout' && '没有生成可用完整回答。'}
+        </div>
+      )}
+
+      <article className="min-h-[5rem] text-[16px] leading-[1.78] text-[var(--tebiq-ink-blue)]">
+        {displayState === 'fallback' && turn.fallback_text && (
+          <p className="mb-3 text-[15px] leading-[1.7] text-[var(--tebiq-deep-slate)]">{turn.fallback_text}</p>
+        )}
+        {turn.answer.trim() && <AnswerProse text={turn.answer} />}
+        {waitingStatus && turn.answer === '' && (
+          <div className="rounded-card border border-[var(--tebiq-soft-gray)] px-3 py-2 text-[13.5px] leading-[1.65] text-[var(--tebiq-deep-slate)]">
+            <span className="inline-flex items-center gap-2">
+              {waitingStatus.showSpinner && (
+                <Loader2 className="h-4 w-4 animate-spin" strokeWidth={1.6} />
+              )}
+              {waitingStatus.main}
+            </span>
+            {waitingStatus.sub && (
+              <p className="mt-1 pl-6 text-[12px] leading-[1.6] text-[var(--tebiq-cool-gray)]">
+                {waitingStatus.sub}
+              </p>
+            )}
+          </div>
+        )}
+        {turn.phase === 'idle' && (
+          <span className="inline-flex items-center gap-2 text-[15px] leading-[1.7] text-[var(--tebiq-deep-slate)]">
+            <Loader2 className="h-4 w-4 animate-spin" strokeWidth={1.6} />
+            已收到补充，正在接到当前咨询里整理。
+          </span>
+        )}
+        {turn.phase === 'streaming' && (
+          <span className="ml-1 inline-block h-4 w-1.5 animate-pulse rounded-full bg-[var(--tebiq-cool-gray)] align-middle" />
+        )}
+      </article>
+
+      {turn.detail && turn.phase !== 'streaming' && turn.phase !== 'limit_reached' && (
+        <p className="border-t border-[var(--tebiq-soft-gray)] pt-3 text-[12px] leading-relaxed text-[var(--tebiq-deep-slate)]">
+          {turn.detail}
+        </p>
+      )}
+    </Surface>
+  )
+}
+
+function FollowUpComposer({
+  disabled,
+  nextIndex,
+  onSubmit,
+}: {
+  disabled: boolean
+  nextIndex: number
+  onSubmit: (addition: string) => void
+}) {
+  const [draft, setDraft] = useState('')
+  const text = draft.trim()
+
+  function submit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+    if (!text || disabled) return
+    onSubmit(text)
+    setDraft('')
+  }
+
+  return (
+    <form onSubmit={submit} className="space-y-2.5 rounded-card border border-[var(--tebiq-soft-gray)] px-3 py-3">
+      <div className="flex items-center justify-between gap-3">
+        <SectionLabel>补充给当前咨询</SectionLabel>
+        <span className="text-[11px] text-[var(--tebiq-cool-gray)]">{Math.min(nextIndex, 3)} / 3</span>
+      </div>
+      <textarea
+        value={draft}
+        onChange={e => setDraft(e.target.value)}
+        disabled={disabled}
+        maxLength={1600}
+        rows={3}
+        placeholder="例：我已经离开原公司，但在留期限还有 8 个月。"
+        className="min-h-[96px] w-full resize-y rounded-card border border-[var(--tebiq-soft-gray)] bg-white p-3 text-[15px] leading-[1.7] text-[var(--tebiq-ink-blue)] outline-none focus-visible:shadow-focus disabled:opacity-60"
+      />
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <p className="text-[11.5px] leading-[1.55] text-[var(--tebiq-cool-gray)]">
+          {disabled ? '正在整理上一条补充，完成后再继续。' : `${draft.length} / 1600 · 只补充同一件事的新背景。`}
+        </p>
+        <button
+          type="submit"
+          disabled={!text || disabled}
+          className="inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-btn bg-[var(--tebiq-ink-blue)] px-3 py-2 text-[13px] font-medium text-[var(--tebiq-off-white)] disabled:cursor-not-allowed disabled:opacity-40 sm:w-auto"
+        >
+          {disabled ? <Loader2 className="h-4 w-4 animate-spin" strokeWidth={1.6} /> : <Send className="h-4 w-4" strokeWidth={1.6} />}
+          补充到当前咨询
+        </button>
+      </div>
+    </form>
+  )
+}
+
+function FollowUpLimitCard({
+  message,
+  onSave,
+  onHumanReview,
+  onNewQuestion,
+}: {
+  message: string | null
+  onSave: () => void
+  onHumanReview: () => void
+  onNewQuestion: () => void
+}) {
+  return (
+    <div className="space-y-3 rounded-card border border-[var(--tebiq-warm-amber)] bg-[var(--tebiq-off-white)] px-3 py-3">
+      <div>
+        <SectionLabel>这次咨询先停在这里</SectionLabel>
+        <p className="mt-1 text-[13.5px] leading-[1.7] text-[var(--tebiq-deep-slate)]">
+          {message || '这次咨询已经补充过几轮。建议先保存，或把关键点给人工确认；如果是另一个事项，可以重新开始。'}
+        </p>
+      </div>
+      <div className="grid gap-2 sm:grid-cols-3">
+        <button
+          type="button"
+          onClick={onSave}
+          className="inline-flex min-h-10 items-center justify-center gap-2 rounded-btn bg-[var(--tebiq-ink-blue)] px-3 py-2 text-[13px] font-medium text-[var(--tebiq-off-white)]"
+        >
+          <Archive className="h-4 w-4" strokeWidth={1.6} />
+          保存
+        </button>
+        <button
+          type="button"
+          onClick={onHumanReview}
+          className="inline-flex min-h-10 items-center justify-center gap-2 rounded-btn border border-[var(--tebiq-soft-gray)] px-3 py-2 text-[13px] font-medium text-[var(--tebiq-ink-blue)]"
+        >
+          想找人工确认
+        </button>
+        <button
+          type="button"
+          onClick={onNewQuestion}
+          className="inline-flex min-h-10 items-center justify-center gap-2 rounded-btn border border-[var(--tebiq-soft-gray)] px-3 py-2 text-[13px] font-medium text-[var(--tebiq-ink-blue)]"
+        >
+          新问题
+        </button>
+      </div>
+    </div>
+  )
+}
+
 type AnswerBlock =
   | { kind: 'heading'; text: string }
   | { kind: 'paragraph'; lines: string[] }
@@ -1059,6 +1456,57 @@ function getWaitingStatus(active: ActiveConsultation, waitingStage: WaitingStage
     sub: null,
     showSpinner: true,
     stage: 'early',
+  }
+}
+
+function getFollowUpWaitingStatus(turn: FollowUpTurn): {
+  main: string
+  sub: string | null
+  showSpinner: boolean
+} {
+  if (turn.phase === 'still_generating') {
+    return {
+      main: '仍在生成，可以继续等待。',
+      sub: turn.routingStatus?.level === 'specific' ? turn.routingStatus.label : null,
+      showSpinner: true,
+    }
+  }
+  return {
+    main: turn.routingStatus?.label ?? '已收到补充，正在接到当前咨询里整理。',
+    sub: null,
+    showSpinner: true,
+  }
+}
+
+function getFollowUpDisplayState(turn: FollowUpTurn): AlphaDisplayState {
+  if (turn.phase === 'completed') return 'completed'
+  if (turn.phase === 'streaming' || turn.phase === 'received' || turn.phase === 'idle') return 'streaming'
+  if (turn.phase === 'still_generating') return 'timeout_waiting'
+  if (turn.phase === 'failed') return 'failed'
+  if (turn.phase === 'limit_reached') return 'timeout'
+  if (turn.phase === 'timeout') {
+    if (turn.partial_answer_saved || turn.answer.trim().length > 0) return 'partial'
+    if (turn.fallback_text) return 'fallback'
+    return 'timeout'
+  }
+  return 'streaming'
+}
+
+function createFollowUpTurn(localId: string, addition: string): FollowUpTurn {
+  return {
+    localId,
+    id: '',
+    addition,
+    answer: '',
+    risk_keywords: [],
+    routingStatus: null,
+    phase: 'idle',
+    first_token_latency_ms: null,
+    total_latency_ms: null,
+    redactions_count: null,
+    fallback_text: null,
+    partial_answer_saved: false,
+    detail: null,
   }
 }
 
@@ -1140,4 +1588,14 @@ function getDisplayState(active: ActiveConsultation): AlphaDisplayState {
 
 function isTerminal(phase: Phase): boolean {
   return phase === 'completed' || phase === 'timeout' || phase === 'failed'
+}
+
+function isFollowUpTerminal(phase: FollowUpPhase): boolean {
+  return phase === 'completed' || phase === 'timeout' || phase === 'failed' || phase === 'limit_reached'
+}
+
+function compactText(text: string, max: number): string {
+  const normalized = text.replace(/\s+/g, ' ').trim()
+  if (normalized.length <= max) return normalized
+  return normalized.slice(0, max - 1) + '…'
 }
