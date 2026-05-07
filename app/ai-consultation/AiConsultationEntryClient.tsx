@@ -57,6 +57,11 @@ interface ActiveConsultation {
   photoPreview: string | null
   answer: string
   risk_keywords: string[]
+  routingStatus: {
+    label: string
+    level: 'initial' | 'specific'
+    buckets: string[]
+  } | null
   phase: Phase
   first_token_latency_ms: number | null
   total_latency_ms: number | null
@@ -71,7 +76,6 @@ interface ActiveConsultation {
 const FEEDBACK_BUTTONS: Array<{ type: FeedbackType; label: string }> = [
   { type: 'helpful', label: '有帮助' },
   { type: 'inaccurate', label: '不准确' },
-  { type: 'add_context', label: '我想补充情况' },
   { type: 'human_review', label: '想找人工确认' },
 ]
 
@@ -179,6 +183,7 @@ export default function AiConsultationEntryClient() {
       photoPreview,
       answer: '',
       risk_keywords: [],
+      routingStatus: null,
       phase: 'idle',
       first_token_latency_ms: null,
       total_latency_ms: null,
@@ -244,11 +249,14 @@ export default function AiConsultationEntryClient() {
         case 'risk_hint':
           return { ...prev, risk_keywords: ev.risk_keyword_hits.slice() }
         case 'routing_status':
-          // 0.6 ENGINE Pack 1: bucket-routing copy. CODEXUI Workstream
-          // B owns the UI rendering; this client doesn't surface it
-          // yet. Returning `prev` keeps the existing UX while making
-          // the switch exhaustive over the new event.
-          return prev
+          return {
+            ...prev,
+            routingStatus: {
+              label: ev.status_label,
+              level: ev.level,
+              buckets: ev.buckets.slice(),
+            },
+          }
         case 'still_generating':
           return prev.phase === 'received' ? { ...prev, phase: 'still_generating' } : prev
         case 'first_token':
@@ -321,7 +329,7 @@ export default function AiConsultationEntryClient() {
           title={active ? '咨询回答' : '先把问题说清楚'}
           description={
             active
-              ? '回答会按咨询记录保存状态展示。完整、部分、超时和失败会明确区分。'
+              ? '回答完成后，可以继续补充情况，或先保存这次咨询。'
               : '文字或日文材料照片都可以先问。TEBIQ 会整理方向、风险提示和下一步确认点。'
           }
           action={
@@ -535,6 +543,10 @@ function ActiveConsultationView({
   const displayState = getDisplayState(active)
   const canAct = active.phase === 'completed'
   const canRecover = active.phase === 'timeout' || active.phase === 'failed'
+  const waitingStatus =
+    active.phase === 'received' || active.phase === 'still_generating'
+      ? getWaitingStatus(active)
+      : null
   const [copyState, setCopyState] = useState<'idle' | 'copied' | 'failed'>('idle')
   const [shareState, setShareState] = useState<'idle' | 'shared' | 'copied' | 'failed'>('idle')
   const detailPath = active.id ? `/c/${encodeURIComponent(active.id)}` : '/me/consultations'
@@ -634,14 +646,26 @@ function ActiveConsultationView({
             <p className="mb-3 text-[15px] leading-[1.7] text-[var(--tebiq-deep-slate)]">{active.fallback_text}</p>
           )}
           {active.answer.trim() && <AnswerProse text={active.answer} />}
-          {active.phase === 'received' && (
+          {waitingStatus && active.answer === '' && (
+            <div className="rounded-card border border-[var(--tebiq-soft-gray)] px-3 py-2 text-[13.5px] leading-[1.65] text-[var(--tebiq-deep-slate)]">
+              <span className="inline-flex items-center gap-2">
+                {waitingStatus.showSpinner && (
+                  <Loader2 className="h-4 w-4 animate-spin" strokeWidth={1.6} />
+                )}
+                {waitingStatus.main}
+              </span>
+              {waitingStatus.sub && (
+                <p className="mt-1 pl-6 text-[12px] leading-[1.6] text-[var(--tebiq-cool-gray)]">
+                  {waitingStatus.sub}
+                </p>
+              )}
+            </div>
+          )}
+          {active.phase === 'received' && active.answer !== '' && (
             <span className="inline-flex items-center gap-2 text-[15px] leading-[1.7] text-[var(--tebiq-deep-slate)]">
               <Loader2 className="h-4 w-4 animate-spin" strokeWidth={1.6} />
               已收到，正在整理咨询方向
             </span>
-          )}
-          {active.phase === 'still_generating' && active.answer === '' && (
-            <span className="text-[15px] leading-[1.7] text-[var(--tebiq-deep-slate)]">回答仍在生成，可以继续等待。</span>
           )}
           {active.phase === 'streaming' && (
             <span className="ml-1 inline-block h-4 w-1.5 animate-pulse rounded-full bg-[var(--tebiq-cool-gray)] align-middle" />
@@ -658,96 +682,97 @@ function ActiveConsultationView({
       {canAct && (
         <Surface className="space-y-4">
           <div>
-            <SectionLabel>反馈与保存</SectionLabel>
-            <p className="mt-1 text-[12.5px] leading-[1.65] text-[var(--tebiq-deep-slate)]">这次咨询可以先保存。反馈会进入 Learning Console，用于判断回答质量。</p>
-          </div>
-          <div className="grid grid-cols-2 gap-2">
-            {FEEDBACK_BUTTONS.map(b => (
-              <button
-                key={b.type}
-                onClick={() => onFeedback(b.type)}
-                disabled={active.feedback_sent !== null && active.feedback_sent !== b.type}
-                className={cx(
-                  'min-h-10 rounded-btn border px-3 py-2 text-left text-[13px] font-medium',
-                  active.feedback_sent === b.type
-                    ? 'border-[var(--tebiq-ink-blue)] bg-[var(--tebiq-soft-gray)] text-[var(--tebiq-ink-blue)]'
-                    : 'border-[var(--tebiq-soft-gray)] text-[var(--tebiq-deep-slate)]',
-                  'disabled:opacity-50',
-                )}
-              >
-                {b.label}
-              </button>
-            ))}
-          </div>
-          <div className="border-t border-[var(--tebiq-soft-gray)] pt-3">
-            <p className="text-[13px] leading-[1.65] text-[var(--tebiq-deep-slate)]">
-              保存后可以从记录页回来，也可以把链接发给自己。
+            <SectionLabel>下一步</SectionLabel>
+            <p className="mt-1 text-[13.5px] leading-[1.7] text-[var(--tebiq-deep-slate)]">
+              如果还有背景信息，先补充；暂时读完，也可以保存这次咨询。
             </p>
           </div>
           <div className="grid gap-2 sm:grid-cols-2">
             <button
+              onClick={onReset}
+              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-btn bg-[var(--tebiq-ink-blue)] px-3 py-2 text-[14px] font-medium text-[var(--tebiq-off-white)]"
+            >
+              <MessageSquarePlus className="h-4 w-4" strokeWidth={1.6} />
+              继续补充情况
+            </button>
+            <button
               onClick={onSave}
               disabled={active.saved}
-              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-btn bg-[var(--tebiq-ink-blue)] px-3 py-2 text-[13px] font-medium text-[var(--tebiq-off-white)] disabled:opacity-75"
+              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-btn border border-[var(--tebiq-soft-gray)] px-3 py-2 text-[13px] font-medium text-[var(--tebiq-ink-blue)] disabled:opacity-70"
             >
               {active.saved ? <CheckCircle2 className="h-4 w-4" strokeWidth={1.6} /> : <Archive className="h-4 w-4" strokeWidth={1.6} />}
               {active.saved ? '已保存' : '保存这次咨询'}
             </button>
-            <button
-              onClick={copyConsultationLink}
-              disabled={!active.id}
-              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-btn border border-[var(--tebiq-soft-gray)] px-3 py-2 text-[13px] font-medium text-[var(--tebiq-ink-blue)] disabled:opacity-50"
-            >
-              {copyState === 'copied' ? <ClipboardCheck className="h-4 w-4" strokeWidth={1.6} /> : <Copy className="h-4 w-4" strokeWidth={1.6} />}
-              {copyState === 'copied' ? '已复制链接' : copyState === 'failed' ? '复制失败' : '复制链接'}
-            </button>
-            <button
-              onClick={shareConsultationLink}
-              disabled={!active.id}
-              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-btn border border-[var(--tebiq-soft-gray)] px-3 py-2 text-[13px] font-medium text-[var(--tebiq-ink-blue)] disabled:opacity-50"
-            >
-              {shareState === 'shared' || shareState === 'copied'
-                ? <CheckCircle2 className="h-4 w-4" strokeWidth={1.6} />
-                : <Share2 className="h-4 w-4" strokeWidth={1.6} />}
-              {shareState === 'shared'
-                ? '已打开分享'
-                : shareState === 'copied'
-                  ? '已复制链接'
-                  : shareState === 'failed'
-                    ? '分享未完成'
-                    : '分享给自己'}
-            </button>
-            <a
-              href="/me/consultations"
-              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-btn border border-[var(--tebiq-soft-gray)] px-3 py-2 text-[13px] font-medium text-[var(--tebiq-deep-slate)]"
-            >
-              <Archive className="h-4 w-4" strokeWidth={1.6} />
-              我的咨询记录
-            </a>
           </div>
-          <a
-            href={detailPath}
-            className="inline-flex items-center gap-1.5 text-[12px] font-medium text-[var(--tebiq-deep-slate)]"
-          >
-            打开这次咨询详情
-            <ArrowRight className="h-3.5 w-3.5" strokeWidth={1.6} />
-          </a>
-          <details className="rounded-card border border-[var(--tebiq-soft-gray)] px-3 py-2 text-[12.5px] leading-[1.65] text-[var(--tebiq-deep-slate)]">
+          <details className="rounded-card border border-[var(--tebiq-soft-gray)] px-3 py-2.5 text-[12.5px] leading-[1.65] text-[var(--tebiq-deep-slate)]">
             <summary className="cursor-pointer font-medium text-[var(--tebiq-ink-blue)]">
-              下次如何快速打开 TEBIQ？
+              回访和分享
             </summary>
-            <div className="mt-2 space-y-1.5">
-              <p>先保存这次咨询，或复制链接发给微信文件传输助手、LINE、邮件、备忘录。</p>
-              <p>Safari 可以再添加到主屏幕；微信里可以收藏或转发给自己。</p>
+            <div className="mt-3 space-y-3">
+              <p>可以保存，或把链接发给微信文件传输助手、LINE、邮件、备忘录。</p>
+              <div className="grid gap-2 sm:grid-cols-2">
+                <button
+                  onClick={copyConsultationLink}
+                  disabled={!active.id}
+                  className="inline-flex min-h-10 items-center justify-center gap-2 rounded-btn border border-[var(--tebiq-soft-gray)] px-3 py-2 text-[13px] font-medium text-[var(--tebiq-ink-blue)] disabled:opacity-50"
+                >
+                  {copyState === 'copied' ? <ClipboardCheck className="h-4 w-4" strokeWidth={1.6} /> : <Copy className="h-4 w-4" strokeWidth={1.6} />}
+                  {copyState === 'copied' ? '已复制链接' : copyState === 'failed' ? '复制失败' : '复制链接'}
+                </button>
+                <button
+                  onClick={shareConsultationLink}
+                  disabled={!active.id}
+                  className="inline-flex min-h-10 items-center justify-center gap-2 rounded-btn border border-[var(--tebiq-soft-gray)] px-3 py-2 text-[13px] font-medium text-[var(--tebiq-ink-blue)] disabled:opacity-50"
+                >
+                  {shareState === 'shared' || shareState === 'copied'
+                    ? <CheckCircle2 className="h-4 w-4" strokeWidth={1.6} />
+                    : <Share2 className="h-4 w-4" strokeWidth={1.6} />}
+                  {shareState === 'shared'
+                    ? '已打开分享'
+                    : shareState === 'copied'
+                      ? '已复制链接'
+                      : shareState === 'failed'
+                        ? '分享未完成'
+                        : '分享给自己'}
+                </button>
+              </div>
+              <div className="flex flex-wrap gap-x-4 gap-y-2 text-[12px]">
+                <a href="/me/consultations" className="inline-flex items-center gap-1 font-medium text-[var(--tebiq-deep-slate)]">
+                  我的咨询记录
+                  <ArrowRight className="h-3.5 w-3.5" strokeWidth={1.6} />
+                </a>
+                <a href={detailPath} className="inline-flex items-center gap-1 font-medium text-[var(--tebiq-deep-slate)]">
+                  这次咨询详情
+                  <ArrowRight className="h-3.5 w-3.5" strokeWidth={1.6} />
+                </a>
+              </div>
+              <p className="text-[12px] text-[var(--tebiq-cool-gray)]">Safari 可以再添加到主屏幕；微信里可以收藏或转发给自己。</p>
             </div>
           </details>
-          <button
-            onClick={onReset}
-            className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-btn border border-[var(--tebiq-soft-gray)] px-3 py-2 text-[13px] font-medium text-[var(--tebiq-ink-blue)]"
-          >
-            <MessageSquarePlus className="h-4 w-4" strokeWidth={1.6} />
-            继续补充
-          </button>
+          <div className="space-y-2 border-t border-[var(--tebiq-soft-gray)] pt-3">
+            <div>
+              <SectionLabel>反馈</SectionLabel>
+              <p className="mt-1 text-[12.5px] leading-[1.65] text-[var(--tebiq-deep-slate)]">这条回答是否帮助你判断下一步？</p>
+            </div>
+            <div className="grid grid-cols-3 gap-2">
+              {FEEDBACK_BUTTONS.map(b => (
+                <button
+                  key={b.type}
+                  onClick={() => onFeedback(b.type)}
+                  disabled={active.feedback_sent !== null && active.feedback_sent !== b.type}
+                  className={cx(
+                    'min-h-9 rounded-btn border px-2 py-1.5 text-center text-[12px] font-medium',
+                    active.feedback_sent === b.type
+                      ? 'border-[var(--tebiq-ink-blue)] bg-[var(--tebiq-soft-gray)] text-[var(--tebiq-ink-blue)]'
+                      : 'border-[var(--tebiq-soft-gray)] text-[var(--tebiq-deep-slate)]',
+                    'disabled:opacity-50',
+                  )}
+                >
+                  {b.label}
+                </button>
+              ))}
+            </div>
+          </div>
         </Surface>
       )}
 
@@ -822,6 +847,25 @@ function AnswerProse({ text }: { text: string }) {
       })}
     </div>
   )
+}
+
+function getWaitingStatus(active: ActiveConsultation): {
+  main: string
+  sub: string | null
+  showSpinner: boolean
+} {
+  if (active.phase === 'still_generating') {
+    return {
+      main: '仍在生成，可以继续等待。',
+      sub: active.routingStatus?.level === 'specific' ? active.routingStatus.label : null,
+      showSpinner: true,
+    }
+  }
+  return {
+    main: active.routingStatus?.label ?? '已收到，正在整理这个问题涉及的在留方向。',
+    sub: null,
+    showSpinner: true,
+  }
 }
 
 function buildAnswerBlocks(text: string): AnswerBlock[] {
