@@ -23,6 +23,7 @@ export type ConsultationEventName =
   | 'risk_hint'          // 0 or 1 — risk_keyword_hits[] non-empty
   | 'routing_status'     // 0.6 ENGINE Pack 1: keyword-bucket label (initial / specific)
   | 'fact_cards_injected' // 0.6 ENGINE Pack 2.2: fact-layer audit announcement
+  | 'follow_up_limit_reached' // 0.6 ENGINE Pack 2.3: chain blocked at 4th attempt
   | 'still_generating'   // 25s elapsed without first_token
   | 'first_token'        // first DS token observed
   | 'answer_chunk'       // streaming token chunk
@@ -64,6 +65,35 @@ export type ConsultationCompletionStatus =
   | 'partial'
   | 'timeout'
   | 'failed'
+
+/**
+ * 0.6 Sprint Workstream D (ENGINE Pack 2.3): rolling consultation
+ * digest that the follow-up endpoint feeds back to the LLM in lieu of
+ * raw chat history. Persisted on `ai_consultations.consultation_summary`
+ * after each terminal turn so the next round can read its parent's
+ * digest.
+ *
+ * The summary is intentionally short and structured (not free text) —
+ * the digest builder is responsible for keeping each list bounded.
+ * Pack §3 invariant: LLM never sees a full multi-turn history.
+ */
+export interface ConsultationSummary {
+  /** What the user is ultimately trying to accomplish — the goal that
+   *  spans all rounds, even if individual round questions vary. */
+  user_goal: string
+  /** Facts the user has volunteered or the answer has confirmed across
+   *  prior rounds. The follow-up matcher reads these alongside the
+   *  latest user_addition to score fact cards. Keep concise (1-2
+   *  short sentences each, max ~6 entries). */
+  known_facts: string[]
+  /** Pieces of information the answer has flagged as still-needed.
+   *  Used to nudge the LLM to keep asking for these when relevant. */
+  missing_facts: string[]
+  /** The 2-4 most actionable take-aways from the previous round's
+   *  answer — what the LLM should treat as already-said so it doesn't
+   *  repeat them in this round. */
+  last_answer_key_points: string[]
+}
 
 /**
  * 0.6 Sprint Workstream C (ENGINE Pack 2.2): per-card audit row that
@@ -121,6 +151,18 @@ export type ConsultationEvent =
        *  ran but produced zero usable matches; it tells the UI "we
        *  checked and there's nothing"). */
       items: ReadonlyArray<ConsultationFactCardAuditEntry>;
+    }
+  | {
+      event: 'follow_up_limit_reached';
+      ts: number;
+      /** Voice-canonical copy the client renders. Populated server-side
+       *  so the UI doesn't have to know the limit / wording. */
+      message: string;
+      /** The number of follow-up rounds the chain has already had. With
+       *  the default 3-round cap this is always >= 3 when the event
+       *  fires (the original question is round 0; rounds 1/2/3 are the
+       *  3 allowed follow-ups; the 4th attempt triggers this event). */
+      follow_up_count: number;
     }
   | { event: 'still_generating'; ts: number }
   | { event: 'first_token'; ts: number; first_token_latency_ms: number }

@@ -190,6 +190,13 @@
       "when": 1778152005828,
       "tag": "0026_consultation_fact_cards",
       "breakpoints": true
+    },
+    {
+      "idx": 27,
+      "version": "7",
+      "when": 1778163316524,
+      "tag": "0027_consultation_followup",
+      "breakpoints": true
     }
   ]
 }

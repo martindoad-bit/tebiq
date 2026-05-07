@@ -296,6 +296,15 @@ export default function AiConsultationEntryClient() {
           // `prev` keeps the existing UX while making the switch
           // exhaustive over the new event.
           return prev
+        case 'follow_up_limit_reached':
+          // 0.6 ENGINE Pack 2.3: emitted only by the
+          // /api/consultation/follow-up endpoint when the chain has
+          // already had 3 follow-ups (4th attempt rejected). The
+          // initial /api/consultation/stream call this client makes
+          // never sees this event; CODEXUI Workstream D-UI owns
+          // rendering it on the follow-up surface. No-op here keeps
+          // the union exhaustive.
+          return prev
         case 'still_generating':
           return prev.phase === 'received' ? { ...prev, phase: 'still_generating' } : prev
         case 'first_token':

@@ -6,7 +6,7 @@
 // Routes that call these MUST handle their own auth — these helpers do
 // not enforce any access control.
 
-import { and, desc, eq } from 'drizzle-orm'
+import { and, asc, desc, eq, or } from 'drizzle-orm'
 import { db } from '@/lib/db'
 import {
   aiConsultations,
@@ -37,6 +37,15 @@ export interface CreateAiConsultationInput {
   /** Issue #60 companion: same pattern for model. Falls back to schema
    *  default ('deepseek-v4-pro') when undefined. */
   model?: string
+  /** 0.6 Pack 2.3: when this consultation is a follow-up round, this
+   *  points back to the chain root (round 0). NULL on round 0 itself.
+   *  Round 0 row never updates this; rounds 1+ set it on insert. */
+  parentConsultationId?: string | null
+  /** 0.6 Pack 2.3: 0 for the original question, 1/2/3 for follow-ups.
+   *  The follow-up endpoint computes this from
+   *  `parent.followUpCount + 1` capped at MAX_FOLLOW_UP_ROUNDS (3).
+   *  When undefined, schema default 0 wins. */
+  followUpCount?: number
 }
 
 export async function createAiConsultation(
@@ -60,6 +69,10 @@ export async function createAiConsultation(
       // Spread keeps the field absent → drizzle uses the column default.
       ...(input.promptVersion !== undefined ? { promptVersion: input.promptVersion } : {}),
       ...(input.model !== undefined ? { model: input.model } : {}),
+      ...(input.parentConsultationId !== undefined
+        ? { parentConsultationId: input.parentConsultationId }
+        : {}),
+      ...(input.followUpCount !== undefined ? { followUpCount: input.followUpCount } : {}),
       streamStartedAt: new Date(),
       completionStatus: 'streaming',
     } satisfies NewAiConsultation)
@@ -122,6 +135,12 @@ export interface CompleteAiConsultationInput {
    *  as `unknown[]` here to keep the queries module decoupled from the
    *  protocol module — the route already type-checks the shape upstream. */
   factCardAudit?: unknown[]
+  /** 0.6 Pack 2.3: rolling structured digest persisted on the row so
+   *  the next follow-up round can read it. Shape: ConsultationSummary
+   *  from stream-protocol; stored as `unknown` here so the queries
+   *  module stays decoupled. Caller may pass null to leave column
+   *  unchanged; pass undefined to skip the spread entirely. */
+  consultationSummary?: unknown
 }
 
 export async function completeAiConsultation(
@@ -150,8 +169,27 @@ export async function completeAiConsultation(
       // away a row's existing fact-card data on accidental misuse.
       ...(input.factCardIds !== undefined ? { factCardIds: input.factCardIds } : {}),
       ...(input.factCardAudit !== undefined ? { factCardAudit: input.factCardAudit } : {}),
+      ...(input.consultationSummary !== undefined
+        ? { consultationSummary: input.consultationSummary as unknown }
+        : {}),
     })
     .where(eq(aiConsultations.id, input.id))
+}
+
+/**
+ * 0.6 Pack 2.3: standalone helper to write the consultation summary
+ * after the post-completion async LLM digest call settles. Decoupled
+ * from completeAiConsultation so the stream route can return as soon
+ * as the answer is done; the digest writes whenever it's ready.
+ */
+export async function setConsultationSummary(
+  id: string,
+  summary: unknown,
+): Promise<void> {
+  await db
+    .update(aiConsultations)
+    .set({ consultationSummary: summary as unknown })
+    .where(eq(aiConsultations.id, id))
 }
 
 export interface FailAiConsultationInput {
@@ -207,6 +245,26 @@ export async function getAiConsultationById(id: string): Promise<AiConsultation 
     .where(eq(aiConsultations.id, id))
     .limit(1)
   return rows[0] ?? null
+}
+
+/**
+ * 0.6 Pack 2.3: load every row in a follow-up chain (the root + any
+ * follow-ups) in chronological order. Accepts either the root id or
+ * any follow-up id; resolves to the chain root then returns root +
+ * children sorted by createdAt asc.
+ *
+ * Returns [] when the id doesn't exist.
+ */
+export async function getFollowUpChain(anyMemberId: string): Promise<AiConsultation[]> {
+  const seed = await getAiConsultationById(anyMemberId)
+  if (!seed) return []
+  const rootId = seed.parentConsultationId ?? seed.id
+  const rows = await db
+    .select()
+    .from(aiConsultations)
+    .where(or(eq(aiConsultations.id, rootId), eq(aiConsultations.parentConsultationId, rootId)))
+    .orderBy(asc(aiConsultations.createdAt))
+  return rows
 }
 
 /** Saved consultations for a viewer (cookie-derived id). */
