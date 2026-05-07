@@ -6,33 +6,54 @@
 
 | 字段 | 值 |
 |------|-----|
-| `last_verified` | 2026-05-05 |
+| `last_verified` | 2026-05-07 |
 | `verified_by` | GM |
-| `source_of_truth` | GitHub remote `origin/main` + `gh pr view` + 用户最新事实 |
-| `main_head` | `13ba029` |
-| `main_head_title` | Merge PR #59 — 0.5 WS-B/C CODEXUI Polish (5 pages + consultation-alpha component) |
+| `source_of_truth` | GitHub remote `origin/main` + `gh pr view` + production sha + 用户最新事实 |
+| `main_head` | `71482f7` |
+| `main_head_title` | Merge PR #88 — Pack 2.1 Prod Ops Runbook (docs) |
+| `production_sha` | `71482f7` (verified `/api/build-info` 2026-05-07T11:48:57.692Z) |
+| `production_url` | https://tebiq.jp/ai-consultation |
 
 ---
 
 ## 当前阶段标签
 
-**TEBIQ 0.5 Safe Consultation Sprint — 进行中（PL directive 2026-05-05，最大放权）**
+**TEBIQ 0.6 Sprint — Pro Thinking + Current Fact Layer + Mobile UX / Retention（PL kickoff 2026-05-07）**
 
-目标：1.0 Alpha → 0.5 Safe Consultation = UI 可信、状态安全、可发给 10-30 内部客户。GM 全权协调，PL 只做最终验收。
+目标：保留 Pro thinking + AI-first Fact Layer + 移动端可读性 + 用户保存/回访路径。
 
-**6 Workstream**：
+**详细 mid-checkpoint**：见 `docs/ops/observations/0.6-SPRINT-MID-CHECKPOINT-20260507.md`（PL 大检查直接看此文件）
 
-| WS | 名称 | Issue | Status |
-|----|------|-------|--------|
-| A | Runtime Stabilization | [#51](https://github.com/martindoad-bit/tebiq/issues/51) | ✅ done — PR #56 merged `64eedb8`, migration 0024 applied 5/5 verified |
-| B | UI Polish (User-facing + Internal) | [#52](https://github.com/martindoad-bit/tebiq/issues/52) | ✅ done — PR #59 merged `13ba029` |
-| C | Learning Console 0.5 | 含在 #52 | ✅ done |
-| D | Light Fact Anchors | [#54](https://github.com/martindoad-bit/tebiq/issues/54) ENGINE | ✅ done — PR #58 merged `f8f85e6`，15 anchors + matcher + injection live |
-| D | Prompt Polish | [#55](https://github.com/martindoad-bit/tebiq/issues/55) VOICE | ✅ done — consultation_alpha_v2 (commit `bcd28ca` / VOICE branch `6a7a626`)|
-| E | QA 0.5 Smoke | [#53](https://github.com/martindoad-bit/tebiq/issues/53) | **🟢 ready to dispatch**（all gates released）|
-| F | Observation Readiness | template | ready |
+**7 Workstream 概览**：
 
-**最终验收包**：TEBIQ 0.5 Safe Consultation Acceptance Report（GM 完成所有 WS 后唯一一次回报 PL）
+| WS | 名称 | Status | 关键 PR |
+|----|------|--------|---------|
+| A | 模型/流稳定 | ✅ Pro thinking 默认 + per-chunk DB await 修 | PR #69 #70 |
+| B | First-response UX | ✅ KEYWORD_BUCKETS + routing_status SSE in prod | PR #79 #87 |
+| C | Current Fact Layer | 🟡 Pack 2.1 (foundation) merged + hotfix; Pack 2.2 (injection) 暂缓 | PR #71 #84 #88 #89 |
+| D | 受控追问 | ⏸ Pack 2.3 队列后 | — |
+| E | Mobile UI | ✅ readability + UX refinement | PR #75 #87 |
+| F | 保存/分享/回访 | ✅ navigator.share + 我的咨询 + root route | PR #81 |
+| G | 个性化风险提示 | 🟡 设计 in KEYWORD_BUCKETS, 前端 deferred | — |
+
+**Fact Cards in main**: 8 张（5 Batch 1 + 3 Batch 2）— see `docs/fact-cards/`
+
+**Active windows**: FACT autopilot Batch 3 in flight; CODEXUI/QA/DOMAIN 等 PL 派发或在跑。
+
+**Production injection 启用条件 (5 项必须全满足)**:
+1. Pack 2.2 stream injection PR merged
+2. PL/DevOps 跑 Runbook §1-§3 (db:migrate / fact-layer:sync / EVAL_LAB_ENABLED)
+3. QA dry-run pass
+4. DOMAIN critical 卡 audit verdict
+5. PL explicit approval `FACT_LAYER_ENABLED=true`
+
+当前 production: **`FACT_LAYER_ENABLED=false`**（fact 不注入；模型按训练数据回答，可能给旧基准）。
+
+---
+
+**TEBIQ 0.5 Safe Consultation Sprint — 已完成（2026-05-05 → 2026-05-06）**
+
+历史 6 WS（A Runtime / B UI / C Learning Console / D Fact Anchors + Voice / E QA Smoke / F Observation）全部 ✅。Production sha base：`b6ffbe9`。
 
 ---
 
@@ -129,32 +150,32 @@ DeepSeek:
 
 ---
 
-## 当前 Active PR
+## 当前 Active PR (0.6 Sprint, 2026-05-07 mid)
 
 | PR | 状态 | 说明 |
 |----|------|------|
-| 无 open PR | — | 上轮 7 个 open PR：#29 ✅ #33 ✅ #36 ✅ #38 ✅ #4 ✗ #11 ✗ #31 ✗ |
+| 无 open PR | — | 0.6 sprint 累计 17 PR 全 merged。本回合 GM 起 mid-checkpoint PR (待 push) |
+
+最近 0.6 merged（按时间倒序，重要项）:
+- PR #88 Pack 2.1 Prod Ops Runbook
+- PR #87 CODEXUI UX refinement (功能堆叠去除 + 内部词清扫)
+- PR #89 hotfix P0 schema-DB drift
+- PR #84 ENGINE Pack 2.1 (migrations + matcher + dry-run)
+- PR #79 ENGINE Pack 1 (KEYWORD_BUCKETS + routing_status SSE + root route)
+- PR #75 + #81 CODEXUI Mobile UI + Save/Share
+- PR #73 + #86 FACT Batch 1 + 2 (8 cards)
+- PR #77 DOMAIN audit Batch 1 critical
 
 ## 当前 Active Issues
 
-| Issue | 0.5 WS | 说明 |
-|-------|--------|------|
-| [#52](https://github.com/martindoad-bit/tebiq/issues/52) | **WS-B + WS-C** | CODEXUI UI Polish — 在跑 |
-| [#53](https://github.com/martindoad-bit/tebiq/issues/53) | **WS-E** | QA 0.5 Smoke — gated on #52 + #54 |
-| ~~#54~~ | WS-D | ✅ closed — PR #58 merged `f8f85e6` |
-| [#49](https://github.com/martindoad-bit/tebiq/issues/49) | observability | DS 90s timeout 率 ~60%（不阻塞 0.5）|
-| [#46](https://github.com/martindoad-bit/tebiq/issues/46) | DEBT P1 | Production DB Migration Runbook (DL-012 部分缓解) |
+| Issue | 类型 | 说明 |
+|-------|------|------|
+| [#80](https://github.com/martindoad-bit/tebiq/issues/80) | FACT P2 follow-up | re-source eijuu-nenkin-risk for general-applicant page |
+| [#49](https://github.com/martindoad-bit/tebiq/issues/49) | observability | DS 90s timeout 率（0.6 sprint 经 Pro thinking 切换后值待重测）|
+| [#46](https://github.com/martindoad-bit/tebiq/issues/46) | DEBT P1 | Production DB Migration Runbook (DL-012 + Pack 2.1 Runbook 补强) |
 | [#13](https://github.com/martindoad-bit/tebiq/issues/13) | QA audit pending | PR #12 Context OS audit |
 
-已 close（本轮 0.5 Sprint）：[#51](https://github.com/martindoad-bit/tebiq/issues/51)（PR #56 `64eedb8`） · [#55](https://github.com/martindoad-bit/tebiq/issues/55)（VOICE `bcd28ca`） · #35（stale）
-
-已 close：#34 · #35 · #37 · #39（PR #44）· #40（PR #47）· #41（PR #48）· #42 · [#43](https://github.com/martindoad-bit/tebiq/issues/43)（QA 9/9 PASS `29b369e`）· #15
-
-## 当前 Open PR
-
-| PR | 状态 | 说明 |
-|----|------|------|
-| 无 open PR | — | 上轮 6 PR：#29 ✅ #33 ✅ #36 ✅ #38 ✅ #44 ✅ #45 ✅ |
+已 close（本轮 0.6 Sprint）：累计 17 PR。详见 mid-checkpoint §3。
 
 ## 1.0 Alpha 状态
 
