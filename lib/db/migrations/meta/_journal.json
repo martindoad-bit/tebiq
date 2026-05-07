@@ -176,6 +176,20 @@
       "when": 1777992291426,
       "tag": "0024_aspiring_trauma",
       "breakpoints": true
+    },
+    {
+      "idx": 25,
+      "version": "7",
+      "when": 1778151980508,
+      "tag": "0025_fact_cards",
+      "breakpoints": true
+    },
+    {
+      "idx": 26,
+      "version": "7",
+      "when": 1778152005828,
+      "tag": "0026_consultation_fact_cards",
+      "breakpoints": true
     }
   ]
 }

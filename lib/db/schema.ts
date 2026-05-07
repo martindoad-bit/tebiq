@@ -1244,6 +1244,23 @@ export const aiConsultations = pgTable(
     followUpCount: integer('follow_up_count').notNull().default(0),
 
     schemaVersion: varchar('schema_version', { length: 24 }).notNull().default('ai-consultation-v1'),
+
+    // 0.6 Pack 2.1 — Fact Layer audit columns (migration 0026).
+    //
+    // `factCardIds` is the deduplicated list of fact_id strings injected
+    // (or hint-only) for this consultation. Used by Learning Console for
+    // weekly aggregation; populated at completion time on the success
+    // and timeout/failed branches alike.
+    //
+    // `factCardAudit` is one entry per matched card with full provenance
+    // metadata. Schema (per Pack §2 / design doc §"Injection point"):
+    //   { fact_id, fact_card_state, risk_level, confidence,
+    //     source_quality, official_sources[], injected_fields[],
+    //     needs_review_flags[], decision: 'inject'|'hint_only'|'drop' }
+    // Required for incident review when a user / 書士 reports a wrong fact.
+    factCardIds: jsonb('fact_card_ids').$type<string[]>().notNull().default(sql`'[]'::jsonb`),
+    factCardAudit: jsonb('fact_card_audit').$type<unknown[]>().notNull().default(sql`'[]'::jsonb`),
+
     createdAt: createdAt(),
     updatedAt: updatedAt(),
   },
@@ -1257,6 +1274,76 @@ export const aiConsultations = pgTable(
 
 export type AiConsultation = typeof aiConsultations.$inferSelect
 export type NewAiConsultation = typeof aiConsultations.$inferInsert
+
+// ============================================================================
+// 0.6 Pack 2.1 — Fact Cards (migration 0025).
+//
+// Filesystem source-of-truth lives at `docs/fact-cards/<slug>.md` (YAML
+// frontmatter + markdown body). The sync script (scripts/fact-layer-sync.ts)
+// upserts each file into this table by `fact_id`. Production loader / matcher
+// reads from here, NOT the filesystem, to keep production unaware of repo
+// layout.
+//
+// State machine (per docs/fact-cards/README.md §"State machine"):
+//   draft | ai_extracted | ai_verified | human_reviewed | needs_review |
+//   conflict | disabled
+// Risk levels (per same):
+//   low | medium | high | critical
+// Source quality (per same §"Source whitelist"):
+//   official | quasi_official | secondary
+//
+// We don't use pgEnums here because the value sets are owned by the Fact
+// Layer state machine (filesystem-canonical) and may evolve faster than
+// schema migrations. text + sync-script validation is the gate.
+// ============================================================================
+export const factCards = pgTable(
+  'fact_cards',
+  {
+    factId: text('fact_id').primaryKey(),
+    title: text('title').notNull(),
+    state: text('state').notNull(),
+    riskLevel: text('risk_level').notNull(),
+    confidence: text('confidence').notNull(),
+    sourceQuality: text('source_quality').notNull(),
+    /** PL §7+§11 escape hatch: critical cards may inject in Alpha when
+     *  this is true AND PL changelog has signed off. Otherwise critical
+     *  cards require state=human_reviewed to inject. */
+    controlledAlphaEligible: boolean('controlled_alpha_eligible').notNull().default(false),
+    appliesTo: jsonb('applies_to').$type<string[]>().notNull(),
+    triggerKeywords: jsonb('trigger_keywords').$type<string[]>().notNull(),
+    /** Always-injected when card passes the gate. May contain {{TODAY_ISO}}
+     *  placeholder; sync stores literal text, matcher substitutes at request
+     *  time. */
+    injectionCertainBlock: text('injection_certain_block').notNull(),
+    /** NOT injected as facts; surfaces a conservative hint marker only. */
+    injectionNeedsReviewAddendum: text('injection_needs_review_addendum'),
+    /** Field-name list — these were marked uncertain on this card and must
+     *  NOT be injected as confirmed facts even when the card overall is
+     *  ai_verified. */
+    needsReviewFlags: jsonb('needs_review_flags').$type<string[]>().notNull().default(sql`'[]'::jsonb`),
+    sourceUrls: jsonb('source_urls').$type<string[]>().notNull(),
+    reviewer: text('reviewer'),
+    lastVerifiedAt: timestamp('last_verified_at', { withTimezone: true }).notNull(),
+    approvedAt: timestamp('approved_at', { withTimezone: true }),
+    approvedBy: text('approved_by'),
+    /** Repo-relative path back to the canonical .md file. Lets Learning
+     *  Console build a permalink. */
+    filesystemPath: text('filesystem_path').notNull(),
+    /** sha256 of (frontmatter + body) for drift detection. Sync mismatch =
+     *  deploy bug; production loader logs but doesn't auto-resync. */
+    contentHash: text('content_hash').notNull(),
+    createdAt: createdAt(),
+    updatedAt: updatedAt(),
+  },
+  t => ({
+    stateIdx: index('fact_cards_state_idx').on(t.state),
+    riskIdx: index('fact_cards_risk_idx').on(t.riskLevel),
+    stateRiskIdx: index('fact_cards_state_risk_idx').on(t.state, t.riskLevel),
+  }),
+)
+
+export type FactCard = typeof factCards.$inferSelect
+export type NewFactCard = typeof factCards.$inferInsert
 
 // re-export sql for callers that want raw helpers without importing drizzle
 export { sql }
