@@ -1,13 +1,15 @@
 ---
 fact_id: spouse-divorce-separation
 title: 日本人・永住者の配偶者 — 離婚・別居後の在留リスク
-state: ai_verified
+state: human_reviewed
 risk_level: critical
 confidence: high
 source_quality: official
 controlled_alpha_eligible: false   # GM 修正 2026-05-07: FACT autopilot 自设 true 违反 §9 边界。critical 卡按 README state machine 默认要 human_reviewed 注入；如要 controlled_alpha_eligible 翻 true，需 PL 在 changelog signoff
 last_verified_at: 2026-05-07
-reviewer: ai_self_verified
+reviewer: domain-cc-tebiq
+approved_at: 2026-05-07
+approved_by: DOMAIN-CC
 sprint: 0.6 / Workstream C / Batch 1
 ai_pipeline:
   collector_run_at: 2026-05-07
@@ -296,6 +298,7 @@ needs_review_flags:
 | 2026-05-07 | AI (claude-sonnet-4-6 / FACT-OPS Batch 1) | initial extraction from moj-isa-torikeshi + moj-isa-haiguusha-todoke | — | ai_extracted | 6か月ルール・14日届出・30日猶予・意見聴取 確認 |
 | 2026-05-07 | AI self-verification | direct_fact_fields sourced; 3項目 needs_review_flags 設定; certain_block + addendum split complete | ai_extracted | ai_verified | risk=critical |
 | 2026-05-07 | GM (boundary correction) | controlled_alpha_eligible: true → false. FACT autopilot 越界 (FACT_OPS_WINDOW_TASK_PACK §9). critical 卡按 README state machine 默认 human_reviewed gate. PR review 时由 PL 决定 signoff. | ai_verified | ai_verified | GM correction |
+| 2026-05-07 | DOMAIN-CC (domain-cc-tebiq) | APPROVE audit. 4つの direct_fact_fields すべて官方ページ直引用で正確（6か月ルール・14日届出・30日猶予・意見聴取）。needs_review 3件は正当かつ injection_certain_block から適切に除外。must_say / must_not_say / qa_cases (4件) は在留実務の核心をカバー。confidence high・risk_level critical いずれも妥当。観察：applies_to に家族滞在を含むが、injection は「日本人の配偶者等」「永住者の配偶者等」に正しく限定。生成物への悪影響なし。 | ai_verified | human_reviewed | APPROVE |
 
 ## Audit assignment
 

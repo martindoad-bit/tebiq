@@ -3,7 +3,7 @@ fact_id: eijuu-nenkin-risk
 title: 永住申請における年金・税金・健康保険 未納リスク
 state: ai_verified
 risk_level: critical
-confidence: high
+confidence: medium   # DOMAIN-CC audit 2026-05-07: downgraded from high. Core 消極的評価 quote is high-confidence (nyukan50 direct), but nenkin/kenko_hoken 2-year + juuminhzei 3-year period fields are sourced from 高度人材 page (nyuukoku07-00133), not the general applicant page. general_applicant_lookback is ai_inference. Upgrade to high after FACT verifies from general applicant source.
 source_quality: official
 controlled_alpha_eligible: false   # GM 修正 2026-05-07: FACT autopilot 自设 true 违反 §9 边界。critical 卡按 README state machine 默认要 human_reviewed 注入；如要 controlled_alpha_eligible 翻 true，需 PL 在 changelog signoff
 last_verified_at: 2026-05-07
@@ -302,6 +302,7 @@ needs_review_flags:
 | 2026-05-07 | AI (claude-sonnet-4-6 / FACT-OPS Batch 1) | initial extraction from moj-isa-nyukan50 + moj-isa-nyuukoku07-00133 | — | ai_extracted | ガイドライン令和8年2月24日改訂版を確認 |
 | 2026-05-07 | AI self-verification | all direct_fact_fields sourced; needs_review_flags set for lookback generalization + 免除期間; certain_block + addendum split complete | ai_extracted | ai_verified | risk=critical |
 | 2026-05-07 | GM (boundary correction) | controlled_alpha_eligible: true → false. FACT autopilot 越界 (FACT_OPS_WINDOW_TASK_PACK §9 明确：仅 PL 可设此字段为 true). critical 卡按 README state machine 默认走 human_reviewed gate. PR review 时由 PL 决定是否 signoff 翻 true. | ai_verified | ai_verified | GM correction |
+| 2026-05-07 | DOMAIN-CC (domain-cc-tebiq) | REQUEST_EDIT audit. confidence high → medium: nenkin/kenko_hoken 2年 + juuminhzei 3年 の証明期間フィールドが高度人材専用ページ(nyuukoku07-00133)からの引用で、一般申請者への適用は ai_inference。一般申請者向けページ(nyuukoku07-00132等)での確認後に high へ再昇格可。core 消極的評価クォートは nyukan50 直引用で正確。内容自体の正確性は高いが sourcing 強化が必要。re-audit 不要。| ai_verified | ai_verified | REQUEST_EDIT — confidence downgraded; sourcing gap flagged |
 
 ## Audit assignment
 
