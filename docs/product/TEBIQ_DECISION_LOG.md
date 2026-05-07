@@ -403,3 +403,196 @@ Issue #46（Production DB Migration Runbook debt）未消。当前每次 schema 
 
 - destructive migration 仍要 PL 显式审批
 - DEBT Issue #46（最终自动化方案）继续保持 open，blanket auth 不替代自动化设计
+
+---
+
+## DL-013 · TEBIQ 0.6 Sprint 启动 — Pro Thinking + AI-first Fact Layer + Mobile UX / Retention
+
+| 字段 | 值 |
+|------|-----|
+| date | 2026-05-07 |
+| owner | 产品负责人 / Project Lead |
+| status | active |
+
+### Background
+
+0.5 Safe Consultation 完成 + 1.0 Alpha 上线观察期。PL 启动 0.6 sprint：Pro thinking 模型 + AI-first Current Fact Layer + 移动端可读性 + 用户保存/回访路径。
+
+### Decision
+
+7 Workstream 并行：
+- A 模型/流稳定（Pro thinking 默认 + per-chunk DB await 移除）
+- B First-response UX（KEYWORD_BUCKETS + routing_status SSE）
+- C Current Fact Layer（AI-first，see DL-014）
+- D 受控追问（consultation_summary + 3 轮上限）
+- E Mobile UI（readability + UX refinement）
+- F 保存/分享/回访（navigator.share + 我的咨询 + root route）
+- G 风险提示个性化（KEYWORD_BUCKETS 复用）
+
+### Impact
+
+- Production model: deepseek-v4-pro thinking enabled (PR #70)
+- 新模块: lib/answer/intent/ + lib/answer/fact-layer/ + scripts/fact-layer-sync.ts
+- 新表: fact_cards (migration 0025)
+- 新 endpoint: /api/internal/fact-layer/dry-run (EVAL_LAB_ENABLED gated)
+- Mobile readability + UX refinement 上线 (PR #75 #81 #87)
+- 用户端去除 "Learning Console" 等内部词
+
+### Out of Scope
+
+- 不重做 brand / Logo / 主色
+- 不进入完整 App 风格重构
+- 不开 production fact_layer 注入直到 5 项 enable 条件全满足
+
+---
+
+## DL-014 · AI-first Fact Layer 工作流 + Publish Gate
+
+| 字段 | 值 |
+|------|-----|
+| date | 2026-05-07 |
+| owner | 产品负责人 / Project Lead |
+| status | active |
+
+### Background
+
+0.5 sprint 用 DOMAIN-CC 手写 fact anchors。0.6 转向 AI-first：FACT 窗口 autopilot 抽取 fact card；DOMAIN 仅做 high/critical 抽检 + needs_review 解决；PL 仅在 critical 卡 controlled_alpha_eligible 翻 true 时签署。
+
+### Decision
+
+**State machine**（per `docs/fact-cards/README.md`）：
+
+| state | Alpha frontend | production |
+|---|---|---|
+| draft / ai_extracted | NO | NO |
+| ai_verified | YES (subject to risk gate) | YES (subject to risk gate) |
+| human_reviewed | YES | YES |
+| needs_review | hint-only | NO facts |
+| conflict / disabled | NO | NO |
+
+**Risk gate**:
+- low/medium/high ai_verified → 直接 ship Alpha
+- critical ai_verified → 仅 controlled_alpha_eligible: true + PL signoff 才 ship
+
+**Boundary（FACT-OPS Pack v1.2 §9）**: FACT 不能自设 critical 卡 controlled_alpha_eligible: true（仅 DOMAIN audit + GM review 或 PL signoff 路径）。
+
+### Impact
+
+- FACT 自主 batch 生产（每批 3 张），autopilot 模式
+- GM 收 Batch Report → 落 repo + 开 PR + 派 DOMAIN/QA
+- DOMAIN 角色窄化：抽检 high/critical + 处理 needs_review/conflict + 不写卡
+- 已实现：8 张 fact card in main，2 张 critical / 5 张 high / 1 张 ai_extracted
+
+### Out of Scope
+
+- 完整 RAG 不在 0.6 范围
+- 政府爬虫不在 0.6 范围
+- 行政書士官方接入不在 0.6 范围
+
+---
+
+## DL-015 · 多窗口协作通用原则编入 canonical doc
+
+| 字段 | 值 |
+|------|-----|
+| date | 2026-05-07 |
+| owner | 产品负责人 / Project Lead |
+| status | active |
+
+### Background
+
+0.6 sprint 早期 GM 在派 CODEXUI 时使用"组件清单式派工"（按钮 1 / 按钮 2 / ...），导致 UI 像后台面板。PL 修正派工原则后扩展为通用规则。
+
+### Decision
+
+`docs/ops/TEBIQ_DELEGATION_PRINCIPLES.md` 编入 canonical（CLAUDE.md §2 必读）。
+
+**一句话原则**: 派问题，不派按钮；派目标，不派堆料；派边界和验收，不替专业窗口做专业判断。
+
+**通用 Work Packet 7 字段**: 背景 / 当前问题 / 用户业务目标 / 约束和边界 / source of truth / 验收标准 / 停止条件。
+
+**例外（必须精确指令）**: P0 hotfix / security / DB schema / API contract / 生产 gate / rollback / fact layer state gate / 用户数据暴露。
+
+### Impact
+
+- 所有 Work Packet 必须按此模板
+- GM 在 PR review 时按此 checklist 判断派工质量
+- PL 派工过度组件化时 GM 主动提醒
+
+---
+
+## DL-016 · Schema-before-migration P0 Lesson
+
+| 字段 | 值 |
+|------|-----|
+| date | 2026-05-07 |
+| owner | GM / 产品负责人 |
+| status | proposed (待 PL 批) |
+
+### Background
+
+PR #84 (ENGINE Pack 2.1) 单 PR 含 schema.ts 列声明 + drizzle migration 文件。Migration 未跑前 schema 已 deploy → drizzle .returning() 投影不存在的列 → HTTP 500 → 用户端全部失败。Hotfix PR #89 注释 schema 两行恢复（migrations 文件保留）。
+
+### Decision (proposed)
+
+所有动 production-active 表（ai_consultations / users / questions / etc）的 PR 必须遵循以下任一模式：
+
+A. **拆 2 PR**：
+- PR-A 仅 add migration file（不动 schema.ts）→ merge → PL 跑 migrate → 验证
+- PR-B 加 schema.ts 列声明 → merge → deploy
+
+B. **单 PR + 渐进 schema**：用 `.notNull().default(...)` + drizzle 必须可在缺列 DB 上执行 .returning() 不报错（如显式 projection 而非 *）
+
+C. **GM PR review 必查**：schema.ts 改动 + migration 同 PR → 强制要求 reviewer 确认 migration 已在 prod DB 应用（或 PR description 明示"prod DB 已应用 migration X"）。
+
+GM 加入 PR review checklist。
+
+### Impact
+
+- 防止再次 P0
+- 减少 prod migration coordination 开销
+- 提升 GM 对 schema PR 的把关精度
+
+---
+
+## DL-017 · GM 在 PL 短暂离开期间自主推进权限边界
+
+| 字段 | 值 |
+|------|-----|
+| date | 2026-05-07 |
+| owner | 产品负责人 / Project Lead |
+| status | proposed (待 PL 批) |
+
+### Background
+
+PL "去洗澡，回来汇总，然后大检查" — GM 自主推进权限不明确，0.6 sprint 中多次出现 GM 推进 vs 等待 PL 的判断模糊。
+
+### Decision (proposed)
+
+PL 短暂离开（< 2 小时）期间 GM 可自主：
+
+- ✅ Merge docs-only PR
+- ✅ Merge UI PR（CODEXUI 已 19 字段完成报告 + 截图）
+- ✅ Merge engineering PR（ENGINE 自测 + Vercel SUCCESS + GM scope review）
+- ✅ P0 hotfix（含 schema 注释类）
+- ✅ 起新 work packet docs
+- ✅ 起 sprint mid-checkpoint report
+- ✅ 起新 DL 提议（待 PL 批）
+- ✅ 主动给 PL https://tebiq.jp/ 链接
+- ✅ 推 docs-only / UI 改动到 prod 不问
+
+GM 不可自主：
+
+- ❌ 翻 production env vars (FACT_LAYER_ENABLED 等)
+- ❌ 跑 prod DB migration
+- ❌ 派新窗口（FACT/CODEXUI/QA/DOMAIN/ENGINE — PL 派发权）
+- ❌ 推动 critical 卡进 production injection（per DL-014）
+- ❌ 改产品方向 / scope / 在留专业结论
+- ❌ 修改 brand / logo / 主色
+
+### Impact
+
+- GM 在 PL 离开期间不停顿，能按既有规则推进
+- 减少 PL 中断成本
+- PL 大检查时只看 GM 完成的 deliverable + 反馈
+
