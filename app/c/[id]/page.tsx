@@ -17,7 +17,7 @@ import { getAiConsultationById, type AiConsultation } from '@/lib/db/queries/aiC
 export const dynamic = 'force-dynamic'
 
 export const metadata = {
-  title: 'TEBIQ — 咨询记录 (Alpha)',
+  title: 'TEBIQ — 已保存咨询 (Alpha)',
   robots: { index: false, follow: false },
 }
 
@@ -37,16 +37,16 @@ export default async function ConsultationDetailPage({ params }: PageProps) {
     <ConsultationShell>
       <div className="space-y-5">
         <BrandHeader
-          eyebrow="咨询记录详情"
-          title="这次问了什么"
-          description="记录页用于回看问题、回答、图片摘要和状态。它不是 Matter，也不是正式案件。"
+          eyebrow="已保存咨询"
+          title="这次咨询"
+          description="这里用于回看问题、回答、图片摘要和状态。它不是正式案件。"
           action={
             <Link
               href="/ai-consultation"
               className="inline-flex h-9 items-center gap-1.5 rounded-btn bg-[var(--tebiq-ink-blue)] px-3 text-[12px] font-medium text-[var(--tebiq-off-white)]"
             >
               <MessageSquarePlus className="h-3.5 w-3.5" strokeWidth={1.6} />
-              再问
+              新问题
             </Link>
           }
         />
@@ -96,23 +96,19 @@ export default async function ConsultationDetailPage({ params }: PageProps) {
         </Surface>
 
         <Surface className="space-y-3">
-          <SectionLabel>记录信号</SectionLabel>
+          <SectionLabel>保存信息</SectionLabel>
           <div className="flex flex-wrap gap-2">
             <MetaPill>{new Date(row.createdAt).toLocaleString('zh-CN')}</MetaPill>
-            <MetaPill>{row.model}</MetaPill>
-            <MetaPill>{row.promptVersion}</MetaPill>
             {row.feedbackType && <MetaPill>反馈：<FeedbackLabel type={row.feedbackType} /></MetaPill>}
             {row.savedQuestion && <MetaPill>已保存</MetaPill>}
             {row.humanConfirmClicked && <MetaPill tone="focus">想人工确认</MetaPill>}
-            {row.firstTokenLatencyMs != null && <MetaPill>first token {row.firstTokenLatencyMs}ms</MetaPill>}
-            {row.totalLatencyMs != null && <MetaPill>total {row.totalLatencyMs}ms</MetaPill>}
           </div>
         </Surface>
 
         <footer className="flex flex-wrap items-center justify-between gap-3 border-t border-[var(--tebiq-soft-gray)] pt-4 text-[12px]">
           <Link href="/me/consultations" className="inline-flex items-center gap-1 text-[var(--tebiq-deep-slate)]">
             <ArrowLeft className="h-3.5 w-3.5" strokeWidth={1.6} />
-            返回记录
+            返回已保存咨询
           </Link>
           <p className="text-[var(--tebiq-deep-slate)]">涉及具体期限、手续、个案审查时，建议向行政書士或入管确认。</p>
         </footer>

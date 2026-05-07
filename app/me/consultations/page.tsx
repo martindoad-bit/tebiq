@@ -19,7 +19,7 @@ import {
 export const dynamic = 'force-dynamic'
 
 export const metadata = {
-  title: 'TEBIQ — 我保存的咨询',
+  title: 'TEBIQ — 已保存咨询',
   robots: { index: false, follow: false },
 }
 
@@ -36,16 +36,16 @@ export default async function MyConsultationsPage() {
     <ConsultationShell>
       <div className="space-y-5">
         <BrandHeader
-          eyebrow="咨询记录"
-          title="保存的问题"
-          description="这里不是 Matter，也不是正式案件列表。它只保留你觉得需要回看的 AI 咨询问题和回答。"
+          eyebrow="已保存咨询"
+          title="之后还要看的咨询"
+          description="这里保存你想之后再看的问题和回答。它不是正式案件列表。"
           action={
             <Link
               href="/ai-consultation"
               className="inline-flex h-9 items-center gap-1.5 rounded-btn bg-[var(--tebiq-ink-blue)] px-3 text-[12px] font-medium text-[var(--tebiq-off-white)]"
             >
               <MessageSquarePlus className="h-3.5 w-3.5" strokeWidth={1.6} />
-              新咨询
+              新问题
             </Link>
           }
         />
@@ -56,21 +56,21 @@ export default async function MyConsultationsPage() {
             <p className="mt-1 text-[28px] font-semibold leading-none text-[var(--tebiq-ink-blue)]">{rows.length}</p>
           </div>
           <p className="max-w-[13rem] text-right text-[12px] leading-relaxed text-[var(--tebiq-deep-slate)]">
-            当前浏览器 cookie 识别。换浏览器或清空 cookie 后列表会重置。
+            当前浏览器保存。换浏览器或清空记录后，这里可能看不到旧咨询。
           </p>
         </Surface>
 
         {!viewerId && (
           <EmptyRecordState
             title="还没有浏览器记录"
-            body="打开咨询页问一题，回答完成后可以保存到这里。"
+            body="打开咨询页问一题，回答完成后可以保存到这里，方便下次查看。"
           />
         )}
 
         {viewerId && rows.length === 0 && (
           <EmptyRecordState
             title="还没有保存过咨询"
-            body="回答页底部的「保存问题」会把这条咨询放到这里。"
+            body="回答页底部的「保存这次咨询」会把这条咨询放到这里。"
           />
         )}
 
@@ -98,7 +98,7 @@ export default async function MyConsultationsPage() {
                       )}
                     </div>
                     <div className="inline-flex items-center gap-1 text-[12px] font-medium text-[var(--tebiq-ink-blue)]">
-                      打开详情
+                      查看回答
                       <ArrowRight className="h-3.5 w-3.5" strokeWidth={1.6} />
                     </div>
                   </Surface>
