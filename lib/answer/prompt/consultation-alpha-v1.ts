@@ -21,7 +21,11 @@
 
 export const CONSULTATION_ALPHA_PROMPT_VERSION = 'consultation_alpha_v2' as const
 
-export const CONSULTATION_ALPHA_MODEL = 'deepseek-v4-pro' as const
+// Speed test 2026-05-07 (PL): temporarily aliased to 'deepseek-chat' which
+// per DS docs currently routes to V4 Flash non-thinking. Easy rollback to
+// 'deepseek-v4-pro'. Acceptance gate: speed + quality vs Pro baseline
+// (avg first_token 11s / total 86s).
+export const CONSULTATION_ALPHA_MODEL = 'deepseek-chat' as const
 
 /**
  * The system prompt body. Voice anchored, not invented per chat session.
