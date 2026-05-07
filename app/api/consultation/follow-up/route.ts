@@ -176,9 +176,12 @@ export async function POST(req: Request): Promise<Response> {
 
   // Fact-layer matcher (Pack 2.2). Per Pack 2.3 §5: matcher input
   // includes summary.user_goal + known_facts + latest_user_addition,
-  // NOT the raw history.
+  // NOT the raw history. Root question is included as a robust
+  // anchor so round-1 follow-ups (where summary is still null because
+  // the parent's fire-and-forget summary build hasn't completed yet)
+  // still inherit the parent's keyword surface.
   const priorSummary = parsePriorSummary(parent.consultationSummary)
-  const matcherInput = composeMatcherInput(priorSummary, userAddition)
+  const matcherInput = composeMatcherInput(priorSummary, userAddition, root.userQuestionText)
   const factLayerEnabled = process.env.FACT_LAYER_ENABLED === 'true'
   const factMatchesPromise: Promise<FactCardMatch[]> = factLayerEnabled
     ? matchFactCards(matcherInput).catch(err => {
@@ -655,10 +658,16 @@ function parsePriorSummary(raw: unknown): ConsultationSummary | null {
 function composeMatcherInput(
   prior: ConsultationSummary | null,
   userAddition: string,
+  rootQuestion: string,
 ): string {
-  if (!prior) return userAddition
-  const parts: string[] = [userAddition, prior.user_goal]
-  for (const f of prior.known_facts ?? []) parts.push(f)
+  // Always include root question — it's the most stable anchor of the
+  // chain's keyword surface. Summary's user_goal is a distilled
+  // restatement of it, so when present we use that; we fall back to
+  // the literal root question when summary is null (round-1 follow-up
+  // before the parent's fire-and-forget summary write completes).
+  const goal = prior?.user_goal?.trim() || rootQuestion
+  const parts: string[] = [userAddition, goal]
+  if (prior?.known_facts) for (const f of prior.known_facts) parts.push(f)
   return parts.filter(Boolean).join(' 　 ')
 }
 
