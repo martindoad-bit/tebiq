@@ -21,11 +21,14 @@
 
 export const CONSULTATION_ALPHA_PROMPT_VERSION = 'consultation_alpha_v2' as const
 
-// Speed test 2026-05-07 (PL): temporarily aliased to 'deepseek-chat' which
-// per DS docs currently routes to V4 Flash non-thinking. Easy rollback to
-// 'deepseek-v4-pro'. Acceptance gate: speed + quality vs Pro baseline
-// (avg first_token 11s / total 86s).
-export const CONSULTATION_ALPHA_MODEL = 'deepseek-chat' as const
+// Quality test 2026-05-07 (PL): switched to 'deepseek-v4-pro' with thinking
+// enabled (DS V4 Pro defaults to thinking on; no explicit thinking field
+// passed). Trigger: post-PR#69 the per-chunk DB await bottleneck is gone,
+// so Pro's slower stream is no longer compounded by DB throttle. Goal:
+// evaluate whether Pro reasoning quality justifies the speed cost vs Flash
+// non-thinking (Flash baseline: ~5s total / 949 chars; quality felt 浅).
+// Rollback: revert to 'deepseek-chat' (one-line change).
+export const CONSULTATION_ALPHA_MODEL = 'deepseek-v4-pro' as const
 
 /**
  * The system prompt body. Voice anchored, not invented per chat session.
