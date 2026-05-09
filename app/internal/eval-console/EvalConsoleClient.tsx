@@ -260,7 +260,7 @@ export default function EvalConsoleClient() {
     let latestTimestamp = 0
     let totalAnswerRows = 0
     for (const slot of Object.values(answers)) {
-      for (const r of [slot.deepseek_raw, slot.deepseek_web, slot.tebiq_current]) {
+      for (const r of [slot.deepseek_raw, slot.tebiq_current]) {
         if (!r) continue
         totalAnswerRows += 1
         const t = Date.parse(r.created_at)

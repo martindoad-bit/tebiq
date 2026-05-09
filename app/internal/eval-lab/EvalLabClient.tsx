@@ -135,8 +135,6 @@ interface QuestionGenStatus {
   deepseek: GenState
   deepseekError: string | null
   deepseekAttempts: number | null
-  deepseekWeb: GenState
-  deepseekWebError: string | null
   tebiq: GenState
   tebiqError: string | null
   tebiqAttempts: number | null
@@ -146,8 +144,6 @@ const EMPTY_GEN_STATUS: QuestionGenStatus = {
   deepseek: 'pending',
   deepseekError: null,
   deepseekAttempts: null,
-  deepseekWeb: 'pending',
-  deepseekWebError: null,
   tebiq: 'pending',
   tebiqError: null,
   tebiqAttempts: null,
@@ -170,8 +166,6 @@ function hydrateGenStatus(
       deepseek: classify(slot?.deepseek_raw),
       deepseekError: slot?.deepseek_raw?.error ?? null,
       deepseekAttempts: getAttempts(slot?.deepseek_raw),
-      deepseekWeb: classify(slot?.deepseek_web),
-      deepseekWebError: slot?.deepseek_web?.error ?? null,
       tebiq: classifyTebiq(slot?.tebiq_current),
       tebiqError: slot?.tebiq_current?.error ?? null,
       tebiqAttempts: getAttempts(slot?.tebiq_current),
@@ -202,11 +196,9 @@ function isRealTebiqAnswer(row: AnswerRow | undefined): boolean {
     && row.engine_version !== 'answer-core-v1.1-fallback'
 }
 
-function isReviewableCase(slot: { deepseek_raw?: AnswerRow; deepseek_web?: AnswerRow; tebiq_current?: AnswerRow } | undefined): boolean {
+function isReviewableCase(slot: { deepseek_raw?: AnswerRow; tebiq_current?: AnswerRow } | undefined): boolean {
   return !!slot?.deepseek_raw?.answer_text
     && !slot.deepseek_raw.error
-    && !!slot.deepseek_web?.answer_text
-    && !slot.deepseek_web.error
     && isRealTebiqAnswer(slot.tebiq_current)
 }
 
@@ -433,8 +425,6 @@ export default function EvalLabClient() {
             deepseek: old?.deepseek === 'running' ? 'running' : next.deepseek,
             deepseekError: next.deepseekError,
             deepseekAttempts: next.deepseekAttempts,
-            deepseekWeb: old?.deepseekWeb === 'running' ? 'running' : next.deepseekWeb,
-            deepseekWebError: next.deepseekWebError,
             tebiq: old?.tebiq === 'running' ? 'running' : next.tebiq,
             tebiqError: next.tebiqError,
             tebiqAttempts: next.tebiqAttempts,
@@ -477,7 +467,7 @@ export default function EvalLabClient() {
       out[q.id] = buildAnswerQualityProposal({
         question: q,
         tebiq: slot?.tebiq_current,
-        deepseek: slot?.deepseek_web ?? slot?.deepseek_raw,
+        deepseek: slot?.deepseek_raw,
       })
     }
     return out
@@ -521,8 +511,8 @@ export default function EvalLabClient() {
       if (a?.severity === 'P1') p1 += 1
       if (a?.action === 'golden_case') golden += 1
       const s = genStatus[q.id]
-      if (s?.deepseek === 'failed' || s?.deepseekWeb === 'failed' || s?.tebiq === 'failed') failed += 1
-      if (s?.deepseek === 'running' || s?.deepseekWeb === 'running' || s?.tebiq === 'running') running += 1
+      if (s?.deepseek === 'failed' || s?.tebiq === 'failed') failed += 1
+      if (s?.deepseek === 'running' || s?.tebiq === 'running') running += 1
       const ans = answersByQuestion[q.id]
       const reviewable = isReviewableCase(ans)
       if (reviewable) complete += 1
@@ -672,46 +662,6 @@ export default function EvalLabClient() {
     [updateGenStatus],
   )
 
-  const generateDeepseekWeb = useCallback(
-    async (q: QuestionRow): Promise<boolean> => {
-      updateGenStatus(q.id, {
-        deepseekWeb: 'running',
-        deepseekWebError: null,
-      })
-      try {
-        const r = await fetch('/api/internal/eval-lab/deepseek-web', {
-          method: 'POST',
-          headers: { 'content-type': 'application/json' },
-          body: JSON.stringify({ question: q.question_text, question_id: q.id }),
-        })
-        const j = (await r.json()) as {
-          ok?: boolean
-          text?: string
-          error?: string
-        }
-        if (j.ok && j.text) {
-          updateGenStatus(q.id, {
-            deepseekWeb: 'success',
-            deepseekWebError: null,
-          })
-          return true
-        }
-        updateGenStatus(q.id, {
-          deepseekWeb: 'failed',
-          deepseekWebError: j.error ?? `HTTP ${r.status}`,
-        })
-        return false
-      } catch (err) {
-        updateGenStatus(q.id, {
-          deepseekWeb: 'failed',
-          deepseekWebError: err instanceof Error ? err.message : String(err),
-        })
-        return false
-      }
-    },
-    [updateGenStatus],
-  )
-
   const generateTebiq = useCallback(
     async (q: QuestionRow): Promise<boolean> => {
       updateGenStatus(q.id, {
@@ -790,16 +740,13 @@ export default function EvalLabClient() {
    * not touched here regardless — they live in eval_annotations.
    */
   const shouldGenerate = useCallback(
-    (qid: string, kind: 'deepseek' | 'deepseekWeb' | 'tebiq', scope: BatchScope, skipAnnotated: boolean): boolean => {
+    (qid: string, kind: 'deepseek' | 'tebiq', scope: BatchScope, skipAnnotated: boolean): boolean => {
       if (skipAnnotated) {
         const ann = annotationByQuestion[qid]
         if (isAnnotationComplete(ann)) return false
       }
       const s = genStatus[qid] ?? EMPTY_GEN_STATUS
-      const slot =
-        kind === 'deepseek' ? s.deepseek :
-        kind === 'deepseekWeb' ? s.deepseekWeb :
-        s.tebiq
+      const slot = kind === 'deepseek' ? s.deepseek : s.tebiq
       if (slot === 'running') return false
       if (scope === 'failed-only') return slot === 'failed'
       // missing scope: generate unless already success
@@ -817,12 +764,11 @@ export default function EvalLabClient() {
       // Build the task list under current state. Two tasks per question
       // (one per kind) so concurrency cap applies across BOTH endpoints
       // — the cap protects DeepSeek and the TEBIQ pipeline equally.
-      type Task = { q: QuestionRow; kind: 'deepseek' | 'deepseekWeb' | 'tebiq' }
+      type Task = { q: QuestionRow; kind: 'deepseek' | 'tebiq' }
       const tasks: Task[] = []
       const skipAnn = skipAnnotatedOnBatch
       for (const q of questions) {
         if (shouldGenerate(q.id, 'deepseek', scope, skipAnn)) tasks.push({ q, kind: 'deepseek' })
-        if (shouldGenerate(q.id, 'deepseekWeb', scope, skipAnn)) tasks.push({ q, kind: 'deepseekWeb' })
         if (shouldGenerate(q.id, 'tebiq', scope, skipAnn)) tasks.push({ q, kind: 'tebiq' })
       }
       if (tasks.length === 0) {
@@ -839,9 +785,6 @@ export default function EvalLabClient() {
           if (t.kind === 'deepseek' && cur.deepseek !== 'running') {
             next[t.q.id] = { ...cur, deepseek: 'pending', deepseekError: null }
           }
-          if (t.kind === 'deepseekWeb' && cur.deepseekWeb !== 'running') {
-            next[t.q.id] = { ...cur, deepseekWeb: 'pending', deepseekWebError: null }
-          }
           if (t.kind === 'tebiq' && cur.tebiq !== 'running') {
             next[t.q.id] = { ...cur, tebiq: 'pending', tebiqError: null }
           }
@@ -857,7 +800,6 @@ export default function EvalLabClient() {
         limit(async () => {
           if (cancelBatchRef.current) return
           if (t.kind === 'deepseek') await generateDeepseek(t.q)
-          else if (t.kind === 'deepseekWeb') await generateDeepseekWeb(t.q)
           else await generateTebiq(t.q)
           done += 1
           setBatchProgress({ done, total: tasks.length })
@@ -871,7 +813,7 @@ export default function EvalLabClient() {
         await refreshAnswers()
       }
     },
-    [batchBusy, questions, shouldGenerate, skipAnnotatedOnBatch, generateDeepseek, generateDeepseekWeb, generateTebiq, refreshAnswers],
+    [batchBusy, questions, shouldGenerate, skipAnnotatedOnBatch, generateDeepseek, generateTebiq, refreshAnswers],
   )
 
   const cancelBatch = useCallback(() => {
@@ -884,13 +826,12 @@ export default function EvalLabClient() {
       const s = genStatus[q.id] ?? EMPTY_GEN_STATUS
       const tasks: Promise<unknown>[] = []
       if (s.deepseek === 'failed') tasks.push(generateDeepseek(q))
-      if (s.deepseekWeb === 'failed') tasks.push(generateDeepseekWeb(q))
       if (s.tebiq === 'failed') tasks.push(generateTebiq(q))
       if (tasks.length === 0) return
       await Promise.all(tasks)
       await refreshAnswers()
     },
-    [genStatus, generateDeepseek, generateDeepseekWeb, generateTebiq, refreshAnswers],
+    [genStatus, generateDeepseek, generateTebiq, refreshAnswers],
   )
 
   // ---- seed / import ----
@@ -1126,7 +1067,6 @@ export default function EvalLabClient() {
                         {sev || (ann?.score != null ? '·' : ' ')}
                       </span>
                       <StatusDot kind="D" state={s.deepseek} />
-                      <StatusDot kind="W" state={s.deepseekWeb} />
                       <StatusDot kind="T" state={s.tebiq} />
                       <span className="truncate flex-1" title={q.question_text}>
                         {q.question_text}
@@ -1184,7 +1124,7 @@ export default function EvalLabClient() {
                 </h2>
               </header>
 
-              <div className="grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-2 gap-3">
                 <AnswerColumn
                   label="DeepSeek 裸答"
                   state={selectedStatus.deepseek}
@@ -1192,15 +1132,6 @@ export default function EvalLabClient() {
                   attempts={selectedStatus.deepseekAttempts}
                   onGenerate={() => generateDeepseek(selected)}
                   row={selectedAnswers?.deepseek_raw}
-                />
-                <AnswerColumn
-                  label="DeepSeek 联网"
-                  state={selectedStatus.deepseekWeb}
-                  liveError={selectedStatus.deepseekWebError}
-                  attempts={null}
-                  onGenerate={() => generateDeepseekWeb(selected)}
-                  row={selectedAnswers?.deepseek_web}
-                  showSearchMeta
                 />
                 <AnswerColumn
                   label="TEBIQ 当前输出"
@@ -1214,7 +1145,7 @@ export default function EvalLabClient() {
               </div>
 
               <div className="flex gap-2 text-[11px]">
-                {(selectedStatus.deepseek === 'failed' || selectedStatus.deepseekWeb === 'failed' || selectedStatus.tebiq === 'failed') && (
+                {(selectedStatus.deepseek === 'failed' || selectedStatus.tebiq === 'failed') && (
                   <button
                     onClick={() => rerunFailed(selected)}
                     className="px-2 py-1 border border-orange-300 rounded bg-orange-50 text-orange-700 hover:bg-orange-100"
@@ -1258,7 +1189,7 @@ export default function EvalLabClient() {
 
 // ---------- subcomponents ----------
 
-function StatusDot({ kind, state }: { kind: 'D' | 'W' | 'T'; state: GenState }) {
+function StatusDot({ kind, state }: { kind: 'D' | 'T'; state: GenState }) {
   const cls =
     state === 'success' ? 'text-emerald-600' :
     state === 'running' ? 'text-blue-600 animate-pulse' :
@@ -1284,7 +1215,6 @@ function AnswerColumn({
   onGenerate,
   row,
   showMeta,
-  showSearchMeta,
 }: {
   label: string
   state: GenState
@@ -1293,7 +1223,6 @@ function AnswerColumn({
   onGenerate: () => void
   row?: AnswerRow
   showMeta?: boolean
-  showSearchMeta?: boolean
 }) {
   const has = !!row?.answer_text
   const busy = state === 'running'
@@ -1348,29 +1277,9 @@ function AnswerColumn({
           {(row.raw_payload_json as { title?: string }).title ?? ''}
         </p>
       )}
-      {showSearchMeta && row?.raw_payload_json && typeof row.raw_payload_json === 'object' && (
-        <SearchMeta payload={row.raw_payload_json} />
-      )}
       <pre className="text-[12px] whitespace-pre-wrap leading-[1.6] text-slate-800">
         {row?.answer_text ?? '（未生成）'}
       </pre>
-    </div>
-  )
-}
-
-function SearchMeta({ payload }: { payload: Record<string, unknown> }) {
-  const results = Array.isArray(payload.search_results)
-    ? payload.search_results as Array<{ title?: unknown; url?: unknown }>
-    : []
-  if (results.length === 0) return null
-  return (
-    <div className="text-[10px] text-slate-500 mb-2 border-b border-slate-100 pb-2 space-y-0.5">
-      <p>search: {String(payload.search_provider ?? 'web')} · {results.length} results</p>
-      {results.slice(0, 3).map((r, idx) => (
-        <p key={`${String(r.url ?? idx)}-${idx}`} className="truncate" title={String(r.url ?? '')}>
-          {idx + 1}. {String(r.title ?? r.url ?? '')}
-        </p>
-      ))}
     </div>
   )
 }
@@ -1591,12 +1500,12 @@ function filterQuestions(
     case 'ungenerated':
       return byScenario.filter(q => {
         const a = answers[q.id]
-        return !a?.deepseek_raw?.answer_text || !a?.deepseek_web?.answer_text || !isRealTebiqAnswer(a?.tebiq_current)
+        return !a?.deepseek_raw?.answer_text || !isRealTebiqAnswer(a?.tebiq_current)
       })
     case 'failed':
       return byScenario.filter(q => {
         const s = status[q.id]
-        return s?.deepseek === 'failed' || s?.deepseekWeb === 'failed' || s?.tebiq === 'failed'
+        return s?.deepseek === 'failed' || s?.tebiq === 'failed'
       })
     case 'golden':
       return byScenario.filter(q => annotations[q.id]?.action === 'golden_case')
