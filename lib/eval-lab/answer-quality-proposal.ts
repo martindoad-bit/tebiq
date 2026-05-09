@@ -24,6 +24,8 @@ export interface ProposalAnswer {
   status: string | null
   fallback_reason: string | null
   error: string | null
+  prompt_version?: string | null
+  engine_version?: string | null
 }
 
 export interface AnswerQualityProposal {
@@ -42,11 +44,25 @@ const SAFETY_DISCLAIMER_RE = /(?:不|不能|不要|避免)[^。！？\n]{0,18}(?
 const NEXT_ACTION_RE = /下一步|建议|先|需要|准备|确认|联系|咨询|提交|补|期限|通知|预约/
 const RISK_RE = /风险|注意|期限|失效|取消|不许可|拒签|超时|超期|影响|确认|入管|行政書士/
 const GENERIC_RE = /具体情况具体分析|因人而异|建议咨询专业人士/
+const CURRENT_TEBIQ_PROMPT_VERSION = 'consultation_alpha_v2'
 
 function hasDangerousCertaintyClaim(text: string): boolean {
   return text
     .split(/[。！？\n]/)
     .some(sentence => DANGEROUS_CLAIM_RE.test(sentence) && !SAFETY_DISCLAIMER_RE.test(sentence))
+}
+
+function hasObviousRepetition(text: string): boolean {
+  const lines = text
+    .split(/\n+/)
+    .map(line => line.trim())
+    .filter(line => line.length >= 12)
+  const seen = new Map<string, number>()
+  for (const line of lines) {
+    seen.set(line, (seen.get(line) ?? 0) + 1)
+    if ((seen.get(line) ?? 0) >= 2) return true
+  }
+  return false
 }
 
 export function buildAnswerQualityProposal(input: {
@@ -74,13 +90,21 @@ export function buildAnswerQualityProposal(input: {
     launchable = 'no'
     repairOwner = 'GENERATION'
   } else {
-    score = 4
-    severity = 'OK'
-    launchable = 'yes'
+    score = null
+    severity = null
+    launchable = null
+
+    if (tebiq?.prompt_version && tebiq.prompt_version !== CURRENT_TEBIQ_PROMPT_VERSION) {
+      flags.push('中台答案来自旧生成链路，不等于前台 TEBIQ')
+      score = 1
+      severity = 'P0'
+      launchable = 'no'
+      repairOwner = 'ENGINE'
+    }
 
     if (tebiq?.fallback_reason) {
       flags.push(`进入 fallback：${tebiq.fallback_reason}`)
-      score = Math.min(score, 2)
+      score = Math.min(score ?? 2, 2)
       severity = 'P1'
       launchable = 'no'
       repairOwner = 'ENGINE'
@@ -88,7 +112,7 @@ export function buildAnswerQualityProposal(input: {
 
     if (tebiq?.status === 'out_of_scope') {
       flags.push(REGRESSION_SET.has(tag) ? '疑似误判为 out_of_scope' : '当前回答为 out_of_scope')
-      score = Math.min(score, REGRESSION_SET.has(tag) ? 1 : 2)
+      score = Math.min(score ?? 2, REGRESSION_SET.has(tag) ? 1 : 2)
       severity = REGRESSION_SET.has(tag) ? 'P0' : 'P1'
       launchable = 'no'
       repairOwner = 'ENGINE'
@@ -96,7 +120,7 @@ export function buildAnswerQualityProposal(input: {
 
     if (hasDangerousCertaintyClaim(text)) {
       flags.push('含“保证/一定”类危险断言')
-      score = Math.min(score, 1)
+      score = Math.min(score ?? 1, 1)
       severity = 'P0'
       launchable = 'no'
       repairOwner = 'DOMAIN'
@@ -104,7 +128,15 @@ export function buildAnswerQualityProposal(input: {
 
     if (text.length < 180) {
       flags.push('答案过短，可能没有把条件、风险、下一步讲清楚')
-      score = Math.min(score, 2)
+      score = Math.min(score ?? 2, 2)
+      severity = severity === 'P0' ? severity : 'P1'
+      launchable = 'no'
+      if (repairOwner === 'UNKNOWN') repairOwner = 'ENGINE'
+    }
+
+    if (hasObviousRepetition(text)) {
+      flags.push('答案出现明显重复段落，疑似展示或投影链路错误')
+      score = Math.min(score ?? 3, 2)
       severity = severity === 'P0' ? severity : 'P1'
       launchable = 'no'
       if (repairOwner === 'UNKNOWN') repairOwner = 'ENGINE'
@@ -112,14 +144,14 @@ export function buildAnswerQualityProposal(input: {
 
     if (!NEXT_ACTION_RE.test(text)) {
       flags.push('缺少明确下一步行动')
-      score = Math.min(score, 3)
-      if (severity === 'OK' || severity == null) severity = 'P2'
+      score = Math.min(score ?? 3, 3)
+      if (severity == null) severity = 'P2'
       if (repairOwner === 'UNKNOWN') repairOwner = 'UX'
     }
 
     if (risk?.risk_level === 'HIGH' && !RISK_RE.test(text)) {
       flags.push(`DOMAIN 风险矩阵为 HIGH，但答案没有明显风险提示`)
-      score = Math.min(score, 2)
+      score = Math.min(score ?? 2, 2)
       severity = severity === 'P0' ? severity : 'P1'
       launchable = 'no'
       if (repairOwner === 'UNKNOWN' || repairOwner === 'UX') repairOwner = 'DOMAIN'
@@ -127,8 +159,8 @@ export function buildAnswerQualityProposal(input: {
 
     if (GENERIC_RE.test(text) && text.length < 500) {
       flags.push('回答偏泛，没有形成可执行判断')
-      score = Math.min(score, 3)
-      if (severity === 'OK' || severity == null) severity = 'P2'
+      score = Math.min(score ?? 3, 3)
+      if (severity == null) severity = 'P2'
       if (repairOwner === 'UNKNOWN') repairOwner = 'ENGINE'
     }
   }

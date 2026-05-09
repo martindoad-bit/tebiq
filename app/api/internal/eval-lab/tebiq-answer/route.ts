@@ -1,16 +1,23 @@
 import { NextResponse } from 'next/server'
 import { isEvalLabEnabled } from '@/lib/eval-lab/auth'
-import { submitQuestionForAnswer } from '@/lib/answer/submit-question'
 import { getEvalQuestionById, upsertEvalAnswer } from '@/lib/db/queries/eval-lab'
+import {
+  CONSULTATION_ALPHA_MODEL,
+  CONSULTATION_ALPHA_PROMPT_VERSION,
+} from '@/lib/answer/prompt/consultation-alpha-v1'
+import {
+  parseConsultationChunk,
+  type ConsultationEvent,
+  type ConsultationFactCardAuditEntry,
+} from '@/lib/consultation/stream-protocol'
 
 // POST /api/internal/eval-lab/tebiq-answer
 //
-// Calls the production answer pipeline (rule_based → DeepSeek-LLM →
-// legacy_seed → safe-clarification, with surface safety) for a given
-// question. Returns the resulting answer_id + a flat snapshot of the
-// user-visible fields plus internal observability fields
-// (engine_version / fallback_reason / status / domain) so the Eval
-// Lab can show side-by-side with the DeepSeek raw answer.
+// Calls the same production consultation stream used by the public
+// /ai-consultation page, then flattens the emitted answer_chunk events
+// for Eval Lab side-by-side review. This is intentional: Cycle 1 labels
+// must judge the actual user-facing TEBIQ path, including current prompt,
+// fact-card injection, forbidden phrase filter, and production persistence.
 //
 // Hardening notes:
 //
@@ -43,12 +50,11 @@ import { getEvalQuestionById, upsertEvalAnswer } from '@/lib/db/queries/eval-lab
 
 export const dynamic = 'force-dynamic'
 export const runtime = 'nodejs'
-// Internal eval only. The user-facing consultation routes keep their own
-// budgets; Phase 1 needs real comparable answers, not fast fallbacks.
-export const maxDuration = 180
+// Internal eval only. Match the production stream's ceiling so a valid
+// long answer is not misclassified as an Eval Lab failure.
+export const maxDuration = 300
 
-const EVAL_LLM_TIMEOUT_MS = 120_000
-const EVAL_LLM_MAX_TOKENS = 2_400
+const MIN_TEBIQ_ANSWER_CHARS = 120
 
 interface ReqBody {
   question?: string
@@ -91,40 +97,26 @@ export async function POST(req: Request) {
 
   const startedAt = Date.now()
   try {
-    const result = await submitQuestionForAnswer({
-      questionText: question,
-      visaType: body.visa_type ?? null,
-      sourcePage: '/internal/eval-lab',
-      llmTimeoutMs: EVAL_LLM_TIMEOUT_MS,
-      llmMaxTokens: EVAL_LLM_MAX_TOKENS,
-    })
-
-    const vm = result.viewModel
-    const pa = vm.public
+    const streamResult = await generateViaProductionStream(req, question)
     const latencyMs = Date.now() - startedAt
-    const answerId = vm.id || result.legacy.answer_id || null
-    const answerLink = vm.id ? `/answer/${vm.id}` : null
+    const answerId = streamResult.consultationId
+    const answerLink = answerId ? `/c/${answerId}` : null
+    const engineVersion = `${CONSULTATION_ALPHA_PROMPT_VERSION}:${CONSULTATION_ALPHA_MODEL}`
+    const fallbackReason =
+      streamResult.completionStatus === 'completed' ? null : `stream_${streamResult.completionStatus}`
 
     const responsePayload = {
       ok: true,
       answer_id: answerId,
       answer_link: answerLink,
       // Internal observability — surfaced ON PURPOSE in this route.
-      status: vm.status,
-      domain: vm.domain,
-      engine_version: vm.engine_version,
-      fallback_reason: vm.fallback_reason,
-      safety: vm.safety,
-      // What the user would see, flattened for the Eval Lab side-by-side.
-      title: pa.title,
-      summary: pa.summary,
-      conclusion: pa.conclusion,
-      visible_text: pa.visible_text,
-      next_steps: pa.next_steps,
-      clarification_questions: pa.clarification_questions,
-      documents_needed: pa.documents_needed,
-      // The detected_intent rendered on /answer/{id}'s "我理解你的问题是" panel.
-      understood_question: vm.understood_question,
+      status: streamResult.completionStatus,
+      domain: null,
+      engine_version: engineVersion,
+      fallback_reason: fallbackReason,
+      fact_card_ids: streamResult.factCardAudit.map(item => item.fact_id),
+      fact_card_audit: streamResult.factCardAudit,
+      visible_text: streamResult.answerText,
       latency_ms: latencyMs,
     }
 
@@ -133,22 +125,26 @@ export async function POST(req: Request) {
         await upsertEvalAnswer({
           questionId,
           answerType: 'tebiq_current',
-          model: vm.engine_version ?? null,
-          promptVersion: 'tebiq-pipeline',
-          answerText: pa.visible_text ?? null,
+          model: CONSULTATION_ALPHA_MODEL,
+          promptVersion: CONSULTATION_ALPHA_PROMPT_VERSION,
+          answerText: streamResult.answerText,
           tebiqAnswerId: answerId,
           tebiqAnswerLink: answerLink,
-          engineVersion: vm.engine_version ?? null,
-          status: vm.status ?? null,
-          domain: vm.domain ?? null,
-          fallbackReason: vm.fallback_reason ?? null,
+          engineVersion,
+          status: streamResult.completionStatus,
+          domain: null,
+          fallbackReason,
           latencyMs,
           error: null,
           rawPayloadJson: {
-            title: pa.title ?? null,
-            summary: pa.summary ?? null,
-            understood_question: vm.understood_question ?? null,
-            safety: vm.safety ?? null,
+            source_route: '/api/consultation/stream',
+            prompt_version: CONSULTATION_ALPHA_PROMPT_VERSION,
+            model: CONSULTATION_ALPHA_MODEL,
+            completion_status: streamResult.completionStatus,
+            terminal_event: streamResult.terminalEvent,
+            fact_card_audit: streamResult.factCardAudit,
+            event_counts: streamResult.eventCounts,
+            min_answer_chars: MIN_TEBIQ_ANSWER_CHARS,
           },
         })
       } catch (persistErr) {
@@ -181,5 +177,98 @@ export async function POST(req: Request) {
       { error: 'tebiq_pipeline_failed', detail: message },
       { status: 500 },
     )
+  }
+}
+
+interface StreamEvalResult {
+  answerText: string
+  consultationId: string | null
+  completionStatus: 'completed'
+  terminalEvent: ConsultationEvent['event']
+  factCardAudit: ConsultationFactCardAuditEntry[]
+  eventCounts: Partial<Record<ConsultationEvent['event'], number>>
+}
+
+async function generateViaProductionStream(req: Request, question: string): Promise<StreamEvalResult> {
+  const streamUrl = new URL('/api/consultation/stream', req.url)
+  const res = await fetch(streamUrl, {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      cookie: req.headers.get('cookie') ?? '',
+    },
+    body: JSON.stringify({ question }),
+  })
+
+  if (!res.ok || !res.body) {
+    const body = await res.text().catch(() => '')
+    throw new Error(`production_stream_http_${res.status}: ${body.slice(0, 300)}`)
+  }
+
+  const reader = res.body.getReader()
+  const decoder = new TextDecoder()
+  let buffer = ''
+  let answerText = ''
+  let consultationId: string | null = null
+  let terminalEvent: ConsultationEvent | null = null
+  let factCardAudit: ConsultationFactCardAuditEntry[] = []
+  const eventCounts: Partial<Record<ConsultationEvent['event'], number>> = {}
+
+  try {
+    while (true) {
+      const { value, done } = await reader.read()
+      if (done) break
+      buffer += decoder.decode(value, { stream: true })
+      const parsed = parseConsultationChunk(buffer)
+      buffer = parsed.remainder
+      for (const event of parsed.events) {
+        eventCounts[event.event] = (eventCounts[event.event] ?? 0) + 1
+        if (event.event === 'received') {
+          consultationId = event.consultation_id
+        } else if (event.event === 'answer_chunk') {
+          answerText += event.chunk
+        } else if (event.event === 'fact_cards_injected') {
+          factCardAudit = event.items.slice()
+        } else if (event.event === 'completed' || event.event === 'timeout' || event.event === 'failed') {
+          terminalEvent = event
+        }
+      }
+    }
+    buffer += decoder.decode()
+    if (buffer.trim()) {
+      const parsed = parseConsultationChunk(buffer + '\n\n')
+      for (const event of parsed.events) {
+        eventCounts[event.event] = (eventCounts[event.event] ?? 0) + 1
+        if (event.event === 'answer_chunk') answerText += event.chunk
+        if (event.event === 'completed' || event.event === 'timeout' || event.event === 'failed') {
+          terminalEvent = event
+        }
+      }
+    }
+  } finally {
+    try { reader.releaseLock() } catch { /* already released */ }
+  }
+
+  const trimmed = answerText.trim()
+  if (terminalEvent?.event === 'failed') {
+    throw new Error(`production_stream_failed: ${terminalEvent.detail}`)
+  }
+  if (terminalEvent?.event === 'timeout') {
+    throw new Error(`production_stream_timeout: ${terminalEvent.completion_status}`)
+  }
+  if (terminalEvent?.event !== 'completed') {
+    throw new Error(`production_stream_no_completed_event`)
+  }
+  if (trimmed.length < MIN_TEBIQ_ANSWER_CHARS) {
+    throw new Error(`production_stream_too_short:${trimmed.length}`)
+  }
+
+  return {
+    answerText: trimmed,
+    consultationId,
+    completionStatus: 'completed',
+    terminalEvent: terminalEvent.event,
+    factCardAudit,
+    eventCounts,
   }
 }
