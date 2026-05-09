@@ -7,24 +7,26 @@
 | Field | Value |
 |---|---|
 | `last_verified` | 2026-05-09 |
-| `verified_by` | Codex GM-OPS takeover cleanup |
-| `source_of_truth` | `origin/main` + `gh pr list` + production `/api/build-info` + production SSE smoke + PL handoff |
-| `main_head` | `22e4bc0` |
-| `main_head_title` | `docs(qa): 0.6 Day-2 全量检查 — PASS, FACT_LAYER_ENABLED=true` |
-| `production_sha` | `22e4bc0c874e7901cd27b5e82c5bb770f4da746e` |
-| `production_build` | `2026-05-09T12:20:30.842Z` from `/api/build-info` |
+| `verified_by` | Codex GM-OPS quality-flywheel A |
+| `source_of_truth` | `origin/main` + `gh pr list` + production `/api/build-info` + production eval-lab state + production SSE smoke + PL handoff |
+| `main_head` | `481ee4b` |
+| `main_head_title` | `docs: recalibrate takeover state (#109)` |
+| `production_sha` | `481ee4b95dd8cfa961b2a177ef15cec6141e7ffa` |
+| `production_build` | `2026-05-09T13:21:54.257Z` from `/api/build-info` |
 | `production_url` | https://tebiq.jp/ai-consultation |
 | `open_prs` | 0 (`gh pr list`, 2026-05-09) |
 
 ## Current Phase
 
-**0.6 Sprint Day-2 PASS; Codex takeover / cleanup in progress.**
+**0.6 Sprint Day-2 PASS; Codex takeover cleanup complete; quality-flywheel A in progress.**
 
 0.6 delivered Pro thinking, Fact Layer production injection, controlled follow-up,
 save/share/return paths, waiting states, and Day-2 QA with P0/P1 = 0.
 
-Next product direction is **not self-assigned by Codex**. GM-OPS waits for the
-founder + Claude.ai target card for the answer-review flywheel / quality work.
+Founder/CC target card now authorizes Sub-task A only: make the internal
+answer-quality console usable, simplify founder annotation, add AI proposal
+review support, and raise the 100-case generation completeness target to >=95%.
+Stop after A for founder trial before starting heterogeneous judge / regression.
 
 ## Production Health
 
@@ -34,7 +36,18 @@ founder + Claude.ai target card for the answer-review flywheel / quality work.
 | `/api/consultation/stream` smoke | ✅ `received → risk_hint → routing_status → fact_cards_injected → first_token → answer_chunk` |
 | `FACT_LAYER_ENABLED` | ✅ true in production behavior, confirmed by `fact_cards_injected` SSE |
 | `EVAL_LAB_ENABLED` | ✅ true in production behavior, dry-run endpoint returns 200 |
+| Eval Lab 100Q completeness | ✅ 95/100 complete (TEBIQ 100/100, DeepSeek 95/100, 5 DS empty failures), verified 2026-05-09 |
 | `DEEPSEEK_MAX_TOKENS` | 1500 in `lib/answer/core/deepseek-prompt.ts` |
+
+## Active Quality-Flywheel A Work
+
+| Item | Status |
+|---|---|
+| Eval Lab production data | ✅ 100 TEBIQ answers generated; 95 DeepSeek comparison answers generated |
+| Founder annotation fields | In PR: simplified to score / severity / launchable / max issue / repair route |
+| AI proposal v0 | In PR: local heuristic proposal for score, flags, skeleton, and repair route |
+| Heterogeneous judge | Not started; requires founder + Claude.ai protocol before B |
+| Regression diff pipeline | Not started; begins only after A checkpoint |
 
 ## 0.6 Delivered Since Prior State
 
@@ -80,8 +93,8 @@ Do not let Codex/GM collapse AQL, DOMAIN, or FACT into execution subroles.
 
 ## Next Checkpoint
 
-1. Finish takeover cleanup PR and stop for PL / Claude.ai review.
-2. Wait for founder + Claude.ai target card before starting quality-cycle work.
+1. Finish Sub-task A PR and stop for founder trial of `/internal/eval-lab`.
+2. Do not start heterogeneous judge (B) or regression diff pipeline (C) until the A checkpoint passes.
 3. When AQL is ready to canonicalize, update `docs/roles/TEBIQ_AQL_ROLE.md` with AQL-owned content.
 4. Do not start FACT Batch 9+ until the target card or PL explicitly asks.
 
