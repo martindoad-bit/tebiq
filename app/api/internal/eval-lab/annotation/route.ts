@@ -3,6 +3,7 @@ import { isEvalLabEnabled } from '@/lib/eval-lab/auth'
 import {
   upsertEvalAnnotation,
   type EvalAction,
+  type EvalAnnotationRow,
   type EvalSeverity,
 } from '@/lib/db/queries/eval-lab'
 
@@ -63,6 +64,31 @@ function asString(v: unknown): string | null {
   return typeof v === 'string' ? v : null
 }
 
+function toSnakeAnnotation(a: EvalAnnotationRow) {
+  return {
+    id: a.id,
+    question_id: a.questionId,
+    reviewer: a.reviewer,
+    score: a.score,
+    severity: a.severity,
+    launchable: a.launchable,
+    direction_correct: a.directionCorrect,
+    answered_question: a.answeredQuestion,
+    dangerous_claim: a.dangerousClaim,
+    hallucination: a.hallucination,
+    should_handoff: a.shouldHandoff,
+    must_have: a.mustHave,
+    must_not_have: a.mustNotHave,
+    missing_points: a.missingPoints,
+    reviewer_note: a.reviewerNote,
+    action: a.action,
+    annotation_json: a.annotationJson,
+    schema_version: a.schemaVersion,
+    created_at: a.createdAt,
+    updated_at: a.updatedAt,
+  }
+}
+
 interface Body {
   question_id?: string
   reviewer?: string
@@ -120,7 +146,7 @@ export async function POST(req: Request) {
           ? body.annotation_json
           : undefined,
     })
-    return NextResponse.json({ ok: true, annotation: row })
+    return NextResponse.json({ ok: true, annotation: toSnakeAnnotation(row) })
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err)
     console.warn('[eval-lab/annotation] failed', message)

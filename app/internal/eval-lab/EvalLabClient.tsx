@@ -1,6 +1,11 @@
 'use client'
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import {
+  buildAnswerQualityProposal,
+  type AnswerQualityProposal,
+  type EvalRepairOwner,
+} from '@/lib/eval-lab/answer-quality-proposal'
 import { pLimit } from '@/lib/eval-lab/concurrency'
 
 // TEBIQ Eval Lab V1 — DB-backed internal annotation tool.
@@ -20,6 +25,7 @@ import { pLimit } from '@/lib/eval-lab/concurrency'
 type AnswerType = 'deepseek_raw' | 'tebiq_current'
 type Severity = 'OK' | 'P2' | 'P1' | 'P0'
 type YesNo = 'yes' | 'no' | ''
+type RepairOwner = EvalRepairOwner | ''
 type Action =
   | 'golden_case'
   | 'prompt_rule'
@@ -97,6 +103,7 @@ interface EditableAnnotation {
   must_not_have: string
   missing_points: string
   reviewer_note: string
+  repair_owner: RepairOwner
   action: Action
 }
 
@@ -113,6 +120,7 @@ const EMPTY_EDIT: EditableAnnotation = {
   must_not_have: '',
   missing_points: '',
   reviewer_note: '',
+  repair_owner: '',
   action: '',
 }
 
@@ -191,13 +199,16 @@ function annotationToEdit(a: AnnotationRow | null): EditableAnnotation {
     must_not_have: a.must_not_have ?? '',
     missing_points: a.missing_points ?? '',
     reviewer_note: a.reviewer_note ?? '',
+    repair_owner: asRepairOwner(a.annotation_json?.repair_owner),
     action: (a.action ?? '') as Action,
   }
 }
 
 type FilterMode =
   | 'all'
+  | 'ready'
   | 'unannotated'
+  | 'ai_red'
   | 'p0'
   | 'p1'
   | 'launchable_no'
@@ -206,6 +217,34 @@ type FilterMode =
   | 'golden'
 
 const DRAFT_KEY = 'tebiq_eval_lab_v1_drafts'
+
+const REPAIR_OWNERS: EvalRepairOwner[] = [
+  'ENGINE',
+  'FACT',
+  'DOMAIN',
+  'UX',
+  'PRODUCT',
+  'GENERATION',
+  'IGNORE',
+  'UNKNOWN',
+]
+
+const REPAIR_OWNER_LABELS: Record<EvalRepairOwner, string> = {
+  ENGINE: 'ENGINE 工程/链路',
+  FACT: 'FACT 事实卡',
+  DOMAIN: 'DOMAIN 专业判断',
+  UX: 'UX/答案结构',
+  PRODUCT: 'PRODUCT 目标/场景',
+  GENERATION: 'GENERATION 生成补齐',
+  IGNORE: 'IGNORE 暂不处理',
+  UNKNOWN: 'UNKNOWN 不确定',
+}
+
+function asRepairOwner(v: unknown): RepairOwner {
+  return typeof v === 'string' && REPAIR_OWNERS.includes(v as EvalRepairOwner)
+    ? (v as EvalRepairOwner)
+    : ''
+}
 
 interface DraftMap {
   [questionId: string]: EditableAnnotation
@@ -262,7 +301,7 @@ export default function EvalLabClient() {
   const [loaded, setLoaded] = useState(false)
   const [loadError, setLoadError] = useState<string | null>(null)
   const [selectedId, setSelectedId] = useState<string | null>(null)
-  const [filter, setFilter] = useState<FilterMode>('all')
+  const [filter, setFilter] = useState<FilterMode>('ready')
   const [scenarioFilter, setScenarioFilter] = useState<string>('all')
   const [batchBusy, setBatchBusy] = useState(false)
   const [seedBusy, setSeedBusy] = useState(false)
@@ -345,7 +384,12 @@ export default function EvalLabClient() {
       setLoaded(true)
       setLoadError(null)
       if (j.questions.length > 0 && !selectedId) {
-        setSelectedId(j.questions[0].id)
+        const firstReady = j.questions.find(q => {
+          const answer = ans[q.id]
+          const ann = annMap[q.id]
+          return !!answer?.deepseek_raw?.answer_text && !!answer?.tebiq_current?.answer_text && ann?.score == null
+        })
+        setSelectedId(firstReady?.id ?? j.questions[0].id)
       }
     } catch (err) {
       setLoadError(err instanceof Error ? err.message : String(err))
@@ -365,18 +409,44 @@ export default function EvalLabClient() {
     return Array.from(set).sort()
   }, [questions])
 
+  const proposalByQuestion = useMemo(() => {
+    const out: Record<string, AnswerQualityProposal> = {}
+    for (const q of questions) {
+      const slot = answersByQuestion[q.id]
+      out[q.id] = buildAnswerQualityProposal({
+        question: q,
+        tebiq: slot?.tebiq_current,
+        deepseek: slot?.deepseek_raw,
+      })
+    }
+    return out
+  }, [questions, answersByQuestion])
+
   const filtered = useMemo(
-    () => filterQuestions(questions, answersByQuestion, annotationByQuestion, genStatus, filter, scenarioFilter),
-    [questions, answersByQuestion, annotationByQuestion, genStatus, filter, scenarioFilter],
+    () =>
+      filterQuestions(
+        questions,
+        answersByQuestion,
+        annotationByQuestion,
+        genStatus,
+        proposalByQuestion,
+        filter,
+        scenarioFilter,
+      ),
+    [questions, answersByQuestion, annotationByQuestion, genStatus, proposalByQuestion, filter, scenarioFilter],
   )
   const selected = questions.find(q => q.id === selectedId) ?? null
   const selectedAnswers = selectedId ? answersByQuestion[selectedId] : undefined
   const selectedEdit = selectedId ? edits[selectedId] ?? EMPTY_EDIT : EMPTY_EDIT
   const selectedStatus = selectedId ? genStatus[selectedId] ?? EMPTY_GEN_STATUS : EMPTY_GEN_STATUS
+  const selectedProposal = selectedId ? proposalByQuestion[selectedId] ?? null : null
 
   const counts = useMemo(() => {
     const total = questions.length
     let annotated = 0
+    let complete = 0
+    let ready = 0
+    let aiRed = 0
     let p0 = 0
     let p1 = 0
     let golden = 0
@@ -393,16 +463,22 @@ export default function EvalLabClient() {
       if (s?.deepseek === 'failed' || s?.tebiq === 'failed') failed += 1
       if (s?.deepseek === 'running' || s?.tebiq === 'running') running += 1
       const ans = answersByQuestion[q.id]
-      if (!ans?.deepseek_raw?.answer_text || !ans?.tebiq_current?.answer_text) ungen += 1
+      const hasBoth = !!ans?.deepseek_raw?.answer_text && !!ans?.tebiq_current?.answer_text
+      if (hasBoth) complete += 1
+      else ungen += 1
+      if (hasBoth && a?.score == null) ready += 1
+      if (proposalByQuestion[q.id]?.red) aiRed += 1
     }
-    return { total, annotated, p0, p1, golden, ungen, failed, running }
-  }, [questions, annotationByQuestion, answersByQuestion, genStatus])
+    const successRate = total === 0 ? 0 : Math.round((complete / total) * 100)
+    return { total, annotated, complete, successRate, ready, aiRed, p0, p1, golden, ungen, failed, running }
+  }, [questions, annotationByQuestion, answersByQuestion, genStatus, proposalByQuestion])
 
   // ---- annotation auto-save (unchanged behaviour) ----
   const persistAnnotation = useCallback(
     async (questionId: string, edit: EditableAnnotation) => {
       setSaveState(prev => ({ ...prev, [questionId]: 'saving' }))
       try {
+        const existingJson = annotationByQuestion[questionId]?.annotation_json ?? {}
         const r = await fetch('/api/internal/eval-lab/annotation', {
           method: 'POST',
           headers: { 'content-type': 'application/json' },
@@ -422,6 +498,10 @@ export default function EvalLabClient() {
             missing_points: edit.missing_points || null,
             reviewer_note: edit.reviewer_note || null,
             action: edit.action || null,
+            annotation_json: {
+              ...existingJson,
+              repair_owner: edit.repair_owner || null,
+            },
           }),
         })
         const j = (await r.json()) as { ok?: boolean; annotation?: AnnotationRow; error?: string }
@@ -444,13 +524,13 @@ export default function EvalLabClient() {
         setSaveState(prev => ({ ...prev, [questionId]: 'error' }))
       }
     },
-    [reviewer],
+    [annotationByQuestion, reviewer],
   )
 
   const onAnnotate = useCallback(
     (questionId: string, patch: Partial<EditableAnnotation>) => {
       setEdits(prev => {
-        const next = { ...prev[questionId] ?? EMPTY_EDIT, ...patch }
+        const next = { ...(prev[questionId] ?? EMPTY_EDIT), ...patch }
         saveDraft(questionId, next)
         const merged = { ...prev, [questionId]: next }
         const existing = debounceTimers.current[questionId]
@@ -462,6 +542,19 @@ export default function EvalLabClient() {
       })
     },
     [persistAnnotation],
+  )
+
+  const applyProposal = useCallback(
+    (questionId: string, proposal: AnswerQualityProposal) => {
+      onAnnotate(questionId, {
+        score: proposal.score,
+        severity: proposal.severity ?? '',
+        launchable: proposal.launchable ?? '',
+        missing_points: proposal.flags.length > 0 ? proposal.flags.join('\n') : 'AI 未发现明显问题',
+        repair_owner: proposal.repairOwner,
+      })
+    },
+    [onAnnotate],
   )
 
   // ---- generation (per-question) ----
@@ -767,9 +860,10 @@ export default function EvalLabClient() {
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 font-mono">
       <header className="border-b border-slate-300 bg-white px-4 py-3 flex flex-wrap items-center gap-3">
-        <h1 className="text-base font-semibold tracking-tight">TEBIQ Eval Lab V1 · 内部</h1>
+        <h1 className="text-base font-semibold tracking-tight">TEBIQ 答案质量标注台</h1>
         <div className="text-xs text-slate-500">
-          {counts.total} 题 · 已标 {counts.annotated} ·
+          {counts.total} 题 · 生成完整 {counts.complete}/{counts.total} ({counts.successRate}%) ·
+          待标 {counts.ready} · AI 标红 {counts.aiRed} · 已标 {counts.annotated} ·
           P0 {counts.p0} · P1 {counts.p1} ·
           golden {counts.golden} · 未生成 {counts.ungen} · 失败 {counts.failed}
           {counts.running > 0 ? ` · 运行中 ${counts.running}` : ''}
@@ -864,8 +958,10 @@ export default function EvalLabClient() {
               onChange={e => setFilter(e.target.value as FilterMode)}
               className="border border-slate-300 rounded px-1 py-0.5"
             >
+              <option value="ready">待标（已生成）</option>
               <option value="all">全部</option>
               <option value="unannotated">未标</option>
+              <option value="ai_red">AI 标红</option>
               <option value="ungenerated">未生成</option>
               <option value="failed">失败</option>
               <option value="p0">P0</option>
@@ -893,6 +989,7 @@ export default function EvalLabClient() {
             {filtered.map(q => {
               const isSel = q.id === selectedId
               const ann = annotationByQuestion[q.id]
+              const proposal = proposalByQuestion[q.id]
               const sev = ann?.severity ?? null
               const sevColor =
                 sev === 'P0' ? 'text-red-700 bg-red-50' :
@@ -922,9 +1019,17 @@ export default function EvalLabClient() {
                         {q.question_text}
                       </span>
                     </div>
-                    {q.starter_tag && (
-                      <div className="text-[10px] text-slate-400 ml-[26px]">{q.starter_tag}</div>
-                    )}
+                    <div className="flex items-center gap-1 text-[10px] text-slate-400 ml-[26px]">
+                      {q.starter_tag && <span>{q.starter_tag}</span>}
+                      {proposal && (
+                        <>
+                          <span>· AI {proposal.score ?? '-'}</span>
+                          <span className={proposal.red ? 'text-red-600' : 'text-slate-400'}>
+                            {proposal.repairOwner}
+                          </span>
+                        </>
+                      )}
+                    </div>
                   </button>
                 </li>
               )
@@ -1016,8 +1121,10 @@ export default function EvalLabClient() {
           ) : (
             <AnnotationForm
               edit={selectedEdit}
+              proposal={selectedProposal}
               saveStatus={saveState[selected.id] ?? 'idle'}
               annotation={annotationByQuestion[selected.id] ?? null}
+              onApplyProposal={selectedProposal ? () => applyProposal(selected.id, selectedProposal) : undefined}
               onChange={patch => onAnnotate(selected.id, patch)}
             />
           )}
@@ -1126,19 +1233,23 @@ function AnswerColumn({
 
 function AnnotationForm({
   edit,
+  proposal,
   saveStatus,
   annotation,
+  onApplyProposal,
   onChange,
 }: {
   edit: EditableAnnotation
+  proposal: AnswerQualityProposal | null
   saveStatus: 'idle' | 'saving' | 'saved' | 'error'
   annotation: AnnotationRow | null
+  onApplyProposal?: () => void
   onChange: (patch: Partial<EditableAnnotation>) => void
 }) {
   return (
-    <form className="space-y-3 text-xs">
+    <form className="space-y-3 text-xs" onSubmit={e => e.preventDefault()}>
       <div className="flex items-center gap-2">
-        <span className="text-[10px] uppercase tracking-wider text-slate-500">标注</span>
+        <span className="text-[10px] uppercase tracking-wider text-slate-500">Founder 标注</span>
         <span className="ml-auto text-[10px]">
           {saveStatus === 'saving' && <span className="text-slate-400">保存中…</span>}
           {saveStatus === 'saved' && <span className="text-emerald-600">已保存</span>}
@@ -1146,7 +1257,11 @@ function AnnotationForm({
         </span>
       </div>
 
-      <Field label="score (1–5)">
+      {proposal && (
+        <AiProposalPanel proposal={proposal} onApply={onApplyProposal} />
+      )}
+
+      <Field label="1. 分数">
         <select
           value={edit.score ?? ''}
           onChange={e =>
@@ -1157,13 +1272,13 @@ function AnnotationForm({
           <option value="">—</option>
           {[1, 2, 3, 4, 5].map(n => (
             <option key={n} value={n}>
-              {n}
+              {n} {scoreLabel(n)}
             </option>
           ))}
         </select>
       </Field>
 
-      <Field label="severity">
+      <Field label="2. 严重程度">
         <select
           value={edit.severity}
           onChange={e => onChange({ severity: e.target.value as Severity | '' })}
@@ -1177,58 +1292,29 @@ function AnnotationForm({
         </select>
       </Field>
 
-      <YesNoField label="可以上线 (launchable)" value={edit.launchable} onChange={v => onChange({ launchable: v })} />
-      <YesNoField label="方向正确" value={edit.direction_correct} onChange={v => onChange({ direction_correct: v })} />
-      <YesNoField label="答到了问题" value={edit.answered_question} onChange={v => onChange({ answered_question: v })} />
-      <YesNoField label="危险断言" value={edit.dangerous_claim} onChange={v => onChange({ dangerous_claim: v })} />
-      <YesNoField label="hallucination" value={edit.hallucination} onChange={v => onChange({ hallucination: v })} />
-      <YesNoField label="应交给行政書士 (handoff)" value={edit.should_handoff} onChange={v => onChange({ should_handoff: v })} />
+      <YesNoField label="3. 能否给用户看" value={edit.launchable} onChange={v => onChange({ launchable: v })} />
 
-      <Field label="must_have">
-        <textarea
-          value={edit.must_have}
-          onChange={e => onChange({ must_have: e.target.value })}
-          rows={2}
-          className="w-full border border-slate-300 rounded px-2 py-1 font-mono text-xs"
-        />
-      </Field>
-      <Field label="must_not_have">
-        <textarea
-          value={edit.must_not_have}
-          onChange={e => onChange({ must_not_have: e.target.value })}
-          rows={2}
-          className="w-full border border-slate-300 rounded px-2 py-1 font-mono text-xs"
-        />
-      </Field>
-      <Field label="missing_points">
+      <Field label="4. 最大问题 / 缺什么">
         <textarea
           value={edit.missing_points}
           onChange={e => onChange({ missing_points: e.target.value })}
-          rows={2}
-          className="w-full border border-slate-300 rounded px-2 py-1 font-mono text-xs"
-        />
-      </Field>
-      <Field label="reviewer_note">
-        <textarea
-          value={edit.reviewer_note}
-          onChange={e => onChange({ reviewer_note: e.target.value })}
-          rows={2}
+          rows={4}
           className="w-full border border-slate-300 rounded px-2 py-1 font-mono text-xs"
         />
       </Field>
 
-      <Field label="action">
+      <Field label="5. 修复路由">
         <select
-          value={edit.action}
-          onChange={e => onChange({ action: e.target.value as Action })}
+          value={edit.repair_owner}
+          onChange={e => onChange({ repair_owner: e.target.value as RepairOwner })}
           className="w-full border border-slate-300 rounded px-2 py-1"
         >
           <option value="">—</option>
-          <option value="golden_case">golden_case</option>
-          <option value="prompt_rule">prompt_rule</option>
-          <option value="fact_card_candidate">fact_card_candidate</option>
-          <option value="handoff_rule">handoff_rule</option>
-          <option value="ignore">ignore</option>
+          {REPAIR_OWNERS.map(owner => (
+            <option key={owner} value={owner}>
+              {REPAIR_OWNER_LABELS[owner]}
+            </option>
+          ))}
         </select>
       </Field>
 
@@ -1237,6 +1323,64 @@ function AnnotationForm({
       )}
     </form>
   )
+}
+
+function AiProposalPanel({
+  proposal,
+  onApply,
+}: {
+  proposal: AnswerQualityProposal
+  onApply?: () => void
+}) {
+  return (
+    <section className={`border rounded p-2 ${proposal.red ? 'border-red-200 bg-red-50' : 'border-blue-200 bg-blue-50'}`}>
+      <div className="flex items-center gap-2">
+        <span className="text-[10px] uppercase tracking-wider text-slate-500">AI 提议</span>
+        <span className={`text-[11px] font-semibold ${proposal.red ? 'text-red-700' : 'text-blue-700'}`}>
+          {proposal.score ?? '-'} / {proposal.severity ?? '-'} / {proposal.repairOwner}
+        </span>
+        <button
+          type="button"
+          onClick={onApply}
+          disabled={!onApply}
+          className="ml-auto text-[11px] px-2 py-0.5 border border-slate-300 rounded bg-white hover:bg-slate-100 disabled:opacity-50"
+        >
+          套用
+        </button>
+      </div>
+      <div className="mt-2 space-y-1">
+        {(proposal.flags.length > 0 ? proposal.flags : ['未发现明显红旗']).map(flag => (
+          <div key={flag} className="text-[11px] text-slate-700">
+            {flag}
+          </div>
+        ))}
+      </div>
+      <div className="mt-2 border-t border-slate-200 pt-2 space-y-1">
+        {proposal.skeleton.map(line => (
+          <div key={line} className="text-[11px] text-slate-600 leading-snug">
+            {line}
+          </div>
+        ))}
+      </div>
+    </section>
+  )
+}
+
+function scoreLabel(score: number): string {
+  switch (score) {
+    case 1:
+      return '危险'
+    case 2:
+      return '差'
+    case 3:
+      return '可用但弱'
+    case 4:
+      return '好'
+    case 5:
+      return '可推荐'
+    default:
+      return ''
+  }
 }
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
@@ -1290,16 +1434,25 @@ function filterQuestions(
   answers: Record<string, { deepseek_raw?: AnswerRow; tebiq_current?: AnswerRow }>,
   annotations: Record<string, AnnotationRow>,
   status: Record<string, QuestionGenStatus>,
+  proposals: Record<string, AnswerQualityProposal>,
   mode: FilterMode,
   scenario: string,
 ): QuestionRow[] {
   const byScenario = qs.filter(q => scenario === 'all' || q.scenario === scenario)
   switch (mode) {
+    case 'ready':
+      return byScenario.filter(q => {
+        const a = answers[q.id]
+        const ann = annotations[q.id]
+        return !!a?.deepseek_raw?.answer_text && !!a?.tebiq_current?.answer_text && ann?.score == null
+      })
     case 'unannotated':
       return byScenario.filter(q => {
         const a = annotations[q.id]
         return !a || a.score == null
       })
+    case 'ai_red':
+      return byScenario.filter(q => proposals[q.id]?.red)
     case 'p0':
       return byScenario.filter(q => annotations[q.id]?.severity === 'P0')
     case 'p1':
