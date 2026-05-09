@@ -52,8 +52,9 @@ const PROMPT_VERSION = 'eval-lab-light-v1'
 const PER_ATTEMPT_TIMEOUT_MS = 90_000
 const MAX_ATTEMPTS = 1
 const RETRY_BASE_DELAY_MS = 800
-const MAX_TOKENS = 800
+const MAX_TOKENS = 1600
 const TEMPERATURE = 0.2
+const MIN_DEEPSEEK_ANSWER_CHARS = 180
 
 const LIGHT_SYSTEM_PROMPT = [
   '你是一位熟悉日本在留资格、入管、区役所、年金、税务等行政手续的中文回答助手。',
@@ -86,6 +87,16 @@ class DeepseekEmptyError extends Error {
 
 interface AttemptResult {
   text: string
+  finishReason: string | null
+}
+
+class DeepseekIncompleteError extends Error {
+  code: string
+  constructor(code: string) {
+    super(code)
+    this.name = 'DeepseekIncompleteError'
+    this.code = code
+  }
 }
 
 async function callDeepseekOnce(question: string, apiKey: string): Promise<AttemptResult> {
@@ -113,11 +124,17 @@ async function callDeepseekOnce(question: string, apiKey: string): Promise<Attem
       throw new DeepseekHttpError(res.status, `deepseek_http_${res.status}`)
     }
     const json = (await res.json()) as {
-      choices?: Array<{ message?: { content?: string } }>
+      choices?: Array<{ message?: { content?: string }; finish_reason?: string | null }>
     }
-    const text = json.choices?.[0]?.message?.content?.trim() ?? ''
+    const choice = json.choices?.[0]
+    const text = choice?.message?.content?.trim() ?? ''
+    const finishReason = choice?.finish_reason ?? null
     if (!text) throw new DeepseekEmptyError()
-    return { text }
+    if (finishReason === 'length') throw new DeepseekIncompleteError('deepseek_length')
+    if (text.length < MIN_DEEPSEEK_ANSWER_CHARS) {
+      throw new DeepseekIncompleteError(`deepseek_too_short_${text.length}`)
+    }
+    return { text, finishReason }
   } finally {
     clearTimeout(timer)
   }
@@ -130,12 +147,14 @@ function shouldRetry(err: unknown, _attempt: number): boolean {
     return err.status >= 500 || err.status === 429
   }
   if (err instanceof DeepseekEmptyError) return true
+  if (err instanceof DeepseekIncompleteError) return true
   return isLikelyTransient(err)
 }
 
 function classifyError(err: unknown): string {
   if (err instanceof DeepseekHttpError) return `deepseek_http_${err.status}`
   if (err instanceof DeepseekEmptyError) return 'deepseek_empty'
+  if (err instanceof DeepseekIncompleteError) return err.code
   const name = (err as { name?: string }).name
   if (name === 'AbortError') return 'deepseek_timeout'
   return 'deepseek_exception'
@@ -226,7 +245,10 @@ export async function POST(req: Request) {
           rawPayloadJson: {
             attempts: attemptsTried,
             timeout_ms: PER_ATTEMPT_TIMEOUT_MS,
+            max_tokens: MAX_TOKENS,
+            min_answer_chars: MIN_DEEPSEEK_ANSWER_CHARS,
             provider_status: providerStatus,
+            finish_reason: result.finishReason,
           },
         })
       } catch (persistErr) {
@@ -240,7 +262,10 @@ export async function POST(req: Request) {
       model: MODEL_ID,
       latency_ms: latencyMs,
       timeout_ms: PER_ATTEMPT_TIMEOUT_MS,
+      max_tokens: MAX_TOKENS,
+      min_answer_chars: MIN_DEEPSEEK_ANSWER_CHARS,
       provider_status: providerStatus,
+      finish_reason: result.finishReason,
       attempts: attemptsTried,
     })
   } catch (err) {
@@ -285,6 +310,8 @@ async function persistError(
       rawPayloadJson: {
         attempts,
         timeout_ms: PER_ATTEMPT_TIMEOUT_MS,
+        max_tokens: MAX_TOKENS,
+        min_answer_chars: MIN_DEEPSEEK_ANSWER_CHARS,
         provider_status: providerStatus,
       },
     })

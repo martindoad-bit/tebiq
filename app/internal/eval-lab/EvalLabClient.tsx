@@ -149,6 +149,10 @@ const EMPTY_GEN_STATUS: QuestionGenStatus = {
   tebiqAttempts: null,
 }
 
+const MIN_DEEPSEEK_ANSWER_CHARS = 180
+const MIN_TEBIQ_ANSWER_CHARS = 120
+const CURRENT_TEBIQ_PROMPT_VERSION = 'consultation_alpha_v2'
+
 /**
  * Hydrate initial gen-status from server-side answer rows.
  * - has answer_text → success
@@ -176,8 +180,9 @@ function hydrateGenStatus(
 
 function classify(row: AnswerRow | undefined): GenState {
   if (!row) return 'pending'
-  if (row.answer_text) return 'success'
+  if (isCompleteDeepseekAnswer(row)) return 'success'
   if (row.error) return 'failed'
+  if (row.answer_text) return 'failed'
   return 'pending'
 }
 
@@ -194,12 +199,20 @@ function isRealTebiqAnswer(row: AnswerRow | undefined): boolean {
     && !row.error
     && !row.fallback_reason
     && row.engine_version !== 'answer-core-v1.1-fallback'
+    && row.prompt_version === CURRENT_TEBIQ_PROMPT_VERSION
+    && row.status === 'completed'
+    && row.answer_text.trim().length >= MIN_TEBIQ_ANSWER_CHARS
+}
+
+function isCompleteDeepseekAnswer(row: AnswerRow | undefined): boolean {
+  return !!row?.answer_text
+    && !row.error
+    && row.answer_text.trim().length >= MIN_DEEPSEEK_ANSWER_CHARS
 }
 
 function isReviewableCase(slot: { deepseek_raw?: AnswerRow; tebiq_current?: AnswerRow } | undefined): boolean {
-  return !!slot?.deepseek_raw?.answer_text
-    && !slot.deepseek_raw.error
-    && isRealTebiqAnswer(slot.tebiq_current)
+  return isCompleteDeepseekAnswer(slot?.deepseek_raw)
+    && isRealTebiqAnswer(slot?.tebiq_current)
 }
 
 function getAttempts(row: AnswerRow | undefined): number | null {
@@ -602,7 +615,7 @@ export default function EvalLabClient() {
         score: proposal.score,
         severity: proposal.severity ?? '',
         launchable: proposal.launchable ?? '',
-        missing_points: proposal.flags.length > 0 ? proposal.flags.join('\n') : 'AI 未发现明显问题',
+        missing_points: proposal.flags.length > 0 ? proposal.flags.join('\n') : '规则预检未发现明显问题',
         repair_owner: proposal.repairOwner,
       })
     },
@@ -915,7 +928,7 @@ export default function EvalLabClient() {
         <h1 className="text-base font-semibold tracking-tight">TEBIQ 答案质量标注台</h1>
         <div className="text-xs text-slate-500">
           {counts.total} 题 · 生成完整 {counts.complete}/{counts.total} ({counts.successRate}%) ·
-          待标 {counts.ready} · AI 标红 {counts.aiRed} · 已标 {counts.annotated} ·
+          待标 {counts.ready} · 预检标红 {counts.aiRed} · 已标 {counts.annotated} ·
           P0 {counts.p0} · P1 {counts.p1} ·
           golden {counts.golden} · 未生成 {counts.ungen} · 失败 {counts.failed}
           {counts.running > 0 ? ` · 运行中 ${counts.running}` : ''}
@@ -1013,7 +1026,7 @@ export default function EvalLabClient() {
               <option value="ready">待标（已生成）</option>
               <option value="all">全部</option>
               <option value="unannotated">未标</option>
-              <option value="ai_red">AI 标红</option>
+              <option value="ai_red">预检标红</option>
               <option value="rerun">待重跑</option>
               <option value="ungenerated">未生成</option>
               <option value="failed">失败</option>
@@ -1076,7 +1089,7 @@ export default function EvalLabClient() {
                       {q.starter_tag && <span>{q.starter_tag}</span>}
                       {proposal && (
                         <>
-                          <span>· AI {proposal.score ?? '-'}</span>
+                          <span>· 预检 {proposal.score ?? '-'}</span>
                           <span className={proposal.red ? 'text-red-600' : 'text-slate-400'}>
                             {proposal.repairOwner}
                           </span>
@@ -1250,6 +1263,9 @@ function AnswerColumn({
       {row?.error && state !== 'success' && (
         <p className="text-[11px] text-red-600">err: {row.error}</p>
       )}
+      {state === 'failed' && !liveError && !row?.error && (
+        <p className="text-[11px] text-red-600">err: stale_or_incomplete_answer</p>
+      )}
       {attempts != null && attempts > 1 && (
         <p className="text-[10px] text-slate-400">attempts: {attempts}</p>
       )}
@@ -1403,7 +1419,7 @@ function AiProposalPanel({
   return (
     <section className={`border rounded p-2 ${proposal.red ? 'border-red-200 bg-red-50' : 'border-blue-200 bg-blue-50'}`}>
       <div className="flex items-center gap-2">
-        <span className="text-[10px] uppercase tracking-wider text-slate-500">AI 提议</span>
+        <span className="text-[10px] uppercase tracking-wider text-slate-500">规则预检（非 AQL）</span>
         <span className={`text-[11px] font-semibold ${proposal.red ? 'text-red-700' : 'text-blue-700'}`}>
           {proposal.score ?? '-'} / {proposal.severity ?? '-'} / {proposal.repairOwner}
         </span>

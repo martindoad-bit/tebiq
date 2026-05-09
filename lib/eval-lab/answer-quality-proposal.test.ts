@@ -89,3 +89,29 @@ test('proposal does not treat safety disclaimer as dangerous certainty', () => {
   })
   assert.equal(proposal.flags.some(flag => flag.includes('危险断言')), false)
 })
+
+test('proposal does not invent a high score when rules find no red flag', () => {
+  const proposal = buildAnswerQualityProposal({
+    question: {
+      question_text: '技人国签证可以做销售工作吗？',
+      scenario: 'C_jinbun_work',
+      starter_tag: 'eval-lab-v1-C06',
+    },
+    tebiq: {
+      answer_text: '销售工作能不能放在技人国里，要看岗位实际内容，不能只看职位名称。先确认是否主要使用外语、海外客户沟通、市场分析、提案、合同协调等专业性内容；如果只是店铺接客、收银、陈列或一般现场销售，就比较难说明技人国该当性。下一步建议整理岗位说明、学历职历、雇用条件、实际业务比例、客户对象和使用语言，再向入管或行政書士确认这个岗位能否说明专业关联性；如果更新或转职期限很近，也要同时确认届出和申请时机。',
+      status: 'completed',
+      fallback_reason: null,
+      error: null,
+      prompt_version: 'consultation_alpha_v2',
+    },
+    deepseek: {
+      answer_text: '需要根据实际工作内容判断。',
+      status: null,
+      fallback_reason: null,
+      error: null,
+    },
+  })
+  assert.equal(proposal.score, null)
+  assert.equal(proposal.severity, null)
+  assert.equal(proposal.repairOwner, 'IGNORE')
+})
