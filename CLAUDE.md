@@ -17,11 +17,11 @@ TEBIQ 不是 AI 签证问答 App、不是签证知识库、不是行政书士官
 |------|------|------|
 | 1 | 本文件（CLAUDE.md） | 所有窗口 |
 | 2 | `docs/ops/TEBIQ_DELEGATION_PRINCIPLES.md` | **所有窗口（多窗口协作通用原则；任何 Work Packet 底层规则）** |
-| 3 | `docs/ops/TEBIQ_CURRENT_STATE.md` | 所有窗口（当前工程快照）|
+| 3 | `docs/product/TEBIQ_CURRENT_STATE.md` | 所有窗口（当前工程快照）|
 | 4 | `docs/product/TEBIQ_CONTEXT_PACK.md` | 所有窗口（长期产品原则）|
 | 5 | `docs/product/TEBIQ_QA_GATES.md` | QA / PR 审计 |
 | 6 | `docs/product/TEBIQ_COPY_SOURCE.md` | 文案相关任务 |
-| 7 | `docs/ops/TEBIQ_ROLES.md` | 不确定自己任务边界时 |
+| 7 | `docs/roles/TEBIQ_*_ROLE.md` | 不确定自己任务边界时 |
 
 ## 事实源优先级
 
@@ -30,7 +30,7 @@ TEBIQ 不是 AI 签证问答 App、不是签证知识库、不是行政书士官
 1. **用户/CEO 本轮明确给出的最新事实**
 2. **GitHub remote 状态**（`gh pr list`、`git log origin/main --oneline -5`）
 3. **Vercel build-info / deployment 状态**
-4. **`docs/ops/TEBIQ_CURRENT_STATE.md`**（repo 内短期状态快照）
+4. **`docs/product/TEBIQ_CURRENT_STATE.md`**（repo 内短期状态快照）
 5. 当前本地 worktree 内容
 
 **如果发现冲突：停止，报告冲突，等待裁决。不得继续基于冲突状态执行任务。**
@@ -43,7 +43,7 @@ git log origin/main --oneline -5
 gh pr list
 ```
 
-然后打开 `docs/ops/TEBIQ_CURRENT_STATE.md`，对比：
+然后打开 `docs/product/TEBIQ_CURRENT_STATE.md`，对比：
 
 - main HEAD 是否与文件记录一致？
 - 有无新合并的 PR 未反映在文件中？
@@ -51,14 +51,14 @@ gh pr list
 
 差异或超龄 → 标注 stale，报告 GM，再继续任务。
 
-完整协议见 `docs/ops/TEBIQ_FRESHNESS_PROTOCOL.md`。
+完整协议见 `docs/ops/TEBIQ_CONTEXT_BOOTSTRAP.md`。
 
 ## STOP 条件
 
 遇到以下任何情况必须停止并报告，不得继续：
 
 - 无法读取 `docs/product/TEBIQ_CONTEXT_PACK.md`
-- 无法读取 `docs/ops/TEBIQ_CURRENT_STATE.md`
+- 无法读取 `docs/product/TEBIQ_CURRENT_STATE.md`
 - 发现事实源冲突（如文档说 PR 已 merge，但 remote 显示未 merge）
 - 任务要求修改产品定位或在留/签证专业结论
 - 任务要求执行超出本角色边界的操作
@@ -75,5 +75,6 @@ gh pr list
 | ENGINE | 具体代码实现 |
 | QA | 测试与审计 |
 | DOMAIN-CC | 在留语义复核 |
+| AQL | 独立答案质量归因与复核设计（见 `docs/roles/TEBIQ_AQL_ROLE.md` 占位文档） |
 
-详细边界见 `docs/ops/TEBIQ_ROLES.md`。
+详细边界见 `docs/roles/TEBIQ_*_ROLE.md`。

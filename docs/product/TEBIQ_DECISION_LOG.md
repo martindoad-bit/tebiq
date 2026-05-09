@@ -596,3 +596,53 @@ GM 不可自主：
 - 减少 PL 中断成本
 - PL 大检查时只看 GM 完成的 deliverable + 反馈
 
+---
+
+## DL-018 · Codex Production Lead 接管与独立判断窗口边界
+
+| 字段 | 值 |
+|------|-----|
+| date | 2026-05-09 |
+| owner | Founder / Project Lead |
+| status | active |
+
+### Background
+
+0.6 Sprint Day-2 后，TEBIQ 已有 Pro thinking、Fact Layer production injection、
+受控追问、保存分享、等待状态和 QA 回归。瓶颈从"缺功能"转为"多窗口状态
+分散 + 答案质量修复闭环未形成"。
+
+Founder 决定由 Codex 接管 Production Lead / Engineering Operations Center，
+先清账，再等待 founder + Claude.ai 目标卡进入下一轮答案质量飞轮。
+
+### Decision
+
+Codex 新 GM 窗口合并执行职能：
+
+- GM
+- ENGINE
+- QA
+- CODEXUI
+
+以下窗口保持独立，不被 Codex 重新定义为子代理：
+
+- AQL — 答案质量归因与复测设计
+- DOMAIN — 在留专业语义复核
+- FACT — Fact card 生产线，继续以 `docs/fact-cards/FACT_OPS_WINDOW_TASK_PACK.md` 为准
+
+VOICE、大 UI polish、App/PWA、付费、材料清单、事项卡、Matter、docs-only
+work packets 继续冻结，除非 founder 明确解冻。
+
+### Operating Rules
+
+- Codex 可以自行决定工程实现、子代理编排、测试路径和清账方式。
+- Codex 不做产品方向裁决、不做 DOMAIN 专业结论、不自评答案质量修复成功。
+- AQL / founder 负责质量出口判断；DOMAIN 负责专业灰区；FACT 保留官方源抽取与状态机自评。
+- 阶段信号记录到 `docs/product/stage_signals.md`；阶段切换由 founder 决定。
+
+### Impact
+
+- `docs/product/TEBIQ_CURRENT_STATE.md` 需重新校准到 2026-05-09 production 事实。
+- `CLAUDE.md` 中 stale doc path 需修正。
+- AQL 暂无完整 canonical role doc，先建立 `docs/roles/TEBIQ_AQL_ROLE.md`
+  作为占位，不替 AQL 定义方法论。

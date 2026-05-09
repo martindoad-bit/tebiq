@@ -1,268 +1,95 @@
-# TEBIQ 当前状态
+# TEBIQ Current State
 
-> 短期工程快照。最多 150 行，不写长文。
-> 由 GM 维护。任何 active PR / 当前主线 / 阻塞变化时必须更新。
-> 长期原则不在此写，见 `TEBIQ_CONTEXT_PACK.md`。重大决策不在此写，见 `TEBIQ_DECISION_LOG.md`。
+> Short-lived engineering snapshot. GM owns this file.
+> Long-term product principles live in `TEBIQ_CONTEXT_PACK.md`; decisions live in
+> `TEBIQ_DECISION_LOG.md`.
 
-| 字段 | 值 |
-|------|-----|
-| `last_verified` | 2026-05-07 (post-Runbook §1+§2 + Wave 3 work packets) |
-| `verified_by` | GM |
-| `source_of_truth` | GitHub remote `origin/main` + `gh pr view` + production sha + 用户最新事实 |
-| `main_head` | `06ab917` |
-| `main_head_title` | Merge PR #94 — post-Runbook schema re-add + Batch 3 fixes |
-| `production_sha` | `06ab917` (verified `/api/build-info` 2026-05-07T13:17:50Z) |
+| Field | Value |
+|---|---|
+| `last_verified` | 2026-05-09 |
+| `verified_by` | Codex GM-OPS takeover cleanup |
+| `source_of_truth` | `origin/main` + `gh pr list` + production `/api/build-info` + production SSE smoke + PL handoff |
+| `main_head` | `22e4bc0` |
+| `main_head_title` | `docs(qa): 0.6 Day-2 全量检查 — PASS, FACT_LAYER_ENABLED=true` |
+| `production_sha` | `22e4bc0c874e7901cd27b5e82c5bb770f4da746e` |
+| `production_build` | `2026-05-09T12:20:30.842Z` from `/api/build-info` |
 | `production_url` | https://tebiq.jp/ai-consultation |
-| `dry_run_endpoint` | https://tebiq.jp/api/internal/fact-layer/dry-run (200, EVAL_LAB_ENABLED set in prod) |
+| `open_prs` | 0 (`gh pr list`, 2026-05-09) |
 
----
+## Current Phase
 
-## 当前阶段标签
+**0.6 Sprint Day-2 PASS; Codex takeover / cleanup in progress.**
 
-**TEBIQ 0.6 Sprint — Pro Thinking + Current Fact Layer + Mobile UX / Retention（PL kickoff 2026-05-07）**
+0.6 delivered Pro thinking, Fact Layer production injection, controlled follow-up,
+save/share/return paths, waiting states, and Day-2 QA with P0/P1 = 0.
 
-目标：保留 Pro thinking + AI-first Fact Layer + 移动端可读性 + 用户保存/回访路径。
+Next product direction is **not self-assigned by Codex**. GM-OPS waits for the
+founder + Claude.ai target card for the answer-review flywheel / quality work.
 
-**详细 mid-checkpoint**：见 `docs/ops/observations/0.6-SPRINT-MID-CHECKPOINT-20260507.md`（PL 大检查直接看此文件）
+## Production Health
 
-**7 Workstream 概览**：
+| Check | Status |
+|---|---|
+| `/api/build-info` | ✅ returns `22e4bc0` |
+| `/api/consultation/stream` smoke | ✅ `received → risk_hint → routing_status → fact_cards_injected → first_token → answer_chunk` |
+| `FACT_LAYER_ENABLED` | ✅ true in production behavior, confirmed by `fact_cards_injected` SSE |
+| `EVAL_LAB_ENABLED` | ✅ true in production behavior, dry-run endpoint returns 200 |
+| `DEEPSEEK_MAX_TOKENS` | 1500 in `lib/answer/core/deepseek-prompt.ts` |
 
-| WS | 名称 | Status | 关键 PR |
-|----|------|--------|---------|
-| A | 模型/流稳定 | ✅ Pro thinking 默认 + per-chunk DB await 修 | PR #69 #70 |
-| B | First-response UX | ✅ KEYWORD_BUCKETS + routing_status SSE in prod | PR #79 #87 |
-| C | Current Fact Layer | 🟡 Pack 2.1 (foundation) merged + hotfix; Pack 2.2 (injection) 暂缓 | PR #71 #84 #88 #89 |
-| D | 受控追问 | ⏸ Pack 2.3 队列后 | — |
-| E | Mobile UI | ✅ readability + UX refinement | PR #75 #87 |
-| F | 保存/分享/回访 | ✅ navigator.share + 我的咨询 + root route | PR #81 |
-| G | 个性化风险提示 | 🟡 设计 in KEYWORD_BUCKETS, 前端 deferred | — |
+## 0.6 Delivered Since Prior State
 
-**Fact Cards in main**: **11 张**（4 keiei 系列 + Batch 1: 3 张 + Batch 2: 3 张 + Batch 3: 3 张）— see `docs/fact-cards/`
+| Area | Status |
+|---|---|
+| ENGINE Pack 2.2 | ✅ Fact Layer production injection shipped |
+| ENGINE Pack 2.3 | ✅ Follow-up endpoint shipped |
+| CODEXUI | ✅ Follow-up UX / save-share / waiting states shipped |
+| FACT | ✅ Batches 5-8 landed in `origin/main`; Batch 9+ not started per PL 2026-05-09 |
+| P0 hotfixes | ✅ duplicate `follow_up_limit_reached` + follow-up matcher root-question inheritance |
+| QA | ✅ Day-2 full check PASS: `docs/qa/0.6-DAY2-20260508.md` |
 
-**Fact card states distribution**:
-- `human_reviewed` (DOMAIN audit done, PR #77 + #90): 5 张
-  - keiei-kanri-2025-10 (critical, controlled_alpha_eligible: true) ← PL signoff equivalent
-  - keiei-kanri-existing-holder-update (high)
-  - shikakugai-fukugyou (high)
-  - zairyu-expiry-renewal-change (high)
-  - spouse-divorce-separation (critical, controlled_alpha_eligible: false — DOMAIN推荐 PL signoff true)
-- `ai_verified` (FACT autopilot, awaiting DOMAIN): 5 张
-  - eijuu-nenkin-risk (critical, confidence: medium — Issue #80 待 FACT re-source)
-  - gijinkoku-job-mismatch (high)
-  - eijuu-zairyu-kikan (high)
-  - kazoku-taizai-yoken (high)
-  - minashi-sainyuukoku (critical, confidence: medium)
-- `ai_extracted` (NOT injectable): 1 张 (startup-visa-keiei-transition — METI 人手 fetch 待)
+## Window Architecture
 
-**Pack 2.1 prod ops 进度** (per `docs/ops/PROD_OPS_RUNBOOK_PACK_2_1.md`):
-- ✅ §1 db:migrate (additive 0025+0026 applied to prod via DL-012 blanket auth)
-- ✅ §2 fact-layer:sync (11/11 cards upserted to prod fact_cards table)
-- ✅ §3 EVAL_LAB_ENABLED=1 (already set in Vercel prod env, dry-run endpoint 200 verified)
-- ⏸ §4 FACT_LAYER_ENABLED=false (per PL §2 enable 5 项满足才翻 true)
+| Window | Status | Boundary |
+|---|---|---|
+| Codex GM-OPS | Active | GM + ENGINE + QA + CODEXUI execution center; does implementation, regression, state, and routing |
+| AQL | Independent | Answer quality diagnosis / attribution. Canonical repo doc pending; see `docs/roles/TEBIQ_AQL_ROLE.md` placeholder |
+| DOMAIN | Independent | In-status / legal-domain semantic review; verdicts self-decided by DOMAIN |
+| FACT | Independent | Fact card production via `docs/fact-cards/FACT_OPS_WINDOW_TASK_PACK.md`; not redefined by Codex |
+| VOICE | Frozen | No active voice work unless PL reactivates |
 
-**Active windows** (post Wave 3 dispatch):
-- FACT: autopilot Batch 4 (5 项 follow-up 候选)
-- ENGINE Pack 2.2 + 2.3: PL 已派 (上回合 starter prompt §1+§2)
-- CODEXUI follow-up + save/share + waiting-state: PL 已派 (上回合 §3+§4+§5)
-- QA: WS-A baseline ✅ + full regression ✅ (16b92b5); 待 Pack 2.2 后跑 fact_layer regression
-- DOMAIN: Batches 1+2 audit ✅ (PR #77 + #90); 待 Batch 3 + Issue #80 follow-up
+Do not let Codex/GM collapse AQL, DOMAIN, or FACT into execution subroles.
 
-**Production injection 启用条件 (5 项, 已 ✅ 项)**:
-1. ⏸ Pack 2.2 stream injection PR merged ← 唯一阻塞
-2. ✅ Runbook §1-§3 done
-3. ⏸ QA dry-run pass (待 Pack 2.2 后跑)
-4. ✅ DOMAIN critical 卡 audit verdict (PR #90 done)
-5. ⏸ PL explicit approval `FACT_LAYER_ENABLED=true`
+## Known Conflicts / Verification Items
 
-当前 production: **`FACT_LAYER_ENABLED=false`**（fact 不注入；模型按训练数据回答，可能给旧基准）。Dry-run endpoint 已可验 matcher 行为。
+| ID | Conflict | Action |
+|---|---|---|
+| C-1 | QA/PL handoff says production DB has 22 fact cards; `origin/main` has 20 markdown fact cards | Not blocking. Verify from prod DB or sync logs before next FACT/DATABASE task |
+| C-2 | QA P2-C says `PARENT_MAX_AGE_HOURS=24` is not wired; `origin/main` code imports and checks it | Treat as verification task, not a one-line fix, before changing code |
+| C-3 | QA P2-E says DB `prompt_version` default is v1; `origin/main` migration/schema default is v2 | Verify prod DB default and newly created rows before changing code |
+| C-4 | `CLAUDE.md` had stale `docs/ops/TEBIQ_CURRENT_STATE.md` / missing freshness-protocol references | Fixed in takeover cleanup branch |
 
----
+## Known P2 / Backlog
 
-**TEBIQ 0.5 Safe Consultation Sprint — 已完成（2026-05-05 → 2026-05-06）**
+| ID | Status |
+|---|---|
+| P2-A | Word scanner false positives around contextual `500万` / `通常`; observability only |
+| P2-B | Complex answers can truncate while stream completes as `completed`; needs product/UX decision |
+| P2-C | Parent max-age behavior needs targeted re-verification; see C-2 |
+| P2-D | `x-tebiq-build` response header absent; QA traceability only |
+| P2-E | Prompt-version observability needs targeted re-verification; see C-3 |
 
-历史 6 WS（A Runtime / B UI / C Learning Console / D Fact Anchors + Voice / E QA Smoke / F Observation）全部 ✅。Production sha base：`b6ffbe9`。
+## Next Checkpoint
 
----
+1. Finish takeover cleanup PR and stop for PL / Claude.ai review.
+2. Wait for founder + Claude.ai target card before starting quality-cycle work.
+3. When AQL is ready to canonicalize, update `docs/roles/TEBIQ_AQL_ROLE.md` with AQL-owned content.
+4. Do not start FACT Batch 9+ until the target card or PL explicitly asks.
 
-**1.0 Alpha Sprint v1（基线）— 已完成（2026-05-05 早）**
+## Maintenance Rules
 
-Charter §10 13 项标准全部 ✅。Production `b6ffbe9` 包含：
-- 文字咨询 + 流式回答（first_token 4-7s typical）
-- 图片咨询 Lite（Bedrock vision，hash-only ephemeral storage，0 PII bytes）
-- 13 风险关键词轻提示 + 5 反馈按钮 + 保存问题
-- DOMAIN 15 fact anchors + Voice canonical fallback
-- Learning Console 中台（7 Tab + KPI，零 DS 依赖）
-- QA 9/9 PASS（0 P0）
-
-**关键决策与里程碑**：
-1. DL-011 — 1.0 重定义为 AI 在留咨询 Alpha（Charter `docs/product/TEBIQ_1_0_ALPHA_CHARTER.md`）
-2. DL-009 — production 仍 blocked beyond Alpha（不解锁 production copy）
-3. DL-008 — VOICE canonical = main `TEBIQ_*.md`
-4. DL-007 — M3-A/B/C 拆分（已 superseded by 1.0 Alpha pivot）
-
-**未结项（不阻塞 Alpha 上线，进 0.7+ 路线）**：
-- Issue #49 P1: DS 90s timeout 率 60%（observability work）
-- Issue #46 DEBT: Production DB migration runbook
-- Issue #13: PR #12 Context OS QA audit pending
-
-规则：单线阻塞不等于全项目阻塞。6 track 独立推进。
-
----
-
-## 里程碑状态（v0.2 精确格式）
-
-| Milestone | Status | 备注 |
-|-----------|--------|------|
-| M0 | accepted | Artifact-first + Context OS |
-| M1 Internal Console | **accepted / monitoring** | CEO 验收 2026-05-05；camelCase fix in main |
-| M2 Routing Safety | **implemented + semantic draft / E2E PASSED** | code merged (PR #23) + DOMAIN 7/7 ✅ + E2E 7/7 ✅（2026-05-05 rerun）|
-| **M3-A** Routing Safety Baseline | routing structure: pass · **answer_text content safety: BLOCK by #37** | DL-010 修订方法学；不再标 PASS 直至 #37 修复 + QA/DOMAIN 复核 |
-| **M3-B** TEBIQ Self-output Baseline | **BLOCK by #37** | fallback 路径会产生 unrelated answered content，临时通过标准失效 |
-| **M3-C** DeepSeek Comparison Baseline | infra ready · **DO NOT RUN until #37 fixed** | PR #36 merged `98474c9`；DS raw route 90s；执行会被 fallback 污染 |
-| M4 Phase 1 (Stage Feedback) | **accepted** | PR #30 in main |
-| M4 Phase 2 (SSE) | **merged / QA pending** | PR #33 in main `501c147` |
-| M5 Matter v0 | ⏳ 等 M3 结论 | — |
-| M6 Private Beta Readiness | ⏳ M2+M4 ✅, 等 QA + M3-C | — |
-| M7 Public Soft Launch | ⏳ — | — |
-
----
-
-## VOICE / DOMAIN / QA / DeepSeek 状态（v0.2 格式）
-
-```
-VOICE:
-  canonical source: docs/voice/TEBIQ_*.md (14 files, commit 02b8e59)
-  superseded:       PR #31 closed (DL-008)
-  production:       none approved
-  delta gaps:       VOICE_SYSTEM_INDEX, HUMAN_REVIEW_TRIGGER_LIBRARY (待裁决)
-
-DOMAIN:
-  merged assets:    docs/domain/ 16 files (Phase 1+2+3 in main)
-  open assets:      none
-  draft status:     all 16 files draft / needs human review
-  formal annotation: blocked (awaiting M3-C FULL_COMPARABLE)
-  production allowed: no
-
-QA:
-  Issue #35 verdict:    BLOCK (P0 active in production)
-  M1 Console:           CONDITIONAL PASS (静态 ✅ / browser smoke 待 CEO)
-  M4 Preview Phase1+2:  CONDITIONAL PASS (静态 ✅ / SSE EventStream browser 验收 pending)
-  Routing E2E:          BLOCK (5/7 pass / 2/7 P0: D05+D06 命中错误 cached answer)
-  VOICE Compliance:     BLOCK (S-02 + S-07 fired due to P0 content pollution)
-  P0 ticket:            Issue #37 (ENGINE answer-core-v1 fallback hotfix)
-  P1 ticket:            VOICE S-07 fallback marker (含在 #37 acceptance §2.3)
-  formal report:        docs/qa/QA_STABILIZATION_REPORT_v0.2.md (commit daa7b18)
-  Issue #13 audit:      pending (PR #12 Context OS audit 待激活)
-
-DeepSeek:
-  fast health (25s):  slow_not_interactive (1/5 ok)
-  batch health (90s): healthy_batch (PR #36 merged — DS raw route now 90s)
-  UX health:          ✅ preview shows stages
-  recommended:        interactive=25s+fallback；batch eval=90s；concurrency=1
-  status:             infra-ready, M3-C 阻塞改为「等 P0 #37 修复」（修复前重跑 100Q 仍被 fallback bug 污染）
-```
-
----
-
-## 6 Track 状态总览
-
-| Track | 名称 | 状态 | 阻塞 |
-|-------|------|------|------|
-| **A** Eval | 🔴 P0 #37 阻塞 M3 升级 | M3-A routing ✅ / content BLOCK | answer-core-v1 fallback hotfix |
-| **B** Internal Console | ✅ 稳定 (M1 accepted) | ✅ | — |
-| **C** Routing Safety | ✅ routing 层 / 🔴 内容层 P0 | M2 视为「routing implemented + semantic draft」，E2E 待 #37 修复后复跑 | #37 |
-| **D** User Preview | ✅ Phase 1+2 in main / browser SSE QA pending | 🟡 | CEO/operator browser smoke |
-| **E** DOMAIN | ✅ Phase 1+2+3 in main (16+1 文件 draft) | ✅ | — |
-| **F** Ops/Release | 🔴 production blocked | DL-009 + #37 P0 | #37 + 产品负责人裁决 |
-
----
-
-## 当前 Active PR (0.6 Sprint, 2026-05-07 mid)
-
-| PR | 状态 | 说明 |
-|----|------|------|
-| 无 open PR | — | 0.6 sprint 累计 17 PR 全 merged。本回合 GM 起 mid-checkpoint PR (待 push) |
-
-最近 0.6 merged（按时间倒序，重要项）:
-- PR #88 Pack 2.1 Prod Ops Runbook
-- PR #87 CODEXUI UX refinement (功能堆叠去除 + 内部词清扫)
-- PR #89 hotfix P0 schema-DB drift
-- PR #84 ENGINE Pack 2.1 (migrations + matcher + dry-run)
-- PR #79 ENGINE Pack 1 (KEYWORD_BUCKETS + routing_status SSE + root route)
-- PR #75 + #81 CODEXUI Mobile UI + Save/Share
-- PR #73 + #86 FACT Batch 1 + 2 (8 cards)
-- PR #77 DOMAIN audit Batch 1 critical
-
-## 当前 Active Issues
-
-| Issue | 类型 | 说明 |
-|-------|------|------|
-| [#80](https://github.com/martindoad-bit/tebiq/issues/80) | FACT P2 follow-up | re-source eijuu-nenkin-risk for general-applicant page |
-| [#49](https://github.com/martindoad-bit/tebiq/issues/49) | observability | DS 90s timeout 率（0.6 sprint 经 Pro thinking 切换后值待重测）|
-| [#46](https://github.com/martindoad-bit/tebiq/issues/46) | DEBT P1 | Production DB Migration Runbook (DL-012 + Pack 2.1 Runbook 补强) |
-| [#13](https://github.com/martindoad-bit/tebiq/issues/13) | QA audit pending | PR #12 Context OS audit |
-
-已 close（本轮 0.6 Sprint）：累计 17 PR。详见 mid-checkpoint §3。
-
-## 1.0 Alpha 状态
-
-| 项 | 状态 |
-|----|------|
-| user-facing 入口 `/ai-consultation` | ✅ HTTP 200 |
-| streaming `/api/consultation/stream` | ✅ SSE token-by-token，first_token 实测 7.1s |
-| TEBIQ system prompt 体感 | ✅ 咨询语气，给下一步，不长篇 |
-| DB `ai_consultations` 表 | ✅ migration 0023 pre-applied 5/5 verified |
-| 用户已保存列表 `/me/consultations` | ✅ HTTP 200 |
-| 受控查看 `/c/[id]` | ✅ 404 for fake id（正确）|
-| feedback / save routes | ✅ 400 for invalid（正确） |
-| Photo Lite (#40) | ✅ merged PR #47 `a6b22a3`（vision via Bedrock; hash-only ephemeral storage; 0 PII bytes persisted; 10 contract tests + 154 regression）|
-| Learning Console (#41) | ✅ merged PR #48 `b6ffbe9`（7 Tab + KPI；EVAL_LAB_ENABLED=1 gate；零 DS 依赖；17 contract tests + 154 regression）|
-| QA Issue #43 | ✅ **9/9 PASS**（report `29b369e`）— §3.1-3.9 全完成，0 P0 |
-
----
-
-## CEO 可见 Surface
-
-| URL | 状态 | 用途 |
-|-----|------|------|
-| `https://tebiq.jp/internal/eval-console` | ✅ | M1 — 100 题状态总览 |
-| `https://tebiq.jp/internal/eval-lab` | ✅ | 标注工具（不要混淆为 console）|
-| `https://tebiq.jp/internal/preview` | ✅ | M4 Phase 1+2 — 阶段反馈 + SSE |
-
----
-
-## UI Brand Source Status
-
-| 项 | 值 |
-|----|-----|
-| Brand direction | **V07 Quiet Brow（locked，不重设计）** |
-| Tokens canonical | `docs/product/tebiq-v07-tokens.json`（colors / typography / sizes / forbidden）|
-| Logo / Icon canonical | `public/brand/tebiq-v07/`（svg/ + app-icon/ + android/ ios/ pwa/）|
-| Code-level tokens | `components/ui/design-tokens.ts` + `tailwind.config.ts` |
-| Brand docs index | `docs/brand/`（4 files: PACKAGE / LOGO_USAGE / COLOR_TOKENS / TYPOGRAPHY，新建 2026-05-05）|
-| Registry updated | yes — Brand 资产区块 |
-| CODEXUI can enter visual implementation | **yes**，前提：只读 Registry 标记的 canonical；不发明色 / 字体 / logo；derived tokens 必须 `needs review` |
-| Known gaps | state colors（hover/active/focus/error）/ elevation+shadow / typography scale / dark mode 全色板 / print guideline — CODEXUI 在 1.0 UI Phase 2 提派生 token 提案，**不直接当 production token 使用** |
-
----
-
-## 待产品负责人裁决（P1）
-
-| # | 事项 |
-|---|------|
-| P1-01 | DS eval route timeout 调整（25s → 90s）— 启动 M3-C |
-| P1-02 | M3-B 通过标准（routing+VOICE 合规 vs 完整 LLM 答案） |
-| P1-03 | VOICE delta（INDEX + HUMAN_REVIEW_TRIGGER_LIBRARY）是否提取 |
-| P1-04 | REGRESSION_SET force human_review 何时放开 |
-| P1-05 | Issue #13 QA audit 正式激活时机 |
-
----
-
-## Current State 维护规则
-
-| 规则 | 说明 |
-|------|------|
-| PR merge → 立即更新 | GM 负责 |
-| 未确认状态 → 写 unknown | 宁可 unknown，不写错 |
-| last_verified > 3 天 | 标注 stale，向 GM 报告 |
-| remote 与本文件冲突 | 以 remote + 用户最新事实为准 |
+| Rule | Meaning |
+|---|---|
+| Remote first | `origin/main`, open PRs, and production build-info outrank local worktrees |
+| Unknown stays unknown | Do not convert unresolved conflicts into facts |
+| No self-eval | Codex does not mark its own answer-quality fixes as solved; AQL/founder validates |
+| Current State decays | Update after merges, production flag changes, or handoff changes |
