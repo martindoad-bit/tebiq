@@ -22,10 +22,11 @@ import { pLimit } from '@/lib/eval-lab/concurrency'
 
 // ---------- types (mirror DB row shape, snake_case from /state) ----------
 
-type AnswerType = 'deepseek_raw' | 'tebiq_current'
+type AnswerType = 'deepseek_raw' | 'deepseek_web' | 'tebiq_current'
 type Severity = 'OK' | 'P2' | 'P1' | 'P0'
 type YesNo = 'yes' | 'no' | ''
 type RepairOwner = EvalRepairOwner | ''
+type VsDeepseekJudgment = 'strict_added' | 'tied' | 'regression' | ''
 type Action =
   | 'golden_case'
   | 'prompt_rule'
@@ -104,6 +105,7 @@ interface EditableAnnotation {
   missing_points: string
   reviewer_note: string
   repair_owner: RepairOwner
+  vs_deepseek_judgment: VsDeepseekJudgment
   action: Action
 }
 
@@ -121,6 +123,7 @@ const EMPTY_EDIT: EditableAnnotation = {
   missing_points: '',
   reviewer_note: '',
   repair_owner: '',
+  vs_deepseek_judgment: '',
   action: '',
 }
 
@@ -132,6 +135,8 @@ interface QuestionGenStatus {
   deepseek: GenState
   deepseekError: string | null
   deepseekAttempts: number | null
+  deepseekWeb: GenState
+  deepseekWebError: string | null
   tebiq: GenState
   tebiqError: string | null
   tebiqAttempts: number | null
@@ -141,6 +146,8 @@ const EMPTY_GEN_STATUS: QuestionGenStatus = {
   deepseek: 'pending',
   deepseekError: null,
   deepseekAttempts: null,
+  deepseekWeb: 'pending',
+  deepseekWebError: null,
   tebiq: 'pending',
   tebiqError: null,
   tebiqAttempts: null,
@@ -154,7 +161,7 @@ const EMPTY_GEN_STATUS: QuestionGenStatus = {
  */
 function hydrateGenStatus(
   questions: QuestionRow[],
-  ans: Record<string, { deepseek_raw?: AnswerRow; tebiq_current?: AnswerRow }>,
+  ans: AnswerSlotsByQuestion,
 ): Record<string, QuestionGenStatus> {
   const out: Record<string, QuestionGenStatus> = {}
   for (const q of questions) {
@@ -163,7 +170,9 @@ function hydrateGenStatus(
       deepseek: classify(slot?.deepseek_raw),
       deepseekError: slot?.deepseek_raw?.error ?? null,
       deepseekAttempts: getAttempts(slot?.deepseek_raw),
-      tebiq: classify(slot?.tebiq_current),
+      deepseekWeb: classify(slot?.deepseek_web),
+      deepseekWebError: slot?.deepseek_web?.error ?? null,
+      tebiq: classifyTebiq(slot?.tebiq_current),
       tebiqError: slot?.tebiq_current?.error ?? null,
       tebiqAttempts: getAttempts(slot?.tebiq_current),
     }
@@ -176,6 +185,29 @@ function classify(row: AnswerRow | undefined): GenState {
   if (row.answer_text) return 'success'
   if (row.error) return 'failed'
   return 'pending'
+}
+
+function classifyTebiq(row: AnswerRow | undefined): GenState {
+  if (!row) return 'pending'
+  if (row.error) return 'failed'
+  if (isRealTebiqAnswer(row)) return 'success'
+  if (row.answer_text) return 'failed'
+  return 'pending'
+}
+
+function isRealTebiqAnswer(row: AnswerRow | undefined): boolean {
+  return !!row?.answer_text
+    && !row.error
+    && !row.fallback_reason
+    && row.engine_version !== 'answer-core-v1.1-fallback'
+}
+
+function isReviewableCase(slot: { deepseek_raw?: AnswerRow; deepseek_web?: AnswerRow; tebiq_current?: AnswerRow } | undefined): boolean {
+  return !!slot?.deepseek_raw?.answer_text
+    && !slot.deepseek_raw.error
+    && !!slot.deepseek_web?.answer_text
+    && !slot.deepseek_web.error
+    && isRealTebiqAnswer(slot.tebiq_current)
 }
 
 function getAttempts(row: AnswerRow | undefined): number | null {
@@ -200,6 +232,7 @@ function annotationToEdit(a: AnnotationRow | null): EditableAnnotation {
     missing_points: a.missing_points ?? '',
     reviewer_note: a.reviewer_note ?? '',
     repair_owner: asRepairOwner(a.annotation_json?.repair_owner),
+    vs_deepseek_judgment: asVsDeepseekJudgment(a.annotation_json?.vs_deepseek_judgment),
     action: (a.action ?? '') as Action,
   }
 }
@@ -209,6 +242,7 @@ type FilterMode =
   | 'ready'
   | 'unannotated'
   | 'ai_red'
+  | 'rerun'
   | 'p0'
   | 'p1'
   | 'launchable_no'
@@ -217,6 +251,23 @@ type FilterMode =
   | 'golden'
 
 const DRAFT_KEY = 'tebiq_eval_lab_v1_drafts'
+
+type AnswerSlotsByQuestion = Record<
+  string,
+  { deepseek_raw?: AnswerRow; deepseek_web?: AnswerRow; tebiq_current?: AnswerRow }
+>
+
+const VS_DEEPSEEK_OPTIONS: Exclude<VsDeepseekJudgment, ''>[] = [
+  'strict_added',
+  'tied',
+  'regression',
+]
+
+const VS_DEEPSEEK_LABELS: Record<Exclude<VsDeepseekJudgment, ''>, string> = {
+  strict_added: 'strict_added 严格加分',
+  tied: 'tied 持平',
+  regression: 'regression 倒退',
+}
 
 const REPAIR_OWNERS: EvalRepairOwner[] = [
   'ENGINE',
@@ -244,6 +295,16 @@ function asRepairOwner(v: unknown): RepairOwner {
   return typeof v === 'string' && REPAIR_OWNERS.includes(v as EvalRepairOwner)
     ? (v as EvalRepairOwner)
     : ''
+}
+
+function asVsDeepseekJudgment(v: unknown): VsDeepseekJudgment {
+  return typeof v === 'string' && VS_DEEPSEEK_OPTIONS.includes(v as Exclude<VsDeepseekJudgment, ''>)
+    ? (v as Exclude<VsDeepseekJudgment, ''>)
+    : ''
+}
+
+function isAnnotationComplete(a: AnnotationRow | undefined | null): boolean {
+  return !!a && a.score != null && asVsDeepseekJudgment(a.annotation_json?.vs_deepseek_judgment) !== ''
 }
 
 interface DraftMap {
@@ -288,9 +349,7 @@ const BATCH_CONCURRENCY = 3
 
 export default function EvalLabClient() {
   const [questions, setQuestions] = useState<QuestionRow[]>([])
-  const [answersByQuestion, setAnswersByQuestion] = useState<
-    Record<string, { deepseek_raw?: AnswerRow; tebiq_current?: AnswerRow }>
-  >({})
+  const [answersByQuestion, setAnswersByQuestion] = useState<AnswerSlotsByQuestion>({})
   const [annotationByQuestion, setAnnotationByQuestion] = useState<Record<string, AnnotationRow>>({})
   const [edits, setEdits] = useState<Record<string, EditableAnnotation>>({})
   const [saveState, setSaveState] = useState<Record<string, 'idle' | 'saving' | 'saved' | 'error'>>({})
@@ -345,7 +404,7 @@ export default function EvalLabClient() {
         return
       }
       setQuestions(j.questions)
-      const ans: Record<string, { deepseek_raw?: AnswerRow; tebiq_current?: AnswerRow }> = {}
+      const ans: AnswerSlotsByQuestion = {}
       for (const a of j.answers) {
         const slot = ans[a.question_id] ?? {}
         slot[a.answer_type] = a
@@ -374,6 +433,8 @@ export default function EvalLabClient() {
             deepseek: old?.deepseek === 'running' ? 'running' : next.deepseek,
             deepseekError: next.deepseekError,
             deepseekAttempts: next.deepseekAttempts,
+            deepseekWeb: old?.deepseekWeb === 'running' ? 'running' : next.deepseekWeb,
+            deepseekWebError: next.deepseekWebError,
             tebiq: old?.tebiq === 'running' ? 'running' : next.tebiq,
             tebiqError: next.tebiqError,
             tebiqAttempts: next.tebiqAttempts,
@@ -387,7 +448,7 @@ export default function EvalLabClient() {
         const firstReady = j.questions.find(q => {
           const answer = ans[q.id]
           const ann = annMap[q.id]
-          return !!answer?.deepseek_raw?.answer_text && !!answer?.tebiq_current?.answer_text && ann?.score == null
+          return isReviewableCase(answer) && !isAnnotationComplete(ann)
         })
         setSelectedId(firstReady?.id ?? j.questions[0].id)
       }
@@ -416,7 +477,7 @@ export default function EvalLabClient() {
       out[q.id] = buildAnswerQualityProposal({
         question: q,
         tebiq: slot?.tebiq_current,
-        deepseek: slot?.deepseek_raw,
+        deepseek: slot?.deepseek_web ?? slot?.deepseek_raw,
       })
     }
     return out
@@ -455,18 +516,18 @@ export default function EvalLabClient() {
     let running = 0
     for (const q of questions) {
       const a = annotationByQuestion[q.id]
-      if (a?.score != null) annotated += 1
+      if (isAnnotationComplete(a)) annotated += 1
       if (a?.severity === 'P0') p0 += 1
       if (a?.severity === 'P1') p1 += 1
       if (a?.action === 'golden_case') golden += 1
       const s = genStatus[q.id]
-      if (s?.deepseek === 'failed' || s?.tebiq === 'failed') failed += 1
-      if (s?.deepseek === 'running' || s?.tebiq === 'running') running += 1
+      if (s?.deepseek === 'failed' || s?.deepseekWeb === 'failed' || s?.tebiq === 'failed') failed += 1
+      if (s?.deepseek === 'running' || s?.deepseekWeb === 'running' || s?.tebiq === 'running') running += 1
       const ans = answersByQuestion[q.id]
-      const hasBoth = !!ans?.deepseek_raw?.answer_text && !!ans?.tebiq_current?.answer_text
-      if (hasBoth) complete += 1
+      const reviewable = isReviewableCase(ans)
+      if (reviewable) complete += 1
       else ungen += 1
-      if (hasBoth && a?.score == null) ready += 1
+      if (reviewable && !isAnnotationComplete(a)) ready += 1
       if (proposalByQuestion[q.id]?.red) aiRed += 1
     }
     const successRate = total === 0 ? 0 : Math.round((complete / total) * 100)
@@ -501,6 +562,7 @@ export default function EvalLabClient() {
             annotation_json: {
               ...existingJson,
               repair_owner: edit.repair_owner || null,
+              vs_deepseek_judgment: edit.vs_deepseek_judgment || null,
             },
           }),
         })
@@ -610,6 +672,46 @@ export default function EvalLabClient() {
     [updateGenStatus],
   )
 
+  const generateDeepseekWeb = useCallback(
+    async (q: QuestionRow): Promise<boolean> => {
+      updateGenStatus(q.id, {
+        deepseekWeb: 'running',
+        deepseekWebError: null,
+      })
+      try {
+        const r = await fetch('/api/internal/eval-lab/deepseek-web', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ question: q.question_text, question_id: q.id }),
+        })
+        const j = (await r.json()) as {
+          ok?: boolean
+          text?: string
+          error?: string
+        }
+        if (j.ok && j.text) {
+          updateGenStatus(q.id, {
+            deepseekWeb: 'success',
+            deepseekWebError: null,
+          })
+          return true
+        }
+        updateGenStatus(q.id, {
+          deepseekWeb: 'failed',
+          deepseekWebError: j.error ?? `HTTP ${r.status}`,
+        })
+        return false
+      } catch (err) {
+        updateGenStatus(q.id, {
+          deepseekWeb: 'failed',
+          deepseekWebError: err instanceof Error ? err.message : String(err),
+        })
+        return false
+      }
+    },
+    [updateGenStatus],
+  )
+
   const generateTebiq = useCallback(
     async (q: QuestionRow): Promise<boolean> => {
       updateGenStatus(q.id, {
@@ -623,8 +725,8 @@ export default function EvalLabClient() {
           headers: { 'content-type': 'application/json' },
           body: JSON.stringify({ question: q.question_text, question_id: q.id }),
         })
-        const j = (await r.json()) as { ok?: boolean; error?: string; attempts?: number }
-        if (j.ok) {
+        const j = (await r.json()) as { ok?: boolean; error?: string; attempts?: number; fallback_reason?: string | null; engine_version?: string | null }
+        if (j.ok && !j.fallback_reason && j.engine_version !== 'answer-core-v1.1-fallback') {
           updateGenStatus(q.id, {
             tebiq: 'success',
             tebiqError: null,
@@ -634,7 +736,7 @@ export default function EvalLabClient() {
         }
         updateGenStatus(q.id, {
           tebiq: 'failed',
-          tebiqError: j.error ?? `HTTP ${r.status}`,
+          tebiqError: j.error ?? j.fallback_reason ?? `HTTP ${r.status}`,
           tebiqAttempts: j.attempts ?? null,
         })
         return false
@@ -660,7 +762,7 @@ export default function EvalLabClient() {
       if (!r.ok) return
       const j = (await r.json()) as { ok: boolean; answers: AnswerRow[] }
       if (!j.ok) return
-      const ans: Record<string, { deepseek_raw?: AnswerRow; tebiq_current?: AnswerRow }> = {}
+      const ans: AnswerSlotsByQuestion = {}
       for (const a of j.answers) {
         const slot = ans[a.question_id] ?? {}
         slot[a.answer_type] = a
@@ -688,13 +790,16 @@ export default function EvalLabClient() {
    * not touched here regardless — they live in eval_annotations.
    */
   const shouldGenerate = useCallback(
-    (qid: string, kind: 'deepseek' | 'tebiq', scope: BatchScope, skipAnnotated: boolean): boolean => {
+    (qid: string, kind: 'deepseek' | 'deepseekWeb' | 'tebiq', scope: BatchScope, skipAnnotated: boolean): boolean => {
       if (skipAnnotated) {
         const ann = annotationByQuestion[qid]
-        if (ann?.score != null) return false
+        if (isAnnotationComplete(ann)) return false
       }
       const s = genStatus[qid] ?? EMPTY_GEN_STATUS
-      const slot = kind === 'deepseek' ? s.deepseek : s.tebiq
+      const slot =
+        kind === 'deepseek' ? s.deepseek :
+        kind === 'deepseekWeb' ? s.deepseekWeb :
+        s.tebiq
       if (slot === 'running') return false
       if (scope === 'failed-only') return slot === 'failed'
       // missing scope: generate unless already success
@@ -712,11 +817,12 @@ export default function EvalLabClient() {
       // Build the task list under current state. Two tasks per question
       // (one per kind) so concurrency cap applies across BOTH endpoints
       // — the cap protects DeepSeek and the TEBIQ pipeline equally.
-      type Task = { q: QuestionRow; kind: 'deepseek' | 'tebiq' }
+      type Task = { q: QuestionRow; kind: 'deepseek' | 'deepseekWeb' | 'tebiq' }
       const tasks: Task[] = []
       const skipAnn = skipAnnotatedOnBatch
       for (const q of questions) {
         if (shouldGenerate(q.id, 'deepseek', scope, skipAnn)) tasks.push({ q, kind: 'deepseek' })
+        if (shouldGenerate(q.id, 'deepseekWeb', scope, skipAnn)) tasks.push({ q, kind: 'deepseekWeb' })
         if (shouldGenerate(q.id, 'tebiq', scope, skipAnn)) tasks.push({ q, kind: 'tebiq' })
       }
       if (tasks.length === 0) {
@@ -733,6 +839,9 @@ export default function EvalLabClient() {
           if (t.kind === 'deepseek' && cur.deepseek !== 'running') {
             next[t.q.id] = { ...cur, deepseek: 'pending', deepseekError: null }
           }
+          if (t.kind === 'deepseekWeb' && cur.deepseekWeb !== 'running') {
+            next[t.q.id] = { ...cur, deepseekWeb: 'pending', deepseekWebError: null }
+          }
           if (t.kind === 'tebiq' && cur.tebiq !== 'running') {
             next[t.q.id] = { ...cur, tebiq: 'pending', tebiqError: null }
           }
@@ -748,6 +857,7 @@ export default function EvalLabClient() {
         limit(async () => {
           if (cancelBatchRef.current) return
           if (t.kind === 'deepseek') await generateDeepseek(t.q)
+          else if (t.kind === 'deepseekWeb') await generateDeepseekWeb(t.q)
           else await generateTebiq(t.q)
           done += 1
           setBatchProgress({ done, total: tasks.length })
@@ -761,7 +871,7 @@ export default function EvalLabClient() {
         await refreshAnswers()
       }
     },
-    [batchBusy, questions, shouldGenerate, skipAnnotatedOnBatch, generateDeepseek, generateTebiq, refreshAnswers],
+    [batchBusy, questions, shouldGenerate, skipAnnotatedOnBatch, generateDeepseek, generateDeepseekWeb, generateTebiq, refreshAnswers],
   )
 
   const cancelBatch = useCallback(() => {
@@ -774,12 +884,13 @@ export default function EvalLabClient() {
       const s = genStatus[q.id] ?? EMPTY_GEN_STATUS
       const tasks: Promise<unknown>[] = []
       if (s.deepseek === 'failed') tasks.push(generateDeepseek(q))
+      if (s.deepseekWeb === 'failed') tasks.push(generateDeepseekWeb(q))
       if (s.tebiq === 'failed') tasks.push(generateTebiq(q))
       if (tasks.length === 0) return
       await Promise.all(tasks)
       await refreshAnswers()
     },
-    [genStatus, generateDeepseek, generateTebiq, refreshAnswers],
+    [genStatus, generateDeepseek, generateDeepseekWeb, generateTebiq, refreshAnswers],
   )
 
   // ---- seed / import ----
@@ -839,14 +950,14 @@ export default function EvalLabClient() {
     const start = idx >= 0 ? idx + 1 : 0
     for (let i = start; i < filtered.length; i += 1) {
       const a = annotationByQuestion[filtered[i].id]
-      if (!a || a.score == null) {
+      if (!isAnnotationComplete(a)) {
         setSelectedId(filtered[i].id)
         return
       }
     }
     for (let i = 0; i < start; i += 1) {
       const a = annotationByQuestion[filtered[i].id]
-      if (!a || a.score == null) {
+      if (!isAnnotationComplete(a)) {
         setSelectedId(filtered[i].id)
         return
       }
@@ -913,7 +1024,7 @@ export default function EvalLabClient() {
             disabled={batchBusy}
             className="text-xs px-3 py-1.5 border border-slate-400 rounded bg-white hover:bg-slate-100 disabled:opacity-50"
           >
-            {batchBusy ? '批量生成中…' : `批量生成未生成 (≤ ${BATCH_CONCURRENCY} 并发)`}
+            {batchBusy ? '批量生成中…' : `补齐 / 重跑待标数据 (≤ ${BATCH_CONCURRENCY} 并发)`}
           </button>
           <button
             onClick={() => runBatch('failed-only')}
@@ -962,6 +1073,7 @@ export default function EvalLabClient() {
               <option value="all">全部</option>
               <option value="unannotated">未标</option>
               <option value="ai_red">AI 标红</option>
+              <option value="rerun">待重跑</option>
               <option value="ungenerated">未生成</option>
               <option value="failed">失败</option>
               <option value="p0">P0</option>
@@ -1014,6 +1126,7 @@ export default function EvalLabClient() {
                         {sev || (ann?.score != null ? '·' : ' ')}
                       </span>
                       <StatusDot kind="D" state={s.deepseek} />
+                      <StatusDot kind="W" state={s.deepseekWeb} />
                       <StatusDot kind="T" state={s.tebiq} />
                       <span className="truncate flex-1" title={q.question_text}>
                         {q.question_text}
@@ -1071,7 +1184,7 @@ export default function EvalLabClient() {
                 </h2>
               </header>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-3 gap-3">
                 <AnswerColumn
                   label="DeepSeek 裸答"
                   state={selectedStatus.deepseek}
@@ -1079,6 +1192,15 @@ export default function EvalLabClient() {
                   attempts={selectedStatus.deepseekAttempts}
                   onGenerate={() => generateDeepseek(selected)}
                   row={selectedAnswers?.deepseek_raw}
+                />
+                <AnswerColumn
+                  label="DeepSeek 联网"
+                  state={selectedStatus.deepseekWeb}
+                  liveError={selectedStatus.deepseekWebError}
+                  attempts={null}
+                  onGenerate={() => generateDeepseekWeb(selected)}
+                  row={selectedAnswers?.deepseek_web}
+                  showSearchMeta
                 />
                 <AnswerColumn
                   label="TEBIQ 当前输出"
@@ -1092,7 +1214,7 @@ export default function EvalLabClient() {
               </div>
 
               <div className="flex gap-2 text-[11px]">
-                {(selectedStatus.deepseek === 'failed' || selectedStatus.tebiq === 'failed') && (
+                {(selectedStatus.deepseek === 'failed' || selectedStatus.deepseekWeb === 'failed' || selectedStatus.tebiq === 'failed') && (
                   <button
                     onClick={() => rerunFailed(selected)}
                     className="px-2 py-1 border border-orange-300 rounded bg-orange-50 text-orange-700 hover:bg-orange-100"
@@ -1136,7 +1258,7 @@ export default function EvalLabClient() {
 
 // ---------- subcomponents ----------
 
-function StatusDot({ kind, state }: { kind: 'D' | 'T'; state: GenState }) {
+function StatusDot({ kind, state }: { kind: 'D' | 'W' | 'T'; state: GenState }) {
   const cls =
     state === 'success' ? 'text-emerald-600' :
     state === 'running' ? 'text-blue-600 animate-pulse' :
@@ -1162,6 +1284,7 @@ function AnswerColumn({
   onGenerate,
   row,
   showMeta,
+  showSearchMeta,
 }: {
   label: string
   state: GenState
@@ -1170,6 +1293,7 @@ function AnswerColumn({
   onGenerate: () => void
   row?: AnswerRow
   showMeta?: boolean
+  showSearchMeta?: boolean
 }) {
   const has = !!row?.answer_text
   const busy = state === 'running'
@@ -1224,9 +1348,29 @@ function AnswerColumn({
           {(row.raw_payload_json as { title?: string }).title ?? ''}
         </p>
       )}
+      {showSearchMeta && row?.raw_payload_json && typeof row.raw_payload_json === 'object' && (
+        <SearchMeta payload={row.raw_payload_json} />
+      )}
       <pre className="text-[12px] whitespace-pre-wrap leading-[1.6] text-slate-800">
         {row?.answer_text ?? '（未生成）'}
       </pre>
+    </div>
+  )
+}
+
+function SearchMeta({ payload }: { payload: Record<string, unknown> }) {
+  const results = Array.isArray(payload.search_results)
+    ? payload.search_results as Array<{ title?: unknown; url?: unknown }>
+    : []
+  if (results.length === 0) return null
+  return (
+    <div className="text-[10px] text-slate-500 mb-2 border-b border-slate-100 pb-2 space-y-0.5">
+      <p>search: {String(payload.search_provider ?? 'web')} · {results.length} results</p>
+      {results.slice(0, 3).map((r, idx) => (
+        <p key={`${String(r.url ?? idx)}-${idx}`} className="truncate" title={String(r.url ?? '')}>
+          {idx + 1}. {String(r.title ?? r.url ?? '')}
+        </p>
+      ))}
     </div>
   )
 }
@@ -1292,7 +1436,22 @@ function AnnotationForm({
         </select>
       </Field>
 
-      <YesNoField label="3. 能否给用户看" value={edit.launchable} onChange={v => onChange({ launchable: v })} />
+      <Field label="3. vs DeepSeek 加分判断（必填）">
+        <select
+          value={edit.vs_deepseek_judgment}
+          onChange={e => onChange({ vs_deepseek_judgment: e.target.value as VsDeepseekJudgment })}
+          className={`w-full border rounded px-2 py-1 ${
+            edit.vs_deepseek_judgment ? 'border-slate-300' : 'border-red-300 bg-red-50'
+          }`}
+        >
+          <option value="">— 必填 —</option>
+          {VS_DEEPSEEK_OPTIONS.map(v => (
+            <option key={v} value={v}>
+              {VS_DEEPSEEK_LABELS[v]}
+            </option>
+          ))}
+        </select>
+      </Field>
 
       <Field label="4. 最大问题 / 缺什么">
         <textarea
@@ -1392,46 +1551,11 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
   )
 }
 
-function YesNoField({
-  label,
-  value,
-  onChange,
-}: {
-  label: string
-  value: YesNo
-  onChange: (v: YesNo) => void
-}) {
-  return (
-    <Field label={label}>
-      <div className="flex gap-1">
-        {(['yes', 'no', ''] as const).map(opt => (
-          <button
-            key={opt || 'clear'}
-            type="button"
-            onClick={() => onChange(opt)}
-            className={`flex-1 px-2 py-1 border rounded text-[11px] ${
-              value === opt
-                ? opt === 'yes'
-                  ? 'bg-emerald-100 border-emerald-400 text-emerald-700'
-                  : opt === 'no'
-                  ? 'bg-red-100 border-red-400 text-red-700'
-                  : 'bg-slate-100 border-slate-400 text-slate-600'
-                : 'bg-white border-slate-300 text-slate-500 hover:bg-slate-50'
-            }`}
-          >
-            {opt === 'yes' ? '✓' : opt === 'no' ? '✗' : '—'}
-          </button>
-        ))}
-      </div>
-    </Field>
-  )
-}
-
 // ---------- helpers ----------
 
 function filterQuestions(
   qs: QuestionRow[],
-  answers: Record<string, { deepseek_raw?: AnswerRow; tebiq_current?: AnswerRow }>,
+  answers: AnswerSlotsByQuestion,
   annotations: Record<string, AnnotationRow>,
   status: Record<string, QuestionGenStatus>,
   proposals: Record<string, AnswerQualityProposal>,
@@ -1444,15 +1568,20 @@ function filterQuestions(
       return byScenario.filter(q => {
         const a = answers[q.id]
         const ann = annotations[q.id]
-        return !!a?.deepseek_raw?.answer_text && !!a?.tebiq_current?.answer_text && ann?.score == null
+        return isReviewableCase(a) && !isAnnotationComplete(ann)
       })
     case 'unannotated':
       return byScenario.filter(q => {
         const a = annotations[q.id]
-        return !a || a.score == null
+        return !isAnnotationComplete(a)
       })
     case 'ai_red':
       return byScenario.filter(q => proposals[q.id]?.red)
+    case 'rerun':
+      return byScenario.filter(q => {
+        const a = answers[q.id]
+        return !isReviewableCase(a)
+      })
     case 'p0':
       return byScenario.filter(q => annotations[q.id]?.severity === 'P0')
     case 'p1':
@@ -1462,12 +1591,12 @@ function filterQuestions(
     case 'ungenerated':
       return byScenario.filter(q => {
         const a = answers[q.id]
-        return !a?.deepseek_raw?.answer_text || !a?.tebiq_current?.answer_text
+        return !a?.deepseek_raw?.answer_text || !a?.deepseek_web?.answer_text || !isRealTebiqAnswer(a?.tebiq_current)
       })
     case 'failed':
       return byScenario.filter(q => {
         const s = status[q.id]
-        return s?.deepseek === 'failed' || s?.tebiq === 'failed'
+        return s?.deepseek === 'failed' || s?.deepseekWeb === 'failed' || s?.tebiq === 'failed'
       })
     case 'golden':
       return byScenario.filter(q => annotations[q.id]?.action === 'golden_case')

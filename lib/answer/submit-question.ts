@@ -13,6 +13,8 @@ export interface SubmitQuestionInput {
   visaType?: string | null
   contactEmail?: string | null
   sourcePage?: string | null
+  llmTimeoutMs?: number
+  llmMaxTokens?: number
 }
 
 export interface SubmitQuestionResult {
@@ -31,6 +33,8 @@ export async function submitQuestionForAnswer(input: SubmitQuestionInput): Promi
   const run = await runAnswerIntake({
     questionText: input.questionText,
     visaType: input.visaType,
+    llmTimeoutMs: input.llmTimeoutMs,
+    llmMaxTokens: input.llmMaxTokens,
   })
 
   // Map the V1 PublicAnswer back to the legacy AnswerResult shape so

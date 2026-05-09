@@ -53,6 +53,8 @@ function isProviderFailure(reason: FallbackReason | null): boolean {
 export interface IntakeInput {
   questionText: string
   visaType?: string | null
+  llmTimeoutMs?: number
+  llmMaxTokens?: number
 }
 
 export async function runAnswerIntake(input: IntakeInput): Promise<AnswerRun> {
@@ -110,6 +112,8 @@ export async function runAnswerIntake(input: IntakeInput): Promise<AnswerRun> {
       detectedIntent,
       candidateSeedSnippet: null, // PR-A scope: no candidate grounding yet (deferred)
       redlines: redlinesForDomain(domain, detectedIntent),
+      timeoutMs: input.llmTimeoutMs,
+      maxTokens: input.llmMaxTokens,
     })
     const llmIsConfidentMatch = llmSource.kind === 'llm_primary'
       && (llmSource.legacy_answer_type === 'matched')

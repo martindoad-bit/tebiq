@@ -33,7 +33,7 @@ import { getRiskMatrixEntry } from '@/lib/eval-lab/risk-matrix-data'
 
 // ---------- types (snake_case as returned by /state) ----------
 
-type AnswerType = 'deepseek_raw' | 'tebiq_current'
+type AnswerType = 'deepseek_raw' | 'deepseek_web' | 'tebiq_current'
 
 interface QuestionRow {
   id: string
@@ -82,6 +82,7 @@ interface StateResponse {
 
 interface AnswerSlot {
   deepseek_raw?: AnswerRow
+  deepseek_web?: AnswerRow
   tebiq_current?: AnswerRow
 }
 
@@ -246,7 +247,7 @@ export default function EvalConsoleClient() {
 
   // Provider health (DB-inferred, no live DS call).
   const providerHealth = useMemo(() => {
-    const flat: { answer_type: 'deepseek_raw' | 'tebiq_current'; answer_text: string | null; error: string | null; created_at: string }[] = []
+    const flat: { answer_type: AnswerType; answer_text: string | null; error: string | null; created_at: string }[] = []
     for (const slot of Object.values(answers)) {
       if (slot.deepseek_raw) flat.push(slot.deepseek_raw)
       if (slot.tebiq_current) flat.push(slot.tebiq_current)
@@ -259,7 +260,7 @@ export default function EvalConsoleClient() {
     let latestTimestamp = 0
     let totalAnswerRows = 0
     for (const slot of Object.values(answers)) {
-      for (const r of [slot.deepseek_raw, slot.tebiq_current]) {
+      for (const r of [slot.deepseek_raw, slot.deepseek_web, slot.tebiq_current]) {
         if (!r) continue
         totalAnswerRows += 1
         const t = Date.parse(r.created_at)

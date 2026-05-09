@@ -22,7 +22,7 @@ export type {
   EvalQuestionRow,
 }
 
-export type EvalAnswerType = 'deepseek_raw' | 'tebiq_current'
+export type EvalAnswerType = 'deepseek_raw' | 'deepseek_web' | 'tebiq_current'
 export type EvalSeverity = 'OK' | 'P2' | 'P1' | 'P0'
 export type EvalAction =
   | 'golden_case'

@@ -1056,6 +1056,7 @@ export type NewDevLoginLink = typeof devLoginLinks.$inferInsert
 
 export const evalAnswerTypeEnum = pgEnum('eval_answer_type', [
   'deepseek_raw',
+  'deepseek_web',
   'tebiq_current',
 ])
 

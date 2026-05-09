@@ -70,3 +70,22 @@ test('proposal escalates dangerous legal certainty to DOMAIN', () => {
   assert.equal(proposal.launchable, 'no')
   assert.equal(proposal.repairOwner, 'DOMAIN')
 })
+
+test('proposal does not treat safety disclaimer as dangerous certainty', () => {
+  const proposal = buildAnswerQualityProposal({
+    question: baseQuestion,
+    tebiq: {
+      answer_text: 'TEBIQ 提供的是一般手续整理和准备方向，不判断你的申请一定会通过或不通过。下一步先确认期限和身份变更方向。',
+      status: 'direct_answer',
+      fallback_reason: null,
+      error: null,
+    },
+    deepseek: {
+      answer_text: '需要看婚姻期间、子女、生活基础和申请材料。',
+      status: null,
+      fallback_reason: null,
+      error: null,
+    },
+  })
+  assert.equal(proposal.flags.some(flag => flag.includes('危险断言')), false)
+})

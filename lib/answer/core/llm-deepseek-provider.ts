@@ -42,6 +42,8 @@ export interface ProvideLlmDeepseekInput {
   detectedIntent: DetectedIntent
   candidateSeedSnippet?: string | null
   redlines?: string[]
+  timeoutMs?: number
+  maxTokens?: number
   // Test-only override — when provided, the provider does NOT call
   // the network and uses this raw JSON string instead. Used by
   // scripts/test/test-deepseek-mock.ts to exercise parse / validate /
@@ -87,7 +89,9 @@ interface FetchErr { ok: false; reason: FallbackReason }
 
 async function callDeepseek(input: ProvideLlmDeepseekInput): Promise<FetchOK | FetchErr> {
   const controller = new AbortController()
-  const timer = setTimeout(() => controller.abort(), DEEPSEEK_TIMEOUT_MS)
+  const timeoutMs = input.timeoutMs ?? DEEPSEEK_TIMEOUT_MS
+  const maxTokens = input.maxTokens ?? DEEPSEEK_MAX_TOKENS
+  const timer = setTimeout(() => controller.abort(), timeoutMs)
   try {
     const res = await fetch(DEEPSEEK_ENDPOINT, {
       method: 'POST',
@@ -98,7 +102,7 @@ async function callDeepseek(input: ProvideLlmDeepseekInput): Promise<FetchOK | F
       body: JSON.stringify({
         model: DEEPSEEK_MODEL_ID,
         temperature: DEEPSEEK_TEMPERATURE,
-        max_tokens: DEEPSEEK_MAX_TOKENS,
+        max_tokens: maxTokens,
         response_format: DEEPSEEK_RESPONSE_FORMAT,
         messages: [
           { role: 'system', content: DEEPSEEK_SYSTEM_PROMPT },

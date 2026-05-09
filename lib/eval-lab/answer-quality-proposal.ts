@@ -37,10 +37,17 @@ export interface AnswerQualityProposal {
   confidence: 'low' | 'medium'
 }
 
-const DANGEROUS_CLAIM_RE = /一定|肯定|保证|绝对|必定|不会有问题|肯定能|肯定可以/
+const DANGEROUS_CLAIM_RE = /(?:一定|肯定|绝对|必定)(?:会|能|可以|通过|不通过|没问题|没有问题)|保证(?:通过|不会被拒|不被拒|没问题|没有问题)|不会有问题/
+const SAFETY_DISCLAIMER_RE = /(?:不|不能|不要|避免)[^。！？\n]{0,18}(?:判断|承诺|保证)[^。！？\n]{0,24}(?:一定|肯定|绝对|必定|通过|不通过|结果)|(?:不|不能|不要|避免)[^。！？\n]{0,12}(?:保证|承诺)/
 const NEXT_ACTION_RE = /下一步|建议|先|需要|准备|确认|联系|咨询|提交|补|期限|通知|预约/
 const RISK_RE = /风险|注意|期限|失效|取消|不许可|拒签|超时|超期|影响|确认|入管|行政書士/
 const GENERIC_RE = /具体情况具体分析|因人而异|建议咨询专业人士/
+
+function hasDangerousCertaintyClaim(text: string): boolean {
+  return text
+    .split(/[。！？\n]/)
+    .some(sentence => DANGEROUS_CLAIM_RE.test(sentence) && !SAFETY_DISCLAIMER_RE.test(sentence))
+}
 
 export function buildAnswerQualityProposal(input: {
   question: ProposalQuestion
@@ -87,7 +94,7 @@ export function buildAnswerQualityProposal(input: {
       repairOwner = 'ENGINE'
     }
 
-    if (DANGEROUS_CLAIM_RE.test(text)) {
+    if (hasDangerousCertaintyClaim(text)) {
       flags.push('含“保证/一定”类危险断言')
       score = Math.min(score, 1)
       severity = 'P0'
