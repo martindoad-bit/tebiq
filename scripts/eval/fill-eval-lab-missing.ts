@@ -171,7 +171,7 @@ async function runTask(args: Args, task: Task): Promise<boolean> {
         ? '/api/internal/eval-lab/deepseek-web'
         : '/api/internal/eval-lab/tebiq-answer'
   const controller = new AbortController()
-  const timeout = setTimeout(() => controller.abort(), task.kind === 'tebiq' ? 80_000 : 120_000)
+  const timeout = setTimeout(() => controller.abort(), task.kind === 'tebiq' ? 200_000 : 120_000)
   try {
     const res = await fetch(`${args.baseUrl}${endpoint}`, {
       method: 'POST',

@@ -33,8 +33,9 @@ import { getEvalQuestionById, upsertEvalAnswer } from '@/lib/db/queries/eval-lab
 // Resolution:
 //   - Remove the outer timeout/retry. Trust the pipeline's own internal
 //     timeouts.
-//   - Set `maxDuration = 60` explicitly so Vercel uses the Hobby ceiling
-//     instead of the 10s default.
+//   - Set `maxDuration` explicitly so the internal eval pipeline has
+//     enough room for real answer generation instead of recording a
+//     fallback simply because the review bench was impatient.
 //   - On failure, persist a structured error and return 500 — the
 //     reviewer can re-trigger via the per-question 重跑失败 button.
 //
@@ -42,14 +43,12 @@ import { getEvalQuestionById, upsertEvalAnswer } from '@/lib/db/queries/eval-lab
 
 export const dynamic = 'force-dynamic'
 export const runtime = 'nodejs'
-// Vercel Hobby cap is 60s; default for unspecified routes is 10s, which
-// is too tight for the TEBIQ pipeline (intent + DeepSeek-LLM up to 18s
-// + projection + DB writes). 60s gives the pipeline room without
-// retrying.
-export const maxDuration = 60
+// Internal eval only. The user-facing consultation routes keep their own
+// budgets; Phase 1 needs real comparable answers, not fast fallbacks.
+export const maxDuration = 180
 
-const EVAL_LLM_TIMEOUT_MS = 45_000
-const EVAL_LLM_MAX_TOKENS = 2_000
+const EVAL_LLM_TIMEOUT_MS = 120_000
+const EVAL_LLM_MAX_TOKENS = 2_400
 
 interface ReqBody {
   question?: string
