@@ -19,7 +19,7 @@ export type ProviderStatus = 'healthy' | 'unavailable' | 'timeout' | 'unknown'
 
 /** The minimal eval_answers shape this helper reads. */
 export interface AnswerForHealth {
-  answer_type: 'deepseek_raw' | 'tebiq_current'
+  answer_type: 'deepseek_raw' | 'deepseek_web' | 'tebiq_current'
   answer_text: string | null
   error: string | null
   created_at: string // ISO timestamp

@@ -23,7 +23,7 @@ import { getRiskMatrixEntry } from '@/lib/eval-lab/risk-matrix-data'
 
 const REVIEWER = 'eval-round1'
 
-type AnswerType = 'deepseek_raw' | 'tebiq_current'
+type AnswerType = 'deepseek_raw' | 'deepseek_web' | 'tebiq_current'
 
 interface QuestionRow {
   id: string
@@ -69,6 +69,7 @@ export default function EvalConsoleDetailClient({ questionId }: { questionId: st
   const [question, setQuestion] = useState<QuestionRow | null>(null)
   const [tebiq, setTebiq] = useState<AnswerRow | null>(null)
   const [deepseek, setDeepseek] = useState<AnswerRow | null>(null)
+  const [deepseekWeb, setDeepseekWeb] = useState<AnswerRow | null>(null)
   const [loaded, setLoaded] = useState(false)
   const [loadError, setLoadError] = useState<string | null>(null)
   const [notFound, setLocalNotFound] = useState(false)
@@ -96,8 +97,10 @@ export default function EvalConsoleDetailClient({ questionId }: { questionId: st
       setQuestion(q)
       const tebiqRow = j.answers.find(a => a.question_id === questionId && a.answer_type === 'tebiq_current') ?? null
       const dsRow = j.answers.find(a => a.question_id === questionId && a.answer_type === 'deepseek_raw') ?? null
+      const dsWebRow = j.answers.find(a => a.question_id === questionId && a.answer_type === 'deepseek_web') ?? null
       setTebiq(tebiqRow)
       setDeepseek(dsRow)
+      setDeepseekWeb(dsWebRow)
       setLoadError(null)
     } catch (err) {
       if ((err as { name?: string })?.name === 'AbortError') return
@@ -307,6 +310,27 @@ export default function EvalConsoleDetailClient({ questionId }: { questionId: st
             </>
           ) : (
             <p className="text-[11px] text-slate-400">尚未生成 DeepSeek 裸答。</p>
+          )}
+        </section>
+
+        <section className="bg-white border border-slate-300 rounded p-4 space-y-2">
+          <h2 className="text-[10px] uppercase tracking-wider text-slate-500">DeepSeek 联网对照</h2>
+          {deepseekWeb ? (
+            <>
+              <dl className="grid md:grid-cols-2 gap-x-6 gap-y-1 text-[11px]">
+                <Field label="model" value={deepseekWeb.model ?? '—'} />
+                <Field label="latency_ms" value={deepseekWeb.latency_ms != null ? String(deepseekWeb.latency_ms) : '—'} />
+                <Field label="created_at" value={deepseekWeb.created_at} />
+              </dl>
+              {deepseekWeb.error && (
+                <p className="text-[11px] text-rose-700">err: {deepseekWeb.error}</p>
+              )}
+              <pre className="text-[12px] whitespace-pre-wrap leading-[1.6] text-slate-800 bg-slate-50 border border-slate-200 rounded p-3">
+                {deepseekWeb.answer_text ?? '（未生成 / 无文本）'}
+              </pre>
+            </>
+          ) : (
+            <p className="text-[11px] text-slate-400">尚未生成 DeepSeek 联网对照。</p>
           )}
         </section>
 

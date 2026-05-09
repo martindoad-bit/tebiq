@@ -48,6 +48,9 @@ export const runtime = 'nodejs'
 // retrying.
 export const maxDuration = 60
 
+const EVAL_LLM_TIMEOUT_MS = 45_000
+const EVAL_LLM_MAX_TOKENS = 2_000
+
 interface ReqBody {
   question?: string
   question_id?: string
@@ -93,6 +96,8 @@ export async function POST(req: Request) {
       questionText: question,
       visaType: body.visa_type ?? null,
       sourcePage: '/internal/eval-lab',
+      llmTimeoutMs: EVAL_LLM_TIMEOUT_MS,
+      llmMaxTokens: EVAL_LLM_MAX_TOKENS,
     })
 
     const vm = result.viewModel

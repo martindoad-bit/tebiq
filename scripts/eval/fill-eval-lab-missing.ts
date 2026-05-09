@@ -1,6 +1,6 @@
 export {}
 
-type AnswerType = 'deepseek_raw' | 'tebiq_current'
+type AnswerType = 'deepseek_raw' | 'deepseek_web' | 'tebiq_current'
 
 interface QuestionRow {
   id: string
@@ -13,6 +13,8 @@ interface AnswerRow {
   answer_type: AnswerType
   answer_text: string | null
   error: string | null
+  engine_version: string | null
+  fallback_reason: string | null
 }
 
 interface StateResponse {
@@ -22,7 +24,7 @@ interface StateResponse {
   error?: string
 }
 
-type TaskKind = 'deepseek' | 'tebiq'
+type TaskKind = 'deepseek' | 'deepseek_web' | 'tebiq'
 
 interface Task {
   question: QuestionRow
@@ -88,22 +90,35 @@ function isSuccess(row: AnswerRow | undefined): boolean {
   return !!row?.answer_text && !row.error
 }
 
+function isTebiqReal(row: AnswerRow | undefined): boolean {
+  return !!row?.answer_text
+    && !row.error
+    && !row.fallback_reason
+    && row.engine_version !== 'answer-core-v1.1-fallback'
+}
+
 function summarize(state: StateResponse) {
   const answers = normalizeAnswers(state.answers)
   let complete = 0
   let deepseekOk = 0
+  let deepseekWebOk = 0
   let tebiqOk = 0
+  let tebiqReal = 0
   let failed = 0
   for (const question of state.questions) {
     const slot = answers[question.id]
     const ds = slot?.deepseek_raw
+    const web = slot?.deepseek_web
     const tebiq = slot?.tebiq_current
     const dsOk = isSuccess(ds)
-    const tebiqOkForQuestion = isSuccess(tebiq)
+    const webOk = isSuccess(web)
+    const tebiqOkForQuestion = isTebiqReal(tebiq)
     if (dsOk) deepseekOk += 1
-    if (tebiqOkForQuestion) tebiqOk += 1
-    if (ds?.error || tebiq?.error) failed += 1
-    if (dsOk && tebiqOkForQuestion) complete += 1
+    if (webOk) deepseekWebOk += 1
+    if (isSuccess(tebiq)) tebiqOk += 1
+    if (tebiqOkForQuestion) tebiqReal += 1
+    if (ds?.error || web?.error || tebiq?.error || tebiq?.fallback_reason) failed += 1
+    if (dsOk && webOk && tebiqOkForQuestion) complete += 1
   }
   const total = state.questions.length
   return {
@@ -111,7 +126,9 @@ function summarize(state: StateResponse) {
     complete,
     rate: total === 0 ? 0 : Math.round((complete / total) * 100),
     deepseekOk,
+    deepseekWebOk,
     tebiqOk,
+    tebiqReal,
     failed,
   }
 }
@@ -121,45 +138,28 @@ function buildTasks(state: StateResponse, targetRate: number): Task[] {
   const targetComplete = Math.ceil(state.questions.length * (targetRate / 100))
   const tasks: Task[] = []
   const addTask = (question: QuestionRow, kind: TaskKind, row: AnswerRow | undefined) => {
-    if (isSuccess(row)) return
+    if (kind === 'tebiq' ? isTebiqReal(row) : isSuccess(row)) return
     tasks.push({ question, kind, reason: row?.error ? 'failed' : 'missing' })
   }
 
   const incomplete = state.questions.filter(question => {
     const slot = answers[question.id]
-    return !isSuccess(slot?.deepseek_raw) || !isSuccess(slot?.tebiq_current)
+    return !isSuccess(slot?.deepseek_raw)
+      || !isSuccess(slot?.deepseek_web)
+      || !isTebiqReal(slot?.tebiq_current)
   })
 
-  // Complete easiest rows first: one side is already present, so one call can
-  // turn the question into a reviewable case.
+  // Complete easiest rows first: only generate the missing/fallback side.
   for (const question of incomplete) {
     const slot = answers[question.id]
-    if (isSuccess(slot?.tebiq_current) && !isSuccess(slot?.deepseek_raw)) {
-      addTask(question, 'deepseek', slot?.deepseek_raw)
-    }
-  }
-  for (const question of incomplete) {
-    const slot = answers[question.id]
-    if (isSuccess(slot?.deepseek_raw) && !isSuccess(slot?.tebiq_current)) {
-      addTask(question, 'tebiq', slot?.tebiq_current)
-    }
+    addTask(question, 'deepseek', slot?.deepseek_raw)
+    addTask(question, 'deepseek_web', slot?.deepseek_web)
+    addTask(question, 'tebiq', slot?.tebiq_current)
   }
 
-  // If target still cannot be reached, fill both sides for remaining rows.
-  const potentialComplete = state.questions.length - incomplete.filter(question => {
-    const slot = answers[question.id]
-    return !isSuccess(slot?.deepseek_raw) && !isSuccess(slot?.tebiq_current)
-  }).length
-  if (potentialComplete < targetComplete) {
-    for (const question of incomplete) {
-      const slot = answers[question.id]
-      if (!isSuccess(slot?.tebiq_current) && !isSuccess(slot?.deepseek_raw)) {
-        addTask(question, 'tebiq', slot?.tebiq_current)
-        addTask(question, 'deepseek', slot?.deepseek_raw)
-      }
-    }
+  if (state.questions.length - incomplete.length >= targetComplete) {
+    return tasks.filter(task => task.reason === 'failed')
   }
-
   return tasks
 }
 
@@ -167,9 +167,11 @@ async function runTask(args: Args, task: Task): Promise<boolean> {
   const endpoint =
     task.kind === 'deepseek'
       ? '/api/internal/eval-lab/deepseek-raw'
-      : '/api/internal/eval-lab/tebiq-answer'
+      : task.kind === 'deepseek_web'
+        ? '/api/internal/eval-lab/deepseek-web'
+        : '/api/internal/eval-lab/tebiq-answer'
   const controller = new AbortController()
-  const timeout = setTimeout(() => controller.abort(), task.kind === 'deepseek' ? 120_000 : 80_000)
+  const timeout = setTimeout(() => controller.abort(), task.kind === 'tebiq' ? 80_000 : 120_000)
   try {
     const res = await fetch(`${args.baseUrl}${endpoint}`, {
       method: 'POST',
@@ -180,8 +182,17 @@ async function runTask(args: Args, task: Task): Promise<boolean> {
       }),
       signal: controller.signal,
     })
-    const json = (await res.json().catch(() => ({}))) as { ok?: boolean; text?: string; error?: string; detail?: string }
-    const ok = res.ok && (json.ok === true || !!json.text)
+    const json = (await res.json().catch(() => ({}))) as {
+      ok?: boolean
+      text?: string
+      error?: string
+      detail?: string
+      fallback_reason?: string | null
+      engine_version?: string | null
+    }
+    const ok = res.ok
+      && (json.ok === true || !!json.text)
+      && (task.kind !== 'tebiq' || (!json.fallback_reason && json.engine_version !== 'answer-core-v1.1-fallback'))
     if (!ok) {
       console.warn(
         `[fail] ${task.kind} ${task.question.starter_tag ?? task.question.id}: ${json.error ?? json.detail ?? `HTTP ${res.status}`}`,
