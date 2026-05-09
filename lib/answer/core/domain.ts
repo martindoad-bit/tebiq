@@ -74,6 +74,25 @@ function matchDomain(text: string): SupportedDomain {
   if (/(回国|帰国|出境|離日|帰るとき|帰国時)/.test(text) && /(公司|会社|法人|経営|経管|经营|经管|清算)/.test(text)) {
     return 'business_manager'
   }
+
+  // Cycle 1 eval-lab routing gaps — in-scope starter questions that
+  // previously fell to OOS because they use plain-language phrasing
+  // without a specific visa category keyword.
+  if (/(打工|アルバイト|开店|開店|自営|自营|自己开店)/.test(text) && /(开店|開店|自営|自营|经营|経営|店)/.test(text)) {
+    return 'business_manager'
+  }
+  if (/(工作签证|工作签|就労|就业|就職|就职|転職|转职|辞职|辞職|離職|离职|新工作|工资|給与|給料|薪资|薪水)/.test(text) && /(在留|签证|簽證|ビザ|更新|変更|转职|転職|辞职|辞職|離職|离职|工作|工资|給与|給料|薪资|薪水)/.test(text)) {
+    return 'admin_general'
+  }
+  if (/(配偶|配偶者|日本人.*配偶)/.test(text) && /(分居|別居|更新|续签|續簽|更新許可)/.test(text)) {
+    return 'admin_general'
+  }
+  if (/(再入国|みなし再入国|非再入国|出境|離日|离开日本|離れる|回国|帰国|旅游签|観光ビザ)/.test(text) && /(在留|签证|簽證|ビザ|更新|许可|許可|資格|资格|结果|結果|一年以上|1年以上|再入国|みなし再入国|非再入国|旅游签|観光ビザ)/.test(text)) {
+    return 'admin_general'
+  }
+  if (/(不知道|不清楚|漏了|检查|檢查|確認|确认|该办什么|該辦什麼)/.test(text) && /(手续|手続|在留|签证|簽證|ビザ)/.test(text)) {
+    return 'admin_general'
+  }
   // ──────────────────────────────────────────────────────────────────
 
   // V1.1 — admin_general catches the long tail of 在留行政 questions

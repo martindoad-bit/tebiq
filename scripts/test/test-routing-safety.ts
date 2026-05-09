@@ -75,6 +75,21 @@ const EXPECTED: ExpectedRouting[] = [
   { starter_tag: 'eval-lab-v1-D09', expected_domain_oneof: ['family_stay', 'long_term_resident'], rule: 'R02 家人' },
 ]
 
+const CYCLE1_GAPS: ExpectedRouting[] = [
+  { starter_tag: 'eval-lab-v1-C08', expected_domain_oneof: ['admin_general'], rule: 'Cycle1 工作签辞职' },
+  { starter_tag: 'eval-lab-v1-C09', expected_domain_oneof: ['admin_general'], rule: 'Cycle1 转职工资更新' },
+  { starter_tag: 'eval-lab-v1-D04', expected_domain_oneof: ['admin_general'], rule: 'Cycle1 配偶分居更新' },
+  { starter_tag: 'eval-lab-v1-I03', expected_domain_oneof: ['admin_general'], rule: 'Cycle1 再入国区别' },
+  { starter_tag: 'eval-lab-v1-I04', expected_domain_oneof: ['admin_general'], rule: 'Cycle1 更新中出境' },
+  { starter_tag: 'eval-lab-v1-I05', expected_domain_oneof: ['admin_general'], rule: 'Cycle1 更新中回国' },
+  { starter_tag: 'eval-lab-v1-I06', expected_domain_oneof: ['admin_general'], rule: 'Cycle1 离开日本一年以上' },
+  { starter_tag: 'eval-lab-v1-I07', expected_domain_oneof: ['admin_general'], rule: 'Cycle1 回国后旅游签' },
+  { starter_tag: 'eval-lab-v1-I10', expected_domain_oneof: ['admin_general'], rule: 'Cycle1 非再入国出境' },
+  { starter_tag: 'eval-lab-v1-J01', expected_domain_oneof: ['admin_general'], rule: 'Cycle1 不知道办什么手续' },
+  { starter_tag: 'eval-lab-v1-J07', expected_domain_oneof: ['business_manager'], rule: 'Cycle1 打工转开店' },
+  { starter_tag: 'eval-lab-v1-J10', expected_domain_oneof: ['admin_general'], rule: 'Cycle1 漏手续检查' },
+]
+
 /**
  * Spot-check a sampling of questions that ALREADY routed correctly
  * (i.e. matched a specific or admin_general domain via the V1.1 patterns)
@@ -150,6 +165,18 @@ async function main() {
   // ---- 3. 7/7 regression tags: domain in expected set ----
   for (const e of EXPECTED) {
     check(`3.${e.starter_tag}: domain ∈ {${e.expected_domain_oneof.join(',')}}`, () => {
+      const text = byTag.get(e.starter_tag)!
+      const domain = detectDomain({ questionText: text, intent: NO_INTENT })
+      assert.ok(
+        e.expected_domain_oneof.includes(domain),
+        `${e.starter_tag} → '${domain}', expected one of ${e.expected_domain_oneof.join(',')}. text="${text}"`,
+      )
+    })
+  }
+
+  // ---- 4. no regression on previously-passing questions ----
+  for (const e of CYCLE1_GAPS) {
+    check(`3b.${e.starter_tag}: Cycle 1 gap domain ∈ {${e.expected_domain_oneof.join(',')}}`, () => {
       const text = byTag.get(e.starter_tag)!
       const domain = detectDomain({ questionText: text, intent: NO_INTENT })
       assert.ok(
