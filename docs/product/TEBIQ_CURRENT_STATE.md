@@ -7,23 +7,23 @@
 | Field | Value |
 |---|---|
 | `last_verified` | 2026-05-09 |
-| `verified_by` | Codex GM-OPS quality-flywheel A |
+| `verified_by` | Codex GM-OPS post-A deploy verification |
 | `source_of_truth` | `origin/main` + `gh pr list` + production `/api/build-info` + production eval-lab state + production SSE smoke + PL handoff |
-| `main_head` | `481ee4b` |
-| `main_head_title` | `docs: recalibrate takeover state (#109)` |
-| `production_sha` | `481ee4b95dd8cfa961b2a177ef15cec6141e7ffa` |
-| `production_build` | `2026-05-09T13:21:54.257Z` from `/api/build-info` |
+| `main_head` | `0bd12fe` |
+| `main_head_title` | `feat(eval-lab): add answer quality review desk (#110)` |
+| `production_sha` | `0bd12fe21c508c1bdee11f4f0b83b34880109fdc` |
+| `production_build` | `2026-05-09T13:25:52.128Z` from `/api/build-info` |
 | `production_url` | https://tebiq.jp/ai-consultation |
 | `open_prs` | 0 (`gh pr list`, 2026-05-09) |
 
 ## Current Phase
 
-**0.6 Sprint Day-2 PASS; Codex takeover cleanup complete; quality-flywheel A in progress.**
+**0.6 Sprint Day-2 PASS; Codex takeover cleanup complete; quality-flywheel A shipped and awaiting founder trial.**
 
 0.6 delivered Pro thinking, Fact Layer production injection, controlled follow-up,
 save/share/return paths, waiting states, and Day-2 QA with P0/P1 = 0.
 
-Founder/CC target card now authorizes Sub-task A only: make the internal
+Founder/CC target card authorized Sub-task A only: make the internal
 answer-quality console usable, simplify founder annotation, add AI proposal
 review support, and raise the 100-case generation completeness target to >=95%.
 Stop after A for founder trial before starting heterogeneous judge / regression.
@@ -44,8 +44,8 @@ Stop after A for founder trial before starting heterogeneous judge / regression.
 | Item | Status |
 |---|---|
 | Eval Lab production data | ✅ 100 TEBIQ answers generated; 95 DeepSeek comparison answers generated |
-| Founder annotation fields | In PR: simplified to score / severity / launchable / max issue / repair route |
-| AI proposal v0 | In PR: local heuristic proposal for score, flags, skeleton, and repair route |
+| Founder annotation fields | ✅ Shipped in #110: score / severity / launchable / max issue / repair route |
+| AI proposal v0 | ✅ Shipped in #110: local heuristic proposal for score, flags, skeleton, and repair route |
 | Heterogeneous judge | Not started; requires founder + Claude.ai protocol before B |
 | Regression diff pipeline | Not started; begins only after A checkpoint |
 
