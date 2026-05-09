@@ -24,7 +24,7 @@ interface StateResponse {
   error?: string
 }
 
-type TaskKind = 'deepseek' | 'deepseek_web' | 'tebiq'
+type TaskKind = 'deepseek' | 'tebiq'
 
 interface Task {
   question: QuestionRow
@@ -101,24 +101,20 @@ function summarize(state: StateResponse) {
   const answers = normalizeAnswers(state.answers)
   let complete = 0
   let deepseekOk = 0
-  let deepseekWebOk = 0
   let tebiqOk = 0
   let tebiqReal = 0
   let failed = 0
   for (const question of state.questions) {
     const slot = answers[question.id]
     const ds = slot?.deepseek_raw
-    const web = slot?.deepseek_web
     const tebiq = slot?.tebiq_current
     const dsOk = isSuccess(ds)
-    const webOk = isSuccess(web)
     const tebiqOkForQuestion = isTebiqReal(tebiq)
     if (dsOk) deepseekOk += 1
-    if (webOk) deepseekWebOk += 1
     if (isSuccess(tebiq)) tebiqOk += 1
     if (tebiqOkForQuestion) tebiqReal += 1
-    if (ds?.error || web?.error || tebiq?.error || tebiq?.fallback_reason) failed += 1
-    if (dsOk && webOk && tebiqOkForQuestion) complete += 1
+    if (ds?.error || tebiq?.error || tebiq?.fallback_reason) failed += 1
+    if (dsOk && tebiqOkForQuestion) complete += 1
   }
   const total = state.questions.length
   return {
@@ -126,7 +122,6 @@ function summarize(state: StateResponse) {
     complete,
     rate: total === 0 ? 0 : Math.round((complete / total) * 100),
     deepseekOk,
-    deepseekWebOk,
     tebiqOk,
     tebiqReal,
     failed,
@@ -145,7 +140,6 @@ function buildTasks(state: StateResponse, targetRate: number): Task[] {
   const incomplete = state.questions.filter(question => {
     const slot = answers[question.id]
     return !isSuccess(slot?.deepseek_raw)
-      || !isSuccess(slot?.deepseek_web)
       || !isTebiqReal(slot?.tebiq_current)
   })
 
@@ -153,7 +147,6 @@ function buildTasks(state: StateResponse, targetRate: number): Task[] {
   for (const question of incomplete) {
     const slot = answers[question.id]
     addTask(question, 'deepseek', slot?.deepseek_raw)
-    addTask(question, 'deepseek_web', slot?.deepseek_web)
     addTask(question, 'tebiq', slot?.tebiq_current)
   }
 
@@ -167,9 +160,7 @@ async function runTask(args: Args, task: Task): Promise<boolean> {
   const endpoint =
     task.kind === 'deepseek'
       ? '/api/internal/eval-lab/deepseek-raw'
-      : task.kind === 'deepseek_web'
-        ? '/api/internal/eval-lab/deepseek-web'
-        : '/api/internal/eval-lab/tebiq-answer'
+      : '/api/internal/eval-lab/tebiq-answer'
   const controller = new AbortController()
   const timeout = setTimeout(() => controller.abort(), task.kind === 'tebiq' ? 200_000 : 120_000)
   try {
