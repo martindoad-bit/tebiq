@@ -9,9 +9,11 @@ import { db } from '@/lib/db'
 import {
   evalAnnotations,
   evalAnswers,
+  evalJudgements,
   evalQuestions,
   type EvalAnnotation as EvalAnnotationRow,
   type EvalAnswer as EvalAnswerRow,
+  type EvalJudgement as EvalJudgementRow,
   type EvalQuestion as EvalQuestionRow,
 } from '@/lib/db/schema'
 import { STARTER_QUESTIONS } from '@/lib/eval-lab/starter-questions'
@@ -19,6 +21,7 @@ import { STARTER_QUESTIONS } from '@/lib/eval-lab/starter-questions'
 export type {
   EvalAnnotationRow,
   EvalAnswerRow,
+  EvalJudgementRow,
   EvalQuestionRow,
 }
 
@@ -98,6 +101,17 @@ export async function listEvalAnnotations(
     .select()
     .from(evalAnnotations)
     .where(and(...conditions))
+}
+
+export async function listEvalJudgements(
+  questionIds?: string[],
+): Promise<EvalJudgementRow[]> {
+  if (questionIds && questionIds.length === 0) return []
+  const query = db.select().from(evalJudgements)
+  if (questionIds && questionIds.length > 0) {
+    return await query.where(inArray(evalJudgements.questionId, questionIds))
+  }
+  return await query
 }
 
 // ---- mutations ----
@@ -238,6 +252,67 @@ export async function upsertEvalAnnotation(
         reviewerNote: values.reviewerNote,
         action: values.action,
         annotationJson: values.annotationJson,
+        updatedAt: sql`now()`,
+      },
+    })
+    .returning()
+  return row
+}
+
+export interface UpsertJudgementInput {
+  questionId: string
+  caseId: string
+  judgeName?: string
+  judgeModel?: string
+  score: number
+  scoreNormalized: number
+  defectFlags: string[]
+  vsDeepseekJudgment: string
+  idealAnswerSkeleton: string
+  confidence: string
+  reasoning: string
+  activeLearningRed: boolean
+  activeLearningReasons: string[]
+  sourceCsvPath?: string | null
+}
+
+export async function upsertEvalJudgement(
+  input: UpsertJudgementInput,
+): Promise<EvalJudgementRow> {
+  const values = {
+    questionId: input.questionId,
+    caseId: input.caseId,
+    judgeName: input.judgeName ?? 'aql_judge_claude_sonnet',
+    judgeModel: input.judgeModel ?? 'claude-sonnet',
+    score: input.score,
+    scoreNormalized: input.scoreNormalized,
+    defectFlags: input.defectFlags,
+    vsDeepseekJudgment: input.vsDeepseekJudgment,
+    idealAnswerSkeleton: input.idealAnswerSkeleton,
+    confidence: input.confidence,
+    reasoning: input.reasoning,
+    activeLearningRed: input.activeLearningRed,
+    activeLearningReasons: input.activeLearningReasons,
+    sourceCsvPath: input.sourceCsvPath ?? null,
+  }
+  const [row] = await db
+    .insert(evalJudgements)
+    .values(values)
+    .onConflictDoUpdate({
+      target: [evalJudgements.caseId, evalJudgements.judgeName],
+      set: {
+        questionId: values.questionId,
+        judgeModel: values.judgeModel,
+        score: values.score,
+        scoreNormalized: values.scoreNormalized,
+        defectFlags: values.defectFlags,
+        vsDeepseekJudgment: values.vsDeepseekJudgment,
+        idealAnswerSkeleton: values.idealAnswerSkeleton,
+        confidence: values.confidence,
+        reasoning: values.reasoning,
+        activeLearningRed: values.activeLearningRed,
+        activeLearningReasons: values.activeLearningReasons,
+        sourceCsvPath: values.sourceCsvPath,
         updatedAt: sql`now()`,
       },
     })

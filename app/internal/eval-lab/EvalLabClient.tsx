@@ -1,11 +1,6 @@
 'use client'
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import {
-  buildAnswerQualityProposal,
-  type AnswerQualityProposal,
-  type EvalRepairOwner,
-} from '@/lib/eval-lab/answer-quality-proposal'
 import { pLimit } from '@/lib/eval-lab/concurrency'
 
 // TEBIQ Eval Lab V1 — DB-backed internal annotation tool.
@@ -25,6 +20,15 @@ import { pLimit } from '@/lib/eval-lab/concurrency'
 type AnswerType = 'deepseek_raw' | 'deepseek_web' | 'tebiq_current'
 type Severity = 'OK' | 'P2' | 'P1' | 'P0'
 type YesNo = 'yes' | 'no' | ''
+type EvalRepairOwner =
+  | 'ENGINE'
+  | 'FACT'
+  | 'DOMAIN'
+  | 'UX'
+  | 'PRODUCT'
+  | 'GENERATION'
+  | 'IGNORE'
+  | 'UNKNOWN'
 type RepairOwner = EvalRepairOwner | ''
 type VsDeepseekJudgment = 'strict_added' | 'tied' | 'regression' | ''
 type Action =
@@ -89,6 +93,40 @@ interface AnnotationRow {
   schema_version: string
   created_at: string
   updated_at: string
+}
+
+interface JudgementRow {
+  id: string
+  question_id: string
+  case_id: string
+  judge_name: string
+  judge_model: string
+  score: number
+  score_normalized: number
+  defect_flags: string[]
+  vs_deepseek_judgment: VsDeepseekJudgment
+  ideal_answer_skeleton: string
+  confidence: string
+  reasoning: string
+  active_learning_red: boolean
+  active_learning_reasons: string[]
+  source_csv_path: string | null
+  schema_version: string
+  created_at: string
+  updated_at: string
+}
+
+interface AnswerQualityProposal {
+  score: number | null
+  scoreNormalized: number | null
+  vsDeepseekJudgment: VsDeepseekJudgment
+  flags: string[]
+  skeleton: string[]
+  red: boolean
+  activeLearningReasons: string[]
+  confidence: number | null
+  reasoning: string
+  judgeModel: string
 }
 
 interface EditableAnnotation {
@@ -312,6 +350,26 @@ function isAnnotationComplete(a: AnnotationRow | undefined | null): boolean {
   return !!a && a.score != null && asVsDeepseekJudgment(a.annotation_json?.vs_deepseek_judgment) !== ''
 }
 
+function judgementToProposal(row: JudgementRow | undefined): AnswerQualityProposal | null {
+  if (!row) return null
+  const confidence = Number(row.confidence)
+  return {
+    score: row.score,
+    scoreNormalized: row.score_normalized,
+    vsDeepseekJudgment: asVsDeepseekJudgment(row.vs_deepseek_judgment),
+    flags: Array.isArray(row.defect_flags) ? row.defect_flags : [],
+    skeleton: row.ideal_answer_skeleton
+      .split(/\s+\|\s+|\n+/)
+      .map(line => line.trim())
+      .filter(Boolean),
+    red: row.active_learning_red,
+    activeLearningReasons: Array.isArray(row.active_learning_reasons) ? row.active_learning_reasons : [],
+    confidence: Number.isFinite(confidence) ? confidence : null,
+    reasoning: row.reasoning,
+    judgeModel: row.judge_model,
+  }
+}
+
 interface DraftMap {
   [questionId: string]: EditableAnnotation
 }
@@ -356,6 +414,7 @@ export default function EvalLabClient() {
   const [questions, setQuestions] = useState<QuestionRow[]>([])
   const [answersByQuestion, setAnswersByQuestion] = useState<AnswerSlotsByQuestion>({})
   const [annotationByQuestion, setAnnotationByQuestion] = useState<Record<string, AnnotationRow>>({})
+  const [judgementByQuestion, setJudgementByQuestion] = useState<Record<string, JudgementRow>>({})
   const [edits, setEdits] = useState<Record<string, EditableAnnotation>>({})
   const [saveState, setSaveState] = useState<Record<string, 'idle' | 'saving' | 'saved' | 'error'>>({})
   const [genStatus, setGenStatus] = useState<Record<string, QuestionGenStatus>>({})
@@ -402,6 +461,7 @@ export default function EvalLabClient() {
         questions: QuestionRow[]
         answers: AnswerRow[]
         annotations: AnnotationRow[]
+        judgements?: JudgementRow[]
         error?: string
       }
       if (!j.ok) {
@@ -419,6 +479,9 @@ export default function EvalLabClient() {
       const annMap: Record<string, AnnotationRow> = {}
       for (const a of j.annotations) annMap[a.question_id] = a
       setAnnotationByQuestion(annMap)
+      const judgeMap: Record<string, JudgementRow> = {}
+      for (const judge of j.judgements ?? []) judgeMap[judge.question_id] = judge
+      setJudgementByQuestion(judgeMap)
       // Hydrate edits from server, then overlay any unsynced drafts.
       const drafts = loadDrafts()
       const initialEdits: Record<string, EditableAnnotation> = {}
@@ -476,15 +539,11 @@ export default function EvalLabClient() {
   const proposalByQuestion = useMemo(() => {
     const out: Record<string, AnswerQualityProposal> = {}
     for (const q of questions) {
-      const slot = answersByQuestion[q.id]
-      out[q.id] = buildAnswerQualityProposal({
-        question: q,
-        tebiq: slot?.tebiq_current,
-        deepseek: slot?.deepseek_raw,
-      })
+      const proposal = judgementToProposal(judgementByQuestion[q.id])
+      if (proposal) out[q.id] = proposal
     }
     return out
-  }, [questions, answersByQuestion])
+  }, [questions, judgementByQuestion])
 
   const filtered = useMemo(
     () =>
@@ -613,10 +672,11 @@ export default function EvalLabClient() {
     (questionId: string, proposal: AnswerQualityProposal) => {
       onAnnotate(questionId, {
         score: proposal.score,
-        severity: proposal.severity ?? '',
-        launchable: proposal.launchable ?? '',
-        missing_points: proposal.flags.length > 0 ? proposal.flags.join('\n') : '规则预检未发现明显问题',
-        repair_owner: proposal.repairOwner,
+        vs_deepseek_judgment: proposal.vsDeepseekJudgment,
+        missing_points: [
+          ...(proposal.flags.length > 0 ? proposal.flags : ['AQL judge 未标出 defect flag']),
+          proposal.reasoning ? `reasoning: ${proposal.reasoning}` : '',
+        ].filter(Boolean).join('\n'),
       })
     },
     [onAnnotate],
@@ -928,7 +988,7 @@ export default function EvalLabClient() {
         <h1 className="text-base font-semibold tracking-tight">TEBIQ 答案质量标注台</h1>
         <div className="text-xs text-slate-500">
           {counts.total} 题 · 生成完整 {counts.complete}/{counts.total} ({counts.successRate}%) ·
-          待标 {counts.ready} · 预检标红 {counts.aiRed} · 已标 {counts.annotated} ·
+          待标 {counts.ready} · AQL 标红 {counts.aiRed} · 已标 {counts.annotated} ·
           P0 {counts.p0} · P1 {counts.p1} ·
           golden {counts.golden} · 未生成 {counts.ungen} · 失败 {counts.failed}
           {counts.running > 0 ? ` · 运行中 ${counts.running}` : ''}
@@ -1026,7 +1086,7 @@ export default function EvalLabClient() {
               <option value="ready">待标（已生成）</option>
               <option value="all">全部</option>
               <option value="unannotated">未标</option>
-              <option value="ai_red">预检标红</option>
+              <option value="ai_red">AQL 标红</option>
               <option value="rerun">待重跑</option>
               <option value="ungenerated">未生成</option>
               <option value="failed">失败</option>
@@ -1089,9 +1149,9 @@ export default function EvalLabClient() {
                       {q.starter_tag && <span>{q.starter_tag}</span>}
                       {proposal && (
                         <>
-                          <span>· 预检 {proposal.score ?? '-'}</span>
+                          <span>· AQL {proposal.score ?? '-'}</span>
                           <span className={proposal.red ? 'text-red-600' : 'text-slate-400'}>
-                            {proposal.repairOwner}
+                            {proposal.red ? 'RED' : 'ok'}
                           </span>
                         </>
                       )}
@@ -1419,9 +1479,9 @@ function AiProposalPanel({
   return (
     <section className={`border rounded p-2 ${proposal.red ? 'border-red-200 bg-red-50' : 'border-blue-200 bg-blue-50'}`}>
       <div className="flex items-center gap-2">
-        <span className="text-[10px] uppercase tracking-wider text-slate-500">规则预检（非 AQL）</span>
+        <span className="text-[10px] uppercase tracking-wider text-slate-500">AQL judge (Claude Sonnet)</span>
         <span className={`text-[11px] font-semibold ${proposal.red ? 'text-red-700' : 'text-blue-700'}`}>
-          {proposal.score ?? '-'} / {proposal.severity ?? '-'} / {proposal.repairOwner}
+          {proposal.score ?? '-'} / {proposal.vsDeepseekJudgment || '-'} / conf {proposal.confidence ?? '-'}
         </span>
         <button
           type="button"
@@ -1432,8 +1492,17 @@ function AiProposalPanel({
           套用
         </button>
       </div>
+      {proposal.activeLearningReasons.length > 0 && (
+        <div className="mt-2 flex flex-wrap gap-1">
+          {proposal.activeLearningReasons.map(reason => (
+            <span key={reason} className="text-[10px] px-1.5 py-0.5 rounded border border-red-200 bg-white text-red-700">
+              {reason}
+            </span>
+          ))}
+        </div>
+      )}
       <div className="mt-2 space-y-1">
-        {(proposal.flags.length > 0 ? proposal.flags : ['未发现明显红旗']).map(flag => (
+        {(proposal.flags.length > 0 ? proposal.flags : ['未发现明显 defect flag']).map(flag => (
           <div key={flag} className="text-[11px] text-slate-700">
             {flag}
           </div>
@@ -1446,6 +1515,11 @@ function AiProposalPanel({
           </div>
         ))}
       </div>
+      {proposal.reasoning && (
+        <div className="mt-2 border-t border-slate-200 pt-2 text-[11px] text-slate-700 leading-snug">
+          {proposal.reasoning}
+        </div>
+      )}
     </section>
   )
 }
