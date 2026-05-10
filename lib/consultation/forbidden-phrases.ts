@@ -36,6 +36,7 @@ const NORMALIZATION_REPLACEMENTS: ReadonlyArray<readonly [string, string]> = Obj
   ['不是可通知书', '不许可通知书'],
   ['不是可通知', '不许可通知'],
   ['国际业务感受性', '国际业务性质'],
+  ['资外语动', '资格外活动'],
 ])
 
 const MAX_PHRASE_LEN = [

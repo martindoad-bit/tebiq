@@ -37,9 +37,9 @@ async function main() {
   }
 
   // ---- 1. System prompt constants ----
-  check('1a. CONSULTATION_ALPHA_PROMPT_VERSION is "consultation_alpha_v13"', () => {
+  check('1a. CONSULTATION_ALPHA_PROMPT_VERSION is "consultation_alpha_v14"', () => {
     // Cycle 1 quality flywheel v4: answer first-look block + UI flywheel.
-    assert.equal(promptMod.CONSULTATION_ALPHA_PROMPT_VERSION, 'consultation_alpha_v13')
+    assert.equal(promptMod.CONSULTATION_ALPHA_PROMPT_VERSION, 'consultation_alpha_v14')
   })
   check('1b. CONSULTATION_ALPHA_MODEL is "deepseek-v4-pro"', () => {
     assert.equal(promptMod.CONSULTATION_ALPHA_MODEL, 'deepseek-v4-pro')
@@ -202,6 +202,11 @@ async function main() {
   check('3g3. redactForbiddenPhrases normalizes common 技人国 wording typo', () => {
     const r = filterMod.redactForbiddenPhrases('这是国际业务感受性的工作')
     assert.equal(r.text, '这是国际业务性质的工作')
+    assert.equal(r.redactions.length, 0)
+  })
+  check('3g4. redactForbiddenPhrases normalizes garbled 资格外活动 wording', () => {
+    const r = filterMod.redactForbiddenPhrases('需要申请资外语动许可')
+    assert.equal(r.text, '需要申请资格外活动许可')
     assert.equal(r.redactions.length, 0)
   })
   check('3h. createForbiddenFilter: clean stream passes through with same total content', () => {
