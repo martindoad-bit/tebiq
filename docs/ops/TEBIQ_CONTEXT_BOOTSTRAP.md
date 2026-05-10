@@ -36,10 +36,11 @@ gh pr list --state open
 按顺序读取：
 
 1. `AGENTS.md`（角色边界、STOP 条件、事实源优先级）
-2. `docs/product/TEBIQ_CONTEXT_PACK.md`（长期产品宪法）
-3. `docs/product/TEBIQ_CURRENT_STATE.md`（当前工程快照）
-4. `docs/product/TEBIQ_DECISION_LOG.md`（最近 2 条决策条目）
-5. 本任务相关文档（QA 任务读 `TEBIQ_QA_GATES.md`；文案任务读 `TEBIQ_COPY_SOURCE.md`；协作流程读 `docs/ops/TEBIQ_AGENT_WORKFLOW.md`）
+2. `docs/ops/TEBIQ_ROLES_V2.md`（当前 Founder / Codex / Claude.ai 分工）
+3. `docs/product/TEBIQ_CONTEXT_PACK.md`（长期产品宪法）
+4. `docs/product/TEBIQ_CURRENT_STATE.md`（当前工程快照）
+5. `docs/product/TEBIQ_DECISION_LOG.md`（最近 2 条决策条目）
+6. 本任务相关文档（QA 任务读 `TEBIQ_QA_GATES.md`；文案任务读 `TEBIQ_COPY_SOURCE.md`；协作流程读 `docs/ops/TEBIQ_AGENT_WORKFLOW.md`）
 
 **Hard-required files — 不存在时必须停止：**
 - `AGENTS.md`、`docs/product/TEBIQ_CONTEXT_PACK.md`、`docs/product/TEBIQ_CURRENT_STATE.md`
