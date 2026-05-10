@@ -646,3 +646,58 @@ work packets 继续冻结，除非 founder 明确解冻。
 - `CLAUDE.md` 中 stale doc path 需修正。
 - AQL 暂无完整 canonical role doc，先建立 `docs/roles/TEBIQ_AQL_ROLE.md`
   作为占位，不替 AQL 定义方法论。
+
+---
+
+## DL-019 · Roles V2：Founder / Codex / Claude.ai 三角分工
+
+| 字段 | 值 |
+|------|-----|
+| date | 2026-05-10 |
+| owner | Founder / Project Lead |
+| status | active |
+
+### Background
+
+Cycle 1 答案质量飞轮启动后，Claude.ai 曾输出过工程 mission card / phase
+拆解 / prompt-style 指令。实际执行中暴露出工程链路缺口：calibration holdout
+漏 judge、需求过度结构化、工程实现细节与产品视角混在一起。
+
+Founder 与 Claude.ai 重新确认：Claude.ai 适合做战略/产品镜子，不适合写给
+Codex 的工程指令。Codex 需要作为 AI Engineering Lead 自主设计工程路径，
+Founder 保留产品方向和验收权。
+
+### Decision
+
+新增 canonical 文档：
+
+- `docs/ops/TEBIQ_ROLES_V2.md`
+
+三角分工：
+
+- Founder / Project Lead：产品方向、场景优先级、阶段切换、质量验收、外部
+  判断角色独立性。
+- Codex / AI Engineering Lead：工程架构、实现、repo/DB/API/UI、部署、QA
+  自动化、子代理调度和工程风险管理。
+- Claude.ai / Product-Strategy Advisor：战略反思、产品反馈、镜子作用；不写
+  Codex prompt、不写 work packet、不设计工程 SOP。
+
+窗口管理：
+
+- Codex 直接管理 ENGINE / QA / CODEXUI / Codex subagents。
+- Codex 间接协调 AQL / DOMAIN / FACT，只提供输入、消费输出、不替代其判断。
+- Founder 直接管理 Claude.ai 对话、产品验收，以及 AQL / DOMAIN / FACT 的独立性边界。
+
+### Rationale
+
+- 判断权、工程权、镜子权分开，可以减少多窗口互相指挥导致的 coordination drag。
+- Codex 有代码触感和 repo/DB/deploy 能力，适合承担工程路径选择。
+- Claude.ai 没有文件系统和运行能力，适合从产品/战略层发现偏差，不适合写工程任务单。
+- AQL / DOMAIN / FACT 必须保持独立，避免执行系统自评自修。
+
+### Impact
+
+- 未来 Claude.ai 输出默认作为 Founder 的参考，不作为 Codex 直接任务。
+- Codex 可以在已批准 scope 内自主拆解、调度子代理、提交 PR 和验证。
+- AQL / DOMAIN / FACT 的指令应写输入、输出、边界、交付格式，不写方法论或替它们做专业判断。
+- 后续角色冲突以 `docs/ops/TEBIQ_ROLES_V2.md` 为准；如需调整，追加新 DL。

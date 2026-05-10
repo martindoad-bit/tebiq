@@ -17,11 +17,12 @@ TEBIQ 不是 AI 签证问答 App、不是签证知识库、不是行政书士官
 |------|------|------|
 | 1 | 本文件（CLAUDE.md） | 所有窗口 |
 | 2 | `docs/ops/TEBIQ_DELEGATION_PRINCIPLES.md` | **所有窗口（多窗口协作通用原则；任何 Work Packet 底层规则）** |
-| 3 | `docs/product/TEBIQ_CURRENT_STATE.md` | 所有窗口（当前工程快照）|
-| 4 | `docs/product/TEBIQ_CONTEXT_PACK.md` | 所有窗口（长期产品原则）|
-| 5 | `docs/product/TEBIQ_QA_GATES.md` | QA / PR 审计 |
-| 6 | `docs/product/TEBIQ_COPY_SOURCE.md` | 文案相关任务 |
-| 7 | `docs/roles/TEBIQ_*_ROLE.md` | 不确定自己任务边界时 |
+| 3 | `docs/ops/TEBIQ_ROLES_V2.md` | 所有窗口（当前 Founder / Codex / Claude.ai 分工）|
+| 4 | `docs/product/TEBIQ_CURRENT_STATE.md` | 所有窗口（当前工程快照）|
+| 5 | `docs/product/TEBIQ_CONTEXT_PACK.md` | 所有窗口（长期产品原则）|
+| 6 | `docs/product/TEBIQ_QA_GATES.md` | QA / PR 审计 |
+| 7 | `docs/product/TEBIQ_COPY_SOURCE.md` | 文案相关任务 |
+| 8 | `docs/roles/TEBIQ_*_ROLE.md` | 不确定自己任务边界时 |
 
 ## 事实源优先级
 
@@ -77,4 +78,5 @@ gh pr list
 | DOMAIN-CC | 在留语义复核 |
 | AQL | 独立答案质量归因与复核设计（见 `docs/roles/TEBIQ_AQL_ROLE.md` 占位文档） |
 
-详细边界见 `docs/roles/TEBIQ_*_ROLE.md`。
+当前三角分工见 `docs/ops/TEBIQ_ROLES_V2.md`。角色细节见
+`docs/roles/TEBIQ_*_ROLE.md`。
