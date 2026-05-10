@@ -126,6 +126,10 @@ async function main() {
       'missing 入管通知 hit',
     )
     assert.ok(
+      riskMod.detectRiskKeywords('入管让我写说明情况，没写会怎么样？').includes('入管通知'),
+      'missing 入管通知 variant hit',
+    )
+    assert.ok(
       riskMod.detectRiskKeywords('我被老公家暴，不敢回家，签证靠他怎么办？').includes('家暴'),
       'missing 家暴 hit',
     )
