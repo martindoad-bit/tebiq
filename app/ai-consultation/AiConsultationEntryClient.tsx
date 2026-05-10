@@ -176,7 +176,7 @@ export default function AiConsultationEntryClient() {
         detail?: string
       }
       if (!r.ok || !j.image_summary || !j.image_storage_ref) {
-        setPhoto({ kind: 'error', message: j.detail || j.error || `识别失败 HTTP ${r.status}` })
+        setPhoto({ kind: 'error', message: userSafePhotoMessage(j.detail || j.error || `识别失败 HTTP ${r.status}`) })
         return
       }
       setPhoto({
@@ -188,7 +188,7 @@ export default function AiConsultationEntryClient() {
         confidence: j.recognition?.confidence ?? 'unknown',
       })
     } catch (err) {
-      setPhoto({ kind: 'error', message: err instanceof Error ? err.message : String(err) })
+      setPhoto({ kind: 'error', message: userSafePhotoMessage(err instanceof Error ? err.message : String(err)) })
     } finally {
       e.target.value = ''
     }
@@ -1525,6 +1525,13 @@ function userSafeDetail(
 
 function looksTechnicalDetail(text: string): boolean {
   return /(api[_ -]?key|not set|deepseek|openai|anthropic|vercel|postgres|database|stack|trace|undefined|null|fetch failed|econn|http\s?\d{3})/i.test(text)
+}
+
+function userSafePhotoMessage(message: string | null | undefined): string {
+  if (!message) return '图片识别没有完成。可以重新上传，或先用文字描述材料内容。'
+  const text = message.trim()
+  if (!text || looksTechnicalDetail(text)) return '图片识别没有完成。可以重新上传，或先用文字描述材料内容。'
+  return cleanDisplayText(text)
 }
 
 function EncodingIssueNotice() {

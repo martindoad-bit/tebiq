@@ -177,25 +177,43 @@ export function StatusBadge({ state }: { state: AlphaDisplayState }) {
 
 export function RiskHintBanner({ hits }: { hits: string[] }) {
   if (hits.length === 0) return null
+  const hint = riskHintPresentation(hits)
   return (
     <div className="rounded-card border border-[var(--tebiq-warm-amber)] bg-[var(--tebiq-off-white)] px-3 py-2.5 text-[12.5px] leading-[1.6] text-[var(--tebiq-ink-blue)]">
       <div className="flex flex-wrap items-center gap-2">
         <TriangleAlert className="h-4 w-4 shrink-0 text-[var(--tebiq-warm-amber)]" strokeWidth={1.55} />
-        <span className="font-medium">可能涉及在留风险</span>
-        <span className="text-[11.5px] text-[var(--tebiq-deep-slate)]">{RISK_HINT}</span>
+        <span className="font-medium">{hint.title}</span>
+        <span className="text-[11.5px] text-[var(--tebiq-deep-slate)]">{hint.body}</span>
         <span className="flex basis-full flex-wrap gap-1 pt-1 sm:basis-auto sm:pt-0">
-          {hits.slice(0, 4).map(hit => (
+          {hint.chips.map(chip => (
             <span
-              key={hit}
+              key={chip}
               className="rounded-chip border border-[var(--tebiq-soft-gray)] px-2 py-0.5 text-[11px] text-[var(--tebiq-deep-slate)]"
             >
-              {hit}
+              {chip}
             </span>
           ))}
         </span>
       </div>
     </div>
   )
+}
+
+function riskHintPresentation(hits: string[]): { title: string; body: string; chips: string[] } {
+  const highRiskHits = new Set(['不许可', '补材料', '超期', '离婚', '解雇', '公司清算', '工作不一致', '资格外活动'])
+  const hasHighRisk = hits.some(hit => highRiskHits.has(hit))
+  if (hasHighRisk) {
+    return {
+      title: '高风险确认',
+      body: '这类问题可能影响更新、变更、届出期限或之后的在留判断。',
+      chips: ['先确认事实', '不要急着提交/离境', '必要时人工确认'],
+    }
+  }
+  return {
+    title: '需要留意',
+    body: RISK_HINT,
+    chips: ['先看条件', '确认期限', '保留记录'],
+  }
 }
 
 export function FeedbackLabel({ type }: { type: FeedbackType }) {

@@ -104,9 +104,7 @@ export default async function ConsultationDetailPage({ params }: PageProps) {
             </div>
           )}
           {answer ? (
-            <article className="whitespace-pre-wrap text-[15px] leading-[1.75] text-[var(--tebiq-ink-blue)]">
-              {cleanDisplayText(answer)}
-            </article>
+            <AnswerDetailProse text={answer} />
           ) : (
             <p className="text-[13px] text-[var(--tebiq-deep-slate)]">还没有可显示的回答正文。</p>
           )}
@@ -226,21 +224,23 @@ function FactCardsBlock({ audit }: { audit: ConsultationFactCardAuditEntry[] }) 
 }
 
 function FactCardRow({ card }: { card: ConsultationFactCardAuditEntry }) {
+  const isHighRisk = card.risk_level === 'high' || card.risk_level === 'critical'
   return (
     <li className="flex flex-col gap-1 rounded-card border border-[var(--tebiq-soft-gray)] bg-[var(--tebiq-soft-gray)]/30 px-3 py-2">
       <div className="flex flex-wrap items-center gap-2">
         <span className="text-[13px] font-medium text-[var(--tebiq-ink-blue)]">
-          {card.fact_id}
+          TEBIQ 知识资料
         </span>
-        <span className="rounded-full border border-[var(--tebiq-cool-gray)] px-2 py-0.5 text-[10px] uppercase tracking-wide text-[var(--tebiq-deep-slate)]">
-          {card.risk_level}
-        </span>
-        <span className="rounded-full border border-[var(--tebiq-cool-gray)] px-2 py-0.5 text-[10px] uppercase tracking-wide text-[var(--tebiq-deep-slate)]">
-          {card.fact_card_state}
-        </span>
-        <span className="rounded-full border border-[var(--tebiq-cool-gray)] px-2 py-0.5 text-[10px] uppercase tracking-wide text-[var(--tebiq-deep-slate)]">
-          {card.source_quality}
-        </span>
+        {card.official_sources.length > 0 && (
+          <span className="rounded-full border border-[var(--tebiq-cool-gray)] px-2 py-0.5 text-[10px] text-[var(--tebiq-deep-slate)]">
+            官方来源
+          </span>
+        )}
+        {isHighRisk && (
+          <span className="rounded-full border border-[var(--tebiq-warm-amber)] px-2 py-0.5 text-[10px] text-[var(--tebiq-deep-slate)]">
+            高风险资料
+          </span>
+        )}
       </div>
       {card.official_sources.length > 0 && (
         <div className="flex flex-wrap gap-x-3 gap-y-0.5 text-[11px] text-[var(--tebiq-cool-gray)]">
@@ -273,6 +273,68 @@ function hostnameOf(url: string): string {
 
 function hasEncodingIssue(text: string | null | undefined): boolean {
   return typeof text === 'string' && /\uFFFD/.test(text)
+}
+
+interface FirstLookBlock {
+  conclusion: string
+  action: string
+  avoid: string | null
+}
+
+function AnswerDetailProse({ text }: { text: string }) {
+  const safeText = cleanDisplayText(text)
+  const { firstLook, rest } = extractFirstLook(safeText)
+  return (
+    <div className="space-y-4">
+      {firstLook && (
+        <div className="rounded-card border border-[var(--tebiq-soft-gray)] bg-[var(--tebiq-soft-gray)]/35 px-3.5 py-3">
+          <SectionLabel>先看这里</SectionLabel>
+          <div className="mt-2 space-y-1.5 text-[14px] leading-[1.65] text-[var(--tebiq-ink-blue)]">
+            <p><span className="font-medium">结论：</span>{firstLook.conclusion}</p>
+            <p><span className="font-medium">今天先做：</span>{firstLook.action}</p>
+            {firstLook.avoid && <p><span className="font-medium">暂时不要：</span>{firstLook.avoid}</p>}
+          </div>
+        </div>
+      )}
+      {rest && (
+        <article className="whitespace-pre-wrap text-[15px] leading-[1.75] text-[var(--tebiq-ink-blue)]">
+          {rest}
+        </article>
+      )}
+    </div>
+  )
+}
+
+function extractFirstLook(text: string): { firstLook: FirstLookBlock | null; rest: string } {
+  const normalized = text.replace(/\r\n/g, '\n').trimStart()
+  const lines = normalized.split('\n')
+  const firstNonEmpty = lines.findIndex(line => line.trim().length > 0)
+  if (firstNonEmpty < 0) return { firstLook: null, rest: text }
+
+  let cursor = firstNonEmpty
+  const heading = lines[cursor].trim().replace(/^#+\s*/, '')
+  if (/^先看这里[:：]?$/.test(heading)) cursor += 1
+
+  const take = (labels: string[]): string | null => {
+    const raw = lines[cursor]?.trim() ?? ''
+    const escaped = labels.map(label => label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')
+    const re = new RegExp(`^(?:[-*]\\s*)?(?:${escaped})[：:]\\s*(.+)$`)
+    const match = raw.match(re)
+    if (!match) return null
+    cursor += 1
+    return match[1].trim()
+  }
+
+  const conclusion = take(['结论'])
+  const action = take(['今天先做', '今天可以先确认', '今天先确认', '先做'])
+  const avoid = take(['暂时不要', '暂时不要做', '先不要做'])
+  if (!conclusion || !action) return { firstLook: null, rest: text }
+
+  while (cursor < lines.length && lines[cursor].trim() === '') cursor += 1
+  return {
+    firstLook: { conclusion, action, avoid },
+    rest: lines.slice(cursor).join('\n').trimStart(),
+  }
 }
 
 function cleanDisplayText(text: string): string {
