@@ -19,7 +19,7 @@
 // prompt revisions are auditable. The constant is the single source of
 // truth for both the prompt body and the version tag — bump together.
 
-export const CONSULTATION_ALPHA_PROMPT_VERSION = 'consultation_alpha_v5' as const
+export const CONSULTATION_ALPHA_PROMPT_VERSION = 'consultation_alpha_v6' as const
 
 // Quality test 2026-05-07 (PL): switched to 'deepseek-v4-pro' with thinking
 // enabled (DS V4 Pro defaults to thinking on; no explicit thinking field
@@ -97,7 +97,12 @@ export function buildConsultationMessages(input: {
       .join('\n')
     messages.push({
       role: 'system',
-      content: ['以下是与本问题相关的事实锚点，请在回答时基于这些事实，不要虚构：', anchors].join('\n'),
+      content: [
+        '以下是与本问题相关的事实锚点，请在回答时基于这些事实，不要虚构：',
+        anchors,
+        '',
+        '重要：事实锚点可能包含日文原文，但最终给用户的回答必须使用简体中文。必要的日文手续名可以括号保留，但不得整段用日文回答。',
+      ].join('\n'),
     })
   }
   if (input.imageSummary && input.imageSummary.trim()) {
@@ -106,6 +111,10 @@ export function buildConsultationMessages(input: {
       content: '用户附带了一份图片摘要：' + input.imageSummary.trim(),
     })
   }
+  messages.push({
+    role: 'system',
+    content: '最终输出语言检查：请只用简体中文回答用户。不要因为事实卡或资料是日文，就改用日文回答。',
+  })
   messages.push({ role: 'user', content: input.userQuestion })
   return messages
 }

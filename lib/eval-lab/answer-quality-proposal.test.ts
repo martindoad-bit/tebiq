@@ -102,7 +102,7 @@ test('proposal does not invent a high score when rules find no red flag', () => 
       status: 'completed',
       fallback_reason: null,
       error: null,
-      prompt_version: 'consultation_alpha_v5',
+      prompt_version: 'consultation_alpha_v6',
     },
     deepseek: {
       answer_text: '需要根据实际工作内容判断。',
