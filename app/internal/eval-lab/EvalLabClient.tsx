@@ -117,16 +117,27 @@ interface JudgementRow {
 }
 
 interface AnswerQualityProposal {
+  caseId: string
   score: number | null
   scoreNormalized: number | null
   vsDeepseekJudgment: VsDeepseekJudgment
   flags: string[]
+  rawFlags: string[]
   skeleton: string[]
   red: boolean
   activeLearningReasons: string[]
   confidence: number | null
   reasoning: string
   judgeModel: string
+}
+
+interface AqlApplyMetadata {
+  applied_at: string
+  case_id: string
+  judge_model: string
+  score: number | null
+  vs_deepseek_judgment: VsDeepseekJudgment
+  defect_flags: string[]
 }
 
 interface EditableAnnotation {
@@ -145,6 +156,7 @@ interface EditableAnnotation {
   repair_owner: RepairOwner
   vs_deepseek_judgment: VsDeepseekJudgment
   action: Action
+  aql_apply: AqlApplyMetadata | null
 }
 
 const EMPTY_EDIT: EditableAnnotation = {
@@ -163,6 +175,7 @@ const EMPTY_EDIT: EditableAnnotation = {
   repair_owner: '',
   vs_deepseek_judgment: '',
   action: '',
+  aql_apply: null,
 }
 
 // ---------- per-question generation status (Issue #14) ----------
@@ -277,6 +290,7 @@ function annotationToEdit(a: AnnotationRow | null): EditableAnnotation {
     repair_owner: asRepairOwner(a.annotation_json?.repair_owner),
     vs_deepseek_judgment: asVsDeepseekJudgment(a.annotation_json?.vs_deepseek_judgment),
     action: (a.action ?? '') as Action,
+    aql_apply: asAqlApplyMetadata(a.annotation_json?.aql_apply),
   }
 }
 
@@ -307,9 +321,357 @@ const VS_DEEPSEEK_OPTIONS: Exclude<VsDeepseekJudgment, ''>[] = [
 ]
 
 const VS_DEEPSEEK_LABELS: Record<Exclude<VsDeepseekJudgment, ''>, string> = {
-  strict_added: 'strict_added 严格加分',
-  tied: 'tied 持平',
-  regression: 'regression 倒退',
+  strict_added: '严格加分',
+  tied: '持平',
+  regression: '倒退',
+}
+
+const DEFECT_FLAG_LABELS: Record<string, string> = {
+  shallow_answer: '答案偏浅',
+  over_safe_generic: '过度保守 / 泛化',
+  fact_underused: '事实卡或实务信息使用不足',
+  no_next_action: '缺少下一步行动',
+  missing_fact_not_asked: '关键事实没有追问或覆盖',
+  user_intent_misread: '误读用户意图',
+  fact_miss: '事实错误或关键事实缺失',
+  truncation_or_incomplete: '答案截断 / 不完整',
+  unsafe_overclaim: '不安全承诺或过度断言',
+}
+
+const ACTIVE_LEARNING_REASON_LABELS: Record<string, string> = {
+  'confidence < 0.6': 'AQL 置信度低于 0.6',
+  'score < 60': 'AQL 评分低于 60',
+  'vs_deepseek_judgment = regression': 'AQL 判断 TEBIQ 倒退',
+}
+
+const INLINE_CODE_LABELS: Record<string, string> = {
+  ...DEFECT_FLAG_LABELS,
+  strict_added: '严格加分',
+  tied: '持平',
+  regression: '倒退',
+}
+
+const AQL_TEXT_CN_OVERRIDES: Record<string, { skeleton: string[]; reasoning: string }> = {
+  'eval-lab-v1-G01': {
+    skeleton: [
+      '先确认搬家是刚发生还是已经过去很久；说明 14 天内办理住址变更，以及迟报后果。',
+      '标准流程是旧区役所办转出、新区役所办转入，并携带在留卡。',
+      '提醒住民票、税务、年金记录不一致，未来可能在更新或永住材料中暴露；逾期很久建议找行政书士。',
+    ],
+    reasoning: 'TEBIQ 能指出住民票、税务、年金记录矛盾会影响更新或永住，这是有价值的风险提醒。但 DeepSeek 对跨市区搬家流程更细，明确了转出届到转入届。两边各有优势，因此 AQL 判断为持平。',
+  },
+  'eval-lab-v1-G02': {
+    skeleton: [
+      '核心事实：通常地址变更在区役所办理，区役所会通过系统同步给入管，不需要另跑入管。',
+      '说明 14 天期限、携带物，以及国保、年金等役所一并处理事项。',
+      '如果正在办在留申请，可补充说明这个边界情形。',
+    ],
+    reasoning: 'TEBIQ 的主要问题是把普通住址变更说成区役所后还必须另去入管。现行在留卡制度下，市区町村会把地址变更同步给入管，普通住址变更通常不需要额外跑入管。这个错误会让用户走错流程，因此 AQL 判断为倒退。',
+  },
+  'eval-lab-v1-G03': {
+    skeleton: [
+      '从搬入新住所起 14 天内办理。',
+      '跨市区搬家时，先在旧役所办转出，再到新役所办转入，并带在留卡和住址证明。',
+      '迟报可能形成届出迟延记录，未来更新或永住时被看到；逾期很久建议找行政书士。',
+    ],
+    reasoning: 'TEBIQ 覆盖了 14 天规则和迟报风险，但程序细节不如 DeepSeek，尤其漏了跨市区时旧役所转出届这一步。没有明显事实错误，但程序指导偏浅，因此 AQL 判断为持平。',
+  },
+  'eval-lab-v1-G04': {
+    skeleton: [
+      '第一步应去警察署或交番报失，取得遗失届出证明书。',
+      '14 天内向入管申请在留卡再交付，准备申请书、照片、证明书、护照等。',
+      '处理中要注意不携带风险；若在留期限也临近，可确认是否与更新申请一并处理。',
+    ],
+    reasoning: 'TEBIQ 把第一步说成去市区町村役所，这是严重错误。遗失在留卡应先向警察报失并取得证明，再去入管申请再交付。役所在这个流程里不是第一窗口。对 14 天期限事项指错窗口，AQL 判断为倒退。',
+  },
+  'eval-lab-v1-G05': {
+    skeleton: [
+      '先确认是否已在期限前提交更新申请；如果没有，立即找行政书士。',
+      '若已提交，特例期间最多允许在原期限后 2 个月内继续停留，并可继续原本被许可的活动。',
+      '持续查看入管邮件和追加材料通知，随身保管受付票；特例期间也快到期时主动联系入管。',
+    ],
+    reasoning: 'TEBIQ 抓住了是否按期申请、特例期间和不许可风险。但漏了工作签用户在特例期间通常可继续原本活动这一重要实践信息。整体可用，但相比 DeepSeek 没有明显加分，所以 AQL 判断为持平。',
+  },
+  'eval-lab-v1-G06': {
+    skeleton: [
+      '先用照片翻译识别紧急词，例如期限、督促、差押。',
+      '带原件去区役所外国人相談窗口；如果通知涉及入管或在留资格，不要只靠役所窗口，应找行政书士。',
+      '提醒忽视通知可能产生滞纳金，也可能影响未来在留更新审查。',
+    ],
+    reasoning: 'TEBIQ 的价值在于区分普通行政通知和在留相关通知，并提醒在留相关时要升级到行政书士。这种风险分流比一般“去役所问”更有帮助，因此 AQL 判断为严格加分。',
+  },
+  'eval-lab-v1-G07': {
+    skeleton: [
+      '先区分国税通知和住民税通知：国税找税务署，住民税找市区町村役所。',
+      '国税可联系国税厅面向外国人的多语种咨询渠道。',
+      '住民税缴纳记录会影响永住或归化审查，不要把任何税务通知当成无关事项。',
+    ],
+    reasoning: 'TEBIQ 明确区分国税和住民税，并把住民税记录与永住、归化风险连接起来，这是 DeepSeek 没有充分覆盖的风险分类。AQL 判断为严格加分。',
+  },
+  'eval-lab-v1-G08': {
+    skeleton: [
+      '通常在长期离日、超过 1 年或没有固定回国计划时，需要考虑海外转出届。',
+      '原则上应在离日前 14 天内办理；已经离境时，可让日本的家人或代理人持委任状代办。',
+      '转出会影响住民票、国保、年金等，但转出届本身不直接取消在留资格。',
+    ],
+    reasoning: 'TEBIQ 覆盖了离日前办理、长期离日触发条件等要点，但漏了已经离境时通过委任状代办这个实用路径。两边质量接近，因此 AQL 判断为持平。',
+  },
+  'eval-lab-v1-G09': {
+    skeleton: [
+      '先确认两个分支条件：离日前是否办过海外转出届，以及在留卡是否仍有效。',
+      '标准情况是带在留卡和住址证明，在 14 天内到役所办理转入。',
+      '若未转出、在留卡过期或在留资格变化，不要自判，应先找行政书士确认在留状态。',
+    ],
+    reasoning: 'TEBIQ 先问关键分支，再进入流程，这比直接给标准手续更符合风险管理。它把非标准情况提前拦住，避免用户在在留状态未清楚时贸然登记，因此 AQL 判断为严格加分。',
+  },
+  'eval-lab-v1-G10': {
+    skeleton: [
+      '先确认不一致字段：地址、姓名生日、还是在留资格。',
+      '地址不一致通常先在役所修正；姓名生日多为役所录入问题，带护照和在留卡处理；在留资格不一致可能需要入管参与。',
+      '已有届出迟延可能影响未来更新或永住，必要时找行政书士评估。',
+    ],
+    reasoning: 'TEBIQ 有风险提醒，但修正步骤不够具体。DeepSeek 对各类不一致的处理流程更可操作。TEBIQ 没有明显事实错误，但偏警示、少动作，因此 AQL 判断为持平。',
+  },
+  'eval-lab-v1-H01': {
+    skeleton: [
+      '先承认问题有歧义，最可能是在问脱退一时金申请期限，即离开日本并丧失住所后 2 年内。',
+      '也可能是在问厚生年金加入年龄或每月缴纳周期，应先追问。',
+      '不要在没有证据时默认解释成永住审查材料窗口。',
+    ],
+    reasoning: 'TEBIQ 直接把问题投射到永住用厚生年金记录窗口，但用户自然更可能是在问脱退一时金期限。DeepSeek 处理了歧义，而 TEBIQ 答非所问风险高，因此 AQL 判断为倒退。',
+  },
+  'eval-lab-v1-H02': {
+    skeleton: [
+      '永住受影响最大：通常需要提交近年缴纳记录，长期稳定缴纳也会被看。',
+      '迟缴或未缴不能简单靠事后补缴抹掉。',
+      '工作签更新影响相对间接，但被查到仍可能成为负面因素；先用ねんきんネット确认正式记录，并区分厚生年金和国民年金。',
+    ],
+    reasoning: '两边都抓住了年金未缴对永住影响最大、对工作签更新较间接。TEBIQ 对永住窗口更精确，但答案略有截断；DeepSeek 覆盖签证类型更广。综合判断为持平。',
+  },
+  'eval-lab-v1-H03': {
+    skeleton: [
+      '先确认签证类型和目标是更新还是永住。',
+      '永住通常要看近 3 年住民税记录，迟缴即使补上也可能留痕。',
+      '工作签更新影响没那么形式化，但未缴记录被审查时仍可能不利；先到区役所确认年份和金额，再找行政书士评估。',
+    ],
+    reasoning: 'TEBIQ 把永住和普通更新分开判断，并要求确认年份、签证和到期时间，这种风险分流更贴近用户真实决策。AQL 判断为严格加分。',
+  },
+  'eval-lab-v1-H04': {
+    skeleton: [
+      '先说明公司未入社保不仅是劳动问题，也可能成为在留更新或永住的负面信号。',
+      '用邮件或书面方式向公司确认未加入事实，并保留记录。',
+      '公司拒绝时联系年金事务所或劳动基准监督署；必要时个人加入国保和国民年金，并在下次更新时主动解释。',
+    ],
+    reasoning: 'TEBIQ 把社保问题连接到在留审查，这是 DeepSeek 较弱的部分。虽然 DeepSeek 的维权流程更细，但 TEBIQ 的在留风险框架和更新前准备建议更有加分，AQL 判断为严格加分。',
+  },
+  'eval-lab-v1-H05': {
+    skeleton: [
+      '健康保险选择包括：14 天内到役所办国保、20 天内办任意继续、或符合条件时加入家属扶养。',
+      '带离职票或资格丧失证明等材料。',
+      '工作签持有人离职还会触发 14 天入管届出，并需要尽快找到符合在留资格的新工作。',
+    ],
+    reasoning: 'TEBIQ 抓住了工作签离职后的在留风险和 14 天入管报告义务，这是 DeepSeek 没有充分提示的关键点。虽然漏了家属扶养选项，但在留风险提醒更重要，因此 AQL 判断为严格加分。',
+  },
+  'eval-lab-v1-H06': {
+    skeleton: [
+      '脱退一时金通常要求非日本籍、已丧失日本住所、缴纳 6 个月以上且未领取过日本年金。',
+      '应在丧失日本住所后 2 年内向日本年金机构邮寄申请。',
+      '关键风险：永住者或定住者不可申请；申请会把相关年金记录清零，若未来想永住，不能轻率申请。',
+    ],
+    reasoning: 'TEBIQ 提醒脱退一时金会清零年金记录，可能破坏永住所需的连续缴纳历史，这是用户很可能没意识到的不可逆风险。虽然 DeepSeek 程序细节更多，但 TEBIQ 的高风险提醒构成严格加分。',
+  },
+  'eval-lab-v1-H07': {
+    skeleton: [
+      '离日后仍有纳税义务时才需要纳税管理人，例如租金收入、事业收入、未缴住民税或所得税。',
+      '离日前先查清并处理未缴税款，不要把问题拖到海外。',
+      '同时确认在留期限和再入国方式；若用视同再入国，通常要在 1 年且在留期限内返回。',
+    ],
+    reasoning: 'TEBIQ 把纳税管理人与离日后的在留有效性风险连接起来，提醒视同再入国和在留期限的限制。这超出单纯税务问题，是用户容易忽略的风险，因此 AQL 判断为严格加分。',
+  },
+  'eval-lab-v1-H08': {
+    skeleton: [
+      '解释机制：确定申告会影响住民税计算；未申告可能导致课税证明异常，进而被入管看到。',
+      '自营业或副业收入者通常必须申告；只有单一雇主且年末调整完成时才可能已覆盖。',
+      '迟申告可以补救但会留痕；永住申请者应逐年核查记录，并尽快咨询税理士。',
+    ],
+    reasoning: 'TEBIQ 有追问和迟申告留痕提醒，但没有把“确定申告、住民税计算、课税证明、入管审查”这条因果链讲清楚。DeepSeek 在机制说明上更强，因此 AQL 判断为持平。',
+  },
+  'eval-lab-v1-H09': {
+    skeleton: [
+      '先确认补税年份是否落在永住所看的住民税 3 年、年金 2 年窗口内。',
+      '区分漏报、少报、是否已经全部缴清；未缴清则先缴清。',
+      '取得纳税证明书其三或未纳税额のない证明；若在审查窗口内，考虑推迟申请，并先找行政书士或税理士。',
+    ],
+    reasoning: 'TEBIQ 给出了申请时机判断：补税年份若落在永住材料窗口内，可能应延后申请。DeepSeek 程序证明名称更细。两边各有优势，因此 AQL 判断为持平。',
+  },
+  'eval-lab-v1-H10': {
+    skeleton: [
+      '迟缴和未缴都会留下记录：迟缴是过期后已缴，未缴是持续不履行。',
+      '未缴可能收到催告，并进一步发生工资或账户差押；迟缴通常也会产生延滞金。',
+      '永住近 3 年审查中两者都不利，但未缴更严重；先取得 3 年住民税记录，再找行政书士评估。',
+    ],
+    reasoning: 'TEBIQ 用永住视角解释两者差异是有帮助的，但漏了未缴可能进入催告、财产调查、差押的实际法律后果。对正在未缴的人来说，这个即时风险很重要。因此 AQL 判断为持平。',
+  },
+  'eval-lab-v1-I01': {
+    skeleton: [
+      '先二分：永久离日，还是可能回来。',
+      '不回来时，需要处理在留卡返还或打孔、海外转出届、脱退一时金、公司解散和税务申告。',
+      '可能回来时，使用视同再入国或正式再入国许可；经营管理持有人长期不经营会有活动实态风险。',
+    ],
+    reasoning: 'TEBIQ 的“回不回来”二分很正确，也提醒经营管理的活动实态风险。但 DeepSeek 对公司解散流程更细，如解散登记、清算、税务申告。两边优势不同，因此 AQL 判断为持平。',
+  },
+  'eval-lab-v1-I02': {
+    skeleton: [
+      '若同一在留资格还会回来，保留在留卡并按视同再入国等规则离境。',
+      '若不回来，在机场交还或被打孔；已在海外且未返还时，可按入管指定方式邮寄返还。',
+      '关键风险：在留期限在海外到期后，即使手上还有卡也不能凭卡再入国。',
+    ],
+    reasoning: 'TEBIQ 覆盖了是否回来的核心分支，并提醒在留期限可能在海外到期。DeepSeek 补充了海外邮寄返还在留卡的具体地址等操作细节。两边各有优势，因此 AQL 判断为持平。',
+  },
+  'eval-lab-v1-I03': {
+    skeleton: [
+      '视同再入国通常无需事前申请，在机场办理，期限为 1 年或当前在留期限中较短者。',
+      '正式再入国许可要提前在入管申请，最长可到 5 年。',
+      '选择取决于在留资格、剩余期限和出国时长；经营管理长期离日会影响未来更新或永住的活动实态判断。',
+    ],
+    reasoning: 'TEBIQ 既说明两种许可机制，也补充经营管理长期离日的活动实态风险。这是用户比较手续时容易忽略的下游风险，因此 AQL 判断为严格加分。',
+  },
+  'eval-lab-v1-I04': {
+    skeleton: [
+      '一般不建议在更新审查中离开日本。',
+      '正常更新期且有有效再入国许可时可能可行，但若海外期间被拒会很麻烦；特例期间离境风险更高。',
+      '离日前应通知入管、安排代理收信、保管申请受付票；若已在特例期间，强烈建议不要离境。',
+    ],
+    reasoning: 'TEBIQ 对特例期间离境风险提示到位，但漏了在日本安排代理接收入管通知这个具体操作。两边各有重点，因此 AQL 判断为持平。',
+  },
+  'eval-lab-v1-I05': {
+    skeleton: [
+      '核心风险是在留期限在海外到期，视同再入国随之失效，无法再入境。',
+      '若入管要求追加材料而本人不在日本，审查可能停滞或不利；海外期间被不许可会更难补救。',
+      '经营管理还会有长期离日导致活动实态不足的风险；离日前确认入管安排代理，临近到期时找行政书士。',
+    ],
+    reasoning: 'TEBIQ 能识别主要风险，也提出经营管理活动实态问题。但没有充分解释人在海外收到不许可后的补救复杂性。整体与 DeepSeek 各有优势，AQL 判断为持平。',
+  },
+  'eval-lab-v1-I06': {
+    skeleton: [
+      '先确认离境时使用的是视同再入国还是正式再入国许可。',
+      '视同再入国通常是 1 年硬期限，超过后基本难以恢复；正式再入国许可最长可更久。',
+      '即使技术上维持在留资格，长期离日也会影响未来永住的居住实态；家族滞在还要看扶养人的状态变化。',
+    ],
+    reasoning: 'TEBIQ 补充了两个 DeepSeek 未充分覆盖的长期风险：超过 1 年离日影响永住居住实态，家族滞在受扶养人状态变化影响。这些前瞻风险构成严格加分。',
+  },
+  'eval-lab-v1-I07': {
+    skeleton: [
+      '先把问题重心从“以后能否旅游签”拉回“现在是否干净离境”。',
+      '旅游签可能性取决于离境是否规范、停留期间有无违规、税金保险公司等义务是否清理。',
+      '经营管理若公司或税务没清理，未来入境或在留申请都可能受影响；复杂履历建议找行政书士检查。',
+    ],
+    reasoning: 'TEBIQ 正确重构了问题：以后旅游签的障碍往往来自现在没有清理干净的离境记录。它还指出经营管理公司未清理的风险，这比泛泛回答能不能旅游签更有价值。',
+  },
+  'eval-lab-v1-I08': {
+    skeleton: [
+      '先分短期会回来还是不回日本。',
+      '如果会回来，公司无运营会在再入国、更新时形成经营管理活动实态风险。',
+      '如果不回来，没人阻止离境，但公司仍有税务申告、法人住民税、社保等法律义务，未来在留申请会受影响。',
+    ],
+    reasoning: 'TEBIQ 的二分框架和经营管理活动实态提醒是正确的，但公司休眠后的具体税务、社保和责任说明不如 DeepSeek 具体。因此 AQL 判断为持平。',
+  },
+  'eval-lab-v1-I09': {
+    skeleton: [
+      '役所侧办理海外转出届，住民票除票，同时处理国保精算。',
+      '税务侧确认当年确定申告，离日后仍有住民税分期时指定纳税管理人。',
+      '重要提醒：即使通过纳税管理人缴住民税，迟缴仍会留痕，未来永住看近 3 年记录；年金侧可在离日后确认脱退一时金。',
+    ],
+    reasoning: 'TEBIQ 把纳税管理人后的住民税迟缴记录与未来永住风险连接起来，这是 DeepSeek 没有充分强调的长期风险。虽然 DeepSeek 操作清单更全，但 TEBIQ 在风险发现上严格加分。',
+  },
+  'eval-lab-v1-I10': {
+    skeleton: [
+      '非再入国出境是指不使用再入国手续离开日本，离境时在留资格终止。',
+      '常见形式包括在出境卡选择不再入国，或完全不办理再入国手续。',
+      '机场可能收走或打孔在留卡；之后若想再来日本，通常要从在留资格认定证明书等流程重新开始。',
+    ],
+    reasoning: 'TEBIQ 对非再入国的两种形式区分得更清楚，但漏了机场收走或打孔在留卡这个具体场景。对用户预期管理来说这个操作细节重要，因此 AQL 判断为持平。',
+  },
+  'eval-lab-v1-J01': {
+    skeleton: [
+      '把问题看作“最近身份或活动发生变化”的风险信号。',
+      '先问当前在留资格、在留期限、最近发生了什么变化。',
+      '举例：技人国离职有 14 天届出和 3 个月活动问题；毕业无工作可考虑特定活动；配偶者离婚有期限压力。',
+    ],
+    reasoning: 'TEBIQ 用具体场景和时限说明风险，比单纯程序回答更贴近用户。但 DeepSeek 的自查清单更完整。两边价值接近，因此 AQL 判断为持平。',
+  },
+  'eval-lab-v1-J02': {
+    skeleton: [
+      '先看信件标题和截止日期。',
+      '常见是补完要求，错过期限可能被视为撤回；也可能是许可或不许可结果通知。',
+      '必须补充最严重类型：意见陈述或听闻通知可能是取消在留资格前置程序，应立即找行政书士。',
+    ],
+    reasoning: 'TEBIQ 能识别补完要求并提醒紧急性，但漏了意见陈述、听闻这类最危险的入管通知。对风险检测产品来说，这是重要缺口，因此 AQL 判断为持平而非加分。',
+  },
+  'eval-lab-v1-J03': {
+    skeleton: [
+      '核心规则：即使材料不齐，也要在期限前先提交申请；逾期提交可能变成不法滞在。',
+      '带现有材料去窗口并说明缺失，入管可能发补正通知，让你后续补材料。',
+      '特例期间的前提是期限内已提交申请；只剩几天时今天就去入管窗口。',
+    ],
+    reasoning: '这是紧急场景，TEBIQ 最大问题是没有把“材料不齐也必须先提交、之后补正”讲清楚。DeepSeek 对窗口操作和补正通知更具体。这个缺口会导致用户错过期限，因此 AQL 判断为倒退。',
+  },
+  'eval-lab-v1-J04': {
+    skeleton: [
+      '所有相关情况都先看 14 天入管届出义务。',
+      '技人国被解雇后在留到期日前仍有效，但 3 个月无活动规则适用；应立即去 Hello Work 办失业保险。',
+      '经营管理若失去经营管理职位，在留基础可能立即动摇，不应等 3 个月才处理；新工作也要确认与在留资格匹配。',
+    ],
+    reasoning: 'TEBIQ 加分点是区分经营管理和技人国：经营管理失去管理角色可能立即影响在留基础。但它漏了 Hello Work 失业保险这个对技人国很实用的动作。综合为持平。',
+  },
+  'eval-lab-v1-J05': {
+    skeleton: [
+      '14 天离婚届出已经错过，现在处于未履行状态，应尽快补交并解释迟延。',
+      '配偶者身份基础已经消失；6 个月无活动规则可能导致在留资格取消。',
+      '关键是：补交届出不等于保住签证，还必须考虑改成定住者或其他合适在留资格。',
+    ],
+    reasoning: 'TEBIQ 最有价值的是把“届出”和“变更在留资格”分开。届出只是合规动作，真正保命的是改到可行身份。这个框架比一般回答更直接，因此 AQL 判断为严格加分。',
+  },
+  'eval-lab-v1-J06': {
+    skeleton: [
+      '空壳公司会显著影响经营管理更新，核心是实际持续经营，而不是公司登记还在。',
+      '证据缺口包括无营业额、办公室空置、无交易等。',
+      '结合 2025 年 10 月经营管理改正和过渡措施，既要看新标准，也要看运营轨迹；准备具体改善计划和证据，完全休眠时找行政书士。',
+    ],
+    reasoning: 'TEBIQ 结合了 2025 年 10 月改正和过渡措施，并提醒现有经营管理持有人仍会被综合评估经营轨迹。这是 DeepSeek 没有覆盖的当前政策背景，因此 AQL 判断为严格加分。',
+  },
+  'eval-lab-v1-J07': {
+    skeleton: [
+      '第一步不是问怎么开店，而是先确认现在的兼职是否已经构成资格外活动。',
+      '技人国持有人做厨房、地面服务等体力劳动，很可能已经违规，必须先处理。',
+      '开店通常要变更到经营管理，并准备独立场所、事业计划、相当投资规模；不同身份如留学、家族滞在另有资格外活动限制。',
+    ],
+    reasoning: 'TEBIQ 把用户可能已经处于资格外活动违规这一点提前指出，这是最重要的风险。DeepSeek 直接进入经营管理申请流程，漏了申请前的合规污染问题。因此 AQL 判断为严格加分。',
+  },
+  'eval-lab-v1-J08': {
+    skeleton: [
+      '先确认当前在留资格和实际工作内容。',
+      '留学或家族滞在可能通过资格外活动许可和 28 小时限制处理；技人国做范围外工作则可能需要换工作或变更在留资格。',
+      '特定技能等还有不同规则；解决期间应停止不合规工作，并带完整雇佣历史找行政书士。',
+    ],
+    reasoning: 'TEBIQ 正确识别资格外活动风险并建议停止和找行政书士，但没有像 DeepSeek 一样按在留资格分支说明解决路径。用户会不清楚自己是小修补还是大变更。因此 AQL 判断为持平。',
+  },
+  'eval-lab-v1-J09': {
+    skeleton: [
+      '先分清税种和严重程度：住民税、年金健保、所得税；滞纳、未纳、免除或猶予。',
+      '仍有未纳时先全部清掉，并取得课税证明、纳税证明、ねんきんネット等官方记录。',
+      '即使补清，迟缴痕迹仍在；可考虑积累 1 到 2 年干净记录后再申请，并让行政书士评估。',
+    ],
+    reasoning: 'TEBIQ 加分点是明确住民税 3 年、年金 2 年等审查窗口，并要求拿正式证明而不是凭记忆判断。但 DeepSeek 补充了补清后仍建议等一段干净记录。综合为持平。',
+  },
+  'eval-lab-v1-J10': {
+    skeleton: [
+      '用清单检查：在留卡有效性和地址、住民登记、入管报告、国保年金、税金、实际活动是否符合在留资格。',
+      '工作变更、学校变更、离婚等通常触发 14 天届出。',
+      '如果曾发生事件，应按年份列出从入境到现在的履历，逐一判断哪些触发报告义务。',
+    ],
+    reasoning: 'TEBIQ 的按年度回顾事件方法正确，但 DeepSeek 的类别清单对普通用户更可操作，且补了住民税记录检查。TEBIQ 概念好但覆盖不够完整，因此 AQL 判断为持平。',
+  },
 }
 
 const REPAIR_OWNERS: EvalRepairOwner[] = [
@@ -346,26 +708,71 @@ function asVsDeepseekJudgment(v: unknown): VsDeepseekJudgment {
     : ''
 }
 
+function asAqlApplyMetadata(v: unknown): AqlApplyMetadata | null {
+  if (!v || typeof v !== 'object') return null
+  const obj = v as Record<string, unknown>
+  const appliedAt = typeof obj.applied_at === 'string' ? obj.applied_at : ''
+  const caseId = typeof obj.case_id === 'string' ? obj.case_id : ''
+  const judgeModel = typeof obj.judge_model === 'string' ? obj.judge_model : ''
+  if (!appliedAt || !caseId) return null
+  return {
+    applied_at: appliedAt,
+    case_id: caseId,
+    judge_model: judgeModel,
+    score: typeof obj.score === 'number' ? obj.score : null,
+    vs_deepseek_judgment: asVsDeepseekJudgment(obj.vs_deepseek_judgment),
+    defect_flags: Array.isArray(obj.defect_flags)
+      ? obj.defect_flags.filter((flag): flag is string => typeof flag === 'string')
+      : [],
+  }
+}
+
 function isAnnotationComplete(a: AnnotationRow | undefined | null): boolean {
   return !!a && a.score != null && asVsDeepseekJudgment(a.annotation_json?.vs_deepseek_judgment) !== ''
+}
+
+function splitSkeleton(text: string): string[] {
+  return text
+    .split(/\s+\|\s+|\n+/)
+    .map(line => line.trim())
+    .filter(Boolean)
+}
+
+function localizeInlineCodes(text: string): string {
+  let out = text
+  for (const [code, label] of Object.entries(INLINE_CODE_LABELS)) {
+    out = out.replaceAll(code, label)
+  }
+  return out
+}
+
+function localizeDefectFlag(flag: string): string {
+  return DEFECT_FLAG_LABELS[flag] ?? flag
+}
+
+function localizeActiveLearningReason(reason: string): string {
+  return ACTIVE_LEARNING_REASON_LABELS[reason] ?? localizeInlineCodes(reason)
 }
 
 function judgementToProposal(row: JudgementRow | undefined): AnswerQualityProposal | null {
   if (!row) return null
   const confidence = Number(row.confidence)
+  const override = AQL_TEXT_CN_OVERRIDES[row.case_id]
+  const rawFlags = Array.isArray(row.defect_flags) ? row.defect_flags : []
   return {
+    caseId: row.case_id,
     score: row.score,
     scoreNormalized: row.score_normalized,
     vsDeepseekJudgment: asVsDeepseekJudgment(row.vs_deepseek_judgment),
-    flags: Array.isArray(row.defect_flags) ? row.defect_flags : [],
-    skeleton: row.ideal_answer_skeleton
-      .split(/\s+\|\s+|\n+/)
-      .map(line => line.trim())
-      .filter(Boolean),
+    flags: rawFlags.map(localizeDefectFlag),
+    rawFlags,
+    skeleton: override?.skeleton ?? splitSkeleton(row.ideal_answer_skeleton).map(localizeInlineCodes),
     red: row.active_learning_red,
-    activeLearningReasons: Array.isArray(row.active_learning_reasons) ? row.active_learning_reasons : [],
+    activeLearningReasons: Array.isArray(row.active_learning_reasons)
+      ? row.active_learning_reasons.map(localizeActiveLearningReason)
+      : [],
     confidence: Number.isFinite(confidence) ? confidence : null,
-    reasoning: row.reasoning,
+    reasoning: override?.reasoning ?? localizeInlineCodes(row.reasoning),
     judgeModel: row.judge_model,
   }
 }
@@ -486,7 +893,9 @@ export default function EvalLabClient() {
       const drafts = loadDrafts()
       const initialEdits: Record<string, EditableAnnotation> = {}
       for (const q of j.questions) {
-        initialEdits[q.id] = drafts[q.id] ?? annotationToEdit(annMap[q.id] ?? null)
+        const proposal = judgementToProposal(judgeMap[q.id])
+        const serverEdit = localizeLegacyAqlEdit(annotationToEdit(annMap[q.id] ?? null), proposal)
+        initialEdits[q.id] = drafts[q.id] ?? serverEdit
       }
       setEdits(initialEdits)
       // Hydrate genStatus from existing answer rows. Never demote a row
@@ -625,6 +1034,7 @@ export default function EvalLabClient() {
               ...existingJson,
               repair_owner: edit.repair_owner || null,
               vs_deepseek_judgment: edit.vs_deepseek_judgment || null,
+              aql_apply: edit.aql_apply,
             },
           }),
         })
@@ -673,10 +1083,15 @@ export default function EvalLabClient() {
       onAnnotate(questionId, {
         score: proposal.score,
         vs_deepseek_judgment: proposal.vsDeepseekJudgment,
-        missing_points: [
-          ...(proposal.flags.length > 0 ? proposal.flags : ['AQL judge 未标出 defect flag']),
-          proposal.reasoning ? `reasoning: ${proposal.reasoning}` : '',
-        ].filter(Boolean).join('\n'),
+        missing_points: buildAqlMissingPoints(proposal),
+        aql_apply: {
+          applied_at: new Date().toISOString(),
+          case_id: proposal.caseId,
+          judge_model: proposal.judgeModel,
+          score: proposal.score,
+          vs_deepseek_judgment: proposal.vsDeepseekJudgment,
+          defect_flags: proposal.rawFlags,
+        },
       })
     },
     [onAnnotate],
@@ -1151,7 +1566,7 @@ export default function EvalLabClient() {
                         <>
                           <span>· AQL {proposal.score ?? '-'}</span>
                           <span className={proposal.red ? 'text-red-600' : 'text-slate-400'}>
-                            {proposal.red ? 'RED' : 'ok'}
+                            {proposal.red ? '优先复核' : '正常'}
                           </span>
                         </>
                       )}
@@ -1300,10 +1715,10 @@ function AnswerColumn({
   const has = !!row?.answer_text
   const busy = state === 'running'
   const stateBadge =
-    state === 'running' ? <span className="text-[10px] text-blue-600">running</span> :
-    state === 'failed' ? <span className="text-[10px] text-red-600">failed</span> :
-    state === 'success' ? <span className="text-[10px] text-emerald-600">success</span> :
-    <span className="text-[10px] text-slate-400">pending</span>
+    state === 'running' ? <span className="text-[10px] text-blue-600">生成中</span> :
+    state === 'failed' ? <span className="text-[10px] text-red-600">失败</span> :
+    state === 'success' ? <span className="text-[10px] text-emerald-600">已生成</span> :
+    <span className="text-[10px] text-slate-400">未生成</span>
   return (
     <div className="border border-slate-200 rounded p-2">
       <div className="flex items-center justify-between mb-2 gap-2">
@@ -1318,16 +1733,16 @@ function AnswerColumn({
         </button>
       </div>
       {liveError && state === 'failed' && (
-        <p className="text-[11px] text-red-600">live err: {liveError}</p>
+        <p className="text-[11px] text-red-600">生成错误：{liveError}</p>
       )}
       {row?.error && state !== 'success' && (
-        <p className="text-[11px] text-red-600">err: {row.error}</p>
+        <p className="text-[11px] text-red-600">错误：{row.error}</p>
       )}
       {state === 'failed' && !liveError && !row?.error && (
-        <p className="text-[11px] text-red-600">err: stale_or_incomplete_answer</p>
+        <p className="text-[11px] text-red-600">错误：旧答案或答案不完整</p>
       )}
       {attempts != null && attempts > 1 && (
-        <p className="text-[10px] text-slate-400">attempts: {attempts}</p>
+        <p className="text-[10px] text-slate-400">尝试次数：{attempts}</p>
       )}
       {showMeta && row?.tebiq_answer_id && (
         <div className="text-[11px] text-slate-600 space-y-0.5 mb-2 border-b border-slate-100 pb-2">
@@ -1375,6 +1790,7 @@ function AnnotationForm({
   onApplyProposal?: () => void
   onChange: (patch: Partial<EditableAnnotation>) => void
 }) {
+  const aqlApplyStatus = getAqlApplyStatus(edit, annotation, proposal)
   return (
     <form className="space-y-3 text-xs" onSubmit={e => e.preventDefault()}>
       <div className="flex items-center gap-2">
@@ -1388,6 +1804,12 @@ function AnnotationForm({
 
       {proposal && (
         <AiProposalPanel proposal={proposal} onApply={onApplyProposal} />
+      )}
+
+      {aqlApplyStatus && (
+        <p className="text-[11px] text-emerald-700 bg-emerald-50 border border-emerald-100 rounded px-2 py-1">
+          {aqlApplyStatus}
+        </p>
       )}
 
       <Field label="1. 分数">
@@ -1479,9 +1901,9 @@ function AiProposalPanel({
   return (
     <section className={`border rounded p-2 ${proposal.red ? 'border-red-200 bg-red-50' : 'border-blue-200 bg-blue-50'}`}>
       <div className="flex items-center gap-2">
-        <span className="text-[10px] uppercase tracking-wider text-slate-500">AQL judge (Claude Sonnet)</span>
+        <span className="text-[10px] uppercase tracking-wider text-slate-500">AQL 评审（Claude Sonnet）</span>
         <span className={`text-[11px] font-semibold ${proposal.red ? 'text-red-700' : 'text-blue-700'}`}>
-          {proposal.score ?? '-'} / {proposal.vsDeepseekJudgment || '-'} / conf {proposal.confidence ?? '-'}
+          {proposal.score ?? '-'} 分 / {proposal.vsDeepseekJudgment ? VS_DEEPSEEK_LABELS[proposal.vsDeepseekJudgment] : '-'} / 置信度 {proposal.confidence ?? '-'}
         </span>
         <button
           type="button"
@@ -1502,7 +1924,7 @@ function AiProposalPanel({
         </div>
       )}
       <div className="mt-2 space-y-1">
-        {(proposal.flags.length > 0 ? proposal.flags : ['未发现明显 defect flag']).map(flag => (
+        {(proposal.flags.length > 0 ? proposal.flags : ['未发现明显缺陷标签']).map(flag => (
           <div key={flag} className="text-[11px] text-slate-700">
             {flag}
           </div>
@@ -1539,6 +1961,50 @@ function scoreLabel(score: number): string {
     default:
       return ''
   }
+}
+
+function getAqlApplyStatus(
+  edit: EditableAnnotation,
+  annotation: AnnotationRow | null,
+  proposal: AnswerQualityProposal | null,
+): string | null {
+  const explicit = edit.aql_apply ?? asAqlApplyMetadata(annotation?.annotation_json?.aql_apply)
+  if (explicit) {
+    const appliedAt = explicit.applied_at ? new Date(explicit.applied_at) : null
+    const when = appliedAt && !Number.isNaN(appliedAt.getTime())
+      ? appliedAt.toLocaleString('zh-CN', { hour12: false })
+      : '已记录时间'
+    return `已套用 AQL 评审（${when}）`
+  }
+  if (!proposal) return null
+  if (!isLikelyAqlApplied(edit, proposal)) return null
+  return '疑似已套用 AQL 评审（旧版没有记录点击动作，只能根据字段推断）'
+}
+
+function buildAqlMissingPoints(proposal: AnswerQualityProposal): string {
+  return [
+    ...(proposal.flags.length > 0 ? proposal.flags : ['AQL 未标出明显缺陷标签']),
+    proposal.reasoning ? `AQL 判断：${proposal.reasoning}` : '',
+  ].filter(Boolean).join('\n')
+}
+
+function localizeLegacyAqlEdit(
+  edit: EditableAnnotation,
+  proposal: AnswerQualityProposal | null,
+): EditableAnnotation {
+  if (!proposal) return edit
+  if (edit.aql_apply) return edit
+  if (!isLikelyAqlApplied(edit, proposal)) return edit
+  return { ...edit, missing_points: buildAqlMissingPoints(proposal) }
+}
+
+function isLikelyAqlApplied(edit: EditableAnnotation, proposal: AnswerQualityProposal): boolean {
+  if (edit.score !== proposal.score) return false
+  if (edit.vs_deepseek_judgment !== proposal.vsDeepseekJudgment) return false
+  const text = edit.missing_points
+  if (!text) return false
+  if (text.includes('AQL 判断') || text.includes('reasoning:')) return true
+  return [...proposal.flags, ...proposal.rawFlags].some(flag => flag && text.includes(flag))
 }
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
