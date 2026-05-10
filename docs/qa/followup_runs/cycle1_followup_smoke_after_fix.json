@@ -1,0 +1,258 @@
+{
+  "schema_version": "tebiq-followup-flywheel-v1",
+  "base_url": "https://tebiq.jp",
+  "generated_at": "2026-05-10T08:35:00.150Z",
+  "input_file": "/private/tmp/tebiq-migrate-0027/docs/qa/user_simulator/cycle1_followup_cases_v1.json",
+  "cases": [
+    {
+      "case_id": "sim-followup-v1-002",
+      "scenario": "技人国/人文",
+      "user_profile_brief": "中国籍，30岁，来日2年，技人国签，在大阪一家IT派遣公司做系统测试，日语N2。",
+      "hidden_risk_hint": "技人国活动内容可能偏离专业业务，派遣/委托现场实际工作与合同描述不一致，离职或待机收入也影响更新。",
+      "why_this_is_realistic": "IT派遣人员常把工资来源当成判断标准，但真实风险在实际活动内容和雇佣稳定性。",
+      "rounds": [
+        {
+          "round": 0,
+          "input": "我现在技人国，会社让我去便利店系统导入现场支援几个月，主要帮店员设置机器，这个能去吗？",
+          "endpoint": "/api/consultation/stream",
+          "parent_consultation_id": null,
+          "consultation_id": "hdt8j3jgslcgorlx2347l35t",
+          "http_status": 200,
+          "completion_status": "completed",
+          "terminal_event": "completed",
+          "answer_text": "你现在拿的是“技术・人文知识・国际业务”在留资格，公司让你去便利店现场支援系统导入，主要帮忙设置机器——这种情况需要先看活动的实质内容是否还符合技人国的范围。\n\n可以确定的是：仅仅“帮店员设置机器”，如果在现场只是照着操作手册做硬件连接、初始设定这类不要求专业知识判断的工作，很可能被看作单纯作业，不属于技人国允许的“需要技术或知识的业务”。入管法规定，连续3个月以上不从事符合资格的活动，会构成在留资格取消事由。此外，从公司派到便利店现场，如果是替其他企业干活，还存在“所属机构”和“活动内容”是否偏离原来“技术・人文知识・国际业务”定义的问题，这不是简单一句“短期”就能带过的。\n\n会影响判断的关键条件包括：你实际承担的工作是否包含系统测试、技术问题判断、客户需求分析等技术业务；业务内容是否与你的学历或实务经验直接相关（并且能说明关联性）；这次外派的期限以及公司是否按自有员工的身份、而不是以派遣形式让你去。如果实际工作以体力设置为主，即使名义上是“系统导入支援”，更新或查核时也可能被质疑。\n\n下一步建议你今天就先确认两件事：一是向公司明确问清楚这次支援的具体业务范围，最好能拿到书面任务说明书；二是对照自己的学历/工作经历，如果并没有信息系统、IT支持等相关背景，风险会更高。这种情况下，不建议只凭公司口头说“短期所以”就直接去，建议找行政书士根据你的具体业务内容做一个在留资格上的合规判断。",
+          "total_latency_ms": 25741,
+          "fact_cards": [
+            {
+              "fact_id": "ryugaku-gijinkoku-henko",
+              "fact_card_state": "ai_verified",
+              "risk_level": "high",
+              "confidence": "medium",
+              "source_quality": "official",
+              "official_sources": [
+                "https://www.moj.go.jp/isa/applications/procedures/16-2.html",
+                "https://www.moj.go.jp/isa/applications/status/gijinkoku.html"
+              ],
+              "injected_fields": [],
+              "needs_review_flags": [],
+              "decision": "inject"
+            },
+            {
+              "fact_id": "gijinkoku-job-mismatch",
+              "fact_card_state": "ai_verified",
+              "risk_level": "high",
+              "confidence": "high",
+              "source_quality": "official",
+              "official_sources": [
+                "https://www.moj.go.jp/isa/applications/status/gijinkoku.html",
+                "https://www.moj.go.jp/isa/applications/procedures/torikeshi_00002.html",
+                "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00015.html"
+              ],
+              "injected_fields": [],
+              "needs_review_flags": [
+                "language_skill_2025_update_verification",
+                "actual_work_vs_contract_gray_zone"
+              ],
+              "decision": "inject"
+            }
+          ],
+          "event_counts": {
+            "received": 1,
+            "routing_status": 2,
+            "fact_cards_injected": 1,
+            "first_token": 1,
+            "answer_chunk": 336,
+            "completed": 1
+          },
+          "qa_flags": [
+            "weak_latest_followup_overlap"
+          ],
+          "error": null
+        },
+        {
+          "round": 1,
+          "input": "合同上写的是ITサポート，但是现场可能也要教收银和整理设备。",
+          "endpoint": "/api/consultation/follow-up",
+          "parent_consultation_id": "hdt8j3jgslcgorlx2347l35t",
+          "consultation_id": "dl4l0i302b82qqspg8mzedh9",
+          "http_status": 200,
+          "completion_status": "completed",
+          "terminal_event": "completed",
+          "answer_text": "你提到合同写的是“ITサポート”，但现场可能还要教店员操作收银机、整理硬件设备。这确实会直接影响在留活动的合规性，要分两个层面来看。\n\n首先，合同上的名称本身并不能直接合法性。审查时看的是**实际从事的业务内容**，而不是职位名称。如果实际工作中教收银、整理设备占了相当比重，而且这些操作不需要技术背景的判断或设计，那很可能被认定为“单纯作业”，从而偏离技人国要求的“需要技术或人文知识”的活动。特别是“教收银”这种操作指导，如果没有融入系统设定、故障预判等技术环节，风险比较明显。\n\n其次，风险有多大，关键取决于**技术性工作占总工时的比例**，以及你是否有书面材料说明这些“周边指导”是系统导入中必要的一环。比如，设置新系统后，向店员说明操作流程，如果同时包含“为什么这样设定、出现异常怎么判断”等技术解释，那还有解释的空间。但如果主要就是站在旁边看店员操作、帮忙搬设备，就属于高危状态。连续3个月以上从事这样比例不当的工作，在留资格可能被取消。\n\n你现在应该尽快做三件事：\n1. **和公司确认书面任务说明书或业务指示**，把“ITサポート”拆解成具体任务，避免口头上只用这个词含糊带过。\n2. **记录自己的实际工时分配**，尤其拍照或邮件留存能证明你做了哪些技术判断（例如设定参数、测试网络、写简单手册等）。\n3. **如果公司无法明确区分技术工作和单纯作业，这种情况不建议只靠AI判断，近期找行政書士做一次合规评估**，把合同和实际任务对照说明，判断是否需要调整工作内容或考虑资格变更。\n\n如果6月回答案例还有后续变更，可以再追加信息。",
+          "total_latency_ms": 29984,
+          "fact_cards": [
+            {
+              "fact_id": "spouse-divorce-separation",
+              "fact_card_state": "human_reviewed",
+              "risk_level": "critical",
+              "confidence": "high",
+              "source_quality": "official",
+              "official_sources": [
+                "https://www.moj.go.jp/isa/applications/procedures/torikeshi_00002.html",
+                "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00016.html"
+              ],
+              "injected_fields": [],
+              "needs_review_flags": [
+                "seitou_na_riyu_scope",
+                "betsujo_marriage_continuing_judgment",
+                "post_divorce_status_change_options"
+              ],
+              "decision": "inject"
+            },
+            {
+              "fact_id": "ryugaku-gijinkoku-henko",
+              "fact_card_state": "ai_verified",
+              "risk_level": "high",
+              "confidence": "medium",
+              "source_quality": "official",
+              "official_sources": [
+                "https://www.moj.go.jp/isa/applications/procedures/16-2.html",
+                "https://www.moj.go.jp/isa/applications/status/gijinkoku.html"
+              ],
+              "injected_fields": [],
+              "needs_review_flags": [],
+              "decision": "inject"
+            }
+          ],
+          "event_counts": {
+            "received": 1,
+            "fact_cards_injected": 1,
+            "first_token": 1,
+            "answer_chunk": 382,
+            "completed": 1
+          },
+          "qa_flags": [],
+          "error": null
+        },
+        {
+          "round": 2,
+          "input": "工资还是现在公司发，不是便利店给我，这样是不是就没事？",
+          "endpoint": "/api/consultation/follow-up",
+          "parent_consultation_id": "dl4l0i302b82qqspg8mzedh9",
+          "consultation_id": "d3jp3hzn9frnnczwqj9zlohd",
+          "http_status": 200,
+          "completion_status": "completed",
+          "terminal_event": "completed",
+          "answer_text": "虽然工资仍由您现在的公司发放，这能说明您与便利店之间没有直接雇佣关系，但**不能单凭这一点就断定合规**。\n\n在留资格审查的核心是**实际从事的业务内容**是否属于“技术·人文知识·国际业务”的范围，而不是谁支付工资。如果您在便利店现场的大部分时间都在从事“教收银、整理设备”这类单纯作业，即使薪酬来自自己的公司，入管仍然可能认为您没有从事符合在留资格的活动。\n\n特别是，如果这种单纯作业的状态**持续3个月以上**，就有可能触发在留资格取消的风险。您当前的关键问题不在于谁发工资，而在于**实际工作内容的技术性占比**以及**公司能否证明您所从事的是符合技人国的技术工作**。\n\n因此，下一步建议：\n- 尽快让公司提供一份**详细的任务说明书**，明确您在便利店现场的具体技术职责（如系统设定、异常诊断、操作培训中的技术说明）与单纯作业的界限；\n- 如果您自己记录工时，注意区分“技术判断时间”与“辅助作业时间”，并确保技术性工作占主要部分；\n- 如果无法清晰地界定这些内容，这种安排确实存在风险，**不建议仅凭发薪方就认定没事**，尽快找行政书士评估实际活动内容为宜。",
+          "total_latency_ms": 16031,
+          "fact_cards": [
+            {
+              "fact_id": "spouse-divorce-separation",
+              "fact_card_state": "human_reviewed",
+              "risk_level": "critical",
+              "confidence": "high",
+              "source_quality": "official",
+              "official_sources": [
+                "https://www.moj.go.jp/isa/applications/procedures/torikeshi_00002.html",
+                "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00016.html"
+              ],
+              "injected_fields": [],
+              "needs_review_flags": [
+                "seitou_na_riyu_scope",
+                "betsujo_marriage_continuing_judgment",
+                "post_divorce_status_change_options"
+              ],
+              "decision": "inject"
+            },
+            {
+              "fact_id": "ryugaku-gijinkoku-henko",
+              "fact_card_state": "ai_verified",
+              "risk_level": "high",
+              "confidence": "medium",
+              "source_quality": "official",
+              "official_sources": [
+                "https://www.moj.go.jp/isa/applications/procedures/16-2.html",
+                "https://www.moj.go.jp/isa/applications/status/gijinkoku.html"
+              ],
+              "injected_fields": [],
+              "needs_review_flags": [],
+              "decision": "inject"
+            }
+          ],
+          "event_counts": {
+            "received": 1,
+            "fact_cards_injected": 1,
+            "first_token": 1,
+            "answer_chunk": 270,
+            "completed": 1
+          },
+          "qa_flags": [
+            "weak_latest_followup_overlap"
+          ],
+          "error": null
+        },
+        {
+          "round": 3,
+          "input": "如果我不去，公司说待机没工资，我更新还有8个月。",
+          "endpoint": "/api/consultation/follow-up",
+          "parent_consultation_id": "d3jp3hzn9frnnczwqj9zlohd",
+          "consultation_id": "spszcqn0ep9ukuuidbtkhf1y",
+          "http_status": 200,
+          "completion_status": "completed",
+          "terminal_event": "completed",
+          "answer_text": "你现在面临的已经不是单纯的“去不去”问题，而是**两个在留风险在同时收紧**：  \n一是活动内容不符可能触发资格取消（连续3个月以上风险会明显上升），  \n二是在留期限只剩8个月，目前积累的工作内容将直接进入更新审查范围。\n\n先说最核心的一点：  \n如果这份系统导入工作实质就是“打开包装→连接设备→按手册设定初始值→交给店员”，而没有**系统测试分析、异常判断、客户需求调整或技术说明**等属于技人国范围的内容，那它属于“单纯作业”的可能性很高。  \n工资由原公司发、没有与便利店直接签约，这两点不能抵消“活动内容不符”的风险。\n\n关于待机无薪这部分：  \n公司说“不去就没有工资，继续待机”，这主要涉及劳动法上的休业手当问题，不属于入管直接管辖。  \n但在留资格上更关键的是——如果你在待机期间**没有任何符合技人国的业务记录**，更新时提交不出“从事技术业务”的实绩，这会成为很大的障碍。\n\n结合你只剩8个月就要更新，这种情况的建议方向是：\n\n- **优先确认公司能否给书面任务说明书**，并在上面写清楚这项外派工作的具体技术业务范围，尤其是需要你做技术判断的部分，而不只是“设置机器”。\n- 如果公司拿不出这样的说明，或者任务实质上就是体力设置，那你签下这份工作会留下不符合资格活动的记录。\n- 如果你因此拒绝并产生了待机，这本身不会直接取消你的在留资格，但长期无法证明对技人国活动的从业，申报会非常被动。\n\n你目前最要紧的一步不是自己判断能做什么工作，而是**让公司明确证明你在做什么工作**。  \n如果公司既不给任务说明书，又坚持安排可能不符合技人国的作业或长期无薪待机，这个节点就需要带着现有雇佣资料找行政书士做合规判断，而不是等到临近更新再处理。",
+          "total_latency_ms": 31022,
+          "fact_cards": [
+            {
+              "fact_id": "spouse-divorce-separation",
+              "fact_card_state": "human_reviewed",
+              "risk_level": "critical",
+              "confidence": "high",
+              "source_quality": "official",
+              "official_sources": [
+                "https://www.moj.go.jp/isa/applications/procedures/torikeshi_00002.html",
+                "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00016.html"
+              ],
+              "injected_fields": [],
+              "needs_review_flags": [
+                "seitou_na_riyu_scope",
+                "betsujo_marriage_continuing_judgment",
+                "post_divorce_status_change_options"
+              ],
+              "decision": "inject"
+            },
+            {
+              "fact_id": "keiei-kanri-existing-holder-update",
+              "fact_card_state": "human_reviewed",
+              "risk_level": "high",
+              "confidence": "high",
+              "source_quality": "official",
+              "official_sources": [
+                "https://www.moj.go.jp/isa/applications/resources/10_00237.html",
+                "https://www.moj.go.jp/isa/content/001448070.pdf"
+              ],
+              "injected_fields": [],
+              "needs_review_flags": [
+                "kaizen_mikomi_unyou_kijun"
+              ],
+              "decision": "inject"
+            }
+          ],
+          "event_counts": {
+            "received": 1,
+            "routing_status": 2,
+            "fact_cards_injected": 1,
+            "first_token": 1,
+            "answer_chunk": 411,
+            "completed": 1
+          },
+          "qa_flags": [],
+          "error": null
+        }
+      ],
+      "qa_flags": [
+        "weak_latest_followup_overlap"
+      ]
+    }
+  ],
+  "summary": {
+    "cases_total": 1,
+    "rounds_total": 4,
+    "completed_rounds": 4,
+    "failed_rounds": 0,
+    "cases_with_flags": 1,
+    "flag_counts": {
+      "weak_latest_followup_overlap": 2
+    }
+  }
+}

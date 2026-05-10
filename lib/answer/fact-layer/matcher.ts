@@ -73,6 +73,33 @@ const RISK_RANK: Record<string, number> = {
   low: 1,
 }
 
+const FACT_ID_REQUIRED_CONTEXT: Record<string, readonly string[]> = {
+  'spouse-divorce-separation': [
+    '離婚', '离婚', '別居', '分居', '配偶', '配偶者', '老公', '老婆',
+    '丈夫', '妻子', '夫婦', '家暴', 'dv',
+  ],
+  'kazoku-taizai-yoken': [
+    '家族滞在', '家族ビザ', '家族签证', '扶養ビザ', '家族帯同', '帯同',
+    '呼び寄せ', '家族来日', '家人', '家属', '妻を呼ぶ', '夫を呼ぶ',
+    '子どもを連れてくる', '配偶者を日本に連れてくる',
+    '老婆来日本', '老公来日本', '孩子来日本',
+  ],
+  'keiei-kanri-2025-10': [
+    '経営管理', '经营管理', '經營管理', '经管', '經管', '経営・管理',
+    '经营・管理', '经营签', '管理签', '开公司', '開業', '起業', '创业',
+    '创办公司',
+  ],
+  'keiei-kanri-existing-holder-update': [
+    '経営管理', '经营管理', '經營管理', '经管', '經管', '経営・管理',
+    '经营・管理', '经营签', '管理签', '开公司', '開業', '起業', '创业',
+    '创办公司',
+  ],
+  'ryugaku-gijinkoku-henko': [
+    '留学', '留学生', '卒業', '毕业', '専門学校', '专门学校', '学校',
+    '内定', '就職', '就活',
+  ],
+}
+
 /** States allowed in the candidate set per matcher policy. dry-run mode
  *  expands this set to include `ai_extracted`. */
 const PRODUCTION_CANDIDATE_STATES = ['ai_verified', 'human_reviewed', 'needs_review'] as const
@@ -144,6 +171,7 @@ function scoreCardAgainst(card: FactCard, haystackLower: string): RawMatch | nul
     }
   }
   if (matched.length === 0) return null
+  if (!passesFactIdContextGuard(card.factId, haystackLower)) return null
 
   const uniqueTotal = new Set(triggers.map(t => t.toLowerCase())).size
   const score = Math.min(1, matched.length / Math.max(1, uniqueTotal))
@@ -153,6 +181,12 @@ function scoreCardAgainst(card: FactCard, haystackLower: string): RawMatch | nul
   if (!isHighRisk && score < SCORE_THRESHOLD_LOW_MEDIUM) return null
 
   return { card, matchedKeywords: matched, score }
+}
+
+function passesFactIdContextGuard(factId: string, haystackLower: string): boolean {
+  const requiredContext = FACT_ID_REQUIRED_CONTEXT[factId]
+  if (!requiredContext) return true
+  return requiredContext.some(term => haystackLower.includes(term.toLowerCase()))
 }
 
 // ---------------------------------------------------------------------------
@@ -234,6 +268,7 @@ export const _matcherInternals = {
   gateDecision,
   scoreCardAgainst,
   RISK_RANK,
+  FACT_ID_REQUIRED_CONTEXT,
   SCORE_THRESHOLD_LOW_MEDIUM,
   MAX_INJECTED,
   PRODUCTION_CANDIDATE_STATES,

@@ -11,10 +11,12 @@ type SimCase = {
   case_id: string
   scenario: string
   user_profile_brief: string
-  initial_question: string
-  followups: Record<string, string>
+  initial_question?: string
+  question?: string
+  followups?: Record<string, string>
   hidden_risk_hint: string
   why_this_is_realistic: string
+  risk_mix?: string
 }
 
 type RoundRun = {
@@ -138,19 +140,19 @@ async function runCase(
     baseUrl,
     endpoint: '/api/consultation/stream',
     body: {
-      question: c.initial_question,
+      question: initialQuestionOf(c),
       viewer_id: viewerId,
     },
     viewerId,
     timeoutMs,
     round: 0,
-    input: c.initial_question,
+    input: initialQuestionOf(c),
     parentConsultationId: null,
   })
   rounds.push(initial)
 
   let parentId = initial.consultation_id
-  const additions = Object.entries(c.followups)
+  const additions = Object.entries(c.followups ?? {})
     .sort(([a], [b]) => a.localeCompare(b))
     .map(([, text]) => text)
 
@@ -190,6 +192,12 @@ async function runCase(
     rounds,
     qa_flags: flags,
   }
+}
+
+function initialQuestionOf(c: SimCase): string {
+  const question = (c.initial_question ?? c.question ?? '').trim()
+  if (!question) throw new Error(`Case ${c.case_id} has no initial_question/question`)
+  return question
 }
 
 async function postSse(input: {

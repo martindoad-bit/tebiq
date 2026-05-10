@@ -343,9 +343,9 @@ async function main() {
   // -----------------------------------------------------------------------
   // 6. Matcher gateDecision (state × risk × controlled_alpha_eligible)
   // -----------------------------------------------------------------------
-  function fakeCard(o: { state: string; riskLevel: string; controlledAlphaEligible?: boolean }) {
+  function fakeCard(o: { state: string; riskLevel: string; controlledAlphaEligible?: boolean; factId?: string }) {
     return {
-      factId: 'test-card',
+      factId: o.factId ?? 'test-card',
       title: 't',
       state: o.state,
       riskLevel: o.riskLevel,
@@ -406,8 +406,8 @@ async function main() {
   // -----------------------------------------------------------------------
   // 7. Matcher scoreCardAgainst
   // -----------------------------------------------------------------------
-  function scoreCard(o: { triggerKeywords: string[]; riskLevel: string }, q: string) {
-    const card = fakeCard({ state: 'ai_verified', riskLevel: o.riskLevel })
+  function scoreCard(o: { triggerKeywords: string[]; riskLevel: string; factId?: string }, q: string) {
+    const card = fakeCard({ state: 'ai_verified', riskLevel: o.riskLevel, factId: o.factId })
     card.triggerKeywords = o.triggerKeywords
     return matcherInternals.scoreCardAgainst(card, q.toLowerCase())
   }
@@ -445,6 +445,70 @@ async function main() {
     const r = scoreCard({ triggerKeywords: ['永住', '永住', '年金'], riskLevel: 'medium' }, '永住申请')
     assert.notEqual(r, null)
     assert.equal(r!.matchedKeywords.length, 1)
+  })
+  check('7g. spouse-divorce card ignores generic cancellation hits without spouse/divorce context', () => {
+    const r = scoreCard({
+      factId: 'spouse-divorce-separation',
+      triggerKeywords: ['取消', '14日届出', '離婚'],
+      riskLevel: 'critical',
+    }, '技人国离职超过3个月会取消吗，我还没做14日届出')
+    assert.equal(r, null)
+  })
+  check('7h. spouse-divorce card still matches with spouse/divorce context', () => {
+    const r = scoreCard({
+      factId: 'spouse-divorce-separation',
+      triggerKeywords: ['取消', '14日届出', '離婚'],
+      riskLevel: 'critical',
+    }, '配偶签离婚后会被取消吗')
+    assert.notEqual(r, null)
+  })
+  check('7i. family-stay card ignores generic study/work hits without dependent-family context', () => {
+    const r = scoreCard({
+      factId: 'kazoku-taizai-yoken',
+      triggerKeywords: ['留学', 'アルバイト', '就労'],
+      riskLevel: 'high',
+    }, '留学转工作签，アルバイト超28小时会影响吗')
+    assert.equal(r, null)
+  })
+  check('7j. family-stay card still matches with dependent-family context', () => {
+    const r = scoreCard({
+      factId: 'kazoku-taizai-yoken',
+      triggerKeywords: ['家族滞在', 'アルバイト', '就労'],
+      riskLevel: 'high',
+    }, '家族滞在アルバイト可以做吗')
+    assert.notEqual(r, null)
+  })
+  check('7k. business-manager existing-holder card ignores generic update without keiei context', () => {
+    const r = scoreCard({
+      factId: 'keiei-kanri-existing-holder-update',
+      triggerKeywords: ['更新', '续签', '2028'],
+      riskLevel: 'high',
+    }, '家族滞在打工超过28小时，更新马上到了')
+    assert.equal(r, null)
+  })
+  check('7l. business-manager existing-holder card still matches with keiei context', () => {
+    const r = scoreCard({
+      factId: 'keiei-kanri-existing-holder-update',
+      triggerKeywords: ['更新', '续签', '2028'],
+      riskLevel: 'high',
+    }, '经管签明年更新，新规则怎么处理')
+    assert.notEqual(r, null)
+  })
+  check('7m. study-to-gijinkoku card ignores current-gijinkoku questions without study context', () => {
+    const r = scoreCard({
+      factId: 'ryugaku-gijinkoku-henko',
+      triggerKeywords: ['技人国', '在留資格変更'],
+      riskLevel: 'high',
+    }, '我现在技人国，公司让我在店里收银点餐，更新时怎么写')
+    assert.equal(r, null)
+  })
+  check('7n. study-to-gijinkoku card still matches with study context', () => {
+    const r = scoreCard({
+      factId: 'ryugaku-gijinkoku-henko',
+      triggerKeywords: ['技人国', '在留資格変更'],
+      riskLevel: 'high',
+    }, '专门学校毕业，想从留学转技人国')
+    assert.notEqual(r, null)
   })
 
   // -----------------------------------------------------------------------

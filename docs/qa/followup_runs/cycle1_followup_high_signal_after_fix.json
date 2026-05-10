@@ -1,0 +1,1193 @@
+{
+  "schema_version": "tebiq-followup-flywheel-v1",
+  "base_url": "https://tebiq.jp",
+  "generated_at": "2026-05-10T08:47:13.978Z",
+  "input_file": "/private/tmp/tebiq-migrate-0027/docs/qa/user_simulator/cycle1_followup_cases_v1.json",
+  "cases": [
+    {
+      "case_id": "sim-followup-v1-002",
+      "scenario": "技人国/人文",
+      "user_profile_brief": "中国籍，30岁，来日2年，技人国签，在大阪一家IT派遣公司做系统测试，日语N2。",
+      "hidden_risk_hint": "技人国活动内容可能偏离专业业务，派遣/委托现场实际工作与合同描述不一致，离职或待机收入也影响更新。",
+      "why_this_is_realistic": "IT派遣人员常把工资来源当成判断标准，但真实风险在实际活动内容和雇佣稳定性。",
+      "rounds": [
+        {
+          "round": 0,
+          "input": "我现在技人国，会社让我去便利店系统导入现场支援几个月，主要帮店员设置机器，这个能去吗？",
+          "endpoint": "/api/consultation/stream",
+          "parent_consultation_id": null,
+          "consultation_id": "ktgvlajr975hg7kvypfbz9aj",
+          "http_status": 200,
+          "completion_status": "completed",
+          "terminal_event": "completed",
+          "answer_text": "你现在的处境我理解了：技人国（技術・人文知識・国際業務）的资格，公司临时派你去便利店做系统导入的现场支援，主要帮店员设置机器。\n\n**最关键的判断点是：这个工作是否属于“需要技术或知识的业务”**\n\n帮你设置收银系统或后台终端，和“在店里单纯补货、收银”性质完全不同。如果工作内容是：\n- 向店员说明系统功能、操作流程\n- 调试机器设置、网络连接\n- 判断故障并解决技术问题\n\n这些更接近系统导入的技术支援，通常可以被解释为“技术”范畴的业务。但如果只是按照手册把机器放到位、插电、连上线，日复一日重复同一个操作，那可能会被质疑是否真的需要“技术”的判断。\n\n**但即使工作内容本身偏技术，几个条件会改变结论：**\n\n- **持续时间**：如果这“几个月”是你唯一的工作内容，且公司内部的业务记录上写得像“出向先での機器据付作業”，更新时有可能被追问。如果只是项目的一部分，且你同时有其他技术业务，风险就低。\n- **语言/业务性质**：如果业务说明书里强调的是“系统相关的现地支援、培训指导”，那和“机器搬运、简单设置”性质不同。\n- **届出**：你这次去的地方是客户现场，不是公司内部。但雇佣关系没变，不属于“契约机关变更”，不需要那14天的届出义务——前提是公司没有把这个看作向便利店“出向”（出向的话需要届出确认）。\n\n**建议你今天就做的三步：**\n\n1. 找公司确认“业务说明书”（業務内容を記載した書面），看这次支援在系统里怎么写——是“機器導入支援”还是“現地研修・設定作業”。措辞会影响审查时的判断。\n2. 确认你目前的在留期限。如果是在更新前不久被派去，建议在申请前把这部分业务说明整理清楚。\n3. 如果你担心业务内容在更新时被质疑，可以把业务说明书拿给行政书士看一下，尤其是技人国更新经验丰富的专业人士。这种情况靠自己判断风险太大。",
+          "total_latency_ms": 30434,
+          "fact_cards": [
+            {
+              "fact_id": "ryugaku-gijinkoku-henko",
+              "fact_card_state": "ai_verified",
+              "risk_level": "high",
+              "confidence": "medium",
+              "source_quality": "official",
+              "official_sources": [
+                "https://www.moj.go.jp/isa/applications/procedures/16-2.html",
+                "https://www.moj.go.jp/isa/applications/status/gijinkoku.html"
+              ],
+              "injected_fields": [],
+              "needs_review_flags": [],
+              "decision": "inject"
+            },
+            {
+              "fact_id": "gijinkoku-job-mismatch",
+              "fact_card_state": "ai_verified",
+              "risk_level": "high",
+              "confidence": "high",
+              "source_quality": "official",
+              "official_sources": [
+                "https://www.moj.go.jp/isa/applications/status/gijinkoku.html",
+                "https://www.moj.go.jp/isa/applications/procedures/torikeshi_00002.html",
+                "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00015.html"
+              ],
+              "injected_fields": [],
+              "needs_review_flags": [
+                "language_skill_2025_update_verification",
+                "actual_work_vs_contract_gray_zone"
+              ],
+              "decision": "inject"
+            }
+          ],
+          "event_counts": {
+            "received": 1,
+            "routing_status": 2,
+            "fact_cards_injected": 1,
+            "first_token": 1,
+            "answer_chunk": 452,
+            "completed": 1
+          },
+          "qa_flags": [],
+          "error": null
+        },
+        {
+          "round": 1,
+          "input": "合同上写的是ITサポート，但是现场可能也要教收银和整理设备。",
+          "endpoint": "/api/consultation/follow-up",
+          "parent_consultation_id": "ktgvlajr975hg7kvypfbz9aj",
+          "consultation_id": "rb90tbf6xgszkyl6b1xns0zb",
+          "http_status": 200,
+          "completion_status": "completed",
+          "terminal_event": "completed",
+          "answer_text": "合同上写的是 IT サポート，这是一个有利的起点。但现场如果真的被要求“教收银”和“整理设备”，就需要看这几个动作和系统导入的技术支援之间有多大关联。\n\n先说比较明确的一点：单纯教店员怎么打收银、在货架间整理设备，如果脱离系统设置背景被独立看待，很容易被归为单纯作业。技人国资格不允许把这类业务当作主活动，持续做下去会有取消风险。\n\n接下来是改变判断的关键：教收银是不是在系统替换后，给店员做操作说明和引导？整理设备是拿起货物摆放，还是在配置网络终端、调试 POS 机？如果整体工作实质是“系统导入手顺说明及终端设置”，只是顺便让店员上手练习，那么风险相对可控。但如果现场管理者要求你长时间顶替店员完成销售、补货，那就是另一回事了。\n\n你现在最好做的下一步是：在开始支援前，让派遣元或现场管理者明确你的工作范围和现场指挥体系。最好能用日文简单记录（邮件、任务表）中表明你的任务是“システム導入に伴う IT サポート（機器設定・操作説明・トラブル対応）”，附带培训不算独立业务。如果现场临时有偏离，你也有理由拒绝或报告。\n\n如果这种临时支援会持续一段时间，且很可能需要频繁承担单纯劳动，就不建议只凭合同名称判断了，这种情况要找行政书士帮你评估实际业务内容的风险，尤其是在在留期限临近的情况下，以免影响更新或变更申请。",
+          "total_latency_ms": 27163,
+          "fact_cards": [
+            {
+              "fact_id": "ryugaku-gijinkoku-henko",
+              "fact_card_state": "ai_verified",
+              "risk_level": "high",
+              "confidence": "medium",
+              "source_quality": "official",
+              "official_sources": [
+                "https://www.moj.go.jp/isa/applications/procedures/16-2.html",
+                "https://www.moj.go.jp/isa/applications/status/gijinkoku.html"
+              ],
+              "injected_fields": [],
+              "needs_review_flags": [],
+              "decision": "inject"
+            },
+            {
+              "fact_id": "gijinkoku-job-mismatch",
+              "fact_card_state": "ai_verified",
+              "risk_level": "high",
+              "confidence": "high",
+              "source_quality": "official",
+              "official_sources": [
+                "https://www.moj.go.jp/isa/applications/status/gijinkoku.html",
+                "https://www.moj.go.jp/isa/applications/procedures/torikeshi_00002.html",
+                "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00015.html"
+              ],
+              "injected_fields": [],
+              "needs_review_flags": [
+                "language_skill_2025_update_verification",
+                "actual_work_vs_contract_gray_zone"
+              ],
+              "decision": "inject"
+            }
+          ],
+          "event_counts": {
+            "received": 1,
+            "fact_cards_injected": 1,
+            "first_token": 1,
+            "answer_chunk": 315,
+            "completed": 1
+          },
+          "qa_flags": [],
+          "error": null
+        },
+        {
+          "round": 2,
+          "input": "工资还是现在公司发，不是便利店给我，这样是不是就没事？",
+          "endpoint": "/api/consultation/follow-up",
+          "parent_consultation_id": "rb90tbf6xgszkyl6b1xns0zb",
+          "consultation_id": "ijspms8kqsi3351dhpgufiop",
+          "http_status": 200,
+          "completion_status": "completed",
+          "terminal_event": "completed",
+          "answer_text": "工资还是现在公司发，这个点确实帮你避开了**契约机关变更的 14 天届出义务**，但并不能因此就认为“没事了”。技人国签证看的是你**实际从事的业务内容**，而不是工资由谁支付。\n\n如果现场让你长时间顶班收银、补货、整理货架，哪怕钱是现公司发的，这些工作仍然属于单纯劳动，不在技人国允许范围内。根据入管法，连续 3 个月以上不从事符合资格的活动，就可能触发在留资格取消程序。所以“谁发工资”保护不了你，关键还是**你每天到底在做什么**。\n\n建议你在支援开始前，让派遣元或现场管理者给你一份**书面的任务说明**，明确写清工作范围是系统导入相关的操作说明、终端设置等 IT 支援。如果现场临时让你去做销售或补货，最好当场确认性质和时间占比，并留下记录（邮件、聊天截图等）。如果单纯劳动只是偶尔几分钟的操作演示，风险相对可控；一旦变成每天好几小时的顶岗，就需要认真对待了。",
+          "total_latency_ms": 20402,
+          "fact_cards": [
+            {
+              "fact_id": "ryugaku-gijinkoku-henko",
+              "fact_card_state": "ai_verified",
+              "risk_level": "high",
+              "confidence": "medium",
+              "source_quality": "official",
+              "official_sources": [
+                "https://www.moj.go.jp/isa/applications/procedures/16-2.html",
+                "https://www.moj.go.jp/isa/applications/status/gijinkoku.html"
+              ],
+              "injected_fields": [],
+              "needs_review_flags": [],
+              "decision": "inject"
+            },
+            {
+              "fact_id": "gijinkoku-job-mismatch",
+              "fact_card_state": "ai_verified",
+              "risk_level": "high",
+              "confidence": "high",
+              "source_quality": "official",
+              "official_sources": [
+                "https://www.moj.go.jp/isa/applications/status/gijinkoku.html",
+                "https://www.moj.go.jp/isa/applications/procedures/torikeshi_00002.html",
+                "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00015.html"
+              ],
+              "injected_fields": [],
+              "needs_review_flags": [
+                "language_skill_2025_update_verification",
+                "actual_work_vs_contract_gray_zone"
+              ],
+              "decision": "inject"
+            }
+          ],
+          "event_counts": {
+            "received": 1,
+            "fact_cards_injected": 1,
+            "first_token": 1,
+            "answer_chunk": 229,
+            "completed": 1
+          },
+          "qa_flags": [],
+          "error": null
+        },
+        {
+          "round": 3,
+          "input": "如果我不去，公司说待机没工资，我更新还有8个月。",
+          "endpoint": "/api/consultation/follow-up",
+          "parent_consultation_id": "ijspms8kqsi3351dhpgufiop",
+          "consultation_id": "m7lagpclifvrfseroxm5qzoa",
+          "http_status": 200,
+          "completion_status": "completed",
+          "terminal_event": "completed",
+          "answer_text": "你现在遇到的是一个典型两难：接受支援任务有“活动不符”风险，拒绝的话公司拿“待机没工资”施压，而离更新只剩8个月，你担心这段时间的空白会影响签证。\n\n先说可以确定的：单纯的“待机”本身不会立刻取消在留资格，但更新时入管会重点看**活动实态和生计能力**。如果接下来几个月中连续待机、没有实际业务且无收入，更新时很可能被要求说明：是否还有持续从事技人国业务的实际，以及靠什么维持生活。\n\n所以眼下这一步怎么选，会明显改变局面：\n\n- **如果选择不去**：你必须拿到公司出具的**书面待机指示**，明确写上是公司判断不需要你出勤，而非你拒绝工作。同时保留工资支付记录（哪怕是“无薪待机”也要有书面通知）。如果待机超过1个月且看不到复工可能，就不能一直等下去，要在更新期限前尽快寻找能承接你技人国资格的新雇主，并办理转职。\n- **如果最后还是去了**：前面已经分析过，关键在于现场实际内容。如果只做单纯机器设置、甚至被安排补货收银，持续时间一长，也可能构成取消事由。所以即便去，也要先拿到书面任务说明，并记录实际工作情况。\n\n你现在还有8个月，时间是有操作余地的，但关键行动最好在**待机开始后的1个月内**启动。建议你今天就向公司确认：\n- 待机的理由和期限（是否书面给出）\n- 工资支付是否会完全停止\n- 公司方面是否有计划重新安排你从事技人国业务\n\n如果接下来出现“实质无业务、无收入”状态满2～3个月，不建议你继续等待，因为那会明显拉高更新不许可的风险。这种情况最好在更新申请前（大约提前3个月时）就带着你的在留卡、雇佣契约、待机通知等材料，找行政书士确定是继续以现公司更新，还是转到新雇主再办更新。",
+          "total_latency_ms": 40038,
+          "fact_cards": [
+            {
+              "fact_id": "spouse-divorce-separation",
+              "fact_card_state": "human_reviewed",
+              "risk_level": "critical",
+              "confidence": "high",
+              "source_quality": "official",
+              "official_sources": [
+                "https://www.moj.go.jp/isa/applications/procedures/torikeshi_00002.html",
+                "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00016.html"
+              ],
+              "injected_fields": [],
+              "needs_review_flags": [
+                "seitou_na_riyu_scope",
+                "betsujo_marriage_continuing_judgment",
+                "post_divorce_status_change_options"
+              ],
+              "decision": "inject"
+            },
+            {
+              "fact_id": "ryugaku-gijinkoku-henko",
+              "fact_card_state": "ai_verified",
+              "risk_level": "high",
+              "confidence": "medium",
+              "source_quality": "official",
+              "official_sources": [
+                "https://www.moj.go.jp/isa/applications/procedures/16-2.html",
+                "https://www.moj.go.jp/isa/applications/status/gijinkoku.html"
+              ],
+              "injected_fields": [],
+              "needs_review_flags": [],
+              "decision": "inject"
+            }
+          ],
+          "event_counts": {
+            "received": 1,
+            "routing_status": 2,
+            "fact_cards_injected": 1,
+            "first_token": 1,
+            "answer_chunk": 425,
+            "completed": 1
+          },
+          "qa_flags": [],
+          "error": null
+        }
+      ],
+      "qa_flags": []
+    },
+    {
+      "case_id": "sim-followup-v1-006",
+      "scenario": "留学转工作",
+      "user_profile_brief": "中国籍，24岁，来日3年，语言学校后读专门学校，正在找工作，内定是酒店前台。",
+      "hidden_risk_hint": "工作内容与学历关联、现场劳务比例、雇佣形态、留学期间资格外活动超时可能影响变更。",
+      "why_this_is_realistic": "留学生拿到内定后常只问专业是否匹配，但实际岗位和过去打工记录才是追问重点。",
+      "rounds": [
+        {
+          "round": 0,
+          "input": "专门学校毕业，酒店前台内定，可以从留学转技人国吗？我专业是ビジネス。",
+          "endpoint": "/api/consultation/stream",
+          "parent_consultation_id": null,
+          "consultation_id": "z0by6e7gvs8wwwhphf7zkvng",
+          "http_status": 200,
+          "completion_status": "completed",
+          "terminal_event": "completed",
+          "answer_text": "你拿的是留学在留资格，专门学校商务专业毕业，现在拿到酒店前台内定，问到能不能直接用这个内定把在留资格从留学换成「技术・人文知识・国际业务」(技人国)。  \n这个路径有两条非常关键的门槛需要先跨过，先讲相对能确定的部分。\n\n第一道关是学历。技人国原则上要求“大学毕业相当”，你读的是专门学校，不一定自动符合。   \n如果你的专门学校是修业年限2年以上、且被认定授予“专门士”称号，很多时候会被视为与大学同等，可以满足学历要件。但如果不是，就很可能需要走“相关实务3年以上”的替代路线，这对应届新卒来说通常走不通。  \n\n第二道关是业务的关联性与业务本身的性质。你学的商务和酒店前台工作能不能连上，这取决于你入职后实际承担的职责。  \n如果你的工作内容明确包含多语言对应、外国客人的送迎与问询、与海外合作的业务联络等，有可能被归入“国际业务”范畴。但如果只是做 check-in/check-out、接电话、整理房间安排这类单纯前台操作，会被认定为人文知识或国际业务都需要的“专门性”不足，变更申请被卡的风险就会明显升高。  \n\n还有一点要看你的语言运用。如果酒店前台工作主要依托日英等外语来服务外国客人，且在职务内容上有明确外语比例，2026年4月起对语言中心型业务追加了 CEFR B2 相当的语言能力证明要件，这项也需要准备好。  \n\n所以现在你需要确认的几件事：  \n・你的专门学校是否已授予“专门士”且修业年限是否2年以上，成绩单和毕业证要留好。  \n・把内定通知书上的职种和配属部门的业务描述看清楚，是否写明“多言语対応”“外国人客対応”“通訳翻訳”等字样；如果没有，你和公司有没有可能让任职计划写得更清楚，否则很难说服入管这属于技人国范畴。  \n・确认公司过去的雇用实绩，有没有用同样职种成功给外国人办过技人国在留资格变更，这能说明业务实质。  \n\n这种情况不是单纯的“有内定就能变”，“商务专门士+前台”的搭配在审查上会非常看实质职务，不建议只靠网络信息判断。建议先带着内定记载和职务内容的相关材料，找行政书士做一次有料咨询，让专家帮你评估职种是否符合技人国、学历是否够格，以及是否需要补语言证明。如果现在离留学在留期限还有几个月，还来得及做这个确认；如果期限很紧了，更要优先确认能否在到期前完成受理，而不是抱着“可能能过”的想法直接提交。",
+          "total_latency_ms": 39351,
+          "fact_cards": [
+            {
+              "fact_id": "ryugaku-gijinkoku-henko",
+              "fact_card_state": "ai_verified",
+              "risk_level": "high",
+              "confidence": "medium",
+              "source_quality": "official",
+              "official_sources": [
+                "https://www.moj.go.jp/isa/applications/procedures/16-2.html",
+                "https://www.moj.go.jp/isa/applications/status/gijinkoku.html"
+              ],
+              "injected_fields": [],
+              "needs_review_flags": [],
+              "decision": "inject"
+            },
+            {
+              "fact_id": "kazoku-taizai-yoken",
+              "fact_card_state": "ai_verified",
+              "risk_level": "high",
+              "confidence": "high",
+              "source_quality": "official",
+              "official_sources": [
+                "https://www.moj.go.jp/isa/applications/status/dependent.html"
+              ],
+              "injected_fields": [],
+              "needs_review_flags": [
+                "minimum_income_threshold",
+                "adult_child_age_limit"
+              ],
+              "decision": "inject"
+            }
+          ],
+          "event_counts": {
+            "received": 1,
+            "routing_status": 2,
+            "fact_cards_injected": 1,
+            "first_token": 1,
+            "answer_chunk": 576,
+            "completed": 1
+          },
+          "qa_flags": [],
+          "error": null
+        },
+        {
+          "round": 1,
+          "input": "工作内容有check-in，也会帮客人搬行李和打扫忙的时候支援。",
+          "endpoint": "/api/consultation/follow-up",
+          "parent_consultation_id": "z0by6e7gvs8wwwhphf7zkvng",
+          "consultation_id": "naidvfowy7exevswrwm97jw2",
+          "http_status": 200,
+          "completion_status": "completed",
+          "terminal_event": "completed",
+          "answer_text": "你提到的工作内容里，“帮客人搬行李和打扫忙的时候支援”这部分需要特别小心。技人国签证允许的是需要人文知识或国际感觉的业务，比如多语言接客、外国人预订对应等，但单纯的搬运行李、清扫房间属于体力劳动，不在该签证的活动范围内。即使只是“忙时支援”，如果公司内部的职务说明书或现场实际工作里这类内容占比明显，入管会认为你的主要业务不是技人国对象业务，从而导致不许可，或被认定为资格外活动。\n\n酒店前台本身是公认的灰色地带。如果前台工作核心是使用外语处理外国客人的预约、问询、观光介绍等，学历又是专门士且修满2年以上，那“国际业务”这一侧还有争取空间。但一旦工作内容里混入现场的体力劳动，审查风险会急剧上升。这里的关键已经不是学历有没有替代可能性，而是“实际从事的活动到底能不能被理解为需要大学教育水平的业务”。\n\n目前你最需要确认的是：内定企业提供的职务内容说明书（職務内容の詳細）里，有没有把“搬运行李、清扫支援”明确写进去，占工作时间的比例大概多少。同时，建议你尽快请一位行政书士看一下内定通知和雇用条件书，让专业人士判断这个职种描述是否符合“国際業務”的框，必要时请公司配合调整工作配置，否则直接提交变更申请，不许可概率很高。时间在一秒一秒走，不要等到留学在留期限快到了才处理。",
+          "total_latency_ms": 28635,
+          "fact_cards": [
+            {
+              "fact_id": "ryugaku-gijinkoku-henko",
+              "fact_card_state": "ai_verified",
+              "risk_level": "high",
+              "confidence": "medium",
+              "source_quality": "official",
+              "official_sources": [
+                "https://www.moj.go.jp/isa/applications/procedures/16-2.html",
+                "https://www.moj.go.jp/isa/applications/status/gijinkoku.html"
+              ],
+              "injected_fields": [],
+              "needs_review_flags": [],
+              "decision": "inject"
+            },
+            {
+              "fact_id": "kazoku-taizai-yoken",
+              "fact_card_state": "ai_verified",
+              "risk_level": "high",
+              "confidence": "high",
+              "source_quality": "official",
+              "official_sources": [
+                "https://www.moj.go.jp/isa/applications/status/dependent.html"
+              ],
+              "injected_fields": [],
+              "needs_review_flags": [
+                "minimum_income_threshold",
+                "adult_child_age_limit"
+              ],
+              "decision": "inject"
+            }
+          ],
+          "event_counts": {
+            "received": 1,
+            "routing_status": 2,
+            "fact_cards_injected": 1,
+            "first_token": 1,
+            "answer_chunk": 312,
+            "completed": 1
+          },
+          "qa_flags": [
+            "weak_latest_followup_overlap"
+          ],
+          "error": null
+        },
+        {
+          "round": 2,
+          "input": "会社说先アルバイト入社，签证下来再正社员，这样可以吗？",
+          "endpoint": "/api/consultation/follow-up",
+          "parent_consultation_id": "naidvfowy7exevswrwm97jw2",
+          "consultation_id": "ky875auy0dxc482lp52ouh4u",
+          "http_status": 200,
+          "completion_status": "completed",
+          "terminal_event": "completed",
+          "answer_text": "公司提出“先用アルバイト形式入职，等签证下来再转正社员”，这个做法对你的情况风险很高，不只是流程顺不顺畅的问题。\n\n关键点在于：技人国签证的审查看的是你“将要从事的业务内容”是否符合该资格的学术性、专业性活动范围。如果你先用アルバイト身份入职，实际做的是搬运行李、清扫支援这类体力型工作，即使你与公司约定“将来做前台正社员”，入管局看到你先发生了这类现场业务并领取了薪酬，很容易认定你的实质工作内容不符，从而不许可。\n\n另外，你的留学在留资格允许的アルバイト有严格限制（通常每周不超过28小时、不能从事风营业等）。如果所谓“アルバイト入社”在实际安排中超出了这个范围，会直接构成资格外活动违规，对现在留学身份的维持和变更申请都会产生致命影响。\n\n还有一点容易被忽略：一旦你以アルバイト身份在这家酒店工作，这段工作履历会留在你的在留记录和公司的雇佣事实里。对于“技人国”申请，如果职务说明书和薪资、雇佣形态等出现“实际是从アルバイト转的”这种不一致，需要解释的地方会更多，审查风险直线上升。\n\n综合来看，这个安排不太可能做到安全过渡。稳妥的做法是，请公司直接以正社员为前提准备职务内容说明书，明确前台的核心业务是多语言对应、外国人预约等能体现国际业务的工作，并先申请在留资格变更。建议你现在就拿内定书、职务详细说明问一下行政书士，看你的学校资格、专业和这份职务内容匹配度到底有多高，不要花时间在“先打工”这种有风险的过渡方案上。",
+          "total_latency_ms": 31698,
+          "fact_cards": [
+            {
+              "fact_id": "kazoku-taizai-yoken",
+              "fact_card_state": "ai_verified",
+              "risk_level": "high",
+              "confidence": "high",
+              "source_quality": "official",
+              "official_sources": [
+                "https://www.moj.go.jp/isa/applications/status/dependent.html"
+              ],
+              "injected_fields": [],
+              "needs_review_flags": [
+                "minimum_income_threshold",
+                "adult_child_age_limit"
+              ],
+              "decision": "inject"
+            },
+            {
+              "fact_id": "shikakugai-fukugyou",
+              "fact_card_state": "human_reviewed",
+              "risk_level": "high",
+              "confidence": "high",
+              "source_quality": "official",
+              "official_sources": [
+                "https://www.moj.go.jp/isa/applications/procedures/shikakugai_00001.html",
+                "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri07_00003.html"
+              ],
+              "injected_fields": [],
+              "needs_review_flags": [
+                "gijinkoku_fukugyo_individual_permit_conditions",
+                "mushokyo_shuro_bassoku",
+                "shotoku_han_i"
+              ],
+              "decision": "inject"
+            }
+          ],
+          "event_counts": {
+            "received": 1,
+            "routing_status": 2,
+            "fact_cards_injected": 1,
+            "first_token": 1,
+            "answer_chunk": 357,
+            "completed": 1
+          },
+          "qa_flags": [],
+          "error": null
+        },
+        {
+          "round": 3,
+          "input": "我留学期间便利店有时超过28小时，源泉票会不会影响？",
+          "endpoint": "/api/consultation/follow-up",
+          "parent_consultation_id": "ky875auy0dxc482lp52ouh4u",
+          "consultation_id": "ka5z56yiwv9zs1vh4be4dsyj",
+          "http_status": 200,
+          "completion_status": "completed",
+          "terminal_event": "completed",
+          "answer_text": "你提到的这个担忧确实值得重视，不能简单说“没关系”。\n\n从入管审查的角度看，源泉票是能直接反映你收入的官方材料。如果在留更新或资格变更时被要求提交，审查官可以通过收入金额倒推你的实际工作时间。如果明显超出每周28小时的留学资格外活动许可上限，这会被视为不法就劳，对签证审批构成主要不利因素。\n\n影响程度取决于几个关键变量：超时的程度和频率，是一两回临时超时还是长期系统性超时，有没有被警告或记录在案，以及你提交的源泉票是否已经在入管面前。如果只是偶尔轻微超时，有时候可以通过诚实说明获得理解；但如果是长期大幅超时，这就不只是“源泉票麻烦”，而是资格外活动违反本身可能成为不许可的实质理由。\n\n你现在面临的情况更复杂——你在准备从留学变更到技人国签证。这意味着入管会同时审查你的留学期间守法状况，包括资格外活动的遵守实绩。如果有明显的超时违反，单独靠换个签证类型并不能自动消除这个风险。\n\n这种情况下不建议只靠AI判断。你下一步真正需要做的，是尽快找行政书士如实说明超时的实际情况，让专业人士评估这对即将提交的签证变更申请会有什么具体影响，以及是否需要提前准备任何说明材料。",
+          "total_latency_ms": 24127,
+          "fact_cards": [
+            {
+              "fact_id": "kazoku-taizai-yoken",
+              "fact_card_state": "ai_verified",
+              "risk_level": "high",
+              "confidence": "high",
+              "source_quality": "official",
+              "official_sources": [
+                "https://www.moj.go.jp/isa/applications/status/dependent.html"
+              ],
+              "injected_fields": [],
+              "needs_review_flags": [
+                "minimum_income_threshold",
+                "adult_child_age_limit"
+              ],
+              "decision": "inject"
+            },
+            {
+              "fact_id": "shikakugai-fukugyou",
+              "fact_card_state": "human_reviewed",
+              "risk_level": "high",
+              "confidence": "high",
+              "source_quality": "official",
+              "official_sources": [
+                "https://www.moj.go.jp/isa/applications/procedures/shikakugai_00001.html",
+                "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri07_00003.html"
+              ],
+              "injected_fields": [],
+              "needs_review_flags": [
+                "gijinkoku_fukugyo_individual_permit_conditions",
+                "mushokyo_shuro_bassoku",
+                "shotoku_han_i"
+              ],
+              "decision": "inject"
+            }
+          ],
+          "event_counts": {
+            "received": 1,
+            "routing_status": 2,
+            "fact_cards_injected": 1,
+            "first_token": 1,
+            "answer_chunk": 271,
+            "completed": 1
+          },
+          "qa_flags": [],
+          "error": null
+        }
+      ],
+      "qa_flags": [
+        "weak_latest_followup_overlap"
+      ]
+    },
+    {
+      "case_id": "sim-followup-v1-010",
+      "scenario": "出国/再入国",
+      "user_profile_brief": "台湾籍，28岁，来日3年，技人国签，在福冈工作，母亲生病准备长期回台湾。",
+      "hidden_risk_hint": "みなし再入国期限、长期休职和活动持续性、住民票/保险处理与在留维持之间的误解。",
+      "why_this_is_realistic": "长期离境用户经常只问机场手续，但实际风险包含再入国期限和在留活动中断。",
+      "rounds": [
+        {
+          "round": 0,
+          "input": "我想回台湾照顾妈妈半年，在留卡还有两年，需要办再入国吗？",
+          "endpoint": "/api/consultation/stream",
+          "parent_consultation_id": null,
+          "consultation_id": "mxs698v4nf7jdkdt5myf8esr",
+          "http_status": 200,
+          "completion_status": "completed",
+          "terminal_event": "completed",
+          "answer_text": "你打算回台湾照顾母亲半年，在留卡剩余两年，从描述看属于有有效在留卡的中长期居留者。\n\n如果出境半年并在一年内回到日本，可以适用“みなし再入国许可”（视为再入国许可），出国前不需要特意去入管办通常再入国许可。你只需要在出境时，在出境卡（或指定电子方式）上勾选“みなし再入国”的选项即可。\n\n需要注意两点：一是みなし再入国要求从出境日起一年内再入国，你的半年计划在这范围内，但一旦因故延长，超过一年就可能无法凭みなし再入国回日本；二是你的在留期限必须在回国当天仍然有效。你的在留卡还有两年，这点也满足。\n\n如果临时有变化，需要在海外停留超过一年，那通常再入国许可必须在出境前提前向入管申请，事后无法在海外补办。如果你对长期特殊情况不确定，带着具体日程和理由找行政书士确认会更稳妥。",
+          "total_latency_ms": 19799,
+          "fact_cards": [
+            {
+              "fact_id": "minashi-sainyuukoku",
+              "fact_card_state": "ai_verified",
+              "risk_level": "critical",
+              "confidence": "medium",
+              "source_quality": "official",
+              "official_sources": [
+                "https://www.moj.go.jp/isa/immigration/procedures/16-5.html"
+              ],
+              "injected_fields": [],
+              "needs_review_flags": [
+                "tokubetsu_eijuusha_2year",
+                "zairyu_shikaku_metsumetsu",
+                "zairyu_kigen_upper_bound"
+              ],
+              "decision": "inject"
+            }
+          ],
+          "event_counts": {
+            "received": 1,
+            "fact_cards_injected": 1,
+            "first_token": 1,
+            "answer_chunk": 213,
+            "completed": 1
+          },
+          "qa_flags": [],
+          "error": null
+        },
+        {
+          "round": 1,
+          "input": "公司可以给我休职，但是工资可能没有。",
+          "endpoint": "/api/consultation/follow-up",
+          "parent_consultation_id": "mxs698v4nf7jdkdt5myf8esr",
+          "consultation_id": "ueuthsxh0thqmcq7ryndf34g",
+          "http_status": 200,
+          "completion_status": "completed",
+          "terminal_event": "completed",
+          "answer_text": "你补充的这个情况很关键。休职本身不影响你用みなし再入国出境——只要出境时在留卡有效，且半年内回来，手续上没有问题。\n\n但真正需要小心的不是出境这一步，而是**再入境之后**。\n\n如果你的在留资格属于“技术・人文知识・国际业务”这类就劳资格，那么资格维持的前提是“与日本企业的雇佣关系持续，并且能通过该活动获得稳定收入”。公司同意休职，说明雇佣关系还在；但**如果半年没有工资**，下一次更新在留期间时，入管会从“生活稳定性”角度审查这段无收入期间：\n\n- 半年无收入，会不会被判定为不足以在日本继续生活？\n- 休职理由能不能说明这只是一时性的中断，而不是实质离职？\n\n这可能导致你回来之后，**更新申请时被要求提交存款证明、海外送金记录、或者对休职理由做额外说明**，严重的话可能被判断为“缺乏活动实态”。\n\n所以当下建议你做两件事：\n1. 请公司把休职理由和起止日期用书面形式（比如休职通知书）留给你，明确写“回国照顾母亲，休职期间为○月○日到○月○日”。\n2. 回国前，确认一下你在日本是否有足够的存款或其它收入来源，将来更新时可能要说明“休职期间生活”。\n\n这种情况不建议只靠 AI 判断，走之前最好拿着休职通知书找行政书士做一次**在留资格生活基础的提前评估**，不会花很多时间，但能避免回来之后踩坑。",
+          "total_latency_ms": 24554,
+          "fact_cards": [
+            {
+              "fact_id": "minashi-sainyuukoku",
+              "fact_card_state": "ai_verified",
+              "risk_level": "critical",
+              "confidence": "medium",
+              "source_quality": "official",
+              "official_sources": [
+                "https://www.moj.go.jp/isa/immigration/procedures/16-5.html"
+              ],
+              "injected_fields": [],
+              "needs_review_flags": [
+                "tokubetsu_eijuusha_2year",
+                "zairyu_shikaku_metsumetsu",
+                "zairyu_kigen_upper_bound"
+              ],
+              "decision": "inject"
+            },
+            {
+              "fact_id": "zairyu-expiry-renewal-change",
+              "fact_card_state": "human_reviewed",
+              "risk_level": "high",
+              "confidence": "high",
+              "source_quality": "official",
+              "official_sources": [
+                "https://www.moj.go.jp/isa/applications/procedures/tokureikikan_00001.html",
+                "https://www.moj.go.jp/isa/applications/procedures/16-3.html"
+              ],
+              "injected_fields": [],
+              "needs_review_flags": [
+                "fukyoka_case_departure_timeline",
+                "kigen_ato_shinsei_handling",
+                "henkou_vs_koshin_tokureikikan_difference"
+              ],
+              "decision": "inject"
+            }
+          ],
+          "event_counts": {
+            "received": 1,
+            "fact_cards_injected": 1,
+            "first_token": 1,
+            "answer_chunk": 333,
+            "completed": 1
+          },
+          "qa_flags": [
+            "weak_latest_followup_overlap"
+          ],
+          "error": null
+        },
+        {
+          "round": 2,
+          "input": "如果超过一年还没回来，是不是在机场说一下就行？",
+          "endpoint": "/api/consultation/follow-up",
+          "parent_consultation_id": "ueuthsxh0thqmcq7ryndf34g",
+          "consultation_id": "xc1qpxk1k77jpfd4mz833m2g",
+          "http_status": 200,
+          "completion_status": "completed",
+          "terminal_event": "completed",
+          "answer_text": "这个想法不成立。みなし再入国许可的有效期只有一年（且不能超过在留期限），一旦超过这个期间没有回到日本，在留资格就会处于失效状态，**不是在机场说一句就能通融的**。入管不会在现场给你补办任何手续。\n\n如果你已经预感到有可能超过一年，**必须在这次出国前申请“通常再入国许可”**（有效最长5年），而不是靠みなし再入国出境。通常再入国需要到地方入管局或出張所提前申请，机场不能办理。\n\n如果你现在人已在海外，且已经离境多时，发现很可能超过一年，那应当尽快联系所在地的日本在外公馆或入管局咨询如何补救，而不是等到入境时再解释。这种情况下自行拖延，可能会带来在留资格取消、甚至今后的入境限制等问题。\n\n因此，如果存在任何延期风险，建议立即评估并找行政書士确认：你当下是否还来得及补办通常再入国许可，或者有没有其他替代方案。这件事不能指望机场通融。",
+          "total_latency_ms": 27163,
+          "fact_cards": [
+            {
+              "fact_id": "minashi-sainyuukoku",
+              "fact_card_state": "ai_verified",
+              "risk_level": "critical",
+              "confidence": "medium",
+              "source_quality": "official",
+              "official_sources": [
+                "https://www.moj.go.jp/isa/immigration/procedures/16-5.html"
+              ],
+              "injected_fields": [],
+              "needs_review_flags": [
+                "tokubetsu_eijuusha_2year",
+                "zairyu_shikaku_metsumetsu",
+                "zairyu_kigen_upper_bound"
+              ],
+              "decision": "inject"
+            },
+            {
+              "fact_id": "zairyu-expiry-renewal-change",
+              "fact_card_state": "human_reviewed",
+              "risk_level": "high",
+              "confidence": "high",
+              "source_quality": "official",
+              "official_sources": [
+                "https://www.moj.go.jp/isa/applications/procedures/tokureikikan_00001.html",
+                "https://www.moj.go.jp/isa/applications/procedures/16-3.html"
+              ],
+              "injected_fields": [],
+              "needs_review_flags": [
+                "fukyoka_case_departure_timeline",
+                "kigen_ato_shinsei_handling",
+                "henkou_vs_koshin_tokureikikan_difference"
+              ],
+              "decision": "inject"
+            }
+          ],
+          "event_counts": {
+            "received": 1,
+            "fact_cards_injected": 1,
+            "first_token": 1,
+            "answer_chunk": 219,
+            "completed": 1
+          },
+          "qa_flags": [
+            "weak_latest_followup_overlap"
+          ],
+          "error": null
+        },
+        {
+          "round": 3,
+          "input": "住民票和健康保险要不要先退掉，我还想保留日本工作。",
+          "endpoint": "/api/consultation/follow-up",
+          "parent_consultation_id": "xc1qpxk1k77jpfd4mz833m2g",
+          "consultation_id": "kkosbhnswb8msd6pwrg83rhg",
+          "http_status": 200,
+          "completion_status": "completed",
+          "terminal_event": "completed",
+          "answer_text": "你的情况下，**住民票和健康保险都不用提前退**。因为半年内会返回日本，且你打算保留日本工作，这些手续维持现状是最直接的选择。\n\n- **住民票**：除非是“搬家到日本其他地方”或“不再回日本”，否则不需要提交転出届。短期出国的半年内，只要日本还有固定的住所，就不符合办転出的条件。\n- **健康保险**：如果你是公司投保（被用者保险），工作关系没断的情况下，保险资格自然会继续。半年离境不影响你作为被保険者的身份，也不用办脱退。\n\n不过这里有一个关键前提：**你的公司是否认可你在海外滞留半年并继续维持雇佣关系**。如果公司制度要求你办休职、转成海外勤务或调整保险方式，那就要按公司手续走，而不是自己单方面保留。建议你先和公司确认两点：\n1. 这半年是以什么名义处理（带薪？部分休职？正常运行海外远程？）\n2. 期间社会保险（健保、厚生年金）以及住民税是否照常由公司代扣代缴。\n\n另外需要注意：如果你的海外停留意外延长超过一年，みなし再入国失效会影响在留资格，届时住民票可能被消除、保险也会出现问题。因此出发前最好明确回来时间，万一出现延期，一定要在一年期限前联系日本在外公馆或行政书士讨论对策。",
+          "total_latency_ms": 26412,
+          "fact_cards": [
+            {
+              "fact_id": "minashi-sainyuukoku",
+              "fact_card_state": "ai_verified",
+              "risk_level": "critical",
+              "confidence": "medium",
+              "source_quality": "official",
+              "official_sources": [
+                "https://www.moj.go.jp/isa/immigration/procedures/16-5.html"
+              ],
+              "injected_fields": [],
+              "needs_review_flags": [
+                "tokubetsu_eijuusha_2year",
+                "zairyu_shikaku_metsumetsu",
+                "zairyu_kigen_upper_bound"
+              ],
+              "decision": "inject"
+            },
+            {
+              "fact_id": "zairyu-expiry-renewal-change",
+              "fact_card_state": "human_reviewed",
+              "risk_level": "high",
+              "confidence": "high",
+              "source_quality": "official",
+              "official_sources": [
+                "https://www.moj.go.jp/isa/applications/procedures/tokureikikan_00001.html",
+                "https://www.moj.go.jp/isa/applications/procedures/16-3.html"
+              ],
+              "injected_fields": [],
+              "needs_review_flags": [
+                "fukyoka_case_departure_timeline",
+                "kigen_ato_shinsei_handling",
+                "henkou_vs_koshin_tokureikikan_difference"
+              ],
+              "decision": "inject"
+            }
+          ],
+          "event_counts": {
+            "received": 1,
+            "routing_status": 2,
+            "fact_cards_injected": 1,
+            "first_token": 1,
+            "answer_chunk": 295,
+            "completed": 1
+          },
+          "qa_flags": [
+            "weak_latest_followup_overlap"
+          ],
+          "error": null
+        }
+      ],
+      "qa_flags": [
+        "weak_latest_followup_overlap"
+      ]
+    },
+    {
+      "case_id": "sim-followup-v1-016",
+      "scenario": "不许可/补材料/入管通知",
+      "user_profile_brief": "中国籍，26岁，来日4年，留学签，申请就职签变更被不许可，内定还在。",
+      "hidden_risk_hint": "不许可理由确认、再申请材料修正、岗位真实性、在留期限临近和资格外活动可否继续是高风险点。",
+      "why_this_is_realistic": "被不许可后用户常只问能否重申，真正需要追问的是理由、期限和当前活动是否合法。",
+      "rounds": [
+        {
+          "round": 0,
+          "input": "我留学转工作签被不许可了，入管只说理由不够明确，我还能马上再申请吗？",
+          "endpoint": "/api/consultation/stream",
+          "parent_consultation_id": null,
+          "consultation_id": "q2azzoo3bq2ducm8v0i7lxch",
+          "http_status": 200,
+          "completion_status": "completed",
+          "terminal_event": "completed",
+          "answer_text": "你目前遇到的是从留学转工作签证的不许可，入管给的反馈是“理由不够明确”。\n\n这种情况下，可以再申请，但不是简单重交一遍原来的材料。不许可意味着入管认为你的申请未能充分证明满足该工作签证的条件，很可能是雇佣关系的说明、业务内容与所学专业的关联性、或公司稳定性等某一环没能说服审查官。\n\n在考虑再申请前，有两件事必须优先确认：\n- 你现在持有的留学在留期限还剩多少天。只要在留期限还没过，你就仍处于合法在留状态，有时间准备再申请。若期限非常短（比如不到两周），行动要更谨慎。\n- 不许可通知书的受领日期，以及通知书上记载的“不许可理由”具体是怎么写的。入管窗口一般可以就拒绝理由做更详细的说明，直接去问比猜测更可靠。\n\n再申请时，必须针对“理由不够明确”这一点，补足说明和证据。比如重新整理雇佣理由书、更具体地描述职务内容如何运用你的专业、或补充公司的经营状况/雇佣实绩等。如果只是把同样的材料再交一次，结果很可能相同。\n\n另外，要不要走“审查请求”这个程序，也需要结合拒绝理由和期限来判断。审查请求有严格的时间限制（通常是不许可通知送达后3个月内），但成功率在理由不充分时并不高，专业人士会更清楚哪种路径适合你。\n\n现阶段最安全的做法是：  \n- 今天或明天就带上不许可通知书和护照，去管辖你的入管窗口确认具体的不许可理由。  \n- 同时清楚问清窗口你的在留期限和再申请时可用的手续种类。  \n- 如果期限紧张或理由涉及专业性判断，不建议只靠自己再申请，直接找行政书士帮你整理材料会稳定很多。",
+          "total_latency_ms": 34211,
+          "fact_cards": [
+            {
+              "fact_id": "kazoku-taizai-yoken",
+              "fact_card_state": "ai_verified",
+              "risk_level": "high",
+              "confidence": "high",
+              "source_quality": "official",
+              "official_sources": [
+                "https://www.moj.go.jp/isa/applications/status/dependent.html"
+              ],
+              "injected_fields": [],
+              "needs_review_flags": [
+                "minimum_income_threshold",
+                "adult_child_age_limit"
+              ],
+              "decision": "inject"
+            }
+          ],
+          "event_counts": {
+            "received": 1,
+            "risk_hint": 1,
+            "fact_cards_injected": 1,
+            "first_token": 1,
+            "answer_chunk": 376,
+            "completed": 1
+          },
+          "qa_flags": [
+            "weak_latest_followup_overlap"
+          ],
+          "error": null
+        },
+        {
+          "round": 1,
+          "input": "他们说可以去听理由，但是我日语怕听不懂。",
+          "endpoint": "/api/consultation/follow-up",
+          "parent_consultation_id": "q2azzoo3bq2ducm8v0i7lxch",
+          "consultation_id": "dfqsu17gmg4tdvq527dccwrv",
+          "http_status": 200,
+          "completion_status": "completed",
+          "terminal_event": "completed",
+          "answer_text": "你现在担心的情况很具体——能去“听理由”，但语言上没把握。\n\n这个关口确实关键：入管叫你去“聽取理由”（当面说明），通常会当场指出申请书或雇佣条件里**哪个具体点没通过**。这个信息如果漏掉，再申请很容易再次被拒。\n\n解决方式可以分几步：\n- **带一位能翻译的人一同前往**。可以是日语流利的朋友、同事，或者以后打算委托的行政书士。多数入管窗口允许陪同，只要提前说明是翻译。\n- **确认窗口是否提供简易英语或外语协助**。部分地区（如东京品川）有“外国人在留综合案内中心”，虽然不一定能全程对应，但可以先打电话问当天有没有可用的多语种职员。\n- **准备笔记重点**：把“不許可理由は何ですか？”、“どの書類が不足または不明確ですか？”这些关键问句写在纸上，当场用简单的日语和纸笔交流也能拿到核心信息。\n\n如果你手上已经有“不许可通知书”，可以先看一下上面记载的“処分の理由”一栏，哪怕只是关键词，也常能看出方向。然后带着通知去现场，边听边抓关键词——例如“業務内容の関連性が不明”、“雇用実態の証明不足”、“収入安定性”等。\n\n**考虑到你之前申请已被拒，当前在留期限可能也紧张。**\n- 如果通知书上的在留期限已经临近（例如剩余不到1个月），那么时间本身就构成高风险。\n- 这种情况下，建议不要自己重复试错，可以当天先去入管听完理由后，直接约见行政书士整理再申请策略。\n\n所以，下一步最直接的做法是：**先确认通知书上的在留期限还剩几天，然后尽快安排一次入管窗口的“理由听取”，并带着翻译或帮手一起进去，把不许可的具体理由全部记录下来。** 这个理由不到手，再申请的材料调整就无从谈起。",
+          "total_latency_ms": 27082,
+          "fact_cards": [
+            {
+              "fact_id": "zairyu-expiry-renewal-change",
+              "fact_card_state": "human_reviewed",
+              "risk_level": "high",
+              "confidence": "high",
+              "source_quality": "official",
+              "official_sources": [
+                "https://www.moj.go.jp/isa/applications/procedures/tokureikikan_00001.html",
+                "https://www.moj.go.jp/isa/applications/procedures/16-3.html"
+              ],
+              "injected_fields": [],
+              "needs_review_flags": [
+                "fukyoka_case_departure_timeline",
+                "kigen_ato_shinsei_handling",
+                "henkou_vs_koshin_tokureikikan_difference"
+              ],
+              "decision": "inject"
+            },
+            {
+              "fact_id": "kazoku-taizai-yoken",
+              "fact_card_state": "ai_verified",
+              "risk_level": "high",
+              "confidence": "high",
+              "source_quality": "official",
+              "official_sources": [
+                "https://www.moj.go.jp/isa/applications/status/dependent.html"
+              ],
+              "injected_fields": [],
+              "needs_review_flags": [
+                "minimum_income_threshold",
+                "adult_child_age_limit"
+              ],
+              "decision": "inject"
+            }
+          ],
+          "event_counts": {
+            "received": 1,
+            "fact_cards_injected": 1,
+            "first_token": 1,
+            "answer_chunk": 408,
+            "completed": 1
+          },
+          "qa_flags": [
+            "weak_latest_followup_overlap"
+          ],
+          "error": null
+        },
+        {
+          "round": 2,
+          "input": "会社是小公司，职位写海外営業，但其实还没开始做海外业务。",
+          "endpoint": "/api/consultation/follow-up",
+          "parent_consultation_id": "dfqsu17gmg4tdvq527dccwrv",
+          "consultation_id": "dptqw7girkjnv1mtzbd1nmpd",
+          "http_status": 200,
+          "completion_status": "completed",
+          "terminal_event": "completed",
+          "answer_text": "你提到“公司是小公司，职位写海外営業，但其实还没开始做海外业务”，这很可能是之前“理由不够明确”的关键所在。\n\n入管在审查“技術・人文知識・国際業務”签证时，会看企业是否真实存在该业务体量，以及你的工作内容是否与在留资格相符。如果公司尚无海外业务，却以“海外営業”名义申请，审查官很容易认为业务必要性未被证明，或者工作内容与资格不符，从而导致不许可。\n\n因此，简单用同样材料再申请风险很高。再申请前至少需要确认两点：第一，公司能否说明为什么需要一个尚无海外业务的“海外营业”岗位——例如明确的业务启动计划、合同草案、或拓展海外市场的具体规划；第二，你的实际工作内容能否调整为更贴近现有业务、且仍符合“技術・人文知識・国際業務”范围（如翻译、市场调查、商务协助等），并由公司重新出具职种说明。\n\n同时请注意在留期限。如果你已经超过原留学期满日但处于不许可后的特例期间，留意不许可通知上给出的期限，并在那之前决定如何处理。如期限很紧，建议听取理由时带上懂日语的帮手，把理由记清楚，然后立即联系行政書士评估材料调整方向，避免再拖到资格外滞在的风险。",
+          "total_latency_ms": 21637,
+          "fact_cards": [
+            {
+              "fact_id": "zairyu-expiry-renewal-change",
+              "fact_card_state": "human_reviewed",
+              "risk_level": "high",
+              "confidence": "high",
+              "source_quality": "official",
+              "official_sources": [
+                "https://www.moj.go.jp/isa/applications/procedures/tokureikikan_00001.html",
+                "https://www.moj.go.jp/isa/applications/procedures/16-3.html"
+              ],
+              "injected_fields": [],
+              "needs_review_flags": [
+                "fukyoka_case_departure_timeline",
+                "kigen_ato_shinsei_handling",
+                "henkou_vs_koshin_tokureikikan_difference"
+              ],
+              "decision": "inject"
+            },
+            {
+              "fact_id": "kazoku-taizai-yoken",
+              "fact_card_state": "ai_verified",
+              "risk_level": "high",
+              "confidence": "high",
+              "source_quality": "official",
+              "official_sources": [
+                "https://www.moj.go.jp/isa/applications/status/dependent.html"
+              ],
+              "injected_fields": [],
+              "needs_review_flags": [
+                "minimum_income_threshold",
+                "adult_child_age_limit"
+              ],
+              "decision": "inject"
+            }
+          ],
+          "event_counts": {
+            "received": 1,
+            "fact_cards_injected": 1,
+            "first_token": 1,
+            "answer_chunk": 278,
+            "completed": 1
+          },
+          "qa_flags": [],
+          "error": null
+        },
+        {
+          "round": 3,
+          "input": "我签证期限下周到期，现在还可以继续打工吗？",
+          "endpoint": "/api/consultation/follow-up",
+          "parent_consultation_id": "dptqw7girkjnv1mtzbd1nmpd",
+          "consultation_id": "zh7imsrdj2gffpkvujuak2ep",
+          "http_status": 200,
+          "completion_status": "completed",
+          "terminal_event": "completed",
+          "answer_text": "你现在持有的还是留学签证，在留期限下周到期。\n\n只要在留卡上还有有效期限、资格外活动许可也还在有效期内，**目前继续打工本身在制度上是可能的**，但必须严格控制在留学资格的限制内（比如每周28小时以内，不从事风俗等行业）。\n\n不过更紧迫的问题是：如果下周期限到了，你还没有提交新的签证申请，那从期限过后的第一天起，你就不能再留在日本，也不能继续打工。之前的工作签证申请已经被不许可，也没有自动延长的效果。\n\n当前如果你还想留在日本工作，**需要在期限截止前，重新提交一次更扎实的工作签证变更申请**。提交后，即使到期了审查还没出结果，也可能适用最长2个月的特例期间，届时你可以继续以留学身份停留和打工。但前提是：在到期前完成提交，并且不是简单重交原先的材料，而是针对上次“理由不够明确”的拒签原因，附上企业海外业务规划、你的具体职务内容说明等新证据。\n\n下一步建议：\n- **今天立刻去入管窗口**，拿着不许可通知书，确认上次被拒的具体理由，同时说明你想再申请，问清楚在期限前提交是否来得及、需要什么补充材料。\n- 联系公司，让他们出具更具体的职位描述和海外业务启动计划，避免再被认定为“実体なし”。\n- 如果时间紧张，或者你觉得理由比较复杂，建议直接委托行政书士处理再申请手续，不要冒险自己拖到最后一天。\n- 打工的事，一旦期限过了而你还没有新申请或特例期间，立刻停止，避免变成不法就劳。",
+          "total_latency_ms": 38937,
+          "fact_cards": [
+            {
+              "fact_id": "zairyu-expiry-renewal-change",
+              "fact_card_state": "human_reviewed",
+              "risk_level": "high",
+              "confidence": "high",
+              "source_quality": "official",
+              "official_sources": [
+                "https://www.moj.go.jp/isa/applications/procedures/tokureikikan_00001.html",
+                "https://www.moj.go.jp/isa/applications/procedures/16-3.html"
+              ],
+              "injected_fields": [],
+              "needs_review_flags": [
+                "fukyoka_case_departure_timeline",
+                "kigen_ato_shinsei_handling",
+                "henkou_vs_koshin_tokureikikan_difference"
+              ],
+              "decision": "inject"
+            },
+            {
+              "fact_id": "kazoku-taizai-yoken",
+              "fact_card_state": "ai_verified",
+              "risk_level": "high",
+              "confidence": "high",
+              "source_quality": "official",
+              "official_sources": [
+                "https://www.moj.go.jp/isa/applications/status/dependent.html"
+              ],
+              "injected_fields": [],
+              "needs_review_flags": [
+                "minimum_income_threshold",
+                "adult_child_age_limit"
+              ],
+              "decision": "inject"
+            }
+          ],
+          "event_counts": {
+            "received": 1,
+            "risk_hint": 1,
+            "fact_cards_injected": 1,
+            "still_generating": 1,
+            "first_token": 1,
+            "answer_chunk": 336,
+            "completed": 1
+          },
+          "qa_flags": [
+            "weak_latest_followup_overlap"
+          ],
+          "error": null
+        }
+      ],
+      "qa_flags": [
+        "weak_latest_followup_overlap"
+      ]
+    },
+    {
+      "case_id": "sim-followup-v1-018",
+      "scenario": "转职/离职",
+      "user_profile_brief": "中国籍，32岁，来日6年，技人国签，游戏公司设计师，因公司裁员离职。",
+      "hidden_risk_hint": "离职后所属机构届出、持续未从事在留活动、境外自由接单的活动和税务、在留取消误解。",
+      "why_this_is_realistic": "失业后的技人国用户通常知道签证还有期限，却不清楚离职届出和活动持续性的要求。",
+      "rounds": [
+        {
+          "round": 0,
+          "input": "我被会社リストラ了，技人国签还剩一年半，找到新工作前可以在日本待多久？",
+          "endpoint": "/api/consultation/stream",
+          "parent_consultation_id": null,
+          "consultation_id": "n8m4cwaha5xghx2bzd70btqu",
+          "http_status": 200,
+          "completion_status": "completed",
+          "terminal_event": "completed",
+          "answer_text": "你被公司裁员的情况，在留资格上的关键风险不是还剩多久，而是**失去工作后超过3个月不从事技人国相应活动，在留资格可能被取消**。这和还剩一年半并不矛盾——就算在留卡期限还有很长时间，如果连续不活动，入管可以依第22条之4取消你的资格。\n\n现在需要注意两件事：\n- **14天届出义务**：离职后14天内必须向入管提交「契约终了届出」。如果已经超期，也尽量补交并说明，不要放着不管。\n- **3个月空窗期风险**：从离职次日起，连续3个月以上不从事符合技人国的业务，就进入取消对象范围。找工作本身不算“活动”，所以空窗越长风险越高。\n\n在找下一份工作期间，你可以留在日本，但需要尽快锁定方向：\n- 如果找到的新工作**业务内容与现有技人国资格相符**（即属于技术・人文知识・国际业务范畴），只需办理届出和通常更新手续，一般可在在留期限内继续活动。\n- 如果暂时只能从事非技人国范围的业务来维持生活，就需要谨慎评估是否需要资格外活动许可，并尽快明确主业何时能回到符合资格的活动上。\n- 如果打算长期转去不满足技人国要求的工作，需要考虑变更到其他适合的在留资格路径。\n\n当前建议你先确认两件事：①向入管确认届出手续是否已完成（或尽快补交）；②梳理接下来几个月的求职方向和准备提交的活动证明。如果超过2个月还完全没有符合资格活动的进展，建议找行政书士评估下一步，不要等到3个月期满再做决定。",
+          "total_latency_ms": 27684,
+          "fact_cards": [
+            {
+              "fact_id": "ryugaku-gijinkoku-henko",
+              "fact_card_state": "ai_verified",
+              "risk_level": "high",
+              "confidence": "medium",
+              "source_quality": "official",
+              "official_sources": [
+                "https://www.moj.go.jp/isa/applications/procedures/16-2.html",
+                "https://www.moj.go.jp/isa/applications/status/gijinkoku.html"
+              ],
+              "injected_fields": [],
+              "needs_review_flags": [],
+              "decision": "inject"
+            },
+            {
+              "fact_id": "gijinkoku-job-mismatch",
+              "fact_card_state": "ai_verified",
+              "risk_level": "high",
+              "confidence": "high",
+              "source_quality": "official",
+              "official_sources": [
+                "https://www.moj.go.jp/isa/applications/status/gijinkoku.html",
+                "https://www.moj.go.jp/isa/applications/procedures/torikeshi_00002.html",
+                "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00015.html"
+              ],
+              "injected_fields": [],
+              "needs_review_flags": [
+                "language_skill_2025_update_verification",
+                "actual_work_vs_contract_gray_zone"
+              ],
+              "decision": "inject"
+            }
+          ],
+          "event_counts": {
+            "received": 1,
+            "routing_status": 2,
+            "fact_cards_injected": 1,
+            "first_token": 1,
+            "answer_chunk": 350,
+            "completed": 1
+          },
+          "qa_flags": [
+            "weak_latest_followup_overlap"
+          ],
+          "error": null
+        },
+        {
+          "round": 1,
+          "input": "离职已经快两个月了，我还没做入管届出。",
+          "endpoint": "/api/consultation/follow-up",
+          "parent_consultation_id": "n8m4cwaha5xghx2bzd70btqu",
+          "consultation_id": "mr9wa1w79iv0uiznrmr5m2bk",
+          "http_status": 200,
+          "completion_status": "completed",
+          "terminal_event": "completed",
+          "answer_text": "你提到离职已经快两个月、还没做“契约终了届出”，这是现在最需要优先处理的事。\n\n技术・人文知识・国际业务（技人国）的持有人，在离职后 **14 天以内** 必须向出入国在留管理厅提交该届出。现在已经明显超期，属于义务违反状态。这种情况如果放着不理，入管在日后审查资格变更或期间更新时，很可能会对“遵守日本在留制度的态度”做不利判断，甚至将这次未届出作为不许可理由之一。\n\n当前的首要行动是：**今天就去你住址所在地的地方入国管理局（或邮寄，但窗口更直接）补办“契约终了届出”**。  \n需要带的材料一般是：护照、在留卡、以及能说明离职事实的文件（离职证明书或公司发的不予续约通知等）。届出书可以在入管窗口当场填写。  \n——补交时虽然超期，但入管实务上通常会受理；但这不代表“”，建议做好被询问超期原因的准备，如实说明即可。\n\n这件事办完以后，我们要立刻面对“工作空窗期”的另一个风险：你持有技人国资格，却连续 **3 个月以上** 没有实际从事符合该资格的活动时，入管可能启动取消在留资格的程序。你已经空窗近两个月，严格来说剩余时间不多。  \n但这不意味着两个月后一定会被取消，只是如果一直没有找到技人国范围内的工作，形势会变得很被动。\n\n所以接下来请你确认两件事：  \n• 你现在有没有已经拿到内定、或正在面试的技人国范围内的工作？（文科类的一般业务、翻译、IT、技术营业等都可以）  \n• 你考虑过从事明显不属于技人国范围的工作吗（比如纯体力劳动、餐饮店前台等），那样的话涉及的就不只是届出，而是需要做在留资格变更。\n\n如果目前还在求职且方向明确，那在空窗期三到四个月以内找到新工作、重新开始活动，并且届出已经补完，风险相对可控。但如果你觉得短期内找不到技人国范围内的工作，这种情况就不建议只靠自己去判断了——届出义务违反和空窗期叠加时，后续资格变更或更新的难度明显增大，需要尽快找行政书士做一次具体评估。",
+          "total_latency_ms": 40516,
+          "fact_cards": [
+            {
+              "fact_id": "spouse-divorce-separation",
+              "fact_card_state": "human_reviewed",
+              "risk_level": "critical",
+              "confidence": "high",
+              "source_quality": "official",
+              "official_sources": [
+                "https://www.moj.go.jp/isa/applications/procedures/torikeshi_00002.html",
+                "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00016.html"
+              ],
+              "injected_fields": [],
+              "needs_review_flags": [
+                "seitou_na_riyu_scope",
+                "betsujo_marriage_continuing_judgment",
+                "post_divorce_status_change_options"
+              ],
+              "decision": "inject"
+            },
+            {
+              "fact_id": "ryugaku-gijinkoku-henko",
+              "fact_card_state": "ai_verified",
+              "risk_level": "high",
+              "confidence": "medium",
+              "source_quality": "official",
+              "official_sources": [
+                "https://www.moj.go.jp/isa/applications/procedures/16-2.html",
+                "https://www.moj.go.jp/isa/applications/status/gijinkoku.html"
+              ],
+              "injected_fields": [],
+              "needs_review_flags": [],
+              "decision": "inject"
+            }
+          ],
+          "event_counts": {
+            "received": 1,
+            "fact_cards_injected": 1,
+            "first_token": 1,
+            "answer_chunk": 489,
+            "completed": 1
+          },
+          "qa_flags": [
+            "weak_latest_followup_overlap"
+          ],
+          "error": null
+        },
+        {
+          "round": 2,
+          "input": "现在有接一些国内客户的设计单，钱打到支付宝。",
+          "endpoint": "/api/consultation/follow-up",
+          "parent_consultation_id": "mr9wa1w79iv0uiznrmr5m2bk",
+          "consultation_id": "i0r1tlv8we1marixl6x7wk2e",
+          "http_status": 200,
+          "completion_status": "completed",
+          "terminal_event": "completed",
+          "answer_text": "如果你现在用技人国的在留资格接国内客户的设计单、报酬收进支付宝，这个状态背后有三个需要立刻处理的点。\n\n第一，技人国原则上要求你在日本从事“本邦公私机构之间的技术或人文知识业务”，接海外客户的自由设计属于自营活动，一般不在技人国的活动范围内。即便你没有其他收入，这也可能被认定为未经许可的资格外活动，会在后续申请更新、变更或永住时带来严重负面影响。\n\n第二，你距离离职已近两个月，3个月的“未从事资格内活动”取消风险马上就会触发。接这类单子无法中止空窗期计算，因为你并没有恢复符合技人国的在留活动。一旦被取消，你会收到意见听取通知，最终获得出国准备期，但取消记录对未来申请很不利。\n\n第三，国内收入打进支付宝，可能涉及在日本未正确申报所得税和社会保险，这同样会影响今后的在留审查。\n\n现在真正能稳住局面的方向是：  \n- 立刻**停止以技人国资格接无法解释为“本邦公私机构之间业务”的设计单**，避免继续制造新的违规风险。  \n- 无论已逾期，马上**向入管提交契约终了届出**，并准备好说明延迟理由。  \n- 尽快**找到一个在日本境内、符合技人国范畴的雇主或契约业务**，在离职满3个月前事实上恢复资格内活动——这才是唯一能直接避免取消风险的办法。  \n- 如果短期内找不到，今天就应该找行政书士评估你是否适合变更为其他资格（如“经营·管理”“特定活动”等），或者着手准备回国后再申请的计划。\n\n这件事不要只靠 AI 判断，已经涉及资格外活动+届出违反+空窗期三重叠加，建议明天就与擅长在留瑕疵的行政书士面谈，同时自己也打电话给入管局确认届出补交事宜。",
+          "total_latency_ms": 37950,
+          "fact_cards": [
+            {
+              "fact_id": "spouse-divorce-separation",
+              "fact_card_state": "human_reviewed",
+              "risk_level": "critical",
+              "confidence": "high",
+              "source_quality": "official",
+              "official_sources": [
+                "https://www.moj.go.jp/isa/applications/procedures/torikeshi_00002.html",
+                "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00016.html"
+              ],
+              "injected_fields": [],
+              "needs_review_flags": [
+                "seitou_na_riyu_scope",
+                "betsujo_marriage_continuing_judgment",
+                "post_divorce_status_change_options"
+              ],
+              "decision": "inject"
+            },
+            {
+              "fact_id": "ryugaku-gijinkoku-henko",
+              "fact_card_state": "ai_verified",
+              "risk_level": "high",
+              "confidence": "medium",
+              "source_quality": "official",
+              "official_sources": [
+                "https://www.moj.go.jp/isa/applications/procedures/16-2.html",
+                "https://www.moj.go.jp/isa/applications/status/gijinkoku.html"
+              ],
+              "injected_fields": [],
+              "needs_review_flags": [],
+              "decision": "inject"
+            }
+          ],
+          "event_counts": {
+            "received": 1,
+            "fact_cards_injected": 1,
+            "first_token": 1,
+            "answer_chunk": 396,
+            "completed": 1
+          },
+          "qa_flags": [
+            "weak_latest_followup_overlap"
+          ],
+          "error": null
+        },
+        {
+          "round": 3,
+          "input": "如果三个月内找不到日本公司，是不是一定会取消签证？",
+          "endpoint": "/api/consultation/follow-up",
+          "parent_consultation_id": "i0r1tlv8we1marixl6x7wk2e",
+          "consultation_id": "oehmsznwb02mjdnctc96sxcj",
+          "http_status": 200,
+          "completion_status": "completed",
+          "terminal_event": "completed",
+          "answer_text": "不是“一定”自动取消，但风险很高，而且你目前的情况会放大这个风险。\n\n入管规定的触发线是“连续3个月以上不从事符合资格的活动”。超过这条线，入管可以启动取消程序，但不是到点自动作废。真正决定结果的，是入管在这段时间里对你整体在留状况的判断。\n\n你目前的问题不只是空窗期。没有提交契约终了届出，又持续进行资格外活动（接国内单收支付宝），这两点如果被入管掌握，会让取消判断变得非常不利。在这种情况下，入管不太可能只因为你说“还在找工作”就搁置取消程序。\n\n如果你已经接近离职满3个月，并且还没有找到符合条件的日本雇主或契约业务，这时候不应该是继续吊着观望的状态。比较实际的行动是：\n- 今天确认离职精确日期，算出距离满3个月还剩多少天；\n- 如果届出还没交，立刻去交并说明延迟理由；\n- 停止一切没有许可的收入活动；\n- 同时联系行政书士，评估是否需要准备资格变更、特定活动（就职活动）或者一旦收到取消通知时的应对方案。\n\n这种情况不建议只靠网络信息判断，找专业的人帮你看下一步会更现实。",
+          "total_latency_ms": 25096,
+          "fact_cards": [
+            {
+              "fact_id": "spouse-divorce-separation",
+              "fact_card_state": "human_reviewed",
+              "risk_level": "critical",
+              "confidence": "high",
+              "source_quality": "official",
+              "official_sources": [
+                "https://www.moj.go.jp/isa/applications/procedures/torikeshi_00002.html",
+                "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00016.html"
+              ],
+              "injected_fields": [],
+              "needs_review_flags": [
+                "seitou_na_riyu_scope",
+                "betsujo_marriage_continuing_judgment",
+                "post_divorce_status_change_options"
+              ],
+              "decision": "inject"
+            },
+            {
+              "fact_id": "ryugaku-gijinkoku-henko",
+              "fact_card_state": "ai_verified",
+              "risk_level": "high",
+              "confidence": "medium",
+              "source_quality": "official",
+              "official_sources": [
+                "https://www.moj.go.jp/isa/applications/procedures/16-2.html",
+                "https://www.moj.go.jp/isa/applications/status/gijinkoku.html"
+              ],
+              "injected_fields": [],
+              "needs_review_flags": [],
+              "decision": "inject"
+            }
+          ],
+          "event_counts": {
+            "received": 1,
+            "fact_cards_injected": 1,
+            "first_token": 1,
+            "answer_chunk": 255,
+            "completed": 1
+          },
+          "qa_flags": [
+            "weak_latest_followup_overlap"
+          ],
+          "error": null
+        }
+      ],
+      "qa_flags": [
+        "weak_latest_followup_overlap"
+      ]
+    }
+  ],
+  "summary": {
+    "cases_total": 5,
+    "rounds_total": 20,
+    "completed_rounds": 20,
+    "failed_rounds": 0,
+    "cases_with_flags": 4,
+    "flag_counts": {
+      "weak_latest_followup_overlap": 11
+    }
+  }
+}
