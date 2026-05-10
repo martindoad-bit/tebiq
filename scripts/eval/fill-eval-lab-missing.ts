@@ -47,7 +47,7 @@ interface Args {
 const DEFAULT_BASE_URL = 'https://tebiq.jp'
 const MIN_DEEPSEEK_ANSWER_CHARS = 180
 const MIN_TEBIQ_ANSWER_CHARS = 120
-const CURRENT_TEBIQ_PROMPT_VERSION = 'consultation_alpha_v12'
+const CURRENT_TEBIQ_PROMPT_VERSION = 'consultation_alpha_v13'
 
 function parseArgs(argv: string[]): Args {
   const out: Args = {

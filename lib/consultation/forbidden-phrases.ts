@@ -33,7 +33,9 @@ export const FORBIDDEN_PHRASES: ReadonlyArray<string> = Object.freeze([
 ])
 
 const NORMALIZATION_REPLACEMENTS: ReadonlyArray<readonly [string, string]> = Object.freeze([
-  ['不是可', '不许可'],
+  ['不是可通知书', '不许可通知书'],
+  ['不是可通知', '不许可通知'],
+  ['国际业务感受性', '国际业务性质'],
 ])
 
 const MAX_PHRASE_LEN = [

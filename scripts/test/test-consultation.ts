@@ -37,9 +37,9 @@ async function main() {
   }
 
   // ---- 1. System prompt constants ----
-  check('1a. CONSULTATION_ALPHA_PROMPT_VERSION is "consultation_alpha_v12"', () => {
+  check('1a. CONSULTATION_ALPHA_PROMPT_VERSION is "consultation_alpha_v13"', () => {
     // Cycle 1 quality flywheel v4: answer first-look block + UI flywheel.
-    assert.equal(promptMod.CONSULTATION_ALPHA_PROMPT_VERSION, 'consultation_alpha_v12')
+    assert.equal(promptMod.CONSULTATION_ALPHA_PROMPT_VERSION, 'consultation_alpha_v13')
   })
   check('1b. CONSULTATION_ALPHA_MODEL is "deepseek-v4-pro"', () => {
     assert.equal(promptMod.CONSULTATION_ALPHA_MODEL, 'deepseek-v4-pro')
@@ -165,6 +165,11 @@ async function main() {
     assert.equal(r.text, '请确认不许可通知书上的期限')
     assert.equal(r.redactions.length, 0)
   })
+  check('3e3. redactForbiddenPhrases does not rewrite normal 不是可... phrasing', () => {
+    const r = filterMod.redactForbiddenPhrases('这不是可去可不去的说明会')
+    assert.equal(r.text, '这不是可去可不去的说明会')
+    assert.equal(r.redactions.length, 0)
+  })
   check('3f. createForbiddenFilter streaming: catches phrase split across chunks', () => {
     // "一定可以" arriving as ["一定", "可以"] must still be redacted.
     const f = filterMod.createForbiddenFilter()
@@ -189,10 +194,15 @@ async function main() {
     const f = filterMod.createForbiddenFilter()
     let out = ''
     out += f.push('通知书写的不是')
-    out += f.push('可期限')
+    out += f.push('可通知期限')
     out += f.flush()
-    assert.equal(out, '通知书写的不许可期限')
+    assert.equal(out, '通知书写的不许可通知期限')
     assert.equal(f.redactions().length, 0)
+  })
+  check('3g3. redactForbiddenPhrases normalizes common 技人国 wording typo', () => {
+    const r = filterMod.redactForbiddenPhrases('这是国际业务感受性的工作')
+    assert.equal(r.text, '这是国际业务性质的工作')
+    assert.equal(r.redactions.length, 0)
   })
   check('3h. createForbiddenFilter: clean stream passes through with same total content', () => {
     const f = filterMod.createForbiddenFilter()
