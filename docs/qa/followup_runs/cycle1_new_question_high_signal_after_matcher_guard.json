@@ -1,0 +1,589 @@
+{
+  "schema_version": "tebiq-followup-flywheel-v1",
+  "base_url": "https://tebiq.jp",
+  "generated_at": "2026-05-10T09:03:32.899Z",
+  "input_file": "/private/tmp/tebiq-migrate-0027/docs/qa/user_simulator/cycle1_new_question_cases_v1.json",
+  "cases": [
+    {
+      "case_id": "sim-new-v1-071",
+      "scenario": "不许可/补材料/入管通知",
+      "user_profile_brief": "中国籍，25岁，留学生，工作签变更被不许可，在留期限很近。",
+      "hidden_risk_hint": "在留期限临近、不许可后活动资格、就业可否和出国/再申请高风险。",
+      "why_this_is_realistic": "被不许可后用户最急的是能否继续上班和留下。",
+      "rounds": [
+        {
+          "round": 0,
+          "input": "工作签不许可了，我签证下周到期，还能继续去内定公司上班吗？",
+          "endpoint": "/api/consultation/stream",
+          "parent_consultation_id": null,
+          "consultation_id": "o47zz6hpn7ans9whnsj4oq5y",
+          "http_status": 200,
+          "completion_status": "completed",
+          "terminal_event": "completed",
+          "answer_text": "你的处境确实很紧张。在留资格申请被不许可，而且在下周在留期限就到期的情况下，是否能继续去内定公司上班，取决于你申请的到底是什么类型的在留资格，以及你手上现在还有没有其他仍有效的在留资格。\n\n先给一个可以直接确定的判断：**如果你这次被不许可的是“在留资格变更许可”（比如从留学变更为技术·人文知识·国际业务），那你现有的留学签证本身还没到期，理论上你仍然可以用它继续留在这边，但留学生每周打工限制（28小时内、资格外活动许可）依然存在，你并不能以“为内定公司全职工作”的身份去上班。** 这种情况下你一旦去内定公司上班，很可能构成不法就劳，这会直接影响到你之后的任何申请。\n\n如果你这次被不许可的是“在留资格更新许可”（你原本就是用工作签证在上班，只是到期前申请更新被拒），那么你现在的资格虽然还有几天有效期，但更新被拒本身就意味着入管认定你在该资格下的活动要件可能已经不合规。继续在这家内定公司上班会面临比第一种情况更严重的风险，而且一旦下周到期，从到期的第二天起你就不再拥有任何有效在留资格，哪怕只是出勤一天，也会构成不法就劳和非法滞留。\n\n这里还有一个关键事实需要你立刻确认，才能进一步判断方向：**你手里的不许可通知书是什么时候收到的？这次申请具体是“变更”还是“更新”？你现在的在留资格卡上写的是什么在留资格，有效期确实是下周哪天？** 如果不清楚这些，很难说你能不能再多做一点准备。\n\n在拿到这些信息之前，现阶段最稳妥也最紧迫的下一步是——\n- **今天先不要再为内定公司出勤**，避免在不许可的情况下继续产生实际工作记录。\n- 立刻带着不许可通知书去你最近的出入国在留管理局窗口，问清楚不许可的具体理由（如有必要，找能日语沟通的人陪同），这是免费的，而且理由会决定你接下来是再申请、做审查请求，还是必须尽快离境。\n- 如果在留期限只剩一周甚至更短，**这种情况已经不建议只靠自己的判断去安排。强烈建议你马上找行政书士或律师做一次针对性的咨询**，特别是你如果想留在日本继续工作的话。因为在期限这么短、同时不许可又已经下来的情况下，任何一个错误的选择（比如错以为可以上班、错过申请窗口）都可能直接导致非法滞留和未来的入境限制。",
+          "total_latency_ms": 41186,
+          "fact_cards": [],
+          "event_counts": {
+            "received": 1,
+            "risk_hint": 1,
+            "fact_cards_injected": 1,
+            "first_token": 1,
+            "answer_chunk": 518,
+            "completed": 1
+          },
+          "qa_flags": [
+            "no_fact_cards_injected",
+            "weak_latest_followup_overlap"
+          ],
+          "error": null
+        }
+      ],
+      "qa_flags": [
+        "no_fact_cards_injected",
+        "weak_latest_followup_overlap"
+      ]
+    },
+    {
+      "case_id": "sim-new-v1-073",
+      "scenario": "家族滞在",
+      "user_profile_brief": "越南籍，28岁，家族滞在，双店兼职。",
+      "hidden_risk_hint": "资格外活动超时、工资记录、多个雇主合算和更新风险。",
+      "why_this_is_realistic": "用户往往到更新前才意识到工时问题。",
+      "rounds": [
+        {
+          "round": 0,
+          "input": "家族滞在打工上个月可能超过28小时很多，更新马上到了，会被拒吗？",
+          "endpoint": "/api/consultation/stream",
+          "parent_consultation_id": null,
+          "consultation_id": "t9tfcj91qg4xwtoyhh3p1xg8",
+          "http_status": 200,
+          "completion_status": "completed",
+          "terminal_event": "completed",
+          "answer_text": "你现在的情况，核心风险不在“超时本身一定会被拒”，而是在“家族滞在＋更新时点＋明显超时”这个组合下，**存在较高的不许可方向**。先把能确定的部分说清楚，再告诉你接下来最该做什么。\n\n**关于家族滞在的打工限制**  \n家族滞在不是就劳签证，打工必须取得“资格外活动许可”。许可条件里明确有“原则上每周28小时以内”（长期休假期间可适用一日8小时）。上个月明显超过28小时，已经脱离了许可范围，在更新审查期属于比较敏感的违规点。\n\n**更新审查会看什么**  \n更新时，入管会审查你在留状况的整体适合性，包括：\n- 是否遵守了现有在留资格的活动范围\n- 资格外活动许可的条件是否被遵守\n- 是否有长期、故意的超时行为\n\n如果超时记录明显、持续，或者有被雇佣方记载的出勤表等材料会一并提交，这个违规信息很可能被更新申请连带反映出来，增加不许可的风险。**但并不意味着一定不许可**，也取决于超时的程度、是否为偶发、以及是否有合理解释材料佐证。\n\n**在“更新马上到了”这个节点，需要先确认两点**  \n- 你在留卡上的**在留期限是不是已经不足2周甚至已经过期**（如果过期，必须先处理在留资格失效问题，而不是直接提交更新）  \n- 手头是否有雇佣方提供的**正确出勤记录（月别·日别）**，以及这些记录与更新时可能申报的内容是否一致  \n\n**下一步建议（按紧急程度）**  \n1. **今天先确认在留期限** —— 如果是期限当日或已经过期，不要拖延，直接去找行政书士或入管确认能否受理。  \n2. **拿出打工的排班表或工资明细分**，整理出上个月的实际劳动时数  \n3. **联系一位有在留更新经验的行政书士**，把在留期限、资格外活动许可取得的有无、超时的具体数字和原因一次性说清楚，让专业人士判断这次要不要做说明材料、如何缓和不利判断。  \n4. **不要自己判断“也许不查”**—— 更新时入管有可能会要求追加提出打工相关材料，提前准备总比到时被动好。\n\n**最后需要说清楚**  \n家族滞在更新不是只看打工时间的单一要素，还看扶养者的在留状况、世代整体生计等，但你的情况里**超时本身已经是明确的风险点，不建议只靠AI判断能不能过**。如果在期限紧迫的情况下硬交，或者在更新时隐瞒超时事实，可能会引发更严重的后续问题，包括将来的在留资格取消风险。马上找专业人士把关申请，是当前最安全的方向。",
+          "total_latency_ms": 37005,
+          "fact_cards": [
+            {
+              "fact_id": "kazoku-taizai-yoken",
+              "fact_card_state": "ai_verified",
+              "risk_level": "high",
+              "confidence": "high",
+              "source_quality": "official",
+              "official_sources": [
+                "https://www.moj.go.jp/isa/applications/status/dependent.html"
+              ],
+              "injected_fields": [],
+              "needs_review_flags": [
+                "minimum_income_threshold",
+                "adult_child_age_limit"
+              ],
+              "decision": "inject"
+            },
+            {
+              "fact_id": "shikakugai-fukugyou",
+              "fact_card_state": "human_reviewed",
+              "risk_level": "high",
+              "confidence": "high",
+              "source_quality": "official",
+              "official_sources": [
+                "https://www.moj.go.jp/isa/applications/procedures/shikakugai_00001.html",
+                "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri07_00003.html"
+              ],
+              "injected_fields": [],
+              "needs_review_flags": [
+                "gijinkoku_fukugyo_individual_permit_conditions",
+                "mushokyo_shuro_bassoku",
+                "shotoku_han_i"
+              ],
+              "decision": "inject"
+            }
+          ],
+          "event_counts": {
+            "received": 1,
+            "routing_status": 2,
+            "fact_cards_injected": 1,
+            "first_token": 1,
+            "answer_chunk": 587,
+            "completed": 1
+          },
+          "qa_flags": [],
+          "error": null
+        }
+      ],
+      "qa_flags": []
+    },
+    {
+      "case_id": "sim-new-v1-075",
+      "scenario": "经营管理",
+      "user_profile_brief": "中国籍，42岁，经营管理签，公司基本停业。",
+      "hidden_risk_hint": "经营活动停止、经营管理外打工、生活维持和更新高风险。",
+      "why_this_is_realistic": "经营失败用户常先说生活压力，真实风险很集中。",
+      "rounds": [
+        {
+          "round": 0,
+          "input": "经营管理公司已经半年没业务了，我靠打工生活，更新还有3个月怎么办？",
+          "endpoint": "/api/consultation/stream",
+          "parent_consultation_id": null,
+          "consultation_id": "pj9lo1ckef0u2fqwsatmuggs",
+          "http_status": 200,
+          "completion_status": "completed",
+          "terminal_event": "completed",
+          "answer_text": "你现在的处境有两种比较关键的风险，会直接影响更新，不是单纯材料缺漏的问题。\n\n**公司半年没业务**  \n经营管理签证的前提是公司实际持续经营。根据现有规定，如果公司实质上处于停业状态，即便公司法人资格还在，入管也可能认为“活动实态已消失”，从而影响在留资格存续。更新时审查的是「事业经营活动的持续性」，半年没有实质业务，不许可的可能性很高，不是随便交一份决算书就能过去。\n\n**靠打工维持生活**  \n经营管理签证的活动范围是经营/管理事业。如果你做的打工是单纯劳动（比如餐饮、便利店、工地等），又没取得“资格外活动许可”，就属于违规。这个情况在更新时如果被发现，不仅更新不许可，还可能触发在留资格取消程序。\n\n**更新只剩3个月**  \n根据现行过渡措施（至2028年10月15日），现有经营管理签证持有人在更新时，即便不能完全符合新基准（如资本金3000万等），仍可综合考量经营状况和改善前景。但前提是公司**确实在经营、有改善可能性**。你现在连业务都没有，靠打工生活，很难让入管看到改善前景。\n\n**现在你不应该只靠自己判断了**\n\n- **今天马上做两件事**：  \n  ① 确认过去半年公司有没有任何收入、合同、报价、客户联络等，哪怕很微小的经营痕迹，都整理出来。  \n  ② 立刻停止没有资格外活动许可的打工行为，避免留下新的违规记录。\n\n- **明天联系行政书士**  \n  把公司停止业务的原因、你个人打工的实态、剩余在留期限如实说明。行政书士可以帮你判断：是否还有通过补材料（比如提供业务恢复计划、过去半年的经营解释）来争取更新的空间，或者是否要尽快转向其他资格（但经营管理转职需要先有就职单位，且要赶在期限前受理）。\n\n**如果你现在什么都不做，等期满再申请，风险会很高。**  \n不要拖到最后一个月，现在就去查在留卡上的具体期限，然后尽快预约行政书士判断路径。",
+          "total_latency_ms": 37137,
+          "fact_cards": [
+            {
+              "fact_id": "keiei-kanri-2025-10",
+              "fact_card_state": "human_reviewed",
+              "risk_level": "critical",
+              "confidence": "high",
+              "source_quality": "official",
+              "official_sources": [
+                "https://www.moj.go.jp/isa/applications/resources/10_00237.html",
+                "https://www.moj.go.jp/isa/content/001448231.pdf",
+                "https://www.moj.go.jp/isa/content/001448070.pdf"
+              ],
+              "injected_fields": [],
+              "needs_review_flags": [
+                "jigyou_keikakusho_expert_check",
+                "jlpt_alternatives_completeness",
+                "jimusho_menseki_kijun"
+              ],
+              "decision": "inject"
+            },
+            {
+              "fact_id": "keiei-kanri-existing-holder-update",
+              "fact_card_state": "human_reviewed",
+              "risk_level": "high",
+              "confidence": "high",
+              "source_quality": "official",
+              "official_sources": [
+                "https://www.moj.go.jp/isa/applications/resources/10_00237.html",
+                "https://www.moj.go.jp/isa/content/001448070.pdf"
+              ],
+              "injected_fields": [],
+              "needs_review_flags": [
+                "kaizen_mikomi_unyou_kijun"
+              ],
+              "decision": "inject"
+            }
+          ],
+          "event_counts": {
+            "received": 1,
+            "risk_hint": 1,
+            "routing_status": 2,
+            "fact_cards_injected": 1,
+            "first_token": 1,
+            "answer_chunk": 449,
+            "completed": 1
+          },
+          "qa_flags": [
+            "weak_latest_followup_overlap"
+          ],
+          "error": null
+        }
+      ],
+      "qa_flags": [
+        "weak_latest_followup_overlap"
+      ]
+    },
+    {
+      "case_id": "sim-new-v1-078",
+      "scenario": "出国/再入国",
+      "user_profile_brief": "中国籍，33岁，技人国，回国照顾家人超过一年。",
+      "hidden_risk_hint": "みなし再入国超过期限可能导致在留失效，需确认许可类型。",
+      "why_this_is_realistic": "长期回国用户常到准备返日前才意识到期限。",
+      "rounds": [
+        {
+          "round": 0,
+          "input": "我みなし再入国回国已经13个月了，现在还能直接买票回日本吗？",
+          "endpoint": "/api/consultation/stream",
+          "parent_consultation_id": null,
+          "consultation_id": "swico6cveatlh98d81w373ro",
+          "http_status": 200,
+          "completion_status": "completed",
+          "terminal_event": "completed",
+          "answer_text": "你目前的情况是：みなし再入国許可的允许在海外停留时间为1年以内，而你已出国13个月，这个期限已经超过了。\n\n按照みなし再入国的规则，一旦超过1年未再入国，该许可就失效了，并且原则上无法在海外申请通常再入国许可（通常再入国许可必须在出国前就办好）。这意味着，你手上原有的在留资格可能已经无法直接使用，直接买机票回日本的话，登机或入境时都有可能被拒。\n\n当前最关键的问题，不是能否买票，而是原来的在留资格现在是否还有效、是否还有通过其他途径再入国的可能性。这种情况下，**不要先买票**，否则可能白花费用甚至产生更复杂的记录。\n\n建议你先做这两步：\n- 联系日本驻外使领馆或原来领取在留卡的地方出入国在留管理局，说明你的出国时间和みなし过期情况，确认现在在留资格的状态；\n- 如果被告知资格已失效，就需要走重新申请「在留资格认定证明书」的路径，这个手续复杂，建议尽早找行政書士判断。\n\n总之，みなし再入国过期后直接飛日本风险很高，不要仅凭经验或推测行动，先确认状态再决定下一步。",
+          "total_latency_ms": 32071,
+          "fact_cards": [
+            {
+              "fact_id": "minashi-sainyuukoku",
+              "fact_card_state": "ai_verified",
+              "risk_level": "critical",
+              "confidence": "medium",
+              "source_quality": "official",
+              "official_sources": [
+                "https://www.moj.go.jp/isa/immigration/procedures/16-5.html"
+              ],
+              "injected_fields": [],
+              "needs_review_flags": [
+                "tokubetsu_eijuusha_2year",
+                "zairyu_shikaku_metsumetsu",
+                "zairyu_kigen_upper_bound"
+              ],
+              "decision": "inject"
+            }
+          ],
+          "event_counts": {
+            "received": 1,
+            "routing_status": 2,
+            "fact_cards_injected": 1,
+            "first_token": 1,
+            "answer_chunk": 266,
+            "completed": 1
+          },
+          "qa_flags": [],
+          "error": null
+        }
+      ],
+      "qa_flags": []
+    },
+    {
+      "case_id": "sim-new-v1-084",
+      "scenario": "技人国/人文",
+      "user_profile_brief": "中国籍，29岁，技人国，名义运营，实际餐厅工作。",
+      "hidden_risk_hint": "实际活动与资格不符、虚假材料、更新不许可风险。",
+      "why_this_is_realistic": "餐饮公司技人国名义和现场劳动混同是高风险常见咨询。",
+      "rounds": [
+        {
+          "round": 0,
+          "input": "我签证是技人国，但公司一直让我在店里收银点餐，更新时写运营可以吗？",
+          "endpoint": "/api/consultation/stream",
+          "parent_consultation_id": null,
+          "consultation_id": "e2kvqeul4ho1cunlopzhe9i9",
+          "http_status": 200,
+          "completion_status": "completed",
+          "terminal_event": "completed",
+          "answer_text": "你目前的情况风险很大，我先把最核心的判断说清楚。  \n技人国在留资格允许的是“需要技术或知识的业务”，以及“基于外国文化感受性的业务”。  \n收银、点餐这类工作属于单纯服务劳动，通常不满足技人国的业务要求，即便公司给你安一个“运营”的头衔，如果实际工作内容没变，也改变不了本质。\n\n更新申请时，入管不仅看申请书上写的职务名称，还会审核实际业务内容。  \n如果入管通过电话调查或追加材料发现你主要在做收银点餐，就会认定你的人件费与业务内容不符，这不仅是更新不许可的问题，还有可能被追溯为“资格外活动”。  \n尤其要注意，连续3个月以上从事不符资格的活动，在留资格本身就有被取消的法定风险。\n\n另一个致命点是，你现在已经面临“业务内容与在留资格不一致”的状态，而且这个状态可能已经持续了一段时间。  \n更新时如果试图用“运营”这类模糊字眼掩盖，可能被判定为虚假申请或隐瞒事实，这会严重影响将来的在留记录。  \n这种情况不建议只靠AI判断，强烈建议在正式提交申请之前，找行政书士确认你目前的工作内容是否有可能通过“雇用条件变更”或“在留资格变更”来合规化。\n\n下一步你需要立刻做两件事：  \n- 今天先确认在留卡上的期限，如果离到期不到1个月，材料又没准备好，先联系入管说明情况，看能否用现有材料先行受理，不要拖到过期后申请。  \n- 找一位处理涉外劳务纠纷或就劳签证的行政书士，带上你的雇用契约书和实际排班记录，评估是让公司调整岗位，还是转而申请“特定技能”等其他资格。不要再继续把收银工作当作“运营”去申请更新。",
+          "total_latency_ms": 26555,
+          "fact_cards": [
+            {
+              "fact_id": "gijinkoku-job-mismatch",
+              "fact_card_state": "ai_verified",
+              "risk_level": "high",
+              "confidence": "high",
+              "source_quality": "official",
+              "official_sources": [
+                "https://www.moj.go.jp/isa/applications/status/gijinkoku.html",
+                "https://www.moj.go.jp/isa/applications/procedures/torikeshi_00002.html",
+                "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00015.html"
+              ],
+              "injected_fields": [],
+              "needs_review_flags": [
+                "language_skill_2025_update_verification",
+                "actual_work_vs_contract_gray_zone"
+              ],
+              "decision": "inject"
+            },
+            {
+              "fact_id": "zairyu-expiry-renewal-change",
+              "fact_card_state": "human_reviewed",
+              "risk_level": "high",
+              "confidence": "high",
+              "source_quality": "official",
+              "official_sources": [
+                "https://www.moj.go.jp/isa/applications/procedures/tokureikikan_00001.html",
+                "https://www.moj.go.jp/isa/applications/procedures/16-3.html"
+              ],
+              "injected_fields": [],
+              "needs_review_flags": [
+                "fukyoka_case_departure_timeline",
+                "kigen_ato_shinsei_handling",
+                "henkou_vs_koshin_tokureikikan_difference"
+              ],
+              "decision": "inject"
+            }
+          ],
+          "event_counts": {
+            "received": 1,
+            "routing_status": 2,
+            "fact_cards_injected": 1,
+            "first_token": 1,
+            "answer_chunk": 388,
+            "completed": 1
+          },
+          "qa_flags": [
+            "weak_latest_followup_overlap"
+          ],
+          "error": null
+        }
+      ],
+      "qa_flags": [
+        "weak_latest_followup_overlap"
+      ]
+    },
+    {
+      "case_id": "sim-new-v1-085",
+      "scenario": "永住",
+      "user_profile_brief": "中国籍，41岁，技人国，家庭申请永住。",
+      "hidden_risk_hint": "家属资格外活动、扶养、税务修正、家庭永住审查风险。",
+      "why_this_is_realistic": "家庭成员的问题常在永住审查中突然暴露。",
+      "rounds": [
+        {
+          "round": 0,
+          "input": "永住审查中老婆家族滞在打工被税务通知收入太高，会不会影响我全家？",
+          "endpoint": "/api/consultation/stream",
+          "parent_consultation_id": null,
+          "consultation_id": "o4xwac0p2lttd81b321s0oek",
+          "http_status": 200,
+          "completion_status": "completed",
+          "terminal_event": "completed",
+          "answer_text": "你现在正在永住审查过程中，而太太的打工收入被税务方面通知“收入太高”，这个信号确实需要认真对待，不能只当税务问题看。它可能同时触发**纳税记录的连锁修正**与**在留资格合规**两个层面的风险，两者都会直接影响你的永住结果和全家人的在留稳定。\n\n我先给出可以确定的判断：\n- 永住审查会回看过去几年的纳税记录，如果你一直把太太作为“抚养控除”对象申报，而她的实际收入超过抚养门槛（年收103万日元或130万日元），你的住民税或所得税申报就可能被认定为不准确。即使事后补税，当初未在期限内正确履行纳税义务这件事本身，很可能在审查中被消极评价。\n- 家族滞在的打工需要取得“资格外活动许可”，并且法定上限是**每周28小时以内**。如果税务通知“收入太高”，入管局可能会质疑她实际工作时间是否已经超出许可范围，这属于在留资格上的严重风险。\n\n以下几项关键事实会决定这件事对你们全家冲击的大小，必须优先确认：\n1. 太太是否已经取得了资格外活动许可？没有的话，她的打工本身就可能被判定为不法就劳。\n2. 她的实际年收入大致在什么区间？如果明显超过130万日元（社保抚养标准）甚至超过150～200万日元，就不只是申报错误，还可能失去“被抚养”身份，需要自行加入健康保险和年金。\n3. 税务通知的具体类型是什么？是居民税的抚养管理通知，还是来自税务署的确定申告遗漏通知？这决定你需要纠正是公司年末调整、个人确定申告，还是两者都需要处理。\n\n现在最要紧的下一步：\n- **今天先停止让太太继续打工**，至少在确认时间是否超限之前，避免风险扩大。\n- 立即向你年末调整的公司或你自己的税理士确认，太太的抚养信息是否需要修正，并准备提交修正申告。修正记录仍会留在系统里，对永住的影响需要由专业人士评估。\n- **这种情况强烈不建议只靠AI或自己判断**，因为同时涉及税法修正、在留合规和永住审查三个关卡。建议你找一位熟悉外国人签证和税务的行书士做一次付费咨询，带上太太的资格外活动许可、工资明细、以及税务局的通知文书，让他一并评估是否需要主动向入管局说明，以及如何尽可能降低不利评价。",
+          "total_latency_ms": 49314,
+          "fact_cards": [
+            {
+              "fact_id": "eijuu-nenkin-risk",
+              "fact_card_state": "ai_verified",
+              "risk_level": "critical",
+              "confidence": "medium",
+              "source_quality": "official",
+              "official_sources": [
+                "https://www.moj.go.jp/isa/applications/resources/nyukan_nyukan50.html",
+                "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri07_00133.html"
+              ],
+              "injected_fields": [],
+              "needs_review_flags": [
+                "general_applicant_lookback_verification",
+                "kokumin_nenkin_menjo_months_threshold",
+                "shakaihoken_gap_tolerance"
+              ],
+              "decision": "inject"
+            },
+            {
+              "fact_id": "kazoku-taizai-yoken",
+              "fact_card_state": "ai_verified",
+              "risk_level": "high",
+              "confidence": "high",
+              "source_quality": "official",
+              "official_sources": [
+                "https://www.moj.go.jp/isa/applications/status/dependent.html"
+              ],
+              "injected_fields": [],
+              "needs_review_flags": [
+                "minimum_income_threshold",
+                "adult_child_age_limit"
+              ],
+              "decision": "inject"
+            }
+          ],
+          "event_counts": {
+            "received": 1,
+            "risk_hint": 1,
+            "routing_status": 2,
+            "fact_cards_injected": 1,
+            "still_generating": 1,
+            "first_token": 1,
+            "answer_chunk": 503,
+            "completed": 1
+          },
+          "qa_flags": [
+            "weak_latest_followup_overlap"
+          ],
+          "error": null
+        }
+      ],
+      "qa_flags": [
+        "weak_latest_followup_overlap"
+      ]
+    },
+    {
+      "case_id": "sim-new-v1-089",
+      "scenario": "不许可/补材料/入管通知",
+      "user_profile_brief": "中国籍，38岁，经营管理签，更新收到追加调查。",
+      "hidden_risk_hint": "办公场所实态、经营活动真实性、现场调查高风险。",
+      "why_this_is_realistic": "经营管理现场确认前用户才意识到办公室不像实际经营场所。",
+      "rounds": [
+        {
+          "round": 0,
+          "input": "入管说要来我办公室看，我办公室其实很少用，里面东西也不多，怎么办？",
+          "endpoint": "/api/consultation/stream",
+          "parent_consultation_id": null,
+          "consultation_id": "bgfqyo6e5blx8brvabmrh22l",
+          "http_status": 200,
+          "completion_status": "completed",
+          "terminal_event": "completed",
+          "answer_text": "入管提出要来你办公室实地查看，这种情况下他们关注的重点不是东西多不多，而是“这个场所是否真的被用作事业所、是否与申请资料一致”。\n\n能先确定的是：如果办公室长期空置、明显没有使用痕迹，入管可能会质疑事业的持续性或真实性，这在经营管理签证的更新、变更审查中是很关键的风险点。但“东西不多”本身不直接等于“有问题”——很多IT、咨询、贸易类事业确实不需要大量实体物资。\n\n所以现在最重要的不是临时添东西，而是把以下三点快速理清：\n- 你的在留资格类别是什么？如果是“经营·管理”，契约上是否明确是事务所用，而非住居？\n- 办公室是否有固定使用的痕迹？比如网络、电话、电脑、打印机、公司印章、过往业务记录（合同、收据、邮件打印件）等能证明日常运营的物品和记录。\n- 公司的主要业务形式是怎样的？如果你的业务本来就不依赖实体来客（比如线上委托开发、SOHO咨询），那只要能解释清楚、有证据支撑，空一点的办公室也有成立的可能。\n\n接下来说几个会改变判断的条件：如果办公室的租赁契约性质是“住居”却用来注册公司，这本身就存在不实申请的风险，需要非常谨慎。另外，如果近期完全没有业务活动记录，即使办公室整洁，也会被质疑。\n\n建议你在入管来之前做这些事：\n1) 确认租赁契约是“事业用”，且公司招牌、邮箱等可见标识已设置。\n2) 准备好能够反映公司真实运营的记录：最近几个月的业务沟通、契约书、请求书、税务申报凭证等，放在手边可随时出示。\n3) 如果今天离访问日期很近，而且业务实态实在薄弱，这种情况不建议只靠自己应对，立即找一位熟悉入管实务的行政书士，把公司资料和现状梳理一遍再对应。\n\n如果入管的访问通知附有书面文件，请务必看看上面有没有标明这次的调查是基于什么原因（比如更新审查中、变事届提出后等），以及是否有提交材料的期限。这种书面期限如果被忽视，可能导致申请被当作撤回处理，需要优先对应。",
+          "total_latency_ms": 27682,
+          "fact_cards": [],
+          "event_counts": {
+            "received": 1,
+            "fact_cards_injected": 1,
+            "first_token": 1,
+            "answer_chunk": 449,
+            "completed": 1
+          },
+          "qa_flags": [
+            "no_fact_cards_injected",
+            "weak_latest_followup_overlap"
+          ],
+          "error": null
+        }
+      ],
+      "qa_flags": [
+        "no_fact_cards_injected",
+        "weak_latest_followup_overlap"
+      ]
+    },
+    {
+      "case_id": "sim-new-v1-092",
+      "scenario": "技人国/人文",
+      "user_profile_brief": "中国籍，28岁，技人国，准备做副业。",
+      "hidden_risk_hint": "误解境外收款等于无在留税务影响，需追问活动地点和内容。",
+      "why_this_is_realistic": "跨境收入平台让用户产生管辖误解。",
+      "rounds": [
+        {
+          "round": 0,
+          "input": "我副业钱打到中国银行卡，日本查不到吧，那应该不用管签证吧？",
+          "endpoint": "/api/consultation/stream",
+          "parent_consultation_id": null,
+          "consultation_id": "qmstglk4rgrj0v5tcewfplw5",
+          "http_status": 200,
+          "completion_status": "completed",
+          "terminal_event": "completed",
+          "answer_text": "你把副业的钱打到中国的银行卡，的确可能在短期内不会直接反映在日本税务或入管的日常记录里。但从在留资格的角度看，你在日本做的工作算不算“合规”，关键不看钱收在哪个国家的账户，而是看你在日本实际从事的活动，是否超出你现有在留资格允许的范围。也就是说，只要人在日本从事了要报酬的副业，就受入管法的约束，和收款账户所在地没有直接关系。\n\n目前的信息还缺一个最关键的东西：**你现在的在留资格到底是什么，以及副业具体是做哪种工作**。比如：\n- 如果你持“技术·人文知识·国际业务”，而副业是餐厅帮厨、便利店收银、工厂",
+          "total_latency_ms": 55328,
+          "fact_cards": [
+            {
+              "fact_id": "shikakugai-fukugyou",
+              "fact_card_state": "human_reviewed",
+              "risk_level": "high",
+              "confidence": "high",
+              "source_quality": "official",
+              "official_sources": [
+                "https://www.moj.go.jp/isa/applications/procedures/shikakugai_00001.html",
+                "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri07_00003.html"
+              ],
+              "injected_fields": [],
+              "needs_review_flags": [
+                "gijinkoku_fukugyo_individual_permit_conditions",
+                "mushokyo_shuro_bassoku",
+                "shotoku_han_i"
+              ],
+              "decision": "inject"
+            }
+          ],
+          "event_counts": {
+            "received": 1,
+            "routing_status": 2,
+            "fact_cards_injected": 1,
+            "still_generating": 1,
+            "first_token": 1,
+            "answer_chunk": 146,
+            "completed": 1
+          },
+          "qa_flags": [
+            "weak_latest_followup_overlap"
+          ],
+          "error": null
+        }
+      ],
+      "qa_flags": [
+        "weak_latest_followup_overlap"
+      ]
+    },
+    {
+      "case_id": "sim-new-v1-095",
+      "scenario": "配偶签",
+      "user_profile_brief": "中国籍，29岁，日本人配偶者签，想离婚。",
+      "hidden_risk_hint": "误解在留期限等于身份基础持续有效，需追问离婚时点和变更。",
+      "why_this_is_realistic": "用户常把卡面期限当作唯一规则。",
+      "rounds": [
+        {
+          "round": 0,
+          "input": "我有配偶签三年，就算离婚是不是三年内都没事？",
+          "endpoint": "/api/consultation/stream",
+          "parent_consultation_id": null,
+          "consultation_id": "o5j2qmrayouzyyxn39c4u377",
+          "http_status": 200,
+          "completion_status": "completed",
+          "terminal_event": "completed",
+          "answer_text": "你这个理解有一个关键误区，必须尽早纠正。目前日本入管法第22条之4第7号的「6个月规则」明确规定：“日本人配偶者”或“永住者配偶者”如果**连续6个月没有进行作为配偶的活动**，在留资格就可能被取消。离婚成立后，你作为配偶的活动基础已经消失，因此并不是“在留卡上的期限还有三年，就一定三年内都没事”。\n\n离婚一旦成立，你首先面临的是**14天以内的申报义务**，需要向出入国在留管理厅提交申报。接着从离婚日开始计算，即使你什么都不做，大约6个月后入管就可以启动取消程序。取消之前会有听取意见的机会，但风险是切实存在的，而不是等到在留卡到期。\n\n所以，“三年内都没事”这个假设不成立。如果之后还希望继续留在日本，必须尽快考虑在留资格变更（比如变更为就劳资格、定住者等，但是否可行要看你的生活实态、工作状况等个案要件，不是一定能变更）。  \n**建议下一步**：立即确认离婚是否已经成立，如果已经成立，请带着离婚受理证明书等材料尽快咨询行政书士，评估变更路径，并在14天内完成申报。这种情况的风险比看起来大，不建议只靠自己判断。",
+          "total_latency_ms": 13702,
+          "fact_cards": [
+            {
+              "fact_id": "spouse-divorce-separation",
+              "fact_card_state": "human_reviewed",
+              "risk_level": "critical",
+              "confidence": "high",
+              "source_quality": "official",
+              "official_sources": [
+                "https://www.moj.go.jp/isa/applications/procedures/torikeshi_00002.html",
+                "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00016.html"
+              ],
+              "injected_fields": [],
+              "needs_review_flags": [
+                "seitou_na_riyu_scope",
+                "betsujo_marriage_continuing_judgment",
+                "post_divorce_status_change_options"
+              ],
+              "decision": "inject"
+            }
+          ],
+          "event_counts": {
+            "received": 1,
+            "risk_hint": 1,
+            "routing_status": 1,
+            "fact_cards_injected": 1,
+            "first_token": 1,
+            "answer_chunk": 270,
+            "completed": 1
+          },
+          "qa_flags": [
+            "weak_latest_followup_overlap"
+          ],
+          "error": null
+        }
+      ],
+      "qa_flags": [
+        "weak_latest_followup_overlap"
+      ]
+    },
+    {
+      "case_id": "sim-new-v1-100",
+      "scenario": "不许可/补材料/入管通知",
+      "user_profile_brief": "中国籍，27岁，技人国更新收到明信片。",
+      "hidden_risk_hint": "误解通知明信片含义，需确认通知内容、携带材料、结果未必仅凭印象判断。",
+      "why_this_is_realistic": "很多用户只看到明信片就猜结果，没读具体内容。",
+      "rounds": [
+        {
+          "round": 0,
+          "input": "入管明信片来了是不是就一定通过了？我还没去拿在留卡。",
+          "endpoint": "/api/consultation/stream",
+          "parent_consultation_id": null,
+          "consultation_id": "lakggost313cp1lh5ybwyozy",
+          "http_status": 200,
+          "completion_status": "completed",
+          "terminal_event": "completed",
+          "answer_text": "收到入管明信片，不代表在留申请一定通过了。明信片其实是通知你去窗口办理下一步手续，具体内容可能在以下几类情况里：\n\n- 最常见的是“审查结束，请来领取在留卡”，但这时你还没亲眼看到结果，不排除是拒签通知或保留决定。\n- 也可能是要求补材料、问询或面试的通知。如果不去或错过期限，申请可能被视作撤回。\n\n所以关键是你还没拿到在留卡，单凭明信片不能下结论。建议你现在先确认明信片上写的是“交付通知”“呼出通知”还是“补材料”。如果上面写了需要携带的证件，也要对照准备。如果明确是领取在留卡的通知，那你应当尽快去窗口领取，当场确认结果。如果内容含糊或涉及补材料，期限又比较紧（不足两周），这种情况不建议只靠自己判断，可以考虑找行政書士一起应对。",
+          "total_latency_ms": 15258,
+          "fact_cards": [],
+          "event_counts": {
+            "received": 1,
+            "fact_cards_injected": 1,
+            "first_token": 1,
+            "answer_chunk": 192,
+            "completed": 1
+          },
+          "qa_flags": [
+            "no_fact_cards_injected",
+            "weak_latest_followup_overlap"
+          ],
+          "error": null
+        }
+      ],
+      "qa_flags": [
+        "no_fact_cards_injected",
+        "weak_latest_followup_overlap"
+      ]
+    }
+  ],
+  "summary": {
+    "cases_total": 10,
+    "rounds_total": 10,
+    "completed_rounds": 10,
+    "failed_rounds": 0,
+    "cases_with_flags": 8,
+    "flag_counts": {
+      "no_fact_cards_injected": 3,
+      "weak_latest_followup_overlap": 8
+    }
+  }
+}
