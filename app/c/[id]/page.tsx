@@ -406,7 +406,7 @@ function ChainBlock({ chain, currentId }: { chain: AiConsultation[]; currentId: 
         })}
       </ol>
       <p className="text-[11px] text-[var(--tebiq-cool-gray)]">
-        每一轮都是独立咨询记录；它们之间通过 parent_consultation_id 链接，方便事后回看。
+        这些记录属于同一次咨询。你可以按顺序回看原问题、补充内容和每轮回答。
       </p>
     </Surface>
   )

@@ -928,7 +928,22 @@ function ActiveConsultationView({
           {displayState === 'fallback' && active.fallback_text && (
             <p className="mb-3 text-[15px] leading-[1.7] text-[var(--tebiq-deep-slate)]">{active.fallback_text}</p>
           )}
-          {active.answer.trim() && <AnswerProse text={active.answer} />}
+          {active.answer.trim() && (
+            <AnswerProse
+              text={active.answer}
+              afterFirstLook={canAct ? (
+                <CompletionQuickActions
+                  saved={active.saved}
+                  copyState={copyState}
+                  followUpDisabled={followUpLocked || hasRunningFollowUp}
+                  onFollowUp={() => setFollowUpOpen(true)}
+                  onSave={onSave}
+                  onCopy={copyConsultationLink}
+                  onHumanReview={() => onFeedback('human_review')}
+                />
+              ) : null}
+            />
+          )}
           {waitingStatus && active.answer === '' && (
             <div className="rounded-card border border-[var(--tebiq-soft-gray)] px-3 py-2 text-[13.5px] leading-[1.65] text-[var(--tebiq-deep-slate)]">
               <div>
@@ -1017,9 +1032,9 @@ function ActiveConsultationView({
           <Surface className="space-y-3">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div>
-                    <SectionLabel>还有补充情况？</SectionLabel>
+                    <SectionLabel>继续问这件事</SectionLabel>
                 <p className="mt-1 text-[13.5px] leading-[1.7] text-[var(--tebiq-deep-slate)]">
-                  只补充同一件事的新背景。另一个问题请重新开始。
+                  补充同一件事的新背景，TEBIQ 会沿用上面的回答继续整理。
                 </p>
               </div>
               {!followUpLocked && (
@@ -1029,7 +1044,7 @@ function ActiveConsultationView({
                   disabled={hasRunningFollowUp}
                   className="inline-flex min-h-10 items-center justify-center gap-2 rounded-btn border border-[var(--tebiq-soft-gray)] px-3 py-2 text-[13px] font-medium text-[var(--tebiq-ink-blue)] disabled:opacity-50"
                 >
-                  {followUpOpen ? '收起补充' : '补充一句'}
+                  {followUpOpen ? '收起追问' : '继续追问'}
                 </button>
               )}
             </div>
@@ -1065,7 +1080,7 @@ function ActiveConsultationView({
           <Surface className="space-y-4">
           <div className="space-y-3">
             <div>
-              <SectionLabel>保存和下次查看</SectionLabel>
+              <SectionLabel>保存这次咨询</SectionLabel>
               <p className="mt-1 text-[13.5px] leading-[1.7] text-[var(--tebiq-deep-slate)]">
                 保存后可稍后补充、发给自己，或给专业人士参考。
               </p>
@@ -1418,13 +1433,14 @@ interface FirstLookBlock {
   avoid: string | null
 }
 
-function AnswerProse({ text }: { text: string }) {
+function AnswerProse({ text, afterFirstLook = null }: { text: string; afterFirstLook?: JSX.Element | null }) {
   const safeText = cleanDisplayText(text)
   const { firstLook, rest } = extractFirstLook(safeText)
   const blocks = buildAnswerBlocks(rest)
   return (
     <div className="space-y-4">
       {firstLook && <FirstLookCard firstLook={firstLook} />}
+      {firstLook && afterFirstLook}
       {blocks.map((block, index) => {
         if (block.kind === 'heading') {
           return (
@@ -1451,6 +1467,67 @@ function AnswerProse({ text }: { text: string }) {
           </p>
         )
       })}
+    </div>
+  )
+}
+
+function CompletionQuickActions({
+  saved,
+  copyState,
+  followUpDisabled,
+  onFollowUp,
+  onSave,
+  onCopy,
+  onHumanReview,
+}: {
+  saved: boolean
+  copyState: 'idle' | 'copied' | 'failed'
+  followUpDisabled: boolean
+  onFollowUp: () => void
+  onSave: () => void
+  onCopy: () => void
+  onHumanReview: () => void
+}) {
+  return (
+    <div className="rounded-card border border-[var(--tebiq-soft-gray)] bg-[var(--tebiq-off-white)] px-3 py-3">
+      <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+        <button
+          type="button"
+          onClick={onFollowUp}
+          disabled={followUpDisabled}
+          className="inline-flex min-h-10 items-center justify-center gap-1.5 rounded-btn bg-[var(--tebiq-ink-blue)] px-2 py-2 text-[12px] font-medium text-[var(--tebiq-off-white)] disabled:opacity-50"
+        >
+          <MessageSquarePlus className="h-3.5 w-3.5" strokeWidth={1.6} />
+          继续追问
+        </button>
+        <button
+          type="button"
+          onClick={onSave}
+          disabled={saved}
+          className="inline-flex min-h-10 items-center justify-center gap-1.5 rounded-btn border border-[var(--tebiq-soft-gray)] px-2 py-2 text-[12px] font-medium text-[var(--tebiq-ink-blue)] disabled:opacity-60"
+        >
+          {saved ? <CheckCircle2 className="h-3.5 w-3.5" strokeWidth={1.6} /> : <Archive className="h-3.5 w-3.5" strokeWidth={1.6} />}
+          {saved ? '已保存' : '保存'}
+        </button>
+        <button
+          type="button"
+          onClick={onCopy}
+          className="inline-flex min-h-10 items-center justify-center gap-1.5 rounded-btn border border-[var(--tebiq-soft-gray)] px-2 py-2 text-[12px] font-medium text-[var(--tebiq-ink-blue)]"
+        >
+          {copyState === 'copied' ? <ClipboardCheck className="h-3.5 w-3.5" strokeWidth={1.6} /> : <Copy className="h-3.5 w-3.5" strokeWidth={1.6} />}
+          {copyState === 'copied' ? '已复制' : '复制'}
+        </button>
+        <button
+          type="button"
+          onClick={onHumanReview}
+          className="inline-flex min-h-10 items-center justify-center rounded-btn border border-[var(--tebiq-warm-amber)] px-2 py-2 text-[12px] font-medium text-[var(--tebiq-ink-blue)]"
+        >
+          人工确认
+        </button>
+      </div>
+      <p className="mt-2 text-[11.5px] leading-[1.55] text-[var(--tebiq-cool-gray)]">
+        可以继续补充同一件事，或先保存后发给自己/专业人士。
+      </p>
     </div>
   )
 }
