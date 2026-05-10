@@ -146,6 +146,11 @@ async function main() {
     assert.equal(r.text, '这种情况通常需要找行政書士确认')
     assert.equal(r.redactions.length, 0)
   })
+  check('3e2. redactForbiddenPhrases normalizes common 不许可 typo without counting as redaction', () => {
+    const r = filterMod.redactForbiddenPhrases('请确认不是可通知书上的期限')
+    assert.equal(r.text, '请确认不许可通知书上的期限')
+    assert.equal(r.redactions.length, 0)
+  })
   check('3f. createForbiddenFilter streaming: catches phrase split across chunks', () => {
     // "一定可以" arriving as ["一定", "可以"] must still be redacted.
     const f = filterMod.createForbiddenFilter()
@@ -165,6 +170,15 @@ async function main() {
     out += f.push('可以')
     out += f.flush()
     assert.ok(!out.includes('一定可以'), `triple-split missed; got "${out}"`)
+  })
+  check('3g2. createForbiddenFilter: normalizes 不是可 across chunk boundary', () => {
+    const f = filterMod.createForbiddenFilter()
+    let out = ''
+    out += f.push('通知书写的不是')
+    out += f.push('可期限')
+    out += f.flush()
+    assert.equal(out, '通知书写的不许可期限')
+    assert.equal(f.redactions().length, 0)
   })
   check('3h. createForbiddenFilter: clean stream passes through with same total content', () => {
     const f = filterMod.createForbiddenFilter()

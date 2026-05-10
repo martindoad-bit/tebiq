@@ -32,7 +32,14 @@ export const FORBIDDEN_PHRASES: ReadonlyArray<string> = Object.freeze([
   '大丈夫',
 ])
 
-const MAX_PHRASE_LEN = FORBIDDEN_PHRASES.reduce((m, p) => Math.max(m, p.length), 0)
+const NORMALIZATION_REPLACEMENTS: ReadonlyArray<readonly [string, string]> = Object.freeze([
+  ['不是可', '不许可'],
+])
+
+const MAX_PHRASE_LEN = [
+  ...FORBIDDEN_PHRASES,
+  ...NORMALIZATION_REPLACEMENTS.map(([from]) => from),
+].reduce((m, p) => Math.max(m, p.length), 0)
 const HOLD_LEN = Math.max(0, MAX_PHRASE_LEN - 1)
 
 export interface ForbiddenFilter {
@@ -49,6 +56,11 @@ export function createForbiddenFilter(): ForbiddenFilter {
   function applyReplace(s: string): string {
     if (!s) return s
     let out = s
+    for (const [from, to] of NORMALIZATION_REPLACEMENTS) {
+      if (out.includes(from)) {
+        out = out.split(from).join(to)
+      }
+    }
     for (const phrase of FORBIDDEN_PHRASES) {
       if (out.includes(phrase)) {
         let idx = 0
