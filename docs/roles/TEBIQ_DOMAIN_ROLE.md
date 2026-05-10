@@ -72,6 +72,7 @@ version: v0.1
 
 - "draft / needs human review" 永远在文件头
 - 不写承诺性 / 结论性文案
+- Handoff trigger 不是法律结论；高风险结论必须写明 `applies_when` / `does_not_apply_when` / `source_or_basis`。详见 `docs/domain/DOMAIN_CLAIM_GUARDRAILS.md`
 - "partial" 是合法判定（routing 正确但内容未验证 — DOMAIN 比 routing-only baseline 更准确）
 - 等 GM 提供数据再做判定，不主动扩 scope
 - 大文档之外，7 行确认是合法简洁交付
