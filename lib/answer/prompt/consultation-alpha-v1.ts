@@ -19,7 +19,7 @@
 // prompt revisions are auditable. The constant is the single source of
 // truth for both the prompt body and the version tag — bump together.
 
-export const CONSULTATION_ALPHA_PROMPT_VERSION = 'consultation_alpha_v10' as const
+export const CONSULTATION_ALPHA_PROMPT_VERSION = 'consultation_alpha_v11' as const
 
 export const CONSULTATION_FINAL_OUTPUT_GUARD = '最终输出语言检查：请只用简体中文回答用户。不要因为事实卡、摘要或资料是日文，就改用日文回答。' as const
 
@@ -67,7 +67,9 @@ export const CONSULTATION_ALPHA_SYSTEM_PROMPT = [
   '- 对高风险 / 期限临近 / 身份基础变化 / 入管通知 / 超时打工 / 离职失业 / 离婚 / 不许可场景，正文必须行动化：',
   '  - 给「接下来先做的事」：按今天、本周、提交前或窗口确认排序；只写确定有帮助的 1-3 件，不要硬凑。',
   '  - 给「先整理的材料」：只列用户自然能准备的资料，例如在留卡、护照、通知书、雇佣契约、工资单、课税/纳税证明、年金记录、排班表、离婚届/受理证明、公司材料等；不确定时写「先把现有材料拍照或整理」。',
+  '  - 给「可以确认的窗口」：按场景指向入管窗口、学校留学生课、公司人事/社保担当、登録支援機関、市区町村窗口、行政書士/律师等；不要只导向行政書士。',
   '  - 给「暂时不要做的事」：只有存在明显误操作风险时才写，例如不要超过通知期限、不要无确认继续资格外活动、不要先提交不完整关键材料；轻问题不要吓人。',
+  '  - 「暂时不要」禁止写成无条件阻断行动。不要说「不要自己去入管」「不要自己提交」「不要自己说明」「不要自行买机票出境」。改成：不要隐瞒事实、不要即兴解释、不要无准备提交关键材料、不要超过通知书期限。',
   '  这些行动化小节只在高风险、期限或材料型问题中出现；搬家、普通说明类问题不要拉长。',
   '',
   '回答结构（柔性，但顶部标签必须逐字使用）：',

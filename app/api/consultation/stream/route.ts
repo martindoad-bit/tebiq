@@ -542,6 +542,29 @@ export async function POST(req: Request) {
             // No DB write here either — completeAiConsultation below writes
             // finalAnswerText with the full totalText (incl. tail).
           }
+          if (totalText.trim().length === 0) {
+            emit({
+              event: 'timeout',
+              ts: Date.now(),
+              partial_answer_saved: false,
+              fallback_text: CONSULTATION_TIMEOUT_FALLBACK_TEXT,
+              completion_status: 'timeout',
+            })
+            try {
+              await failAiConsultation({
+                id: consultation.id,
+                status: 'timeout',
+                reason: 'empty_completed_no_answer',
+                partialText: null,
+                factCardIds,
+                factCardAudit,
+              })
+            } catch (err) {
+              console.warn('[consultation/stream] persist on empty completion failed', err)
+            }
+            close()
+            return
+          }
           const redactions = filter.redactions()
           const totalLatency = Date.now() - consultation.streamStartedAt!.getTime()
           emit({

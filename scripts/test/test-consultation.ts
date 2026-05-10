@@ -37,9 +37,9 @@ async function main() {
   }
 
   // ---- 1. System prompt constants ----
-  check('1a. CONSULTATION_ALPHA_PROMPT_VERSION is "consultation_alpha_v10"', () => {
+  check('1a. CONSULTATION_ALPHA_PROMPT_VERSION is "consultation_alpha_v11"', () => {
     // Cycle 1 quality flywheel v4: answer first-look block + UI flywheel.
-    assert.equal(promptMod.CONSULTATION_ALPHA_PROMPT_VERSION, 'consultation_alpha_v10')
+    assert.equal(promptMod.CONSULTATION_ALPHA_PROMPT_VERSION, 'consultation_alpha_v11')
   })
   check('1b. CONSULTATION_ALPHA_MODEL is "deepseek-v4-pro"', () => {
     assert.equal(promptMod.CONSULTATION_ALPHA_MODEL, 'deepseek-v4-pro')
@@ -645,6 +645,28 @@ async function main() {
       src.includes('promptVersion: CONSULTATION_ALPHA_PROMPT_VERSION'),
       'stream route does not pass promptVersion: CONSULTATION_ALPHA_PROMPT_VERSION to createAiConsultation',
     )
+  })
+  check('9d. stream and follow-up do not allow empty text to complete successfully', () => {
+    const fs = require('fs') as typeof import('fs')
+    const path = require('path') as typeof import('path')
+    for (const route of [
+      'app/api/consultation/stream/route.ts',
+      'app/api/consultation/follow-up/route.ts',
+    ]) {
+      const src = fs.readFileSync(path.join(process.cwd(), route), 'utf8')
+      assert.ok(
+        src.includes('totalText.trim().length === 0'),
+        `${route} missing non-empty completion guard`,
+      )
+      assert.ok(
+        src.includes("reason: 'empty_completed_no_answer'"),
+        `${route} missing empty completion failure reason`,
+      )
+      assert.ok(
+        src.includes("completion_status: 'timeout'"),
+        `${route} does not turn empty completion into timeout/fallback`,
+      )
+    }
   })
 
   // ---- 10. 0.6 ENGINE Pack 1 — routing_status SSE event ----
