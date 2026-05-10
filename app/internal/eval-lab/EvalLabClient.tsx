@@ -261,9 +261,17 @@ function isCompleteDeepseekAnswer(row: AnswerRow | undefined): boolean {
     && row.answer_text.trim().length >= MIN_DEEPSEEK_ANSWER_CHARS
 }
 
-function isReviewableCase(slot: { deepseek_raw?: AnswerRow; tebiq_current?: AnswerRow } | undefined): boolean {
-  return isCompleteDeepseekAnswer(slot?.deepseek_raw)
-    && isRealTebiqAnswer(slot?.tebiq_current)
+function isLiveConsultationQuestion(q: QuestionRow | null | undefined): boolean {
+  return q?.source === 'live_consultation'
+}
+
+function isReviewableCase(
+  slot: { deepseek_raw?: AnswerRow; tebiq_current?: AnswerRow } | undefined,
+  q?: QuestionRow | null,
+): boolean {
+  const tebiqReady = isRealTebiqAnswer(slot?.tebiq_current)
+  if (isLiveConsultationQuestion(q)) return tebiqReady
+  return isCompleteDeepseekAnswer(slot?.deepseek_raw) && tebiqReady
 }
 
 function getAttempts(row: AnswerRow | undefined): number | null {
@@ -835,6 +843,7 @@ export default function EvalLabClient() {
   const [scenarioFilter, setScenarioFilter] = useState<string>('all')
   const [batchBusy, setBatchBusy] = useState(false)
   const [seedBusy, setSeedBusy] = useState(false)
+  const [liveImportBusy, setLiveImportBusy] = useState(false)
   const [importText, setImportText] = useState('')
   const [headerMessage, setHeaderMessage] = useState<string | null>(null)
 
@@ -923,7 +932,7 @@ export default function EvalLabClient() {
         const firstReady = j.questions.find(q => {
           const answer = ans[q.id]
           const ann = annMap[q.id]
-          return isReviewableCase(answer) && !isAnnotationComplete(ann)
+          return isReviewableCase(answer, q) && !isAnnotationComplete(ann)
         })
         setSelectedId(firstReady?.id ?? j.questions[0].id)
       }
@@ -995,7 +1004,7 @@ export default function EvalLabClient() {
       if (s?.deepseek === 'failed' || s?.tebiq === 'failed') failed += 1
       if (s?.deepseek === 'running' || s?.tebiq === 'running') running += 1
       const ans = answersByQuestion[q.id]
-      const reviewable = isReviewableCase(ans)
+      const reviewable = isReviewableCase(ans, q)
       if (reviewable) complete += 1
       else ungen += 1
       if (reviewable && !isAnnotationComplete(a)) ready += 1
@@ -1374,6 +1383,37 @@ export default function EvalLabClient() {
     }
   }
 
+  const onImportLive = async () => {
+    setLiveImportBusy(true)
+    try {
+      const r = await fetch('/api/internal/eval-lab/import-live', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ limit: 50 }),
+      })
+      const j = (await r.json()) as {
+        ok?: boolean
+        scanned?: number
+        eligible?: number
+        inserted?: number
+        skippedExisting?: number
+        answersUpserted?: number
+        error?: string
+        detail?: string
+      }
+      if (j.ok) {
+        setHeaderMessage(
+          `真实咨询导入完成：新增 ${j.inserted ?? 0}，已存在 ${j.skippedExisting ?? 0}，答案 ${j.answersUpserted ?? 0}。可按“真实咨询”场景筛选。`,
+        )
+        await loadAll()
+      } else {
+        setHeaderMessage(`真实咨询导入失败: ${j.detail ?? j.error ?? `HTTP ${r.status}`}`)
+      }
+    } finally {
+      setLiveImportBusy(false)
+    }
+  }
+
   const goNext = useCallback(() => {
     const idx = filtered.findIndex(q => q.id === selectedId)
     const start = idx >= 0 ? idx + 1 : 0
@@ -1430,6 +1470,13 @@ export default function EvalLabClient() {
             />
             批量时跳过已标注题
           </label>
+          <button
+            onClick={onImportLive}
+            disabled={liveImportBusy}
+            className="text-xs px-3 py-1.5 border border-emerald-400 rounded bg-emerald-50 text-emerald-800 hover:bg-emerald-100 disabled:opacity-50"
+          >
+            {liveImportBusy ? '导入中…' : '导入最近真实咨询'}
+          </button>
           {counts.total === 0 && (
             <button
               onClick={onSeed}
@@ -2033,7 +2080,7 @@ function filterQuestions(
       return byScenario.filter(q => {
         const a = answers[q.id]
         const ann = annotations[q.id]
-        return isReviewableCase(a) && !isAnnotationComplete(ann)
+        return isReviewableCase(a, q) && !isAnnotationComplete(ann)
       })
     case 'unannotated':
       return byScenario.filter(q => {
@@ -2045,7 +2092,7 @@ function filterQuestions(
     case 'rerun':
       return byScenario.filter(q => {
         const a = answers[q.id]
-        return !isReviewableCase(a)
+        return !isReviewableCase(a, q)
       })
     case 'p0':
       return byScenario.filter(q => annotations[q.id]?.severity === 'P0')
@@ -2056,7 +2103,7 @@ function filterQuestions(
     case 'ungenerated':
       return byScenario.filter(q => {
         const a = answers[q.id]
-        return !a?.deepseek_raw?.answer_text || !isRealTebiqAnswer(a?.tebiq_current)
+        return !isReviewableCase(a, q)
       })
     case 'failed':
       return byScenario.filter(q => {

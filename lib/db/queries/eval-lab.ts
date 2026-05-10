@@ -4,9 +4,10 @@
 // EVAL_LAB_ENABLED before reaching here. These functions do not do any
 // auth themselves — they assume their caller has.
 
-import { and, asc, eq, inArray, sql } from 'drizzle-orm'
+import { and, asc, desc, eq, inArray, isNull, sql } from 'drizzle-orm'
 import { db } from '@/lib/db'
 import {
+  aiConsultations,
   evalAnnotations,
   evalAnswers,
   evalJudgements,
@@ -33,6 +34,9 @@ export type EvalAction =
   | 'fact_card_candidate'
   | 'handoff_rule'
   | 'ignore'
+
+const LIVE_CONSULTATION_SOURCE = 'live_consultation'
+const LIVE_CONSULTATION_SCENARIO = '真实咨询'
 
 // ---- seed ----
 
@@ -428,4 +432,118 @@ export async function importQuestions(items: ImportItem[]): Promise<number> {
     inserted += result.length
   }
   return inserted
+}
+
+export interface ImportLiveConsultationsResult {
+  scanned: number
+  eligible: number
+  inserted: number
+  skippedExisting: number
+  answersUpserted: number
+}
+
+/**
+ * Bridge real front-door consultations into Eval Lab so founder/tester
+ * feedback can enter the same quality flywheel as golden-set cases.
+ *
+ * We import only root consultations for now. Follow-up rows need chain context
+ * to be judged fairly, so they should get their own multi-turn review surface.
+ */
+export async function importRecentLiveConsultationsToEvalLab(
+  limit = 50,
+): Promise<ImportLiveConsultationsResult> {
+  const safeLimit = Math.max(1, Math.min(200, Math.floor(limit)))
+  const rows = await db
+    .select()
+    .from(aiConsultations)
+    .where(and(
+      eq(aiConsultations.completionStatus, 'completed'),
+      isNull(aiConsultations.parentConsultationId),
+    ))
+    .orderBy(desc(aiConsultations.createdAt))
+    .limit(safeLimit)
+
+  const eligible = rows.filter(row => {
+    const answer = (row.finalAnswerText ?? row.aiAnswerText ?? '').trim()
+    return row.userQuestionText.trim().length > 0 && answer.length > 0
+  })
+
+  if (eligible.length === 0) {
+    return {
+      scanned: rows.length,
+      eligible: 0,
+      inserted: 0,
+      skippedExisting: 0,
+      answersUpserted: 0,
+    }
+  }
+
+  const values = eligible.map(row => ({
+    questionText: row.userQuestionText.trim(),
+    starterTag: `live-${row.id}`,
+    scenario: LIVE_CONSULTATION_SCENARIO,
+    source: LIVE_CONSULTATION_SOURCE,
+    metadataJson: {
+      source_consultation_id: row.id,
+      source: LIVE_CONSULTATION_SOURCE,
+      created_at: row.createdAt instanceof Date ? row.createdAt.toISOString() : row.createdAt,
+      viewer_id: row.viewerId,
+      prompt_version: row.promptVersion,
+      model: row.model,
+      fact_card_ids: row.factCardIds,
+      completion_status: row.completionStatus,
+      answer_link: `/answer/${row.id}`,
+    },
+  }))
+
+  const insertedRows = await db
+    .insert(evalQuestions)
+    .values(values)
+    .onConflictDoNothing({ target: evalQuestions.starterTag })
+    .returning({ id: evalQuestions.id })
+
+  const tags = values.map(v => v.starterTag)
+  const questionRows = await db
+    .select()
+    .from(evalQuestions)
+    .where(inArray(evalQuestions.starterTag, tags))
+
+  const questionByTag = new Map(questionRows.map(row => [row.starterTag, row]))
+  let answersUpserted = 0
+  for (const source of eligible) {
+    const question = questionByTag.get(`live-${source.id}`)
+    if (!question) continue
+    const answer = (source.finalAnswerText ?? source.aiAnswerText ?? '').trim()
+    await upsertEvalAnswer({
+      questionId: question.id,
+      answerType: 'tebiq_current',
+      model: source.model,
+      promptVersion: source.promptVersion,
+      answerText: answer,
+      tebiqAnswerId: source.id,
+      tebiqAnswerLink: `/answer/${source.id}`,
+      engineVersion: 'answer-core-v1.1-llm',
+      status: source.completionStatus,
+      domain: null,
+      fallbackReason: source.timeoutReason,
+      latencyMs: source.totalLatencyMs,
+      rawPayloadJson: {
+        source: LIVE_CONSULTATION_SOURCE,
+        source_consultation_id: source.id,
+        fact_card_ids: source.factCardIds,
+        fact_card_audit: source.factCardAudit,
+        prompt_version: source.promptVersion,
+        model: source.model,
+      },
+    })
+    answersUpserted += 1
+  }
+
+  return {
+    scanned: rows.length,
+    eligible: eligible.length,
+    inserted: insertedRows.length,
+    skippedExisting: eligible.length - insertedRows.length,
+    answersUpserted,
+  }
 }
