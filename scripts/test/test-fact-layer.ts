@@ -226,6 +226,29 @@ async function main() {
       }
     }
   })
+  check('4f. YAML mapping-style needs_review_flags are preserved as audit ids', () => {
+    const mappingFlag = [
+      '---',
+      'fact_id: mapping-flag',
+      'title: mapping flag test',
+      'state: needs_review',
+      'risk_level: high',
+      'confidence: low',
+      'source_quality: secondary',
+      'last_verified_at: 2026-05-11',
+      'applies_to: [test]',
+      'official_sources: []',
+      'needs_review_flags:',
+      '  - source_gap: Needs official confirmation.',
+      '  - official_term_check: Confirm exact official term.',
+      '---',
+      '',
+      '## common_user_phrases',
+      '- 测试',
+    ].join('\n')
+    const card = internals.normalize('/tmp/mapping-flag.md', mappingFlag)
+    assert.deepEqual(card.needsReviewFlags, ['source_gap', 'official_term_check'])
+  })
 
   // -----------------------------------------------------------------------
   // 5. Sync hard-fail surface

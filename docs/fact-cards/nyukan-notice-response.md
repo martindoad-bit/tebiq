@@ -4,7 +4,7 @@ title: 入管からの通知・追加資料請求への対応
 state: needs_review
 risk_level: high
 confidence: low
-source_quality: partial
+source_quality: secondary
 controlled_alpha_eligible: false
 last_verified_at: "2026-05-11"
 reviewer: FACT-OPS (Cycle 2 Batch 1)
@@ -22,7 +22,10 @@ does_not_cover:
   - "不許可通知を受けた後の審査請求・再申請の選択肢（Priority Backlog — DOMAIN確認要）"
   - "在留期間超過後の出頭申告手続き（overstay-taisho 参照）"
   - "特定の在留資格変更・更新申請の具体的な書類要件"
-official_sources: []
+official_sources:
+  - url: https://www.moj.go.jp/isa/consultation/center/
+    label: 出入国在留管理庁 — 外国人在留総合インフォメーションセンター等
+    accessed: "2026-05-11"
 needs_review_flags:
   - no_dedicated_isa_source: 入管通知への対応手順を一元的に説明するISA公式ページは確認できず。個別の申請種別ページに分散している。公式一次ソースの確認要。
   - notice_types_and_deadlines: 各通知タイプ（資料提出通知書・補完通知・照会書等）の正式名称・法令根拠・具体的期限・不対応時の影響はai推定。ISA公式確認要。
@@ -31,7 +34,9 @@ applies_to:
   - 在留資格申請（新規・更新・変更）を行っている外国人
   - 入管から何らかの文書・通知を受け取った申請者
   - 入管から届いた通知の内容・対応方法を確認したい者
-direct_fact_fields: []
+direct_fact_fields:
+  - 出入国在留管理庁は、出入国手続・在留手続に関する各種問い合わせに応じるため、各地方出入国在留管理局・支局に相談窓口（外国人在留総合インフォメーションセンター等）を設置している
+  - インフォメーションセンターで回答できることは、出入国手続・在留手続に関する一般的な案内であり、内容によっては審査担当部署や関係省庁への問い合わせを案内することがある
 ai_inferred_fields:
   - 入管からの通知には主に①追加資料提出要求②補完通知③照会（問い合わせ）④不許可通知がある（ai推定）
   - 追加資料提出要求には期限が記載されており、期限内に対応しないと審査に影響する可能性がある（ai推定）

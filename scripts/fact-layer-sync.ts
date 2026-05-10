@@ -268,6 +268,16 @@ function extractNeedsReviewFlagIds(value: unknown): string[] {
     if (entry && typeof entry === 'object' && 'id' in entry) {
       const id = (entry as { id: unknown }).id
       if (typeof id === 'string') ids.push(id)
+      continue
+    }
+    // FACT cards commonly use YAML mapping syntax:
+    //   - flag_id: human-readable reason
+    // Preserve the mapping key as the audit flag id.
+    if (entry && typeof entry === 'object') {
+      const keys = Object.keys(entry)
+      if (keys.length === 1 && typeof keys[0] === 'string' && keys[0].length > 0) {
+        ids.push(keys[0])
+      }
     }
   }
   return ids
