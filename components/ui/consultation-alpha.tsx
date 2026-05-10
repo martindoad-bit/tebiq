@@ -200,6 +200,15 @@ export function RiskHintBanner({ hits }: { hits: string[] }) {
 }
 
 function riskHintPresentation(hits: string[]): { title: string; body: string; chips: string[] } {
+  const crisisHits = new Set(['家暴', '证件扣押', '入管通知'])
+  const hasCrisis = hits.some(hit => crisisHits.has(hit))
+  if (hasCrisis) {
+    return {
+      title: '安全/证件风险',
+      body: '这类问题先处理人身安全、证件和通知期限，再判断在留路径。',
+      chips: ['保留证据', '联系警察/支援窗口', '再整理在留影响'],
+    }
+  }
   const highRiskHits = new Set(['不许可', '补材料', '超期', '离婚', '解雇', '公司清算', '工作不一致', '资格外活动'])
   const hasHighRisk = hits.some(hit => highRiskHits.has(hit))
   if (hasHighRisk) {

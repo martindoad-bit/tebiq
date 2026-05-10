@@ -3,7 +3,7 @@
  *
  * DB-free / LLM-free unit tests for:
  *   - System prompt + version constants
- *   - Risk keyword detection (13 keywords)
+ *   - Risk keyword detection (16 keywords)
  *   - Forbidden phrase streaming filter (7 phrases × split-token edge cases)
  *   - SSE protocol frame format + parser
  *
@@ -37,9 +37,9 @@ async function main() {
   }
 
   // ---- 1. System prompt constants ----
-  check('1a. CONSULTATION_ALPHA_PROMPT_VERSION is "consultation_alpha_v11"', () => {
+  check('1a. CONSULTATION_ALPHA_PROMPT_VERSION is "consultation_alpha_v12"', () => {
     // Cycle 1 quality flywheel v4: answer first-look block + UI flywheel.
-    assert.equal(promptMod.CONSULTATION_ALPHA_PROMPT_VERSION, 'consultation_alpha_v11')
+    assert.equal(promptMod.CONSULTATION_ALPHA_PROMPT_VERSION, 'consultation_alpha_v12')
   })
   check('1b. CONSULTATION_ALPHA_MODEL is "deepseek-v4-pro"', () => {
     assert.equal(promptMod.CONSULTATION_ALPHA_MODEL, 'deepseek-v4-pro')
@@ -91,8 +91,8 @@ async function main() {
   })
 
   // ---- 2. Risk keywords ----
-  check('2a. RISK_KEYWORDS has exactly 13 entries (Pack §5)', () => {
-    assert.equal(riskMod.RISK_KEYWORDS.length, 13)
+  check('2a. RISK_KEYWORDS has exactly 16 entries (Pack §5 + crisis expansion)', () => {
+    assert.equal(riskMod.RISK_KEYWORDS.length, 16)
   })
   check('2b. detectRiskKeywords: empty input → empty array', () => {
     assert.deepEqual(riskMod.detectRiskKeywords(''), [])
@@ -119,6 +119,20 @@ async function main() {
   check('2g. detectRiskKeywords: off-topic question returns empty', () => {
     const hits = riskMod.detectRiskKeywords('今天东京天气怎么样？')
     assert.deepEqual(hits, [])
+  })
+  check('2h. detectRiskKeywords: crisis scenarios hit notification / DV / document seizure', () => {
+    assert.ok(
+      riskMod.detectRiskKeywords('入管通知让我提交说明书，不去会怎么样？').includes('入管通知'),
+      'missing 入管通知 hit',
+    )
+    assert.ok(
+      riskMod.detectRiskKeywords('我被老公家暴，不敢回家，签证靠他怎么办？').includes('家暴'),
+      'missing 家暴 hit',
+    )
+    assert.ok(
+      riskMod.detectRiskKeywords('在留卡被公司收走了，可以报警吗？').includes('证件扣押'),
+      'missing 证件扣押 hit',
+    )
   })
 
   // ---- 3. Forbidden phrases ----

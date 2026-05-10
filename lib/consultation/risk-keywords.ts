@@ -1,6 +1,6 @@
 // 1.0 Alpha — Risk keyword detection (Issue #39 §5).
 //
-// 13 keywords covering high-risk in-residence patterns. Hits surface a
+// 16 keywords covering high-risk in-residence patterns. Hits surface a
 // soft warning above the streaming answer area, AND get persisted on
 // the consultation row for telemetry.
 //
@@ -26,6 +26,9 @@ export const RISK_KEYWORDS: ReadonlyArray<string> = Object.freeze([
   '税金',
   '工作不一致',
   '资格外活动',
+  '入管通知',
+  '家暴',
+  '证件扣押',
 ])
 
 interface RiskPattern {
@@ -56,6 +59,16 @@ const RISK_PATTERNS: ReadonlyArray<RiskPattern> = [
   // 工作不一致 — phrases like "在留资格和现在实际工作不一致" / "工作内容不一样" / "实际工作不符"
   { hit: '工作不一致', matches: [/工作.{0,8}(不一致|不一样|不同|不符)/, /(仕事|職).{0,8}不一致/] },
   { hit: '资格外活动', matches: ['资格外活动', '資格外活動', '资格外'] },
+  { hit: '入管通知', matches: ['入管通知', '入管的通知', '入管から通知', '通知书', '通知書', '説明書', '理由書'] },
+  { hit: '家暴', matches: ['家暴', '家庭暴力', 'DV', '被打', '威胁', '威脅', '恐吓', '脅迫'] },
+  {
+    hit: '证件扣押',
+    matches: [
+      '在留卡被公司收走', '在留卡被收走', '在留卡被扣', '扣押在留卡', '扣留在留卡',
+      '护照被收走', '护照被扣', '证件被收走', '证件被扣',
+      '在留カード取られ', 'パスポート取られ',
+    ],
+  },
 ]
 
 export function detectRiskKeywords(userQuestion: string | null | undefined): string[] {
