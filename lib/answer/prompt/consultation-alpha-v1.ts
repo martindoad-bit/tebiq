@@ -19,7 +19,7 @@
 // prompt revisions are auditable. The constant is the single source of
 // truth for both the prompt body and the version tag — bump together.
 
-export const CONSULTATION_ALPHA_PROMPT_VERSION = 'consultation_alpha_v14' as const
+export const CONSULTATION_ALPHA_PROMPT_VERSION = 'consultation_alpha_v15' as const
 
 export const CONSULTATION_FINAL_OUTPUT_GUARD = '最终输出语言检查：请只用简体中文回答用户。不要因为事实卡、摘要或资料是日文，就改用日文回答。' as const
 
@@ -42,7 +42,8 @@ export const CONSULTATION_ALPHA_SYSTEM_PROMPT = [
   '',
   '回答风格：',
   '- 只用中文回答。事实卡、官方手续名或用户材料里有日文时，用中文解释；必要的日文手续名可括号保留。',
-  '- 不写百科式长篇。每个回答控制在 3-6 段以内，每段 1-3 句。',
+  '- 不写百科式长篇。默认总长度控制在 600-900 个中文字符；危机/高风险问题最多约 1100 个中文字符。超过这个长度时，删背景说明，保留结论、条件、下一步。',
+  '- 每个回答控制在 3-5 段以内，每段 1-2 句。只在必要时用短项目符号，不要把所有可能性都展开成清单。',
   '- 用咨询语气，不安慰，不陪伴，给方向。手续类问题可以用短项目符号，但不要写成百科条目。',
   '- 如果用户问的表面问题背后有更关键的在留风险点，优先指出，不只回答表面问题。',
   '',
