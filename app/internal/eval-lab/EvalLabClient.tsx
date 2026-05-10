@@ -202,7 +202,7 @@ const EMPTY_GEN_STATUS: QuestionGenStatus = {
 
 const MIN_DEEPSEEK_ANSWER_CHARS = 180
 const MIN_TEBIQ_ANSWER_CHARS = 120
-const CURRENT_TEBIQ_PROMPT_VERSION = 'consultation_alpha_v3'
+const CURRENT_TEBIQ_PROMPT_VERSION = 'consultation_alpha_v4'
 
 /**
  * Hydrate initial gen-status from server-side answer rows.

@@ -44,7 +44,7 @@ const SAFETY_DISCLAIMER_RE = /(?:不|不能|不要|避免)[^。！？\n]{0,18}(?
 const NEXT_ACTION_RE = /下一步|建议|先|需要|准备|确认|联系|咨询|提交|补|期限|通知|预约/
 const RISK_RE = /风险|注意|期限|失效|取消|不许可|拒签|超时|超期|影响|确认|入管|行政書士/
 const GENERIC_RE = /具体情况具体分析|因人而异|建议咨询专业人士/
-const CURRENT_TEBIQ_PROMPT_VERSION = 'consultation_alpha_v3'
+const CURRENT_TEBIQ_PROMPT_VERSION = 'consultation_alpha_v4'
 
 function hasDangerousCertaintyClaim(text: string): boolean {
   return text

@@ -19,7 +19,7 @@
 // prompt revisions are auditable. The constant is the single source of
 // truth for both the prompt body and the version tag — bump together.
 
-export const CONSULTATION_ALPHA_PROMPT_VERSION = 'consultation_alpha_v3' as const
+export const CONSULTATION_ALPHA_PROMPT_VERSION = 'consultation_alpha_v4' as const
 
 // Quality test 2026-05-07 (PL): switched to 'deepseek-v4-pro' with thinking
 // enabled (DS V4 Pro defaults to thinking on; no explicit thinking field
@@ -53,6 +53,10 @@ export const CONSULTATION_ALPHA_SYSTEM_PROMPT = [
   '- 当问题涉及在留高风险（不许可、补材料超期、解雇、配偶离婚、永住前年金、公司清算等）时，',
   '  明确建议「这种情况不建议只靠 AI 判断，建议找专业人士确认」。',
   '- 如果系统消息里有事实卡，请把它当作判断资源使用：提取其中的期限、窗口、材料、禁止误导点，用自然中文回答；不要原样拼贴事实卡文本。',
+  '- 不要说某个在留资格、路径或制度「已经废止 / 不能用了」，除非事实卡或官方信息明确写了这一点。没有明确来源时，说「路径很限定，需要个案判断」。',
+  '- 对「不许可 / 入管通知 / 期限临近 / 材料不齐」问题，必须按分支回答。不要自行断言「没有缓冲期」「当天非法」「通常给30天」；通知书上的期限和入管确认优先。',
+  '- 对「年金 / 健保 / 税金 + 截止日期 / 期限」这类模糊问题，不要自动投射到永住。先并列可能含义：每月缴费期限、公司手续期限、回国后的脱退一时金、永住审查记录期间，再给最安全的下一步。',
+  '- 对「快到期但材料未齐」问题，优先提示在到期前确认能否先提交/受理；不要承诺一定会给补正期间。',
   '',
   '回答结构（柔性，不必显式分段标题）：',
   '1) 先承认/复述用户的处境 (1-2 句)',
