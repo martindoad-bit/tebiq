@@ -40,6 +40,18 @@ direct_fact_fields:
   - required_documents_application_photo_passport
 ai_inferred_fields: []
 needs_review_flags: []
+citation_label: "在留カード紛失・盗難時の再交付申請"
+citation_summary: "在留カードを紛失・盗難した場合の再交付手続き（警察届出→入管申請・14日期限）を確認するカード。市区町村役所ではなく入管が申請先であることを明示。"
+source_display_names:
+  - "法務省 / 出入国在留管理庁"
+applies_when:
+  - "在留カードを紛失・盗難・滅失した"
+  - "ユーザーが在留カード紛失後の対処手順を問い合わせる"
+  - "在留カードを盗まれた場合の対応を確認する"
+does_not_cover:
+  - "雇用主・第三者による在留カードの保管・没収への法的対処（専門家への相談または DOMAIN確認要）"
+  - "住居地変更届出（市区町村役場での手続き — zairyu-address-change 参照）"
+  - "在留カードの有効期限更新（eijuu-card-koushin または zairyu-expiry-renewal-change 参照）"
 ---
 
 # 中長期在留者 — 在留カード紛失・盗難時の再交付申請
@@ -234,3 +246,4 @@ needs_review_flags: []
 | date | actor | action | from_state | to_state | note |
 |---|---|---|---|---|---|
 | 2026-05-10 | Codex (Cycle 1 self-cycle) | official source extraction + scenario mapping + QA cases | — | ai_verified | Fixes AQL P0 G04 wrong-office regression; risk=high so single explicit loss/reissue trigger can inject; official source only |
+| 2026-05-11 | FACT-OPS (Cycle 2 Batch 1) | Cycle 2メタデータフィールド追加（citation_label, citation_summary, source_display_names, applies_when, does_not_cover）。does_not_coverに雇用主による文書没収の境界・住居地変更届出との分離・有効期限更新との分離を記載。本体の変更なし。 | ai_verified | ai_verified | patch |
