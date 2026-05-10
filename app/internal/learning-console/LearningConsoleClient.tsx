@@ -114,7 +114,7 @@ function OverviewGrid({ overview, kpis }: { overview: Overview; kpis: LearningCo
     ['图片咨询数', overview.images.toString(), 'has image'],
     ['高风险词命中', overview.riskHits.toString(), 'risk keyword hits'],
     ['不准确反馈', overview.inaccurate.toString(), 'feedback'],
-    ['想人工确认', overview.humanReview.toString(), 'human confirm'],
+    ['需确认', overview.humanReview.toString(), 'human confirm'],
     ['已保存问题', overview.saved.toString(), 'saved'],
     ['超时 / 失败', overview.failures.toString(), 'timeout + failed'],
     ['平均响应时间', overview.avgLatencyLabel, 'completed rows'],
@@ -192,7 +192,7 @@ function RowList({ rows }: { rows: LearningConsoleRow[] }) {
                       {row.hasImage && <MetaPill icon={Camera}>图片</MetaPill>}
                       {row.riskKeywordHits.length > 0 && <MetaPill tone="focus" icon={ShieldAlert}>风险词 {row.riskKeywordHits.length}</MetaPill>}
                       {row.feedbackType && <MetaPill>反馈：<FeedbackLabel type={row.feedbackType} /></MetaPill>}
-                      {row.humanConfirmClicked && <MetaPill tone="focus">想人工确认</MetaPill>}
+                      {row.humanConfirmClicked && <MetaPill tone="focus">需确认</MetaPill>}
                       {row.savedQuestion && <MetaPill>已保存</MetaPill>}
                     </div>
                     <div>

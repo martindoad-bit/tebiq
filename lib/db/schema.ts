@@ -1293,7 +1293,7 @@ export const aiConsultations = pgTable(
     //
     // `factCardAudit` is one entry per matched card with full provenance
     // metadata. Schema (per Pack §2 / design doc §"Injection point"):
-    //   { fact_id, fact_card_state, risk_level, confidence,
+    //   { fact_id, title, fact_card_state, risk_level, confidence,
     //     source_quality, official_sources[], injected_fields[],
     //     needs_review_flags[], decision: 'inject'|'hint_only'|'drop' }
     // Required for incident review when a user / 書士 reports a wrong fact.

@@ -116,7 +116,7 @@ async function main() {
   await check('2b. FOLLOW_UP_LIMIT_MESSAGE matches Pack §4 voice canonical', () => {
     assert.equal(
       constantsMod.FOLLOW_UP_LIMIT_MESSAGE,
-      '这个问题已经包含多轮补充，建议保存咨询、整理材料后再继续，或考虑人工确认。',
+      '这个问题已经包含多轮补充，建议保存概要、整理材料后再继续；如果是另一个事项，可以重新开始。',
     )
   })
   await check('2c. PARENT_MAX_AGE_HOURS = 24 (Pack §7 abuse guard)', () => {

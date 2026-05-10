@@ -108,6 +108,9 @@ export interface ConsultationSummary {
  */
 export interface ConsultationFactCardAuditEntry {
   fact_id: string
+  /** User-facing fact-card title. Older persisted rows may not have it,
+   *  so UI parsers should still provide a fallback. */
+  title: string
   fact_card_state: string
   risk_level: string
   confidence: string

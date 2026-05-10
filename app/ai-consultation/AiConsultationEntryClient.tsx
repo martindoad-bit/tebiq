@@ -29,8 +29,10 @@ import {
   feedbackLabel,
   type AlphaDisplayState,
 } from '@/components/ui/consultation-alpha'
+import { FactReferenceBlock } from '@/components/ui/fact-reference'
 import {
   parseConsultationChunk,
+  type ConsultationFactCardAuditEntry,
   type ConsultationEvent,
 } from '@/lib/consultation/stream-protocol'
 
@@ -59,6 +61,7 @@ interface FollowUpTurn {
   addition: string
   answer: string
   risk_keywords: string[]
+  fact_cards: ConsultationFactCardAuditEntry[]
   routingStatus: {
     label: string
     level: 'initial' | 'specific'
@@ -81,6 +84,7 @@ interface ActiveConsultation {
   photoPreview: string | null
   answer: string
   risk_keywords: string[]
+  fact_cards: ConsultationFactCardAuditEntry[]
   routingStatus: {
     label: string
     level: 'initial' | 'specific'
@@ -113,7 +117,7 @@ type WaitingStage = 'early' | 'long' | 'escape'
 const FEEDBACK_BUTTONS: Array<{ type: FeedbackType; label: string }> = [
   { type: 'helpful', label: '有帮助' },
   { type: 'inaccurate', label: '不准确' },
-  { type: 'human_review', label: '想找人工确认' },
+  { type: 'human_review', label: '需确认' },
 ]
 
 function ensureViewerCookie(): string {
@@ -235,6 +239,7 @@ export default function AiConsultationEntryClient() {
       photoPreview,
       answer: '',
       risk_keywords: [],
+      fact_cards: [],
       routingStatus: null,
       phase: 'idle',
       first_token_latency_ms: null,
@@ -321,12 +326,7 @@ export default function AiConsultationEntryClient() {
             },
           }
         case 'fact_cards_injected':
-          // 0.6 ENGINE Pack 2.2: matcher audit announcement. CODEXUI
-          // Workstream G owns the UI rendering ("今日有效事实命中"
-          // hint); this client doesn't surface it yet. Returning
-          // `prev` keeps the existing UX while making the switch
-          // exhaustive over the new event.
-          return prev
+          return { ...prev, fact_cards: ev.items.slice() }
         case 'still_generating':
           return prev.phase === 'received' ? { ...prev, phase: 'still_generating' } : prev
         case 'first_token':
@@ -368,7 +368,7 @@ export default function AiConsultationEntryClient() {
       setActive(prev => prev ? {
         ...prev,
         followUpLimitReached: true,
-        followUpLimitMessage: '这次咨询已经补充过几轮。建议先保存，或把关键点给人工确认；如果是另一个事项，可以重新开始。',
+        followUpLimitMessage: '这次咨询已经补充过几轮。建议先保存概要；如果是另一个事项，可以重新开始。',
       } : prev)
       return
     }
@@ -463,7 +463,7 @@ export default function AiConsultationEntryClient() {
           case 'first_token':
             return { ...turn, phase: 'streaming', first_token_latency_ms: ev.first_token_latency_ms }
           case 'fact_cards_injected':
-            return turn
+            return { ...turn, fact_cards: ev.items.slice() }
           case 'answer_chunk':
             return { ...turn, answer: turn.answer + ev.chunk }
           case 'completed':
@@ -1033,6 +1033,10 @@ function ActiveConsultationView({
           )}
         </article>
 
+        {answerHasStarted && (
+          <FactReferenceBlock audit={active.fact_cards} variant="compact" />
+        )}
+
         {activeSafeDetail && active.phase !== 'streaming' && (
           <p className="border-t border-[var(--tebiq-soft-gray)] pt-3 text-[12px] leading-relaxed text-[var(--tebiq-deep-slate)]">
             {activeSafeDetail}
@@ -1097,7 +1101,7 @@ function ActiveConsultationView({
           <Surface className="space-y-4">
           <div className="space-y-3">
             <div>
-              <SectionLabel>保存这次咨询</SectionLabel>
+              <SectionLabel>保存概要</SectionLabel>
               <p className="mt-1 text-[13.5px] leading-[1.7] text-[var(--tebiq-deep-slate)]">
                 保存后可稍后补充、发给自己，或给专业人士参考。
               </p>
@@ -1106,26 +1110,26 @@ function ActiveConsultationView({
               <button
                 onClick={onSave}
                 disabled={active.saved}
-                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-btn bg-[var(--tebiq-ink-blue)] px-3 py-2 text-[14px] font-medium text-[var(--tebiq-off-white)] disabled:opacity-70"
+                className="inline-flex min-h-11 items-center justify-center gap-2 whitespace-nowrap rounded-btn bg-[var(--tebiq-ink-blue)] px-3 py-2 text-[14px] font-medium text-[var(--tebiq-off-white)] disabled:opacity-70"
               >
                 {active.saved ? <CheckCircle2 className="h-4 w-4" strokeWidth={1.6} /> : <Archive className="h-4 w-4" strokeWidth={1.6} />}
-                {active.saved ? '已保存' : '保存这次咨询'}
+                {active.saved ? '已保存' : '保存概要'}
               </button>
               <button
                 onClick={copyConsultationLink}
                 disabled={!active.id}
-                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-btn border border-[var(--tebiq-soft-gray)] px-3 py-2 text-[13px] font-medium text-[var(--tebiq-ink-blue)] disabled:opacity-50 sm:bg-[var(--tebiq-off-white)]"
+                className="inline-flex min-h-11 items-center justify-center gap-2 whitespace-nowrap rounded-btn border border-[var(--tebiq-soft-gray)] px-3 py-2 text-[13px] font-medium text-[var(--tebiq-ink-blue)] disabled:opacity-50 sm:bg-[var(--tebiq-off-white)]"
               >
                 {copyState === 'copied' ? <ClipboardCheck className="h-4 w-4" strokeWidth={1.6} /> : <Copy className="h-4 w-4" strokeWidth={1.6} />}
-                {copyState === 'copied' ? '已复制链接' : copyState === 'failed' ? '复制失败' : '复制咨询链接'}
+                {copyState === 'copied' ? '已复制链接' : copyState === 'failed' ? '复制失败' : '复制链接'}
               </button>
               <button
                 onClick={copyConsultationSummary}
                 disabled={!active.id}
-                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-btn border border-[var(--tebiq-soft-gray)] px-3 py-2 text-[13px] font-medium text-[var(--tebiq-ink-blue)] disabled:opacity-50 sm:bg-[var(--tebiq-off-white)]"
+                className="inline-flex min-h-11 items-center justify-center gap-2 whitespace-nowrap rounded-btn border border-[var(--tebiq-soft-gray)] px-3 py-2 text-[13px] font-medium text-[var(--tebiq-ink-blue)] disabled:opacity-50 sm:bg-[var(--tebiq-off-white)]"
               >
                 {summaryCopyState === 'copied' ? <ClipboardCheck className="h-4 w-4" strokeWidth={1.6} /> : <Copy className="h-4 w-4" strokeWidth={1.6} />}
-                {summaryCopyState === 'copied' ? '已复制概要' : summaryCopyState === 'failed' ? '复制失败' : '复制咨询概要'}
+                {summaryCopyState === 'copied' ? '已复制概要' : summaryCopyState === 'failed' ? '复制失败' : '复制概要'}
               </button>
             </div>
             <p className="text-[12px] leading-[1.65] text-[var(--tebiq-cool-gray)]">
@@ -1193,7 +1197,7 @@ function ActiveConsultationView({
 
           <Surface className="space-y-2 p-3.5 sm:p-4">
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-              <p className="text-[13px] font-medium text-[var(--tebiq-ink-blue)]">这条回答帮到你了吗？</p>
+              <p className="text-[13px] font-medium text-[var(--tebiq-ink-blue)]">反馈这条回答</p>
               <div className="grid grid-cols-3 gap-2 sm:min-w-[15rem]">
               {FEEDBACK_BUTTONS.map(b => (
                 <button
@@ -1201,7 +1205,7 @@ function ActiveConsultationView({
                   onClick={() => onFeedback(b.type)}
                   disabled={active.feedback_sent !== null && active.feedback_sent !== b.type}
                   className={cx(
-                    'min-h-9 rounded-btn border px-2 py-1.5 text-center text-[12px] font-medium',
+                    'min-h-9 rounded-btn border px-2 py-1.5 text-center text-[12px] font-medium whitespace-nowrap',
                     active.feedback_sent === b.type
                       ? 'border-[var(--tebiq-ink-blue)] bg-[var(--tebiq-soft-gray)] text-[var(--tebiq-ink-blue)]'
                       : 'border-[var(--tebiq-soft-gray)] text-[var(--tebiq-deep-slate)]',
@@ -1269,7 +1273,29 @@ function ActiveConsultationView({
           {error && <MetaPill tone="focus">{userSafeDetail(error, 'failed')}</MetaPill>}
         </div>
       )}
+      {active.feedback_sent === 'human_review' && (
+        <HumanReviewNotice onSave={onSave} />
+      )}
     </section>
+  )
+}
+
+function HumanReviewNotice({ onSave }: { onSave: () => void }) {
+  return (
+    <Surface className="space-y-2 border-[var(--tebiq-soft-gray)] p-3.5">
+      <SectionLabel>确认请求已记录</SectionLabel>
+      <p className="text-[13px] leading-[1.7] text-[var(--tebiq-deep-slate)]">
+        这还不是人工受理。你可以先保存概要；需要具体期限、材料或个案判断时，带着概要向行政書士或入管确认。
+      </p>
+      <button
+        type="button"
+        onClick={onSave}
+        className="inline-flex min-h-9 items-center justify-center gap-2 whitespace-nowrap rounded-btn border border-[var(--tebiq-soft-gray)] px-3 py-1.5 text-[12.5px] font-medium text-[var(--tebiq-ink-blue)]"
+      >
+        <Archive className="h-3.5 w-3.5" strokeWidth={1.6} />
+        保存概要
+      </button>
+    </Surface>
   )
 }
 
@@ -1339,6 +1365,10 @@ function FollowUpTurnCard({ turn, index }: { turn: FollowUpTurn; index: number }
           <span className="ml-1 inline-block h-4 w-1.5 animate-pulse rounded-full bg-[var(--tebiq-cool-gray)] align-middle" />
         )}
       </article>
+
+      {turn.answer.trim() && (
+        <FactReferenceBlock audit={turn.fact_cards} variant="compact" />
+      )}
 
       {turnSafeDetail && turn.phase !== 'streaming' && turn.phase !== 'limit_reached' && (
         <p className="border-t border-[var(--tebiq-soft-gray)] pt-3 text-[12px] leading-relaxed text-[var(--tebiq-deep-slate)]">
@@ -1416,7 +1446,7 @@ function FollowUpLimitCard({
       <div>
         <SectionLabel>这次咨询先停在这里</SectionLabel>
         <p className="mt-1 text-[13.5px] leading-[1.7] text-[var(--tebiq-deep-slate)]">
-          {message || '这次咨询已经补充过几轮。建议先保存，或把关键点给人工确认；如果是另一个事项，可以重新开始。'}
+          {message || '这次咨询已经补充过几轮。建议先保存概要；如果是另一个事项，可以重新开始。'}
         </p>
       </div>
       <div className="grid gap-2 sm:grid-cols-3">
@@ -1433,7 +1463,7 @@ function FollowUpLimitCard({
           onClick={onHumanReview}
           className="inline-flex min-h-10 items-center justify-center gap-2 rounded-btn border border-[var(--tebiq-soft-gray)] px-3 py-2 text-[13px] font-medium text-[var(--tebiq-ink-blue)]"
         >
-          想找人工确认
+          确认方式
         </button>
         <button
           type="button"
@@ -1486,7 +1516,7 @@ function CrisisActionCard({
             className="mt-3 inline-flex min-h-9 items-center justify-center gap-2 rounded-btn border border-[var(--tebiq-soft-gray)] bg-[var(--tebiq-off-white)] px-3 py-1.5 text-[12.5px] font-medium text-[var(--tebiq-ink-blue)]"
           >
             {copyState === 'copied' ? <ClipboardCheck className="h-3.5 w-3.5" strokeWidth={1.6} /> : <Copy className="h-3.5 w-3.5" strokeWidth={1.6} />}
-            {copyState === 'copied' ? '已复制概要' : copyState === 'failed' ? '复制失败' : '复制给人工确认'}
+            {copyState === 'copied' ? '已复制概要' : copyState === 'failed' ? '复制失败' : '复制给专业人士'}
           </button>
         </div>
       </div>
@@ -1514,7 +1544,7 @@ function getCrisisAction(hits: string[]): CrisisAction | null {
     return {
       title: '先守住通知期限',
       body: '入管通知、说明书或补材料不能放着不管，先确认期限和要提交的内容。',
-      steps: ['拍照保存通知书，确认提交期限、提交地点和材料名称。', '把事实经过按时间顺序整理，不要临时编理由。', '期限紧或内容不清楚时，尽快带通知书找人工确认。'],
+      steps: ['拍照保存通知书，确认提交期限、提交地点和材料名称。', '把事实经过按时间顺序整理，不要临时编理由。', '期限紧或内容不清楚时，尽快带通知书找专业人士确认。'],
     }
   }
   return null
@@ -1588,39 +1618,41 @@ function CompletionQuickActions({
 }) {
   return (
     <div className="rounded-card border border-[var(--tebiq-soft-gray)] bg-[var(--tebiq-off-white)] px-3 py-3">
-      <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+      <div className="grid grid-cols-2 gap-2">
         <button
           type="button"
           onClick={onFollowUp}
           disabled={followUpDisabled}
-          className="inline-flex min-h-10 items-center justify-center gap-1.5 rounded-btn bg-[var(--tebiq-ink-blue)] px-2 py-2 text-[12px] font-medium text-[var(--tebiq-off-white)] disabled:opacity-50"
+          className="inline-flex min-h-10 items-center justify-center gap-1.5 whitespace-nowrap rounded-btn bg-[var(--tebiq-ink-blue)] px-2 py-2 text-[12px] font-medium text-[var(--tebiq-off-white)] disabled:opacity-50"
         >
           <MessageSquarePlus className="h-3.5 w-3.5" strokeWidth={1.6} />
-          继续追问
+          继续问
         </button>
         <button
           type="button"
           onClick={onSave}
           disabled={saved}
-          className="inline-flex min-h-10 items-center justify-center gap-1.5 rounded-btn border border-[var(--tebiq-soft-gray)] px-2 py-2 text-[12px] font-medium text-[var(--tebiq-ink-blue)] disabled:opacity-60"
+          className="inline-flex min-h-10 items-center justify-center gap-1.5 whitespace-nowrap rounded-btn border border-[var(--tebiq-soft-gray)] px-2 py-2 text-[12px] font-medium text-[var(--tebiq-ink-blue)] disabled:opacity-60"
         >
           {saved ? <CheckCircle2 className="h-3.5 w-3.5" strokeWidth={1.6} /> : <Archive className="h-3.5 w-3.5" strokeWidth={1.6} />}
           {saved ? '已保存' : '保存'}
         </button>
+      </div>
+      <div className="mt-2 flex flex-wrap gap-x-4 gap-y-2 text-[12px]">
         <button
           type="button"
           onClick={onCopy}
-          className="inline-flex min-h-10 items-center justify-center gap-1.5 rounded-btn border border-[var(--tebiq-soft-gray)] px-2 py-2 text-[12px] font-medium text-[var(--tebiq-ink-blue)]"
+          className="inline-flex items-center gap-1 font-medium text-[var(--tebiq-deep-slate)]"
         >
           {copyState === 'copied' ? <ClipboardCheck className="h-3.5 w-3.5" strokeWidth={1.6} /> : <Copy className="h-3.5 w-3.5" strokeWidth={1.6} />}
-          {copyState === 'copied' ? '已复制' : '复制'}
+          {copyState === 'copied' ? '已复制链接' : '复制链接'}
         </button>
         <button
           type="button"
           onClick={onHumanReview}
-          className="inline-flex min-h-10 items-center justify-center rounded-btn border border-[var(--tebiq-warm-amber)] px-2 py-2 text-[12px] font-medium text-[var(--tebiq-ink-blue)]"
+          className="inline-flex items-center gap-1 font-medium text-[var(--tebiq-deep-slate)]"
         >
-          人工确认
+          确认方式
         </button>
       </div>
       <p className="mt-2 text-[11.5px] leading-[1.55] text-[var(--tebiq-cool-gray)]">
@@ -1635,10 +1667,10 @@ function FirstLookCard({ firstLook }: { firstLook: FirstLookBlock }) {
     <div className="rounded-card border border-[var(--tebiq-soft-gray)] bg-[var(--tebiq-soft-gray)]/35 px-3.5 py-3">
       <SectionLabel>先看这里</SectionLabel>
       <div className="mt-2 space-y-1.5 text-[14px] leading-[1.65] text-[var(--tebiq-ink-blue)]">
-        <p><span className="font-medium">结论：</span>{renderInline(firstLook.conclusion)}</p>
-        <p><span className="font-medium">今天先做：</span>{renderInline(firstLook.action)}</p>
+        <p><span className="font-medium">当前判断：</span>{renderInline(firstLook.conclusion)}</p>
+        <p><span className="font-medium">建议动作：</span>{renderInline(firstLook.action)}</p>
         {firstLook.avoid && (
-          <p><span className="font-medium">暂时不要：</span>{renderInline(firstLook.avoid)}</p>
+          <p><span className="font-medium">暂缓事项：</span>{renderInline(firstLook.avoid)}</p>
         )}
       </div>
     </div>
@@ -1665,9 +1697,9 @@ function extractFirstLook(text: string): { firstLook: FirstLookBlock | null; res
     return match[1].trim()
   }
 
-  const conclusion = take(['结论'])
-  const action = take(['今天先做', '今天可以先确认', '今天先确认', '先做'])
-  const avoid = take(['暂时不要', '暂时不要做', '先不要做'])
+  const conclusion = take(['当前判断', '结论'])
+  const action = take(['建议动作', '优先行动', '今天先做', '今天可以先确认', '今天先确认', '先做'])
+  const avoid = take(['暂缓事项', '先避免', '暂时不要', '暂时不要做', '先不要做'])
   if (!conclusion || !action) return { firstLook: null, rest: text }
 
   while (cursor < lines.length && lines[cursor].trim() === '') cursor += 1
@@ -1834,6 +1866,7 @@ function createFollowUpTurn(localId: string, addition: string): FollowUpTurn {
     addition,
     answer: '',
     risk_keywords: [],
+    fact_cards: [],
     routingStatus: null,
     phase: 'idle',
     first_token_latency_ms: null,

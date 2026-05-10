@@ -122,7 +122,7 @@ export default async function LearningConsoleDetailPage({ params }: PageProps) {
                 {row.feedbackType ? <MetaPill>反馈：<FeedbackLabel type={row.feedbackType} /></MetaPill> : <MetaPill>无反馈</MetaPill>}
                 <MetaPill>{row.savedQuestion ? '已保存' : '未保存'}</MetaPill>
                 <MetaPill tone={row.humanConfirmClicked ? 'focus' : 'neutral'}>
-                  {row.humanConfirmClicked ? '想人工确认' : '未点人工确认'}
+                  {row.humanConfirmClicked ? '需确认' : '未点确认'}
                 </MetaPill>
                 <MetaPill>追问 {row.followUpCount}</MetaPill>
               </div>

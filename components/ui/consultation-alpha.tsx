@@ -215,7 +215,7 @@ function riskHintPresentation(hits: string[]): { title: string; body: string; ch
     return {
       title: '高风险确认',
       body: '这类问题可能影响更新、变更、届出期限或之后的在留判断。',
-      chips: ['先确认事实', '不要急着提交/离境', '必要时人工确认'],
+      chips: ['先确认事实', '不要急着提交/离境', '必要时专业确认'],
     }
   }
   return {
@@ -234,7 +234,7 @@ export function feedbackLabel(type: FeedbackType): string {
     case 'helpful': return '有帮助'
     case 'inaccurate': return '不准确'
     case 'add_context': return '想补充情况'
-    case 'human_review': return '想人工确认'
+    case 'human_review': return '需确认'
     case 'saved': return '已保存'
   }
 }

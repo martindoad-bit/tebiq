@@ -26,7 +26,7 @@ export const LEARNING_CONSOLE_TAB_LABELS: Record<LearningConsoleTab, string> = {
   image:        '图片咨询',
   risk:         '命中高风险词',
   inaccurate:   '不准确反馈',
-  human_review: '想人工确认',
+  human_review: '需确认',
   saved:        '已保存问题',
   failure:      '超时 / 失败',
 }

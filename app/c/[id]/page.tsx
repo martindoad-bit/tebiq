@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, BookOpen, Camera, GitBranch, MessageSquarePlus } from 'lucide-react'
+import { ArrowLeft, Camera, GitBranch, MessageSquarePlus } from 'lucide-react'
 import {
   BrandHeader,
   ConsultationShell,
@@ -12,6 +12,7 @@ import {
   Surface,
   type AlphaDisplayState,
 } from '@/components/ui/consultation-alpha'
+import { FactReferenceBlock } from '@/components/ui/fact-reference'
 import type { ConsultationFactCardAuditEntry } from '@/lib/consultation/stream-protocol'
 import {
   getAiConsultationById,
@@ -110,7 +111,7 @@ export default async function ConsultationDetailPage({ params }: PageProps) {
           )}
         </Surface>
 
-        <FactCardsBlock audit={factCardAudit} />
+        <FactReferenceBlock audit={factCardAudit} />
 
         {isChain && <ChainBlock chain={chain} currentId={row.id} />}
 
@@ -120,7 +121,7 @@ export default async function ConsultationDetailPage({ params }: PageProps) {
             <MetaPill>{new Date(row.createdAt).toLocaleString('zh-CN')}</MetaPill>
             {row.feedbackType && <MetaPill>反馈：<FeedbackLabel type={row.feedbackType} /></MetaPill>}
             {row.savedQuestion && <MetaPill>已保存</MetaPill>}
-            {row.humanConfirmClicked && <MetaPill tone="focus">想人工确认</MetaPill>}
+            {row.humanConfirmClicked && <MetaPill tone="focus">需确认</MetaPill>}
           </div>
         </Surface>
 
@@ -161,6 +162,7 @@ function parseFactCardAudit(row: AiConsultation): ConsultationFactCardAuditEntry
     if (typeof e.fact_id !== 'string') continue
     out.push({
       fact_id: e.fact_id,
+      title: typeof e.title === 'string' && e.title.trim() ? e.title : 'TEBIQ 知识资料',
       fact_card_state: typeof e.fact_card_state === 'string' ? e.fact_card_state : 'unknown',
       risk_level: typeof e.risk_level === 'string' ? e.risk_level : 'unknown',
       confidence: typeof e.confidence === 'string' ? e.confidence : 'unknown',
@@ -182,95 +184,6 @@ function parseFactCardAudit(row: AiConsultation): ConsultationFactCardAuditEntry
   return out
 }
 
-function FactCardsBlock({ audit }: { audit: ConsultationFactCardAuditEntry[] }) {
-  if (audit.length === 0) return null
-  const injected = audit.filter(a => a.decision === 'inject')
-  const hintOnly = audit.filter(a => a.decision === 'hint_only')
-  // No "drop" rows surface (server can omit them) — but be tolerant
-  // either way and just show what's there.
-  if (injected.length === 0 && hintOnly.length === 0) return null
-  return (
-    <details className="rounded-card border border-[var(--tebiq-soft-gray)] bg-[var(--tebiq-off-white)] p-4 sm:p-5">
-      <summary className="flex cursor-pointer list-none items-center gap-2 text-[13px] font-medium text-[var(--tebiq-ink-blue)]">
-        <BookOpen className="h-4 w-4 text-[var(--tebiq-ink-blue)]" strokeWidth={1.6} />
-        参考依据
-        <span className="text-[12px] font-normal text-[var(--tebiq-cool-gray)]">
-          {injected.length + hintOnly.length} 条资料
-        </span>
-      </summary>
-      <div className="mt-3 space-y-3">
-        <p className="text-[12px] leading-relaxed text-[var(--tebiq-deep-slate)]">
-          TEBIQ 会参考已整理的事实资料，但具体期限和个案判断仍建议向行政書士或入管确认。
-        </p>
-        {injected.length > 0 && (
-          <div className="space-y-2">
-            <SectionLabel>已用于回答</SectionLabel>
-            <ul className="space-y-1.5">
-              {injected.map(card => <FactCardRow key={card.fact_id} card={card} />)}
-            </ul>
-          </div>
-        )}
-        {hintOnly.length > 0 && (
-          <div className="space-y-2">
-            <SectionLabel>相关但需进一步确认</SectionLabel>
-            <ul className="space-y-1.5">
-              {hintOnly.map(card => <FactCardRow key={card.fact_id} card={card} />)}
-            </ul>
-          </div>
-        )}
-      </div>
-    </details>
-  )
-}
-
-function FactCardRow({ card }: { card: ConsultationFactCardAuditEntry }) {
-  const isHighRisk = card.risk_level === 'high' || card.risk_level === 'critical'
-  return (
-    <li className="flex flex-col gap-1 rounded-card border border-[var(--tebiq-soft-gray)] bg-[var(--tebiq-soft-gray)]/30 px-3 py-2">
-      <div className="flex flex-wrap items-center gap-2">
-        <span className="text-[13px] font-medium text-[var(--tebiq-ink-blue)]">
-          TEBIQ 知识资料
-        </span>
-        {card.official_sources.length > 0 && (
-          <span className="rounded-full border border-[var(--tebiq-cool-gray)] px-2 py-0.5 text-[10px] text-[var(--tebiq-deep-slate)]">
-            官方来源
-          </span>
-        )}
-        {isHighRisk && (
-          <span className="rounded-full border border-[var(--tebiq-warm-amber)] px-2 py-0.5 text-[10px] text-[var(--tebiq-deep-slate)]">
-            高风险资料
-          </span>
-        )}
-      </div>
-      {card.official_sources.length > 0 && (
-        <div className="flex flex-wrap gap-x-3 gap-y-0.5 text-[11px] text-[var(--tebiq-cool-gray)]">
-          {card.official_sources.slice(0, 3).map(url => (
-            <a key={url} href={url} target="_blank" rel="noreferrer noopener" className="hover:underline truncate">
-              {hostnameOf(url)}
-            </a>
-          ))}
-          {card.official_sources.length > 3 && (
-            <span>+{card.official_sources.length - 3} more</span>
-          )}
-        </div>
-      )}
-      {card.needs_review_flags.length > 0 && (
-        <p className="text-[11px] text-[var(--tebiq-cool-gray)]">
-          部分细节仍需要结合材料或窗口说明进一步确认。
-        </p>
-      )}
-    </li>
-  )
-}
-
-function hostnameOf(url: string): string {
-  try {
-    return new URL(url).hostname
-  } catch {
-    return url.slice(0, 32)
-  }
-}
-
 function hasEncodingIssue(text: string | null | undefined): boolean {
   return typeof text === 'string' && /\uFFFD/.test(text)
 }
@@ -290,9 +203,9 @@ function AnswerDetailProse({ text }: { text: string }) {
         <div className="rounded-card border border-[var(--tebiq-soft-gray)] bg-[var(--tebiq-soft-gray)]/35 px-3.5 py-3">
           <SectionLabel>先看这里</SectionLabel>
           <div className="mt-2 space-y-1.5 text-[14px] leading-[1.65] text-[var(--tebiq-ink-blue)]">
-            <p><span className="font-medium">结论：</span>{firstLook.conclusion}</p>
-            <p><span className="font-medium">今天先做：</span>{firstLook.action}</p>
-            {firstLook.avoid && <p><span className="font-medium">暂时不要：</span>{firstLook.avoid}</p>}
+            <p><span className="font-medium">当前判断：</span>{firstLook.conclusion}</p>
+            <p><span className="font-medium">建议动作：</span>{firstLook.action}</p>
+            {firstLook.avoid && <p><span className="font-medium">暂缓事项：</span>{firstLook.avoid}</p>}
           </div>
         </div>
       )}
@@ -325,9 +238,9 @@ function extractFirstLook(text: string): { firstLook: FirstLookBlock | null; res
     return match[1].trim()
   }
 
-  const conclusion = take(['结论'])
-  const action = take(['今天先做', '今天可以先确认', '今天先确认', '先做'])
-  const avoid = take(['暂时不要', '暂时不要做', '先不要做'])
+  const conclusion = take(['当前判断', '结论'])
+  const action = take(['建议动作', '优先行动', '今天先做', '今天可以先确认', '今天先确认', '先做'])
+  const avoid = take(['暂缓事项', '先避免', '暂时不要', '暂时不要做', '先不要做'])
   if (!conclusion || !action) return { firstLook: null, rest: text }
 
   while (cursor < lines.length && lines[cursor].trim() === '') cursor += 1

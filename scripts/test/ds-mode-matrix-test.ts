@@ -20,6 +20,8 @@
  * Output: JSON + human-readable summary on stdout.
  */
 
+export {}
+
 const ENDPOINT = 'https://api.deepseek.com/chat/completions'
 
 const SYSTEM_PROMPT =

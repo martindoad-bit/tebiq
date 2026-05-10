@@ -45,6 +45,7 @@ async function main() {
   const STREAM_ROUTE_PATH = join(process.cwd(), 'app/api/consultation/stream/route.ts')
   const QUERIES_PATH = join(process.cwd(), 'lib/db/queries/aiConsultations.ts')
   const C_PAGE_PATH = join(process.cwd(), 'app/c/[id]/page.tsx')
+  const FACT_REFERENCE_PATH = join(process.cwd(), 'components/ui/fact-reference.tsx')
   const ME_PAGE_PATH = join(process.cwd(), 'app/me/consultations/page.tsx')
 
   // -----------------------------------------------------------------------
@@ -63,6 +64,7 @@ async function main() {
       items: [
         {
           fact_id: 'keiei-kanri-2025-10',
+          title: '经营管理 2025 改正',
           fact_card_state: 'ai_verified',
           risk_level: 'critical',
           confidence: 'high',
@@ -86,6 +88,7 @@ async function main() {
       items: [
         {
           fact_id: 'spouse-divorce-separation',
+          title: '配偶离婚分居',
           fact_card_state: 'human_reviewed',
           risk_level: 'critical',
           confidence: 'high',
@@ -129,17 +132,17 @@ async function main() {
     // Compile-time check: only inject | hint_only | drop accepted
     const entries: import('@/lib/consultation/stream-protocol').ConsultationFactCardAuditEntry[] = [
       {
-        fact_id: 'a', fact_card_state: 's', risk_level: 'low', confidence: 'high',
+        fact_id: 'a', title: 'A', fact_card_state: 's', risk_level: 'low', confidence: 'high',
         source_quality: 'official', official_sources: [], injected_fields: [],
         needs_review_flags: [], decision: 'inject',
       },
       {
-        fact_id: 'b', fact_card_state: 's', risk_level: 'low', confidence: 'high',
+        fact_id: 'b', title: 'B', fact_card_state: 's', risk_level: 'low', confidence: 'high',
         source_quality: 'official', official_sources: [], injected_fields: [],
         needs_review_flags: [], decision: 'hint_only',
       },
       {
-        fact_id: 'c', fact_card_state: 's', risk_level: 'low', confidence: 'high',
+        fact_id: 'c', title: 'C', fact_card_state: 's', risk_level: 'low', confidence: 'high',
         source_quality: 'official', official_sources: [], injected_fields: [],
         needs_review_flags: [], decision: 'drop',
       },
@@ -273,16 +276,20 @@ async function main() {
       '/c/[id] missing parseFactCardAudit helper',
     )
   })
-  check('4c. /c/[id] renders FactCardsBlock + per-card row', () => {
-    assert.ok(cPageSrc.includes('FactCardsBlock'))
-    assert.ok(cPageSrc.includes('FactCardRow'))
-    assert.ok(cPageSrc.includes('本回答参考的事实卡'))
+  const factReferenceSrc = readFileSync(FACT_REFERENCE_PATH, 'utf8')
+
+  check('4c. /c/[id] renders shared FactReferenceBlock', () => {
+    assert.ok(cPageSrc.includes('FactReferenceBlock'))
+    assert.ok(factReferenceSrc.includes('参考资料'))
+    assert.ok(factReferenceSrc.includes('FactReferenceRow'))
   })
-  check('4d. /c/[id] links each card to docs/fact-cards/<id>.md on github', () => {
+  check('4d. FactReferenceBlock links each card official_sources URL', () => {
     assert.ok(
-      cPageSrc.includes('docs/fact-cards/'),
-      'fact card link does not target docs/fact-cards/',
+      factReferenceSrc.includes('card.official_sources'),
+      'fact reference does not read official_sources',
     )
+    assert.ok(factReferenceSrc.includes('target="_blank"'))
+    assert.ok(factReferenceSrc.includes('rel="noreferrer noopener"'))
   })
 
   // -----------------------------------------------------------------------
@@ -295,10 +302,7 @@ async function main() {
       mePageSrc.includes('row.factCardIds'),
       '/me/consultations does not surface fact-card count',
     )
-    assert.ok(
-      /事实卡\s*×/.test(mePageSrc),
-      '/me/consultations missing 事实卡 ×N badge label',
-    )
+    assert.ok(/参考资料\s*×/.test(mePageSrc), '/me/consultations missing 参考资料 ×N badge label')
   })
 
   // -----------------------------------------------------------------------

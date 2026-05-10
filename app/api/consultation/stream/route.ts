@@ -355,6 +355,7 @@ export async function POST(req: Request) {
       const todayIso = new Date().toISOString().slice(0, 10)
       factCardAudit = factMatches.map(m => ({
         fact_id: m.fact_id,
+        title: m.title,
         fact_card_state: m.state,
         risk_level: m.risk_level,
         confidence: m.confidence,

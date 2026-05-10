@@ -2,7 +2,7 @@
  * 1.0 Alpha Learning Console contract tests (Issue #41).
  *
  * DB-free / SSR-free unit tests for:
- *   - 7-tab filter predicate semantics (Pack §4)
+ *   - 8-tab filter predicate semantics (Pack §4 + needs_attention)
  *   - KPI roll-up math (Pack §5)
  *   - Today-vs-yesterday boundary handling (Asia/Tokyo)
  *
@@ -69,48 +69,56 @@ async function main() {
   }
 
   // ---- 1. Tab labels + tab list ----
-  check('1a. LEARNING_CONSOLE_TABS has exactly 7 entries (Pack §4)', () => {
-    assert.equal(mod.LEARNING_CONSOLE_TABS.length, 7)
+  check('1a. LEARNING_CONSOLE_TABS has exactly 8 entries (Pack §4 + needs_attention)', () => {
+    assert.equal(mod.LEARNING_CONSOLE_TABS.length, 8)
   })
   check('1b. LEARNING_CONSOLE_TAB_LABELS keys match LEARNING_CONSOLE_TABS', () => {
     for (const t of mod.LEARNING_CONSOLE_TABS) {
       assert.ok(mod.LEARNING_CONSOLE_TAB_LABELS[t], `missing label for tab "${t}"`)
     }
   })
-  check('1c. tab order matches Pack §4 (1.全部 / 2.图片 / 3.高风险 / 4.不准确 / 5.人工 / 6.已保存 / 7.超时)', () => {
+  check('1c. tab order matches Pack §4 with needs_attention first', () => {
     assert.deepEqual(mod.LEARNING_CONSOLE_TABS, [
-      'all', 'image', 'risk', 'inaccurate', 'human_review', 'saved', 'failure',
+      'needs_attention', 'all', 'image', 'risk', 'inaccurate', 'human_review', 'saved', 'failure',
     ])
   })
 
   // ---- 2. matchesTab predicate ----
-  check('2a. all → matches every row', () => {
+  check('2a. needs_attention → failure / inaccurate / human_review / slow / encoding issue', () => {
+    assert.equal(mod.matchesTab(row({ completionStatus: 'failed' }), 'needs_attention'), true)
+    assert.equal(mod.matchesTab(row({ feedbackType: 'inaccurate' }), 'needs_attention'), true)
+    assert.equal(mod.matchesTab(row({ feedbackType: 'human_review' }), 'needs_attention'), true)
+    assert.equal(mod.matchesTab(row({ totalLatencyMs: 46_000 }), 'needs_attention'), true)
+    assert.equal(mod.matchesTab(row({ finalAnswerText: '显示异常 �' }), 'needs_attention'), true)
+    assert.equal(mod.matchesTab(row(), 'needs_attention'), false)
+  })
+  check('2b. all → matches every row', () => {
     assert.equal(mod.matchesTab(row(), 'all'), true)
     assert.equal(mod.matchesTab(row({ completionStatus: 'failed' }), 'all'), true)
   })
-  check('2b. image → only hasImage=true', () => {
+  check('2c. image → only hasImage=true', () => {
     assert.equal(mod.matchesTab(row({ hasImage: true }), 'image'), true)
     assert.equal(mod.matchesTab(row({ hasImage: false }), 'image'), false)
   })
-  check('2c. risk → riskKeywordHits.length > 0', () => {
+  check('2d. risk → riskKeywordHits.length > 0', () => {
     assert.equal(mod.matchesTab(row({ riskKeywordHits: ['离婚'] }), 'risk'), true)
     assert.equal(mod.matchesTab(row({ riskKeywordHits: [] }), 'risk'), false)
   })
-  check('2d. inaccurate → feedbackType === "inaccurate"', () => {
+  check('2e. inaccurate → feedbackType === "inaccurate"', () => {
     assert.equal(mod.matchesTab(row({ feedbackType: 'inaccurate' }), 'inaccurate'), true)
     assert.equal(mod.matchesTab(row({ feedbackType: 'helpful' }), 'inaccurate'), false)
     assert.equal(mod.matchesTab(row({ feedbackType: null }), 'inaccurate'), false)
   })
-  check('2e. human_review → feedbackType="human_review" OR humanConfirmClicked=true', () => {
+  check('2f. human_review → feedbackType="human_review" OR humanConfirmClicked=true', () => {
     assert.equal(mod.matchesTab(row({ feedbackType: 'human_review' }), 'human_review'), true)
     assert.equal(mod.matchesTab(row({ humanConfirmClicked: true }), 'human_review'), true)
     assert.equal(mod.matchesTab(row(), 'human_review'), false)
   })
-  check('2f. saved → savedQuestion=true', () => {
+  check('2g. saved → savedQuestion=true', () => {
     assert.equal(mod.matchesTab(row({ savedQuestion: true }), 'saved'), true)
     assert.equal(mod.matchesTab(row({ savedQuestion: false }), 'saved'), false)
   })
-  check('2g. failure → timeout OR failed', () => {
+  check('2h. failure → timeout OR failed', () => {
     assert.equal(mod.matchesTab(row({ completionStatus: 'timeout' }), 'failure'), true)
     assert.equal(mod.matchesTab(row({ completionStatus: 'failed' }), 'failure'), true)
     assert.equal(mod.matchesTab(row({ completionStatus: 'completed' }), 'failure'), false)

@@ -37,9 +37,9 @@ async function main() {
   }
 
   // ---- 1. System prompt constants ----
-  check('1a. CONSULTATION_ALPHA_PROMPT_VERSION is "consultation_alpha_v16"', () => {
+  check('1a. CONSULTATION_ALPHA_PROMPT_VERSION is "consultation_alpha_v17"', () => {
     // Cycle 1 quality flywheel v4: answer first-look block + UI flywheel.
-    assert.equal(promptMod.CONSULTATION_ALPHA_PROMPT_VERSION, 'consultation_alpha_v16')
+    assert.equal(promptMod.CONSULTATION_ALPHA_PROMPT_VERSION, 'consultation_alpha_v17')
   })
   check('1b. CONSULTATION_ALPHA_MODEL is "deepseek-v4-pro"', () => {
     assert.equal(promptMod.CONSULTATION_ALPHA_MODEL, 'deepseek-v4-pro')
@@ -57,7 +57,7 @@ async function main() {
   })
   check('1d2. system prompt requires first-look answer block', () => {
     const p = promptMod.CONSULTATION_ALPHA_SYSTEM_PROMPT
-    for (const phrase of ['先看这里', '结论：', '今天先做：']) {
+    for (const phrase of ['先看这里', '当前判断：', '建议动作：']) {
       assert.ok(p.includes(phrase), `prompt missing first-look phrase: ${phrase}`)
     }
   })

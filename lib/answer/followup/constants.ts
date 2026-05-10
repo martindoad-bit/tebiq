@@ -25,7 +25,7 @@ export const MAX_FOLLOW_UP_ROUNDS = 3
  * field directly so the canonical copy is enforced server-side.
  */
 export const FOLLOW_UP_LIMIT_MESSAGE =
-  '这个问题已经包含多轮补充，建议保存咨询、整理材料后再继续，或考虑人工确认。'
+  '这个问题已经包含多轮补充，建议保存概要、整理材料后再继续；如果是另一个事项，可以重新开始。'
 
 /**
  * How many distinct viewer cookies one parent_consultation_id can be

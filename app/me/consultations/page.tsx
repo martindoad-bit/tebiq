@@ -94,7 +94,7 @@ export default async function MyConsultationsPage() {
                       {row.feedbackType && <MetaPill>反馈：<FeedbackLabel type={row.feedbackType} /></MetaPill>}
                       {row.savedQuestion && <MetaPill>已保存</MetaPill>}
                       {(row.factCardIds ?? []).length > 0 && (
-                        <MetaPill icon={BookOpen}>参考了 TEBIQ 知识库</MetaPill>
+                        <MetaPill icon={BookOpen}>参考资料 ×{(row.factCardIds ?? []).length}</MetaPill>
                       )}
                       {(row.riskKeywordHits ?? []).length > 0 && (
                         <MetaPill tone="focus">有风险提示</MetaPill>

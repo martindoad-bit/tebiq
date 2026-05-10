@@ -221,7 +221,7 @@ function knowledgeSeedToAnswer(seed: KnowledgeSeed, _questionText: string): Answ
     answer_level: 'L2',
     review_status: 'reviewed',
     title: seed.title,
-    summary: `这个问题和「${seed.title}」相关。先按材料准备维度确认事实，再决定是否需要人工确认。`,
+    summary: `这个问题和「${seed.title}」相关。先按材料准备维度确认事实，再决定是否需要专业确认。`,
     sections,
     next_steps: [
       '先确认这件事是否属于你的当前在留资格和申请阶段。',
