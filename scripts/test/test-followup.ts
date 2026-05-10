@@ -46,6 +46,7 @@ async function main() {
   const FOLLOWUP_ROUTE_PATH = join(process.cwd(), 'app/api/consultation/follow-up/route.ts')
   const QUERIES_PATH = join(process.cwd(), 'lib/db/queries/aiConsultations.ts')
   const C_PAGE_PATH = join(process.cwd(), 'app/c/[id]/page.tsx')
+  const ENTRY_CLIENT_PATH = join(process.cwd(), 'app/ai-consultation/AiConsultationEntryClient.tsx')
 
   // -----------------------------------------------------------------------
   // 1. SSE protocol: follow_up_limit_reached event
@@ -81,10 +82,10 @@ async function main() {
       assert.ok(ev.message.length > 0)
     }
   })
-  await check('1d. follow_up_limit_reached is NOT a terminal event', () => {
-    // Terminal events are completed / partial / timeout / failed —
-    // limit_reached is paired with a `completed` frame in the
-    // short-stream so isTerminal stays accurate.
+  await check('1d. follow_up_limit_reached is a terminal event for parsers', () => {
+    // The server still pairs limit_reached with a synthetic completed
+    // frame for older clients, but parsers may stop safely on
+    // follow_up_limit_reached because no DB row or LLM call follows.
     assert.equal(
       protocolMod.isTerminalConsultationEvent({
         event: 'follow_up_limit_reached',
@@ -92,7 +93,7 @@ async function main() {
         message: 'x',
         follow_up_count: 3,
       }),
-      false,
+      true,
     )
   })
   await check('1e. ConsultationSummary type accepts the canonical 4-field shape', () => {
@@ -403,9 +404,32 @@ async function main() {
   })
 
   // -----------------------------------------------------------------------
-  // 8. Migration 0027 shape
+  // 8. Frontend follow-up chain wiring
   // -----------------------------------------------------------------------
-  await check('8a. migration 0027 is exactly one ALTER + one ALTER + one INDEX (additive)', () => {
+  const entryClientSrc = readFileSync(ENTRY_CLIENT_PATH, 'utf8')
+
+  await check('8a. consultation page sends follow-ups to latest answered turn, not always root', () => {
+    assert.ok(entryClientSrc.includes('getFollowUpParentConsultationId(active)'))
+    assert.ok(entryClientSrc.includes('parent_consultation_id: parentConsultationId'))
+    assert.ok(!entryClientSrc.includes('parent_consultation_id: active.id'))
+  })
+  await check('8b. latest follow-up parent helper walks turns from newest to oldest', () => {
+    assert.ok(entryClientSrc.includes('function getFollowUpParentConsultationId'))
+    assert.ok(entryClientSrc.includes('.reverse()'))
+    assert.ok(entryClientSrc.includes("turn.phase === 'completed' || turn.phase === 'timeout'"))
+    assert.ok(entryClientSrc.includes('return latestAnswerTurn?.id ?? active.id'))
+  })
+  await check('8c. frontend handles follow_up_limit_reached exactly in root + follow-up paths', () => {
+    const occurrences = entryClientSrc.match(/case 'follow_up_limit_reached'/g) ?? []
+    assert.equal(occurrences.length, 2)
+    assert.ok(entryClientSrc.includes('followUpLimitReached: true'))
+    assert.ok(entryClientSrc.includes("phase: 'limit_reached'"))
+  })
+
+  // -----------------------------------------------------------------------
+  // 9. Migration 0027 shape
+  // -----------------------------------------------------------------------
+  await check('9a. migration 0027 is exactly one ALTER + one ALTER + one INDEX (additive)', () => {
     const path = join(process.cwd(), 'lib/db/migrations/0027_consultation_followup.sql')
     const sql = readFileSync(path, 'utf8')
     assert.ok(sql.includes('ADD COLUMN "parent_consultation_id"'))

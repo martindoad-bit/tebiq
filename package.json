@@ -31,6 +31,7 @@
     "test:live-regression": "tsx scripts/test/test-live-regression.ts",
     "eval:import-judgements": "tsx --env-file=.env.local scripts/eval/import-judgements.ts",
     "eval:calibration-report": "tsx scripts/eval/write-calibration-report.ts",
+    "qa:followup-flywheel": "tsx scripts/qa/run-followup-flywheel.ts",
     "smoke:production-answer": "tsx scripts/test/smoke-production-answer.ts",
     "test": "tsx --test lib/**/*.test.ts"
   },

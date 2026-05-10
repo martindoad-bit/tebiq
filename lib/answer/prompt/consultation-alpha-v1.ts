@@ -21,6 +21,8 @@
 
 export const CONSULTATION_ALPHA_PROMPT_VERSION = 'consultation_alpha_v6' as const
 
+export const CONSULTATION_FINAL_OUTPUT_GUARD = '最终输出语言检查：请只用简体中文回答用户。不要因为事实卡、摘要或资料是日文，就改用日文回答。' as const
+
 // Quality test 2026-05-07 (PL): switched to 'deepseek-v4-pro' with thinking
 // enabled (DS V4 Pro defaults to thinking on; no explicit thinking field
 // passed). Trigger: post-PR#69 the per-chunk DB await bottleneck is gone,
@@ -113,7 +115,7 @@ export function buildConsultationMessages(input: {
   }
   messages.push({
     role: 'system',
-    content: '最终输出语言检查：请只用简体中文回答用户。不要因为事实卡或资料是日文，就改用日文回答。',
+    content: CONSULTATION_FINAL_OUTPUT_GUARD,
   })
   messages.push({ role: 'user', content: input.userQuestion })
   return messages

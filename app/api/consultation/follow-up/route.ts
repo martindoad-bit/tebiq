@@ -49,6 +49,7 @@ import { matchBuckets, topBucket } from '@/lib/answer/intent/match-buckets'
 import {
   CONSULTATION_ALPHA_MODEL,
   CONSULTATION_ALPHA_PROMPT_VERSION,
+  CONSULTATION_FINAL_OUTPUT_GUARD,
   buildConsultationMessages,
 } from '@/lib/answer/prompt/consultation-alpha-v1'
 import { anchorsToPromptContext, matchAnchors } from '@/lib/consultation/fact-anchors'
@@ -69,6 +70,7 @@ import {
   getAiConsultationById,
   markFirstToken,
   setConsultationSummary,
+  type AiConsultation,
 } from '@/lib/db/queries/aiConsultations'
 
 export const dynamic = 'force-dynamic'
@@ -79,6 +81,7 @@ const DEEPSEEK_ENDPOINT = 'https://api.deepseek.com/chat/completions'
 const TEMPERATURE = 0.3
 const MAX_TOKENS = 1500
 const ROUTING_STATUS_SPECIFIC_DELAY_MS = 3000
+const ON_DEMAND_SUMMARY_TIMEOUT_MS = 7_000
 
 interface ReqBody {
   parent_consultation_id?: string
@@ -180,7 +183,7 @@ export async function POST(req: Request): Promise<Response> {
   // anchor so round-1 follow-ups (where summary is still null because
   // the parent's fire-and-forget summary build hasn't completed yet)
   // still inherit the parent's keyword surface.
-  const priorSummary = parsePriorSummary(parent.consultationSummary)
+  const priorSummary = await resolvePriorSummary(parent, root)
   const matcherInput = composeMatcherInput(priorSummary, userAddition, root.userQuestionText)
   const factLayerEnabled = process.env.FACT_LAYER_ENABLED === 'true'
   const factMatchesPromise: Promise<FactCardMatch[]> = factLayerEnabled
@@ -361,6 +364,7 @@ export async function POST(req: Request): Promise<Response> {
         factAnchors: anchorsToPromptContext(matchedAnchors),
       })
       const summaryMsg = summaryAsSystemMessage(priorSummary)
+        ?? fallbackRootContextAsSystemMessage(root.userQuestionText, parent.userQuestionText)
       const messages: Array<{ role: 'system' | 'user'; content: string }> = []
       // Slice: every system message in baseMessages...
       for (const m of baseMessages.slice(0, -1)) messages.push(m)
@@ -370,6 +374,7 @@ export async function POST(req: Request): Promise<Response> {
       if (summaryMsg) {
         messages.push(summaryMsg)
       }
+      messages.push({ role: 'system', content: CONSULTATION_FINAL_OUTPUT_GUARD })
       // ...then re-append the trailing user message LAST.
       messages.push(baseMessages[baseMessages.length - 1])
 
@@ -669,6 +674,65 @@ function composeMatcherInput(
   const parts: string[] = [userAddition, goal]
   if (prior?.known_facts) for (const f of prior.known_facts) parts.push(f)
   return parts.filter(Boolean).join(' 　 ')
+}
+
+async function resolvePriorSummary(
+  parent: AiConsultation,
+  root: AiConsultation,
+): Promise<ConsultationSummary | null> {
+  const existing = parsePriorSummary(parent.consultationSummary)
+  if (existing) return existing
+
+  const parentAnswer = parent.finalAnswerText ?? parent.aiAnswerText
+  if (!parentAnswer || !parentAnswer.trim()) return null
+
+  const rootSummary = parent.parentConsultationId
+    ? parsePriorSummary(root.consultationSummary)
+    : null
+
+  try {
+    const result = await buildConsultationSummary({
+      rootQuestion: root.userQuestionText,
+      userMessage: parent.userQuestionText,
+      answerText: parentAnswer,
+      priorSummary: rootSummary,
+      roundIndex: parent.followUpCount ?? 0,
+    }, { timeoutMs: ON_DEMAND_SUMMARY_TIMEOUT_MS })
+    if (result.summary) {
+      void setConsultationSummary(parent.id, result.summary)
+      return result.summary
+    }
+    if (result.fallback_reason) {
+      console.warn(
+        '[consultation/follow-up] on-demand prior summary skipped:',
+        result.fallback_reason,
+        `(latency=${result.latency_ms}ms)`,
+      )
+    }
+  } catch (err) {
+    console.warn('[consultation/follow-up] resolvePriorSummary error', err)
+  }
+  return rootSummary
+}
+
+function fallbackRootContextAsSystemMessage(
+  rootQuestion: string,
+  parentQuestion: string,
+): { role: 'system'; content: string } {
+  const lines = [
+    '以下是当前咨询链的最小上下文（结构化摘要尚未生成或不可用）：',
+    `- root_question: ${rootQuestion}`,
+  ]
+  if (parentQuestion && parentQuestion !== rootQuestion) {
+    lines.push(`- previous_round_user_input: ${parentQuestion}`)
+  }
+  lines.push(
+    '',
+    '请把本轮新增问题理解为对 root_question 的追问；',
+    '如果用户使用「这个 / 那 / 现在 / 还要不要 / 去哪里」等指代表达，优先回接 root_question 和 previous_round_user_input，不要当作全新的独立咨询。',
+    '不要复述上一轮已知大方向，只回答本轮新增问题并推进下一步。',
+  )
+  return { role: 'system', content: lines.join('\n') }
 }
 
 /**

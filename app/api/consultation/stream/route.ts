@@ -4,6 +4,7 @@ import { matchBuckets, topBucket } from '@/lib/answer/intent/match-buckets'
 import {
   CONSULTATION_ALPHA_MODEL,
   CONSULTATION_ALPHA_PROMPT_VERSION,
+  CONSULTATION_FINAL_OUTPUT_GUARD,
   buildConsultationMessages,
 } from '@/lib/answer/prompt/consultation-alpha-v1'
 import { anchorsToPromptContext, matchAnchors } from '@/lib/consultation/fact-anchors'
@@ -413,6 +414,7 @@ export async function POST(req: Request) {
         ? [
             ...baseMessages.slice(0, -1), // everything except the trailing user message
             { role: 'system' as const, content: factSystemMessage },
+            { role: 'system' as const, content: CONSULTATION_FINAL_OUTPUT_GUARD },
             baseMessages[baseMessages.length - 1], // re-append user message LAST
           ]
         : baseMessages

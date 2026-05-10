@@ -326,15 +326,6 @@ export default function AiConsultationEntryClient() {
           // `prev` keeps the existing UX while making the switch
           // exhaustive over the new event.
           return prev
-        case 'follow_up_limit_reached':
-          // 0.6 ENGINE Pack 2.3: emitted only by the
-          // /api/consultation/follow-up endpoint when the chain has
-          // already had 3 follow-ups (4th attempt rejected). The
-          // initial /api/consultation/stream call this client makes
-          // never sees this event; CODEXUI Workstream D-UI owns
-          // rendering it on the follow-up surface. No-op here keeps
-          // the union exhaustive.
-          return prev
         case 'still_generating':
           return prev.phase === 'received' ? { ...prev, phase: 'still_generating' } : prev
         case 'first_token':
@@ -385,6 +376,7 @@ export default function AiConsultationEntryClient() {
     const text = addition.trim()
     if (!text) return
     setError(null)
+    const parentConsultationId = getFollowUpParentConsultationId(active)
 
     const localId = 'fu_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7)
     const turn = createFollowUpTurn(localId, text)
@@ -399,7 +391,7 @@ export default function AiConsultationEntryClient() {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({
-          parent_consultation_id: active.id,
+          parent_consultation_id: parentConsultationId,
           user_addition: text,
         }),
         signal: ac.signal,
@@ -1592,6 +1584,14 @@ function isTerminal(phase: Phase): boolean {
 
 function isFollowUpTerminal(phase: FollowUpPhase): boolean {
   return phase === 'completed' || phase === 'timeout' || phase === 'failed' || phase === 'limit_reached'
+}
+
+function getFollowUpParentConsultationId(active: ActiveConsultation): string {
+  const latestAnswerTurn = active.followUps
+    .slice()
+    .reverse()
+    .find(turn => turn.id && (turn.phase === 'completed' || turn.phase === 'timeout'))
+  return latestAnswerTurn?.id ?? active.id
 }
 
 function compactText(text: string, max: number): string {
