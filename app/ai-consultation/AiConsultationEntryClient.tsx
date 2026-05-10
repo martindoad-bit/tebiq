@@ -558,12 +558,12 @@ export default function AiConsultationEntryClient() {
     <ConsultationShell>
       <div className="space-y-5">
         <BrandHeader
-          eyebrow="AI 在留咨询 Alpha"
-          title={active ? '咨询回答' : '先把问题说清楚'}
+          eyebrow="AI 在留咨询"
+          title={active ? '咨询回答' : '先整理你的在留问题'}
           description={
             active
-              ? '回答完成后，可以继续补充情况，或先保存这次咨询。'
-              : '文字或日文材料照片都可以先问。TEBIQ 会整理方向、风险提示和下一步确认点。'
+              ? '回答完成后，可以补充同一件事，或先保存这次咨询。'
+              : '写下现在的情况。TEBIQ 会整理可能的风险和下一步确认点。'
           }
           action={
             <a
@@ -571,7 +571,7 @@ export default function AiConsultationEntryClient() {
               className="inline-flex h-9 w-full items-center justify-center gap-1.5 rounded-btn border border-[var(--tebiq-soft-gray)] px-3 text-[12px] text-[var(--tebiq-deep-slate)] sm:w-auto"
             >
               <Archive className="h-3.5 w-3.5" strokeWidth={1.6} />
-              已保存咨询
+              查看已保存
             </a>
           }
         />
@@ -583,8 +583,8 @@ export default function AiConsultationEntryClient() {
                 <div className="flex min-w-0 items-center gap-2">
                   <MessageSquarePlus className="h-4 w-4 shrink-0 text-[var(--tebiq-ink-blue)]" strokeWidth={1.6} />
                   <div className="min-w-0">
-                    <SectionLabel>文字咨询</SectionLabel>
-                    <p className="text-[13.5px] leading-[1.65] text-[var(--tebiq-deep-slate)]">把现在的情况直接写下来。已有日文材料时，也可以先加一张照片。</p>
+                    <SectionLabel>直接写问题</SectionLabel>
+                    <p className="text-[13.5px] leading-[1.65] text-[var(--tebiq-deep-slate)]">不用整理成正式材料，把现在的情况写下来。</p>
                   </div>
                 </div>
                 <button
@@ -602,7 +602,7 @@ export default function AiConsultationEntryClient() {
                 onChange={e => setQuestion(e.target.value)}
                 maxLength={4000}
                 rows={5}
-                placeholder="例：我是经管签，公司还没清算，能不能直接回国？"
+                placeholder="例：我换工作了，需要向入管报告吗？"
                 className="min-h-[132px] w-full resize-y rounded-card border border-[var(--tebiq-soft-gray)] bg-[var(--tebiq-off-white)] p-3.5 text-[16px] leading-[1.7] text-[var(--tebiq-ink-blue)] outline-none focus-visible:shadow-focus"
                 required
               />
@@ -618,7 +618,7 @@ export default function AiConsultationEntryClient() {
                   ) : (
                     <Send className="h-4 w-4" strokeWidth={1.6} />
                   )}
-                  {photo.kind === 'recognizing' ? '识别中' : '开始咨询'}
+                  {photo.kind === 'recognizing' ? '识别中' : '开始整理'}
                 </button>
               </div>
             </Surface>
@@ -637,13 +637,9 @@ export default function AiConsultationEntryClient() {
               </Surface>
             )}
 
-            <Surface className="flex items-center justify-between gap-3 p-3.5 text-[13px] text-[var(--tebiq-deep-slate)] sm:p-4">
-              <span>保存过的咨询可以从这里找回。</span>
-              <a href="/me/consultations" className="inline-flex items-center gap-1 font-medium text-[var(--tebiq-ink-blue)]">
-                已保存咨询
-                <ArrowRight className="h-3.5 w-3.5" strokeWidth={1.6} />
-              </a>
-            </Surface>
+            <div className="text-center text-[12px] leading-relaxed text-[var(--tebiq-cool-gray)]">
+              问完后可以保存，稍后从“已保存”继续查看。
+            </div>
           </form>
         )}
 
@@ -660,8 +656,7 @@ export default function AiConsultationEntryClient() {
         )}
 
         <footer className="space-y-1 border-t border-[var(--tebiq-soft-gray)] pt-4 text-[12px] leading-relaxed text-[var(--tebiq-deep-slate)]">
-          <p>这是 TEBIQ 1.0 Alpha，limited release。</p>
-          <p>涉及具体期限、手续、个案审查时，建议向行政書士或入管确认。</p>
+          <p>具体期限、手续和个案判断，请向行政書士或入管确认。</p>
         </footer>
       </div>
     </ConsultationShell>
@@ -687,7 +682,7 @@ function PhotoLiteCard({
         <div className="flex items-center gap-2">
           <Camera className="h-4 w-4 text-[var(--tebiq-ink-blue)]" strokeWidth={1.6} />
           <div>
-            <SectionLabel>拍照咨询 Lite</SectionLabel>
+            <SectionLabel>拍日文材料问一问</SectionLabel>
             <p className="text-[13px] leading-[1.6] text-[var(--tebiq-deep-slate)]">适合入管通知、年金税金、雇佣相关材料。</p>
           </div>
         </div>
@@ -717,7 +712,7 @@ function PhotoLiteCard({
             上传 / 拍照
           </button>
           <p className="mt-2 text-[12px] leading-[1.65] text-[var(--tebiq-cool-gray)]">
-            图片只用于这次咨询的识别摘要，不做 OCR 档案系统。
+            图片只用于这次回答的内容理解，不作为正式材料保存。
           </p>
         </div>
       )}
@@ -785,6 +780,7 @@ function ActiveConsultationView({
   const isWaitingForAnswer = !answerHasStarted
   const [waitingStage, setWaitingStage] = useState<WaitingStage>('early')
   const [waitingChoice, setWaitingChoice] = useState<'idle' | 'continue' | 'saved'>('idle')
+  const [followUpOpen, setFollowUpOpen] = useState(false)
   const baseDisplayState = getDisplayState(active)
   const displayState: AlphaDisplayState =
     isWaitingForAnswer && waitingStage !== 'early' ? 'timeout_waiting' : baseDisplayState
@@ -794,6 +790,7 @@ function ActiveConsultationView({
     isWaitingForAnswer
       ? getWaitingStatus(active, waitingStage)
       : null
+  const activeSafeDetail = userSafeDetail(active.detail, active.phase)
   const [copyState, setCopyState] = useState<'idle' | 'copied' | 'failed'>('idle')
   const [shareState, setShareState] = useState<'idle' | 'shared' | 'copied' | 'failed'>('idle')
   const [shareContext, setShareContext] = useState({
@@ -822,13 +819,17 @@ function ActiveConsultationView({
     setWaitingChoice('idle')
     if (!isWaitingForAnswer) return
 
-    const longTimer = window.setTimeout(() => setWaitingStage('long'), 17_000)
-    const escapeTimer = window.setTimeout(() => setWaitingStage('escape'), 35_000)
+    const longTimer = window.setTimeout(() => setWaitingStage('long'), 5_000)
+    const escapeTimer = window.setTimeout(() => setWaitingStage('escape'), 15_000)
     return () => {
       window.clearTimeout(longTimer)
       window.clearTimeout(escapeTimer)
     }
   }, [active.id, isWaitingForAnswer])
+
+  useEffect(() => {
+    setFollowUpOpen(false)
+  }, [active.id])
 
   async function writeClipboardText(text: string) {
     if (navigator.clipboard?.writeText) {
@@ -906,6 +907,9 @@ function ActiveConsultationView({
         </div>
 
         <RiskHintBanner hits={active.risk_keywords} />
+        {hasEncodingIssue(active.answer) && (
+          <EncodingIssueNotice />
+        )}
 
         {(displayState === 'partial' || displayState === 'fallback' || displayState === 'timeout') && (
           <div className="rounded-card border border-[var(--tebiq-warm-amber)] px-3 py-2 text-[12.5px] leading-[1.65] text-[var(--tebiq-ink-blue)]">
@@ -942,33 +946,35 @@ function ActiveConsultationView({
               </div>
               {waitingStatus.stage === 'escape' && (
                 <div className="mt-3 space-y-2 border-t border-[var(--tebiq-soft-gray)] pt-3">
-                  <div className="grid gap-2 sm:grid-cols-3">
+                  <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
                     <button
                       type="button"
                       onClick={() => setWaitingChoice('continue')}
-                      className="inline-flex min-h-10 items-center justify-center rounded-btn bg-[var(--tebiq-ink-blue)] px-3 py-2 text-[13px] font-medium text-[var(--tebiq-off-white)]"
+                      className="inline-flex min-h-10 items-center justify-center rounded-btn bg-[var(--tebiq-ink-blue)] px-3 py-2 text-[13px] font-medium text-[var(--tebiq-off-white)] sm:min-w-[9rem]"
                     >
                       继续等待
                     </button>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        onSave()
-                        setWaitingChoice('saved')
-                      }}
-                      disabled={!active.id || active.saved}
-                      className="inline-flex min-h-10 items-center justify-center gap-1.5 rounded-btn border border-[var(--tebiq-soft-gray)] px-3 py-2 text-[13px] font-medium text-[var(--tebiq-ink-blue)] disabled:opacity-60"
-                    >
-                      {active.saved ? '已保存' : '稍后回来'}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={onRetry}
-                      className="inline-flex min-h-10 items-center justify-center gap-1.5 rounded-btn border border-[var(--tebiq-soft-gray)] px-3 py-2 text-[13px] font-medium text-[var(--tebiq-ink-blue)]"
-                    >
-                      <RefreshCcw className="h-3.5 w-3.5" strokeWidth={1.6} />
-                      重新生成
-                    </button>
+                    <div className="flex flex-wrap gap-x-4 gap-y-2 text-[12.5px]">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          onSave()
+                          setWaitingChoice('saved')
+                        }}
+                        disabled={!active.id || active.saved}
+                        className="font-medium text-[var(--tebiq-ink-blue)] disabled:opacity-60"
+                      >
+                        {active.saved ? '已保存' : '先保存，稍后回来'}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={onRetry}
+                        className="inline-flex items-center gap-1 font-medium text-[var(--tebiq-deep-slate)]"
+                      >
+                        <RefreshCcw className="h-3.5 w-3.5" strokeWidth={1.6} />
+                        重新生成
+                      </button>
+                    </div>
                   </div>
                   {waitingChoice === 'continue' && (
                     <p className="text-[12px] leading-[1.6] text-[var(--tebiq-cool-gray)]">
@@ -995,9 +1001,9 @@ function ActiveConsultationView({
           )}
         </article>
 
-        {active.detail && active.phase !== 'streaming' && (
+        {activeSafeDetail && active.phase !== 'streaming' && (
           <p className="border-t border-[var(--tebiq-soft-gray)] pt-3 text-[12px] leading-relaxed text-[var(--tebiq-deep-slate)]">
-            {active.detail}
+            {activeSafeDetail}
           </p>
         )}
       </Surface>
@@ -1007,37 +1013,61 @@ function ActiveConsultationView({
       ))}
 
       {canAct && (
-        <Surface className="space-y-4">
-          <div className="rounded-card border border-[var(--tebiq-soft-gray)] bg-[var(--tebiq-off-white)] px-3 py-3">
-            <SectionLabel>继续这个咨询</SectionLabel>
-            <p className="mt-1 text-[13.5px] leading-[1.7] text-[var(--tebiq-deep-slate)]">
-              当前主题仍然是：<span className="font-medium text-[var(--tebiq-ink-blue)]">{compactText(active.question, 54)}</span>
-            </p>
-            <p className="mt-1 text-[12.5px] leading-[1.65] text-[var(--tebiq-cool-gray)]">
-              补充会接在上面的回答后继续整理，不是重新开一个问题。
-            </p>
-          </div>
+        <>
+          <Surface className="space-y-3">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                    <SectionLabel>还有补充情况？</SectionLabel>
+                <p className="mt-1 text-[13.5px] leading-[1.7] text-[var(--tebiq-deep-slate)]">
+                  只补充同一件事的新背景。另一个问题请重新开始。
+                </p>
+              </div>
+              {!followUpLocked && (
+                <button
+                  type="button"
+                  onClick={() => setFollowUpOpen(v => !v)}
+                  disabled={hasRunningFollowUp}
+                  className="inline-flex min-h-10 items-center justify-center gap-2 rounded-btn border border-[var(--tebiq-soft-gray)] px-3 py-2 text-[13px] font-medium text-[var(--tebiq-ink-blue)] disabled:opacity-50"
+                >
+                  {followUpOpen ? '收起补充' : '补充一句'}
+                </button>
+              )}
+            </div>
 
-          {followUpLocked ? (
-            <FollowUpLimitCard
-              message={active.followUpLimitMessage}
-              onSave={onSave}
-              onHumanReview={() => onFeedback('human_review')}
-              onNewQuestion={onReset}
-            />
-          ) : (
-            <FollowUpComposer
-              disabled={hasRunningFollowUp}
-              nextIndex={active.followUpCount + 1}
-              onSubmit={onFollowUp}
-            />
-          )}
+            {followUpOpen && !followUpLocked && (
+              <div className="rounded-card border border-[var(--tebiq-soft-gray)] bg-[var(--tebiq-off-white)] px-3 py-3">
+                <p className="text-[12.5px] leading-[1.65] text-[var(--tebiq-cool-gray)]">
+                  当前主题：<span className="font-medium text-[var(--tebiq-ink-blue)]">{compactText(active.question, 54)}</span>
+                </p>
+                <div className="mt-3">
+                  <FollowUpComposer
+                    disabled={hasRunningFollowUp}
+                    nextIndex={active.followUpCount + 1}
+                    onSubmit={addition => {
+                      onFollowUp(addition)
+                      setFollowUpOpen(false)
+                    }}
+                  />
+                </div>
+              </div>
+            )}
 
-          <div className="space-y-3 border-t border-[var(--tebiq-soft-gray)] pt-3">
+            {followUpLocked && (
+              <FollowUpLimitCard
+                message={active.followUpLimitMessage}
+                onSave={onSave}
+                onHumanReview={() => onFeedback('human_review')}
+                onNewQuestion={onReset}
+              />
+            )}
+          </Surface>
+
+          <Surface className="space-y-4">
+          <div className="space-y-3">
             <div>
               <SectionLabel>保存和下次查看</SectionLabel>
               <p className="mt-1 text-[13.5px] leading-[1.7] text-[var(--tebiq-deep-slate)]">
-                觉得这条回答有用，先保存。也可以复制链接发给自己，之后从已保存咨询里打开。
+                保存后可稍后补充、发给自己，或给专业人士参考。
               </p>
             </div>
             <div className="grid gap-2 sm:grid-cols-2">
@@ -1052,7 +1082,7 @@ function ActiveConsultationView({
               <button
                 onClick={copyConsultationLink}
                 disabled={!active.id}
-                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-btn border border-[var(--tebiq-soft-gray)] px-3 py-2 text-[13px] font-medium text-[var(--tebiq-ink-blue)] disabled:opacity-50"
+                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-btn border border-[var(--tebiq-soft-gray)] px-3 py-2 text-[13px] font-medium text-[var(--tebiq-ink-blue)] disabled:opacity-50 sm:bg-[var(--tebiq-off-white)]"
               >
                 {copyState === 'copied' ? <ClipboardCheck className="h-4 w-4" strokeWidth={1.6} /> : <Copy className="h-4 w-4" strokeWidth={1.6} />}
                 {copyState === 'copied' ? '已复制链接' : copyState === 'failed' ? '复制失败' : '复制咨询链接'}
@@ -1119,12 +1149,12 @@ function ActiveConsultationView({
               <p className="text-[12px] text-[var(--tebiq-cool-gray)]">TEBIQ 不会强制跳出当前浏览器；保存或复制后，你可以按自己的习惯下次打开。</p>
             </div>
           </details>
-          <div className="space-y-2 border-t border-[var(--tebiq-soft-gray)] pt-3">
-            <div>
-              <SectionLabel>反馈</SectionLabel>
-              <p className="mt-1 text-[12.5px] leading-[1.65] text-[var(--tebiq-deep-slate)]">这条回答是否帮助你判断下一步？</p>
-            </div>
-            <div className="grid grid-cols-3 gap-2">
+          </Surface>
+
+          <Surface className="space-y-2 p-3.5 sm:p-4">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+              <p className="text-[13px] font-medium text-[var(--tebiq-ink-blue)]">这条回答帮到你了吗？</p>
+              <div className="grid grid-cols-3 gap-2 sm:min-w-[15rem]">
               {FEEDBACK_BUTTONS.map(b => (
                 <button
                   key={b.type}
@@ -1141,9 +1171,10 @@ function ActiveConsultationView({
                   {b.label}
                 </button>
               ))}
+              </div>
             </div>
-          </div>
-        </Surface>
+          </Surface>
+        </>
       )}
 
       {canRecover && (
@@ -1195,7 +1226,7 @@ function ActiveConsultationView({
       {(active.feedback_sent || error) && (
         <div className="flex flex-wrap gap-2">
           {active.feedback_sent && <MetaPill>反馈：{feedbackLabel(active.feedback_sent)}</MetaPill>}
-          {error && <MetaPill tone="focus">{error}</MetaPill>}
+          {error && <MetaPill tone="focus">{userSafeDetail(error, 'failed')}</MetaPill>}
         </div>
       )}
     </section>
@@ -1208,6 +1239,7 @@ function FollowUpTurnCard({ turn, index }: { turn: FollowUpTurn; index: number }
     turn.phase === 'received' || turn.phase === 'still_generating'
       ? getFollowUpWaitingStatus(turn)
       : null
+  const turnSafeDetail = userSafeDetail(turn.detail, turn.phase)
 
   return (
     <Surface className="space-y-4 border-l-2 border-l-[var(--tebiq-soft-gray)]">
@@ -1224,6 +1256,9 @@ function FollowUpTurnCard({ turn, index }: { turn: FollowUpTurn; index: number }
       </div>
 
       <RiskHintBanner hits={turn.risk_keywords} />
+      {hasEncodingIssue(turn.answer) && (
+        <EncodingIssueNotice />
+      )}
 
       {(displayState === 'partial' || displayState === 'fallback' || displayState === 'timeout') && (
         <div className="rounded-card border border-[var(--tebiq-warm-amber)] px-3 py-2 text-[12.5px] leading-[1.65] text-[var(--tebiq-ink-blue)]">
@@ -1265,9 +1300,9 @@ function FollowUpTurnCard({ turn, index }: { turn: FollowUpTurn; index: number }
         )}
       </article>
 
-      {turn.detail && turn.phase !== 'streaming' && turn.phase !== 'limit_reached' && (
+      {turnSafeDetail && turn.phase !== 'streaming' && turn.phase !== 'limit_reached' && (
         <p className="border-t border-[var(--tebiq-soft-gray)] pt-3 text-[12px] leading-relaxed text-[var(--tebiq-deep-slate)]">
-          {turn.detail}
+          {turnSafeDetail}
         </p>
       )}
     </Surface>
@@ -1296,7 +1331,7 @@ function FollowUpComposer({
   return (
     <form onSubmit={submit} className="space-y-2.5 rounded-card border border-[var(--tebiq-soft-gray)] px-3 py-3">
       <div className="flex items-center justify-between gap-3">
-        <SectionLabel>补充给当前咨询</SectionLabel>
+        <SectionLabel>补充情况</SectionLabel>
         <span className="text-[11px] text-[var(--tebiq-cool-gray)]">{Math.min(nextIndex, 3)} / 3</span>
       </div>
       <textarea
@@ -1318,7 +1353,7 @@ function FollowUpComposer({
           className="inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-btn bg-[var(--tebiq-ink-blue)] px-3 py-2 text-[13px] font-medium text-[var(--tebiq-off-white)] disabled:cursor-not-allowed disabled:opacity-40 sm:w-auto"
         >
           {disabled ? <Loader2 className="h-4 w-4 animate-spin" strokeWidth={1.6} /> : <Send className="h-4 w-4" strokeWidth={1.6} />}
-          补充到当前咨询
+          继续整理
         </button>
       </div>
     </form>
@@ -1377,10 +1412,19 @@ type AnswerBlock =
   | { kind: 'paragraph'; lines: string[] }
   | { kind: 'list'; items: string[] }
 
+interface FirstLookBlock {
+  conclusion: string
+  action: string
+  avoid: string | null
+}
+
 function AnswerProse({ text }: { text: string }) {
-  const blocks = buildAnswerBlocks(text)
+  const safeText = cleanDisplayText(text)
+  const { firstLook, rest } = extractFirstLook(safeText)
+  const blocks = buildAnswerBlocks(rest)
   return (
     <div className="space-y-4">
+      {firstLook && <FirstLookCard firstLook={firstLook} />}
       {blocks.map((block, index) => {
         if (block.kind === 'heading') {
           return (
@@ -1411,6 +1455,85 @@ function AnswerProse({ text }: { text: string }) {
   )
 }
 
+function FirstLookCard({ firstLook }: { firstLook: FirstLookBlock }) {
+  return (
+    <div className="rounded-card border border-[var(--tebiq-soft-gray)] bg-[var(--tebiq-soft-gray)]/35 px-3.5 py-3">
+      <SectionLabel>先看这里</SectionLabel>
+      <div className="mt-2 space-y-1.5 text-[14px] leading-[1.65] text-[var(--tebiq-ink-blue)]">
+        <p><span className="font-medium">结论：</span>{renderInline(firstLook.conclusion)}</p>
+        <p><span className="font-medium">今天先做：</span>{renderInline(firstLook.action)}</p>
+        {firstLook.avoid && (
+          <p><span className="font-medium">暂时不要：</span>{renderInline(firstLook.avoid)}</p>
+        )}
+      </div>
+    </div>
+  )
+}
+
+function extractFirstLook(text: string): { firstLook: FirstLookBlock | null; rest: string } {
+  const normalized = text.replace(/\r\n/g, '\n').trimStart()
+  const lines = normalized.split('\n')
+  const firstNonEmpty = lines.findIndex(line => line.trim().length > 0)
+  if (firstNonEmpty < 0) return { firstLook: null, rest: text }
+
+  let cursor = firstNonEmpty
+  const heading = lines[cursor].trim().replace(/^#+\s*/, '')
+  if (/^先看这里[:：]?$/.test(heading)) cursor += 1
+
+  const take = (label: string): string | null => {
+    const raw = lines[cursor]?.trim() ?? ''
+    const re = new RegExp(`^(?:[-*]\\s*)?${label}[：:]\\s*(.+)$`)
+    const match = raw.match(re)
+    if (!match) return null
+    cursor += 1
+    return match[1].trim()
+  }
+
+  const conclusion = take('结论')
+  const action = take('今天先做')
+  const avoid = take('暂时不要')
+  if (!conclusion || !action) return { firstLook: null, rest: text }
+
+  while (cursor < lines.length && lines[cursor].trim() === '') cursor += 1
+  return {
+    firstLook: { conclusion, action, avoid },
+    rest: lines.slice(cursor).join('\n').trimStart(),
+  }
+}
+
+function hasEncodingIssue(text: string | null | undefined): boolean {
+  return typeof text === 'string' && /\uFFFD/.test(text)
+}
+
+function cleanDisplayText(text: string): string {
+  return text.replace(/\uFFFD+/g, '…')
+}
+
+function userSafeDetail(
+  detail: string | null | undefined,
+  phase: ActiveConsultation['phase'] | FollowUpTurn['phase'] | 'failed',
+): string | null {
+  if (!detail) return null
+  const text = detail.trim()
+  if (!text) return null
+  if (phase === 'failed' || looksTechnicalDetail(text)) {
+    return '这次生成没有完成。可以重新生成，或稍后再试。'
+  }
+  return cleanDisplayText(text)
+}
+
+function looksTechnicalDetail(text: string): boolean {
+  return /(api[_ -]?key|not set|deepseek|openai|anthropic|vercel|postgres|database|stack|trace|undefined|null|fetch failed|econn|http\s?\d{3})/i.test(text)
+}
+
+function EncodingIssueNotice() {
+  return (
+    <div className="rounded-card border border-[var(--tebiq-warm-amber)] px-3 py-2 text-[12.5px] leading-[1.65] text-[var(--tebiq-ink-blue)]">
+      这条回答里检测到显示异常字符。建议重新生成，或点“不准确”让团队复查。
+    </div>
+  )
+}
+
 function getWaitingStatus(active: ActiveConsultation, waitingStage: WaitingStage): {
   main: string
   sub: string | null
@@ -1419,32 +1542,32 @@ function getWaitingStatus(active: ActiveConsultation, waitingStage: WaitingStage
 } {
   if (waitingStage === 'escape') {
     return {
-      main: '仍在生成，没有卡死。',
-      sub: '可以继续等待，也可以先保存问题稍后回来，或重新生成这次回答。',
+      main: '仍在处理，没有卡住。',
+      sub: '复杂问题会多花一点时间。正文一出现就会自动显示。',
       showSpinner: true,
       stage: 'escape',
     }
   }
   if (waitingStage === 'long' || active.phase === 'still_generating') {
     return {
-      main: '还在生成，请再等一下。',
+      main: '正在整理风险和下一步。',
       sub: active.routingStatus?.level === 'specific'
-        ? `${active.routingStatus.label}。复杂问题可能需要更久一点。`
-        : '复杂问题可能需要更久一点。',
+        ? `${active.routingStatus.label}。`
+        : '正在把问题拆成可判断的条件。',
       showSpinner: true,
       stage: 'long',
     }
   }
   if (active.phase === 'idle') {
     return {
-      main: '正在连接咨询服务...',
+      main: '已收到，正在连接咨询服务。',
       sub: null,
       showSpinner: true,
       stage: 'early',
     }
   }
   return {
-    main: active.routingStatus?.label ?? '已收到，正在整理这个问题涉及的在留方向。',
+    main: active.routingStatus?.label ?? '已收到，正在判断在留场景。',
     sub: null,
     showSpinner: true,
     stage: 'early',
@@ -1458,7 +1581,7 @@ function getFollowUpWaitingStatus(turn: FollowUpTurn): {
 } {
   if (turn.phase === 'still_generating') {
     return {
-      main: '仍在生成，可以继续等待。',
+      main: '仍在处理这条补充。',
       sub: turn.routingStatus?.level === 'specific' ? turn.routingStatus.label : null,
       showSpinner: true,
     }

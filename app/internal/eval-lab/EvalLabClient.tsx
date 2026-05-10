@@ -202,7 +202,7 @@ const EMPTY_GEN_STATUS: QuestionGenStatus = {
 
 const MIN_DEEPSEEK_ANSWER_CHARS = 180
 const MIN_TEBIQ_ANSWER_CHARS = 120
-const CURRENT_TEBIQ_PROMPT_VERSION = 'consultation_alpha_v7'
+const CURRENT_TEBIQ_PROMPT_VERSION = 'consultation_alpha_v8'
 
 /**
  * Hydrate initial gen-status from server-side answer rows.
@@ -315,6 +315,8 @@ type FilterMode =
   | 'failed'
   | 'golden'
 
+type SourceFilter = 'all' | 'live_consultation' | 'starter' | 'other'
+
 const DRAFT_KEY = 'tebiq_eval_lab_v1_drafts'
 
 type AnswerSlotsByQuestion = Record<
@@ -332,6 +334,15 @@ const VS_DEEPSEEK_LABELS: Record<Exclude<VsDeepseekJudgment, ''>, string> = {
   strict_added: '严格加分',
   tied: '持平',
   regression: '倒退',
+}
+
+const SOURCE_FILTERS: SourceFilter[] = ['all', 'live_consultation', 'starter', 'other']
+
+const SOURCE_FILTER_LABELS: Record<SourceFilter, string> = {
+  all: '全部',
+  live_consultation: '真实咨询',
+  starter: 'golden',
+  other: '其他',
 }
 
 const DEFECT_FLAG_LABELS: Record<string, string> = {
@@ -841,6 +852,7 @@ export default function EvalLabClient() {
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [filter, setFilter] = useState<FilterMode>('ready')
   const [scenarioFilter, setScenarioFilter] = useState<string>('all')
+  const [sourceFilter, setSourceFilter] = useState<SourceFilter>('all')
   const [batchBusy, setBatchBusy] = useState(false)
   const [seedBusy, setSeedBusy] = useState(false)
   const [liveImportBusy, setLiveImportBusy] = useState(false)
@@ -973,11 +985,15 @@ export default function EvalLabClient() {
         proposalByQuestion,
         filter,
         scenarioFilter,
+        sourceFilter,
       ),
-    [questions, answersByQuestion, annotationByQuestion, genStatus, proposalByQuestion, filter, scenarioFilter],
+    [questions, answersByQuestion, annotationByQuestion, genStatus, proposalByQuestion, filter, scenarioFilter, sourceFilter],
   )
   const selected = questions.find(q => q.id === selectedId) ?? null
   const selectedAnswers = selectedId ? answersByQuestion[selectedId] : undefined
+  const selectedHasBaseline = !!selectedAnswers?.deepseek_raw?.answer_text
+  const selectedBaselineMissing = !!selected && isLiveConsultationQuestion(selected) && !selectedHasBaseline
+  const selectedRequiresVsDeepseek = !selected || !isLiveConsultationQuestion(selected) || selectedHasBaseline
   const selectedEdit = selectedId ? edits[selectedId] ?? EMPTY_EDIT : EMPTY_EDIT
   const selectedStatus = selectedId ? genStatus[selectedId] ?? EMPTY_GEN_STATUS : EMPTY_GEN_STATUS
   const selectedProposal = selectedId ? proposalByQuestion[selectedId] ?? null : null
@@ -1571,6 +1587,22 @@ export default function EvalLabClient() {
                 ))}
               </select>
             )}
+            <div className="flex flex-wrap gap-1">
+              {SOURCE_FILTERS.map(source => (
+                <button
+                  key={source}
+                  type="button"
+                  onClick={() => setSourceFilter(source)}
+                  className={`rounded px-1.5 py-0.5 text-[10px] ${
+                    sourceFilter === source
+                      ? 'bg-slate-900 text-white'
+                      : 'border border-slate-200 bg-white text-slate-500'
+                  }`}
+                >
+                  {SOURCE_FILTER_LABELS[source]}
+                </button>
+              ))}
+            </div>
             <span className="ml-auto text-slate-500">{filtered.length}</span>
           </div>
           <ul className="space-y-1">
@@ -1601,6 +1633,7 @@ export default function EvalLabClient() {
                       >
                         {sev || (ann?.score != null ? '·' : ' ')}
                       </span>
+                      <SourceChip source={q.source} />
                       <StatusDot kind="D" state={s.deepseek} />
                       <StatusDot kind="T" state={s.tebiq} />
                       <span className="truncate flex-1" title={q.question_text}>
@@ -1613,7 +1646,9 @@ export default function EvalLabClient() {
                         <>
                           <span>· AQL {proposal.score ?? '-'}</span>
                           <span className={proposal.red ? 'text-red-600' : 'text-slate-400'}>
-                            {proposal.red ? '优先复核' : '正常'}
+                            {proposal.red
+                              ? `优先复核${proposal.activeLearningReasons.length > 0 ? ` ${proposal.activeLearningReasons.length}` : ''}`
+                              : '正常'}
                           </span>
                         </>
                       )}
@@ -1667,6 +1702,7 @@ export default function EvalLabClient() {
                   attempts={selectedStatus.deepseekAttempts}
                   onGenerate={() => generateDeepseek(selected)}
                   row={selectedAnswers?.deepseek_raw}
+                  baselineMissing={selectedBaselineMissing}
                 />
                 <AnswerColumn
                   label="TEBIQ 当前输出"
@@ -1712,6 +1748,7 @@ export default function EvalLabClient() {
               proposal={selectedProposal}
               saveStatus={saveState[selected.id] ?? 'idle'}
               annotation={annotationByQuestion[selected.id] ?? null}
+              requiresVsDeepseek={selectedRequiresVsDeepseek}
               onApplyProposal={selectedProposal ? () => applyProposal(selected.id, selectedProposal) : undefined}
               onChange={patch => onAnnotate(selected.id, patch)}
             />
@@ -1742,6 +1779,24 @@ function StatusDot({ kind, state }: { kind: 'D' | 'T'; state: GenState }) {
   )
 }
 
+function SourceChip({ source }: { source: string }) {
+  const label =
+    source === 'live_consultation' ? 'real' :
+    source === 'starter' ? 'golden' :
+    source || 'src'
+  const cls =
+    source === 'live_consultation'
+      ? 'bg-emerald-50 text-emerald-700'
+      : source === 'starter'
+        ? 'bg-slate-100 text-slate-500'
+        : 'bg-blue-50 text-blue-700'
+  return (
+    <span className={`inline-flex shrink-0 rounded px-1 py-0.5 text-[9px] font-medium uppercase ${cls}`}>
+      {label}
+    </span>
+  )
+}
+
 function AnswerColumn({
   label,
   state,
@@ -1750,6 +1805,7 @@ function AnswerColumn({
   onGenerate,
   row,
   showMeta,
+  baselineMissing,
 }: {
   label: string
   state: GenState
@@ -1758,10 +1814,12 @@ function AnswerColumn({
   onGenerate: () => void
   row?: AnswerRow
   showMeta?: boolean
+  baselineMissing?: boolean
 }) {
   const has = !!row?.answer_text
   const busy = state === 'running'
   const stateBadge =
+    baselineMissing ? <span className="text-[10px] text-slate-400">可跳过</span> :
     state === 'running' ? <span className="text-[10px] text-blue-600">生成中</span> :
     state === 'failed' ? <span className="text-[10px] text-red-600">失败</span> :
     state === 'success' ? <span className="text-[10px] text-emerald-600">已生成</span> :
@@ -1781,6 +1839,11 @@ function AnswerColumn({
       </div>
       {liveError && state === 'failed' && (
         <p className="text-[11px] text-red-600">生成错误：{liveError}</p>
+      )}
+      {baselineMissing && !has && (
+        <p className="text-[11px] leading-snug text-slate-500">
+          未生成对照答案。真实咨询可以先标 TEBIQ；需要对比时再生成。
+        </p>
       )}
       {row?.error && state !== 'success' && (
         <p className="text-[11px] text-red-600">错误：{row.error}</p>
@@ -1816,7 +1879,7 @@ function AnswerColumn({
         </p>
       )}
       <pre className="text-[12px] whitespace-pre-wrap leading-[1.6] text-slate-800">
-        {row?.answer_text ?? '（未生成）'}
+        {row?.answer_text ? cleanDisplayText(row.answer_text) : '（未生成）'}
       </pre>
     </div>
   )
@@ -1827,6 +1890,7 @@ function AnnotationForm({
   proposal,
   saveStatus,
   annotation,
+  requiresVsDeepseek,
   onApplyProposal,
   onChange,
 }: {
@@ -1834,6 +1898,7 @@ function AnnotationForm({
   proposal: AnswerQualityProposal | null
   saveStatus: 'idle' | 'saving' | 'saved' | 'error'
   annotation: AnnotationRow | null
+  requiresVsDeepseek: boolean
   onApplyProposal?: () => void
   onChange: (patch: Partial<EditableAnnotation>) => void
 }) {
@@ -1890,15 +1955,15 @@ function AnnotationForm({
         </select>
       </Field>
 
-      <Field label="3. vs DeepSeek 加分判断（必填）">
+      <Field label={`3. vs DeepSeek 加分判断${requiresVsDeepseek ? '（必填）' : '（可先跳过）'}`}>
         <select
           value={edit.vs_deepseek_judgment}
           onChange={e => onChange({ vs_deepseek_judgment: e.target.value as VsDeepseekJudgment })}
           className={`w-full border rounded px-2 py-1 ${
-            edit.vs_deepseek_judgment ? 'border-slate-300' : 'border-red-300 bg-red-50'
+            edit.vs_deepseek_judgment || !requiresVsDeepseek ? 'border-slate-300' : 'border-red-300 bg-red-50'
           }`}
         >
-          <option value="">— 必填 —</option>
+          <option value="">{requiresVsDeepseek ? '— 必填 —' : '— 可先跳过 —'}</option>
           {VS_DEEPSEEK_OPTIONS.map(v => (
             <option key={v} value={v}>
               {VS_DEEPSEEK_LABELS[v]}
@@ -2073,47 +2138,59 @@ function filterQuestions(
   proposals: Record<string, AnswerQualityProposal>,
   mode: FilterMode,
   scenario: string,
+  source: SourceFilter,
 ): QuestionRow[] {
   const byScenario = qs.filter(q => scenario === 'all' || q.scenario === scenario)
+  const bySource = byScenario.filter(q => matchesSourceFilter(q, source))
   switch (mode) {
     case 'ready':
-      return byScenario.filter(q => {
+      return bySource.filter(q => {
         const a = answers[q.id]
         const ann = annotations[q.id]
         return isReviewableCase(a, q) && !isAnnotationComplete(ann)
       })
     case 'unannotated':
-      return byScenario.filter(q => {
+      return bySource.filter(q => {
         const a = annotations[q.id]
         return !isAnnotationComplete(a)
       })
     case 'ai_red':
-      return byScenario.filter(q => proposals[q.id]?.red)
+      return bySource.filter(q => proposals[q.id]?.red)
     case 'rerun':
-      return byScenario.filter(q => {
+      return bySource.filter(q => {
         const a = answers[q.id]
         return !isReviewableCase(a, q)
       })
     case 'p0':
-      return byScenario.filter(q => annotations[q.id]?.severity === 'P0')
+      return bySource.filter(q => annotations[q.id]?.severity === 'P0')
     case 'p1':
-      return byScenario.filter(q => annotations[q.id]?.severity === 'P1')
+      return bySource.filter(q => annotations[q.id]?.severity === 'P1')
     case 'launchable_no':
-      return byScenario.filter(q => annotations[q.id]?.launchable === 'no')
+      return bySource.filter(q => annotations[q.id]?.launchable === 'no')
     case 'ungenerated':
-      return byScenario.filter(q => {
+      return bySource.filter(q => {
         const a = answers[q.id]
         return !isReviewableCase(a, q)
       })
     case 'failed':
-      return byScenario.filter(q => {
+      return bySource.filter(q => {
         const s = status[q.id]
         return s?.deepseek === 'failed' || s?.tebiq === 'failed'
       })
     case 'golden':
-      return byScenario.filter(q => annotations[q.id]?.action === 'golden_case')
+      return bySource.filter(q => annotations[q.id]?.action === 'golden_case')
     case 'all':
     default:
-      return byScenario
+      return bySource
   }
+}
+
+function matchesSourceFilter(q: QuestionRow, source: SourceFilter): boolean {
+  if (source === 'all') return true
+  if (source === 'other') return q.source !== 'live_consultation' && q.source !== 'starter'
+  return q.source === source
+}
+
+function cleanDisplayText(text: string): string {
+  return text.replace(/\uFFFD+/g, '…')
 }

@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, BookOpen, Camera, ExternalLink, GitBranch, MessageSquarePlus } from 'lucide-react'
+import { ArrowLeft, BookOpen, Camera, GitBranch, MessageSquarePlus } from 'lucide-react'
 import {
   BrandHeader,
   ConsultationShell,
@@ -51,7 +51,7 @@ export default async function ConsultationDetailPage({ params }: PageProps) {
         <BrandHeader
           eyebrow="已保存咨询"
           title="这次咨询"
-          description="这里用于回看问题、回答、图片摘要和状态。它不是正式案件。"
+          description="这里用于回看问题、回答和补充记录。它不是正式案件。"
           action={
             <Link
               href="/ai-consultation"
@@ -95,12 +95,17 @@ export default async function ConsultationDetailPage({ params }: PageProps) {
               {displayState === 'fallback' && '这条记录使用了安全降级文案，不应看作完整回答。'}
               {displayState === 'timeout' && '这条记录没有生成可用完整回答。'}
               {displayState === 'failed' && '这条记录生成失败。'}
-              {row.timeoutReason ? ` 原因：${row.timeoutReason}` : ''}
+              {row.timeoutReason ? ` ${userSafeDetail(row.timeoutReason)}` : ''}
+            </div>
+          )}
+          {hasEncodingIssue(answer) && (
+            <div className="rounded-card border border-[var(--tebiq-warm-amber)] px-3 py-2 text-[12px] leading-relaxed text-[var(--tebiq-ink-blue)]">
+              这条回答里检测到显示异常字符。建议重新生成，或在反馈里标记“不准确”。
             </div>
           )}
           {answer ? (
             <article className="whitespace-pre-wrap text-[15px] leading-[1.75] text-[var(--tebiq-ink-blue)]">
-              {answer}
+              {cleanDisplayText(answer)}
             </article>
           ) : (
             <p className="text-[13px] text-[var(--tebiq-deep-slate)]">还没有可显示的回答正文。</p>
@@ -126,7 +131,7 @@ export default async function ConsultationDetailPage({ params }: PageProps) {
             <ArrowLeft className="h-3.5 w-3.5" strokeWidth={1.6} />
             返回已保存咨询
           </Link>
-          <p className="text-[var(--tebiq-deep-slate)]">涉及具体期限、手续、个案审查时，建议向行政書士或入管确认。</p>
+          <p className="text-[var(--tebiq-deep-slate)]">具体期限、手续和个案判断，请向行政書士或入管确认。</p>
         </footer>
       </div>
     </ConsultationShell>
@@ -187,57 +192,46 @@ function FactCardsBlock({ audit }: { audit: ConsultationFactCardAuditEntry[] }) 
   // either way and just show what's there.
   if (injected.length === 0 && hintOnly.length === 0) return null
   return (
-    <Surface className="space-y-3">
-      <div className="flex items-center gap-2">
+    <details className="rounded-card border border-[var(--tebiq-soft-gray)] bg-[var(--tebiq-off-white)] p-4 sm:p-5">
+      <summary className="flex cursor-pointer list-none items-center gap-2 text-[13px] font-medium text-[var(--tebiq-ink-blue)]">
         <BookOpen className="h-4 w-4 text-[var(--tebiq-ink-blue)]" strokeWidth={1.6} />
-        <SectionLabel>本回答参考的事实卡</SectionLabel>
+        参考依据
+        <span className="text-[12px] font-normal text-[var(--tebiq-cool-gray)]">
+          {injected.length + hintOnly.length} 条资料
+        </span>
+      </summary>
+      <div className="mt-3 space-y-3">
+        <p className="text-[12px] leading-relaxed text-[var(--tebiq-deep-slate)]">
+          TEBIQ 会参考已整理的事实资料，但具体期限和个案判断仍建议向行政書士或入管确认。
+        </p>
+        {injected.length > 0 && (
+          <div className="space-y-2">
+            <SectionLabel>已用于回答</SectionLabel>
+            <ul className="space-y-1.5">
+              {injected.map(card => <FactCardRow key={card.fact_id} card={card} />)}
+            </ul>
+          </div>
+        )}
+        {hintOnly.length > 0 && (
+          <div className="space-y-2">
+            <SectionLabel>相关但需进一步确认</SectionLabel>
+            <ul className="space-y-1.5">
+              {hintOnly.map(card => <FactCardRow key={card.fact_id} card={card} />)}
+            </ul>
+          </div>
+        )}
       </div>
-      {injected.length > 0 && (
-        <div className="space-y-2">
-          <p className="text-[12px] text-[var(--tebiq-deep-slate)]">
-            注入了 {injected.length} 张事实卡（已合入回答）：
-          </p>
-          <ul className="space-y-1.5">
-            {injected.map(card => <FactCardRow key={card.fact_id} card={card} />)}
-          </ul>
-        </div>
-      )}
-      {hintOnly.length > 0 && (
-        <div className="space-y-2">
-          <p className="text-[12px] text-[var(--tebiq-deep-slate)]">
-            另有 {hintOnly.length} 张相关事实卡触发了「需进一步确认」标记，未作为事实直接注入：
-          </p>
-          <ul className="space-y-1.5">
-            {hintOnly.map(card => <FactCardRow key={card.fact_id} card={card} />)}
-          </ul>
-        </div>
-      )}
-      <p className="text-[11px] text-[var(--tebiq-cool-gray)]">
-        事实卡来源：本仓库 docs/fact-cards/ 公开审核档；具体期限/手续仍建议与行政書士或入管确认。
-      </p>
-    </Surface>
+    </details>
   )
 }
 
 function FactCardRow({ card }: { card: ConsultationFactCardAuditEntry }) {
-  // GitHub permalink at the consultation's git_sha is ideal but the row
-  // doesn't carry git_sha (would require Pack 2.3 schema add). For now
-  // link to the file path on main; consumers can checkout history if
-  // they need an exact-version snapshot.
-  const repoUrl =
-    `https://github.com/martindoad-bit/tebiq/blob/main/docs/fact-cards/${encodeURIComponent(card.fact_id)}.md`
   return (
     <li className="flex flex-col gap-1 rounded-card border border-[var(--tebiq-soft-gray)] bg-[var(--tebiq-soft-gray)]/30 px-3 py-2">
       <div className="flex flex-wrap items-center gap-2">
-        <a
-          href={repoUrl}
-          target="_blank"
-          rel="noreferrer noopener"
-          className="inline-flex items-center gap-1 text-[13px] font-medium text-[var(--tebiq-ink-blue)] hover:underline"
-        >
+        <span className="text-[13px] font-medium text-[var(--tebiq-ink-blue)]">
           {card.fact_id}
-          <ExternalLink className="h-3 w-3" strokeWidth={1.6} />
-        </a>
+        </span>
         <span className="rounded-full border border-[var(--tebiq-cool-gray)] px-2 py-0.5 text-[10px] uppercase tracking-wide text-[var(--tebiq-deep-slate)]">
           {card.risk_level}
         </span>
@@ -275,6 +269,25 @@ function hostnameOf(url: string): string {
   } catch {
     return url.slice(0, 32)
   }
+}
+
+function hasEncodingIssue(text: string | null | undefined): boolean {
+  return typeof text === 'string' && /\uFFFD/.test(text)
+}
+
+function cleanDisplayText(text: string): string {
+  return text.replace(/\uFFFD+/g, '…')
+}
+
+function userSafeDetail(detail: string): string {
+  const text = detail.trim()
+  if (!text) return ''
+  if (looksTechnicalDetail(text)) return '可以重新生成，或稍后再试。'
+  return `原因：${cleanDisplayText(text)}`
+}
+
+function looksTechnicalDetail(text: string): boolean {
+  return /(api[_ -]?key|not set|deepseek|openai|anthropic|vercel|postgres|database|stack|trace|undefined|null|fetch failed|econn|http\s?\d{3})/i.test(text)
 }
 
 // 0.6 Pack 2.3 — follow-up chain display.

@@ -37,8 +37,8 @@ export default async function MyConsultationsPage() {
       <div className="space-y-5">
         <BrandHeader
           eyebrow="已保存咨询"
-          title="之后还要看的咨询"
-          description="这里保存你想之后再看的问题和回答。它不是正式案件列表。"
+          title="已保存的咨询"
+          description="问完后保存的咨询会在这里。之后可以继续查看、补充，或发给专业人士参考。"
           action={
             <Link
               href="/ai-consultation"
@@ -56,21 +56,21 @@ export default async function MyConsultationsPage() {
             <p className="mt-1 text-[28px] font-semibold leading-none text-[var(--tebiq-ink-blue)]">{rows.length}</p>
           </div>
           <p className="max-w-[13rem] text-right text-[12px] leading-relaxed text-[var(--tebiq-deep-slate)]">
-            当前浏览器保存。换浏览器或清空记录后，这里可能看不到旧咨询。
+            这台设备上的咨询记录。换浏览器或清空记录后，可能看不到旧咨询。
           </p>
         </Surface>
 
         {!viewerId && (
           <EmptyRecordState
             title="还没有浏览器记录"
-            body="打开咨询页问一题，回答完成后可以保存到这里，方便下次查看。"
+            body="打开咨询页问一题，回答完成后点保存，就会出现在这里。"
           />
         )}
 
         {viewerId && rows.length === 0 && (
           <EmptyRecordState
             title="还没有保存过咨询"
-            body="回答页底部的「保存这次咨询」会把这条咨询放到这里。"
+            body="问完后点「保存这次咨询」，之后就能从这里继续查看。"
           />
         )}
 
@@ -94,10 +94,10 @@ export default async function MyConsultationsPage() {
                       {row.feedbackType && <MetaPill>反馈：<FeedbackLabel type={row.feedbackType} /></MetaPill>}
                       {row.savedQuestion && <MetaPill>已保存</MetaPill>}
                       {(row.factCardIds ?? []).length > 0 && (
-                        <MetaPill icon={BookOpen}>事实卡 ×{(row.factCardIds as string[]).length}</MetaPill>
+                        <MetaPill icon={BookOpen}>参考了 TEBIQ 知识库</MetaPill>
                       )}
                       {(row.riskKeywordHits ?? []).length > 0 && (
-                        <MetaPill tone="focus">风险词：{(row.riskKeywordHits as string[]).join(' · ')}</MetaPill>
+                        <MetaPill tone="focus">有风险提示</MetaPill>
                       )}
                     </div>
                     <div className="inline-flex items-center gap-1 text-[12px] font-medium text-[var(--tebiq-ink-blue)]">

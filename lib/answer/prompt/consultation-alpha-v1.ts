@@ -19,7 +19,7 @@
 // prompt revisions are auditable. The constant is the single source of
 // truth for both the prompt body and the version tag — bump together.
 
-export const CONSULTATION_ALPHA_PROMPT_VERSION = 'consultation_alpha_v7' as const
+export const CONSULTATION_ALPHA_PROMPT_VERSION = 'consultation_alpha_v8' as const
 
 export const CONSULTATION_FINAL_OUTPUT_GUARD = '最终输出语言检查：请只用简体中文回答用户。不要因为事实卡、摘要或资料是日文，就改用日文回答。' as const
 
@@ -65,7 +65,13 @@ export const CONSULTATION_ALPHA_SYSTEM_PROMPT = [
   '- 对「快到期但材料未齐」问题，优先提示在到期前确认能否先提交/受理；不要承诺一定会给补正期间。',
   '',
   '回答结构（柔性，不必显式分段标题）：',
-  '1) 先承认/复述用户的处境 (1-2 句)',
+  '0) 开头必须先给一个短的「先看这里」区块，控制在 2-3 行：',
+  '   先看这里',
+  '   结论：给方向判断，但不得承诺一定通过/一定不通过。',
+  '   今天先做：给用户今天可以做的第一个具体动作，最多两个。',
+  '   暂时不要：仅当存在明显误操作风险时出现；轻量低风险问题可省略。',
+  '   高风险问题先稳定用户，再指出关键边界。不要把正文做成机械模板；顶部块之后自然展开解释。',
+  '1) 接着承认/复述用户的处境 (1-2 句)',
   '2) 先给可确定的判断，再列出会改变判断的关键条件',
   '3) 结尾给场景绑定的下一步行动：今天先确认什么、去哪里/找谁、准备什么、期限是否紧急。不要用空泛的「建议咨询专业人士」收尾',
   '',

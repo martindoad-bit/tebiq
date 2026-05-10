@@ -8,6 +8,7 @@
 import type { AiConsultation } from '@/lib/db/queries/aiConsultations'
 
 export const LEARNING_CONSOLE_TABS = [
+  'needs_attention',
   'all',
   'image',
   'risk',
@@ -20,6 +21,7 @@ export const LEARNING_CONSOLE_TABS = [
 export type LearningConsoleTab = (typeof LEARNING_CONSOLE_TABS)[number]
 
 export const LEARNING_CONSOLE_TAB_LABELS: Record<LearningConsoleTab, string> = {
+  needs_attention: '需要处理',
   all:          '全部咨询',
   image:        '图片咨询',
   risk:         '命中高风险词',
@@ -32,6 +34,16 @@ export const LEARNING_CONSOLE_TAB_LABELS: Record<LearningConsoleTab, string> = {
 /** Pack §4 — filter predicate per tab. */
 export function matchesTab(row: AiConsultation, tab: LearningConsoleTab): boolean {
   switch (tab) {
+    case 'needs_attention': {
+      const answer = `${row.finalAnswerText ?? ''}\n${row.aiAnswerText ?? ''}`
+      return row.completionStatus === 'timeout'
+        || row.completionStatus === 'failed'
+        || row.feedbackType === 'inaccurate'
+        || row.feedbackType === 'human_review'
+        || row.humanConfirmClicked === true
+        || /\uFFFD/.test(answer)
+        || (typeof row.totalLatencyMs === 'number' && row.totalLatencyMs > 45_000)
+    }
     case 'all':
       return true
     case 'image':

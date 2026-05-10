@@ -14,7 +14,7 @@ import {
 import type { LucideIcon } from 'lucide-react'
 
 export const ALPHA_NOTICE =
-  'TEBIQ 1.0 Alpha — 以下回答用于整理问题和下一步，不是最终专业判断。'
+  'TEBIQ Alpha — 先整理在留问题和下一步，不替代最终专业判断。'
 
 export const RISK_HINT =
   '这个问题可能涉及在留风险，建议不要只靠 AI 回答做最终决定。'
@@ -159,12 +159,12 @@ export function MetaPill({
 
 export function StatusBadge({ state }: { state: AlphaDisplayState }) {
   const config: Record<AlphaDisplayState, { label: string; icon: LucideIcon; focus?: boolean }> = {
-    completed: { label: '完整回答', icon: CheckCircle2 },
+    completed: { label: '回答完成', icon: CheckCircle2 },
     partial: { label: '回答可能不完整', icon: TriangleAlert, focus: true },
-    streaming: { label: '回答生成中', icon: Loader2 },
-    timeout_waiting: { label: '仍在生成', icon: Clock3, focus: true },
+    streaming: { label: '正在整理', icon: Loader2 },
+    timeout_waiting: { label: '还在处理', icon: Clock3, focus: true },
     timeout: { label: '未生成完整回答', icon: Clock3, focus: true },
-    failed: { label: '生成失败', icon: RefreshCcw },
+    failed: { label: '生成失败', icon: RefreshCcw, focus: true },
     fallback: { label: '降级回答', icon: TriangleAlert, focus: true },
   }
   const item = config[state]
@@ -178,15 +178,21 @@ export function StatusBadge({ state }: { state: AlphaDisplayState }) {
 export function RiskHintBanner({ hits }: { hits: string[] }) {
   if (hits.length === 0) return null
   return (
-    <div className="rounded-card border border-[var(--tebiq-warm-amber)] bg-[var(--tebiq-off-white)] px-3.5 py-3 text-[13px] leading-[1.65] text-[var(--tebiq-ink-blue)]">
-      <div className="flex gap-2.5">
-        <TriangleAlert className="mt-0.5 h-4 w-4 shrink-0 text-[var(--tebiq-warm-amber)]" strokeWidth={1.55} />
-        <div>
-          <p>{RISK_HINT}</p>
-          <p className="mt-1 text-[11px] text-[var(--tebiq-deep-slate)]">
-            关键词：{hits.join(' · ')}
-          </p>
-        </div>
+    <div className="rounded-card border border-[var(--tebiq-warm-amber)] bg-[var(--tebiq-off-white)] px-3 py-2.5 text-[12.5px] leading-[1.6] text-[var(--tebiq-ink-blue)]">
+      <div className="flex flex-wrap items-center gap-2">
+        <TriangleAlert className="h-4 w-4 shrink-0 text-[var(--tebiq-warm-amber)]" strokeWidth={1.55} />
+        <span className="font-medium">可能涉及在留风险</span>
+        <span className="text-[11.5px] text-[var(--tebiq-deep-slate)]">{RISK_HINT}</span>
+        <span className="flex basis-full flex-wrap gap-1 pt-1 sm:basis-auto sm:pt-0">
+          {hits.slice(0, 4).map(hit => (
+            <span
+              key={hit}
+              className="rounded-chip border border-[var(--tebiq-soft-gray)] px-2 py-0.5 text-[11px] text-[var(--tebiq-deep-slate)]"
+            >
+              {hit}
+            </span>
+          ))}
+        </span>
       </div>
     </div>
   )

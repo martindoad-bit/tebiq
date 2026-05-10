@@ -64,7 +64,7 @@ interface Props {
 }
 
 export default function LearningConsoleClient({ rows, kpis, rowLimit }: Props) {
-  const [tab, setTab] = useState<LearningConsoleTab>('all')
+  const [tab, setTab] = useState<LearningConsoleTab>('needs_attention')
 
   const filtered = useMemo(
     () => rows.filter(r => matchesTab(r as unknown as Parameters<typeof matchesTab>[0], tab)),
@@ -82,7 +82,7 @@ export default function LearningConsoleClient({ rows, kpis, rowLimit }: Props) {
               真实咨询记录
             </h1>
             <p className="mt-2 max-w-[42rem] text-[13px] leading-relaxed text-[var(--tebiq-deep-slate)]">
-              这里看真实用户问题、AI 回答、图片摘要、反馈、风险词、延迟和失败原因。它不是案件系统，也不是 Pro 后台。
+              真实用户问题、回答状态、反馈和异常。用于测试期排查，不是案件系统。
             </p>
           </div>
           <div className="flex flex-wrap gap-2 text-[12px]">
@@ -177,6 +177,8 @@ function RowList({ rows }: { rows: LearningConsoleRow[] }) {
       {rows.map(row => {
         const answer = row.finalAnswerText ?? row.aiAnswerText ?? ''
         const displayState = displayStateForRow(row)
+        const hasIssue = hasEncodingIssue(answer)
+        const slow = typeof row.totalLatencyMs === 'number' && row.totalLatencyMs > 45_000
         return (
           <li key={row.id}>
             <Link href={`/internal/learning-console/${encodeURIComponent(row.id)}`}>
@@ -185,6 +187,8 @@ function RowList({ rows }: { rows: LearningConsoleRow[] }) {
                   <div className="min-w-0 flex-1 space-y-2">
                     <div className="flex flex-wrap items-center gap-2">
                       <StatusBadge state={displayState} />
+                      {hasIssue && <MetaPill tone="focus">异常字符</MetaPill>}
+                      {slow && <MetaPill tone="focus">慢响应</MetaPill>}
                       {row.hasImage && <MetaPill icon={Camera}>图片</MetaPill>}
                       {row.riskKeywordHits.length > 0 && <MetaPill tone="focus" icon={ShieldAlert}>风险词 {row.riskKeywordHits.length}</MetaPill>}
                       {row.feedbackType && <MetaPill>反馈：<FeedbackLabel type={row.feedbackType} /></MetaPill>}
@@ -204,7 +208,7 @@ function RowList({ rows }: { rows: LearningConsoleRow[] }) {
                     )}
                     {answer && (
                       <p className="line-clamp-2 text-[13px] leading-relaxed text-[var(--tebiq-deep-slate)]">
-                        回答：{answer}
+                        回答：{cleanDisplayText(answer)}
                       </p>
                     )}
                     {row.riskKeywordHits.length > 0 && (
@@ -233,6 +237,14 @@ function RowList({ rows }: { rows: LearningConsoleRow[] }) {
       })}
     </ul>
   )
+}
+
+function hasEncodingIssue(text: string | null | undefined): boolean {
+  return typeof text === 'string' && /\uFFFD/.test(text)
+}
+
+function cleanDisplayText(text: string): string {
+  return text.replace(/\uFFFD+/g, '…')
 }
 
 function Metric({ label, value }: { label: string; value: string }) {

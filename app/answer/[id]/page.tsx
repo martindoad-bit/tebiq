@@ -1,8 +1,15 @@
 import Link from 'next/link'
+import { redirect } from 'next/navigation'
 import AppShell from '@/app/_components/v5/AppShell'
 import AppBar from '@/app/_components/v5/AppBar'
 import TabBar from '@/app/_components/v5/TabBar'
+import {
+  BrandHeader,
+  ConsultationShell,
+  Surface,
+} from '@/components/ui/consultation-alpha'
 import { getAnswerDraftById } from '@/lib/db/queries/answerDrafts'
+import { getAiConsultationById } from '@/lib/db/queries/aiConsultations'
 import { extractAnswerRun, reconstructLegacyRun } from '@/lib/answer/core/persistence'
 import { toViewModel } from '@/lib/answer/core/view-model'
 import type { AnswerSection } from '@/lib/answer/types'
@@ -34,21 +41,47 @@ export default async function AnswerPage({
   const draft = await getAnswerDraftById(id).catch(() => null)
 
   if (!draft) {
+    const consultation = await getAiConsultationById(id).catch(() => null)
+    if (consultation) {
+      redirect(`/c/${encodeURIComponent(id)}`)
+    }
     return (
-      <AppShell appBar={<AppBar title="下一步" back="/" />} tabBar={<TabBar />}>
-        <section className="mt-4 rounded-card border border-hairline bg-surface px-4 py-5">
-          <h1 className="text-[18px] font-medium text-ink">回答不存在或已过期</h1>
-          <p className="mt-2 text-[12px] leading-[1.7] text-ash">
-            可以回到首页继续问。
-          </p>
-          <Link
-            href="/"
-            className="mt-4 inline-flex min-h-[40px] items-center rounded-btn bg-ink px-4 text-[13px] font-medium text-white"
-          >
-            返回首页
-          </Link>
-        </section>
-      </AppShell>
+      <ConsultationShell>
+        <div className="space-y-5">
+          <BrandHeader
+            eyebrow="咨询记录"
+            title="这条链接暂时打不开"
+            description="这可能是旧版回答链接，或记录已经不存在。可以回到已保存咨询查看，或重新开始。"
+            action={
+              <Link
+                href="/ai-consultation"
+                className="inline-flex h-9 items-center gap-1.5 rounded-btn bg-[var(--tebiq-ink-blue)] px-3 text-[12px] font-medium text-[var(--tebiq-off-white)]"
+              >
+                新问题
+              </Link>
+            }
+          />
+          <Surface className="space-y-3">
+            <p className="text-[13.5px] leading-[1.7] text-[var(--tebiq-deep-slate)]">
+              如果这是刚刚复制的咨询链接，请优先打开已保存咨询；新的咨询记录会使用 /c/ 开头的链接。
+            </p>
+            <div className="flex flex-wrap gap-2">
+              <Link
+                href="/me/consultations"
+                className="inline-flex min-h-10 items-center rounded-btn border border-[var(--tebiq-soft-gray)] px-3 text-[13px] font-medium text-[var(--tebiq-ink-blue)]"
+              >
+                查看已保存
+              </Link>
+              <Link
+                href="/ai-consultation"
+                className="inline-flex min-h-10 items-center rounded-btn bg-[var(--tebiq-ink-blue)] px-3 text-[13px] font-medium text-[var(--tebiq-off-white)]"
+              >
+                重新咨询
+              </Link>
+            </div>
+          </Surface>
+        </div>
+      </ConsultationShell>
     )
   }
 

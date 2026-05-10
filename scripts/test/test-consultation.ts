@@ -37,9 +37,9 @@ async function main() {
   }
 
   // ---- 1. System prompt constants ----
-  check('1a. CONSULTATION_ALPHA_PROMPT_VERSION is "consultation_alpha_v7"', () => {
-    // Cycle 1 quality flywheel v3: high-risk branch + ambiguity guard.
-    assert.equal(promptMod.CONSULTATION_ALPHA_PROMPT_VERSION, 'consultation_alpha_v7')
+  check('1a. CONSULTATION_ALPHA_PROMPT_VERSION is "consultation_alpha_v8"', () => {
+    // Cycle 1 quality flywheel v4: answer first-look block + UI flywheel.
+    assert.equal(promptMod.CONSULTATION_ALPHA_PROMPT_VERSION, 'consultation_alpha_v8')
   })
   check('1b. CONSULTATION_ALPHA_MODEL is "deepseek-v4-pro"', () => {
     assert.equal(promptMod.CONSULTATION_ALPHA_MODEL, 'deepseek-v4-pro')
@@ -54,6 +54,12 @@ async function main() {
     const p = promptMod.CONSULTATION_ALPHA_SYSTEM_PROMPT
     assert.ok(p.includes('DeepSeek'), 'prompt does not mention DeepSeek redaction rule')
     assert.ok(p.includes('AI'), 'prompt does not mention AI redaction rule')
+  })
+  check('1d2. system prompt requires first-look answer block', () => {
+    const p = promptMod.CONSULTATION_ALPHA_SYSTEM_PROMPT
+    for (const phrase of ['先看这里', '结论：', '今天先做：']) {
+      assert.ok(p.includes(phrase), `prompt missing first-look phrase: ${phrase}`)
+    }
   })
   check('1e. buildConsultationMessages places user message last', () => {
     const m = promptMod.buildConsultationMessages({ userQuestion: 'test question' })
