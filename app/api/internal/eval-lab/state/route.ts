@@ -3,10 +3,12 @@ import { isEvalLabEnabled } from '@/lib/eval-lab/auth'
 import {
   listEvalAnnotations,
   listEvalAnswers,
+  listEvalJudgements,
   listEvalQuestions,
   type EvalAnnotationRow,
   type EvalQuestionRow,
   type EvalAnswerRow,
+  type EvalJudgementRow,
 } from '@/lib/db/queries/eval-lab'
 
 // Drizzle returns camelCase TypeScript names. The client + lib layer (sample-classifier,
@@ -73,6 +75,29 @@ function toSnakeAnnotation(a: EvalAnnotationRow) {
   }
 }
 
+function toSnakeJudgement(j: EvalJudgementRow) {
+  return {
+    id: j.id,
+    question_id: j.questionId,
+    case_id: j.caseId,
+    judge_name: j.judgeName,
+    judge_model: j.judgeModel,
+    score: j.score,
+    score_normalized: j.scoreNormalized,
+    defect_flags: j.defectFlags,
+    vs_deepseek_judgment: j.vsDeepseekJudgment,
+    ideal_answer_skeleton: j.idealAnswerSkeleton,
+    confidence: j.confidence,
+    reasoning: j.reasoning,
+    active_learning_red: j.activeLearningRed,
+    active_learning_reasons: j.activeLearningReasons,
+    source_csv_path: j.sourceCsvPath,
+    schema_version: j.schemaVersion,
+    created_at: j.createdAt,
+    updated_at: j.updatedAt,
+  }
+}
+
 // GET /api/internal/eval-lab/state
 //
 // Returns the full DB-backed view of the Eval Lab: every active
@@ -126,6 +151,13 @@ export async function GET(req: Request) {
       listEvalAnswers(ids),
       listEvalAnnotations(reviewer, ids),
     ])
+    let judgements: EvalJudgementRow[] = []
+    try {
+      judgements = await listEvalJudgements(ids)
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err)
+      console.warn('[eval-lab/state] judgements unavailable', message)
+    }
     return NextResponse.json({
       ok: true,
       schema_version: 'eval-lab-v1',
@@ -133,6 +165,7 @@ export async function GET(req: Request) {
       questions: questions.map(toSnakeQuestion),
       answers: answers.map(toSnakeAnswer),
       annotations: annotations.map(toSnakeAnnotation),
+      judgements: judgements.map(toSnakeJudgement),
     })
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err)

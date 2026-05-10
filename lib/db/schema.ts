@@ -1160,12 +1160,50 @@ export const evalAnnotations = pgTable(
   }),
 )
 
+// --- eval_judgements ---
+// AQL / heterogeneous judge output for answer-quality flywheel review.
+// One row per (case_id, judge_name). The founder annotation remains in
+// eval_annotations; this table is an independent AI proposal source.
+export const evalJudgements = pgTable(
+  'eval_judgements',
+  {
+    id: idCol(),
+    questionId: varchar('question_id', { length: 24 })
+      .notNull()
+      .references(() => evalQuestions.id, { onDelete: 'cascade' }),
+    caseId: varchar('case_id', { length: 80 }).notNull(),
+    judgeName: varchar('judge_name', { length: 80 }).notNull().default('aql_judge_claude_sonnet'),
+    judgeModel: varchar('judge_model', { length: 80 }).notNull().default('claude-sonnet'),
+    score: integer('score').notNull(),
+    scoreNormalized: integer('score_normalized').notNull(),
+    defectFlags: jsonb('defect_flags').$type<string[]>().notNull().default(sql`'[]'::jsonb`),
+    vsDeepseekJudgment: varchar('vs_deepseek_judgment', { length: 32 }).notNull(),
+    idealAnswerSkeleton: text('ideal_answer_skeleton').notNull(),
+    confidence: numeric('confidence', { precision: 4, scale: 2 }).notNull(),
+    reasoning: text('reasoning').notNull(),
+    activeLearningRed: boolean('active_learning_red').notNull().default(false),
+    activeLearningReasons: jsonb('active_learning_reasons').$type<string[]>().notNull().default(sql`'[]'::jsonb`),
+    sourceCsvPath: varchar('source_csv_path', { length: 240 }),
+    schemaVersion: varchar('schema_version', { length: 24 }).notNull().default('eval-judgement-v1'),
+    createdAt: createdAt(),
+    updatedAt: updatedAt(),
+  },
+  t => ({
+    caseJudgeUnique: uniqueIndex('eval_judgements_case_judge_unique').on(t.caseId, t.judgeName),
+    questionIdx: index('eval_judgements_question_idx').on(t.questionId),
+    activeLearningIdx: index('eval_judgements_active_learning_idx').on(t.activeLearningRed),
+    scoreIdx: index('eval_judgements_score_idx').on(t.scoreNormalized),
+  }),
+)
+
 export type EvalQuestion = typeof evalQuestions.$inferSelect
 export type NewEvalQuestion = typeof evalQuestions.$inferInsert
 export type EvalAnswer = typeof evalAnswers.$inferSelect
 export type NewEvalAnswer = typeof evalAnswers.$inferInsert
 export type EvalAnnotation = typeof evalAnnotations.$inferSelect
 export type NewEvalAnnotation = typeof evalAnnotations.$inferInsert
+export type EvalJudgement = typeof evalJudgements.$inferSelect
+export type NewEvalJudgement = typeof evalJudgements.$inferInsert
 
 // =====================================================================
 // AI Consultation (TEBIQ 1.0 Alpha) — Charter §6 / Issue #39
