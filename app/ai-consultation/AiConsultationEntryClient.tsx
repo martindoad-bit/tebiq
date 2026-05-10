@@ -14,6 +14,7 @@ import {
   RefreshCcw,
   Send,
   Share2,
+  ShieldAlert,
   Upload,
 } from 'lucide-react'
 import {
@@ -792,6 +793,7 @@ function ActiveConsultationView({
       : null
   const activeSafeDetail = userSafeDetail(active.detail, active.phase)
   const [copyState, setCopyState] = useState<'idle' | 'copied' | 'failed'>('idle')
+  const [summaryCopyState, setSummaryCopyState] = useState<'idle' | 'copied' | 'failed'>('idle')
   const [shareState, setShareState] = useState<'idle' | 'shared' | 'copied' | 'failed'>('idle')
   const [shareContext, setShareContext] = useState({
     isWechat: false,
@@ -858,6 +860,16 @@ function ActiveConsultationView({
     }
   }
 
+  async function copyConsultationSummary() {
+    if (!active.id) return
+    try {
+      await writeClipboardText(buildConsultationSummary(active, consultationUrl))
+      setSummaryCopyState('copied')
+    } catch {
+      setSummaryCopyState('failed')
+    }
+  }
+
   async function shareConsultationLink() {
     if (!active.id) return
     if (!canUseNativeShare) {
@@ -907,6 +919,11 @@ function ActiveConsultationView({
         </div>
 
         <RiskHintBanner hits={active.risk_keywords} />
+        <CrisisActionCard
+          action={getCrisisAction(active.risk_keywords)}
+          copyState={summaryCopyState}
+          onCopySummary={copyConsultationSummary}
+        />
         {hasEncodingIssue(active.answer) && (
           <EncodingIssueNotice />
         )}
@@ -1085,7 +1102,7 @@ function ActiveConsultationView({
                 保存后可稍后补充、发给自己，或给专业人士参考。
               </p>
             </div>
-            <div className="grid gap-2 sm:grid-cols-2">
+            <div className="grid gap-2 sm:grid-cols-3">
               <button
                 onClick={onSave}
                 disabled={active.saved}
@@ -1101,6 +1118,14 @@ function ActiveConsultationView({
               >
                 {copyState === 'copied' ? <ClipboardCheck className="h-4 w-4" strokeWidth={1.6} /> : <Copy className="h-4 w-4" strokeWidth={1.6} />}
                 {copyState === 'copied' ? '已复制链接' : copyState === 'failed' ? '复制失败' : '复制咨询链接'}
+              </button>
+              <button
+                onClick={copyConsultationSummary}
+                disabled={!active.id}
+                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-btn border border-[var(--tebiq-soft-gray)] px-3 py-2 text-[13px] font-medium text-[var(--tebiq-ink-blue)] disabled:opacity-50 sm:bg-[var(--tebiq-off-white)]"
+              >
+                {summaryCopyState === 'copied' ? <ClipboardCheck className="h-4 w-4" strokeWidth={1.6} /> : <Copy className="h-4 w-4" strokeWidth={1.6} />}
+                {summaryCopyState === 'copied' ? '已复制概要' : summaryCopyState === 'failed' ? '复制失败' : '复制咨询概要'}
               </button>
             </div>
             <p className="text-[12px] leading-[1.65] text-[var(--tebiq-cool-gray)]">
@@ -1207,7 +1232,7 @@ function ActiveConsultationView({
                 ? '已生成的内容会保留；如果要完整回答，可以重新生成这次回答。'
                 : displayState === 'failed'
                   ? '请求没有完成。重试会保留原问题重新发起，不是新问题。'
-                  : '这次没有拿到可用完整回答。可以继续保存问题，或重新生成这次回答。'}
+                  : '这次没有拿到可用完整回答。系统已保留这个问题，可以重新生成，或先保存后稍后回来。'}
             </p>
           </div>
           <div className="grid gap-2 sm:grid-cols-2">
@@ -1422,6 +1447,79 @@ function FollowUpLimitCard({
   )
 }
 
+type CrisisAction = {
+  title: string
+  body: string
+  steps: string[]
+}
+
+function CrisisActionCard({
+  action,
+  copyState,
+  onCopySummary,
+}: {
+  action: CrisisAction | null
+  copyState: 'idle' | 'copied' | 'failed'
+  onCopySummary: () => void
+}) {
+  if (!action) return null
+  return (
+    <div className="rounded-card border border-[var(--tebiq-warm-amber)] bg-[var(--tebiq-soft-gray)]/30 px-3.5 py-3 text-[13px] leading-[1.65] text-[var(--tebiq-ink-blue)]">
+      <div className="flex items-start gap-2.5">
+        <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0 text-[var(--tebiq-warm-amber)]" strokeWidth={1.6} />
+        <div className="min-w-0 flex-1">
+          <p className="font-semibold">{action.title}</p>
+          <p className="mt-1 text-[12.5px] text-[var(--tebiq-deep-slate)]">{action.body}</p>
+          <ol className="mt-2 space-y-1.5">
+            {action.steps.map((step, index) => (
+              <li key={step} className="flex gap-2">
+                <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[var(--tebiq-off-white)] text-[11px] font-semibold text-[var(--tebiq-ink-blue)]">
+                  {index + 1}
+                </span>
+                <span className="min-w-0">{step}</span>
+              </li>
+            ))}
+          </ol>
+          <button
+            type="button"
+            onClick={onCopySummary}
+            className="mt-3 inline-flex min-h-9 items-center justify-center gap-2 rounded-btn border border-[var(--tebiq-soft-gray)] bg-[var(--tebiq-off-white)] px-3 py-1.5 text-[12.5px] font-medium text-[var(--tebiq-ink-blue)]"
+          >
+            {copyState === 'copied' ? <ClipboardCheck className="h-3.5 w-3.5" strokeWidth={1.6} /> : <Copy className="h-3.5 w-3.5" strokeWidth={1.6} />}
+            {copyState === 'copied' ? '已复制概要' : copyState === 'failed' ? '复制失败' : '复制给人工确认'}
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function getCrisisAction(hits: string[]): CrisisAction | null {
+  const hitSet = new Set(hits)
+  if (hitSet.has('家暴')) {
+    return {
+      title: '先保护人身安全，再整理签证影响',
+      body: '如果人身安全受威胁，先离开危险场所并留下记录，签证路径可以随后整理。',
+      steps: ['有当下危险时先联系警察或 DV 支援窗口。', '保留聊天、照片、诊断书、报警或相談记录。', '再确认住所、配偶关系和在留期限会怎样影响下一步。'],
+    }
+  }
+  if (hitSet.has('证件扣押')) {
+    return {
+      title: '先把证件和记录拿回来',
+      body: '在留卡、护照等证件被扣押时，先处理证件本身和沟通记录，再判断工作或在留影响。',
+      steps: ['保存公司要求、聊天记录和证件被收走的经过。', '必要时联系警察、入管相談或支援窗口确认取回方式。', '不要只听公司口头说法，再整理是否涉及退职、转职或在留期限。'],
+    }
+  }
+  if (hitSet.has('入管通知')) {
+    return {
+      title: '先守住通知期限',
+      body: '入管通知、说明书或补材料不能放着不管，先确认期限和要提交的内容。',
+      steps: ['拍照保存通知书，确认提交期限、提交地点和材料名称。', '把事实经过按时间顺序整理，不要临时编理由。', '期限紧或内容不清楚时，尽快带通知书找人工确认。'],
+    }
+  }
+  return null
+}
+
 type AnswerBlock =
   | { kind: 'heading'; text: string }
   | { kind: 'paragraph'; lines: string[] }
@@ -1611,6 +1709,43 @@ function userSafePhotoMessage(message: string | null | undefined): string {
   return cleanDisplayText(text)
 }
 
+function buildConsultationSummary(active: ActiveConsultation, consultationUrl: string): string {
+  const lines = [
+    'TEBIQ 咨询概要',
+    '',
+    `问题：${active.question}`,
+  ]
+  if (active.risk_keywords.length > 0) {
+    lines.push(`风险提示：${active.risk_keywords.join('、')}`)
+  }
+  if (active.photoSummary) {
+    lines.push(`图片摘要：${stripAnswerMarkup(active.photoSummary)}`)
+  }
+  const answer = stripAnswerMarkup(active.answer).replace(/\s+/g, ' ').trim()
+  if (answer) {
+    lines.push('', '回答摘录：', truncateText(answer, 900))
+  } else if (active.fallback_text) {
+    lines.push('', '当前状态：', stripAnswerMarkup(active.fallback_text))
+  } else {
+    lines.push('', '当前状态：这次还没有生成完整回答。')
+  }
+  lines.push('', `咨询链接：${consultationUrl}`)
+  return lines.join('\n')
+}
+
+function stripAnswerMarkup(text: string): string {
+  return cleanDisplayText(text)
+    .replace(/\*\*([^*]+)\*\*/g, '$1')
+    .replace(/^#{1,3}\s+/gm, '')
+    .replace(/\r\n/g, '\n')
+    .trim()
+}
+
+function truncateText(text: string, max: number): string {
+  if (text.length <= max) return text
+  return text.slice(0, max - 1).trimEnd() + '…'
+}
+
 function EncodingIssueNotice() {
   return (
     <div className="rounded-card border border-[var(--tebiq-warm-amber)] px-3 py-2 text-[12.5px] leading-[1.65] text-[var(--tebiq-ink-blue)]">
@@ -1627,8 +1762,8 @@ function getWaitingStatus(active: ActiveConsultation, waitingStage: WaitingStage
 } {
   if (waitingStage === 'escape') {
     return {
-      main: '仍在处理，没有卡住。',
-      sub: '复杂问题会多花一点时间。正文一出现就会自动显示。',
+      main: '仍在处理，可能需要再等一会儿。',
+      sub: '复杂在留问题有时会超过 30 秒。可以继续等，也可以先保存这个问题。',
       showSpinner: true,
       stage: 'escape',
     }
