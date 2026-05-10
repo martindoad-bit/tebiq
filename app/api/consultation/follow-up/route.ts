@@ -77,7 +77,7 @@ export const maxDuration = 300
 
 const DEEPSEEK_ENDPOINT = 'https://api.deepseek.com/chat/completions'
 const TEMPERATURE = 0.3
-const MAX_TOKENS = 1200
+const MAX_TOKENS = 1500
 const ROUTING_STATUS_SPECIFIC_DELAY_MS = 3000
 
 interface ReqBody {

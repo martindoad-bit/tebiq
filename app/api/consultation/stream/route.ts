@@ -57,7 +57,7 @@ import {
 //   - On any timeout/failure, NEVER fall through to legacy_seed matcher
 //     (the bug PR #38 fixed for /api/questions; here we don't even call
 //     that pipeline — we go straight to fallback text)
-//   - prompt_version='consultation_alpha_v1' / model='deepseek-v4-pro'
+//   - current prompt_version / model persisted on every row
 //     persisted on every row
 //
 // Internal-only env gate? No. The Charter says Alpha goes to
@@ -74,7 +74,7 @@ export const maxDuration = 300
 
 const DEEPSEEK_ENDPOINT = 'https://api.deepseek.com/chat/completions'
 const TEMPERATURE = 0.3
-const MAX_TOKENS = 1200
+const MAX_TOKENS = 1500
 
 // 0.6 ENGINE Pack 1: routing_status `specific` layer fires after this
 // delay if first_token still hasn't arrived. PL §3 spec: "3-5s 仍无正文";

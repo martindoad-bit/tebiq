@@ -40,7 +40,7 @@ export const maxDuration = 300
 
 const ENDPOINT = 'https://api.deepseek.com/chat/completions'
 const TEMPERATURE = 0.3
-const MAX_TOKENS = 1200
+const MAX_TOKENS = 1500
 
 const DEFAULT_QUESTION =
   '我现在是经营管理签证，公司最近半年几乎没有营业额，但是我个人账户还有钱。下次续签是不是只要公司还在就可以？'
