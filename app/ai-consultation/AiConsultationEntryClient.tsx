@@ -1480,18 +1480,19 @@ function extractFirstLook(text: string): { firstLook: FirstLookBlock | null; res
   const heading = lines[cursor].trim().replace(/^#+\s*/, '')
   if (/^先看这里[:：]?$/.test(heading)) cursor += 1
 
-  const take = (label: string): string | null => {
+  const take = (labels: string[]): string | null => {
     const raw = lines[cursor]?.trim() ?? ''
-    const re = new RegExp(`^(?:[-*]\\s*)?${label}[：:]\\s*(.+)$`)
+    const escaped = labels.map(label => label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')
+    const re = new RegExp(`^(?:[-*]\\s*)?(?:${escaped})[：:]\\s*(.+)$`)
     const match = raw.match(re)
     if (!match) return null
     cursor += 1
     return match[1].trim()
   }
 
-  const conclusion = take('结论')
-  const action = take('今天先做')
-  const avoid = take('暂时不要')
+  const conclusion = take(['结论'])
+  const action = take(['今天先做', '今天可以先确认', '今天先确认', '先做'])
+  const avoid = take(['暂时不要', '暂时不要做', '先不要做'])
   if (!conclusion || !action) return { firstLook: null, rest: text }
 
   while (cursor < lines.length && lines[cursor].trim() === '') cursor += 1
