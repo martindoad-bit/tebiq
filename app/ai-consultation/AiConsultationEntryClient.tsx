@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from 'react'
 import {
   Archive,
-  ArrowRight,
   Camera,
   CheckCircle2,
   ClipboardCheck,
@@ -26,7 +25,6 @@ import {
   StatusBadge,
   Surface,
   cx,
-  feedbackLabel,
   type AlphaDisplayState,
 } from '@/components/ui/consultation-alpha'
 import { FactReferenceBlock } from '@/components/ui/fact-reference'
@@ -946,20 +944,7 @@ function ActiveConsultationView({
             <p className="mb-3 text-[15px] leading-[1.7] text-[var(--tebiq-deep-slate)]">{active.fallback_text}</p>
           )}
           {active.answer.trim() && (
-            <AnswerProse
-              text={active.answer}
-              afterFirstLook={canAct ? (
-                <CompletionQuickActions
-                  saved={active.saved}
-                  copyState={copyState}
-                  followUpDisabled={followUpLocked || hasRunningFollowUp}
-                  onFollowUp={() => setFollowUpOpen(true)}
-                  onSave={onSave}
-                  onCopy={copyConsultationLink}
-                  onHumanReview={() => onFeedback('human_review')}
-                />
-              ) : null}
-            />
+            <AnswerProse text={active.answer} />
           )}
           {waitingStatus && active.answer === '' && (
             <div className="rounded-card border border-[var(--tebiq-soft-gray)] px-3 py-2 text-[13.5px] leading-[1.65] text-[var(--tebiq-deep-slate)]">
@@ -1053,7 +1038,7 @@ function ActiveConsultationView({
           <Surface className="space-y-3">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div>
-                    <SectionLabel>继续问这件事</SectionLabel>
+                <SectionLabel>继续问这件事</SectionLabel>
                 <p className="mt-1 text-[13.5px] leading-[1.7] text-[var(--tebiq-deep-slate)]">
                   补充同一件事的新背景，TEBIQ 会沿用上面的回答继续整理。
                 </p>
@@ -1063,9 +1048,9 @@ function ActiveConsultationView({
                   type="button"
                   onClick={() => setFollowUpOpen(v => !v)}
                   disabled={hasRunningFollowUp}
-                  className="inline-flex min-h-10 items-center justify-center gap-2 rounded-btn border border-[var(--tebiq-soft-gray)] px-3 py-2 text-[13px] font-medium text-[var(--tebiq-ink-blue)] disabled:opacity-50"
+                  className="inline-flex min-h-10 w-full items-center justify-center gap-2 whitespace-nowrap rounded-btn border border-[var(--tebiq-soft-gray)] px-3 py-2 text-[13px] font-medium text-[var(--tebiq-ink-blue)] disabled:opacity-50 sm:w-auto"
                 >
-                  {followUpOpen ? '收起追问' : '继续追问'}
+                  {followUpOpen ? '收起' : '继续问'}
                 </button>
               )}
             </div>
@@ -1099,122 +1084,103 @@ function ActiveConsultationView({
           </Surface>
 
           <Surface className="space-y-4">
-          <div className="space-y-3">
-            <div>
-              <SectionLabel>保存概要</SectionLabel>
-              <p className="mt-1 text-[13.5px] leading-[1.7] text-[var(--tebiq-deep-slate)]">
-                保存后可稍后补充、发给自己，或给专业人士参考。
+            <div className="space-y-3">
+              <div>
+                <SectionLabel>保存概要</SectionLabel>
+                <p className="mt-1 text-[13.5px] leading-[1.7] text-[var(--tebiq-deep-slate)]">
+                  保存后可稍后补充、发给自己，或给专业人士参考。
+                </p>
+              </div>
+              <div>
+                <button
+                  onClick={onSave}
+                  disabled={active.saved}
+                  className="inline-flex min-h-11 w-full items-center justify-center gap-2 whitespace-nowrap rounded-btn bg-[var(--tebiq-ink-blue)] px-3 py-2 text-[14px] font-medium text-[var(--tebiq-off-white)] disabled:opacity-70 sm:w-auto sm:min-w-[11rem]"
+                >
+                  {active.saved ? <CheckCircle2 className="h-4 w-4" strokeWidth={1.6} /> : <Archive className="h-4 w-4" strokeWidth={1.6} />}
+                  {active.saved ? '已保存' : '保存概要'}
+                </button>
+              </div>
+              <p className="text-[12px] leading-[1.65] text-[var(--tebiq-cool-gray)]">
+                {shareContext.isWechat
+                  ? '微信里也可以用右上角菜单发送给自己。复制链接仍然是最稳的方式。'
+                  : shareContext.isDesktop
+                    ? '桌面端要发到微信或邮件时，建议先复制链接，再粘贴过去。'
+                    : '手机浏览器可以复制链接；支持系统分享时，也可以用系统分享。'}
               </p>
             </div>
-            <div className="grid gap-2 sm:grid-cols-3">
-              <button
-                onClick={onSave}
-                disabled={active.saved}
-                className="inline-flex min-h-11 items-center justify-center gap-2 whitespace-nowrap rounded-btn bg-[var(--tebiq-ink-blue)] px-3 py-2 text-[14px] font-medium text-[var(--tebiq-off-white)] disabled:opacity-70"
-              >
-                {active.saved ? <CheckCircle2 className="h-4 w-4" strokeWidth={1.6} /> : <Archive className="h-4 w-4" strokeWidth={1.6} />}
-                {active.saved ? '已保存' : '保存概要'}
-              </button>
-              <button
-                onClick={copyConsultationLink}
-                disabled={!active.id}
-                className="inline-flex min-h-11 items-center justify-center gap-2 whitespace-nowrap rounded-btn border border-[var(--tebiq-soft-gray)] px-3 py-2 text-[13px] font-medium text-[var(--tebiq-ink-blue)] disabled:opacity-50 sm:bg-[var(--tebiq-off-white)]"
-              >
-                {copyState === 'copied' ? <ClipboardCheck className="h-4 w-4" strokeWidth={1.6} /> : <Copy className="h-4 w-4" strokeWidth={1.6} />}
-                {copyState === 'copied' ? '已复制链接' : copyState === 'failed' ? '复制失败' : '复制链接'}
-              </button>
-              <button
-                onClick={copyConsultationSummary}
-                disabled={!active.id}
-                className="inline-flex min-h-11 items-center justify-center gap-2 whitespace-nowrap rounded-btn border border-[var(--tebiq-soft-gray)] px-3 py-2 text-[13px] font-medium text-[var(--tebiq-ink-blue)] disabled:opacity-50 sm:bg-[var(--tebiq-off-white)]"
-              >
-                {summaryCopyState === 'copied' ? <ClipboardCheck className="h-4 w-4" strokeWidth={1.6} /> : <Copy className="h-4 w-4" strokeWidth={1.6} />}
-                {summaryCopyState === 'copied' ? '已复制概要' : summaryCopyState === 'failed' ? '复制失败' : '复制概要'}
-              </button>
-            </div>
-            <p className="text-[12px] leading-[1.65] text-[var(--tebiq-cool-gray)]">
-              {shareContext.isWechat
-                ? '微信里也可以用右上角菜单发送给自己。复制链接仍然是最稳的方式。'
-                : shareContext.isDesktop
-                  ? '桌面端要发到微信或邮件时，建议先复制链接，再粘贴过去。'
-                  : '手机浏览器可以复制链接；支持系统分享时，也可以用系统分享。'}
-            </p>
-          </div>
 
-          <details className="rounded-card border border-[var(--tebiq-soft-gray)] px-3 py-2.5 text-[12.5px] leading-[1.65] text-[var(--tebiq-deep-slate)]">
-            <summary className="cursor-pointer font-medium text-[var(--tebiq-ink-blue)]">
-              更多保存方式
-            </summary>
-            <div className="mt-3 space-y-3">
-              <p>如果要发给自己，复制链接最稳定。微信内也可以使用右上角菜单。如果已经换成另一件事，可以重新开始。</p>
-              <div className="grid gap-2 sm:grid-cols-2">
-                {canUseNativeShare && (
+            <details className="rounded-card border border-[var(--tebiq-soft-gray)] px-3 py-2.5 text-[12.5px] leading-[1.65] text-[var(--tebiq-deep-slate)]">
+              <summary className="cursor-pointer font-medium text-[var(--tebiq-ink-blue)]">
+                复制和更多方式
+              </summary>
+              <div className="mt-3 space-y-3">
+                <div className="grid gap-2 sm:grid-cols-2">
                   <button
-                    onClick={shareConsultationLink}
+                    onClick={copyConsultationLink}
                     disabled={!active.id}
                     className="inline-flex min-h-10 items-center justify-center gap-2 rounded-btn border border-[var(--tebiq-soft-gray)] px-3 py-2 text-[13px] font-medium text-[var(--tebiq-ink-blue)] disabled:opacity-50"
                   >
-                    {shareState === 'shared'
-                      ? <CheckCircle2 className="h-4 w-4" strokeWidth={1.6} />
-                      : <Share2 className="h-4 w-4" strokeWidth={1.6} />}
-                    {shareState === 'shared'
-                      ? '已打开分享'
-                      : shareState === 'failed'
-                        ? '分享未完成'
-                        : '打开系统分享'}
+                    {copyState === 'copied' ? <ClipboardCheck className="h-4 w-4" strokeWidth={1.6} /> : <Copy className="h-4 w-4" strokeWidth={1.6} />}
+                    {copyState === 'copied' ? '已复制链接' : copyState === 'failed' ? '复制失败' : '复制链接'}
                   </button>
-                )}
-                <button
-                  onClick={onReset}
-                  className="inline-flex min-h-10 items-center justify-center gap-2 rounded-btn border border-[var(--tebiq-soft-gray)] px-3 py-2 text-[13px] font-medium text-[var(--tebiq-ink-blue)] disabled:opacity-50"
-                >
-                  <MessageSquarePlus className="h-4 w-4" strokeWidth={1.6} />
-                  重新开始咨询
-                </button>
+                  <button
+                    onClick={copyConsultationSummary}
+                    disabled={!active.id}
+                    className="inline-flex min-h-10 items-center justify-center gap-2 rounded-btn border border-[var(--tebiq-soft-gray)] px-3 py-2 text-[13px] font-medium text-[var(--tebiq-ink-blue)] disabled:opacity-50"
+                  >
+                    {summaryCopyState === 'copied' ? <ClipboardCheck className="h-4 w-4" strokeWidth={1.6} /> : <Copy className="h-4 w-4" strokeWidth={1.6} />}
+                    {summaryCopyState === 'copied' ? '已复制概要' : summaryCopyState === 'failed' ? '复制失败' : '复制概要'}
+                  </button>
+                  {canUseNativeShare && (
+                    <button
+                      onClick={shareConsultationLink}
+                      disabled={!active.id}
+                      className="inline-flex min-h-10 items-center justify-center gap-2 rounded-btn border border-[var(--tebiq-soft-gray)] px-3 py-2 text-[13px] font-medium text-[var(--tebiq-ink-blue)] disabled:opacity-50"
+                    >
+                      {shareState === 'shared'
+                        ? <CheckCircle2 className="h-4 w-4" strokeWidth={1.6} />
+                        : <Share2 className="h-4 w-4" strokeWidth={1.6} />}
+                      {shareState === 'shared'
+                        ? '已打开分享'
+                        : shareState === 'failed'
+                          ? '分享未完成'
+                          : '打开系统分享'}
+                    </button>
+                  )}
+                  <button
+                    onClick={onReset}
+                    className="inline-flex min-h-10 items-center justify-center gap-2 rounded-btn border border-[var(--tebiq-soft-gray)] px-3 py-2 text-[13px] font-medium text-[var(--tebiq-ink-blue)] disabled:opacity-50"
+                  >
+                    <MessageSquarePlus className="h-4 w-4" strokeWidth={1.6} />
+                    重新开始咨询
+                  </button>
+                </div>
+                <p>如果要发给自己，复制链接最稳定。微信内也可以使用右上角菜单。</p>
               </div>
-              <div className="flex flex-wrap gap-x-4 gap-y-2 text-[12px]">
-                <button
-                  type="button"
-                  onClick={onReset}
-                  className="inline-flex items-center gap-1 font-medium text-[var(--tebiq-deep-slate)]"
-                >
-                  提出新的问题
-                  <ArrowRight className="h-3.5 w-3.5" strokeWidth={1.6} />
-                </button>
-                <a href="/me/consultations" className="inline-flex items-center gap-1 font-medium text-[var(--tebiq-deep-slate)]">
-                  已保存咨询
-                  <ArrowRight className="h-3.5 w-3.5" strokeWidth={1.6} />
-                </a>
-                <a href={detailPath} className="inline-flex items-center gap-1 font-medium text-[var(--tebiq-deep-slate)]">
-                  打开这次咨询
-                  <ArrowRight className="h-3.5 w-3.5" strokeWidth={1.6} />
-                </a>
-              </div>
-              <p className="text-[12px] text-[var(--tebiq-cool-gray)]">TEBIQ 不会强制跳出当前浏览器；保存或复制后，你可以按自己的习惯下次打开。</p>
-            </div>
-          </details>
+            </details>
           </Surface>
 
           <Surface className="space-y-2 p-3.5 sm:p-4">
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
               <p className="text-[13px] font-medium text-[var(--tebiq-ink-blue)]">反馈这条回答</p>
-              <div className="grid grid-cols-3 gap-2 sm:min-w-[15rem]">
-              {FEEDBACK_BUTTONS.map(b => (
-                <button
-                  key={b.type}
-                  onClick={() => onFeedback(b.type)}
-                  disabled={active.feedback_sent !== null && active.feedback_sent !== b.type}
-                  className={cx(
-                    'min-h-9 rounded-btn border px-2 py-1.5 text-center text-[12px] font-medium whitespace-nowrap',
-                    active.feedback_sent === b.type
-                      ? 'border-[var(--tebiq-ink-blue)] bg-[var(--tebiq-soft-gray)] text-[var(--tebiq-ink-blue)]'
-                      : 'border-[var(--tebiq-soft-gray)] text-[var(--tebiq-deep-slate)]',
-                    'disabled:opacity-50',
-                  )}
-                >
-                  {b.label}
-                </button>
-              ))}
+              <div className="flex flex-wrap gap-2">
+                {FEEDBACK_BUTTONS.map(b => (
+                  <button
+                    key={b.type}
+                    onClick={() => onFeedback(b.type)}
+                    disabled={active.feedback_sent !== null && active.feedback_sent !== b.type}
+                    className={cx(
+                      'min-h-8 rounded-full border px-3 py-1 text-center text-[12px] font-medium whitespace-nowrap',
+                      active.feedback_sent === b.type
+                        ? 'border-[var(--tebiq-ink-blue)] bg-[var(--tebiq-soft-gray)] text-[var(--tebiq-ink-blue)]'
+                        : 'border-[var(--tebiq-soft-gray)] text-[var(--tebiq-deep-slate)]',
+                      'disabled:opacity-50',
+                    )}
+                  >
+                    {b.label}
+                  </button>
+                ))}
               </div>
             </div>
           </Surface>
@@ -1267,34 +1233,25 @@ function ActiveConsultationView({
         </Surface>
       )}
 
-      {(active.feedback_sent || error) && (
+      {error && (
         <div className="flex flex-wrap gap-2">
-          {active.feedback_sent && <MetaPill>反馈：{feedbackLabel(active.feedback_sent)}</MetaPill>}
-          {error && <MetaPill tone="focus">{userSafeDetail(error, 'failed')}</MetaPill>}
+          <MetaPill tone="focus">{userSafeDetail(error, 'failed')}</MetaPill>
         </div>
       )}
       {active.feedback_sent === 'human_review' && (
-        <HumanReviewNotice onSave={onSave} />
+        <HumanReviewNotice />
       )}
     </section>
   )
 }
 
-function HumanReviewNotice({ onSave }: { onSave: () => void }) {
+function HumanReviewNotice() {
   return (
     <Surface className="space-y-2 border-[var(--tebiq-soft-gray)] p-3.5">
       <SectionLabel>确认请求已记录</SectionLabel>
       <p className="text-[13px] leading-[1.7] text-[var(--tebiq-deep-slate)]">
-        这还不是人工受理。你可以先保存概要；需要具体期限、材料或个案判断时，带着概要向行政書士或入管确认。
+        这还不是人工受理。需要具体期限、材料或个案判断时，可以带着已保存的概要向行政書士或入管确认。
       </p>
-      <button
-        type="button"
-        onClick={onSave}
-        className="inline-flex min-h-9 items-center justify-center gap-2 whitespace-nowrap rounded-btn border border-[var(--tebiq-soft-gray)] px-3 py-1.5 text-[12.5px] font-medium text-[var(--tebiq-ink-blue)]"
-      >
-        <Archive className="h-3.5 w-3.5" strokeWidth={1.6} />
-        保存概要
-      </button>
     </Surface>
   )
 }
@@ -1561,14 +1518,13 @@ interface FirstLookBlock {
   avoid: string | null
 }
 
-function AnswerProse({ text, afterFirstLook = null }: { text: string; afterFirstLook?: JSX.Element | null }) {
+function AnswerProse({ text }: { text: string }) {
   const safeText = cleanDisplayText(text)
   const { firstLook, rest } = extractFirstLook(safeText)
   const blocks = buildAnswerBlocks(rest)
   return (
     <div className="space-y-4">
       {firstLook && <FirstLookCard firstLook={firstLook} />}
-      {firstLook && afterFirstLook}
       {blocks.map((block, index) => {
         if (block.kind === 'heading') {
           return (
@@ -1595,69 +1551,6 @@ function AnswerProse({ text, afterFirstLook = null }: { text: string; afterFirst
           </p>
         )
       })}
-    </div>
-  )
-}
-
-function CompletionQuickActions({
-  saved,
-  copyState,
-  followUpDisabled,
-  onFollowUp,
-  onSave,
-  onCopy,
-  onHumanReview,
-}: {
-  saved: boolean
-  copyState: 'idle' | 'copied' | 'failed'
-  followUpDisabled: boolean
-  onFollowUp: () => void
-  onSave: () => void
-  onCopy: () => void
-  onHumanReview: () => void
-}) {
-  return (
-    <div className="rounded-card border border-[var(--tebiq-soft-gray)] bg-[var(--tebiq-off-white)] px-3 py-3">
-      <div className="grid grid-cols-2 gap-2">
-        <button
-          type="button"
-          onClick={onFollowUp}
-          disabled={followUpDisabled}
-          className="inline-flex min-h-10 items-center justify-center gap-1.5 whitespace-nowrap rounded-btn bg-[var(--tebiq-ink-blue)] px-2 py-2 text-[12px] font-medium text-[var(--tebiq-off-white)] disabled:opacity-50"
-        >
-          <MessageSquarePlus className="h-3.5 w-3.5" strokeWidth={1.6} />
-          继续问
-        </button>
-        <button
-          type="button"
-          onClick={onSave}
-          disabled={saved}
-          className="inline-flex min-h-10 items-center justify-center gap-1.5 whitespace-nowrap rounded-btn border border-[var(--tebiq-soft-gray)] px-2 py-2 text-[12px] font-medium text-[var(--tebiq-ink-blue)] disabled:opacity-60"
-        >
-          {saved ? <CheckCircle2 className="h-3.5 w-3.5" strokeWidth={1.6} /> : <Archive className="h-3.5 w-3.5" strokeWidth={1.6} />}
-          {saved ? '已保存' : '保存'}
-        </button>
-      </div>
-      <div className="mt-2 flex flex-wrap gap-x-4 gap-y-2 text-[12px]">
-        <button
-          type="button"
-          onClick={onCopy}
-          className="inline-flex items-center gap-1 font-medium text-[var(--tebiq-deep-slate)]"
-        >
-          {copyState === 'copied' ? <ClipboardCheck className="h-3.5 w-3.5" strokeWidth={1.6} /> : <Copy className="h-3.5 w-3.5" strokeWidth={1.6} />}
-          {copyState === 'copied' ? '已复制链接' : '复制链接'}
-        </button>
-        <button
-          type="button"
-          onClick={onHumanReview}
-          className="inline-flex items-center gap-1 font-medium text-[var(--tebiq-deep-slate)]"
-        >
-          确认方式
-        </button>
-      </div>
-      <p className="mt-2 text-[11.5px] leading-[1.55] text-[var(--tebiq-cool-gray)]">
-        可以继续补充同一件事，或先保存后发给自己/专业人士。
-      </p>
     </div>
   )
 }
