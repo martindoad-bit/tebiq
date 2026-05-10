@@ -43,6 +43,7 @@ const SOURCE_WHITELIST_DOMAINS: ReadonlyArray<string> = [
   'elaws.e-gov.go.jp',
   'mhlw.go.jp',
   'nta.go.jp',
+  'soumu.go.jp',         // 総務省 — 住民税 / 地方税
   'meti.go.jp',          // 経済産業省 — startup visa, etc
   'nenkin.go.jp',        // 日本年金機構
   // 各市町村区役所 — wildcard not enforced; reviewer handles per-card
@@ -268,6 +269,16 @@ function extractNeedsReviewFlagIds(value: unknown): string[] {
     if (entry && typeof entry === 'object' && 'id' in entry) {
       const id = (entry as { id: unknown }).id
       if (typeof id === 'string') ids.push(id)
+      continue
+    }
+    // FACT cards commonly use YAML mapping syntax:
+    //   - flag_id: human-readable reason
+    // Preserve the mapping key as the audit flag id.
+    if (entry && typeof entry === 'object') {
+      const keys = Object.keys(entry)
+      if (keys.length === 1 && typeof keys[0] === 'string' && keys[0].length > 0) {
+        ids.push(keys[0])
+      }
     }
   }
   return ids

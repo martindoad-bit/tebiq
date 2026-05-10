@@ -85,6 +85,7 @@ Only these are acceptable as `official_sources`:
 - e-Gov 法令検索 (`elaws.e-gov.go.jp`)
 - 厚生労働省 (`mhlw.go.jp`) — for 年金・健康保険・労務
 - 国税庁 (`nta.go.jp`) — for 税金関連
+- 総務省 (`soumu.go.jp`) — for 住民税・地方税制度
 - 各市町村区役所 official pages — for 住民税・国民健康保険 procedural
 - 政府公式 PDF / 告示 / 省令
 

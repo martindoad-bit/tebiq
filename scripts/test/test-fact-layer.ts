@@ -54,6 +54,7 @@ async function main() {
     assert.equal(internals.validateUrlAgainstWhitelist('https://www.mhlw.go.jp/content/y.pdf'), true)
     assert.equal(internals.validateUrlAgainstWhitelist('https://elaws.e-gov.go.jp/document?lawid=z'), true)
     assert.equal(internals.validateUrlAgainstWhitelist('https://www.nta.go.jp/taxes/x.htm'), true)
+    assert.equal(internals.validateUrlAgainstWhitelist('https://www.soumu.go.jp/main_sosiki/jichi_zeisei/x.html'), true)
   })
   check('1b. blog / 中文中介 sources are NOT whitelisted', () => {
     assert.equal(internals.validateUrlAgainstWhitelist('https://gyousei-blog.example.com/visa'), false)
@@ -225,6 +226,29 @@ async function main() {
         )
       }
     }
+  })
+  check('4f. YAML mapping-style needs_review_flags are preserved as audit ids', () => {
+    const mappingFlag = [
+      '---',
+      'fact_id: mapping-flag',
+      'title: mapping flag test',
+      'state: needs_review',
+      'risk_level: high',
+      'confidence: low',
+      'source_quality: secondary',
+      'last_verified_at: 2026-05-11',
+      'applies_to: [test]',
+      'official_sources: []',
+      'needs_review_flags:',
+      '  - source_gap: Needs official confirmation.',
+      '  - official_term_check: Confirm exact official term.',
+      '---',
+      '',
+      '## common_user_phrases',
+      '- 测试',
+    ].join('\n')
+    const card = internals.normalize('/tmp/mapping-flag.md', mappingFlag)
+    assert.deepEqual(card.needsReviewFlags, ['source_gap', 'official_term_check'])
   })
 
   // -----------------------------------------------------------------------
