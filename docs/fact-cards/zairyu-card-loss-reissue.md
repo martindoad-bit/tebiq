@@ -2,7 +2,7 @@
 fact_id: zairyu-card-loss-reissue
 title: 中長期在留者 — 在留カード紛失・盗難時の再交付申請
 state: ai_verified
-risk_level: medium
+risk_level: high
 confidence: high
 source_quality: official
 controlled_alpha_eligible: false
@@ -233,4 +233,4 @@ needs_review_flags: []
 
 | date | actor | action | from_state | to_state | note |
 |---|---|---|---|---|---|
-| 2026-05-10 | Codex (Cycle 1 self-cycle) | official source extraction + scenario mapping + QA cases | — | ai_verified | Fixes AQL P0 G04 wrong-office regression; risk=medium; official source only |
+| 2026-05-10 | Codex (Cycle 1 self-cycle) | official source extraction + scenario mapping + QA cases | — | ai_verified | Fixes AQL P0 G04 wrong-office regression; risk=high so single explicit loss/reissue trigger can inject; official source only |
