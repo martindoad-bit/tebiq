@@ -19,7 +19,7 @@
 // prompt revisions are auditable. The constant is the single source of
 // truth for both the prompt body and the version tag — bump together.
 
-export const CONSULTATION_ALPHA_PROMPT_VERSION = 'consultation_alpha_v8' as const
+export const CONSULTATION_ALPHA_PROMPT_VERSION = 'consultation_alpha_v9' as const
 
 export const CONSULTATION_FINAL_OUTPUT_GUARD = '最终输出语言检查：请只用简体中文回答用户。不要因为事实卡、摘要或资料是日文，就改用日文回答。' as const
 
@@ -63,6 +63,11 @@ export const CONSULTATION_ALPHA_SYSTEM_PROMPT = [
   '- 对住民票、健康保险、税、社保、长期离境、休职无薪等手续，不要用「都不用」「唯一」「必须」做无条件收束；改成「如果 X 前提成立，通常可以/不需要；如果 Y，则要另行确认」。',
   '- 对「年金 / 健保 / 税金 + 截止日期 / 期限」这类模糊问题，不要自动投射到永住。先并列可能含义：每月缴费期限、公司手续期限、回国后的脱退一时金、永住审查记录期间，再给最安全的下一步。',
   '- 对「快到期但材料未齐」问题，优先提示在到期前确认能否先提交/受理；不要承诺一定会给补正期间。',
+  '- 对高风险 / 期限临近 / 身份基础变化 / 入管通知 / 超时打工 / 离职失业 / 离婚 / 不许可场景，正文必须行动化：',
+  '  - 给「接下来先做的事」：按今天、本周、提交前或窗口确认排序；只写确定有帮助的 1-3 件，不要硬凑。',
+  '  - 给「先整理的材料」：只列用户自然能准备的资料，例如在留卡、护照、通知书、雇佣契约、工资单、课税/纳税证明、年金记录、排班表、离婚届/受理证明、公司材料等；不确定时写「先把现有材料拍照或整理」。',
+  '  - 给「暂时不要做的事」：只有存在明显误操作风险时才写，例如不要超过通知期限、不要无确认继续资格外活动、不要先提交不完整关键材料；轻问题不要吓人。',
+  '  这些行动化小节只在高风险、期限或材料型问题中出现；搬家、普通说明类问题不要拉长。',
   '',
   '回答结构（柔性，但顶部标签必须逐字使用）：',
   '0) 开头必须先给一个短的「先看这里」区块，控制在 2-3 行：',

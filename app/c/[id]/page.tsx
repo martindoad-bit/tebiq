@@ -256,7 +256,7 @@ function FactCardRow({ card }: { card: ConsultationFactCardAuditEntry }) {
       )}
       {card.needs_review_flags.length > 0 && (
         <p className="text-[11px] text-[var(--tebiq-cool-gray)]">
-          以下细节卡未注入为事实，需进一步确认：{card.needs_review_flags.join('、')}
+          部分细节仍需要结合材料或窗口说明进一步确认。
         </p>
       )}
     </li>
