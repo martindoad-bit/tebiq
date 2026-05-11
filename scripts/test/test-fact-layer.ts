@@ -48,11 +48,12 @@ async function main() {
   // -----------------------------------------------------------------------
   // 1. URL whitelist
   // -----------------------------------------------------------------------
-  check('1a. moj.go.jp / isa.go.jp / mhlw.go.jp are whitelisted', () => {
+  check('1a. government source domains are whitelisted', () => {
     assert.equal(internals.validateUrlAgainstWhitelist('https://www.moj.go.jp/isa/applications/x.html'), true)
     assert.equal(internals.validateUrlAgainstWhitelist('https://isa.go.jp/policy.pdf'), true)
     assert.equal(internals.validateUrlAgainstWhitelist('https://www.mhlw.go.jp/content/y.pdf'), true)
     assert.equal(internals.validateUrlAgainstWhitelist('https://elaws.e-gov.go.jp/document?lawid=z'), true)
+    assert.equal(internals.validateUrlAgainstWhitelist('https://laws.e-gov.go.jp/document?lawid=326CO0000000319'), true)
     assert.equal(internals.validateUrlAgainstWhitelist('https://www.nta.go.jp/taxes/x.htm'), true)
   })
   check('1b. blog / 中文中介 sources are NOT whitelisted', () => {

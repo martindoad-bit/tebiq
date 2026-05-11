@@ -41,6 +41,7 @@ const SOURCE_WHITELIST_DOMAINS: ReadonlyArray<string> = [
   'isa.go.jp',
   'moj.go.jp',
   'elaws.e-gov.go.jp',
+  'laws.e-gov.go.jp',
   'mhlw.go.jp',
   'nta.go.jp',
   'soumu.go.jp',         // 総務省 — 住民税 / 地方税
