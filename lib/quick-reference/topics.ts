@@ -3,6 +3,9 @@ export type QuickReferenceVerification = 'source-backed' | 'needs-check'
 export interface QuickReferenceSource {
   label: string
   url: string
+  organization?: string
+  locator?: string
+  relation?: 'direct' | 'related'
 }
 
 export interface QuickReferenceFact {

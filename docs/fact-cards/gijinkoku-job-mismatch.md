@@ -71,6 +71,25 @@ needs_review_flags:
       就業規則上の職務と実際の業務内容のズレ（例：エンジニア雇用だが一時的に
       営業補助業務）の取消し判断基準は公式ページに具体的な閾値が明示されていない。
       実務上の運用事例が必要。
+related_links:
+  - title: "技術・人文知識・国際業務（在留資格）"
+    url: "https://www.moj.go.jp/isa/applications/status/gijinkoku.html"
+    organization: "出入国在留管理庁"
+    display_label: "技術・人文知識・国際業務（在留資格）"
+    locator: "ページ内で「技術・人文知識・国際業務（在留資格）」を検索"
+    relation: "official_reference"
+  - title: "在留資格の取消しについて（解説）"
+    url: "https://www.moj.go.jp/isa/applications/procedures/torikeshi_00002.html"
+    organization: "出入国在留管理庁"
+    display_label: "在留資格の取消しについて（解説）"
+    locator: "ページ内で「在留資格の取消しについて（解説）」を検索"
+    relation: "official_reference"
+  - title: "所属機関に関する届出（契約機関・活動機関変更）"
+    url: "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00015.html"
+    organization: "出入国在留管理庁"
+    display_label: "所属機関に関する届出（契約機関・活動機関変更）"
+    locator: "ページ内で「所属機関に関する届出」を検索"
+    relation: "official_reference"
 ---
 
 # 技術・人文知識・国際業務 — 業務内容と在留資格の不一致リスク

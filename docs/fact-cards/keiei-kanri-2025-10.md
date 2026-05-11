@@ -73,6 +73,25 @@ needs_review_flags:        # NOT injected as facts; appear in needs_review_adden
     reason: B2相当の代替経路（JLPT N2 / BJT 400+ / 20年在留 / 高等教育卒 / 義務教育+高校卒）の網羅性は要 PDF 確認。
   - id: jimusho_menseki_kijun
     reason: 「自宅兼用は原則不可」のみ確認。具体面積基準は「一律に答え難し」とのみ記載。運用例は要追加調査。
+related_links:
+  - title: "在留資格「経営・管理」に係る上陸基準省令等の改正について"
+    url: "https://www.moj.go.jp/isa/applications/resources/10_00237.html"
+    organization: "出入国在留管理庁"
+    display_label: "在留資格「経営・管理」に係る上陸基準省令等の改正について"
+    locator: "ページ内で「在留資格「経営」を検索"
+    relation: "official_reference"
+  - title: "改正概要 PDF"
+    url: "https://www.moj.go.jp/isa/content/001448231.pdf"
+    organization: "出入国在留管理庁"
+    display_label: "改正概要 PDF"
+    locator: "ページ内で「改正概要 PDF」を検索"
+    relation: "official_reference"
+  - title: "改正ガイドライン PDF"
+    url: "https://www.moj.go.jp/isa/content/001448070.pdf"
+    organization: "出入国在留管理庁"
+    display_label: "改正ガイドライン PDF"
+    locator: "ページ内で「改正ガイドライン PDF」を検索"
+    relation: "official_reference"
 ---
 
 # 経営・管理ビザ 2025年10月16日 改正後 新基準

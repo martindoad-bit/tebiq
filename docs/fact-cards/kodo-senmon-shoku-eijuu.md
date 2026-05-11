@@ -44,6 +44,13 @@ ai_inferred_fields:
 needs_review_flags:
   - points_calculation_table: ポイント計算の具体的配点表（学歴・職歴・年収・年齢別スコア）は別ページに記載。ISA公表の最新ポイント計算表（告示別表）の直接引用要。
   - eijuu_via_kodo_route: 高度専門職1号→（2号経由vs直接）→永住申請のルート詳細。永住申請ガイドライン（nyukan_nyukan50.html相当）との照合要。
+related_links:
+  - title: "出入国在留管理庁 — 高度専門職（在留資格）"
+    url: "https://www.moj.go.jp/isa/applications/status/designatedactivities02_00004.html"
+    organization: "出入国在留管理庁"
+    display_label: "出入国在留管理庁 — 高度専門職（在留資格）"
+    locator: "ページ内で「高度専門職（在留資格）」を検索"
+    relation: "official_reference"
 ---
 
 ## current_date_logic

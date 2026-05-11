@@ -48,6 +48,43 @@ ai_inferred_fields:
 needs_review_flags:
   - first_offense_enforcement_practice: 不携帯の実務上の初回処分（注意・起訴猶予等）の公式データ・法的根拠は確認要。
   - special_permanent_resident_teiji: 特別永住者（特別永住者証明書）の提示義務の詳細（常時携帯義務なしだが提示義務あり）の法令引用確認要。
+evidence_points:
+  - claim: "中長期在留者は在留カードを常時携帯しなければならない（入管法第23条第2項）。不携帯は20万円以下の罰金（第75条の3）。"
+    source_title: "出入国在留管理庁：在留カードに関する各種届出"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/zairyu_01.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「常時携帯義務」および「罰則」の記述を確認。法令は第23条第2項・第75条の3"
+    display_label: "在留カード常時携帯義務・罰則20万円"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "警察官等から提示を求められた場合は提示義務あり。拒否した場合は1年以下の懲役または20万円以下の罰金（入管法第75条の2）。不携帯より格段に重い。"
+    source_title: "出入国在留管理庁：在留カードに関する各種届出"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/zairyu_01.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「提示義務」および「第75条の2」に関する記述を確認"
+    display_label: "提示拒否罰則（懲役1年以下）"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "16歳未満は在留カードの常時携帯義務が免除されている（入管法第23条第5項）。"
+    source_title: "出入国在留管理庁：在留カードに関する各種届出"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/zairyu_01.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内またはISA FAQで「16歳未満」「携帯義務免除」を検索"
+    display_label: "16歳未満：携帯義務免除"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "在留カードを常時携帯する義務は入管法第23条に基づく。不携帯の場合の20万円以下の罰金は第75条に基づく。"
+    source_title: "出入国管理及び難民認定法 第23条・第75条（e-gov法令検索）"
+    source_url: "https://laws.e-gov.go.jp/document?lawid=326CO0000000319"
+    source_organization: "e-gov（デジタル庁）"
+    source_locator: "第23条（在留カードの携帯及び提示義務）・第75条（罰則：20万円以下の罰金）"
+    display_label: "在留カード携帯義務・罰則の法令根拠"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic
@@ -166,3 +203,4 @@ A: いいえ。16歳未満の方は在留カードの常時携帯義務が免除
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
 |------|------|----------|--------------|-------------|------|
 | 2026-05-11 | FACT-OPS (Cycle 2 Batch 14) | 新規作成。在留カード常時携帯義務。入管法第23条第2項（携帯義務）・第23条第3項（提示義務）・第75条の3（不携帯20万円罰金）・第75条の2（提示拒否1年懲役）・第23条第5項（16歳未満免除）・ISA FAQ Q36（16歳未満免除）は公式直接確認済み。実務上の初回処分・特別永住者はai_inferred + needs_review_flag。 | — | ai_verified | new |
+| 2026-05-11 | FACT-OPS (Evidence Layer v1) | DOMAIN推奨によりe-gov法令ページ（入管法第23条・第75条）をevidence_pointsに追加。ISA手続きページより一次根拠として強い法令原文URLを追記。 | ai_verified | ai_verified | evidence-patch |

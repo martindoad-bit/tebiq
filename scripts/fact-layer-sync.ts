@@ -41,6 +41,7 @@ const SOURCE_WHITELIST_DOMAINS: ReadonlyArray<string> = [
   'isa.go.jp',
   'moj.go.jp',
   'elaws.e-gov.go.jp',
+  'laws.e-gov.go.jp',
   'mhlw.go.jp',
   'nta.go.jp',
   'soumu.go.jp',         // 総務省 — 住民税 / 地方税
@@ -212,6 +213,8 @@ interface CardFrontmatter {
   controlled_alpha_eligible?: unknown
   applies_to?: unknown
   official_sources?: unknown
+  evidence_points?: unknown
+  related_links?: unknown
   needs_review_flags?: unknown
   reviewer?: unknown
   last_verified_at?: unknown
@@ -238,27 +241,166 @@ function asStringArray(value: unknown, label: string, factId: string): string[] 
   })
 }
 
-function extractSourceUrls(value: unknown, factId: string): string[] {
+interface OfficialSourceEntry {
+  url: string
+  title?: string
+  label?: string
+  publisher?: string
+}
+
+interface EvidencePointEntry {
+  claim: string
+  source_title: string
+  source_url: string
+  source_organization?: string
+  source_locator?: string
+  display_label?: string
+  support_level: 'direct' | 'indirect' | 'background'
+  user_visible: boolean
+  needs_domain_review: boolean
+}
+
+interface RelatedLinkEntry {
+  title: string
+  url: string
+  organization?: string
+  display_label?: string
+  locator?: string
+  relation?: string
+}
+
+function extractOfficialSources(value: unknown, factId: string): OfficialSourceEntry[] {
   if (!Array.isArray(value)) {
     throw new SyncError(factId, 'official_sources must be an array')
   }
-  const urls: string[] = []
+  const sources: OfficialSourceEntry[] = []
   for (let i = 0; i < value.length; i++) {
     const entry = value[i]
     if (typeof entry === 'string') {
-      urls.push(entry)
+      sources.push({ url: entry })
       continue
     }
     if (entry && typeof entry === 'object' && 'url' in entry) {
-      const url = (entry as { url: unknown }).url
+      const src = entry as {
+        url: unknown
+        title?: unknown
+        label?: unknown
+        publisher?: unknown
+      }
+      const url = src.url
       if (typeof url === 'string' && url.length > 0) {
-        urls.push(url)
+        sources.push({
+          url,
+          title: typeof src.title === 'string' ? src.title.trim() : undefined,
+          label: typeof src.label === 'string' ? src.label.trim() : undefined,
+          publisher: typeof src.publisher === 'string' ? src.publisher.trim() : undefined,
+        })
         continue
       }
     }
     throw new SyncError(factId, `official_sources[${i}] is missing a string .url`)
   }
-  return urls
+  return sources
+}
+
+function normalizeEvidencePoints(value: unknown, factId: string): EvidencePointEntry[] {
+  if (value == null) return []
+  if (!Array.isArray(value)) {
+    throw new SyncError(factId, 'evidence_points must be an array when present')
+  }
+  return value.map((entry, i) => {
+    if (!entry || typeof entry !== 'object') {
+      throw new SyncError(factId, `evidence_points[${i}] must be an object`)
+    }
+    const e = entry as Record<string, unknown>
+    const support = typeof e.support_level === 'string' ? e.support_level : 'background'
+    if (!['direct', 'indirect', 'background'].includes(support)) {
+      throw new SyncError(factId, `evidence_points[${i}].support_level must be direct|indirect|background`)
+    }
+    return {
+      claim: asNonEmptyString(e.claim, `evidence_points[${i}].claim`, factId),
+      source_title: asNonEmptyString(e.source_title, `evidence_points[${i}].source_title`, factId),
+      source_url: asNonEmptyString(e.source_url, `evidence_points[${i}].source_url`, factId),
+      source_organization: typeof e.source_organization === 'string' ? e.source_organization.trim() : undefined,
+      source_locator: typeof e.source_locator === 'string' ? e.source_locator.trim() : undefined,
+      display_label: typeof e.display_label === 'string' ? e.display_label.trim() : undefined,
+      support_level: support as EvidencePointEntry['support_level'],
+      user_visible: e.user_visible !== false,
+      needs_domain_review: e.needs_domain_review === true,
+    }
+  })
+}
+
+function normalizeRelatedLinks(
+  value: unknown,
+  officialSources: ReadonlyArray<OfficialSourceEntry>,
+  factId: string,
+): RelatedLinkEntry[] {
+  if (value == null) {
+    return officialSources.map(source => ({
+      title: source.title || source.label || sourceLabelForUrl(source.url),
+      url: source.url,
+      organization: source.publisher || organizationForUrl(source.url),
+      display_label: source.label || source.title || sourceLabelForUrl(source.url),
+      relation: 'official_reference',
+    }))
+  }
+  if (!Array.isArray(value)) {
+    throw new SyncError(factId, 'related_links must be an array when present')
+  }
+  return value.map((entry, i) => {
+    if (!entry || typeof entry !== 'object') {
+      throw new SyncError(factId, `related_links[${i}] must be an object`)
+    }
+    const e = entry as Record<string, unknown>
+    return {
+      title: asNonEmptyString(e.title, `related_links[${i}].title`, factId),
+      url: asNonEmptyString(e.url, `related_links[${i}].url`, factId),
+      organization: typeof e.organization === 'string' ? e.organization.trim() : undefined,
+      display_label: typeof e.display_label === 'string' ? e.display_label.trim() : undefined,
+      locator: typeof e.locator === 'string' ? e.locator.trim() : undefined,
+      relation: typeof e.relation === 'string' ? e.relation.trim() : undefined,
+    }
+  })
+}
+
+function sourceLabelForUrl(url: string): string {
+  const org = organizationForUrl(url)
+  return org === '官方资料' ? hostnameOf(url) : `${org}：相关资料`
+}
+
+function organizationForUrl(url: string): string {
+  const host = hostnameOf(url)
+  if (/moj\.go\.jp$/i.test(host) || /isa\.go\.jp$/i.test(host)) return '出入国在留管理庁'
+  if (/mhlw\.go\.jp$/i.test(host)) return '厚生労働省'
+  if (/nenkin\.go\.jp$/i.test(host)) return '日本年金機構'
+  if (/soumu\.go\.jp$/i.test(host)) return '総務省'
+  if (/nta\.go\.jp$/i.test(host)) return '国税庁'
+  if (/digital\.go\.jp$/i.test(host)) return 'デジタル庁'
+  if (/kyoukaikenpo\.or\.jp$/i.test(host)) return '全国健康保険協会'
+  if (/\.lg\.jp$/i.test(host)) return '自治体'
+  if (/\.go\.jp$/i.test(host)) return '日本政府'
+  return '官方资料'
+}
+
+function hostnameOf(url: string): string {
+  try {
+    return new URL(url).hostname.replace(/^www\./, '')
+  } catch {
+    return url.slice(0, 32)
+  }
+}
+
+function uniqueStrings(values: ReadonlyArray<string>): string[] {
+  const out: string[] = []
+  const seen = new Set<string>()
+  for (const value of values) {
+    const cleaned = value.trim()
+    if (!cleaned || seen.has(cleaned)) continue
+    seen.add(cleaned)
+    out.push(cleaned)
+  }
+  return out
 }
 
 function extractNeedsReviewFlagIds(value: unknown): string[] {
@@ -331,7 +473,14 @@ function normalize(filePath: string, raw: string): NormalizedCard {
 
   const controlledAlphaEligible = fm.controlled_alpha_eligible === true
   const appliesTo = asStringArray(fm.applies_to, 'applies_to', factId)
-  const sourceUrls = extractSourceUrls(fm.official_sources, factId)
+  const officialSources = extractOfficialSources(fm.official_sources, factId)
+  const evidencePoints = normalizeEvidencePoints(fm.evidence_points, factId)
+  const relatedLinks = normalizeRelatedLinks(fm.related_links, officialSources, factId)
+  const sourceUrls = uniqueStrings([
+    ...officialSources.map(s => s.url),
+    ...evidencePoints.map(e => e.source_url),
+    ...relatedLinks.map(l => l.url),
+  ])
   const needsReviewFlags = extractNeedsReviewFlagIds(fm.needs_review_flags)
 
   if (state === 'ai_verified' && riskLevel === 'critical' && controlledAlphaEligible && confidence !== 'high') {
@@ -344,7 +493,7 @@ function normalize(filePath: string, raw: string): NormalizedCard {
   // Hard-fail: any source URL outside the whitelist
   for (const url of sourceUrls) {
     if (!validateUrlAgainstWhitelist(url)) {
-      throw new SyncError(factId, `official_sources URL "${url}" is outside the source whitelist`)
+      throw new SyncError(factId, `source URL "${url}" is outside the source whitelist`)
     }
   }
 
@@ -412,6 +561,8 @@ function normalize(filePath: string, raw: string): NormalizedCard {
     injectionNeedsReviewAddendum: sections.needsReviewAddendum,
     needsReviewFlags,
     sourceUrls,
+    evidencePoints,
+    relatedLinks,
     reviewer: typeof fm.reviewer === 'string' ? fm.reviewer : null,
     lastVerifiedAt,
     approvedAt,
@@ -479,6 +630,8 @@ export async function runSync(opts: { dryRun?: boolean } = {}): Promise<SyncResu
           injectionNeedsReviewAddendum: card.injectionNeedsReviewAddendum ?? null,
           needsReviewFlags: card.needsReviewFlags,
           sourceUrls: card.sourceUrls,
+          evidencePoints: card.evidencePoints,
+          relatedLinks: card.relatedLinks,
           reviewer: card.reviewer ?? null,
           lastVerifiedAt: card.lastVerifiedAt,
           approvedAt: card.approvedAt ?? null,

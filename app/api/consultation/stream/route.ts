@@ -361,6 +361,8 @@ export async function POST(req: Request) {
         confidence: m.confidence,
         source_quality: m.source_quality,
         official_sources: m.official_sources,
+        evidence_points: m.evidence_points,
+        related_links: m.related_links,
         // Pack §5 reserves `injected_fields` for direct_fact_field names.
         // The Pack 2.1 schema doesn't surface those (no column on
         // fact_cards table); a future migration may add them. For now

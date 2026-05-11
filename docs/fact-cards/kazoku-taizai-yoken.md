@@ -50,6 +50,13 @@ needs_review_flags:
     reason: "扶養に足りる収入の具体的閾値は src-01 に数値記載なし。住民税証明書等の書類提出が必要とされているが、審査基準の数値は公開されていない。"
   - id: adult_child_age_limit
     reason: "「子」の範囲（成人後の扶養家族の扱い）については src-01 に明示記述なし。"
+related_links:
+  - title: "家族滞在（在留資格）"
+    url: "https://www.moj.go.jp/isa/applications/status/dependent.html"
+    organization: "出入国在留管理庁"
+    display_label: "家族滞在（在留資格）"
+    locator: "ページ内で「家族滞在（在留資格）」を検索"
+    relation: "official_reference"
 ---
 
 ## current_date_logic

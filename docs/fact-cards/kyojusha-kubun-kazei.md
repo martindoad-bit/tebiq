@@ -48,6 +48,13 @@ needs_review_flags:
   - address_determination_timing: 来日後に「住所」が認定されるタイミング（住民票登録日 vs 実際の生活本拠確立日）の詳細。「客観的事実による判定」の具体的な判定基準は国税庁 No.2012 等で確認要。
   - hieijusha_5nen_transition: 過去10年在住期間が5年を超えた時点での非永住者→一般居住者（全世界所得）への移行タイミング・判定方法の確認要。
   - tax_treaty_override: 租税条約の存在により実際の課税は条約内容が優先される場合がある。具体的な条約ごとの扱いは税理士相談要。
+related_links:
+  - title: "国税庁 No.2010 — 納税義務者"
+    url: "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/2010.htm"
+    organization: "国税庁"
+    display_label: "国税庁 No.2010 — 納税義務者"
+    locator: "ページ内で「納税義務者」を検索"
+    relation: "official_reference"
 ---
 
 ## current_date_logic

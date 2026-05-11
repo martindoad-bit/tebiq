@@ -334,6 +334,8 @@ export async function POST(req: Request): Promise<Response> {
         confidence: m.confidence,
         source_quality: m.source_quality,
         official_sources: m.official_sources,
+        evidence_points: m.evidence_points,
+        related_links: m.related_links,
         injected_fields: [],
         needs_review_flags: m.needs_review_flags,
         decision: m.decision,

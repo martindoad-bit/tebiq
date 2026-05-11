@@ -33,6 +33,10 @@ export interface FactCardMatch {
   decision: GateDecision
   /** Source URLs verbatim from the card (for audit/Learning Console). */
   official_sources: string[]
+  /** Claim-level evidence points for user-visible source cards. */
+  evidence_points: FactCard['evidencePoints']
+  /** Card-level related links. May be broader than exact claim evidence. */
+  related_links: FactCard['relatedLinks']
   /** Field IDs the card declared as withheld; passed through to audit. */
   needs_review_flags: string[]
   /** Card body content (resolve {{TODAY_ISO}} at injection time, not here). */
@@ -264,6 +268,8 @@ export async function matchFactCards(
       controlled_alpha_eligible: r.card.controlledAlphaEligible,
       decision,
       official_sources: (r.card.sourceUrls ?? []) as string[],
+      evidence_points: r.card.evidencePoints ?? [],
+      related_links: r.card.relatedLinks ?? [],
       needs_review_flags: (r.card.needsReviewFlags ?? []) as string[],
       injection_certain_block: r.card.injectionCertainBlock,
       injection_needs_review_addendum: r.card.injectionNeedsReviewAddendum ?? null,

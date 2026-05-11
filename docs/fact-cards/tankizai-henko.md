@@ -47,6 +47,19 @@ ai_inferred_fields:
 needs_review_flags:
   - official_policy_statement: 「短期滞在からの変更は原則認めない」の公式声明・通知の直接引用未取得。ISA Q&Aまたは入管法施行規則の解釈根拠確認要。
   - humanitarian_exception_scope: 例外が認められる「人道的理由」の範囲とISAの具体的判断基準の確認要。
+related_links:
+  - title: "出入国在留管理庁 — 在留資格変更許可申請"
+    url: "https://www.moj.go.jp/isa/applications/procedures/16-2.html"
+    organization: "出入国在留管理庁"
+    display_label: "出入国在留管理庁 — 在留資格変更許可申請"
+    locator: "ページ内で「在留資格変更許可申請」を検索"
+    relation: "official_reference"
+  - title: "出入国在留管理庁 — 短期滞在（在留資格）"
+    url: "https://www.moj.go.jp/isa/applications/status/temporaryvisitor.html"
+    organization: "出入国在留管理庁"
+    display_label: "出入国在留管理庁 — 短期滞在（在留資格）"
+    locator: "ページ内で「短期滞在（在留資格）」を検索"
+    relation: "official_reference"
 ---
 
 ## current_date_logic

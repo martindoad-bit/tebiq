@@ -48,6 +48,25 @@ ai_inferred_fields:
 needs_review_flags:
   - late_enrollment_consequences: 14日の期限を過ぎた場合の具体的なペナルティ（罰則・記録への影響）は公式ソースに明示なし。実務的影響の確認要。
   - kenpo_ninizokudzuki_interaction: 退職後の健康保険（任意継続 vs 国保）の選択と国民年金切換の関係・タイミングはai推定。厚生労働省の任意継続ページとの整合確認要。
+evidence_points:
+  - claim: "退職日の翌日から14日以内に市区役所または町村役場へ国民年金第1号被保険者への切換届出が必要。"
+    source_title: "日本年金機構：会社を退職したときの国民年金の手続き"
+    source_url: "https://www.nenkin.go.jp/service/kokunen/kanyu/20140710-03.html"
+    source_organization: "日本年金機構"
+    source_locator: "ページ内「退職日の翌日から14日以内」の記述を確認"
+    display_label: "退職後14日以内の国民年金切換"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "国民年金保険料の納付が難しい場合は、免除・猶予の申請が可能。"
+    source_title: "日本年金機構：国民年金に加入するための手続き"
+    source_url: "https://www.nenkin.go.jp/service/kokunen/kanyu/20140710-04.html"
+    source_organization: "日本年金機構"
+    source_locator: "ページ内「保険料の免除・猶予」または「納付が難しい場合」を確認"
+    display_label: "保険料免除・猶予の申請"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

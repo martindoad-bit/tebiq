@@ -170,6 +170,8 @@ function parseFactCardAudit(row: AiConsultation): ConsultationFactCardAuditEntry
       official_sources: Array.isArray(e.official_sources)
         ? (e.official_sources as unknown[]).filter((u): u is string => typeof u === 'string')
         : [],
+      evidence_points: parseEvidencePoints(e.evidence_points),
+      related_links: parseRelatedLinks(e.related_links),
       injected_fields: Array.isArray(e.injected_fields)
         ? (e.injected_fields as unknown[]).filter((f): f is string => typeof f === 'string')
         : [],
@@ -182,6 +184,52 @@ function parseFactCardAudit(row: AiConsultation): ConsultationFactCardAuditEntry
     })
   }
   return out
+}
+
+function parseEvidencePoints(value: unknown): ConsultationFactCardAuditEntry['evidence_points'] {
+  if (!Array.isArray(value)) return []
+  return value.flatMap(item => {
+    if (!item || typeof item !== 'object') return []
+    const e = item as Record<string, unknown>
+    if (
+      typeof e.claim !== 'string' ||
+      typeof e.source_title !== 'string' ||
+      typeof e.source_url !== 'string'
+    ) {
+      return []
+    }
+    const support = e.support_level === 'direct' || e.support_level === 'indirect' || e.support_level === 'background'
+      ? e.support_level
+      : 'background'
+    return [{
+      claim: e.claim,
+      source_title: e.source_title,
+      source_url: e.source_url,
+      source_organization: typeof e.source_organization === 'string' ? e.source_organization : undefined,
+      source_locator: typeof e.source_locator === 'string' ? e.source_locator : undefined,
+      display_label: typeof e.display_label === 'string' ? e.display_label : undefined,
+      support_level: support,
+      user_visible: e.user_visible !== false,
+      needs_domain_review: e.needs_domain_review === true,
+    }]
+  })
+}
+
+function parseRelatedLinks(value: unknown): ConsultationFactCardAuditEntry['related_links'] {
+  if (!Array.isArray(value)) return []
+  return value.flatMap(item => {
+    if (!item || typeof item !== 'object') return []
+    const e = item as Record<string, unknown>
+    if (typeof e.title !== 'string' || typeof e.url !== 'string') return []
+    return [{
+      title: e.title,
+      url: e.url,
+      organization: typeof e.organization === 'string' ? e.organization : undefined,
+      display_label: typeof e.display_label === 'string' ? e.display_label : undefined,
+      locator: typeof e.locator === 'string' ? e.locator : undefined,
+      relation: typeof e.relation === 'string' ? e.relation : undefined,
+    }]
+  })
 }
 
 function hasEncodingIssue(text: string | null | undefined): boolean {

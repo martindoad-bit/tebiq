@@ -68,6 +68,34 @@ needs_review_flags:
       離婚後に取りうる在留資格変更の選択肢（就労資格への変更、定住者資格の申請等）
       の具体的条件・申請タイミングは公式ページに明示なし。
       DOMAIN/書士確認が必要。
+evidence_points:
+  - claim: "「日本人の配偶者等」「永住者の配偶者等」保持者が配偶者としての活動を継続して6か月以上行っていない場合は在留資格取消対象（入管法第22条の4第1項第7号）。"
+    source_title: "出入国在留管理庁：在留資格の取消しについて（入管法第22条の4）"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/torikeshi_00002.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「第7号」または「配偶者としての活動を6か月以上行っていない」の記述を確認"
+    display_label: "配偶者活動6か月不実施→取消（第22条の4第7号）"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "離婚・死別後14日以内に出入国在留管理庁長官への届出が必要（家族滞在・日本人の配偶者等・永住者の配偶者等）。"
+    source_title: "出入国在留管理庁：配偶者に関する届出"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00016.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「離婚」または「14日以内」に関する届出義務の記述を確認"
+    display_label: "離婚後14日以内の届出義務"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "取消し前に意見聴取の機会があり、取消し事由3〜10号に該当する場合は最大30日の出国猶予期間が指定される。"
+    source_title: "出入国在留管理庁：在留資格の取消しについて（入管法第22条の4）"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/torikeshi_00002.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「意見聴取」「出国猶予期間30日」の記述を確認。意見聴取：第22条の4第2項、30日出国猶予（第1項第3号〜第10号に適用）：第22条の4第3項"
+    display_label: "取消し手続き（意見聴取・30日猶予）"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 # 日本人・永住者の配偶者 — 離婚・別居後の在留リスク
@@ -322,6 +350,7 @@ needs_review_flags:
 | 2026-05-07 | GM (boundary correction) | controlled_alpha_eligible: true → false. FACT autopilot 越界 (FACT_OPS_WINDOW_TASK_PACK §9). critical 卡按 README state machine 默认 human_reviewed gate. PR review 时由 PL 决定 signoff. | ai_verified | ai_verified | GM correction |
 | 2026-05-07 | DOMAIN-CC (domain-cc-tebiq) | APPROVE audit. 4つの direct_fact_fields すべて官方ページ直引用で正確（6か月ルール・14日届出・30日猶予・意見聴取）。needs_review 3件は正当かつ injection_certain_block から適切に除外。must_say / must_not_say / qa_cases (4件) は在留実務の核心をカバー。confidence high・risk_level critical いずれも妥当。観察：applies_to に家族滞在を含むが、injection は「日本人の配偶者等」「永住者の配偶者等」に正しく限定。生成物への悪影響なし。 | ai_verified | human_reviewed | APPROVE |
 | 2026-05-11 | FACT-OPS (Cycle 2 Batch 3) | Cycle 2メタデータ追加パッチ。citation_label・citation_summary・source_display_names・applies_when・does_not_coverフィールドを追加。事実内容・state変更なし。 | human_reviewed | human_reviewed | patch |
+| 2026-05-11 | FACT-OPS (Evidence Layer v1) + DOMAIN-CC | DOMAIN確認完了。意見聴取：第22条の4第2項、30日出国猶予（第1項第3号〜第10号適用）：第22条の4第3項。source_locatorに条項番号追記。needs_domain_review: true → false。 | human_reviewed | human_reviewed | domain-patch |
 
 ## Audit assignment
 

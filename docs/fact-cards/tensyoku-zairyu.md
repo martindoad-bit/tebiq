@@ -52,6 +52,34 @@ ai_inferred_fields:
 needs_review_flags:
   - tensyoku_misdelivery_penalty: 届出不履行の具体的罰則（第70条等）の入管法条文根拠の公式確認要（ISA届出ページには罰則の直接記載なし）
   - zairyu_henko_youhi_criterion: 転職先業務が「同一在留資格の活動範囲内」かの具体的判断基準（ISAガイドライン・FAQ等での公式確認要）
+evidence_points:
+  - claim: "転職（契約終了・新契約締結）の事由が生じた日から14日以内に出入国在留管理庁長官への届出が必要（入管法第19条の16第2号）。"
+    source_title: "出入国在留管理庁：所属（契約）機関に関する届出"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00015.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「届出期間」欄および「第19条の16第2号」の法令根拠を確認"
+    display_label: "転職時14日届出義務（第19条の16第2号）"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "電子届出システムを利用すれば24時間365日届出可能。資料提出不要。"
+    source_title: "出入国在留管理庁：所属（契約）機関に関する届出"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00015.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「届出方法」→「インターネットによる場合」を確認"
+    display_label: "電子届出（24時間・資料不要）"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "届出対象の在留資格：高度専門職1号・2号、研究、技術・人文知識・国際業務、介護、興行（契約ベース）、技能、特定技能。"
+    source_title: "出入国在留管理庁：所属（契約）機関に関する届出"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00015.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「手続対象者」欄を確認"
+    display_label: "対象在留資格（技人国・特定技能等）"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

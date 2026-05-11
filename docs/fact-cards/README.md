@@ -86,7 +86,7 @@ Only these are acceptable as `official_sources`:
 
 - 出入国在留管理庁 (`isa.go.jp`, `moj.go.jp/isa`)
 - 法務省 (`moj.go.jp`)
-- e-Gov 法令検索 (`elaws.e-gov.go.jp`)
+- e-Gov 法令検索 (`elaws.e-gov.go.jp`, `laws.e-gov.go.jp`)
 - 厚生労働省 (`mhlw.go.jp`) — for 年金・健康保険・労務
 - 国税庁 (`nta.go.jp`) — for 税金関連
 - 総務省 (`soumu.go.jp`) — for 住民税・地方税制度

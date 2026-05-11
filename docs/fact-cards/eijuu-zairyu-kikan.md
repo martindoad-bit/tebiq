@@ -60,6 +60,19 @@ needs_review_flags:
     reason: "地域再生関連3年特例は src-01 に記載があるが、認定要件・対象地域等の詳細が本日のfetchでは取得できていない。注入は controlled_alpha_eligible: false のまま慎重に行う。"
   - id: jisshu_kaigo_exclusion_detail
     reason: "技能実習の5年カウント除外は明確だが、その後就労資格に変更した場合の通算計算ルールは明示的に確認できていない。"
+related_links:
+  - title: "永住許可に関するガイドライン"
+    url: "https://www.moj.go.jp/isa/applications/resources/nyukan_nyukan50.html"
+    organization: "出入国在留管理庁"
+    display_label: "永住許可に関するガイドライン"
+    locator: "ページ内で「永住許可に関するガイドライン」を検索"
+    relation: "official_reference"
+  - title: "高度専門職（在留資格）永住許可申請 提出書類"
+    url: "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri07_00133.html"
+    organization: "出入国在留管理庁"
+    display_label: "高度専門職（在留資格）永住許可申請 提出書類"
+    locator: "ページ内で「高度専門職」を検索"
+    relation: "official_reference"
 ---
 
 ## current_date_logic

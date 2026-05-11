@@ -75,6 +75,43 @@ needs_review_flags:
       「収入を伴う事業を運営する活動又は報酬を受ける活動」の具体的範囲
       （フリーランス受注・投資所得・Uber Eats 等の業務委託・暗号資産取引等）は
       官方ページに定義なし。実務上の判断基準は要確認。
+evidence_points:
+  - claim: "在留資格に定められた活動以外で報酬を受ける活動には事前に資格外活動許可が必要（入管法第19条第2項）。"
+    source_title: "出入国在留管理庁：資格外活動の許可（入管法第19条）"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/shikakugai_00001.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ冒頭「原則」の引用文を確認"
+    display_label: "資格外活動許可の原則（入管法第19条）"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "入管法別表第2の在留資格（永住者・定住者・日本人の配偶者等等）は就労制限なく資格外活動許可不要。"
+    source_title: "出入国在留管理庁：資格外活動の許可（入管法第19条）"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/shikakugai_00001.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「入管法別表第２に掲げる在留資格の方」の記述を確認"
+    display_label: "別表第2（永住者等）は許可不要"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "留学生の包括許可は通常期：週28時間以内、長期休業期間中は1日8時間以内（週単位ではない）。"
+    source_title: "出入国在留管理庁：「留学」の在留資格に係る資格外活動許可について"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri07_00003.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「週28時間以内」「長期休業期間」の記述を確認"
+    display_label: "留学生28時間ルール・休業中は1日8時間"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "資格外活動許可（包括許可）があっても風俗営業等での就労は許可条件外。"
+    source_title: "出入国在留管理庁：資格外活動の許可（入管法第19条）"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/shikakugai_00001.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「風俗営業等が営まれていないことを条件」の記述を確認"
+    display_label: "風俗業等は許可条件外"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 # 資格外活動・副業 — 許可なき就労活動のリスク

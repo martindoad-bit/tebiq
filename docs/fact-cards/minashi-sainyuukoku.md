@@ -53,6 +53,25 @@ needs_review_flags:
     reason: "再入国許可なし出国による在留資格消滅は入管法第26条の2第6項が根拠とされるが、本日のfetchではe-gov法令ページ・src-01いずれもこの条文を取得できず。ai_inferenceとして扱い、certain_blockでheddging。DOMAIN確認推奨。"
   - id: zairyu_kigen_upper_bound
     reason: "在留期限がみなし再入国1年より前に来る場合、在留期限が実質上限という運用はAI知識だが、src-01に明示記述なし。行政運用上の解釈として扱う。"
+evidence_points:
+  - claim: "みなし再入国許可は在留資格保持者が出国から1年以内に再入国する場合に通常の再入国許可取得を不要とする制度。在留期間3月以下・短期滞在は対象外。"
+    source_title: "出入国在留管理庁：再入国許可申請"
+    source_url: "https://www.moj.go.jp/isa/immigration/procedures/16-5.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「みなし再入国許可」の定義および「対象外」の記述を確認"
+    display_label: "みなし再入国許可（1年ルール・対象外）"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "通常再入国許可の有効期間は現に有する在留期間の範囲内で最長5年（特別永住者は6年）。出国前に申請が必要。"
+    source_title: "出入国在留管理庁：再入国許可申請"
+    source_url: "https://www.moj.go.jp/isa/immigration/procedures/16-5.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「有効期間は、現に有する在留期間の範囲内で、５年間」の記述を確認"
+    display_label: "通常再入国許可（最長5年・出国前申請）"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic
@@ -269,6 +288,7 @@ qa_cases:
 | 2026-05-07 | GM (Batch 5) | PL signoff 2026-05-07 — Pack 2.2 prod inject 解锁，FACT_LAYER_ENABLED=true 5-门第 5 项进度。controlled_alpha_eligible: false → true。keyword coverage 追加（技術キーワード 6 bullets）。 | ai_verified | ai_verified | alpha flip + keyword coverage |
 | 2026-05-11 | FACT-OPS (Cycle 2 Batch 4) | Cycle 2メタデータ追加パッチ。citation_label・citation_summary・source_display_names・applies_when・does_not_coverフィールドを追加。事実内容・state変更なし。 | ai_verified | ai_verified | patch |
 | 2026-05-11 | Codex AQL guardrail | needs_review_flags.zairyu_kigen_upper_bound / zairyu_shikaku_metsumetsu に関わる断定表現を injection_certain_block から除外し、needs_review_addendum へ隔離。critical card は controlled_alpha_eligible を false に戻し、DOMAIN確認まで hint_only。 | ai_verified | ai_verified | safety downgrade |
+| 2026-05-11 | FACT-OPS (Evidence Layer v1) | URL生存確認完了。`https://www.moj.go.jp/isa/immigration/procedures/16-5.html` はアクティブページ（再入国許可申請）。パス `isa/immigration/` は他と異なるが404リスクなし。evidence_points URL変更不要。 | ai_verified | ai_verified | url-check |
 
 ## Audit assignment
 

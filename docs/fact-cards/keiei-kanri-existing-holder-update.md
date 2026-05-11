@@ -57,6 +57,19 @@ related_fact_cards:
 needs_review_flags:
   - id: kaizen_mikomi_unyou_kijun
     reason: 「経営状況・改善見通しを総合考量」の運用上の判断基準（具体的に何が改善見通しと認められるか）は公式ページに明示なし。改正ガイドライン PDF (moj-isa-001448070) または不許可事例で要確認。
+related_links:
+  - title: "在留資格「経営・管理」に係る上陸基準省令等の改正について"
+    url: "https://www.moj.go.jp/isa/applications/resources/10_00237.html"
+    organization: "出入国在留管理庁"
+    display_label: "在留資格「経営・管理」に係る上陸基準省令等の改正について"
+    locator: "ページ内で「在留資格「経営」を検索"
+    relation: "official_reference"
+  - title: "改正ガイドライン PDF"
+    url: "https://www.moj.go.jp/isa/content/001448070.pdf"
+    organization: "出入国在留管理庁"
+    display_label: "改正ガイドライン PDF"
+    locator: "ページ内で「改正ガイドライン PDF」を検索"
+    relation: "official_reference"
 ---
 
 # 既存の経営・管理ビザ保持者の更新時 — 2028-10-15 までの過渡措置

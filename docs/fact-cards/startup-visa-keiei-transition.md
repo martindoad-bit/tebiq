@@ -84,6 +84,25 @@ needs_review_flags:
       METI スタートアップビザページ (meti.go.jp) はWebFetchがタイムアウトで
       取得失敗。詳細条件・移行フロー・認定機関リストは人手での確認が必要。
       このカードの confidence が medium に留まる主因。
+related_links:
+  - title: "本邦の大学等を卒業した留学生による起業活動に係る措置について"
+    url: "https://www.moj.go.jp/isa/applications/resources/nyuukokukanri07_00001.html"
+    organization: "出入国在留管理庁"
+    display_label: "本邦の大学等を卒業した留学生による起業活動に係る措置について"
+    locator: "ページ内で「本邦の大学等を卒業した留学生による起業活動に係る措」を検索"
+    relation: "official_reference"
+  - title: "外国人起業活動促進事業（スタートアップビザ）"
+    url: "https://www.moj.go.jp/isa/03_00097.html"
+    organization: "出入国在留管理庁"
+    display_label: "外国人起業活動促進事業（スタートアップビザ）"
+    locator: "ページ内で「外国人起業活動促進事業」を検索"
+    relation: "official_reference"
+  - title: "スタートアップビザ（外国人起業活動促進事業）"
+    url: "https://www.meti.go.jp/policy/newbusiness/startupvisa/index.html"
+    organization: "経済産業省"
+    display_label: "スタートアップビザ（外国人起業活動促進事業）"
+    locator: "ページ内で「スタートアップビザ」を検索"
+    relation: "official_reference"
 ---
 
 # スタートアップビザ（特定活動）から経営・管理への在留資格変更

@@ -45,6 +45,13 @@ needs_review_flags:
   - marital_substance_review_criteria: 婚姻実態確認の審査基準（どのような同居・交流証拠が有効か）は公式ガイドラインの直接引用が未取得。審査実務の確認要。
   - article_22_4_activity_absence: 入管法22条の4第7号（配偶者として活動不実施・6か月以上）の条文テキスト照合要。
   - income_requirement_absence: 日本人配偶者の収入要件不存在の公式確認要（実務では収入証明書提出を求められる場合あり）。
+related_links:
+  - title: "出入国在留管理庁 — 日本人の配偶者等（在留資格）"
+    url: "https://www.moj.go.jp/isa/applications/status/spouseorchildofjapanese.html"
+    organization: "出入国在留管理庁"
+    display_label: "出入国在留管理庁 — 日本人の配偶者等（在留資格）"
+    locator: "ページ内で「日本人の配偶者等（在留資格）」を検索"
+    relation: "official_reference"
 ---
 
 ## current_date_logic

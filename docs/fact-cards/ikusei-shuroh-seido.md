@@ -60,6 +60,19 @@ needs_review_flags:
   - ikusei_field_expansion: 令和8年1月23日閣議決定の12分野が最終確定か、追加分野が今後閣議決定される可能性の最新状況を確認要。
   - ikusei_tenseki_period_by_field: 転籍制限期間「1年以上2年以下」の各分野における具体的な設定値（分野別運用方針）の確認要。
   - ikusei_tokutei_transition_period: 特定技能1号への移行が認められる「一定の期間」（在籍期間要件）の具体的な数値の確認要。
+related_links:
+  - title: "出入国在留管理庁 — 育成就労制度Q&A"
+    url: "https://www.moj.go.jp/isa/applications/faq/ikusei_qa_00002.html"
+    organization: "出入国在留管理庁"
+    display_label: "出入国在留管理庁 — 育成就労制度Q&A"
+    locator: "ページ内で「育成就労制度Q&A」を検索"
+    relation: "official_reference"
+  - title: "出入国在留管理庁 — 育成就労制度の創設"
+    url: "https://www.moj.go.jp/isa/03_00163.html"
+    organization: "出入国在留管理庁"
+    display_label: "出入国在留管理庁 — 育成就労制度の創設"
+    locator: "ページ内で「育成就労制度の創設」を検索"
+    relation: "official_reference"
 ---
 
 ## current_date_logic

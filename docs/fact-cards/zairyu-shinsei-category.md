@@ -49,6 +49,13 @@ needs_review_flags:
   - category_scope_other_visas: 本カードはISAの技人国ページに記載されたカテゴリー定義に基づく。他の就労ビザ（研究・教授・企業内転勤等）でも同一のカテゴリー制度が適用されるかは各ビザの申請ページで確認要。
   - category2_online_system: カテゴリー2に該当するオンライン申請システム認定機関・大学院修了者採用機関の詳細要件はISA公式で確認要。
   - taiijin_activity_definition: 令和8年4月15日以降の語学力証明が必要な「対人活動を要する職種」の定義・判断基準の詳細はISA公式で確認要。
+related_links:
+  - title: "出入国在留管理庁 — 技術・人文知識・国際業務（申請書類）"
+    url: "https://www.moj.go.jp/isa/applications/status/gijinkoku.html"
+    organization: "出入国在留管理庁"
+    display_label: "出入国在留管理庁 — 技術・人文知識・国際業務（申請書類）"
+    locator: "ページ内で「技術・人文知識・国際業務（申請書類）」を検索"
+    relation: "official_reference"
 ---
 
 ## current_date_logic

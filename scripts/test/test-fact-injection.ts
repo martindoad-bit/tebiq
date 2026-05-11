@@ -70,6 +70,8 @@ async function main() {
           confidence: 'high',
           source_quality: 'official',
           official_sources: ['https://www.moj.go.jp/isa/applications/resources/10_00237.html'],
+          evidence_points: [],
+          related_links: [],
           injected_fields: [],
           needs_review_flags: ['jigyou_keikakusho_expert_check'],
           decision: 'inject',
@@ -94,6 +96,8 @@ async function main() {
           confidence: 'high',
           source_quality: 'official',
           official_sources: ['https://www.moj.go.jp/isa/x'],
+          evidence_points: [],
+          related_links: [],
           injected_fields: [],
           needs_review_flags: [],
           decision: 'inject',
@@ -133,17 +137,17 @@ async function main() {
     const entries: import('@/lib/consultation/stream-protocol').ConsultationFactCardAuditEntry[] = [
       {
         fact_id: 'a', title: 'A', fact_card_state: 's', risk_level: 'low', confidence: 'high',
-        source_quality: 'official', official_sources: [], injected_fields: [],
+        source_quality: 'official', official_sources: [], evidence_points: [], related_links: [], injected_fields: [],
         needs_review_flags: [], decision: 'inject',
       },
       {
         fact_id: 'b', title: 'B', fact_card_state: 's', risk_level: 'low', confidence: 'high',
-        source_quality: 'official', official_sources: [], injected_fields: [],
+        source_quality: 'official', official_sources: [], evidence_points: [], related_links: [], injected_fields: [],
         needs_review_flags: [], decision: 'hint_only',
       },
       {
         fact_id: 'c', title: 'C', fact_card_state: 's', risk_level: 'low', confidence: 'high',
-        source_quality: 'official', official_sources: [], injected_fields: [],
+        source_quality: 'official', official_sources: [], evidence_points: [], related_links: [], injected_fields: [],
         needs_review_flags: [], decision: 'drop',
       },
     ]
@@ -280,13 +284,21 @@ async function main() {
 
   check('4c. /c/[id] renders shared FactReferenceBlock', () => {
     assert.ok(cPageSrc.includes('FactReferenceBlock'))
-    assert.ok(factReferenceSrc.includes('参考资料'))
-    assert.ok(factReferenceSrc.includes('FactReferenceRow'))
+    assert.ok(factReferenceSrc.includes('可核对资料'))
+    assert.ok(factReferenceSrc.includes('ReferenceLink'))
   })
-  check('4d. FactReferenceBlock links each card official_sources URL', () => {
+  check('4d. FactReferenceBlock links evidence, related links, and official_sources fallback', () => {
     assert.ok(
       factReferenceSrc.includes('card.official_sources'),
       'fact reference does not read official_sources',
+    )
+    assert.ok(
+      factReferenceSrc.includes('card.evidence_points'),
+      'fact reference does not read claim-level evidence points',
+    )
+    assert.ok(
+      factReferenceSrc.includes('card.related_links'),
+      'fact reference does not read related_links',
     )
     assert.ok(factReferenceSrc.includes('target="_blank"'))
     assert.ok(factReferenceSrc.includes('rel="noreferrer noopener"'))
