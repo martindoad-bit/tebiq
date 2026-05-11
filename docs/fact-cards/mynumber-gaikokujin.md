@@ -68,6 +68,25 @@ related_links:
     display_label: "デジタル庁 — マイナンバーFAQ（外国人向け）"
     locator: "ページ内で「マイナンバーFAQ（外国人向け）」を検索"
     relation: "official_reference"
+evidence_points:
+  - claim: "外国人へのマイナンバー付番条件：住民票登録がある外国人（国籍不問）に付番される。来日後に住民票が作成されると個人番号通知が届く（デジタル庁FAQ Q2-1・Q2-9）。対象外：在留期間3か月以下と決定された者・短期滞在・外交・公用の在留資格者（総務省）。"
+    source_title: "デジタル庁：マイナンバーFAQ（外国人向け）"
+    source_url: "https://www.digital.go.jp/en/policies/mynumber_faq_02"
+    source_organization: "デジタル庁"
+    source_locator: "FAQ内「Q2-1（付番条件）」「Q2-9（来日後の付番）」の記述を確認"
+    display_label: "マイナンバー：住民票登録で外国人にも付番・短期滞在等は対象外"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "マイナンバーカードの有効期限：永住者・高度専門職2号・特別永住者は発行日から10回目の誕生日まで（18歳未満は5年）。その他在留資格者：在留期間の満了日に連動。在留期間延長後は「マイナンバーカードの券面記載事項の変更が必要」（総務省）。住民票記載事項（中長期在留者）：在留資格・在留期間・在留期間の満了日・在留カードの番号。"
+    source_title: "総務省：外国人住民のマイナンバーカード等"
+    source_url: "https://www.soumu.go.jp/main_sosiki/jichi_gyousei/c-gyousei/zairyu/basic_resident_registration_card.html"
+    source_organization: "総務省"
+    source_locator: "ページ内「マイナンバーカード有効期限」「永住者10年」「在留期間連動」「券面変更」の記述を確認"
+    display_label: "マイナンバーカード：永住者10年・その他は在留期間連動・更新後は券面変更申請要"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic
