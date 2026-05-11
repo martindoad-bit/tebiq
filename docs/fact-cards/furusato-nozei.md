@@ -60,6 +60,24 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: false
+  - claim: "ワンストップ特例制度の利用要件：①確定申告が不要の給与所得者等であること ②寄附先の自治体数が5か所以内であること ③各寄附先自治体に「寄附金税額控除に係る申告特例申請書」を寄附の翌年1月10日までに提出すること。"
+    source_title: "総務省：ふるさと納税のしくみ"
+    source_url: "https://www.soumu.go.jp/main_sosiki/jichi_zeisei/czaisei/czaisei_seido/furusato/mechanism/index.html"
+    source_organization: "総務省"
+    source_locator: "ページ内「ワンストップ特例制度の要件」「確定申告不要の給与所得者等」「5自治体以内」「申請書を翌年1月10日までに提出」の記述を確認"
+    display_label: "ワンストップ特例：給与所得者・5自治体以内・翌年1/10までに申請書提出の3要件"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "ふるさと納税の控除計算：（寄附金額 − 2,000円）×（1 − 所得税の限界税率 − 住民税率10%）が所得税・住民税から控除される。実質的な自己負担は2,000円のみ（控除上限額内の場合）。"
+    source_title: "総務省：ふるさと納税のしくみ"
+    source_url: "https://www.soumu.go.jp/main_sosiki/jichi_zeisei/czaisei/czaisei_seido/furusato/mechanism/index.html"
+    source_organization: "総務省"
+    source_locator: "ページ内「2,000円を超える部分を所得税・住民税から全額控除」「控除額の計算方法」の記述を確認"
+    display_label: "ふるさと納税の控除計算：寄附額−2,000円を全額控除・実質負担は2,000円のみ"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: true
 ---
 
 ## current_date_logic

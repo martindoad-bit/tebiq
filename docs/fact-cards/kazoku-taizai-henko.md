@@ -75,6 +75,15 @@ evidence_points:
     support_level: "indirect"
     user_visible: true
     needs_domain_review: false
+  - claim: "在留資格変更許可申請の申請可能者：本人・法定代理人・雇用機関の職員・弁護士・行政書士・親権者等が申請できる（ISA 16-2.html）。申請先は住所地の地方出入国在留管理局。"
+    source_title: "出入国在留管理庁：在留資格変更許可申請"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/16-2.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「申請できる方」「本人」「弁護士」「行政書士」「親権者」の記述を確認"
+    display_label: "在留資格変更：本人・雇用機関・弁護士・行政書士・親権者等が申請可"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

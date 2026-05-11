@@ -61,6 +61,24 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: false
+  - claim: "最低賃金額は都道府県ごとに毎年10月頃に改定される（厚生労働省の地域別最低賃金審議）。2024年度の全国加重平均は1,055円（2024年10月）。"
+    source_title: "厚生労働省：地域別最低賃金の全国一覧"
+    source_url: "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/roudoukijun/minimumichiran/"
+    source_organization: "厚生労働省"
+    source_locator: "ページ内「地域別最低賃金の改定時期（毎年10月頃）」「全国加重平均1,055円（2024年度）」の記述を確認"
+    display_label: "最低賃金：毎年10月頃に都道府県ごとに改定・2024年度全国加重平均1,055円"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "違反時の罰則：最低賃金以下の賃金を支払った使用者は50万円以下の罰金（最低賃金法第40条）。申告先は都道府県労働局・労働基準監督署。"
+    source_title: "厚生労働省：地域別最低賃金の全国一覧"
+    source_url: "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/roudoukijun/minimumichiran/"
+    source_organization: "厚生労働省"
+    source_locator: "ページ内「最低賃金違反の罰則（50万円以下の罰金・最低賃金法第40条）」「申告先（労働局・労基署）」の記述を確認"
+    display_label: "最低賃金違反：使用者に50万円以下の罰金（最低賃金法第40条）・申告先は労働局・労基署"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

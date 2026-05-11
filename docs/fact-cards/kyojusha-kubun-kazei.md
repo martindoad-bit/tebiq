@@ -74,6 +74,15 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: false
+  - claim: "非居住者の定義：「居住者以外の個人」。課税範囲：「日本国内において生じた所得（国内源泉所得）に限って課税されます」（国税庁 No.2010）。在留資格「永住者」（入管法上の永住）と課税上の「居住者・非永住者」の区分は別の概念であり、在留資格の永住者取得によって課税区分は変わらない。"
+    source_title: "国税庁 No.2010：納税義務者"
+    source_url: "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/2010.htm"
+    source_organization: "国税庁"
+    source_locator: "ページ内『非居住者の定義』『国内源泉所得のみ課税』の記述を確認"
+    display_label: "非居住者＝国内源泉所得のみ課税・在留資格の永住者と課税区分は別概念"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

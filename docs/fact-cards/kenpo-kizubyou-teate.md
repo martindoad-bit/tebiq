@@ -63,6 +63,24 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: false
+  - claim: "傷病手当金の支給期間：同一の傷病について、支給を始めた日から通算して最長1年6か月（2022年1月1日改正後は通算制に変更）。"
+    source_title: "全国健康保険協会：傷病手当金"
+    source_url: "https://www.kyoukaikenpo.or.jp/g7/cat710/sb3100/"
+    source_organization: "全国健康保険協会（協会けんぽ）"
+    source_locator: "ページ内「支給期間（支給を始めた日から通算して1年6か月）」「2022年1月1日改正（通算制）」に関する記述を確認"
+    display_label: "傷病手当金の支給期間：支給開始日から通算して最長1年6か月（2022年1月改正）"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "傷病手当金の支給額の計算式：支給開始日以前12か月間の各月の標準報酬月額を平均した額÷30日×3分の2（約67%）。"
+    source_title: "全国健康保険協会：傷病手当金"
+    source_url: "https://www.kyoukaikenpo.or.jp/g7/cat710/sb3100/"
+    source_organization: "全国健康保険協会（協会けんぽ）"
+    source_locator: "ページ内「支給額の計算（支給開始日以前12か月間の標準報酬月額の平均÷30日×2/3）」に関する記述を確認"
+    display_label: "傷病手当金の計算：過去12か月の標準報酬月額平均÷30日×2/3（約67%）/日"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

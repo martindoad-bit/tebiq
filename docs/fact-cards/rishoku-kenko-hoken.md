@@ -72,6 +72,15 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: false
+  - claim: "任意継続の申請書類：「健康保険任意継続被保険者資格取得申出書」を都道府県の協会けんぽ支部へ提出。任意継続の加入条件として退職日までに被保険者期間が継続して2か月以上あること。退職後は事業主負担分も自己負担となるため保険料は在職時の約2倍（標準報酬月額上限32万円）。"
+    source_title: "全国健康保険協会（協会けんぽ）：任意継続"
+    source_url: "https://www.kyoukaikenpo.or.jp/benefit/voluntary_continuation/"
+    source_organization: "全国健康保険協会（協会けんぽ）"
+    source_locator: "ページ内『健康保険任意継続被保険者資格取得申出書』『2か月以上の被保険者期間』『標準報酬月額上限32万円』の記述を確認"
+    display_label: "任意継続：申請書＝資格取得申出書・加入条件2か月以上・保険料2倍（上限32万円）"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

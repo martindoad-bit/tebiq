@@ -59,6 +59,24 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: false
+  - claim: "特例期間の法的根拠：入管法第20条第5項（変更申請中の在留）・第21条第4項（更新申請中の在留）。申請は在留期限内に適法に行われていることが前提。"
+    source_title: "出入国在留管理庁：在留期間の更新について"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri07_00003.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「特例期間の法的根拠（入管法第20条第5項・第21条第4項）」「在留期限内申請が前提」の記述を確認"
+    display_label: "特例期間の根拠：入管法第20条第5項（変更）・第21条第4項（更新）・在留期限内申請が前提"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "特例期間中の就労継続：申請前と同じ在留資格に基づく活動（就労等）を継続できる。在留資格変更申請中の場合は、変更前の在留資格に基づく活動の範囲内での就労継続。"
+    source_title: "出入国在留管理庁：在留期間の更新について"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri07_00003.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「特例期間中の就労継続（申請前と同じ在留資格の範囲で継続）」「変更申請中は変更前の在留資格の範囲」の記述を確認"
+    display_label: "特例期間中の就労：申請前と同じ在留資格の範囲で継続可・変更申請中は変更前の資格の範囲内"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

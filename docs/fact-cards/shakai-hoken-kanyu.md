@@ -76,6 +76,15 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: false
+  - claim: "士業の個人事業所（弁護士・税理士等）で常時5人以上の従業員を雇用している事業所は2022年10月施行より強制適用事業所となった（日本年金機構）。適用除外業種（農業・林業・漁業・サービス業等の一部個人事業所）は5人以上でも強制適用外（任意適用申請可）（日本年金機構）。"
+    source_title: "日本年金機構：適用事業所と被保険者"
+    source_url: "https://www.nenkin.go.jp/service/kounen/tekiyo/jigyosho/20150518.html"
+    source_organization: "日本年金機構"
+    source_locator: "ページ内「士業の個人事業所（2022年10月施行）」「適用除外業種（農業・林業・漁業・サービス業等）」の記述を確認"
+    display_label: "社会保険：士業個人事業所5人以上は2022年10月から強制適用・農業等一部業種は除外"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

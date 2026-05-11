@@ -87,6 +87,15 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: false
+  - claim: "マイナンバー（個人番号）は原則として一生変更されない。マイナンバーカード（個人番号カード）の取得は任意だが、行政手続き・銀行口座開設・健康保険証利用（マイナ保険証）等で事実上必要になる場面が増加している。（ai推定 — 任意性と事実上の利用実態はデジタル庁FAQ等からの推定）"
+    source_title: "デジタル庁：マイナンバーFAQ（外国人向け）"
+    source_url: "https://www.digital.go.jp/en/policies/mynumber_faq_02"
+    source_organization: "デジタル庁"
+    source_locator: "FAQ内『マイナンバーの変更（原則不変）』『マイナンバーカードの任意取得』に関する記述を確認（カード利用拡大はai推定）"
+    display_label: "マイナンバーは原則一生不変・カード取得は任意だが利用場面増加（ai推定）"
+    support_level: "indirect"
+    user_visible: true
+    needs_domain_review: true
 ---
 
 ## current_date_logic

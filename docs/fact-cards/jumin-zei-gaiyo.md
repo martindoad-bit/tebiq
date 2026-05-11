@@ -79,6 +79,15 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: false
+  - claim: "住民税の非課税限度額（扶養あり・東京都23区基準）：「35万円×（本人＋配偶者＋扶養親族の合計）＋31万円」以下の所得であれば均等割・所得割ともに全額非課税。普通徴収（自営業者等）の納付は6月・8月・10月・翌年1月の4期。"
+    source_title: "東京都主税局：個人住民税（全国標準税率）"
+    source_url: "https://www.tax.metro.tokyo.lg.jp/kazei/kojin_ju.html"
+    source_organization: "tax.metro.tokyo.lg.jp"
+    source_locator: "ページ内『非課税限度額（扶養あり計算式）』『普通徴収の納付4期』の記述を確認"
+    display_label: "住民税：扶養ありの非課税限度＝35万×人数＋31万・普通徴収は年4期"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

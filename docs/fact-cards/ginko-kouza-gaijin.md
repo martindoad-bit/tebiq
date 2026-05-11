@@ -60,6 +60,24 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: false
+  - claim: "マイナンバーの告知義務：2016年以降、銀行口座の新規開設時にはマイナンバー（個人番号）の提示・告知が義務付けられている（犯罪収益移転防止法・番号法）。告知しない場合は口座開設を断られる場合がある。"
+    source_title: "金融庁：外国人による銀行口座の開設等に係る参考情報"
+    source_url: "https://www.fsa.go.jp/ordinary/kaigaikouza/index.html"
+    source_organization: "金融庁"
+    source_locator: "ページ内「マイナンバー告知義務（2016年以降・番号法・犯収法）」「未告知の場合の口座開設拒否」の記述を確認"
+    display_label: "マイナンバー告知義務：2016年以降・銀行口座開設時に必須・未告知は開設不可の場合あり"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "短期滞在（在留期間90日以内）の外国人は原則として日本の銀行口座を開設できない。就労・留学等の在留期間3か月超の中長期在留資格を持つ外国人が口座開設の対象となる。"
+    source_title: "金融庁：外国人による銀行口座の開設等に係る参考情報"
+    source_url: "https://www.fsa.go.jp/ordinary/kaigaikouza/index.html"
+    source_organization: "金融庁"
+    source_locator: "ページ内「短期滞在者（90日以内）は口座開設不可」「中長期在留者が対象」の記述を確認"
+    display_label: "銀行口座：短期滞在（90日以内）は原則不可・中長期在留者が対象"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

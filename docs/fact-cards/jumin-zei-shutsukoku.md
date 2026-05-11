@@ -61,6 +61,24 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: false
+  - claim: "住民税の課税基準日：毎年1月1日現在に日本国内に住所がある者に対し、前年（1月〜12月）の所得に基づいて課税（地方税法第39条）。翌年6月から翌々年5月にかけて徴収。"
+    source_title: "総務省：個人住民税の概要"
+    source_url: "https://www.soumu.go.jp/main_sosiki/jichi_gyousei/c-zaisei/czaisei_4.html"
+    source_organization: "総務省"
+    source_locator: "ページ内「住民税の課税基準日（1月1日・地方税法第39条）」「翌年6月から翌々年5月に徴収」の記述を確認"
+    display_label: "住民税の課税基準日：1月1日現在に日本在住の者に前年所得で課税（地方税法第39条）"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "帰国前の転出届：市区町村に転出届を提出することで、翌年以降の住民税の賦課を止めることができる（転出届提出後は住民税の新たな課税なし）。ただし転出届前の未払い分は引き続き支払義務がある。"
+    source_title: "総務省：個人住民税の概要"
+    source_url: "https://www.soumu.go.jp/main_sosiki/jichi_gyousei/c-zaisei/czaisei_4.html"
+    source_organization: "総務省"
+    source_locator: "ページ内「転出届提出による翌年以降の住民税課税停止」「転出前の未払い分の支払義務」の記述を確認"
+    display_label: "帰国前に転出届を提出すると翌年以降の住民税課税を止められる・転出前の未払い分は支払義務あり"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

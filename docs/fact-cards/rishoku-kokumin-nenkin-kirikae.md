@@ -67,6 +67,15 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: false
+  - claim: "国民年金第1号切換の必要書類：国民年金被保険者関係届書（申出書）＋基礎年金番号通知書または年金手帳等（基礎年金番号使用の場合）またはマイナンバーカード（マイナンバー使用の場合）＋資格喪失日を証明できる離職票等（退職直後）。申請先は住所地の市区役所または町村役場。"
+    source_title: "日本年金機構：国民年金に加入するための手続き"
+    source_url: "https://www.nenkin.go.jp/service/kokunen/kanyu/20140710-04.html"
+    source_organization: "日本年金機構"
+    source_locator: "ページ内『国民年金第1号切換の必要書類（届書・基礎年金番号またはマイナンバー・離職票等）』の記述を確認"
+    display_label: "国民年金切換：必要書類＝届書＋基礎年金番号またはマイナンバー＋離職票等・申請先は市区役所"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

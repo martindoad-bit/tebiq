@@ -79,6 +79,15 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: false
+  - claim: "再入国許可を所持しないで出国した外国人が再び日本に入国しようとする場合は、あらためて在留資格の取得が必要（ISA公式）。再入国予定がある場合は出国前にみなし再入国許可の確認が必要。"
+    source_title: "出入国在留管理庁：在留カード等の返納"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00020.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「再入国許可を所持しないで出国した外国人が再び日本に入国しようとする場合は、あらためて在留資格の取得が必要」の記述を確認"
+    display_label: "帰国時：再入国許可なし出国後の再入国は在留資格の新規取得が必要（ISA公式）"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

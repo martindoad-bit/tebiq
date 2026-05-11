@@ -61,6 +61,24 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: false
+  - claim: "留学ビザ（在留資格）の更新申請先：居住地を管轄する地方出入国在留管理官署（窓口またはオンライン）。申請書類：在留期間更新許可申請書・在学証明書・成績証明書・写真・手数料4,000円等。"
+    source_title: "出入国在留管理庁：在留期間更新許可申請（留学）"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/16-2.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「留学ビザ更新の申請先（居住地管轄の入管・窓口またはオンライン）」「申請書類一覧（在学証明・成績証明・写真・4,000円）」の記述を確認"
+    display_label: "留学ビザ更新：居住地管轄入管（窓口・オンライン）に在学証明・成績証明・写真・4,000円を提出"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "出席率の運用：出席率70%未満の場合は更新が困難になるリスクが高い。日本語学校は入管への在籍状況報告義務があり、低出席率の学生情報が共有される場合がある。"
+    source_title: "出入国在留管理庁：在留期間更新許可申請（留学）"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/16-2.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「出席率と更新審査（70%未満のリスク）」「日本語学校の在籍状況報告義務」の記述を確認"
+    display_label: "出席率70%未満は更新困難リスク・日本語学校は入管への在籍状況報告義務あり"
+    support_level: "indirect"
+    user_visible: true
+    needs_domain_review: true
 ---
 
 ## current_date_logic

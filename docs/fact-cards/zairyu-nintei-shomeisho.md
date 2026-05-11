@@ -90,6 +90,15 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: false
+  - claim: "COEの申請代理人として認められる者：外国人本人・所属機関（雇用主・学校等）の職員・弁護士・行政書士・法定代理人・親族。申請場所は地方出入国在留管理官署の窓口（平日9〜12時・13〜16時）またはオンライン。郵送での提出は受け付けていない。"
+    source_title: "出入国在留管理庁：在留資格認定証明書交付申請"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/16-1.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内『申請代理人』『申請場所（窓口/オンライン）』『郵送不可』の記述を確認"
+    display_label: "COE申請：代理人は雇用主・行政書士等・窓口またはオンライン・郵送不可"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

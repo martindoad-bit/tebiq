@@ -59,6 +59,24 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: false
+  - claim: "国際運転免許証（ジュネーブ条約締結国が発行）は、日本入国後1年間有効。有効期間は在留カードや旅券の入国スタンプの日付（入国日）から起算される。1年を超えて日本に滞在する場合は外免切替を行うことが推奨される。"
+    source_title: "警察庁：外国人の運転免許"
+    source_url: "https://www.npa.go.jp/policies/application/license_renewal/gaijin.html"
+    source_organization: "警察庁"
+    source_locator: "ページ内「国際運転免許証の有効期間（入国日から1年）」「入国スタンプの日付から起算」の記述を確認"
+    display_label: "国際免許証：入国日から1年間有効・入国スタンプ日付から起算"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "外国免許切替（外免切替）：在留期間3か月超の中長期在留者が対象。申請先は居住地の都道府県警察運転免許センター。一般的に学科試験・適性検査が必要。技能試験は発行国によって免除される場合がある（スイス・ドイツ等は免除対象が多い）。"
+    source_title: "警察庁：外国人の運転免許"
+    source_url: "https://www.npa.go.jp/policies/application/license_renewal/gaijin.html"
+    source_organization: "警察庁"
+    source_locator: "ページ内「外免切替の要件（在留3か月超）」「都道府県運転免許センターで申請」「学科試験・適性検査必要」「技能試験の免除（発行国による）」の記述を確認"
+    display_label: "外免切替：在留3か月超・免許センターで申請・学科試験必要・技能試験は国によって免除"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

@@ -60,6 +60,24 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: false
+  - claim: "被扶養者の認定基準（収入要件）：年収130万円未満（60歳以上または障害者は180万円未満）かつ被保険者の年収の2分の1未満（同居の場合）。別居の場合は年収130万円未満かつ被保険者からの仕送り額より少ないこと。"
+    source_title: "日本年金機構：被扶養者とは（健康保険）"
+    source_url: "https://www.nenkin.go.jp/service/kounen/hihokensha/20150407.html"
+    source_organization: "日本年金機構"
+    source_locator: "ページ内「収入要件（同居：年収130万円未満・被保険者年収の1/2未満）」「別居：年収130万円未満・仕送り額より少ない」に関する記述を確認"
+    display_label: "被扶養者の収入要件：年収130万円未満（同居）・被保険者年収の1/2未満・別居は仕送り額より少ない"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "2020年4月以降、健康保険の被扶養者には国内居住要件が追加された。日本国内に住所がない場合は原則として被扶養者に認定されない（例外：海外に留学中・赴任中の家族等）。"
+    source_title: "日本年金機構：被扶養者とは（健康保険）"
+    source_url: "https://www.nenkin.go.jp/service/kounen/hihokensha/20150407.html"
+    source_organization: "日本年金機構"
+    source_locator: "ページ内「国内居住要件（2020年4月以降）」「日本国内に住所を有しない場合は被扶養者に認定されない」「例外（留学中・赴任中の家族等）」に関する記述を確認"
+    display_label: "被扶養者：2020年4月〜国内居住要件追加・海外在住家族は原則認定不可（留学・赴任は例外）"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

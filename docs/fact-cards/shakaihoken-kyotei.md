@@ -60,6 +60,24 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: false
+  - claim: "社会保障協定の主な締結国（2024年時点）：ドイツ・英国・韓国・アメリカ・フランス・ベルギー・カナダ・オーストラリア・オランダ・イタリア・中国・スウェーデン・チェコ・スペイン・アイルランド・ブラジル・スイス・ハンガリー・インド・ルクセンブルク・フィリピン・スロバキア・フィンランド等（順次拡大中）。"
+    source_title: "日本年金機構：社会保障協定"
+    source_url: "https://www.nenkin.go.jp/service/kaigai/kyotei/20120501.html"
+    source_organization: "日本年金機構"
+    source_locator: "ページ内「社会保障協定締結国一覧」に関する記述を確認"
+    display_label: "社会保障協定締結国（2024年時点）：ドイツ・英・韓・米・仏・ベルギー・加・豪・蘭・伊・中・瑞典等"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "社会保障協定の主な効果：①二重加入防止（日本と協定国の両方で保険料を負担せずに済む）②加入期間通算（一方の国での加入期間が短くても両国の期間を通算して年金受給資格を満たせる場合がある）。効果は協定の種類（適用除外のみ or 加入期間通算あり）によって異なる。"
+    source_title: "日本年金機構：社会保障協定"
+    source_url: "https://www.nenkin.go.jp/service/kaigai/kyotei/20120501.html"
+    source_organization: "日本年金機構"
+    source_locator: "ページ内「二重加入防止」「加入期間通算」「協定の種類（適用除外のみ vs 加入期間通算あり）」に関する記述を確認"
+    display_label: "社会保障協定の効果：①二重加入防止 ②加入期間通算（協定種類によって異なる）"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

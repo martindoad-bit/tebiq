@@ -61,6 +61,24 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: false
+  - claim: "出産育児一時金の支給金額：50万円（2023年4月1日以降。産科医療補償制度の対象分娩の場合。旧：42万円＋産科医療補償制度加算）。"
+    source_title: "厚生労働省：出産育児一時金"
+    source_url: "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/iryouhoken/shussanteate_00001.html"
+    source_organization: "厚生労働省"
+    source_locator: "ページ内「50万円（2023年4月1日以降）」「産科医療補償制度対象分娩の場合」に関する記述を確認"
+    display_label: "出産育児一時金：50万円（2023年4月〜・産科医療補償制度対象分娩）"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "直接支払制度：出産費用を医療機関が出産育児一時金から直接受け取る制度。窓口での立替が不要。出産費用が50万円を下回る場合は差額が被保険者に支給され、超過する場合は本人が差額を支払う。"
+    source_title: "厚生労働省：出産育児一時金"
+    source_url: "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/iryouhoken/shussanteate_00001.html"
+    source_organization: "厚生労働省"
+    source_locator: "ページ内「直接支払制度（医療機関が代理受取）」「差額支給（費用が50万円未満の場合）」「超過分は本人負担」に関する記述を確認"
+    display_label: "直接支払制度：医療機関が代理受取・窓口立替不要・差額は本人に支給または請求"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

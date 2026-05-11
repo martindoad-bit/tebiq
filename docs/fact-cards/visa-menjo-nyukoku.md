@@ -60,6 +60,24 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: false
+  - claim: "査証免除（ビザ免除）の効果：短期滞在（90日以内）であればビザなしで入国可能。在留資格は「短期滞在」として扱われ、就労は原則不可。"
+    source_title: "外務省：一般旅券所持者に対する査証免除措置"
+    source_url: "https://www.mofa.go.jp/mofaj/toko/visa/tanki/himmune.html"
+    source_organization: "外務省"
+    source_locator: "ページ内「査証免除の効果（90日以内の短期滞在）」「在留資格は短期滞在」「就労不可」の記述を確認"
+    display_label: "査証免除の効果：ビザなしで短期滞在（90日以内）・在留資格は短期滞在・就労は原則不可"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "査証免除対象外の主な国：中国・インド・ベトナム・フィリピン・パキスタン・バングラデシュ等（これらの国籍者は事前に日本大使館・領事館でビザを取得する必要がある）。"
+    source_title: "外務省：一般旅券所持者に対する査証免除措置"
+    source_url: "https://www.mofa.go.jp/mofaj/toko/visa/tanki/himmune.html"
+    source_organization: "外務省"
+    source_locator: "ページ内「査証免除対象外の国籍（中国・インド・ベトナム・フィリピン等）」「事前に日本大使館・領事館でビザ取得が必要」の記述を確認"
+    display_label: "査証免除対象外：中国・インド・ベトナム・フィリピン等は事前にビザ取得が必要"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

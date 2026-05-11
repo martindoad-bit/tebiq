@@ -61,6 +61,24 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: false
+  - claim: "高度専門職1号の学歴ポイントの主な基準：博士号取得者は30点、修士号取得者は20点、学士号取得者は10点。日本の大学（特定の大学院等）を卒業した場合に追加加算あり（特定大学リストはISA公式で確認要）。"
+    source_title: "出入国在留管理庁：高度専門職（在留資格）"
+    source_url: "https://www.moj.go.jp/isa/applications/status/skilled_labor01.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「ポイント計算表」「学歴ポイント（博士30点・修士20点・学士10点）」の記述を確認"
+    display_label: "高度専門職ポイント学歴：博士30点・修士20点・学士10点"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "永住短縮特例：高度専門職1号で70点以上を3年継続した場合、永住申請が可能（通常の10年要件を3年に短縮）。80点以上を1年継続した場合は、さらに短縮され1年で永住申請が可能。"
+    source_title: "出入国在留管理庁：高度専門職（在留資格）"
+    source_url: "https://www.moj.go.jp/isa/applications/status/skilled_labor01.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「永住許可の特例（70点以上×3年・80点以上×1年）」「通常の10年要件の短縮」の記述を確認"
+    display_label: "高度専門職の永住短縮：70点以上×3年→永住申請可・80点以上×1年→1年で申請可"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

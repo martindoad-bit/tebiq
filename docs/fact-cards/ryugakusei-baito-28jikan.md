@@ -60,6 +60,24 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: false
+  - claim: "資格外活動許可には2種類ある：①入国時・在留更新時に付与される「包括的許可」（在留カード裏面に記載）と、②個別申請による「個別許可」。包括的許可は留学ビザで在留する学生に入国時または在留更新時に付与される。"
+    source_title: "出入国在留管理庁：資格外活動許可申請（留学生等）"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri07_00003.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「包括的許可」「個別許可」の区分と在留カードへの記載に関する記述を確認"
+    display_label: "資格外活動許可：包括的許可（在留カード記載）と個別許可の2種類"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "週28時間を超えるアルバイトは資格外活動違反（不法就労）となり、在留資格の取消・退去強制のリスクがある。"
+    source_title: "出入国在留管理庁：資格外活動許可申請（留学生等）"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri07_00003.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「資格外活動許可の範囲を超えた就労は不法就労」「在留資格取消」に関する記述を確認"
+    display_label: "週28時間超のアルバイト：資格外活動違反（不法就労）・在留資格取消リスクあり"
+    support_level: "indirect"
+    user_visible: true
+    needs_domain_review: true
 ---
 
 ## current_date_logic

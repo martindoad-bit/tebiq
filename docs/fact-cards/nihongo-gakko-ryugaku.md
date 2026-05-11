@@ -62,6 +62,24 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: false
+  - claim: "法務省告示機関（日本語学校）：告示機関に在籍することが「留学」在留資格取得の前提条件。告示外の語学学校は短期滞在での参加となる。"
+    source_title: "出入国在留管理庁：留学（在留資格）"
+    source_url: "https://www.moj.go.jp/isa/applications/status/student.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「法務省告示機関（日本語学校）の要件」「告示外の語学学校は留学在留資格の対象外」の記述を確認"
+    display_label: "法務省告示機関が「留学」資格の前提条件・告示外語学学校は短期滞在扱い"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "2010年7月施行の改正入管法により、日本語学校の在留資格が「就学」から「留学」に統合。就学ビザは廃止され、日本語学校も大学・専門学校と同じ「留学」在留資格に一本化された。"
+    source_title: "出入国在留管理庁：留学（在留資格）"
+    source_url: "https://www.moj.go.jp/isa/applications/status/student.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「就学ビザ廃止（2010年7月施行）」「日本語学校も留学に統合」の記述を確認"
+    display_label: "2010年改正：日本語学校の在留資格が就学から留学に統合・就学ビザは廃止"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

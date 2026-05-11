@@ -59,6 +59,24 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: false
+  - claim: "特定技能2号の対象分野（2023年9月11分野に拡大）：建設・造船・舶用工業・自動車整備・航空・宿泊・農業・漁業・飲食料品製造・外食業・ビルクリーニング。介護は対象外。"
+    source_title: "出入国在留管理庁：特定技能2号"
+    source_url: "https://www.moj.go.jp/isa/applications/status/tokutei2.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「特定技能2号の対象分野（2023年9月拡大後11分野）」「介護は対象外」の記述を確認"
+    display_label: "特定技能2号の対象11分野（2023年9月拡大）：建設・造船・農業・漁業等・介護は対象外"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "特定技能1号と2号の主な違い：①在留更新上限（1号：通算5年、2号：上限なし）②家族帯同（1号：原則不可、2号：可）③永住申請（2号：通算10年在留で要件充足の可能性あり）。"
+    source_title: "出入国在留管理庁：特定技能2号"
+    source_url: "https://www.moj.go.jp/isa/applications/status/tokutei2.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「特定技能1号と2号の比較（在留上限・家族帯同・永住申請）」の記述を確認"
+    display_label: "1号vs2号：在留上限（1号5年・2号なし）・家族帯同（1号不可・2号可）・永住申請可否"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

@@ -65,6 +65,24 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: false
+  - claim: "資格確認書：マイナ保険証を保有しない方等に、当分の間、無申請で無償で交付される。電子証明書の有効期限が切れていても、失効後3か月間はマイナ保険証として利用可能（3か月猶予措置）。スマートフォンでのマイナ保険証利用は2026年9月より対応医療機関で開始予定。"
+    source_title: "厚生労働省：マイナンバーカードの健康保険証利用"
+    source_url: "https://www.mhlw.go.jp/stf/newpage_08277.html"
+    source_organization: "厚生労働省"
+    source_locator: "ページ内「資格確認書（無申請・無償交付）」「電子証明書失効後3か月猶予」「スマートフォン対応（2026年9月〜）」の記述を確認"
+    display_label: "資格確認書：無申請・無償交付・電子証明書失効後3か月猶予・スマホ対応2026年9月予定"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "外国人のマイナンバーカードは在留資格によって有効期限が異なる：永住者・特別永住者・高度専門職2号は発行から10年有効。技術・人文知識・国際業務・留学等のその他の在留資格は在留期間の満了日が有効期限。在留期間満了によるカード失効後は、在留期間更新後に速やかにカード券面変更申請とマイナ保険証利用登録の継続確認が必要（ai推定 — mynumber_card_renewal_and_maina_hoken確認要）。"
+    source_title: "厚生労働省：マイナンバーカードの健康保険証利用"
+    source_url: "https://www.mhlw.go.jp/stf/newpage_08277.html"
+    source_organization: "厚生労働省"
+    source_locator: "ページ内「外国人のマイナンバーカード有効期限（在留期間連動）」「在留期間更新後のカード手続き」の記述を確認"
+    display_label: "外国人マイナ保険証：技人国・留学等は在留期間満了でカード失効→更新後に券面変更申請が必要（ai推定）"
+    support_level: "indirect"
+    user_visible: true
+    needs_domain_review: true
 ---
 
 ## current_date_logic

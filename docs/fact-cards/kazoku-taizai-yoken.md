@@ -76,6 +76,15 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: false
+  - claim: "家族滞在の扶養申請には扶養能力を証明する書類（住民税課税証明書・収入を証する文書等）の提出が必要。具体的な最低収入基準の数値は公式には示されていない（審査基準の数値は未公表）。扶養者の収入水準・家族構成を踏まえた審査が行われる（ai推定）。"
+    source_title: "出入国在留管理庁：家族滞在（在留資格）"
+    source_url: "https://www.moj.go.jp/isa/applications/status/dependent.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「扶養」「収入を証する文書」「住民税課税証明書」の記述から推論（具体的収入閾値は未公表のためai推定）"
+    display_label: "家族滞在申請：扶養能力証明書類が必要・具体的収入基準は非公表（ai推定）"
+    support_level: "indirect"
+    user_visible: true
+    needs_domain_review: true
 ---
 
 ## current_date_logic

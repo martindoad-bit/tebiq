@@ -61,6 +61,24 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: false
+  - claim: "基礎控除：合計所得金額2,400万円以下の場合は48万円（2020年改正・所得税）。2,400万円超〜2,450万円以下は32万円、2,450万円超〜2,500万円以下は16万円、2,500万円超は0円。"
+    source_title: "国税庁：所得控除"
+    source_url: "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/shoto320.htm"
+    source_organization: "国税庁"
+    source_locator: "ページ内「基礎控除」のセクションで所得区分別の控除額（48万円・32万円・16万円・0円）を確認"
+    display_label: "基礎控除：合計所得2,400万円以下→48万円（2020年改正）"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "配偶者控除：配偶者の合計所得金額48万円以下（年収103万円以下に相当）が対象。控除額は本人の合計所得金額に応じて13〜38万円（本人所得900万円以下は38万円、900万円超〜950万円以下は26万円、950万円超〜1,000万円以下は13万円）。"
+    source_title: "国税庁：所得控除"
+    source_url: "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/shoto320.htm"
+    source_organization: "国税庁"
+    source_locator: "ページ内「配偶者控除」のセクションで「配偶者の合計所得金額48万円以下」「控除額13〜38万円（本人所得に応じた段階表）」を確認"
+    display_label: "配偶者控除：配偶者年収103万円以下・本人所得に応じて13〜38万円"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

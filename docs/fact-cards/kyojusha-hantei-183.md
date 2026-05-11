@@ -60,6 +60,24 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: false
+  - claim: "居住者（所得税法上）：①日本国内に住所を有する者、または②現在まで引き続き1年以上居所（住所でなくとも）を有する者。この定義に当たらない者が非居住者。"
+    source_title: "国税庁：非居住者・外国法人の課税のしくみ"
+    source_url: "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/2875.htm"
+    source_organization: "国税庁"
+    source_locator: "ページ内「居住者の定義（住所または1年以上の居所）」「非居住者（それ以外の個人）」の記述を確認"
+    display_label: "居住者の定義：①日本に住所あり、または②1年以上継続して居所あり・それ以外は非居住者"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "183日ルール（租税条約）：日米・日英・日独等の租税条約では、183日以下の滞在で①雇用主が日本居住者でない②給与が日本の事業所負担でない等の条件を全て満たす場合、日本での所得税が免除される。条約がない国には適用なし。"
+    source_title: "国税庁：非居住者・外国法人の課税のしくみ"
+    source_url: "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/2875.htm"
+    source_organization: "国税庁"
+    source_locator: "ページ内「183日ルール（租税条約の規定）」「条件：雇用主が日本非居住者・給与が日本事業所負担でない等」「条約のない国には不適用」の記述を確認"
+    display_label: "183日ルール：日米・日英・日独等の租税条約で一定条件を満たせば日本での所得税免除・条約なし国は不適用"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

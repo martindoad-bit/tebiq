@@ -84,6 +84,15 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: false
+  - claim: "新ガイドライン（派遣先確定義務等）は2026年3月9日以降の申請から適用。申請書類（派遣形態用）は技術・人文知識・国際業務（申請書類）ページに「派遣契約に基づいて就労する場合（申請人が被派遣者の場合）」として別途明示されている（ISA公式）。"
+    source_title: "出入国在留管理庁 — 技術・人文知識・国際業務（申請書類）"
+    source_url: "https://www.moj.go.jp/isa/applications/status/gijinkoku.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「派遣契約に基づいて就労する場合（申請人が被派遣者の場合）」の記述を確認"
+    display_label: "技人国派遣：2026年3月9日施行・派遣形態用申請書類はISA書類ページに別途明示"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

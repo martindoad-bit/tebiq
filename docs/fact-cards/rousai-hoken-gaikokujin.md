@@ -62,6 +62,24 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: false
+  - claim: "労災保険の保険料は事業主が全額負担する。労働者（従業員）が保険料を負担することはない。"
+    source_title: "厚生労働省：労働者災害補償保険（労災保険）"
+    source_url: "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/roudoukijun/rousaihoken/index.html"
+    source_organization: "厚生労働省"
+    source_locator: "ページ内「保険料（事業主が全額負担・労働者負担なし）」に関する記述を確認"
+    display_label: "労災保険料：事業主が全額負担・労働者の負担はゼロ"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "不法就労者・不法在留者も、労働者としての実態があれば業務上の災害・通勤災害において労災保険給付を受けられる。在留資格・国籍は問わない。"
+    source_title: "厚生労働省：労働者災害補償保険（労災保険）"
+    source_url: "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/roudoukijun/rousaihoken/index.html"
+    source_organization: "厚生労働省"
+    source_locator: "ページ内「労働者の国籍、在留資格の種類にかかわらず」「不法就労者への適用」に関する記述を確認"
+    display_label: "労災保険：不法就労者・不法在留者も労働実態があれば給付対象（国籍・在留資格不問）"
+    support_level: "indirect"
+    user_visible: true
+    needs_domain_review: true
 ---
 
 ## current_date_logic

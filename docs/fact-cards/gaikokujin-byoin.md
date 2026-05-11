@@ -61,6 +61,24 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: false
+  - claim: "高額療養費制度：1か月間の医療費自己負担額が上限額（所得区分によって異なる。一般所得者の場合は月額約80,100円＋（医療費−267,000円）×1%）を超えた場合、超過分が払い戻される。外国人も健康保険・国民健康保険に加入していれば対象。"
+    source_title: "厚生労働省：外国人向け医療情報"
+    source_url: "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/iryou/i-anpan/index_00006.html"
+    source_organization: "厚生労働省"
+    source_locator: "ページ内「高額療養費制度」「月の上限額（所得区分別）」「超過分の払い戻し」「外国人も加入者は対象」の記述を確認"
+    display_label: "高額療養費制度：月上限超過分が払い戻し・外国人も保険加入者は対象"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: true
+  - claim: "マイナンバーカードの保険証利用：マイナンバーカードを健康保険証として利用登録（マイナポータル等で事前登録）した場合、カードリーダー対応の医療機関ではマイナンバーカード1枚で受診可能。従来の健康保険証は不要。"
+    source_title: "厚生労働省：外国人向け医療情報"
+    source_url: "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/iryou/i-anpan/index_00006.html"
+    source_organization: "厚生労働省"
+    source_locator: "ページ内「マイナンバーカードの保険証利用」「マイナポータルでの事前登録」「カードリーダー対応医療機関での受診」の記述を確認"
+    display_label: "マイナンバーカード保険証利用：事前登録でカード1枚で受診可・従来保険証不要"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

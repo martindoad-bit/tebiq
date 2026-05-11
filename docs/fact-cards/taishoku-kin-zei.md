@@ -60,6 +60,24 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: false
+  - claim: "退職所得控除額の計算：勤続20年以下は40万円×勤続年数（最低80万円）、勤続20年超は800万円＋70万円×（勤続年数−20年）。1年未満の端数は1年に切り上げ。"
+    source_title: "国税庁：退職金と税（退職所得の源泉徴収）"
+    source_url: "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1420.htm"
+    source_organization: "国税庁"
+    source_locator: "ページ内「退職所得控除額の計算式（20年以下・20年超の区分）」「1年未満の端数は1年に切り上げ」の記述を確認"
+    display_label: "退職所得控除：勤続20年以下は40万円×年数・20年超は800万＋70万×（年数−20）"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "帰国した非居住者が退職金を受け取る場合：支払金額の全額に対して20.42%（復興特別所得税含む）が源泉徴収される（退職所得控除の適用なし）。租税条約のある国では軽減申請が可能。"
+    source_title: "国税庁：退職金と税（退職所得の源泉徴収）"
+    source_url: "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1420.htm"
+    source_organization: "国税庁"
+    source_locator: "ページ内「非居住者への退職金の支払い（20.42%源泉徴収・退職所得控除の適用なし）」「租税条約による軽減」の記述を確認"
+    display_label: "非居住者の退職金：全額に20.42%源泉徴収・退職所得控除なし・租税条約で軽減可能な場合あり"
+    support_level: "indirect"
+    user_visible: true
+    needs_domain_review: true
 ---
 
 ## current_date_logic

@@ -75,6 +75,15 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: false
+  - claim: "2027年8月（令和9年8月）診療分から所得区分がより細かく設定される予定。非課税世帯の多数回該当限度額が25%引き下げられる予定（厚生労働省公式）。入院費の食事代・差額ベッド代・先進医療費は高額療養費の対象外。"
+    source_title: "厚生労働省：高額療養費制度を利用される皆さまへ"
+    source_url: "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/iryouhoken/juuyou/kougakuiryou/index.html"
+    source_organization: "厚生労働省"
+    source_locator: "ページ内『2027年8月改定（所得区分細分化・非課税世帯多数回25%引き下げ）』『対象外費用（食事代・差額ベッド代・先進医療）』の記述を確認"
+    display_label: "高額療養費：2027年8月〜所得区分細分化・非課税世帯多数回25%引下げ予定・食事代等は対象外"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

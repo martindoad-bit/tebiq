@@ -59,6 +59,24 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: false
+  - claim: "特定技能の直接雇用原則：特定技能外国人は特定技能所属機関（受入機関）との直接の雇用契約が必要（入管法・特定技能に関する基本方針）。"
+    source_title: "出入国在留管理庁：特定技能1号"
+    source_url: "https://www.moj.go.jp/isa/applications/status/tokutei1.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「特定技能外国人の直接雇用の原則（特定技能所属機関との直接雇用契約）」の記述を確認"
+    display_label: "特定技能の直接雇用原則：受入機関（所属機関）との直接の雇用契約が必要"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "農業・漁業での派遣就労の特例：これら2分野では季節性・繁閑差が大きいため、特例として適正な派遣会社経由の就労が認められている。"
+    source_title: "出入国在留管理庁：特定技能1号"
+    source_url: "https://www.moj.go.jp/isa/applications/status/tokutei1.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「農業・漁業分野の特例（派遣就労が認められる理由・季節性・繁閑差）」の記述を確認"
+    display_label: "農業・漁業の派遣就労特例：季節性・繁閑差の大きい2分野のみ適正派遣会社経由での就労が許可"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

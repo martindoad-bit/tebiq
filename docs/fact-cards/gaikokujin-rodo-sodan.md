@@ -61,6 +61,24 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: false
+  - claim: "外国人労働相談コーナーは各都道府県労働局に設置されており、英語・中国語・スペイン語・ポルトガル語等の多言語に対応する相談員が配置されている（対応言語は都道府県・窓口によって異なる）。"
+    source_title: "厚生労働省：外国人労働者の雇用管理の改善等"
+    source_url: "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/koyou/gaikokujin/index.html"
+    source_organization: "厚生労働省"
+    source_locator: "ページ内「外国人労働相談コーナー」「英語等での相談対応」「多言語対応状況」の記述を確認"
+    display_label: "外国人労働相談コーナー：各都道府県労働局に設置・英語・中国語・スペイン語等対応"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "外国人労働相談コーナー・総合労働相談コーナーで相談できる内容：労働条件・賃金未払い・解雇・雇い止め・配置転換・ハラスメント・社会保険等の労働問題全般。費用は無料。"
+    source_title: "厚生労働省：外国人労働者の雇用管理の改善等"
+    source_url: "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/koyou/gaikokujin/index.html"
+    source_organization: "厚生労働省"
+    source_locator: "ページ内「総合労働相談コーナー（解雇・雇い止め・配置転換・賃金引き下げ・労働条件等）」「無料」の記述を確認"
+    display_label: "労働相談の対象：賃金未払い・解雇・ハラスメント・社会保険等・全て無料"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

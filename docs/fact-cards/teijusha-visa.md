@@ -75,6 +75,15 @@ evidence_points:
     support_level: "indirect"
     user_visible: true
     needs_domain_review: true
+  - claim: "定住者の在留期間：「5年、3年、1年、6か月または法務大臣が個別に指定する期間（5年を超えない）」。永住者・定住者等の扶養を受ける18歳未満の未婚の子（扶養子女）の対象年齢は2022年4月1日改正により旧20歳未満から18歳未満に変更された。"
+    source_title: "出入国在留管理庁：定住者（在留資格）"
+    source_url: "https://www.moj.go.jp/isa/applications/status/longtermresident.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内『在留期間（5年・3年・1年・6か月・個別指定）』『扶養子女の年齢要件（2022年4月1日改正・18歳未満）』の記述を確認"
+    display_label: "定住者：在留期間最長5年・扶養子女の対象年齢は18歳未満（2022年4月改正）"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

@@ -61,6 +61,24 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: false
+  - claim: "定期健康診断の項目（労働安全衛生規則第44条）：既往歴・業務歴の調査・自覚症状・他覚症状の有無、身長・体重・腹囲・視力・聴力・血圧・血液検査・胸部X線・尿検査等。"
+    source_title: "厚生労働省：健康診断について"
+    source_url: "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/roudoukijun/anzen/anzeneisei02.html"
+    source_organization: "厚生労働省"
+    source_locator: "ページ内「定期健康診断の項目（労働安全衛生規則第44条）」「検査項目一覧（身長・体重・血圧・血液検査・胸部X線等）」の記述を確認"
+    display_label: "定期健康診断の項目（労安衛規則第44条）：身長・体重・血圧・血液検査・胸部X線・尿検査等"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "パート・アルバイトの健診対象要件（厚労省通知）：①所定労働時間が週30時間以上（通常の労働者の4分の3以上）、かつ②雇用期間が1年以上（または1年以上継続して雇用される見込みがある）場合。"
+    source_title: "厚生労働省：健康診断について"
+    source_url: "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/roudoukijun/anzen/anzeneisei02.html"
+    source_organization: "厚生労働省"
+    source_locator: "ページ内「パート・アルバイトの定期健診対象要件（週30時間以上・勤続1年以上または見込み）」の記述を確認"
+    display_label: "パート・アルバイトの健診対象：週30時間以上かつ勤続1年以上（または見込みあり）の場合"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

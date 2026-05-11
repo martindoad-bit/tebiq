@@ -65,6 +65,24 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: false
+  - claim: "外国人も日本の住民登録があれば児童手当の申請対象となる。在留資格の種類は問わないが、短期滞在（観光・短期ビザ）は除く。"
+    source_title: "こども家庭庁：児童手当制度"
+    source_url: "https://www.cfa.go.jp/policies/kokoseido/jidouteate/"
+    source_organization: "こども家庭庁"
+    source_locator: "ページ内「支給対象（日本国内に住んでいる者）」「在留資格の種類を問わない」「短期滞在を除く」に関する記述を確認"
+    display_label: "児童手当：外国人も住民登録があれば対象・在留資格不問（短期滞在を除く）"
+    support_level: "indirect"
+    user_visible: true
+    needs_domain_review: true
+  - claim: "児童手当の支給は年3回（2月・6月・10月）に、各前4か月分をまとめて振り込む方式。"
+    source_title: "こども家庭庁：児童手当制度"
+    source_url: "https://www.cfa.go.jp/policies/kokoseido/jidouteate/"
+    source_organization: "こども家庭庁"
+    source_locator: "ページ内「支給時期（2月・6月・10月の年3回・各4か月分）」に関する記述を確認"
+    display_label: "児童手当の支給：年3回（2月・6月・10月）・各4か月分まとめて振込"
+    support_level: "indirect"
+    user_visible: true
+    needs_domain_review: true
 ---
 
 ## current_date_logic

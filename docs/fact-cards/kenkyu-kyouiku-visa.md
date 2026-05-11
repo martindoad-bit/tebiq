@@ -68,6 +68,24 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: false
+  - claim: "在留資格「研究」の要件：大学卒業以上（学士以上）または当該研究に関連する研究について3年以上の実務経験を有すること。公私の機関との契約に基づき研究業務に従事することが必要。"
+    source_title: "出入国在留管理庁：研究（在留資格）"
+    source_url: "https://www.moj.go.jp/isa/applications/status/research.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「大学を卒業した者その他これと同等以上の教育を受けた者」「当該研究に関連する研究について3年以上の実務経験を有する者」の記述を確認"
+    display_label: "在留資格「研究」の要件：大学卒業（学士以上）または関連研究3年以上実務経験"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "在留資格「教育」の要件：小学校・中学校・高等学校等の学校教育機関（大学を除く）での語学教育その他の教科教育が対象。大学での教育活動は「教授」ビザが適用される。"
+    source_title: "出入国在留管理庁：教育（在留資格）"
+    source_url: "https://www.moj.go.jp/isa/applications/status/instructor.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「小学校・中学校・高等学校・中等教育学校・特別支援学校・専修学校・各種学校」「大学を除く学校教育機関での教育活動」に関する記述を確認"
+    display_label: "在留資格「教育」：小中高等の学校での語学・教科教育（大学は「教授」ビザ）"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

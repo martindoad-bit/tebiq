@@ -75,6 +75,15 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: false
+  - claim: "カテゴリー3・定義：前年分の法定調書合計表を提出済みだが源泉徴収税額が1,000万円未満の団体・個人。カテゴリー4の定義：「左のいずれにも該当しない団体・個人」（新設企業・法定調書未提出等）。カテゴリーは申請者本人ではなく所属機関（雇用主）の規模・属性で決まる。"
+    source_title: "出入国在留管理庁：技術・人文知識・国際業務（申請書類）"
+    source_url: "https://www.moj.go.jp/isa/applications/status/gijinkoku.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内『カテゴリー3（源泉1,000万未満・法定調書提出済）』『カテゴリー4（いずれにも該当しない）』の定義記述を確認"
+    display_label: "技人国カテゴリー3（法定調書提出済・源泉1,000万未満）・カテゴリー4（新設等）・カテゴリーは所属機関の属性で決定"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

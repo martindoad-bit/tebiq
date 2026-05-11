@@ -70,6 +70,15 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: false
+  - claim: "高度専門職ポイント計算の主要カテゴリ：学歴・職歴・年収・年齢・研究開発・ボーナスポイント。ポイントは「在留資格取得時」に70点以上を満たせばよく、在留中に年収・年齢等で変動しても即座に在留資格取消にはならない（ai推定 — ISAポイント計算表確認要）。"
+    source_title: "出入国在留管理庁：高度専門職（在留資格）"
+    source_url: "https://www.moj.go.jp/isa/applications/status/designatedactivities02_00004.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「ポイント計算」「学歴・職歴・年収・年齢・研究開発・ボーナスポイント」の記述を確認"
+    display_label: "高度専門職：ポイントは学歴・職歴・年収等の総合点・取得時に70点以上で良い（変動しても即取消なし・ai推定）"
+    support_level: "indirect"
+    user_visible: true
+    needs_domain_review: true
 ---
 
 ## current_date_logic

@@ -59,6 +59,24 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: false
+  - claim: "生活保護の行政的準用対象となる主な在留資格（厚生労働省通知による）：永住者・特別永住者・定住者・日本人の配偶者等・永住者の配偶者等・難民認定者。"
+    source_title: "厚生労働省：生活保護制度"
+    source_url: "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/hukushi_kaigo/seikatsuhogo/index.html"
+    source_organization: "厚生労働省"
+    source_locator: "ページ内「外国人への生活保護の行政的準用対象（在留資格別リスト）」の記述を確認"
+    display_label: "生活保護の準用対象：永住者・特別永住者・定住者・日本人配偶者等・難民認定者"
+    support_level: "indirect"
+    user_visible: true
+    needs_domain_review: true
+  - claim: "就労ビザ（技人国・特定技能等）・留学・家族滞在等の在留資格者は生活保護の行政的準用の対象外。就労による自立が前提とされている。"
+    source_title: "厚生労働省：生活保護制度"
+    source_url: "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/hukushi_kaigo/seikatsuhogo/index.html"
+    source_organization: "厚生労働省"
+    source_locator: "ページ内「就労ビザ・留学・家族滞在は生活保護の行政的準用の対象外（就労自立が前提）」の記述を確認"
+    display_label: "就労ビザ・留学・家族滞在は生活保護の行政的準用対象外・就労による自立が前提"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic
