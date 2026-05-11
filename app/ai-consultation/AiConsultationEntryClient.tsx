@@ -5,7 +5,6 @@ import {
   Camera,
   CheckCircle2,
   ClipboardCheck,
-  Copy,
   FileText,
   Loader2,
   MessageSquarePlus,
@@ -763,7 +762,6 @@ function ActiveConsultationView({
       : null
   const activeSafeDetail = userSafeDetail(active.detail, active.phase)
   const [copyState, setCopyState] = useState<'idle' | 'copied' | 'failed'>('idle')
-  const [summaryCopyState, setSummaryCopyState] = useState<'idle' | 'copied' | 'failed'>('idle')
   const [shareState, setShareState] = useState<'idle' | 'shared' | 'copied' | 'failed'>('idle')
   const [shareContext, setShareContext] = useState({
     isWechat: false,
@@ -829,16 +827,6 @@ function ActiveConsultationView({
     }
   }
 
-  async function copyConsultationSummary() {
-    if (!active.id) return
-    try {
-      await writeClipboardText(buildConsultationSummary(active, consultationUrl))
-      setSummaryCopyState('copied')
-    } catch {
-      setSummaryCopyState('failed')
-    }
-  }
-
   async function shareConsultationLink() {
     if (!active.id) return
     if (!canUseNativeShare) {
@@ -890,8 +878,6 @@ function ActiveConsultationView({
         <RiskHintBanner hits={active.risk_keywords} />
         <CrisisActionCard
           action={getCrisisAction(active.risk_keywords)}
-          copyState={summaryCopyState}
-          onCopySummary={copyConsultationSummary}
         />
         {hasEncodingIssue(active.answer) && (
           <EncodingIssueNotice />
@@ -1028,7 +1014,7 @@ function ActiveConsultationView({
                   ? '已打开分享'
                   : copyState === 'copied'
                     ? '已复制链接'
-                    : '分享概要'}
+                    : '分享'}
               </button>
             </div>
             {copyState === 'failed' || shareState === 'failed' ? (
@@ -1310,12 +1296,8 @@ type CrisisAction = {
 
 function CrisisActionCard({
   action,
-  copyState,
-  onCopySummary,
 }: {
   action: CrisisAction | null
-  copyState: 'idle' | 'copied' | 'failed'
-  onCopySummary: () => void
 }) {
   if (!action) return null
   return (
@@ -1335,14 +1317,6 @@ function CrisisActionCard({
               </li>
             ))}
           </ol>
-          <button
-            type="button"
-            onClick={onCopySummary}
-            className="mt-3 inline-flex min-h-9 items-center justify-center gap-2 rounded-btn border border-[var(--tebiq-soft-gray)] bg-[var(--tebiq-off-white)] px-3 py-1.5 text-[12.5px] font-medium text-[var(--tebiq-ink-blue)]"
-          >
-            {copyState === 'copied' ? <ClipboardCheck className="h-3.5 w-3.5" strokeWidth={1.6} /> : <Copy className="h-3.5 w-3.5" strokeWidth={1.6} />}
-            {copyState === 'copied' ? '已复制概要' : copyState === 'failed' ? '复制失败' : '复制给专业人士'}
-          </button>
         </div>
       </div>
     </div>
@@ -1500,43 +1474,6 @@ function userSafePhotoMessage(message: string | null | undefined): string {
   const text = message.trim()
   if (!text || looksTechnicalDetail(text)) return '图片识别没有完成。可以重新上传，或先用文字描述材料内容。'
   return cleanDisplayText(text)
-}
-
-function buildConsultationSummary(active: ActiveConsultation, consultationUrl: string): string {
-  const lines = [
-    'TEBIQ 咨询概要',
-    '',
-    `问题：${active.question}`,
-  ]
-  if (active.risk_keywords.length > 0) {
-    lines.push(`风险提示：${active.risk_keywords.join('、')}`)
-  }
-  if (active.photoSummary) {
-    lines.push(`图片摘要：${stripAnswerMarkup(active.photoSummary)}`)
-  }
-  const answer = stripAnswerMarkup(active.answer).replace(/\s+/g, ' ').trim()
-  if (answer) {
-    lines.push('', '回答摘录：', truncateText(answer, 900))
-  } else if (active.fallback_text) {
-    lines.push('', '当前状态：', stripAnswerMarkup(active.fallback_text))
-  } else {
-    lines.push('', '当前状态：这次还没有生成完整回答。')
-  }
-  lines.push('', `咨询链接：${consultationUrl}`)
-  return lines.join('\n')
-}
-
-function stripAnswerMarkup(text: string): string {
-  return cleanDisplayText(text)
-    .replace(/\*\*([^*]+)\*\*/g, '$1')
-    .replace(/^#{1,3}\s+/gm, '')
-    .replace(/\r\n/g, '\n')
-    .trim()
-}
-
-function truncateText(text: string, max: number): string {
-  if (text.length <= max) return text
-  return text.slice(0, max - 1).trimEnd() + '…'
 }
 
 function EncodingIssueNotice() {

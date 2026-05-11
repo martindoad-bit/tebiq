@@ -41,7 +41,7 @@ export default function ScrivenerPage() {
             <span className="pb-1 text-[13px] text-slate">/ 30 分钟</span>
           </div>
           <p className="mt-3 text-[12.5px] leading-[1.7] text-slate">
-            如后续委托办理，本次咨询费可抵扣办理费用。
+            如后续委托办理，可按预约时说明抵扣办理费用。
           </p>
         </section>
 

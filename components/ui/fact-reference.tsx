@@ -74,7 +74,7 @@ function FactReferenceRow({ card }: { card: ConsultationFactCardAuditEntry }) {
         </span>
         {sourceLabels.length > 0 && (
           <span className="rounded-full border border-[var(--tebiq-cool-gray)] px-2 py-0.5 text-[10px] text-[var(--tebiq-deep-slate)]">
-            官方来源
+            来源链接
           </span>
         )}
         {isHighRisk && (

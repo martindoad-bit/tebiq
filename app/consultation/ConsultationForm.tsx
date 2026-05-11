@@ -274,7 +274,7 @@ export default function ConsultationForm() {
           </button>
 
           <p className="mt-4 border-t border-hairline pt-3 text-[11px] leading-relaxed text-ash">
-            行政书士可基于你提供的信息进行确认和建议，但不保证申请结果。
+            行政书士可基于你提供的信息进行确认和建议；费用抵扣等细节以预约说明为准。
           </p>
         </form>
       </section>
