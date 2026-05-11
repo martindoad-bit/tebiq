@@ -5,10 +5,23 @@ state: ai_verified
 risk_level: critical
 confidence: medium
 source_quality: official
-controlled_alpha_eligible: true    # PL signoff 2026-05-07 — Pack 2.2 prod inject 解锁，FACT_LAYER_ENABLED=true 5-门第 5 项进度
+controlled_alpha_eligible: false   # AQL guardrail 2026-05-11: critical card keeps hint_only until needs_review flags are resolved.
 last_verified_at: "2026-05-07"
 reviewer: ai_self_verified
 sprint: "0.6 / Workstream C / Batch 3"
+citation_label: "みなし再入国許可（1年ルール・在留期限・長期出国リスク）"
+citation_summary: "在留資格保持者が出国する際のみなし再入国許可制度（1年以内に再入国すれば許可不要）と、在留期限が6ヶ月未満での出国時の注意点、1年超出国時の在留資格失効リスクを確認するカード。"
+source_display_names:
+  - "出入国在留管理庁"
+applies_when:
+  - "帰国・海外旅行の際に再入国許可が必要かどうか確認したい"
+  - "みなし再入国許可の有効期限（1年）を確認したい"
+  - "在留期限が近い状態で出国した場合の扱いを確認したい"
+  - "長期出国（1年超）の場合の在留資格への影響を確認したい"
+does_not_cover:
+  - "特別永住者のみなし再入国許可（有効期間2年 — 一般在留資格保持者とは異なる）"
+  - "海外在住中の在留期間更新（原則不可）"
+  - "出国前の在留期間更新（申請タイミングは zairyu-expiry-renewal-change 参照）"
 ai_pipeline:
   collector_run_at: "2026-05-07"
   extractor_model: "claude-opus-4-5"
@@ -214,7 +227,6 @@ qa_cases:
 - 有効な在留カードを持つ外国人が出国から1年以内に再入国する場合、再入国許可の取得は不要
 - 「３月」以下の在留期間者・「短期滞在」保持者は対象外
 - 出国時に出国カードの「みなし」欄に記入することが必要
-- 在留期限が1年より前にある場合、実質的な上限は在留期限当日（在留期限を超えた在留継続は不可のため）
 
 ■ 通常再入国許可（1年超の海外滞在に必要）
 - 最長有効期間：5年間（特別永住者は6年間）
@@ -223,7 +235,7 @@ qa_cases:
 - 一次（1回限り）・数次（有効期間内複数回）の2種類
 
 ■ 注意事項
-- みなし再入国許可または通常再入国許可の有効期間内に再入国しなかった場合、在留資格に重大な影響が生じる可能性があります（詳細は行政書士にご確認ください）
+- みなし再入国許可または通常再入国許可の有効期間内に再入国できない可能性がある場合は、出国前に入管または行政書士へ確認する
 - 緊急出国等で事前手続きができなかった場合は、在外公館または入国管理局に相談が必要です
 
 ■ 避けるべき表現
@@ -244,6 +256,7 @@ qa_cases:
 - 特別永住者のみなし再入国許可期間（2年とされるが法令条文の明示確認が必要）
 - 再入国許可なし出国後の在留資格消滅の具体的条件・手続き
 - 在留期限とみなし再入国許可期間が重なる場合の優先ルール
+- 在留期限が1年より前に来る場合、在留期限を実質上限として扱う運用の具体的根拠
 - みなし再入国中に在留期限延長が必要になった場合の対処
 ```
 
@@ -254,6 +267,8 @@ qa_cases:
 | 2026-05-07 | FACT-OPS Batch 3 | 初次抽取 src-01 から1年ルール確認 | draft → ai_extracted |
 | 2026-05-07 | FACT-OPS Batch 3 | 13項自己チェック通過、ai_inferred_fields hedging適用 | ai_extracted → ai_verified |
 | 2026-05-07 | GM (Batch 5) | PL signoff 2026-05-07 — Pack 2.2 prod inject 解锁，FACT_LAYER_ENABLED=true 5-门第 5 项进度。controlled_alpha_eligible: false → true。keyword coverage 追加（技術キーワード 6 bullets）。 | ai_verified | ai_verified | alpha flip + keyword coverage |
+| 2026-05-11 | FACT-OPS (Cycle 2 Batch 4) | Cycle 2メタデータ追加パッチ。citation_label・citation_summary・source_display_names・applies_when・does_not_coverフィールドを追加。事実内容・state変更なし。 | ai_verified | ai_verified | patch |
+| 2026-05-11 | Codex AQL guardrail | needs_review_flags.zairyu_kigen_upper_bound / zairyu_shikaku_metsumetsu に関わる断定表現を injection_certain_block から除外し、needs_review_addendum へ隔離。critical card は controlled_alpha_eligible を false に戻し、DOMAIN確認まで hint_only。 | ai_verified | ai_verified | safety downgrade |
 
 ## Audit assignment
 

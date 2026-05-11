@@ -52,7 +52,7 @@ export function ConsultationShell({
     <div className="min-h-screen overflow-x-hidden bg-[var(--tebiq-off-white)] text-[var(--tebiq-ink-blue)]">
       <AlphaNotice />
       <main className={cx(
-        'mx-auto w-full px-4 py-5 sm:px-6 sm:py-7',
+        'mx-auto w-full px-4 py-5 text-[16px] sm:px-6 sm:py-7',
         tabBar ? 'pb-28' : '',
         wide ? 'max-w-6xl' : 'max-w-[min(480px,100vw)]',
       )}>
@@ -70,7 +70,7 @@ export function ConsultationShell({
 export function AlphaNotice({ compact = false }: { compact?: boolean }) {
   return (
     <div className="sticky top-0 z-20 border-b border-[var(--tebiq-soft-gray)] bg-[var(--tebiq-off-white)]/95 px-4 py-1.5 backdrop-blur">
-      <div className="mx-auto flex max-w-6xl items-start gap-2 text-[11.5px] leading-[1.55] text-[var(--tebiq-deep-slate)] sm:text-[12px]">
+      <div className="mx-auto flex max-w-6xl items-start gap-2 text-[12px] leading-[1.55] text-[var(--tebiq-deep-slate)] sm:text-[12.5px]">
         <ShieldCheck className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[var(--tebiq-ink-blue)]" strokeWidth={1.6} />
         <span className={cx('min-w-0 flex-1 break-words', compact ? 'line-clamp-2' : '')}>{ALPHA_NOTICE}</span>
       </div>
@@ -100,18 +100,18 @@ export function BrandHeader({
             className="h-auto w-[120px]"
           />
           <div>
-            <p className="text-[11px] font-medium uppercase tracking-normal text-[var(--tebiq-cool-gray)]">
+            <p className="text-[12px] font-medium uppercase tracking-normal text-[var(--tebiq-cool-gray)]">
               {eyebrow}
             </p>
-            <h1 className="mt-1 text-[24px] font-semibold leading-[1.16] tracking-normal text-[var(--tebiq-ink-blue)] sm:text-[26px]">
+            <h1 className="mt-1 text-[28px] font-semibold leading-[1.14] tracking-normal text-[var(--tebiq-ink-blue)] sm:text-[28px]">
               {title}
             </h1>
           </div>
         </div>
-        {action && <div className="w-full shrink-0 sm:w-auto">{action}</div>}
+        {action && <div className="shrink-0">{action}</div>}
       </div>
       {description && (
-        <p className="max-w-[34rem] break-words text-[14.5px] leading-[1.75] text-[var(--tebiq-deep-slate)] sm:text-[15px]">
+        <p className="max-w-[34rem] break-words text-[15.5px] leading-[1.75] text-[var(--tebiq-deep-slate)] sm:text-[15.5px]">
           {description}
         </p>
       )}
@@ -131,7 +131,7 @@ export function Surface({
   const Component = as
   return (
     <Component className={cx(
-      'min-w-0 max-w-full overflow-hidden rounded-card border border-[var(--tebiq-soft-gray)] bg-[var(--tebiq-off-white)] p-4 sm:p-5',
+      'min-w-0 max-w-full overflow-hidden rounded-card border border-[var(--tebiq-soft-gray)] bg-[var(--tebiq-off-white)] p-[18px] sm:p-5',
       className,
     )}>
       {children}
@@ -141,7 +141,7 @@ export function Surface({
 
 export function SectionLabel({ children }: { children: ReactNode }) {
   return (
-    <p className="text-[11px] font-medium uppercase tracking-normal text-[var(--tebiq-cool-gray)]">
+    <p className="text-[12px] font-medium uppercase tracking-normal text-[var(--tebiq-cool-gray)]">
       {children}
     </p>
   )
@@ -158,27 +158,27 @@ export function MetaPill({
 }) {
   return (
     <span className={cx(
-      'inline-flex items-center gap-1 rounded-chip border px-2 py-1 text-[11px] leading-none',
+      'inline-flex min-h-[26px] max-w-full shrink-0 items-center gap-1 rounded-chip border px-2.5 py-1 text-[12px] leading-none whitespace-nowrap',
       tone === 'focus'
         ? 'border-[var(--tebiq-warm-amber)] bg-[var(--tebiq-off-white)] text-[var(--tebiq-ink-blue)]'
         : tone === 'soft'
           ? 'border-[var(--tebiq-soft-gray)] bg-[var(--tebiq-soft-gray)] text-[var(--tebiq-deep-slate)]'
           : 'border-[var(--tebiq-soft-gray)] bg-[var(--tebiq-off-white)] text-[var(--tebiq-deep-slate)]',
     )}>
-      {Icon && <Icon className="h-3 w-3 shrink-0" strokeWidth={1.6} />}
-      {children}
+      {Icon && <Icon className="h-3.5 w-3.5 shrink-0" strokeWidth={1.6} />}
+      <span className="min-w-0 truncate">{children}</span>
     </span>
   )
 }
 
 export function StatusBadge({ state }: { state: AlphaDisplayState }) {
   const config: Record<AlphaDisplayState, { label: string; icon: LucideIcon; focus?: boolean }> = {
-    completed: { label: '回答完成', icon: CheckCircle2 },
-    partial: { label: '回答可能不完整', icon: TriangleAlert, focus: true },
+    completed: { label: '完成', icon: CheckCircle2 },
+    partial: { label: '不完整', icon: TriangleAlert, focus: true },
     streaming: { label: '正在整理', icon: Loader2 },
-    timeout_waiting: { label: '还在处理', icon: Clock3, focus: true },
-    timeout: { label: '未生成完整回答', icon: Clock3, focus: true },
-    failed: { label: '生成失败', icon: RefreshCcw, focus: true },
+    timeout_waiting: { label: '处理中', icon: Clock3, focus: true },
+    timeout: { label: '未完成', icon: Clock3, focus: true },
+    failed: { label: '失败', icon: RefreshCcw, focus: true },
     fallback: { label: '降级回答', icon: TriangleAlert, focus: true },
   }
   const item = config[state]
@@ -202,7 +202,7 @@ export function RiskHintBanner({ hits }: { hits: string[] }) {
           {hint.chips.map(chip => (
             <span
               key={chip}
-              className="rounded-chip border border-[var(--tebiq-soft-gray)] px-2 py-0.5 text-[11px] text-[var(--tebiq-deep-slate)]"
+            className="rounded-chip border border-[var(--tebiq-soft-gray)] px-2 py-0.5 text-[11.5px] text-[var(--tebiq-deep-slate)] whitespace-nowrap"
             >
               {chip}
             </span>

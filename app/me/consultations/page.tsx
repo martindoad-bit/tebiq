@@ -44,21 +44,21 @@ export default async function MyConsultationsPage() {
           action={
             <Link
               href="/ai-consultation"
-              className="inline-flex h-9 items-center gap-1.5 rounded-btn bg-[var(--tebiq-ink-blue)] px-3 text-[12px] font-medium text-[var(--tebiq-off-white)]"
+              className="inline-flex h-10 items-center gap-1.5 whitespace-nowrap rounded-btn bg-[var(--tebiq-ink-blue)] px-3 text-[13px] font-medium text-[var(--tebiq-off-white)]"
             >
               <MessageSquarePlus className="h-3.5 w-3.5" strokeWidth={1.6} />
-              新问题
+              提问
             </Link>
           }
         />
 
-        <Surface className="flex items-center justify-between gap-4">
-          <div>
+        <Surface className="space-y-2">
+          <div className="flex items-end gap-2">
             <SectionLabel>最近记录</SectionLabel>
-            <p className="mt-1 text-[28px] font-semibold leading-none text-[var(--tebiq-ink-blue)]">{rows.length}</p>
+            <p className="text-[28px] font-semibold leading-none text-[var(--tebiq-ink-blue)]">{rows.length}</p>
           </div>
-          <p className="max-w-[13rem] text-right text-[12px] leading-relaxed text-[var(--tebiq-deep-slate)]">
-            当前显示最近 20 条。换浏览器或清空记录后，可能看不到旧咨询。
+          <p className="text-[13.5px] leading-relaxed text-[var(--tebiq-deep-slate)]">
+            当前显示最近 20 条；换浏览器或清空记录后，可能看不到旧咨询。
           </p>
         </Surface>
 
@@ -85,7 +85,7 @@ export default async function MyConsultationsPage() {
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0">
                         <SectionLabel>{new Date(row.createdAt).toLocaleString('zh-CN')}</SectionLabel>
-                        <p className="mt-1 line-clamp-2 text-[15px] leading-relaxed text-[var(--tebiq-ink-blue)]">
+                        <p className="mt-1 line-clamp-2 text-[16px] leading-relaxed text-[var(--tebiq-ink-blue)]">
                           {row.userQuestionText}
                         </p>
                       </div>
@@ -95,7 +95,6 @@ export default async function MyConsultationsPage() {
                   <div className="flex flex-wrap gap-2">
                     {row.hasImage && <MetaPill icon={Camera}>图片咨询</MetaPill>}
                     {row.feedbackType && <MetaPill>反馈：<FeedbackLabel type={row.feedbackType} /></MetaPill>}
-                    <MetaPill>自动记录</MetaPill>
                     {(row.factCardIds ?? []).length > 0 && (
                       <MetaPill icon={BookOpen}>参考资料 ×{(row.factCardIds ?? []).length}</MetaPill>
                     )}
@@ -104,7 +103,7 @@ export default async function MyConsultationsPage() {
                     )}
                   </div>
                   <div className="flex items-center justify-between gap-3">
-                    <Link href={`/c/${encodeURIComponent(row.id)}`} className="inline-flex items-center gap-1 text-[12px] font-medium text-[var(--tebiq-ink-blue)]">
+                    <Link href={`/c/${encodeURIComponent(row.id)}`} className="inline-flex min-h-9 items-center gap-1 text-[13.5px] font-medium text-[var(--tebiq-ink-blue)]">
                       查看回答
                       <ArrowRight className="h-3.5 w-3.5" strokeWidth={1.6} />
                     </Link>
@@ -124,12 +123,12 @@ function EmptyRecordState({ title, body }: { title: string; body: string }) {
   return (
     <Surface className="space-y-3 text-center">
       <div>
-        <h2 className="text-[16px] font-semibold text-[var(--tebiq-ink-blue)]">{title}</h2>
-        <p className="mt-1 text-[13px] leading-relaxed text-[var(--tebiq-deep-slate)]">{body}</p>
+        <h2 className="text-[17px] font-semibold text-[var(--tebiq-ink-blue)]">{title}</h2>
+        <p className="mt-1 text-[14px] leading-relaxed text-[var(--tebiq-deep-slate)]">{body}</p>
       </div>
       <Link
         href="/ai-consultation"
-        className="inline-flex items-center justify-center gap-2 rounded-btn bg-[var(--tebiq-ink-blue)] px-4 py-2 text-[13px] font-medium text-[var(--tebiq-off-white)]"
+        className="inline-flex min-h-11 items-center justify-center gap-2 whitespace-nowrap rounded-btn bg-[var(--tebiq-ink-blue)] px-4 py-2 text-[14px] font-medium text-[var(--tebiq-off-white)]"
       >
         开始咨询
         <ArrowRight className="h-3.5 w-3.5" strokeWidth={1.6} />

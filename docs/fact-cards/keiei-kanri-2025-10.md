@@ -11,6 +11,19 @@ reviewer: DOMAIN-CC
 approved_at: 2026-05-07
 approved_by: DOMAIN-CC (claude-sonnet-4-6, audit-full-20260507)
 sprint: 0.6 / Workstream C
+citation_label: "経営管理ビザ（2025年10月以降の新基準・5要件）"
+citation_summary: "2025年10月16日以降に適用される経営管理在留資格の許可基準改定（ビジネス規模・実績・継続性等5要件）を確認するカード。旧500万円基準との主な違いを含む。"
+source_display_names:
+  - "出入国在留管理庁"
+applies_when:
+  - "経営管理ビザの新規申請・変更申請を2025年10月以降に行う場合"
+  - "2025年10月以降の経営管理ビザの許可基準（5要件）を確認したい"
+  - "旧500万円資本金・売上要件と新基準の違いを確認したい"
+  - "経営管理ビザの事業実態・継続性・規模要件を確認したい"
+does_not_cover:
+  - "2025年10月以降の既存保有者の更新過渡措置（keiei-kanri-existing-holder-update 参照）"
+  - "スタートアップビザ・特定活動から経営管理への移行（startup-visa-keiei-transition 参照）"
+  - "経営管理ビザの更新書類一覧の詳細（ISA手続きページ参照）"
 ai_pipeline:
   collector_run_at: 2026-05-07
   extractor_model: deepseek-v4-pro (extraction via Claude Opus 4.7 / WebFetch)
@@ -411,6 +424,7 @@ is a frontend-side conservative hint only.
 | 2026-05-07 | AI (Claude Opus 4.7 via WebFetch + manual extraction) | initial AI extraction | — | ai_extracted | source: moj-isa-10-00237 |
 | 2026-05-07 | AI self-verification (post PL §11 update) | split certain vs needs_review fields; populated direct_fact_fields, ai_inferred_fields, needs_review_flags; defined certain_block + needs_review_addendum | ai_extracted | ai_verified | risk=critical, controlled_alpha_eligible=true per PL §7 + §11 explicit allowance |
 | 2026-05-07 | DOMAIN-CC (audit-full-20260507) | §2 full checklist PASS; all 5 core 2025-10-16 改正 requirements sourced; 3 needs_review_flags appropriately isolated to PDF; injection_certain_block confirmed safe | ai_verified | human_reviewed | APPROVE — controlled_alpha_eligible:true confirmed for Alpha injection |
+| 2026-05-11 | FACT-OPS (Cycle 2 Batch 4) | Cycle 2メタデータ追加パッチ。citation_label・citation_summary・source_display_names・applies_when・does_not_coverフィールドを追加。事実内容・state変更なし。 | human_reviewed | human_reviewed | patch |
 
 ## Audit assignment
 

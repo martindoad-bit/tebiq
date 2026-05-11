@@ -9,6 +9,19 @@ controlled_alpha_eligible: false   # GM 修正 2026-05-07: FACT autopilot 自设
 last_verified_at: 2026-05-07
 reviewer: ai_self_verified
 sprint: 0.6 / Workstream C / Batch 1
+citation_label: "技人国（業務内容と在留資格の不一致リスク）"
+citation_summary: "技術・人文知識・国際業務（技人国）の在留資格で許可されている業務範囲と、業務内容不一致の場合の在留取消リスクを確認するカード。転職後の業務内容審査にも適用。"
+source_display_names:
+  - "出入国在留管理庁"
+applies_when:
+  - "技人国で就労中に業務内容が大きく変わった場合のリスクを確認したい"
+  - "技人国の在留資格で許可される業務範囲を確認したい"
+  - "技人国更新時に業務内容変更が審査に影響するか確認したい"
+  - "転職後の新しい業務内容が技人国に該当するか確認したい"
+does_not_cover:
+  - "転職時の入管届出義務（gijinkoku-job-change-notification 参照 — 14日以内）"
+  - "技人国更新申請の書類一覧（gijinkoku-koushin-shorui 参照）"
+  - "技人国から他の在留資格への変更手続き"
 ai_pipeline:
   collector_run_at: 2026-05-07
   extractor_model: claude-sonnet-4-6 (FACT-OPS Batch 1, WebFetch from official ISA/MOJ sources)
@@ -294,6 +307,7 @@ needs_review_flags:
 | 2026-05-07 | AI self-verification | direct_fact_fields sourced; language_skill_2025 を needs_review に格納; certain_block + addendum split complete | ai_extracted | ai_verified | risk=high |
 | 2026-05-07 | GM (boundary correction) | controlled_alpha_eligible: true → false. FACT autopilot 越界。high 卡 ai_verified 不需要此 flag (only critical does). | ai_verified | ai_verified | GM correction |
 | 2026-05-07 | DOMAIN-CC (audit-full-20260507) | §2 checklist: PHANTOM FIELD detected — kaijo_jitsurei_rule_6months_haiguusha listed in direct_fact_fields but has no body content with source citation; 6か月ルールは配偶者ビザ (22条の4第7号) のルールであり技人国には適用なし。REQUEST_EDIT: remove from direct_fact_fields (Option A) or add body section with 配偶者/技人国 distinction and move to ai_inferred_fields (Option B). Core content (3か月・14日・業務外リスト) is solid. State stays ai_verified pending FACT fix. | ai_verified | ai_verified | REQUEST_EDIT |
+| 2026-05-11 | FACT-OPS (Cycle 2 Batch 4) | Cycle 2メタデータ追加パッチ。citation_label・citation_summary・source_display_names・applies_when・does_not_coverフィールドを追加。事実内容・state変更なし。 | ai_verified | ai_verified | patch |
 
 ## Audit assignment
 

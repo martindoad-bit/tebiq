@@ -57,10 +57,10 @@ export default async function ConsultationDetailPage({ params }: PageProps) {
           action={
             <Link
               href="/ai-consultation"
-              className="inline-flex h-9 items-center gap-1.5 rounded-btn bg-[var(--tebiq-ink-blue)] px-3 text-[12px] font-medium text-[var(--tebiq-off-white)]"
+              className="inline-flex h-10 items-center gap-1.5 whitespace-nowrap rounded-btn bg-[var(--tebiq-ink-blue)] px-3 text-[13px] font-medium text-[var(--tebiq-off-white)]"
             >
               <MessageSquarePlus className="h-3.5 w-3.5" strokeWidth={1.6} />
-              新问题
+              提问
             </Link>
           }
         />
@@ -70,7 +70,7 @@ export default async function ConsultationDetailPage({ params }: PageProps) {
             <SectionLabel>你的问题</SectionLabel>
             <StatusBadge state={displayState} />
           </div>
-          <p className="text-[15px] leading-relaxed text-[var(--tebiq-ink-blue)]">{row.userQuestionText}</p>
+          <p className="text-[17px] leading-relaxed text-[var(--tebiq-ink-blue)]">{row.userQuestionText}</p>
         </Surface>
 
         {row.hasImage && row.imageSummary && (
@@ -79,8 +79,8 @@ export default async function ConsultationDetailPage({ params }: PageProps) {
               <Camera className="h-4 w-4 text-[var(--tebiq-ink-blue)]" strokeWidth={1.6} />
               <SectionLabel>图片摘要</SectionLabel>
             </div>
-            <p className="text-[13px] leading-relaxed text-[var(--tebiq-deep-slate)]">{row.imageSummary}</p>
-            <p className="text-[11px] text-[var(--tebiq-cool-gray)]">原图未保存；这里只保留识别摘要供这条咨询参考。</p>
+            <p className="text-[14.5px] leading-relaxed text-[var(--tebiq-deep-slate)]">{row.imageSummary}</p>
+            <p className="text-[12px] text-[var(--tebiq-cool-gray)]">原图未保存；这里只保留识别摘要供这条咨询参考。</p>
           </Surface>
         )}
 
@@ -92,7 +92,7 @@ export default async function ConsultationDetailPage({ params }: PageProps) {
             <StatusBadge state={displayState} />
           </div>
           {(displayState === 'partial' || displayState === 'fallback' || displayState === 'timeout' || displayState === 'failed') && (
-            <div className="rounded-card border border-[var(--tebiq-warm-amber)] px-3 py-2 text-[12px] leading-relaxed text-[var(--tebiq-ink-blue)]">
+            <div className="rounded-card border border-[var(--tebiq-warm-amber)] px-3 py-2 text-[13.5px] leading-relaxed text-[var(--tebiq-ink-blue)]">
               {displayState === 'partial' && '这条记录有部分回答，但没有完整完成。'}
               {displayState === 'fallback' && '这条记录使用了安全降级文案，不应看作完整回答。'}
               {displayState === 'timeout' && '这条记录没有生成可用完整回答。'}
@@ -101,14 +101,14 @@ export default async function ConsultationDetailPage({ params }: PageProps) {
             </div>
           )}
           {hasEncodingIssue(answer) && (
-            <div className="rounded-card border border-[var(--tebiq-warm-amber)] px-3 py-2 text-[12px] leading-relaxed text-[var(--tebiq-ink-blue)]">
+            <div className="rounded-card border border-[var(--tebiq-warm-amber)] px-3 py-2 text-[13.5px] leading-relaxed text-[var(--tebiq-ink-blue)]">
               这条回答里检测到显示异常字符。建议重新生成，或在反馈里标记“不准确”。
             </div>
           )}
           {answer ? (
             <AnswerDetailProse text={answer} />
           ) : (
-            <p className="text-[13px] text-[var(--tebiq-deep-slate)]">还没有可显示的回答正文。</p>
+            <p className="text-[14px] text-[var(--tebiq-deep-slate)]">还没有可显示的回答正文。</p>
           )}
         </Surface>
 
@@ -121,13 +121,12 @@ export default async function ConsultationDetailPage({ params }: PageProps) {
           <div className="flex flex-wrap gap-2">
             <MetaPill>{new Date(row.createdAt).toLocaleString('zh-CN')}</MetaPill>
             {row.feedbackType && <MetaPill>反馈：<FeedbackLabel type={row.feedbackType} /></MetaPill>}
-            <MetaPill>自动记录</MetaPill>
             {row.humanConfirmClicked && <MetaPill tone="focus">需确认</MetaPill>}
           </div>
         </Surface>
 
-        <footer className="flex flex-wrap items-center justify-between gap-3 border-t border-[var(--tebiq-soft-gray)] pt-4 text-[12px]">
-          <Link href="/me/consultations" className="inline-flex items-center gap-1 text-[var(--tebiq-deep-slate)]">
+        <footer className="flex flex-wrap items-center justify-between gap-3 border-t border-[var(--tebiq-soft-gray)] pt-4 text-[13px]">
+          <Link href="/me/consultations" className="inline-flex min-h-9 items-center gap-1 text-[var(--tebiq-deep-slate)]">
             <ArrowLeft className="h-3.5 w-3.5" strokeWidth={1.6} />
             返回我的咨询
           </Link>
@@ -203,7 +202,7 @@ function AnswerDetailProse({ text }: { text: string }) {
       {firstLook && (
         <div className="rounded-card border border-[var(--tebiq-soft-gray)] bg-[var(--tebiq-soft-gray)]/35 px-3.5 py-3">
           <SectionLabel>先看这里</SectionLabel>
-          <div className="mt-2 space-y-1.5 text-[14px] leading-[1.65] text-[var(--tebiq-ink-blue)]">
+          <div className="mt-2 space-y-1.5 text-[15px] leading-[1.65] text-[var(--tebiq-ink-blue)]">
             <p><span className="font-medium">当前判断：</span>{firstLook.conclusion}</p>
             <p><span className="font-medium">建议动作：</span>{firstLook.action}</p>
             {firstLook.avoid && <p><span className="font-medium">暂缓事项：</span>{firstLook.avoid}</p>}
@@ -211,7 +210,7 @@ function AnswerDetailProse({ text }: { text: string }) {
         </div>
       )}
       {rest && (
-        <article className="whitespace-pre-wrap text-[15px] leading-[1.75] text-[var(--tebiq-ink-blue)]">
+        <article className="whitespace-pre-wrap text-[16px] leading-[1.8] text-[var(--tebiq-ink-blue)]">
           {rest}
         </article>
       )}
@@ -295,19 +294,19 @@ function ChainBlock({ chain, currentId }: { chain: AiConsultation[]; currentId: 
               }`
             }>
               <div className="flex flex-wrap items-center gap-2">
-                <span className="text-[11px] uppercase tracking-wide text-[var(--tebiq-deep-slate)]">
+                <span className="text-[12px] uppercase tracking-wide text-[var(--tebiq-deep-slate)]">
                   {labelPrefix}
                 </span>
-                <span className="text-[10px] text-[var(--tebiq-cool-gray)]">
+                <span className="text-[11.5px] text-[var(--tebiq-cool-gray)]">
                   {new Date(entry.createdAt).toLocaleString('zh-CN')}
                 </span>
                 {isCurrent && (
-                  <span className="rounded-full border border-[var(--tebiq-ink-blue)] px-2 py-0.5 text-[10px] font-medium text-[var(--tebiq-ink-blue)]">
+                  <span className="whitespace-nowrap rounded-full border border-[var(--tebiq-ink-blue)] px-2 py-0.5 text-[11px] font-medium text-[var(--tebiq-ink-blue)]">
                     当前查看
                   </span>
                 )}
               </div>
-              <p className="mt-1 line-clamp-2 text-[13px] leading-relaxed text-[var(--tebiq-ink-blue)]">
+              <p className="mt-1 line-clamp-2 text-[14px] leading-relaxed text-[var(--tebiq-ink-blue)]">
                 {entry.userQuestionText}
               </p>
             </div>
@@ -319,7 +318,7 @@ function ChainBlock({ chain, currentId }: { chain: AiConsultation[]; currentId: 
           )
         })}
       </ol>
-      <p className="text-[11px] text-[var(--tebiq-cool-gray)]">
+      <p className="text-[12.5px] text-[var(--tebiq-cool-gray)]">
         这些记录属于同一次咨询。你可以按顺序回看原问题、补充内容和每轮回答。
       </p>
     </Surface>

@@ -77,18 +77,18 @@ export default function AnswerResultView({
   return (
     <div className="pt-1">
       <section className="rounded-[16px] border border-hairline bg-surface px-4 py-4">
-        <span className={`rounded-[9px] px-2.5 py-1 text-[11px] leading-none ${viewModel.status_class}`}>
+        <span className={`inline-flex min-h-[26px] items-center whitespace-nowrap rounded-[9px] px-2.5 py-1 text-[12px] leading-none ${viewModel.status_class}`}>
           {viewModel.status_label}
         </span>
-        <h1 className="mt-4 text-[22px] font-medium leading-[1.38] tracking-[-0.01em] text-ink [overflow-wrap:anywhere]">
+        <h1 className="mt-4 text-[24px] font-medium leading-[1.34] tracking-normal text-ink [overflow-wrap:anywhere]">
           {p.title}
         </h1>
-        <p className="mt-3 rounded-[12px] bg-paper px-3 py-3 text-[13px] leading-[1.7] text-slate [overflow-wrap:anywhere]">
+        <p className="mt-3 rounded-[12px] bg-paper px-3 py-3 text-[14.5px] leading-[1.7] text-slate [overflow-wrap:anywhere]">
           {viewModel.question}
         </p>
         <div className="mt-3 rounded-[12px] border border-hairline bg-canvas px-3 py-3">
-          <p className="text-[11px] font-medium text-ash">我理解你的问题是</p>
-          <p className="mt-1.5 text-[13px] leading-[1.65] text-ink [overflow-wrap:anywhere]">
+          <p className="text-[12px] font-medium text-ash">我理解你的问题是</p>
+          <p className="mt-1.5 text-[14px] leading-[1.65] text-ink [overflow-wrap:anywhere]">
             {viewModel.understood_question}
           </p>
         </div>
@@ -120,8 +120,8 @@ export default function AnswerResultView({
                       data-tebiq-segment={isTrueFocus ? 'true-focus' : isThreeStrip ? (idx === 0 ? 'direct-answer' : 'next-steps') : 'body'}
                       className={
                         isTrueFocus
-                          ? 'border-l-2 border-[var(--tebiq-warm-amber,#D4A23A)] pl-3 text-[15px] leading-[1.75] text-ink font-medium whitespace-pre-line [overflow-wrap:anywhere]'
-                          : 'text-[15px] leading-[1.7] text-ink whitespace-pre-line [overflow-wrap:anywhere]'
+                          ? 'border-l-2 border-[var(--tebiq-warm-amber,#D4A23A)] pl-3 text-[16px] leading-[1.78] text-ink font-medium whitespace-pre-line [overflow-wrap:anywhere]'
+                          : 'text-[16px] leading-[1.76] text-ink whitespace-pre-line [overflow-wrap:anywhere]'
                       }
                     >
                       {para}
@@ -133,7 +133,7 @@ export default function AnswerResultView({
           })()
         ) : (
           <div className="mt-4">
-            <p className="text-[14px] leading-[1.7] text-ink [overflow-wrap:anywhere]">{p.summary}</p>
+            <p className="text-[15px] leading-[1.7] text-ink [overflow-wrap:anywhere]">{p.summary}</p>
           </div>
         )}
       </section>
@@ -169,7 +169,7 @@ export default function AnswerResultView({
           <SectionHeading>{status === 'out_of_scope' ? '请补充' : '需要先确认'}</SectionHeading>
           <ul className="mt-3 grid gap-3">
             {p.clarification_questions.map(q => (
-              <li key={q} className="rounded-[12px] bg-paper px-3 py-3 text-[13px] leading-[1.65] text-ink">
+              <li key={q} className="rounded-[12px] bg-paper px-3 py-3 text-[14.5px] leading-[1.65] text-ink">
                 {q}
               </li>
             ))}
@@ -194,12 +194,12 @@ export default function AnswerResultView({
 
       {showActionTemplate && (
         <details className="mt-5 rounded-[14px] border border-hairline bg-surface px-4 py-3">
-          <summary className="cursor-pointer text-[13px] font-medium text-ink">复制 TEBIQ 的建议</summary>
-          <p className="mt-3 text-[12px] leading-[1.7] text-slate [overflow-wrap:anywhere]">{copySource}</p>
+          <summary className="cursor-pointer text-[14px] font-medium text-ink">复制 TEBIQ 的建议</summary>
+          <p className="mt-3 text-[13.5px] leading-[1.7] text-slate [overflow-wrap:anywhere]">{copySource}</p>
           <button
             type="button"
             onClick={copyCard}
-            className="mt-3 min-h-[36px] rounded-[10px] border border-hairline bg-canvas px-3 text-[12px] font-medium text-ink active:bg-paper"
+            className="mt-3 min-h-10 whitespace-nowrap rounded-[10px] border border-hairline bg-canvas px-3 text-[13px] font-medium text-ink active:bg-paper"
           >
             {copyState === 'copied' ? '已复制' : '复制'}
           </button>
@@ -208,7 +208,7 @@ export default function AnswerResultView({
 
       <section className="mt-5 border-t border-hairline pt-4">
         <SectionHeading>来源与说明</SectionHeading>
-        <p className="mt-2 text-[12px] leading-[1.7] text-ash [overflow-wrap:anywhere]">{p.disclaimer}</p>
+        <p className="mt-2 text-[13px] leading-[1.7] text-ash [overflow-wrap:anywhere]">{p.disclaimer}</p>
       </section>
 
       <section className="mt-5 rounded-[16px] border border-hairline bg-surface px-4 py-4">
@@ -219,7 +219,7 @@ export default function AnswerResultView({
               key={`${option.type}-${option.label}`}
               type="button"
               onClick={() => submitFeedback(option.type, option.label, 'note' in option ? option.note : undefined)}
-              className={`min-h-[40px] rounded-[10px] border px-3 text-[12px] transition-colors ${
+              className={`min-h-11 whitespace-nowrap rounded-[10px] border px-3 text-[13px] transition-colors ${
                 feedback === option.label
                   ? 'border-ink bg-ink text-white'
                   : 'border-hairline bg-canvas text-slate active:bg-paper'
@@ -230,7 +230,7 @@ export default function AnswerResultView({
           ))}
         </div>
         {feedback && (
-          <p className="mt-3 rounded-[10px] bg-paper px-3 py-2 text-[12px] leading-[1.6] text-slate">
+          <p className="mt-3 rounded-[10px] bg-paper px-3 py-2 text-[13px] leading-[1.6] text-slate">
             已记录。TEBIQ 会根据反馈继续修正内容。
           </p>
         )}
@@ -242,7 +242,7 @@ export default function AnswerResultView({
 // ---------- helpers ----------
 
 function SectionHeading({ children }: { children: string }) {
-  return <h2 className="text-[13px] font-medium leading-none text-ink">{children}</h2>
+  return <h2 className="text-[14px] font-medium leading-none text-ink">{children}</h2>
 }
 
 function NumberedList({ title, items, emphasis = false }: { title: string; items: string[]; emphasis?: boolean }) {
@@ -254,9 +254,9 @@ function NumberedList({ title, items, emphasis = false }: { title: string; items
         {items.map((item, index) => (
           <li
             key={`${title}-${item}-${index}`}
-            className={`grid grid-cols-[24px_1fr] gap-2 ${emphasis ? 'text-[13px] text-ink' : 'text-[12px] text-slate'} leading-[1.65]`}
+            className={`grid grid-cols-[24px_1fr] gap-2 ${emphasis ? 'text-[14px] text-ink' : 'text-[13.5px] text-slate'} leading-[1.65]`}
           >
-            <span className="flex h-6 w-6 items-center justify-center rounded-[8px] bg-paper text-[11px] tabular-nums text-ink">
+            <span className="flex h-6 w-6 items-center justify-center rounded-[8px] bg-paper text-[12px] tabular-nums text-ink">
               {index + 1}
             </span>
             <span className="[overflow-wrap:anywhere]">{item}</span>
@@ -274,8 +274,8 @@ function BulletList({ title, items }: { title: string; items: string[] }) {
       <SectionHeading>{title}</SectionHeading>
       <ul className="mt-3 grid gap-2">
         {items.map((item, index) => (
-          <li key={`${title}-${item}-${index}`} className="grid grid-cols-[24px_1fr] gap-2 text-[12px] text-slate leading-[1.65]">
-            <span className="flex h-6 w-6 items-center justify-center rounded-[8px] bg-paper text-[11px] tabular-nums text-ink">·</span>
+          <li key={`${title}-${item}-${index}`} className="grid grid-cols-[24px_1fr] gap-2 text-[13.5px] text-slate leading-[1.65]">
+            <span className="flex h-6 w-6 items-center justify-center rounded-[8px] bg-paper text-[12px] tabular-nums text-ink">·</span>
             <span className="[overflow-wrap:anywhere]">{item}</span>
           </li>
         ))}
@@ -310,7 +310,7 @@ function SectionBlock({ heading, body }: { heading: string; body: string }) {
   return (
     <div className="py-4 first:pt-0 last:pb-0">
       <SectionHeading>{heading}</SectionHeading>
-      <p className="mt-3 text-[12px] leading-[1.65] text-slate whitespace-pre-line [overflow-wrap:anywhere]">
+      <p className="mt-3 text-[13.5px] leading-[1.65] text-slate whitespace-pre-line [overflow-wrap:anywhere]">
         {body}
       </p>
     </div>

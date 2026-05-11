@@ -34,7 +34,7 @@ html, body {
 }
 
 html {
-  font-size: clamp(15px, 0.65vw + 13px, 17px);
+  font-size: clamp(16px, 0.45vw + 14.5px, 17px);
 }
 
 body:lang(ja),
@@ -58,6 +58,7 @@ body:lang(ja),
 a,
 button {
   -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 /* iOS 输入框防自动缩放：最小 16px */

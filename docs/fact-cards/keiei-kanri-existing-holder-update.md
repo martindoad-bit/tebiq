@@ -11,6 +11,18 @@ reviewer: DOMAIN-CC
 approved_at: 2026-05-07
 approved_by: DOMAIN-CC (claude-sonnet-4-6, audit-full-20260507)
 sprint: 0.6 / Workstream C
+citation_label: "経営管理ビザ（既存保有者更新・2025年10月以降の過渡措置）"
+citation_summary: "2025年10月16日以降に更新申請を行う既存の経営管理在留資格保持者に適用される過渡措置の内容を確認するカード。新旧基準の切り替えタイミングと必要な準備。"
+source_display_names:
+  - "出入国在留管理庁"
+applies_when:
+  - "既存の経営管理ビザを2025年10月16日以降に更新申請する場合"
+  - "経営管理ビザ保有中で新基準が自分の更新に適用されるか確認したい"
+  - "経営管理ビザの更新に向けた事業実績・継続性の準備が必要か確認したい"
+does_not_cover:
+  - "2025年10月以降の新規申請・変更申請の新基準（keiei-kanri-2025-10 参照）"
+  - "経営管理ビザの具体的な必要書類（ISA手続きページ参照）"
+  - "スタートアップビザ→経営管理への移行（startup-visa-keiei-transition 参照）"
 ai_pipeline:
   collector_run_at: 2026-05-07
   extractor_model: Claude Opus 4.7 / WebFetch (re-uses fact-001 collection)
@@ -297,6 +309,7 @@ needs_review_flags:
 |---|---|---|---|---|---|
 | 2026-05-07 | AI (Claude Opus 4.7 / re-using fact-001 WebFetch) | initial AI extraction with self-verification | — | ai_verified | source: moj-isa-10-00237; risk=high (時限のある運用判断、誤れば更新影響); related_fact_cards links to fact-001 |
 | 2026-05-07 | DOMAIN-CC (audit-full-20260507) | §2 full checklist PASS; 5 direct_fact_fields sourced from moj-isa-10-00237; 3年過渡措置 (〜2028-10-15) + 2028-10-16 完全適合要件 confirmed; date_logic guards correct; 1 needs_review_flag (kaizen_mikomi) appropriately isolated | ai_verified | human_reviewed | APPROVE |
+| 2026-05-11 | FACT-OPS (Cycle 2 Batch 4) | Cycle 2メタデータ追加パッチ。citation_label・citation_summary・source_display_names・applies_when・does_not_coverフィールドを追加。事実内容・state変更なし。 | human_reviewed | human_reviewed | patch |
 
 ## Audit assignment
 

@@ -73,6 +73,85 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
     ],
   },
   {
+    id: 'card-carry',
+    title: '在留卡要不要随身带',
+    summary: '中长期在留者有在留卡常时携带和提示义务。',
+    category: '在留卡',
+    facts: [
+      {
+        label: '携带义务',
+        text: '中长期在留者原则上需要常时携带在留卡；16 岁未满者有免除规则。',
+        verification: 'source-backed',
+      },
+      {
+        label: '提示义务',
+        text: '被入管、警察等要求提示时，需要提示在留卡；提示拒否的后果比单纯忘带更重。',
+        verification: 'source-backed',
+      },
+    ],
+    checkNote: '特別永住者、16 岁未满儿童、忘带后的实际处理，需要按具体身份核对。',
+    sources: [
+      {
+        label: '出入国在留管理庁：在留カードに関する各種届出',
+        url: 'https://www.moj.go.jp/isa/applications/procedures/zairyu_01.html',
+      },
+    ],
+  },
+  {
+    id: 'job-change',
+    title: '换工作后的入管手续',
+    summary: '技人国、特定技能等身份转职后，先看 14 日届出和资格变更要否。',
+    category: '工作',
+    facts: [
+      {
+        label: '届出期限',
+        text: '契约结束或新契约成立等事由发生后，通常需要 14 日以内向入管届出。',
+        verification: 'source-backed',
+      },
+      {
+        label: '变更判断',
+        text: '新工作是否仍在当前在留资格范围内，需要结合业务内容判断；不要只看公司变了没有。',
+        verification: 'needs-check',
+      },
+    ],
+    checkNote: '“只换公司”与“工作内容也变了”不是一回事；业务范围拿不准时可考虑就劳资格证明书或专业确认。',
+    sources: [
+      {
+        label: '出入国在留管理庁：所属（契約）機関に関する届出',
+        url: 'https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00015.html',
+      },
+    ],
+  },
+  {
+    id: 'retirement-risk',
+    title: '离职、失业后的在留风险',
+    summary: '退职后不是马上失效，但有届出义务和活动空白风险。',
+    category: '工作',
+    facts: [
+      {
+        label: '14 日届出',
+        text: '退职、解雇等导致契约机构关系结束时，通常需要 14 日以内向入管届出。',
+        verification: 'source-backed',
+      },
+      {
+        label: '3 个月风险',
+        text: '与在留资格相关的活动连续 3 个月以上没有进行时，可能进入取消风险判断。',
+        verification: 'source-backed',
+      },
+    ],
+    checkNote: '正在认真就职活动是否属于“正当理由”，需要结合材料和实际行动记录判断。',
+    sources: [
+      {
+        label: '出入国在留管理庁：所属（契約）機関に関する届出',
+        url: 'https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00015.html',
+      },
+      {
+        label: '出入国在留管理庁：在留資格取消し',
+        url: 'https://www.moj.go.jp/isa/applications/procedures/torikeshi_00002.html',
+      },
+    ],
+  },
+  {
     id: 'deemed-reentry',
     title: 'みなし再入国',
     summary: '短期离开日本时，确认是否能用みなし再入国。',
@@ -94,6 +173,89 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
       {
         label: '出入国在留管理庁：再入国許可申請',
         url: 'https://www.moj.go.jp/isa/immigration/procedures/16-5.html',
+      },
+    ],
+  },
+  {
+    id: 'health-insurance-after-leaving-job',
+    title: '退职后的健康保险',
+    summary: '退职后要在任意继续和国民健康保险之间确认路径和期限。',
+    category: '社保',
+    facts: [
+      {
+        label: '任意继续',
+        text: '协会健保任意继续通常有退职后 20 日以内申请等时间要求。',
+        verification: 'source-backed',
+      },
+      {
+        label: '国保',
+        text: '没有加入其他健康保险时，国民健康保险通常需要向住所地市区町村办理。',
+        verification: 'source-backed',
+      },
+    ],
+    checkNote: '任意继续、国保、家属扶养的条件和费用不同；先确认退职日、健保资格丧失日和住所地。',
+    sources: [
+      {
+        label: '全国健康保険協会：任意継続',
+        url: 'https://www.kyoukaikenpo.or.jp/benefit/voluntary_continuation/',
+      },
+      {
+        label: '厚生労働省：国民健康保険の加入・脱退',
+        url: 'https://www.mhlw.go.jp/stf/newpage_21539.html',
+      },
+    ],
+  },
+  {
+    id: 'pension-after-leaving-job',
+    title: '退职后的国民年金切换',
+    summary: '厚生年金资格结束后，先确认是否需要切到国民年金第 1 号。',
+    category: '年金',
+    facts: [
+      {
+        label: '期限',
+        text: '退职日翌日起 14 日以内，到住所地市区町村办理国民年金切换。',
+        verification: 'source-backed',
+      },
+      {
+        label: '资料',
+        text: '通常需要年金番号或マイナンバー，以及能确认资格丧失日的离职票等资料。',
+        verification: 'source-backed',
+      },
+    ],
+    checkNote: '马上进入新公司的厚生年金、配偶者扶养第 3 号、保险料免除申请，路径会不同。',
+    sources: [
+      {
+        label: '日本年金機構：会社を退職したときの国民年金の手続き',
+        url: 'https://www.nenkin.go.jp/service/kokunen/kanyu/20140710-03.html',
+      },
+    ],
+  },
+  {
+    id: 'tax-certificate',
+    title: '住民税和课税/纳税证明',
+    summary: '在留更新、永住、收入证明相关问题经常会用到税证明。',
+    category: '税金',
+    facts: [
+      {
+        label: '住民税',
+        text: '日本有住所者按前年所得等计算住民税；外国人也可能成为课税对象。',
+        verification: 'source-backed',
+      },
+      {
+        label: '证明书',
+        text: '住民税课税/纳税证明通常在市区町村取得；国税纳税证明在税务署或 e-Tax 取得。',
+        verification: 'source-backed',
+      },
+    ],
+    checkNote: '在留申请到底要几年分、哪种证明，要按在留资格和申请类型核对。',
+    sources: [
+      {
+        label: '総務省：個人住民税',
+        url: 'https://www.soumu.go.jp/main_sosiki/jichi_zeisei/czaisei/czaisei_seido/individual-inhabitant-tax.html',
+      },
+      {
+        label: '国税庁：納税証明書',
+        url: 'https://www.nta.go.jp/taxes/shiraberu/taxanswer/osirase/9208.htm',
       },
     ],
   },
@@ -127,36 +289,27 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
     ],
   },
   {
-    id: 'affiliation-change',
-    title: '换工作或离职后的届出',
-    summary: '部分在留资格在离职、入职、机构变更时有届出义务。',
-    category: '工作',
+    id: 'foreign-employment-notification',
+    title: '雇主的外国人雇用届出',
+    summary: '雇用外国人时，事业主侧也有向 Hello Work 届出的义务。',
+    category: '雇用',
     facts: [
       {
-        label: '期限',
-        text: '所属机构相关届出通常以事由发生日起 14 日以内为基本线。',
+        label: '义务主体',
+        text: '外国人劳动者的雇入和离职，原则上由事业主向 Hello Work 届出。',
         verification: 'source-backed',
       },
       {
-        label: '对象',
-        text: '教授、経営・管理、教育、企業内転勤、留学、研修等活动机构类身份有对应届出。',
+        label: '期限差异',
+        text: '雇用保险被保险者和非被保险者的届出期限不同，需要按雇佣形态核对。',
         verification: 'source-backed',
-      },
-      {
-        label: '需确认',
-        text: '技人国、特定技能、高度专门职等可能涉及契约机构届出或变更申请。',
-        verification: 'needs-check',
       },
     ],
-    checkNote: '不同在留资格用的届出类型不同；换工作前后不要只看“14 日”这一项。',
+    checkNote: '这是雇主侧义务，不等于本人不需要处理自己的在留届出或资格变更。',
     sources: [
       {
-        label: '出入国在留管理庁：所属機関等に関する届出 Q&A',
-        url: 'https://www.moj.go.jp/isa/applications/procedures/shozokunikansuru_00001.html',
-      },
-      {
-        label: '出入国在留管理庁：所属（活動）機関に関する届出',
-        url: 'https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00014.html',
+        label: '厚生労働省：外国人雇用状況の届出',
+        url: 'https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/koyou/gaikokujin/todokede/index.html',
       },
     ],
   },

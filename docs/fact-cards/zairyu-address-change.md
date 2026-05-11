@@ -9,6 +9,18 @@ controlled_alpha_eligible: false
 last_verified_at: 2026-05-10
 reviewer: ai_self_verified
 sprint: Cycle 1 Quality Flywheel / v2
+citation_label: "住居地変更届出（中長期在留者・14日以内）"
+citation_summary: "中長期在留者が引越し（住居地変更）した場合の市区町村への届出義務（14日以内）と在留カード記載変更の手続きを確認するカード。"
+source_display_names:
+  - "出入国在留管理庁"
+applies_when:
+  - "外国人が引越しした場合の住所変更手続きを確認したい"
+  - "住居地変更届出の期限・届出先を確認したい"
+  - "引越し後に在留カードの住所を変更する方法を確認したい"
+does_not_cover:
+  - "氏名・国籍・在留資格等の記載事項変更（在留カード記載事項変更手続き）"
+  - "住民票の転入届の詳細手続き（各市区町村窓口）"
+  - "在留期間更新申請の住所確認書類としての利用"
 ai_pipeline:
   collector_run_at: 2026-05-10
   extractor_model: codex-aql-cycle1
@@ -214,3 +226,4 @@ needs_review_flags: []
 | date | actor | action | from_state | to_state | note |
 |---|---|---|---|---|---|
 | 2026-05-10 | Codex (Cycle 1 self-cycle) | official source extraction + scenario mapping + QA cases | — | ai_verified | Fixes AQL P0 G02 wrong-office regression; risk=low; official source only |
+| 2026-05-11 | FACT-OPS (Cycle 2 Batch 3) | Cycle 2メタデータ追加パッチ。citation_label・citation_summary・source_display_names・applies_when・does_not_coverフィールドを追加。事実内容・state変更なし。 | ai_verified | ai_verified | patch |

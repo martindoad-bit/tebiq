@@ -175,9 +175,10 @@ async function main() {
     {
       id: 'B3.eijuu-纳税年限',
       question: '永住申请需要交几年的年金',
-      // PL signoff 2026-05-07 (Batch 5 / Pack 2.2): controlled_alpha_eligible
-      // flipped true → gate now maps to inject for this ai_verified critical card.
-      expect_inject_includes: ['eijuu-nenkin-risk'],
+      // AQL guardrail 2026-05-11: general-applicant 2年/3年 lookback is
+      // not fully sourced, so this critical card must remain hint-only.
+      expect_inject_includes: ['eijuu-zairyu-kikan'],
+      expect_hint_only_includes: ['eijuu-nenkin-risk'],
     },
     {
       id: 'B4.keiei-existing',
@@ -204,9 +205,10 @@ async function main() {
     {
       id: 'C4.minashi-再入国许可',
       question: '再入国许可不要的情况是什么',
-      // PL signoff 2026-05-07 (Batch 5 / Pack 2.2): controlled_alpha_eligible
-      // flipped true → gate now maps to inject.
-      expect_inject_includes: ['minashi-sainyuukoku'],
+      // AQL guardrail 2026-05-11: unresolved upper-bound/status-loss
+      // fields keep this critical card hint-only until DOMAIN confirms.
+      expect_inject_includes: [],
+      expect_hint_only_includes: ['minashi-sainyuukoku'],
     },
     {
       id: 'C5.kazoku-家族滞在签证',

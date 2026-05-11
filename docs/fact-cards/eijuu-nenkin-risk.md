@@ -5,10 +5,23 @@ state: ai_verified
 risk_level: critical
 confidence: medium   # DOMAIN-CC audit 2026-05-07: downgraded from high. Core 消極的評価 quote is high-confidence (nyukan50 direct), but nenkin/kenko_hoken 2-year + juuminhzei 3-year period fields are sourced from 高度人材 page (nyuukoku07-00133), not the general applicant page. general_applicant_lookback is ai_inference. Upgrade to high after FACT verifies from general applicant source.
 source_quality: official
-controlled_alpha_eligible: true    # PL signoff 2026-05-07 — Pack 2.2 prod inject 解锁，FACT_LAYER_ENABLED=true 5-门第 5 项进度
+controlled_alpha_eligible: false   # AQL guardrail 2026-05-11: general applicant lookback still needs source verification; critical card returns hint_only until resolved.
 last_verified_at: 2026-05-07
 reviewer: ai_self_verified
 sprint: 0.6 / Workstream C / Batch 1
+citation_label: "永住申請（年金・税・健康保険の未納リスク）"
+citation_summary: "永住許可申請における年金・住民税・健康保険の未納・滞納がISAガイドラインの消極的評価要因となるリスクを確認するカード。年金・税・健保の確認期間と証明書類の概要。"
+source_display_names:
+  - "出入国在留管理庁"
+applies_when:
+  - "永住申請を検討中で年金・税・健保の納付記録への影響を確認したい"
+  - "年金保険料の未納・猶予・免除期間が永住申請に影響するか確認したい"
+  - "住民税の滞納が永住申請の審査に影響するか確認したい"
+  - "健康保険の加入記録が永住審査の考慮要素になるか確認したい"
+does_not_cover:
+  - "永住申請の在留期間・就労期間要件（eijuu-zairyu-kikan 参照）"
+  - "脱退一時金（日本出国後の年金返還制度 — nenkin-dattai-ichijikin 参照）"
+  - "住民税の課税証明書・納税証明書の取得方法（juminzei-kazei-shomeisho 参照）"
 ai_pipeline:
   collector_run_at: 2026-05-07
   extractor_model: claude-sonnet-4-6 (FACT-OPS Batch 1, WebFetch from official ISA/MOJ sources)
@@ -87,7 +100,7 @@ needs_review_flags:
 **意味**：申請直前に滞納分を一括納付しても、遅延した事実自体が
 「原則として消極的に評価」される。過去にさかのぼって審査される。
 
-### 年金：直近2年間の納付証明が必要
+### 年金：高度人材外国人等の書類ページでは直近2年間の納付証明を確認
 
 「直近２年間において国民年金に加入していた期間がある方は、
 当該期間分の領収証書（写し）を全て提出」し、
@@ -99,7 +112,7 @@ needs_review_flags:
 - ねんきん定期便（全期間表示版）
 - ねんきんネット「各月の年金記録」印刷
 
-### 健康保険：直近2年間の納付証明が必要
+### 健康保険：高度人材外国人等の書類ページでは直近2年間の納付証明を確認
 
 「直近２年間において国民健康保険に加入していた期間がある方は、
 当該期間分の領収証書（写し）を全て提出」し、
@@ -110,7 +123,7 @@ needs_review_flags:
 - 健康保険被保険者証（写し）または国民健康保険被保険者証（写し）
 - 国民健康保険料（税）納付証明書・領収証書
 
-### 住民税：直近3年分の証明が必要
+### 住民税：高度人材外国人等の書類ページでは直近3年分の証明を確認
 
 「直近３年分の住民税の課税（又は非課税）証明書及び納税証明書」を提出。
 > source: moj-isa-nyuukoku07-00133
@@ -166,8 +179,8 @@ needs_review_flags:
 
 1. 公的義務の対象は「納税・公的年金・公的医療保険」の3種類すべて
 2. 申請直前に滞納を一括解消しても「原則として消極的に評価」される——遅延の事実自体が問題になる
-3. 年金・健康保険は**直近2年間**の納付状況が審査される
-4. 住民税は**直近3年分**の証明が必要
+3. 高度人材外国人等の書類ページでは、年金・健康保険は**直近2年間**の納付状況が確認対象として示されている
+4. 高度人材外国人等の書類ページでは、住民税は**直近3年分**の証明が示されている
 5. 「期限内」納付かどうかが重要。実際に払ったかどうかだけではない
 6. 永住申請を考えているなら、今すぐ自分の年金・健保・税金の記録を確認することを強く推奨
 7. 高リスク案件（未納期間あり・免除あり・フリーランス）は行政書士に事前相談を推奨
@@ -178,7 +191,7 @@ needs_review_flags:
 - ❌ 「多少の未納は審査に影響しません」
 - ❌ 「会社員なら天引きされているから気にしなくていいです」（健保種別・転職空白期間を無視した発言）
 - ❌ 「年金免除していれば払わなくても大丈夫です」（免除≠未納だが影響は個別確認が必要）
-- ❌ 「直近1年間の記録があれば十分です」（実際は2年・3年）
+- ❌ 「一般の永住申請でも必ず直近2年・3年で足ります／同じです」（一般申請者向けページでの確認が必要）
 - ❌ 国税については触れずに住民税だけ説明する（納税証明には両方が必要）
 
 ---
@@ -192,7 +205,7 @@ needs_review_flags:
 **must_have**:
 - 申請時点で納付済みでも、期限内に納付していない場合は「原則として消極的に評価」される旨
 - 遅延の事実自体が問題になると説明
-- 直近2年間が審査対象
+- 高度人材外国人等の書類ページでは直近2年間が確認対象
 - 行政書士に事前相談を推奨
 
 **must_not_have**:
@@ -210,17 +223,18 @@ needs_review_flags:
 **user**: 永住申请需要准备几年的年金和税务证明？
 
 **must_have**:
-- 年金・健康保険：直近2年間
-- 住民税：直近3年分
+- 高度人材外国人等の書類ページでは、年金・健康保険：直近2年間
+- 高度人材外国人等の書類ページでは、住民税：直近3年分
+- 一般申請者向けの提出年数は、申請類型ごとの公式ページで確認する必要がある
 - 給与天引きの場合と自己納付の場合で提出書類が異なる旨
 
 **must_not_have**:
 - 「直近1年で十分」
 - 年金のみ・税金のみを説明して一方を省略
 
-**bad_answer_example**: 「直近1年分の年金領収書と住民税証明書を準備してください」
+**bad_answer_example**: 「一般永住なら直近2年分の年金と直近3年分の住民税だけで足ります」
 
-**good_answer_criteria**: 年金・健保は2年、住民税は3年と正確に答え、給与天引きか自己納付かで書類が変わることにも触れる。
+**good_answer_criteria**: 公的義務（納税・年金・医療保険）の履行が重要であることを伝えた上で、2年/3年の年数は高度人材外国人等の書類ページで確認された範囲として扱い、一般申請者は公式ページで提出年数を確認するよう案内する。
 
 ---
 
@@ -283,14 +297,15 @@ needs_review_flags:
 「申請時点において納税（納付）済みであったとしても、当初の納税（納付）期間内に履行されていない場合は、原則として消極的に評価されます」
 → 遅延した事実自体が審査で不利に働く。
 
-審査対象期間（書類要件から確認されている範囲）：
-- 公的年金・公的医療保険：直近2年間の納付記録
-- 住民税：直近3年分の課税・納税証明書
-- 遅延納付（期限後の納付）がないことの証明が必要
+書類要件から確認されている範囲：
+- 高度人材外国人等の書類ページでは、公的年金・公的医療保険は直近2年間の納付記録が示されている
+- 高度人材外国人等の書類ページでは、住民税は直近3年分の課税・納税証明書が示されている
+- 一般申請者に同じ年数をそのまま断定せず、申請類型ごとの公式ページで提出年数を確認する
+- 遅延納付（期限後の納付）がないことの証明が重要
 
 回答時の注意：
 - 「払えば大丈夫」と言わない
-- 年金・健保は2年、住民税は3年と正確に伝える
+- 2年/3年は高度人材外国人等の確認済み例として扱い、一般申請者へ普遍化しない
 - 未納・遅延歴がある場合は行政書士に事前相談を強く推奨
 - 免除期間の影響・転職時空白期間の影響は個別確認が必要と伝える（確定情報なし）
 ```
@@ -313,6 +328,8 @@ needs_review_flags:
 | 2026-05-07 | GM (boundary correction) | controlled_alpha_eligible: true → false. FACT autopilot 越界 (FACT_OPS_WINDOW_TASK_PACK §9 明确：仅 PL 可设此字段为 true). critical 卡按 README state machine 默认走 human_reviewed gate. PR review 时由 PL 决定是否 signoff 翻 true. | ai_verified | ai_verified | GM correction |
 | 2026-05-07 | DOMAIN-CC (domain-cc-tebiq) | REQUEST_EDIT audit. confidence high → medium: nenkin/kenko_hoken 2年 + juuminhzei 3年 の証明期間フィールドが高度人材専用ページ(nyuukoku07-00133)からの引用で、一般申請者への適用は ai_inference。一般申請者向けページ(nyuukoku07-00132等)での確認後に high へ再昇格可。core 消極的評価クォートは nyukan50 直引用で正確。内容自体の正確性は高いが sourcing 強化が必要。re-audit 不要。| ai_verified | ai_verified | REQUEST_EDIT — confidence downgraded; sourcing gap flagged |
 | 2026-05-07 | GM (Batch 5) | PL signoff 2026-05-07 — Pack 2.2 prod inject 解锁，FACT_LAYER_ENABLED=true 5-门第 5 项进度。controlled_alpha_eligible: false → true。keyword coverage 追加（技術キーワード 6 bullets）。 | ai_verified | ai_verified | alpha flip + keyword coverage |
+| 2026-05-11 | FACT-OPS (Cycle 2 Batch 4) | Cycle 2メタデータ追加パッチ。citation_label・citation_summary・source_display_names・applies_when・does_not_coverフィールドを追加。事実内容・state変更なし。 | ai_verified | ai_verified | patch |
+| 2026-05-11 | Codex AQL guardrail | general_applicant_lookback_verification 未解決のため、2年/3年の年数を一般永住へ普遍化しないよう injection wording を修正し、controlled_alpha_eligible を false に戻す。 | ai_verified | ai_verified | safety downgrade |
 
 ## Audit assignment
 

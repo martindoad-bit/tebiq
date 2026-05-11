@@ -43,8 +43,12 @@ const SOURCE_WHITELIST_DOMAINS: ReadonlyArray<string> = [
   'elaws.e-gov.go.jp',
   'mhlw.go.jp',
   'nta.go.jp',
+  'soumu.go.jp',         // 総務省 — 住民税 / 地方税
   'meti.go.jp',          // 経済産業省 — startup visa, etc
   'nenkin.go.jp',        // 日本年金機構
+  'digital.go.jp',       // デジタル庁 — マイナンバー / マイナ保険証
+  'kyoukaikenpo.or.jp',  // 全国健康保険協会 — 任意継続
+  'lg.jp',               // 自治体公式 — 住民税 / 国保などの手続
   // 各市町村区役所 — wildcard not enforced; reviewer handles per-card
 ]
 
@@ -268,6 +272,16 @@ function extractNeedsReviewFlagIds(value: unknown): string[] {
     if (entry && typeof entry === 'object' && 'id' in entry) {
       const id = (entry as { id: unknown }).id
       if (typeof id === 'string') ids.push(id)
+      continue
+    }
+    // FACT cards commonly use YAML mapping syntax:
+    //   - flag_id: human-readable reason
+    // Preserve the mapping key as the audit flag id.
+    if (entry && typeof entry === 'object') {
+      const keys = Object.keys(entry)
+      if (keys.length === 1 && typeof keys[0] === 'string' && keys[0].length > 0) {
+        ids.push(keys[0])
+      }
     }
   }
   return ids
@@ -319,6 +333,13 @@ function normalize(filePath: string, raw: string): NormalizedCard {
   const appliesTo = asStringArray(fm.applies_to, 'applies_to', factId)
   const sourceUrls = extractSourceUrls(fm.official_sources, factId)
   const needsReviewFlags = extractNeedsReviewFlagIds(fm.needs_review_flags)
+
+  if (state === 'ai_verified' && riskLevel === 'critical' && controlledAlphaEligible && confidence !== 'high') {
+    throw new SyncError(
+      factId,
+      'critical ai_verified cards may set controlled_alpha_eligible=true only when confidence=high',
+    )
+  }
 
   // Hard-fail: any source URL outside the whitelist
   for (const url of sourceUrls) {

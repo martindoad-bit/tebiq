@@ -9,6 +9,19 @@ controlled_alpha_eligible: false
 last_verified_at: "2026-05-07"
 reviewer: FACT-OPS (Batch 6)
 sprint: "0.6"
+citation_label: "特定技能1号（対象16業種・5年上限・家族帯同不可・日本語要件）"
+citation_summary: "特定技能1号の在留資格要件（技能水準・通算5年上限・対象16業種・家族帯同不可）と特定技能2号との主な相違点を確認するカード。"
+source_display_names:
+  - "出入国在留管理庁"
+applies_when:
+  - "特定技能1号の対象業種・要件を確認したい"
+  - "技能実習から特定技能1号への移行を検討している"
+  - "特定技能1号の在留期間上限（5年）・更新可否を確認したい"
+  - "特定技能1号・2号の違い（家族帯同・在留期間）を確認したい"
+does_not_cover:
+  - "特定技能1号の更新申請手続き（tokutei-ginou-koushin 参照）"
+  - "各業種別の技能試験・日本語試験の詳細（各分野所管省庁で確認要）"
+  - "技能実習制度（育成就労）からの移行手続きの詳細"
 ai_pipeline: WebFetch → FACT-OPS review
 official_sources:
   - url: https://www.moj.go.jp/isa/applications/status/specifiedskilledworker.html
@@ -151,3 +164,4 @@ A: 技能実習2号・3号を良好に修了した場合、同一業種・職種
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
 |------|------|----------|--------------|-------------|------|
 | 2026-05-07 | FACT-OPS (Batch 6) | 新規作成。特定技能1号の業種・要件（5年上限・家族帯同不可・日本語要件）。ai_verified: 5+ direct_fact_fields確認。N4/家族帯同はai_inferred + needs_review_flag。 | — | ai_verified | new |
+| 2026-05-11 | FACT-OPS (Cycle 2 Batch 5) | Cycle 2メタデータ追加パッチ。citation_label・citation_summary・source_display_names・applies_when・does_not_coverフィールドを追加。事実内容・state変更なし。 | ai_verified | ai_verified | patch |
