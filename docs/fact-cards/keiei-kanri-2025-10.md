@@ -92,6 +92,16 @@ related_links:
     display_label: "改正ガイドライン PDF"
     locator: "ページ内で「改正ガイドライン PDF」を検索"
     relation: "official_reference"
+evidence_points:
+  - claim: "経営管理ビザ改正（2025年10月16日以降の新規申請・変更申請）の主要新基準：①ビジネスの規模（3,000万円相当以上のビジネス規模）②申請人の学歴または3年以上の経営管理実務経験③JLPT N2相当以上または20年以上在留等の日本語要件④事業所：住居兼用は原則不可⑤事業継続性・実態。旧500万円資本金基準は新規申請では廃止。"
+    source_title: "出入国在留管理庁：在留資格「経営・管理」に係る上陸基準省令等の改正について"
+    source_url: "https://www.moj.go.jp/isa/applications/resources/10_00237.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「2025年10月16日以降の新基準」「5要件」「3,000万」「N2相当」の記述を確認"
+    display_label: "経営管理ビザ：2025年10月16日以降・3,000万規模・日本語N2・事業所独立等の新基準"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 # 経営・管理ビザ 2025年10月16日 改正後 新基準

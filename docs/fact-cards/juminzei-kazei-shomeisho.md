@@ -67,6 +67,25 @@ related_links:
     display_label: "国税庁 — 納税証明書"
     locator: "ページ内で「納税証明書」を検索"
     relation: "official_reference"
+evidence_points:
+  - claim: "住民税の課税対象：1月1日現在、日本国内に住所がある者（外国人含む）。課税基準：前年（1月1日〜12月31日）の所得に対して課税（前年課税原則）。税の種類：都道府県民税＋市区町村民税。課税証明書（住民税）：住民票のある市区町村役場で発行。"
+    source_title: "総務省：個人住民税"
+    source_url: "https://www.soumu.go.jp/main_sosiki/jichi_zeisei/czaisei/czaisei_seido/individual-inhabitant-tax.html"
+    source_organization: "総務省"
+    source_locator: "ページ内「課税対象」「前年課税」「外国人」「証明書」の記述を確認"
+    display_label: "住民税：外国人も1月1日時点の住所地で課税・前年所得基準"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "国税の納税証明書の種類：その1（納付すべき税額・納付済額の証明）・その2（所得金額の証明）・その3（未納の税額がないことの証明）・その4（滞納処分を受けたことがないことの証明）。取得先：税務署・e-Tax。"
+    source_title: "国税庁：納税証明書"
+    source_url: "https://www.nta.go.jp/taxes/shiraberu/taxanswer/osirase/9208.htm"
+    source_organization: "国税庁"
+    source_locator: "ページ内「納税証明書その1・その2・その3・その4」の記述を確認"
+    display_label: "国税納税証明書：その1〜その4の4種類・税務署またはe-Taxで取得"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

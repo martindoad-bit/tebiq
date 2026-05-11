@@ -60,6 +60,25 @@ related_links:
     display_label: "東京都主税局 — 個人住民税（全国標準税率）"
     locator: "ページ内で「個人住民税（全国標準税率）」を検索"
     relation: "official_reference"
+evidence_points:
+  - claim: "住民税の税率（全国標準）：所得割10%（道府県民税4%＋市区町村民税6%）。均等割：5,000円/年（2024年度以降・道府県1,000円＋市区町村3,000円＋森林環境税1,000円）。課税対象：前年（1月1日〜12月31日）の所得。課税自治体：1月1日時点に住所を置く市区町村。"
+    source_title: "東京都主税局：個人住民税（全国標準税率）"
+    source_url: "https://www.tax.metro.tokyo.lg.jp/kazei/kojin_ju.html"
+    source_organization: "tax.metro.tokyo.lg.jp"
+    source_locator: "ページ内「所得割税率」「均等割」「課税基準」の記述を確認"
+    display_label: "住民税：所得割10%・均等割5,000円・前年所得基準・1月1日時点住所"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "給与所得者の特別徴収：6月〜翌年5月の12回に分けて給与から天引き。普通徴収（自営業者等）：6月・8月・10月・翌年1月の4期。非課税限度額（単身・扶養なし・東京都23区基準）：所得45万円以下は均等割・所得割ともに非課税。来日初年度は前年に日本での所得がないため翌年の住民税が非課税または少額となる（ai推定）。"
+    source_title: "東京都主税局：個人住民税（全国標準税率）"
+    source_url: "https://www.tax.metro.tokyo.lg.jp/kazei/kojin_ju.html"
+    source_organization: "tax.metro.tokyo.lg.jp"
+    source_locator: "ページ内「特別徴収」「普通徴収」「非課税限度額」の記述を確認"
+    display_label: "住民税：給与天引き6〜翌5月・非課税所得45万以下・初年度非課税ai推定"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

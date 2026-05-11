@@ -70,6 +70,16 @@ related_links:
     display_label: "改正ガイドライン PDF"
     locator: "ページ内で「改正ガイドライン PDF」を検索"
     relation: "official_reference"
+evidence_points:
+  - claim: "経営管理ビザ既存保有者の更新過渡措置：2025年10月16日以降の更新申請について、2028年10月15日までの3年間は過渡措置期間。この期間中は新基準を一部満たさない場合でも、経営状況と改善見通しを総合考量して審査される。2025年10月16日より前に申請が受理されたものには旧基準が適用される。2028年10月15日以降は新基準を完全に満たすことが必要。"
+    source_title: "出入国在留管理庁：在留資格「経営・管理」に係る上陸基準省令等の改正について"
+    source_url: "https://www.moj.go.jp/isa/applications/resources/10_00237.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「過渡措置」「2028年10月15日まで」「既存保有者」「経営状況・改善見通し」の記述を確認"
+    display_label: "経営管理ビザ：既存保有者は2028年10月まで過渡措置・改善見通し総合考量"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 # 既存の経営・管理ビザ保持者の更新時 — 2028-10-15 までの過渡措置
