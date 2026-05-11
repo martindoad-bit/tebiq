@@ -90,6 +90,34 @@ related_links:
     display_label: "所属機関に関する届出（契約機関・活動機関変更）"
     locator: "ページ内で「所属機関に関する届出」を検索"
     relation: "official_reference"
+evidence_points:
+  - claim: "技術・人文知識・国際業務（技人国）は「技術若しくは知識を要する業務又は外国の文化に基盤を有する思考若しくは感受性を必要とする業務」のみ対象。「本来の在留資格に基づく活動を行っていない場合には、在留資格を取り消される場合があります」。教授・経営管理・法律会計業務・医療・研究・教育等は技人国の対象外（別資格対象）。"
+    source_title: "出入国在留管理庁：技術・人文知識・国際業務（在留資格）"
+    source_url: "https://www.moj.go.jp/isa/applications/status/gijinkoku.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「在留資格に係る活動」「対象外業務」「取消し」の記述を確認"
+    display_label: "技人国：対象業務範囲・活動不実施3か月で取消リスク・対象外業務一覧"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "在留資格取消し事由：「当該在留資格に係る活動を行っておらず、かつ、他の活動を行い又は行おうとして在留している場合」（正当な理由ある場合を除く）。活動継続3か月以上不実施は取消し対象（入管法第22条の4）。"
+    source_title: "出入国在留管理庁：在留資格の取消しについて（解説）"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/torikeshi_00002.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「取消し事由」「活動継続3か月以上不実施」の記述を確認"
+    display_label: "在留資格取消し：活動不実施3か月超・他活動従事で取消対象（第22条の4）"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "転職・会社名変更・会社消滅・雇用契約終了・新契約開始等が生じた場合、「事由が生じた日から14日以内」に届出義務（入管法第19条の16第2項）。届出方法：オンライン・窓口持参・郵送のいずれか。"
+    source_title: "出入国在留管理庁：所属機関に関する届出（契約機関・活動機関変更）"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00015.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「14日以内」「届出義務」「入管法第19条の16第2項」の記述を確認"
+    display_label: "技人国：転職等から14日以内の届出義務（入管法19条の16第2項）"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 # 技術・人文知識・国際業務 — 業務内容と在留資格の不一致リスク

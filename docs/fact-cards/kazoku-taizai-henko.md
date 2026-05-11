@@ -56,6 +56,25 @@ related_links:
     display_label: "出入国在留管理庁 — 在留資格変更許可申請"
     locator: "ページ内で「在留資格変更許可申請」を検索"
     relation: "official_reference"
+evidence_points:
+  - claim: "在留資格変更許可申請の申請時期：「変更の理由となった事由が生じた日から、在留期間の満了する日以前」。処理期間：1か月〜2か月。申請費用（窓口）：6,000円（収入印紙）。申請費用（オンライン）：5,500円。申請先：住所地の地方出入国在留管理局。"
+    source_title: "出入国在留管理庁：在留資格変更許可申請"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/16-2.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「申請時期」「処理期間」「手数料」「申請先」の記述を確認"
+    display_label: "在留資格変更：処理1〜2か月・窓口6,000円・申請は事由生じた日〜満了日前"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "在留資格取消警告（公式）：「本来の在留資格に基づく活動を行っていない場合には、在留資格を取り消される場合があります」。変更許可が下りるまで就労することは不可（ai推定）。変更申請が在留期間満了日前に受理された場合、審査結果が出るまで適法在留継続（特例期間、ai推定）。"
+    source_title: "出入国在留管理庁：在留資格変更許可申請"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/16-2.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「在留資格取消」「活動不実施」の記述を確認"
+    display_label: "在留資格変更：取消警告あり・許可前就労不可・特例期間ai推定"
+    support_level: "indirect"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic
