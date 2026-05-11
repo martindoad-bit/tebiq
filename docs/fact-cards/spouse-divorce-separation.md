@@ -11,6 +11,18 @@ reviewer: domain-cc-tebiq
 approved_at: 2026-05-07
 approved_by: DOMAIN-CC
 sprint: 0.6 / Workstream C / Batch 1
+citation_label: "配偶者ビザ（離婚・別居後の在留リスク・6か月ルール）"
+citation_summary: "日本人・永住者の配偶者等の在留資格保持者が離婚・別居した場合の在留取消リスク（6か月ルール）と届出義務（14日以内）を確認するカード。"
+source_display_names:
+  - "出入国在留管理庁"
+applies_when:
+  - "日本人または永住者と離婚・別居した場合の在留への影響を確認したい"
+  - "離婚・死別後の届出義務と在留資格取消リスクを確認したい"
+  - "配偶者ビザで在留中に婚姻関係が実質的に消滅した場合のリスクを確認したい"
+does_not_cover:
+  - "離婚後に取りうる在留資格変更の選択肢（就労資格・定住者等）の申請条件（DOMAIN/書士確認要）"
+  - "DV被害者の在留保護（配偶者暴力防止法に基づく特別な扱い）"
+  - "永住者・定住者への変更申請（別途入管窓口・行政書士相談要）"
 ai_pipeline:
   collector_run_at: 2026-05-07
   extractor_model: claude-sonnet-4-6 (FACT-OPS Batch 1, WebFetch from official ISA/MOJ sources)
@@ -309,6 +321,7 @@ needs_review_flags:
 | 2026-05-07 | AI self-verification | direct_fact_fields sourced; 3項目 needs_review_flags 設定; certain_block + addendum split complete | ai_extracted | ai_verified | risk=critical |
 | 2026-05-07 | GM (boundary correction) | controlled_alpha_eligible: true → false. FACT autopilot 越界 (FACT_OPS_WINDOW_TASK_PACK §9). critical 卡按 README state machine 默认 human_reviewed gate. PR review 时由 PL 决定 signoff. | ai_verified | ai_verified | GM correction |
 | 2026-05-07 | DOMAIN-CC (domain-cc-tebiq) | APPROVE audit. 4つの direct_fact_fields すべて官方ページ直引用で正確（6か月ルール・14日届出・30日猶予・意見聴取）。needs_review 3件は正当かつ injection_certain_block から適切に除外。must_say / must_not_say / qa_cases (4件) は在留実務の核心をカバー。confidence high・risk_level critical いずれも妥当。観察：applies_to に家族滞在を含むが、injection は「日本人の配偶者等」「永住者の配偶者等」に正しく限定。生成物への悪影響なし。 | ai_verified | human_reviewed | APPROVE |
+| 2026-05-11 | FACT-OPS (Cycle 2 Batch 3) | Cycle 2メタデータ追加パッチ。citation_label・citation_summary・source_display_names・applies_when・does_not_coverフィールドを追加。事実内容・state変更なし。 | human_reviewed | human_reviewed | patch |
 
 ## Audit assignment
 
