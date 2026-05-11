@@ -66,6 +66,24 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: false
+  - claim: "免除段階による老齢年金額への影響：全額免除期間は受給資格期間（10年）には算入されるが、年金額は満額の2分の1相当になる。4分の3免除は8分の5、半額免除は4分の3、4分の1免除は8分の7相当。追納（10年以内）することで年金額を回復可能。"
+    source_title: "日本年金機構：国民年金保険料の免除・猶予制度"
+    source_url: "https://www.nenkin.go.jp/service/kokunen/menjo/20150428.html"
+    source_organization: "日本年金機構"
+    source_locator: "ページ内「免除段階ごとの年金額への影響」「全額免除期間は受給資格期間に算入・年金額は半分」「追納」に関する記述を確認"
+    display_label: "国民年金免除：全額免除は年金額が半分・追納（10年以内）で回復可能"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "学生納付特例制度：大学・専門学校等に在学中の学生で所得が一定以下の場合、在学期間中の保険料納付が猶予される。猶予期間分の保険料は10年以内であれば後から追納が可能。"
+    source_title: "日本年金機構：国民年金保険料の免除・猶予制度"
+    source_url: "https://www.nenkin.go.jp/service/kokunen/menjo/20150428.html"
+    source_organization: "日本年金機構"
+    source_locator: "ページ内「学生納付特例制度」「在学中は保険料を猶予」「10年以内の追納」に関する記述を確認"
+    display_label: "学生納付特例：在学中は保険料猶予・10年以内に追納可能"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

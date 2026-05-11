@@ -61,6 +61,24 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: false
+  - claim: "企業内転勤の転勤前勤務要件：転勤前に1年以上、日本法人・外国法人等の同一機関（またはその外国にある事業所）で継続して勤務していることが必要。"
+    source_title: "出入国在留管理庁：企業内転勤（在留資格）"
+    source_url: "https://www.moj.go.jp/isa/applications/status/intracompanytransferee.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「当該機関の外国にある事業所において継続して1年以上」勤務要件の記述を確認"
+    display_label: "企業内転勤：転勤前に同一機関の外国事業所で継続1年以上勤務が必要"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "企業内転勤には学歴要件がない。同一企業グループ内の転勤であり、転勤前1年以上の継続勤務要件を満たせば、学歴に関係なく申請できる点が技人国との主な違い。"
+    source_title: "出入国在留管理庁：企業内転勤（在留資格）"
+    source_url: "https://www.moj.go.jp/isa/applications/status/intracompanytransferee.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「学歴要件」に関する記述（または記述がないことで学歴不要であることを確認）および技人国との比較箇所を確認"
+    display_label: "企業内転勤：学歴要件なし（技人国との主な違い）・転勤前勤務1年以上が代替要件"
+    support_level: "indirect"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic
