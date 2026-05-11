@@ -86,6 +86,15 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: false
+  - claim: "住民税の未納・滞納は在留更新審査や永住申請の審査において公的義務の遵守状況として考慮される可能性がある。在留更新申請では在留資格によって直近分の住民税課税証明書・納税証明書の提出が求められる場合がある。（ai推定 — 公的義務の遵守状況は入管審査の考慮要素）"
+    source_title: "総務省：個人住民税"
+    source_url: "https://www.soumu.go.jp/main_sosiki/jichi_zeisei/czaisei/czaisei_seido/individual-inhabitant-tax.html"
+    source_organization: "総務省"
+    source_locator: "ページ内『住民税の課税・納付義務』の記述を確認（在留申請との関係はai推定 — ISA手続きページで資格ごとに確認要）"
+    display_label: "住民税未納は在留更新・永住申請に影響の可能性（ai推定・資格別確認要）"
+    support_level: "indirect"
+    user_visible: true
+    needs_domain_review: true
 ---
 
 ## current_date_logic
