@@ -63,6 +63,24 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: false
+  - claim: "禁錮以上の刑事犯罪による上陸拒否：日本国内または外国の法律により禁錮以上の刑（または薬物関連の罰金刑等）に処せられた者は上陸拒否事由に該当する（入管法第5条）。ただし執行猶予期間が経過し一定年数が経過した場合等は例外的に許可される場合あり。"
+    source_title: "出入国在留管理庁：上陸拒否について"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri07_00121.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「入管法第5条第1号」「禁錮以上の刑に処せられた者」「外国の法令による刑事罰」の記述を確認"
+    display_label: "上陸拒否：国内外の禁錮以上の犯罪歴（入管法5条）・執行猶予後の例外あり"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: true
+  - claim: "出国命令による出国：オーバーステイ等で自発的に入国管理局に出頭して出国命令を受けた場合、再入国禁止期間は1年間（退去強制令書による強制送還の5年より大幅に短い）。"
+    source_title: "出入国在留管理庁：上陸拒否について"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri07_00121.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「出国命令後の上陸禁止（1年間）」「退去強制令書による5年との比較」の記述を確認"
+    display_label: "出国命令：自発的出頭→1年禁止（退去強制の5年より短い）"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

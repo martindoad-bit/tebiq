@@ -60,6 +60,24 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: false
+  - claim: "呼び寄せる家族が取得する在留資格は扶養者の在留資格によって異なる：扶養者が技人国・留学等（就労系・非就労系）→家族滞在；扶養者が永住者→永住者の配偶者等；扶養者が日本人の外国人配偶者→日本人の配偶者等。特定技能1号は家族帯同原則不可。"
+    source_title: "出入国在留管理庁：家族滞在（在留資格）"
+    source_url: "https://www.moj.go.jp/isa/applications/status/dependent.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「家族滞在の対象（就労系・留学等の扶養を受ける配偶者・子）」「在留資格の種類による違い」の記述を確認"
+    display_label: "家族呼び寄せ：扶養者の在留資格で異なる（技人国→家族滞在・永住者→永住者配偶者等）"
+    support_level: "indirect"
+    user_visible: true
+    needs_domain_review: true
+  - claim: "COE申請後の流れ：在日の扶養者がCOEを地方出入国在留管理官署に申請（窓口またはオンライン）→ 処理期間1〜3か月でCOE取得 → 海外の家族にCOEを送付（電子メール転送も可能） → 家族が在外公館（日本大使館等）でビザ申請 → 来日・在留カード取得。"
+    source_title: "出入国在留管理庁：家族滞在（在留資格）"
+    source_url: "https://www.moj.go.jp/isa/applications/status/dependent.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「COEの申請（窓口/オンライン）」「処理期間1〜3か月」「在外公館での査証申請」「COEの電子化・電子メール転送」の記述を確認"
+    display_label: "COE申請の流れ：申請（1〜3か月）→メール転送可→在外公館でビザ申請→来日"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

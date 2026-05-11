@@ -60,6 +60,24 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: false
+  - claim: "国土交通省は「外国人の民間賃貸住宅への入居円滑化ガイドライン」を不動産業者向けに策定・公表している。国籍のみを理由とした入居拒否は差別的取扱いとして問題とされており、外国人の入居に関する適切な対応を業者に求めている。"
+    source_title: "国土交通省：外国人の民間賃貸住宅への円滑な入居の推進について"
+    source_url: "https://www.mlit.go.jp/jutakukentiku/house/jutakukentiku_house_tk3_000056.html"
+    source_organization: "国土交通省"
+    source_locator: "ページ内「外国人の民間賃貸住宅への入居円滑化ガイドライン」「国籍のみを理由とした拒否は差別的取扱い」の記述を確認"
+    display_label: "国交省ガイドライン：国籍のみによる入居拒否は差別的取扱い・業者に適切対応を要請"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "住居確保給付金：離職または廃業から2年以内で、ハローワークに求職申込をしている場合等に、市区町村の自立相談支援機関に申請可能。住宅を確保するための家賃相当額が原則3か月（最長9か月まで延長可能）支給される。"
+    source_title: "国土交通省：外国人の民間賃貸住宅への円滑な入居の推進について"
+    source_url: "https://www.mlit.go.jp/jutakukentiku/house/jutakukentiku_house_tk3_000056.html"
+    source_organization: "国土交通省"
+    source_locator: "ページ内「住居確保給付金」「離職・廃業から2年以内・ハローワーク求職申込」「市区町村の自立相談支援機関」「原則3か月・最長9か月」の記述を確認"
+    display_label: "住居確保給付金：離職等から2年以内・求職申込中・原則3か月（最長9か月）支給"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: true
 ---
 
 ## current_date_logic

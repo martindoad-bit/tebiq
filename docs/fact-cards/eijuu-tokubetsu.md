@@ -60,6 +60,24 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: false
+  - claim: "特別永住者の退去強制事由：内乱罪・外患罪・一定の重大犯罪（殺人・強盗等）を犯した場合のみ退去強制の対象となる。通常の外国人（永住者含む）の退去強制事由と比較して大幅に限定されており、安定した法的地位を持つ。"
+    source_title: "出入国在留管理庁：特別永住者"
+    source_url: "https://www.moj.go.jp/isa/applications/status/tokubetsueijusha.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「退去強制の事由（内乱・外患罪・一定の重大犯罪のみ）」「通常の外国人より限定的」の記述を確認"
+    display_label: "特別永住者の退去強制：内乱罪・外患罪・重大犯罪のみ・通常外国人より大幅に限定"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "特別永住者証明書の有効期間：16歳未満は16歳の誕生日まで（または発行日から7年のいずれか早い方）、16歳以上は7年。更新は有効期間満了の2か月前から市区町村窓口で申請できる。"
+    source_title: "出入国在留管理庁：特別永住者"
+    source_url: "https://www.moj.go.jp/isa/applications/status/tokubetsueijusha.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「特別永住者証明書の有効期間（16歳未満：16歳誕生日まで/7年のいずれか早い方；16歳以上：7年）」「更新：2か月前から市区町村窓口」の記述を確認"
+    display_label: "特別永住者証明書：16歳以上は7年・16歳未満は16歳誕生日まで（または7年）・更新は2か月前から"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

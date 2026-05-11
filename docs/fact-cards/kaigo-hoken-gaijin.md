@@ -61,6 +61,24 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: false
+  - claim: "第2号被保険者（40〜64歳）が介護保険の給付を受けられる特定疾病：老化に起因する16の疾病に限定される（初老期の認知症・脳血管疾患・筋萎縮性側索硬化症・末期がん等）。加齢以外の原因による疾患は給付対象外。"
+    source_title: "厚生労働省：介護保険制度の概要"
+    source_url: "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/hukushi_kaigo/kaigo_koureisha/gaiyo/index.html"
+    source_organization: "厚生労働省"
+    source_locator: "ページ内「第2号被保険者の特定疾病（16疾病）」「老化に起因する疾病のみ給付対象」の記述を確認"
+    display_label: "第2号被保険者（40〜64歳）：給付は特定疾病16種（老化起因）に限定"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "第1号被保険者（65歳以上）の介護保険料：市区町村ごとに決定（3年ごとに改定）。年金月額が1万5千円以上の場合は年金から天引き（特別徴収）。1万5千円未満または年金受給なしの場合は普通徴収（納付書または口座振替）。"
+    source_title: "厚生労働省：介護保険制度の概要"
+    source_url: "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/hukushi_kaigo/kaigo_koureisha/gaiyo/index.html"
+    source_organization: "厚生労働省"
+    source_locator: "ページ内「第1号被保険者の保険料（市区町村が決定・3年ごと改定）」「特別徴収（年金天引き）」「普通徴収」の記述を確認"
+    display_label: "第1号被保険者の保険料：市区町村ごと・3年ごと改定・年金1.5万円以上は天引き"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

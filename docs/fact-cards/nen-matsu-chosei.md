@@ -61,6 +61,24 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: false
+  - claim: "年末調整の対象者は給与所得者（居住者）。非居住者（引き続き1年未満の外国人・帰国した外国人等）は年末調整の対象外となり、確定申告が必要になる場合がある。"
+    source_title: "国税庁：年末調整"
+    source_url: "https://www.nta.go.jp/taxes/tetsuzuki/shinsei/annai/gensen/nencho/index.htm"
+    source_organization: "国税庁"
+    source_locator: "ページ内「非居住者（在留1年未満）は年末調整の対象外」「確定申告が必要」の記述を確認"
+    display_label: "年末調整：非居住者（在留1年未満等）は対象外・確定申告が必要"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "年末調整で提出する主な書類：①給与所得者の扶養控除等（異動）申告書 ②給与所得者の保険料控除申告書（生命保険・地震保険等の控除申告）③給与所得者の基礎控除申告書 兼 配偶者控除等申告書（基礎控除・配偶者控除の申告）。これら3種が年末調整の中核書類。"
+    source_title: "国税庁：年末調整"
+    source_url: "https://www.nta.go.jp/taxes/tetsuzuki/shinsei/annai/gensen/nencho/index.htm"
+    source_organization: "国税庁"
+    source_locator: "ページ内「提出書類」セクションで3種類の申告書（扶養控除等・保険料控除・基礎控除兼配偶者控除）を確認"
+    display_label: "年末調整の提出書類：①扶養控除等申告書 ②保険料控除申告書 ③基礎控除兼配偶者控除申告書"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

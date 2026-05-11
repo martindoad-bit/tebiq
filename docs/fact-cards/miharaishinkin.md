@@ -60,6 +60,24 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: false
+  - claim: "賃金請求権の消滅時効：2020年4月1日以降に発生した賃金請求権の時効は3年（改正民法・労働基準法附則第143条）。2020年4月1日より前に発生した賃金の時効は旧法の2年が適用される場合がある。"
+    source_title: "厚生労働省：賃金の支払（労働基準法）"
+    source_url: "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/roudoukijun/zigyonushi/index.html"
+    source_organization: "厚生労働省"
+    source_locator: "ページ内「賃金請求権の時効（3年・2020年4月1日以降）」「改正民法・労基法附則」の記述を確認"
+    display_label: "賃金時効：2020年4月以降発生分は3年（改正民法・労基法附則）"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "未払い賃金立替払い制度：事業主が倒産した場合、独立行政法人労働者健康安全機構が未払い賃金の80%（上限あり：退職時の年齢に応じて88万円〜296万円）を立替払いする。退職後6か月以内に破産手続開始等の申立てがあった元従業員が対象。"
+    source_title: "厚生労働省：賃金の支払（労働基準法）"
+    source_url: "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/roudoukijun/zigyonushi/index.html"
+    source_organization: "厚生労働省"
+    source_locator: "ページ内「未払い賃金立替払い制度」「労働者健康安全機構が80%を立替払い」「上限額（年齢別）」「退職後6か月以内の倒産申立て」の記述を確認"
+    display_label: "倒産時立替払い：未払い賃金の80%を国が立替・上限あり・退職後6か月以内の倒産が条件"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

@@ -59,6 +59,24 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: false
+  - claim: "特定活動17号（ワーキングホリデー）の在留期間は原則1年（協定によって異なる場合あり）。更新は原則不可であり、同一の人物が再度ワーキングホリデーを取得することもできない（1回限りの制度）。"
+    source_title: "出入国在留管理庁：特定活動（ワーキングホリデー）"
+    source_url: "https://www.moj.go.jp/isa/applications/status/specact02.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「在留期間（原則1年）」「更新不可（1回限り）」の記述を確認"
+    display_label: "ワーキングホリデー：在留1年・更新不可・1回限りの制度"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "特定活動17号の就労制限：風俗営業等の禁止業種を除き、就労の種類・時間に制限がない（学生ビザの週28時間制限は適用されない）。フルタイム就労も可能。"
+    source_title: "出入国在留管理庁：特定活動（ワーキングホリデー）"
+    source_url: "https://www.moj.go.jp/isa/applications/status/specact02.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「就労可（風俗営業等を除く）」「週28時間制限なし」の記述を確認"
+    display_label: "ワーキングホリデーの就労：風俗業除き制限なし・週28時間制限の対象外"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: true
 ---
 
 ## current_date_logic
