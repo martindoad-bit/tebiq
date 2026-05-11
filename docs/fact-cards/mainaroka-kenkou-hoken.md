@@ -55,6 +55,16 @@ related_links:
     display_label: "厚生労働省 — マイナンバーカードの健康保険証利用"
     locator: "ページ内で「マイナンバーカードの健康保険証利用」を検索"
     relation: "official_reference"
+evidence_points:
+  - claim: "従来の健康保険証は令和6年12月2日（2024年12月2日）以降、新規発行停止。マイナ保険証：「マイナンバーカードに健康保険証の利用登録をしたもの」。使用方法：「医療機関・薬局の窓口で、顔認証付きカードリーダーにかざして使用」。資格確認書：「マイナ保険証を保有していない方等に、当分の間、無申請で無償で交付」。電子証明書失効後3か月間は利用可能。スマートフォン対応：2026年9月開始予定（厚生労働省）。"
+    source_title: "厚生労働省：マイナンバーカードの健康保険証利用"
+    source_url: "https://www.mhlw.go.jp/stf/newpage_08277.html"
+    source_organization: "厚生労働省"
+    source_locator: "ページ内「健康保険証廃止日」「マイナ保険証」「資格確認書」「電子証明書失効後3か月」の記述を確認"
+    display_label: "マイナ保険証：2024年12月2日健康保険証廃止・資格確認書無申請無償交付・失効後3か月猶予"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

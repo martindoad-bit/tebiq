@@ -55,6 +55,25 @@ related_links:
     display_label: "国税庁 No.2010 — 納税義務者"
     locator: "ページ内で「納税義務者」を検索"
     relation: "official_reference"
+evidence_points:
+  - claim: "課税上の居住者の定義：「日本国内に住所があるかまたは現在まで引き続いて1年以上居所がある個人」。課税範囲：「所得が生じた場所が日本国の内外を問わず、そのすべての所得に対して課税されます」（全世界所得課税）（国税庁 No.2010）。"
+    source_title: "国税庁 No.2010：納税義務者"
+    source_url: "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/2010.htm"
+    source_organization: "国税庁"
+    source_locator: "ページ内「居住者の定義」「全世界所得課税」の記述を確認"
+    display_label: "課税区分：居住者＝1年以上居所・全世界所得課税"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "非永住者の定義：「居住者のうち日本国籍がなく、かつ、過去10年以内の間に日本国内に住所または居所を有していた期間の合計が5年以下である個人」。課税範囲：国内源泉所得＋国外源泉所得で国内送金分のみ課税。非居住者の定義：「居住者以外の個人」（国税庁 No.2010）。課税範囲：国内源泉所得のみ。"
+    source_title: "国税庁 No.2010：納税義務者"
+    source_url: "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/2010.htm"
+    source_organization: "国税庁"
+    source_locator: "ページ内「非永住者の定義」「非居住者の定義」「課税範囲」の記述を確認"
+    display_label: "非永住者＝外国籍居住者で過去10年在住5年以下・国内+国外送金分のみ課税"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

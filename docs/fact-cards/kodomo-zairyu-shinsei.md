@@ -69,6 +69,25 @@ related_links:
     display_label: "出入国在留管理庁 — 家族滞在（申請書類）"
     locator: "ページ内で「家族滞在（申請書類）」を検索"
     relation: "official_reference"
+evidence_points:
+  - claim: "日本で生まれた外国人の子の在留資格取得申請：「資格の取得の事由が生じた日から３０日以内」に申請が必要。60日を超えて本邦に滞在しようとする場合は在留資格取得許可申請が必要。手数料：無料。申請場所：子の住所地を管轄する地方出入国在留管理官署。16歳未満は写真貼付不要。"
+    source_title: "出入国在留管理庁：在留資格取得許可申請"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/16-10.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「30日以内」「60日」「手数料無料」「写真不要（16歳未満）」の記述を確認"
+    display_label: "子の在留資格：出生後30日以内申請・60日超で不法滞在リスク・手数料無料"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "両親外国人の場合の国籍：「父も母も外国の国籍である場合、その子どもが日本で生まれたとしても、日本国籍を取得することはできません。」（ISA公式）。親が技人国等の場合→家族滞在。親が永住者・定住者等の場合→定住者を取得できる。片親が日本人の場合は子が出生時から日本国籍取得（国籍法第2条第1号）、在留申請不要。"
+    source_title: "出入国在留管理庁：在留資格取得許可申請"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/16-10.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「両親外国人・日本国籍不取得」「取得できる在留資格（家族滞在・定住者）」の記述を確認"
+    display_label: "子の国籍：両親外国人は日本国籍不取得・家族滞在か定住者取得・片親日本人は国籍取得で申請不要"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic
