@@ -49,6 +49,13 @@ needs_review_flags:
   - illegal_work_impact_on_henko: 家族滞在中に資格外活動許可なしで就労した実績がある場合の変更申請への影響（不許可事由）については公式ガイドラインの直接引用要。
   - kazoku_taizai_to_specific_requirements: 家族滞在から特定の就労ビザへの変更に固有の追加要件（あれば）はISAの各在留資格の要件ページで確認要。
   - tokurei_kikan_confirmation: 変更申請中の特例期間（在留期間満了後も適法在留継続）の根拠条文（出入国管理特例法第20条等）の直接引用要。
+related_links:
+  - title: "出入国在留管理庁 — 在留資格変更許可申請"
+    url: "https://www.moj.go.jp/isa/applications/procedures/16-2.html"
+    organization: "出入国在留管理庁"
+    display_label: "出入国在留管理庁 — 在留資格変更許可申請"
+    locator: "ページ内で「在留資格変更許可申請」を検索"
+    relation: "official_reference"
 ---
 
 ## current_date_logic

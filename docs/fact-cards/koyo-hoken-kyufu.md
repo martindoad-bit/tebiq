@@ -60,6 +60,19 @@ needs_review_flags:
   - foreign_national_eligibility_explicit: 外国人の雇用保険受給資格について「国籍不問」の公式明示的確認が未取得。ハローワーク公式ページの外国人向け情報での直接引用要。
   - voluntary_resign_restriction_2025_reform: 自己都合退職の給付制限（2か月）は2020年改正で3か月から2か月に短縮された。現行2か月（5年間2回以内）ルールの最新条文・通達確認要。
   - special_reason_separation: 特定理由離職者（やむを得ない自己都合）の定義・範囲（3/4以上の労働時間削減・ハラスメント等）の詳細確認要。
+related_links:
+  - title: "厚生労働省ハローワーク — 基本手当について"
+    url: "https://www.hellowork.mhlw.go.jp/insurance/insurance_basicbenefit.html"
+    organization: "厚生労働省"
+    display_label: "厚生労働省ハローワーク — 基本手当について"
+    locator: "ページ内で「基本手当について」を検索"
+    relation: "official_reference"
+  - title: "厚生労働省ハローワーク — 基本手当の所定給付日数"
+    url: "https://www.hellowork.mhlw.go.jp/insurance/insurance_benefitdays.html"
+    organization: "厚生労働省"
+    display_label: "厚生労働省ハローワーク — 基本手当の所定給付日数"
+    locator: "ページ内で「基本手当の所定給付日数」を検索"
+    relation: "official_reference"
 ---
 
 ## current_date_logic

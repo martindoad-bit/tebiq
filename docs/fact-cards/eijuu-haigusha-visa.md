@@ -44,6 +44,13 @@ needs_review_flags:
   - no_work_restriction_source: 就労制限なしは法律上の解釈に基づくai推定。入管法別表第2「永住者の配偶者等」の活動範囲条文確認要。
   - marital_substance_review: 更新時の婚姻実態審査基準の公式ガイドライン確認要（nihonjin-haigusha-visaカードと同様の論点）。
   - eijuu_vs_nihonjin_spouse_diff: 永住者配偶者等と日本人配偶者等の審査実務上の差異の確認要（スポンサーが外国籍永住者の場合の実務的違い）。
+related_links:
+  - title: "出入国在留管理庁 — 永住者の配偶者等（在留資格）"
+    url: "https://www.moj.go.jp/isa/applications/status/spouseorchildofpermanentresident.html"
+    organization: "出入国在留管理庁"
+    display_label: "出入国在留管理庁 — 永住者の配偶者等（在留資格）"
+    locator: "ページ内で「永住者の配偶者等（在留資格）」を検索"
+    relation: "official_reference"
 ---
 
 ## current_date_logic

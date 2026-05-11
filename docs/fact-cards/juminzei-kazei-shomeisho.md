@@ -54,6 +54,19 @@ ai_inferred_fields:
 needs_review_flags:
   - zairyu_update_tax_requirement: 在留更新時の住民税課税証明書・納税証明書の必要年数はISA手続きページ（在留資格別）で直接確認要。資格ごとに要件が異なる。
   - eijuu_tax_document_years: 永住申請の所得・納税証明書の具体的必要年数・書類種別はeijuu-tsujou-route.mdのneeds_reviewと連動。DOMAIN確認要。
+related_links:
+  - title: "総務省 — 個人住民税"
+    url: "https://www.soumu.go.jp/main_sosiki/jichi_zeisei/czaisei/czaisei_seido/individual-inhabitant-tax.html"
+    organization: "総務省"
+    display_label: "総務省 — 個人住民税"
+    locator: "ページ内で「個人住民税」を検索"
+    relation: "official_reference"
+  - title: "国税庁 — 納税証明書"
+    url: "https://www.nta.go.jp/taxes/shiraberu/taxanswer/osirase/9208.htm"
+    organization: "国税庁"
+    display_label: "国税庁 — 納税証明書"
+    locator: "ページ内で「納税証明書」を検索"
+    relation: "official_reference"
 ---
 
 ## current_date_logic

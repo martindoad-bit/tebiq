@@ -66,6 +66,19 @@ needs_review_flags:
   - income_threshold_amount: 永住申請に必要な「独立の生計を営むに足りる資産又は技能」の具体的な年収・資産額の目安はISA公式ページには記載なし。実務上の目安は弁護士・行政書士等で確認要。
   - spouse_japanese_shorui_diff: 日本人配偶者・永住者配偶者等経由の永住申請（zairyu_eijyu01.html）では所得証明が直近3年分と異なる。各区分の書類リストはISA公式ページで確認要。
   - ryokaishomeisho_content: 了解書（2021年10月必須化）の具体的な内容（公租公課等の遵守誓約）はISA多言語版ページで確認要。
+related_links:
+  - title: "出入国在留管理庁 — 永住許可申請（就労資格者等向け）必要書類"
+    url: "https://www.moj.go.jp/isa/applications/procedures/zairyu_eijyu03.html"
+    organization: "出入国在留管理庁"
+    display_label: "出入国在留管理庁 — 永住許可申請（就労資格者等向け）必要書類"
+    locator: "ページ内で「永住許可申請（就労資格者等向け）必要書類」を検索"
+    relation: "official_reference"
+  - title: "出入国在留管理庁 — 永住者の在留資格への変更許可申請"
+    url: "https://www.moj.go.jp/isa/applications/procedures/16-4.html"
+    organization: "出入国在留管理庁"
+    display_label: "出入国在留管理庁 — 永住者の在留資格への変更許可申請"
+    locator: "ページ内で「永住者の在留資格への変更許可申請」を検索"
+    relation: "official_reference"
 ---
 
 ## current_date_logic

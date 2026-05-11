@@ -46,6 +46,19 @@ ai_inferred_fields:
 needs_review_flags:
   - cefr_b2_language_role_scope: 「主として言語使用業務に従事する場合のCEFR B2要件」の適用範囲と根拠条文確認（2026-04-15施行の改正告示照合要）
   - pre_graduation_application_flow: 卒業見込みでの申請受理・卒業証明書後日提出の実務フロー確認（CategoryⅠ〜Ⅳによる差異含む）
+related_links:
+  - title: "出入国在留管理庁 — 在留資格変更許可申請"
+    url: "https://www.moj.go.jp/isa/applications/procedures/16-2.html"
+    organization: "出入国在留管理庁"
+    display_label: "出入国在留管理庁 — 在留資格変更許可申請"
+    locator: "ページ内で「在留資格変更許可申請」を検索"
+    relation: "official_reference"
+  - title: "出入国在留管理庁 — 技術・人文知識・国際業務（在留資格）"
+    url: "https://www.moj.go.jp/isa/applications/status/gijinkoku.html"
+    organization: "出入国在留管理庁"
+    display_label: "出入国在留管理庁 — 技術・人文知識・国際業務（在留資格）"
+    locator: "ページ内で「技術・人文知識・国際業務（在留資格）」を検索"
+    relation: "official_reference"
 ---
 
 ## current_date_logic

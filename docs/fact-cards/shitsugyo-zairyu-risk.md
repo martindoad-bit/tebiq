@@ -59,6 +59,25 @@ needs_review_flags:
   - seito_na_riyu_shugyo_katsudo: 就職活動が「正当な理由」として入管法第22条の4第1項第6号の例外となるかの公式確認が未取得。ISA公式ページには具体例の記載なし。
   - gijinkoku_to_gijinkoku_tokutei_katsudo: 技人国から新たな技人国求職のための特定活動（留学生向け以外）が存在するかのISA公式確認要。
   - 14nichi_fujikai_sanction: 14日以内の届出を怠った場合の具体的なペナルティ・影響（在留更新への影響等）の確認要。
+related_links:
+  - title: "出入国在留管理庁 — 所属（契約）機関に関する届出"
+    url: "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00015.html"
+    organization: "出入国在留管理庁"
+    display_label: "出入国在留管理庁 — 所属（契約）機関に関する届出"
+    locator: "ページ内で「所属（契約）機関に関する届出」を検索"
+    relation: "official_reference"
+  - title: "出入国在留管理庁 — 在留資格取消し（解説）"
+    url: "https://www.moj.go.jp/isa/applications/procedures/torikeshi_00002.html"
+    organization: "出入国在留管理庁"
+    display_label: "出入国在留管理庁 — 在留資格取消し（解説）"
+    locator: "ページ内で「在留資格取消し（解説）」を検索"
+    relation: "official_reference"
+  - title: "出入国在留管理庁 — 特定活動（就労継続支援）"
+    url: "https://www.moj.go.jp/isa/10_00213.html"
+    organization: "出入国在留管理庁"
+    display_label: "出入国在留管理庁 — 特定活動（就労継続支援）"
+    locator: "ページ内で「特定活動（就労継続支援）」を検索"
+    relation: "official_reference"
 ---
 
 ## current_date_logic

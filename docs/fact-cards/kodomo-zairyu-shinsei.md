@@ -56,6 +56,19 @@ needs_review_flags:
   - kodomo_60nichi_choka_shotsu: 60日超の在留資格なし在留の具体的な法的効果（不法残留の認定・退去強制手続きへの移行タイミング）のISA公式確認要。
   - teijusha_code_requirement: 親が永住者等の場合の定住者取得申請に必要な書類の詳細（ISA定住者ページで確認要）。
   - kazoku_taizai_sojin_limit: 家族滞在の扶養者資格に特定技能2号は含まれるが特定技能1号は含まれない点の最新確認要。
+related_links:
+  - title: "出入国在留管理庁 — 在留資格取得許可申請"
+    url: "https://www.moj.go.jp/isa/applications/procedures/16-10.html"
+    organization: "出入国在留管理庁"
+    display_label: "出入国在留管理庁 — 在留資格取得許可申請"
+    locator: "ページ内で「在留資格取得許可申請」を検索"
+    relation: "official_reference"
+  - title: "出入国在留管理庁 — 家族滞在（申請書類）"
+    url: "https://www.moj.go.jp/isa/applications/status/dependent.html"
+    organization: "出入国在留管理庁"
+    display_label: "出入国在留管理庁 — 家族滞在（申請書類）"
+    locator: "ページ内で「家族滞在（申請書類）」を検索"
+    relation: "official_reference"
 ---
 
 ## current_date_logic

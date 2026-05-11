@@ -50,6 +50,13 @@ ai_inferred_fields:
 needs_review_flags:
   - tokutei_tekiyo_jigyo_scale: 短時間労働者の拡大適用（特定適用事業所）の企業規模要件（従業員数51人以上等）は段階的に拡大中。現行閾値の最新確認要（日本年金機構または厚労省公式ページ）。
   - health_insurance_parallel: 健康保険（協会けんぽ・健保組合）の加入義務は厚生年金と原則同一の事業所・要件を適用。健康保険固有の要件（任意継続・被扶養者等）は別途確認要。
+related_links:
+  - title: "日本年金機構 — 適用事業所と被保険者"
+    url: "https://www.nenkin.go.jp/service/kounen/tekiyo/jigyosho/20150518.html"
+    organization: "日本年金機構"
+    display_label: "日本年金機構 — 適用事業所と被保険者"
+    locator: "ページ内で「適用事業所と被保険者」を検索"
+    relation: "official_reference"
 ---
 
 ## current_date_logic

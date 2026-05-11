@@ -49,6 +49,13 @@ needs_review_flags:
   - limit_amounts_2026_reform: 2026年8月改定後の自己負担限度額の具体的な新金額は現時点未確定。2026年8月以降の診療分については厚生労働省公式ページで最新額を確認要。
   - income_bracket_amounts_source: 70歳未満の5区分の具体的な限度額（区分ア〜オの金額）はHTMLページでの直接取得が困難（PDF形式）。ai照合値として記載しているが、厚生労働省公式PDFでの直接確認要。
   - application_procedure_detail: 高額療養費の払い戻し申請手続き（健保組合・協会けんぽ・国保）の具体的書類・期限は加入している保険者で確認要。
+related_links:
+  - title: "厚生労働省 — 高額療養費制度を利用される皆さまへ"
+    url: "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/iryouhoken/juuyou/kougakuiryou/index.html"
+    organization: "厚生労働省"
+    display_label: "厚生労働省 — 高額療養費制度を利用される皆さまへ"
+    locator: "ページ内で「高額療養費制度を利用される皆さまへ」を検索"
+    relation: "official_reference"
 ---
 
 ## current_date_logic

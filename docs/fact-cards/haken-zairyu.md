@@ -52,6 +52,19 @@ needs_review_flags:
   - hakenchi_henkou_notification: 派遣先変更のみ（派遣元との契約継続中）の場合の14日届出義務の有無の法令根拠を確認要。ISAは「派遣元=所属機関」としているが派遣先変更の通知義務の正式解釈確認要。
   - hakenchi_henkou_zairyu_impact: 派遣先変更後の業務内容が同一であれば在留資格取消しリスクはないとされるが、公式確認未取得。
   - haken_zairyu_kikan_renew: 派遣契約更新時の在留期間更新申請の実務（必要書類・タイミング）の公式確認要。
+related_links:
+  - title: "出入国在留管理庁 — 技人国をもって派遣形態で就労する場合の取扱い（2026年2月24日）"
+    url: "https://www.moj.go.jp/isa/content/001457164.pdf"
+    organization: "出入国在留管理庁"
+    display_label: "出入国在留管理庁 — 技人国をもって派遣形態で就労する場合の取扱い（2026年2月24日）"
+    locator: "ページ内で「技人国をもって派遣形態で就労する場合の取扱い」を検索"
+    relation: "official_reference"
+  - title: "出入国在留管理庁 — 技術・人文知識・国際業務（申請書類）"
+    url: "https://www.moj.go.jp/isa/applications/status/gijinkoku.html"
+    organization: "出入国在留管理庁"
+    display_label: "出入国在留管理庁 — 技術・人文知識・国際業務（申請書類）"
+    locator: "ページ内で「技術・人文知識・国際業務（申請書類）」を検索"
+    relation: "official_reference"
 ---
 
 ## current_date_logic

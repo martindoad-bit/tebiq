@@ -48,6 +48,34 @@ ai_inferred_fields:
 needs_review_flags:
   - first_offense_enforcement_practice: 不携帯の実務上の初回処分（注意・起訴猶予等）の公式データ・法的根拠は確認要。
   - special_permanent_resident_teiji: 特別永住者（特別永住者証明書）の提示義務の詳細（常時携帯義務なしだが提示義務あり）の法令引用確認要。
+evidence_points:
+  - claim: "中長期在留者は在留カードを常時携帯しなければならない（入管法第23条第2項）。不携帯は20万円以下の罰金（第75条の3）。"
+    source_title: "出入国在留管理庁：在留カードに関する各種届出"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/zairyu_01.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「常時携帯義務」および「罰則」の記述を確認。法令は第23条第2項・第75条の3"
+    display_label: "在留カード常時携帯義務・罰則20万円"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "警察官等から提示を求められた場合は提示義務あり。拒否した場合は1年以下の懲役または20万円以下の罰金（入管法第75条の2）。不携帯より格段に重い。"
+    source_title: "出入国在留管理庁：在留カードに関する各種届出"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/zairyu_01.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「提示義務」および「第75条の2」に関する記述を確認"
+    display_label: "提示拒否罰則（懲役1年以下）"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "16歳未満は在留カードの常時携帯義務が免除されている（入管法第23条第5項）。"
+    source_title: "出入国在留管理庁：在留カードに関する各種届出"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/zairyu_01.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内またはISA FAQで「16歳未満」「携帯義務免除」を検索"
+    display_label: "16歳未満：携帯義務免除"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

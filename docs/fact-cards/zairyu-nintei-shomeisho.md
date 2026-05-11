@@ -58,6 +58,19 @@ needs_review_flags:
   - coe_yukigeikan_hourei: COEの有効期間3か月の正確な法令根拠（入管法施行規則第6条の2の現行条文）の確認要。
   - coe_visa_processing_by_country: 在外公館での査証申請処理期間は国・公館によって大きく異なる。MOFA（外務省）公式での確認要。
   - kekkaku_screening_status: 令和7年施行予定だった結核スクリーニング（入国前健康診断）の現時点での施行状況の確認要。
+related_links:
+  - title: "出入国在留管理庁 — 在留資格認定証明書交付申請"
+    url: "https://www.moj.go.jp/isa/applications/procedures/16-1.html"
+    organization: "出入国在留管理庁"
+    display_label: "出入国在留管理庁 — 在留資格認定証明書交付申請"
+    locator: "ページ内で「在留資格認定証明書交付申請」を検索"
+    relation: "official_reference"
+  - title: "出入国在留管理庁 — 在留資格認定証明書の電子化Q&A"
+    url: "https://www.moj.go.jp/isa/applications/procedures/10_00136.html"
+    organization: "出入国在留管理庁"
+    display_label: "出入国在留管理庁 — 在留資格認定証明書の電子化Q&A"
+    locator: "ページ内で「在留資格認定証明書の電子化Q&A」を検索"
+    relation: "official_reference"
 ---
 
 ## current_date_logic

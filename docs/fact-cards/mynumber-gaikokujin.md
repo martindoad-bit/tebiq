@@ -55,6 +55,19 @@ needs_review_flags:
   - card_renewal_after_zairyu_update: 在留期間更新後のマイナンバーカード券面変更申請の具体的手続き・必要書類・手数料は市区町村窓口で確認要。
   - mainaroka_kenkou_hoken: 2025年12月以降の健康保険証廃止・マイナ保険証への一本化の最新状況は別途確認要（マイナ保険証の利用登録手続き）。
   - notification_card_vs_mynumber_card: 個人番号通知カード（紙）とマイナンバーカード（プラスチック）の違いと、通知カードが廃止された2020年5月以降の新規通知方法の詳細確認要。
+related_links:
+  - title: "総務省 — 外国人住民のマイナンバーカード等"
+    url: "https://www.soumu.go.jp/main_sosiki/jichi_gyousei/c-gyousei/zairyu/basic_resident_registration_card.html"
+    organization: "総務省"
+    display_label: "総務省 — 外国人住民のマイナンバーカード等"
+    locator: "ページ内で「外国人住民のマイナンバーカード等」を検索"
+    relation: "official_reference"
+  - title: "デジタル庁 — マイナンバーFAQ（外国人向け）"
+    url: "https://www.digital.go.jp/en/policies/mynumber_faq_02"
+    organization: "デジタル庁"
+    display_label: "デジタル庁 — マイナンバーFAQ（外国人向け）"
+    locator: "ページ内で「マイナンバーFAQ（外国人向け）」を検索"
+    relation: "official_reference"
 ---
 
 ## current_date_logic

@@ -42,6 +42,13 @@ ai_inferred_fields:
 needs_review_flags:
   - seven_year_validity_source: 永住者の在留カード7年有効期間は出入国管理及び難民認定法第19条の4第1項に基づくai推定。法令テキスト直接引用による確認要（e-govは{{TODAY_ISO}}時点でJS依存ページのため取得困難）。
   - source_url_redirect: official_sources記載のURLが2026-05-07時点でリダイレクト。ISA新URLを確認して更新要。
+related_links:
+  - title: "出入国在留管理庁 — 在留カード有効期間更新許可申請"
+    url: "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00011.html"
+    organization: "出入国在留管理庁"
+    display_label: "出入国在留管理庁 — 在留カード有効期間更新許可申請"
+    locator: "ページ内で「在留カード有効期間更新許可申請」を検索"
+    relation: "official_reference"
 ---
 
 ## current_date_logic

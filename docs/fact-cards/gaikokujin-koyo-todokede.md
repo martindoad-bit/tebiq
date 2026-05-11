@@ -56,6 +56,34 @@ ai_inferred_fields:
 needs_review_flags:
   - todokede_houreijoubun: 労働施策総合推進法第28条（外国人の雇用状況の届出）・第41条第2号（30万円以下の罰金）の条文番号の公式MHLW/e-Gov確認要（本ページには条文番号明示なし）
   - jisseki_touroku_gaijin_haken: 派遣社員の外国人（派遣元が届出義務者か派遣先かの確認要）
+evidence_points:
+  - claim: "全ての事業主に外国人労働者（特別永住者・外交・公用を除く）の雇入れ・離職時のハローワーク届出義務がある。未届出・虚偽届出は30万円以下の罰金。"
+    source_title: "厚生労働省：外国人雇用状況の届出について"
+    source_url: "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/koyou/gaikokujin/todokede/index.html"
+    source_organization: "厚生労働省"
+    source_locator: "ページ冒頭の法令根拠・義務者・罰則の記述を確認"
+    display_label: "外国人雇用届出義務・30万円罰金"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "雇用保険被保険者：雇入れ翌月10日まで、離職翌日から10日以内。非被保険者：雇入れ・離職ともに翌月末日まで。"
+    source_title: "厚生労働省：外国人雇用状況の届出について"
+    source_url: "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/koyou/gaikokujin/todokede/index.html"
+    source_organization: "厚生労働省"
+    source_locator: "ページ内「１．雇用保険被保険者となる外国人」「２．被保険者とならない外国人」の届出期限を確認"
+    display_label: "届出期限（被保険者翌月10日・非被保険者翌月末）"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "届出の際に在留カード等の写しの添付は不要。在留カードまたは旅券等の提示を受けて確認すれば足りる。"
+    source_title: "厚生労働省：外国人雇用状況の届出について"
+    source_url: "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/koyou/gaikokujin/todokede/index.html"
+    source_organization: "厚生労働省"
+    source_locator: "ページ内「５．外国人雇用状況届出の注意事項等」を確認"
+    display_label: "在留カード写し添付不要"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

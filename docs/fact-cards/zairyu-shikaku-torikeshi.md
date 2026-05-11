@@ -60,6 +60,19 @@ needs_review_flags:
   - justifiable_reason_scope: 第5号・第6号・第7号の「正当な理由がある場合を除く」の具体的な判断基準（公式ガイドラインの直接引用）は未取得。個別の行政解釈による。
   - 2024_reform_enforcement_date: 令和6年改正の施行日（公布から2年以内の政令指定日）は執筆時点で未確定。永住者向け取消事由の具体的施行日は法務省公表の政令で確認要。
   - torikeshi_after_procedure: 在留資格取消後の具体的な退去強制手続き・異議申立て方法は弁護士相談要（本カードの対象外）。
+related_links:
+  - title: "出入国在留管理庁 — 在留資格の取消しについて"
+    url: "https://www.moj.go.jp/isa/applications/procedures/torikeshi_00002.html"
+    organization: "出入国在留管理庁"
+    display_label: "出入国在留管理庁 — 在留資格の取消しについて"
+    locator: "ページ内で「在留資格の取消しについて」を検索"
+    relation: "official_reference"
+  - title: "出入国在留管理庁 — 永住許可制度の適正化に関するQ&A"
+    url: "https://www.moj.go.jp/isa/immigration/faq/kanri_qa_00003.html"
+    organization: "出入国在留管理庁"
+    display_label: "出入国在留管理庁 — 永住許可制度の適正化に関するQ&A"
+    locator: "ページ内で「永住許可制度の適正化に関するQ&A」を検索"
+    relation: "official_reference"
 ---
 
 ## current_date_logic

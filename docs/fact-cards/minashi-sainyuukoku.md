@@ -53,6 +53,25 @@ needs_review_flags:
     reason: "再入国許可なし出国による在留資格消滅は入管法第26条の2第6項が根拠とされるが、本日のfetchではe-gov法令ページ・src-01いずれもこの条文を取得できず。ai_inferenceとして扱い、certain_blockでheddging。DOMAIN確認推奨。"
   - id: zairyu_kigen_upper_bound
     reason: "在留期限がみなし再入国1年より前に来る場合、在留期限が実質上限という運用はAI知識だが、src-01に明示記述なし。行政運用上の解釈として扱う。"
+evidence_points:
+  - claim: "みなし再入国許可は在留資格保持者が出国から1年以内に再入国する場合に通常の再入国許可取得を不要とする制度。在留期間3月以下・短期滞在は対象外。"
+    source_title: "出入国在留管理庁：再入国許可申請"
+    source_url: "https://www.moj.go.jp/isa/immigration/procedures/16-5.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「みなし再入国許可」の定義および「対象外」の記述を確認"
+    display_label: "みなし再入国許可（1年ルール・対象外）"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "通常再入国許可の有効期間は現に有する在留期間の範囲内で最長5年（特別永住者は6年）。出国前に申請が必要。"
+    source_title: "出入国在留管理庁：再入国許可申請"
+    source_url: "https://www.moj.go.jp/isa/immigration/procedures/16-5.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「有効期間は、現に有する在留期間の範囲内で、５年間」の記述を確認"
+    display_label: "通常再入国許可（最長5年・出国前申請）"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic
