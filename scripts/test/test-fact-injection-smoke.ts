@@ -258,6 +258,11 @@ async function main() {
       question: '雇佣外国人要向 Hello Work 届出吗，外国人雇佣届出什么时候提交',
       expect_inject_includes: ['gaikokujin-koyo-todokede'],
     },
+    {
+      id: 'D5.rishoku-年金健保合并中文',
+      question: '退职以后国民年金和健康保险要怎么处理？',
+      expect_inject_includes: ['rishoku-kokumin-nenkin-kirikae', 'rishoku-kenko-hoken'],
+    },
   ]
 
   // -----------------------------------------------------------------------
