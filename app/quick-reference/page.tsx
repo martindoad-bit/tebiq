@@ -26,7 +26,7 @@ export default function QuickReferencePage() {
                 速查
               </h1>
               <p className="mt-1 text-[14px] leading-[1.65] text-ash">
-                {QUICK_REFERENCE_TOPICS.length} 个常见事项和来源入口。用于核对，不代表个案最终判断。
+                常见事项和官方来源入口。先核对规则，再按自己的材料判断。
               </p>
             </div>
           </div>

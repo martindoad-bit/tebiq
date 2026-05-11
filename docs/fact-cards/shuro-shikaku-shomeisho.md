@@ -49,6 +49,34 @@ related_links:
     display_label: "出入国在留管理庁 — 就労資格証明書交付申請"
     locator: "ページ内で「就労資格証明書交付申請」を検索"
     relation: "official_reference"
+evidence_points:
+  - claim: "就労資格証明書は「自らの在留資格で行うことができる収入を伴う事業を運営する活動又は報酬を受ける活動」であることを証明する文書。申請は任意（法律上の義務ではない）。申請先：住居地を管轄する地方出入国在留管理官署。主な書類：就労資格証明書交付申請書・旅券・在留カード（提示）・職歴・業務内容関係書類等。"
+    source_title: "出入国在留管理庁：就労資格証明書交付申請"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/16-9.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「就労資格証明書の定義」「任意申請」「申請先」「必要書類」の記述を確認"
+    display_label: "就労資格証明書：任意申請・住居地管轄入管官署・転職先の就労適格証明に活用"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "就労資格証明書は在留資格・在留期間を変更または更新するものではない。転職時に現在の在留資格で転職先の業務が適法に行えるかを事前に証明する書類であり、業務内容が現在の在留資格の範囲外になる場合は就労資格証明書ではなく在留資格変更申請が必要。"
+    source_title: "出入国在留管理庁：就労資格証明書交付申請"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/16-9.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「就労資格証明書の性格（在留資格・在留期間を変更するものではない）」「業務内容が在留資格範囲外の場合は変更申請が必要」の記述を確認"
+    display_label: "就労資格証明書：在留資格・期間を変更するものではない・範囲外業務は変更申請が必要"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "就労資格証明書を取得した場合、転職先企業（雇用主）が外国人の就労資格を確認し雇用する際の不法就労助長罪（入管法第73条の2）のリスクを軽減できる。転職時の所属機関変更届（14日以内・入管法第19条の16）とは別の手続き（ai推定）。"
+    source_title: "出入国在留管理庁：就労資格証明書交付申請"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/16-9.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「就労資格証明書の活用（雇用主の不法就労確認リスク軽減）」「転職届出（所属機関変更届）との関係」の記述を確認"
+    display_label: "就労資格証明書：雇用主の不法就労助長リスク軽減・転職届出（14日以内）とは別手続き（ai推定）"
+    support_level: "indirect"
+    user_visible: true
+    needs_domain_review: true
 ---
 
 ## current_date_logic

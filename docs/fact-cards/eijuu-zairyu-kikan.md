@@ -73,6 +73,34 @@ related_links:
     display_label: "高度専門職（在留資格）永住許可申請 提出書類"
     locator: "ページ内で「高度専門職」を検索"
     relation: "official_reference"
+evidence_points:
+  - claim: "永住申請の在留期間要件（原則）：「引き続き10年以上本邦に在留していること（うち、就労資格または居住資格を持って5年以上在留していること）」。技能実習・特定技能1号の在留期間は5年の就労期間にカウントされない。最長在留期間（通常3年以上）を保有していることも必要。"
+    source_title: "出入国在留管理庁：永住許可に関するガイドライン"
+    source_url: "https://www.moj.go.jp/isa/applications/resources/nyukan_nyukan50.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ガイドライン内「在留期間要件」「10年以上」「技能実習除外」の記述を確認"
+    display_label: "永住申請：原則10年在留・就労5年・技能実習・特定技能1号は不算入"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "永住申請の短縮特例：①日本人・永住者・特別永住者の配偶者（実体を伴う婚姻から3年以上+1年以上在留）②高度人材ポイント70点以上（3年で申請可）③高度人材ポイント80点以上（1年で申請可）④定住者・難民認定者：一定要件で短縮適用（ISAガイドライン）。"
+    source_title: "出入国在留管理庁：永住許可に関するガイドライン"
+    source_url: "https://www.moj.go.jp/isa/applications/resources/nyukan_nyukan50.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ガイドライン内「特例」「短縮」「高度人材」「配偶者」の記述を確認"
+    display_label: "永住申請短縮特例：配偶者3年+1年・高度70点3年・高度80点1年"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "永住申請には現在の在留資格の「最長の在留期間をもって在留していること」が必要：「出入国管理及び難民認定法施行規則別表第２に規定されている最長の在留期間をもって在留していること」（永住許可ガイドライン）。多くの就労系在留資格では3年または5年更新が最長在留期間にあたり、1年更新のままでは申請が困難。"
+    source_title: "出入国在留管理庁：永住許可に関するガイドライン"
+    source_url: "https://www.moj.go.jp/isa/applications/resources/nyukan_nyukan50.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ガイドライン内「出入国管理及び難民認定法施行規則別表第２に規定されている最長の在留期間をもって在留していること」の記述を確認"
+    display_label: "永住申請：最長在留期間での在留が必要（1年更新では申請困難）"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

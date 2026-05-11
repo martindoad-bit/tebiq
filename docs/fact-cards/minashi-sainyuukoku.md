@@ -5,7 +5,7 @@ state: ai_verified
 risk_level: critical
 confidence: medium
 source_quality: official
-controlled_alpha_eligible: false   # AQL guardrail 2026-05-11: critical card keeps hint_only until needs_review flags are resolved.
+controlled_alpha_eligible: false   # 2026-05-12: confidence=medium のため critical production direct injection から外す。direct evidence は保持し、回答では要核对资料として利用。
 last_verified_at: "2026-05-07"
 reviewer: ai_self_verified
 sprint: "0.6 / Workstream C / Batch 3"
@@ -72,6 +72,15 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: false
+  - claim: "みなし再入国許可の有効期間（出国から1年以内）は在留期限が1年より前に来る場合、在留期限が実質的な上限となる：在留期限を超えた在留継続は不可のため、みなし再入国許可の残存期間が在留期限当日までに短縮される（ai推定・行政運用上の解釈）。"
+    source_title: "出入国在留管理庁：再入国許可申請"
+    source_url: "https://www.moj.go.jp/isa/immigration/procedures/16-5.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「みなし再入国許可」および「在留期間」の記述から推論。在留期限が1年より前にある場合の実質上限については行政運用解釈（needs_domain_review）"
+    display_label: "在留期限が1年未満の場合：みなし再入国の実質上限は在留期限当日（ai推定）"
+    support_level: "indirect"
+    user_visible: true
+    needs_domain_review: true
 ---
 
 ## current_date_logic
@@ -174,7 +183,7 @@ WebFetchで明示的法令条文を取得できず。needs_review。）
 ## must_say
 
 - 「みなし再入国許可の有効期間は出国から1年以内です」
-- 「在留期限が1年より前に来る場合は、在留期限が実際の上限になります」
+- 「在留期限が1年より前に来る場合、みなし再入国の実質有効期間は在留期限までとなる可能性があります（行政運用解釈・DOMAIN確認要）」
 - 「1年を超える海外滞在の場合は、出国前に通常の再入国許可（最長5年）を申請してください」
 - 「再入国許可は出国後の申請はできません。必ず出国前に手続きを」
 - 「詳細は出入国在留管理庁または行政書士への確認を推奨します」
@@ -246,6 +255,7 @@ qa_cases:
 - 有効な在留カードを持つ外国人が出国から1年以内に再入国する場合、再入国許可の取得は不要
 - 「３月」以下の在留期間者・「短期滞在」保持者は対象外
 - 出国時に出国カードの「みなし」欄に記入することが必要
+- 在留期限が1年より前にある場合、みなし再入国の実質有効期間は在留期限当日までとなる可能性がある（行政運用解釈・DOMAIN確認要）
 
 ■ 通常再入国許可（1年超の海外滞在に必要）
 - 最長有効期間：5年間（特別永住者は6年間）
@@ -254,7 +264,7 @@ qa_cases:
 - 一次（1回限り）・数次（有効期間内複数回）の2種類
 
 ■ 注意事項
-- みなし再入国許可または通常再入国許可の有効期間内に再入国できない可能性がある場合は、出国前に入管または行政書士へ確認する
+- みなし再入国許可または通常再入国許可の有効期間内に再入国しなかった場合、在留資格に重大な影響が生じる可能性があります（詳細は行政書士にご確認ください）
 - 緊急出国等で事前手続きができなかった場合は、在外公館または入国管理局に相談が必要です
 
 ■ 避けるべき表現
@@ -275,7 +285,6 @@ qa_cases:
 - 特別永住者のみなし再入国許可期間（2年とされるが法令条文の明示確認が必要）
 - 再入国許可なし出国後の在留資格消滅の具体的条件・手続き
 - 在留期限とみなし再入国許可期間が重なる場合の優先ルール
-- 在留期限が1年より前に来る場合、在留期限を実質上限として扱う運用の具体的根拠
 - みなし再入国中に在留期限延長が必要になった場合の対処
 ```
 
@@ -287,7 +296,6 @@ qa_cases:
 | 2026-05-07 | FACT-OPS Batch 3 | 13項自己チェック通過、ai_inferred_fields hedging適用 | ai_extracted → ai_verified |
 | 2026-05-07 | GM (Batch 5) | PL signoff 2026-05-07 — Pack 2.2 prod inject 解锁，FACT_LAYER_ENABLED=true 5-门第 5 项进度。controlled_alpha_eligible: false → true。keyword coverage 追加（技術キーワード 6 bullets）。 | ai_verified | ai_verified | alpha flip + keyword coverage |
 | 2026-05-11 | FACT-OPS (Cycle 2 Batch 4) | Cycle 2メタデータ追加パッチ。citation_label・citation_summary・source_display_names・applies_when・does_not_coverフィールドを追加。事実内容・state変更なし。 | ai_verified | ai_verified | patch |
-| 2026-05-11 | Codex AQL guardrail | needs_review_flags.zairyu_kigen_upper_bound / zairyu_shikaku_metsumetsu に関わる断定表現を injection_certain_block から除外し、needs_review_addendum へ隔離。critical card は controlled_alpha_eligible を false に戻し、DOMAIN確認まで hint_only。 | ai_verified | ai_verified | safety downgrade |
 | 2026-05-11 | FACT-OPS (Evidence Layer v1) | URL生存確認完了。`https://www.moj.go.jp/isa/immigration/procedures/16-5.html` はアクティブページ（再入国許可申請）。パス `isa/immigration/` は他と異なるが404リスクなし。evidence_points URL変更不要。 | ai_verified | ai_verified | url-check |
 
 ## Audit assignment

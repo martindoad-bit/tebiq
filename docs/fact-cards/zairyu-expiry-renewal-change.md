@@ -84,6 +84,34 @@ related_links:
     display_label: "在留期間更新許可申請"
     locator: "ページ内で「在留期間更新許可申請」を検索"
     relation: "official_reference"
+evidence_points:
+  - claim: "在留期間更新申請のタイミング：「在留期間の満了する概ね３か月前から」（6か月以上の在留期間保有者）。入院・長期出張等の特別事情がある場合は3か月以上前からの早期申請も認められる場合あり。"
+    source_title: "出入国在留管理庁：在留期間更新許可申請"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/16-3.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「申請時期」「３か月前」「特別な事情」の記述を確認"
+    display_label: "在留更新：概ね3か月前から申請可（6か月以上保有者）"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "特例期間：在留期間更新または変更許可申請後、「当該申請に係る処分が在留期間の満了の日までになされないとき」に自動発生。終了は「処分がされる時」または「在留期間の満了の日から２か月が経過する日が終了する時」のいずれか早い方。特例期間中は「引き続き従前の在留資格をもって在留でき、従前の活動を行うことができます」。在留カードも有効。"
+    source_title: "出入国在留管理庁：特例期間の解説"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/tokureikikan_00001.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「特例期間」「従前の在留資格」「２か月」「在留カード」の記述を確認"
+    display_label: "特例期間：最長2か月・従前活動継続可・在留カード有効・不許可で即終了"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "在留期間更新許可申請の費用：窓口申請は6,000円（収入印紙）、オンライン申請は5,500円（2025年4月1日以降受理分。それ以前は4,000円）。処理期間は2週間〜1か月。申請書への押印は原則として不要。"
+    source_title: "出入国在留管理庁：在留期間更新許可申請"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/16-3.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「手数料」「6,000円」「5,500円」「処理期間」「押印不要」の記述を確認"
+    display_label: "在留期間更新：費用6,000円（窓口）/5,500円（オンライン）・処理2週間〜1か月"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 # 在留期限間近の更新・変更申請 — 申請タイミングと特例期間

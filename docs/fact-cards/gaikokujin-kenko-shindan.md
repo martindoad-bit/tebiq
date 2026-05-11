@@ -1,0 +1,155 @@
+---
+fact_id: gaikokujin-kenko-shindan
+title: 外国人労働者の健康診断 — 雇入時・定期健康診断の義務
+state: ai_verified
+risk_level: medium
+confidence: high
+source_quality: official
+controlled_alpha_eligible: false
+last_verified_at: "2026-05-11"
+reviewer: FACT-OPS (Cycle 2 New Batch 19)
+sprint: "cycle2-new-batch19"
+citation_label: "外国人労働者の健康診断（雇入時健診・定期健診・事業主の費用負担義務・労働安全衛生法・拒否できない）"
+citation_summary: "労働安全衛生法に基づく雇入時健康診断・定期健康診断が外国人労働者にも適用され、費用は事業主が負担することを確認するカード。"
+source_display_names:
+  - "厚生労働省"
+applies_when:
+  - "外国人労働者にも健康診断の実施義務があるか確認したい"
+  - "雇入時健康診断の費用は誰が負担するか確認したい"
+  - "年1回の定期健康診断が外国人にも適用されるか確認したい"
+  - "健康診断の結果を会社に知られるか確認したい"
+does_not_cover:
+  - "産業医制度の詳細"
+  - "特定業務従事者（有害業務等）の健康診断"
+  - "外国人の入国時・渡航前の健康診断"
+ai_pipeline: WebFetch → FACT-OPS review
+official_sources:
+  - url: https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/roudoukijun/anzen/anzeneisei02.html
+    label: 厚生労働省 — 健康診断について
+    accessed: "2026-05-11"
+applies_to:
+  - 日本で就労する全ての外国人労働者
+  - 外国人労働者を雇用する事業主
+direct_fact_fields:
+  - 雇入時健康診断：事業主は労働者（外国人含む）を雇い入れる際に健康診断を実施する義務がある（労働安全衛生法第66条）
+  - 定期健康診断：事業主は年1回（有害業務は年2回）定期健康診断を実施する義務がある
+  - 費用負担：健康診断の費用は事業主が負担する（労働者の自己負担は原則不可）
+  - 適用対象：常時使用する労働者（国籍・在留資格問わず）
+  - パート・アルバイト：週30時間以上・勤続1年以上（または勤続見込み1年以上）の場合は定期健診の対象
+ai_inferred_fields:
+  - 健診項目：問診・身長・体重・血圧・血液検査・胸部X線・尿検査等（ai推定）
+  - 健診結果の扱い：事業主は健診結果に基づき必要な措置を講じる義務があるが、プライバシー保護も求められる（ai推定）
+  - 健診を拒否した場合：労働者が健診を正当な理由なく拒否した場合は義務違反になる可能性がある（ai推定）
+  - 海外赴任者（外国人）：海外から帰国した労働者には帰国時健診も義務付けられる場合がある（ai推定）
+needs_review_flags:
+  - part_arubaito_kijun: パート・アルバイトの健診義務の週30時間・1年要件の詳細はMHLW確認要。
+  - kenshin_kyohi_sekinin: 健康診断を拒否した場合の事業主・労働者双方の法的責任の詳細はDOMAIN確認要。
+related_links:
+  - title: "厚生労働省 — 健康診断について"
+    url: "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/roudoukijun/anzen/anzeneisei02.html"
+    organization: "厚生労働省"
+    display_label: "厚生労働省 — 健康診断"
+    locator: "ページ内で「雇入時健康診断」「定期健康診断」「費用負担」を検索"
+    relation: "official_reference"
+evidence_points:
+  - claim: "労働安全衛生法第66条：事業主は常時使用する労働者（外国人含む）に対し、雇入時健康診断・年1回の定期健康診断を実施する義務がある。費用は事業主負担。パート・アルバイトは週30時間以上・勤続1年以上（または見込み）の場合は定期健診の対象。"
+    source_title: "厚生労働省：健康診断について"
+    source_url: "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/roudoukijun/anzen/anzeneisei02.html"
+    source_organization: "厚生労働省"
+    source_locator: "ページ内「雇入時健康診断（労安衛法第66条）」「定期健康診断（年1回）」「費用は事業主負担」「パート・アルバイトの対象要件」の記述を確認"
+    display_label: "外国人の健康診断：雇入時・定期（年1回）実施義務・費用は事業主負担・外国人も対象"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "定期健康診断の項目（労働安全衛生規則第44条）：既往歴・業務歴の調査・自覚症状・他覚症状の有無、身長・体重・腹囲・視力・聴力・血圧・血液検査・胸部X線・尿検査等。"
+    source_title: "厚生労働省：健康診断について"
+    source_url: "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/roudoukijun/anzen/anzeneisei02.html"
+    source_organization: "厚生労働省"
+    source_locator: "ページ内「定期健康診断の項目（労働安全衛生規則第44条）」「検査項目一覧（身長・体重・血圧・血液検査・胸部X線等）」の記述を確認"
+    display_label: "定期健康診断の項目（労安衛規則第44条）：身長・体重・血圧・血液検査・胸部X線・尿検査等"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "パート・アルバイトの健診対象要件（厚労省通知）：①所定労働時間が週30時間以上（通常の労働者の4分の3以上）、かつ②雇用期間が1年以上（または1年以上継続して雇用される見込みがある）場合。"
+    source_title: "厚生労働省：健康診断について"
+    source_url: "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/roudoukijun/anzen/anzeneisei02.html"
+    source_organization: "厚生労働省"
+    source_locator: "ページ内「パート・アルバイトの定期健診対象要件（週30時間以上・勤続1年以上または見込み）」の記述を確認"
+    display_label: "パート・アルバイトの健診対象：週30時間以上かつ勤続1年以上（または見込みあり）の場合"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+---
+
+## current_date_logic
+
+本カードの内容は {{TODAY_ISO}} 時点での労働安全衛生法に基づく。
+
+## current_effective_fact
+
+労働安全衛生法に基づく健康診断は外国人労働者にも適用される。事業主は雇入時健康診断・年1回の定期健康診断を実施する義務があり、費用は事業主が負担する。
+
+**健康診断の種類と対象（{{TODAY_ISO}} 現在）：**
+
+| 種類 | タイミング | 対象 | 費用 |
+|------|---------|------|------|
+| 雇入時健康診断 | 雇用時 | 常時使用する全労働者 | **事業主負担** |
+| 定期健康診断 | 年1回 | 常時使用する全労働者 | **事業主負担** |
+| パート・アルバイト | 年1回 | 週30時間以上・勤続1年以上（または見込み） | **事業主負担** |
+
+## exceptions_or_transition
+
+- **特定業務従事者**：有害業務（放射線・深夜業等）に従事する者は年2回の健診が必要
+- **海外勤務からの帰国者**：海外での業務後帰国した際に帰国時健診が必要な場合あり（ai推定）
+- **健康診断の拒否**：事業主が健診を実施しない場合は50万円以下の罰金。労働者が正当な理由なく拒否した場合も問題になる可能性あり
+
+## common_user_phrases
+
+- 外国人でも会社の健康診断を受けないといけませんか
+- 健康診断の費用は自分が払いますか
+- アルバイトでも健康診断を受けられますか
+- 会社が健康診断をしてくれません。どうすればいいですか
+
+技術キーワード（マッチャ用）：
+
+- 外国人 健康診断 / 外国人 会社 健診 / 外国人 定期健康診断
+- 健康診断 費用 会社 / アルバイト 健康診断 / 雇入時健康診断 外国人
+- 外国人 健診 義務 / 健康診断 外国人労働者
+
+## must_say
+
+- 雇入時健康診断・定期健康診断（年1回）は外国人労働者にも適用
+- 費用は事業主が負担（労働者の自己負担は原則不可）
+- パート・アルバイトは週30時間以上・勤続1年以上（または見込み）が対象
+
+## must_not_say
+
+- 「外国人は健康診断の対象外」（国籍問わず対象）
+- 「健康診断の費用は自己負担」（事業主負担が原則）
+
+## qa_cases
+
+**Q1: 外国人でも会社の健康診断を受けないといけませんか？**
+A: はい。労働安全衛生法は国籍に関わらず全ての労働者に適用されます。事業主は雇入時と年1回の定期健康診断を実施する義務があり、費用は事業主が負担します。
+
+**Q2: アルバイトです。健康診断を会社に申請できますか？**
+A: 週30時間以上働き、1年以上継続して雇用される見込みがある場合は、定期健康診断の対象となります。事業主に健康診断の実施を求めることができます。
+
+## injection_format
+
+### injection_certain_block
+
+```
+【外国人の健康診断 ファクト / {{TODAY_ISO}} 確認済み】
+
+・雇入時健康診断：入社時に事業主が実施（費用：事業主負担）
+・定期健康診断：年1回（費用：事業主負担）
+・対象：常時使用する全労働者（外国人含む）
+・パート：週30時間以上・勤続1年以上（または見込み）
+```
+
+## changelog
+
+| 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
+|------|------|----------|--------------|-------------|------|
+| 2026-05-11 | FACT-OPS (Cycle 2 New Batch 19) | 新規作成。外国人労働者の健康診断。厚生労働省公式で雇入時・定期健診の実施義務・事業主費用負担・パートの対象要件を確認。健診項目・拒否の責任はai推定。 | — | ai_verified | new |

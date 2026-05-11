@@ -73,6 +73,34 @@ related_links:
     display_label: "出入国在留管理庁 — 育成就労制度の創設"
     locator: "ページ内で「育成就労制度の創設」を検索"
     relation: "official_reference"
+evidence_points:
+  - claim: "育成就労制度の施行日は令和9年4月1日（2027年4月1日）。目的：「人手不足分野における人材育成と人材確保」（技能実習の「国際貢献」目的から変更）。在留期間：原則3年間。家族帯同：原則として認めない。対象分野（2026年1月23日閣議決定）：農業・飲食料品製造業・林業・木材産業・漁業・外食業・ビルクリーニング業・リネンサプライ業・宿泊業・介護・造船舶用工業・鉄道（計12分野）。"
+    source_title: "出入国在留管理庁：育成就労制度Q&A"
+    source_url: "https://www.moj.go.jp/isa/applications/faq/ikusei_qa_00002.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "Q&A内「Q3（施行日）」「Q13（在留期間）」「Q51（家族帯同）」「対象分野」の記述を確認"
+    display_label: "育成就労：2027年4月1日施行・原則3年・家族帯同不可・12分野"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "転籍（本人意向）：「新たに一定要件下での本人意向による転籍も認められます。転籍は同一業務区分内に限定されます」。転籍制限期間：「1年以上2年以下（または実施者判断で1年）を超えていること」（ISA Q&A Q40）。特定技能1号移行：技能に係る試験（技能検定試験3級等または特定技能1号評価試験）及び日本語能力A2相当以上の試験の合格が必要（試験免除なし）（ISA Q&A Q64）。"
+    source_title: "出入国在留管理庁：育成就労制度Q&A"
+    source_url: "https://www.moj.go.jp/isa/applications/faq/ikusei_qa_00002.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "Q&A内「Q40（転籍要件）」「Q64（特定技能1号移行要件）」「Q48・Q54（日本語要件）」の記述を確認"
+    display_label: "育成就労：転籍は同一業務区分内・制限期間1〜2年・特定技能1号移行は試験必要"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "育成就労制度の受入れ可能国：「原則として、二国間取決め（協力覚書（MOC））を作成した国からのみ受入れることができます」（ISA Q&A Q61）。送出機関が徴収できる費用の上限：「月給の２か月分まで」（ISA Q&A Q63）。"
+    source_title: "出入国在留管理庁：育成就労制度Q&A"
+    source_url: "https://www.moj.go.jp/isa/applications/faq/ikusei_qa_00002.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "Q&A内「Q61（受入れ可能国・MOC締結国）」「Q63（送出機関費用上限・月給2か月分）」の記述を確認"
+    display_label: "育成就労：受入れはMOC締結国のみ・送出機関費用上限は月給2か月分"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

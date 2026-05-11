@@ -49,6 +49,34 @@ related_links:
     display_label: "出入国在留管理庁 — 在留カード有効期間更新許可申請"
     locator: "ページ内で「在留カード有効期間更新許可申請」を検索"
     relation: "official_reference"
+evidence_points:
+  - claim: "申請対象者は「永住者若しくは高度専門職２号の在留資格を有する中長期在留者」。申請受付期間（成人・16歳以上）は「現に有する在留カードの有効期間の満了日の２か月前から有効期間満了日まで」。"
+    source_title: "出入国在留管理庁：在留カード有効期間更新許可申請"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00011.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「申請できる方」「申請時期」「２か月前」の記述を確認"
+    display_label: "永住者・高度専門職2号：満了2か月前〜満了日まで申請"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "在留カードの有効期間の満了日が16歳の誕生日とされている中長期在留者（16歳未満の永住者等）は「16歳の誕生日の６か月前から同誕生日まで」申請受付。"
+    source_title: "出入国在留管理庁：在留カード有効期間更新許可申請"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00011.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「16歳の誕生日」「６か月前」の記述を確認"
+    display_label: "16歳未満：誕生日6か月前〜誕生日当日"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "永住者（16歳以上）の在留カード有効期間はカード交付日から7年（出入国管理及び難民認定法第19条の4第1項に基づくai推定）。在留資格「永住者」自体には有効期限はないが、在留カードには有効期間があり更新が義務。（法令テキストの直接引用による確認が必要）"
+    source_title: "出入国在留管理庁：在留カード有効期間更新許可申請"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00011.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「在留カードの有効期間」「永住者」「7年」の記述を確認（seven_year_validity_source確認要）"
+    display_label: "永住者在留カード有効期間：16歳以上は7年（法令照合要）"
+    support_level: "indirect"
+    user_visible: true
+    needs_domain_review: true
 ---
 
 ## current_date_logic

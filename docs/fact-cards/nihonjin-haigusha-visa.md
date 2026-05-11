@@ -52,6 +52,34 @@ related_links:
     display_label: "出入国在留管理庁 — 日本人の配偶者等（在留資格）"
     locator: "ページ内で「日本人の配偶者等（在留資格）」を検索"
     relation: "official_reference"
+evidence_points:
+  - claim: "対象者：「日本人の配偶者若しくは特別養子又は日本人の子として出生した者」。在留期間の種類：「５年、３年、１年又は６月」の4種類。"
+    source_title: "出入国在留管理庁：日本人の配偶者等（在留資格）"
+    source_url: "https://www.moj.go.jp/isa/applications/status/spouseorchildofjapanese.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「対象者」「在留期間」「日本人の配偶者若しくは特別養子又は日本人の子」の記述を確認"
+    display_label: "対象：日本人の配偶者・特別養子・日本人の子。在留5年/3年/1年/6か月"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "就労制限なし（活動内容の制限がない身分系在留資格）（ai推定・法令照合要）。更新時に婚姻の実態（同居・生活実態）の審査あり（ai推定）。別居・活動不実施6か月以上は在留資格取消リスク（`article_22_4_activity_absence`確認要）。"
+    source_title: "出入国在留管理庁：日本人の配偶者等（在留資格）"
+    source_url: "https://www.moj.go.jp/isa/applications/status/spouseorchildofjapanese.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「活動内容」「就労」「更新」の記述を確認"
+    display_label: "就労制限なし・更新時に婚姻実態審査あり"
+    support_level: "indirect"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "日本人の配偶者等ビザから永住申請への移行：日本人の配偶者等で在留実績が3年以上（かつ1年以上継続在留）の場合、永住申請の在留期間短縮特例の基礎要件を満たす可能性がある（ai推定・永住許可ガイドラインの配偶者特例と整合）。他の永住要件（公租公課・素行・生計独立等）も同時に充足が必要。"
+    source_title: "出入国在留管理庁：日本人の配偶者等（在留資格）"
+    source_url: "https://www.moj.go.jp/isa/applications/status/spouseorchildofjapanese.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「日本人の配偶者等」の在留資格概要と永住許可ガイドライン（nyukan_nyukan50）の配偶者特例要件（3年以上婚姻+1年以上在留）から推論"
+    display_label: "日本人配偶者等ビザ：3年以上婚姻+1年以上在留で永住短縮特例の基礎（ai推定）"
+    support_level: "indirect"
+    user_visible: true
+    needs_domain_review: true
 ---
 
 ## current_date_logic

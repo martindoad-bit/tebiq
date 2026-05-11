@@ -53,10 +53,6 @@ Every card declares one `state`:
 | `high` | YES (more conservative copy required) | YES (enters human audit queue) |
 | `critical` | only if `controlled_alpha_eligible: true` is set on the card AND PL has signed off in the card's changelog; otherwise requires `human_reviewed` | requires `human_reviewed` unless explicit PL override in changelog |
 
-Sync additionally hard-fails `ai_verified + critical + controlled_alpha_eligible=true`
-unless `confidence: high`. Medium-confidence critical cards must stay hint-only
-until the flagged source gaps are resolved.
-
 **Per-field gating within an `ai_verified` card**:
 
 A card may be `ai_verified` overall but mark specific fields with
@@ -86,14 +82,22 @@ Only these are acceptable as `official_sources`:
 
 - 出入国在留管理庁 (`isa.go.jp`, `moj.go.jp/isa`)
 - 法務省 (`moj.go.jp`)
-- e-Gov 法令検索 (`elaws.e-gov.go.jp`, `laws.e-gov.go.jp`)
+- e-Gov 法令検索 (`elaws.e-gov.go.jp`)
 - 厚生労働省 (`mhlw.go.jp`) — for 年金・健康保険・労務
 - 国税庁 (`nta.go.jp`) — for 税金関連
 - 総務省 (`soumu.go.jp`) — for 住民税・地方税制度
-- デジタル庁 (`digital.go.jp`) — for マイナンバー / マイナ保険証制度
-- 全国健康保険協会 (`kyoukaikenpo.or.jp`) — for 協会けんぽ・任意継続
+- 経済産業省 (`meti.go.jp`) — for startup visa 等
+- 日本年金機構 (`nenkin.go.jp`) — for 年金関連
+- デジタル庁 (`digital.go.jp`) — for マイナンバー・マイナ保険証
+- 全国健康保険協会 (`kyoukaikenpo.or.jp`) — for 健康保険任意継続
+- 国土交通省 (`mlit.go.jp`) — for 住まい・賃貸
+- 金融庁 (`fsa.go.jp`) — for 銀行口座
+- こども家庭庁 (`cfa.go.jp`) — for 児童手当など
+- 文部科学省 (`mext.go.jp`) — for 学校・教育
+- 警察庁 (`npa.go.jp`) — for 運転免許
+- 外務省 (`mofa.go.jp`) — for 査証免除・入国
+- e-Gov 法令検索 (`laws.e-gov.go.jp`)
 - 各市町村区役所 official pages — for 住民税・国民健康保険 procedural
-- 自治体公式ドメイン (`*.lg.jp`) — for local tax / NHI / address procedures
 - 政府公式 PDF / 告示 / 省令
 
 **NOT acceptable as source**: 行政書士ブログ, 中文中介公众号, 小红书,

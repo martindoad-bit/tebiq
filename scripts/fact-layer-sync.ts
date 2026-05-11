@@ -8,9 +8,10 @@
  *
  * Hard fails (exit 1) if:
  *   - Card lists `state: human_reviewed` but is missing required fields
- *   - Any `official_sources[].url` is outside the source whitelist
+ *   - Any source/evidence/related URL is outside the source whitelist
  *   - Card has `state ∈ (ai_verified, human_reviewed)` but
  *     `injection_certain_block` (markdown body section) is empty
+ *   - Injectable high/critical cards have no user-visible direct evidence
  *
  * Usage:
  *   npx tsx scripts/fact-layer-sync.ts                # production env
@@ -49,6 +50,12 @@ const SOURCE_WHITELIST_DOMAINS: ReadonlyArray<string> = [
   'nenkin.go.jp',        // 日本年金機構
   'digital.go.jp',       // デジタル庁 — マイナンバー / マイナ保険証
   'kyoukaikenpo.or.jp',  // 全国健康保険協会 — 任意継続
+  'mlit.go.jp',          // 国土交通省 — 住まい / 賃貸
+  'fsa.go.jp',           // 金融庁 — 銀行口座
+  'cfa.go.jp',           // こども家庭庁 — 児童手当など
+  'mext.go.jp',          // 文部科学省 — 学校 / 教育
+  'npa.go.jp',           // 警察庁 — 運転免許
+  'mofa.go.jp',          // 外務省 — 査証免除 / 入国
   'lg.jp',               // 自治体公式 — 住民税 / 国保などの手続
   // 各市町村区役所 — wildcard not enforced; reviewer handles per-card
 ]
@@ -378,6 +385,13 @@ function organizationForUrl(url: string): string {
   if (/nta\.go\.jp$/i.test(host)) return '国税庁'
   if (/digital\.go\.jp$/i.test(host)) return 'デジタル庁'
   if (/kyoukaikenpo\.or\.jp$/i.test(host)) return '全国健康保険協会'
+  if (/mlit\.go\.jp$/i.test(host)) return '国土交通省'
+  if (/fsa\.go\.jp$/i.test(host)) return '金融庁'
+  if (/cfa\.go\.jp$/i.test(host)) return 'こども家庭庁'
+  if (/mext\.go\.jp$/i.test(host)) return '文部科学省'
+  if (/npa\.go\.jp$/i.test(host)) return '警察庁'
+  if (/mofa\.go\.jp$/i.test(host)) return '外務省'
+  if (/laws\.e-gov\.go\.jp$/i.test(host) || /elaws\.e-gov\.go\.jp$/i.test(host)) return 'e-Gov法令検索'
   if (/\.lg\.jp$/i.test(host)) return '自治体'
   if (/\.go\.jp$/i.test(host)) return '日本政府'
   return '官方资料'
@@ -515,6 +529,18 @@ function normalize(filePath: string, raw: string): NormalizedCard {
         factId,
         `state="${state}" but body's \`### injection_certain_block\` fenced text is empty`,
       )
+    }
+
+    if ((riskLevel === 'high' || riskLevel === 'critical')) {
+      const directEvidence = evidencePoints.filter(point =>
+        point.user_visible && point.support_level === 'direct' && !point.needs_domain_review,
+      )
+      if (directEvidence.length === 0) {
+        throw new SyncError(
+          factId,
+          'injectable high/critical cards must include at least one user-visible direct evidence point',
+        )
+      }
     }
   }
 

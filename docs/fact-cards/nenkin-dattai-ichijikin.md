@@ -53,6 +53,34 @@ related_links:
     display_label: "日本年金機構 — 脱退一時金の制度"
     locator: "ページ内で「脱退一時金の制度」を検索"
     relation: "official_reference"
+evidence_points:
+  - claim: "脱退一時金の受給要件：①日本国籍を有していないこと②公的年金制度の被保険者でないこと（資格喪失後）③老齢年金の受給資格期間（10年以上）を満たしていないこと④障害年金等の受給権がないこと⑤日本国内に住所を有していないこと⑥保険料納付済期間等の合計が6月以上あること。申請期限：「日本に住所を有しなくなった日から2年以内」。上限月数：2021年4月以降は60月（5年）（以前は36月）。"
+    source_title: "日本年金機構：脱退一時金の制度"
+    source_url: "https://www.nenkin.go.jp/service/jukyu/seido/sonota-kyufu/dattai-ichiji/20150406.html"
+    source_organization: "日本年金機構"
+    source_locator: "ページ内「脱退一時金の受給要件」「申請期限2年」「月数上限60か月」の記述を確認"
+    display_label: "脱退一時金：受給6条件・出国後2年以内申請・月数上限60か月（5年・2021年4月以降）"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "脱退一時金の月数上限改正（2021年4月）：上限月数が36か月（旧）から60か月（5年分）に引き上げられた。上限60か月を超えた保険料納付分は支給額に反映されない。支給額の計算式：最終月の標準報酬月額 × 保険料率 × 1/2 × 月数に応じた乗率。"
+    source_title: "日本年金機構：脱退一時金の制度"
+    source_url: "https://www.nenkin.go.jp/service/jukyu/seido/sonota-kyufu/dattai-ichiji/20150406.html"
+    source_organization: "日本年金機構"
+    source_locator: "ページ内「月数上限60か月（2021年4月1日施行・旧36か月）」「脱退一時金の額（標準報酬月額×保険料率×1/2×乗率）」の記述を確認"
+    display_label: "脱退一時金：2021年4月〜上限60か月（旧36か月）・超過分は非反映・計算式あり"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "脱退一時金を受け取ると、受取分に対応する期間の年金加入記録が消滅する可能性がある。将来、永住申請（年金保険料納付要件）や老齢年金受給（受給資格期間10年）を検討する場合は、受取前に影響を慎重に確認することが推奨される（ai推定 — record_erasure_detail確認要）。"
+    source_title: "日本年金機構：脱退一時金の制度"
+    source_url: "https://www.nenkin.go.jp/service/jukyu/seido/sonota-kyufu/dattai-ichiji/20150406.html"
+    source_organization: "日本年金機構"
+    source_locator: "ページ内「脱退一時金受取後の年金記録への影響（記録消滅の可能性）」「永住申請・老齢年金受給を検討する場合の注意」の記述を確認"
+    display_label: "脱退一時金受取後：年金記録消滅リスク・永住申請・老齢年金への影響に注意（ai推定）"
+    support_level: "indirect"
+    user_visible: true
+    needs_domain_review: true
 ---
 
 ## current_date_logic
@@ -119,7 +147,7 @@ related_links:
 - 「全額返ってくる」（支払い全額ではなく、月数・計算式に基づく金額）
 - 「社会保障協定締結国でも必ず受け取れる」（協定内容による制限あり・確認要）
 - 「いつでも申請できる」（出国後2年以内という期限がある）
-- 「受け取っても年金記録は残る」（記録への影響は確認中だが注意が必要）
+- 「受け取っても年金記録は残る」（年金記録への影響は日本年金機構へ要確認。DOMAIN確認要）
 
 ## qa_cases
 

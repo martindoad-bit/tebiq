@@ -70,6 +70,34 @@ related_links:
     display_label: "出入国在留管理庁 — 技術・人文知識・国際業務（書類一覧）"
     locator: "ページ内で「技術・人文知識・国際業務（書類一覧）」を検索"
     relation: "official_reference"
+evidence_points:
+  - claim: "技人国在留期間更新申請の申請開始時期：「在留期間の満了する概ね3か月前から」（6か月以上の在留期間保有者）。標準処理期間：「2週間〜1か月」。共通必須書類：在留期間更新許可申請書・写真1葉（16歳未満免除）・パスポート・在留カード・カテゴリー該当証明書類・所属機関代表者申告書・住民税の課税（非課税）証明書および納税証明書 各1通。"
+    source_title: "出入国在留管理庁：在留期間更新許可申請"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/16-3.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「申請時期」「処理期間」「必要書類（共通）」の記述を確認"
+    display_label: "技人国更新：3か月前から・処理2週間〜1か月・共通必須書類6種"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "転職後（カテゴリー3・4）の更新では追加書類（労働条件通知書等・登記事項証明書・事業内容案内書・直近決算書）が必要。2026年4月15日施行：一部申請者にCEFR B2相当以上の語学能力証明書の提出が新たに必要（適用対象範囲は`cefr_b2_category_scope`確認要）。"
+    source_title: "出入国在留管理庁：技術・人文知識・国際業務（書類一覧）"
+    source_url: "https://www.moj.go.jp/isa/content/gijinkoku.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「転職後の追加書類」「CEFR B2語学能力証明」の記述を確認"
+    display_label: "技人国更新：転職後追加書類4種・2026年4月CEFR B2新設要件"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "技人国更新申請の窓口手数料は収入印紙で納付。窓口申請の収入印紙額については複数の記載があり（4,000円・6,000円）、ISA手続きページで最新額を直接確認することを推奨（`fee_amount_confirmation`確認要）。"
+    source_title: "出入国在留管理庁：在留期間更新許可申請"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/16-3.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「手数料」「収入印紙」の記述を確認（金額は要現地確認）"
+    display_label: "技人国更新：窓口手数料は収入印紙納付・金額はISA公式で要確認"
+    support_level: "indirect"
+    user_visible: true
+    needs_domain_review: true
 ---
 
 ## current_date_logic
@@ -168,8 +196,6 @@ A: 共通必須書類は①在留期間更新許可申請書、②写真1葉（1
 ```
 【技人国更新申請 ファクト / {{TODAY_ISO}} 確認済み】
 
-以下は出入国在留管理庁の公式情報に基づく現行制度。
-
 ・申請開始時期：在留期限の概ね3か月前から
 ・標準処理期間：2週間〜1か月
 ・申請場所：住所地管轄の地方入管局（またはオンライン）
@@ -185,21 +211,18 @@ A: 共通必須書類は①在留期間更新許可申請書、②写真1葉（1
 転職後（カテゴリー3・4）の追加書類：
 - 労働条件通知書等・登記事項証明書・事業内容資料・直近決算書
 
-2026年4月15日以降の新設要件（適用範囲確認要）：
-語学能力証明書（CEFR B2以上）が一部申請者に新たに必要。
-具体的な適用対象・証明書類はISA公式通知または窓口で確認要
-
 回答時の注意：
 - 申請書類はカテゴリーおよび転職有無により異なる
 - 手数料金額は要確認（窓口・オンラインで異なる可能性）
-- CEFR B2要件の適用対象者は現在確認中のため断定しない
+- 2026年4月以降のCEFR B2語学証明要件の適用対象は未確定のため断定しない（addendum参照）
 ```
 
 ### injection_needs_review_addendum
 
 ```
 ※ 以下はai推定または公式確認待ちのため、断定的に回答しないこと：
-・CEFR B2適用対象・証明書類の詳細（適用範囲はISA公式通知で確認要。現在`cefr_b2_category_scope`未確認）
+・2026年4月15日以降の語学証明要件（CEFR B2以上）：「一部申請者に新たに必要」だが適用対象の具体的範囲は未確定（`cefr_b2_category_scope`確認要。ISA公式通知または窓口で確認）
+・CEFR B2相当と認められる試験・スコアの公式対応表（ISA公式通知で確認要）
 ・窓口申請の収入印紙の正確な金額（4,000円か6,000円か — ISAページで確認要）
 ・ISAが認めるCEFR B2相当試験・スコアの具体的な対応表
 ・カテゴリー1・2の書類簡略化の具体的内容

@@ -284,7 +284,7 @@ async function main() {
 
   check('4c. /c/[id] renders shared FactReferenceBlock', () => {
     assert.ok(cPageSrc.includes('FactReferenceBlock'))
-    assert.ok(factReferenceSrc.includes('可核对资料'))
+    assert.ok(factReferenceSrc.includes('参考资料'))
     assert.ok(factReferenceSrc.includes('ReferenceLink'))
   })
   check('4d. FactReferenceBlock links evidence, related links, and official_sources fallback', () => {

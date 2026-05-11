@@ -52,6 +52,34 @@ related_links:
     display_label: "出入国在留管理庁 — 特定技能（在留資格）"
     locator: "ページ内で「特定技能（在留資格）」を検索"
     relation: "official_reference"
+evidence_points:
+  - claim: "特定技能1号の技能水準は「相当程度の知識又は経験を必要とする技能」。個別許可期間は最長3年、通算在留上限は5年。対象業種は介護・農業・漁業・建設・造船・自動車整備・航空・宿泊・外食業・飲食料品製造業・鉄道・自動車運送業・林業・木材産業等16分野。"
+    source_title: "出入国在留管理庁：特定技能（在留資格）"
+    source_url: "https://www.moj.go.jp/isa/applications/status/specifiedskilledworker.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「特定技能1号」「技能水準」「通算在留上限」「対象分野」の記述を確認"
+    display_label: "特定技能1号：技能水準・通算5年上限・16分野"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "特定技能2号の技能水準は「熟練した技能」（1号より上位）。在留期間の上限はなく「3年・2年・1年・6か月」を繰り返し更新可能。1号は家族帯同不可、2号は家族帯同可（各ai推定・法令照合要）。"
+    source_title: "出入国在留管理庁：特定技能（在留資格）"
+    source_url: "https://www.moj.go.jp/isa/applications/status/specifiedskilledworker.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「特定技能1号・2号の比較」「熟練した技能」「上限なし」「家族帯同」の記述を確認"
+    display_label: "1号vs2号：通算上限あり/なし・家族帯同不可/可"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "特定技能1号の日本語要件：国際交流基金日本語基礎テスト（JFT-Basic）合格またはJLPT N4以上合格が必要。介護分野では加えて「介護日本語評価試験」も必要。業種によって要求される試験の種類が異なる（ai推定・業種別試験要件は各分野所管省庁で確認要）。"
+    source_title: "出入国在留管理庁：特定技能（在留資格）"
+    source_url: "https://www.moj.go.jp/isa/applications/status/specifiedskilledworker.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「日本語能力」「JFT-Basic」「JLPT N4」「介護日本語評価試験」の記述から推論（japanese_language_test_by_sector確認要）"
+    display_label: "特定技能1号：JFT-Basic又はN4以上必要・介護は追加試験あり（ai推定）"
+    support_level: "indirect"
+    user_visible: true
+    needs_domain_review: true
 ---
 
 ## current_date_logic
@@ -110,9 +138,8 @@ related_links:
 ## must_say
 
 - 特定技能1号は通算5年が在留上限。5年後に特定技能2号への移行ができない場合は帰国が原則
-- 特定技能1号は家族帯同不可。配偶者・子を「家族滞在」で呼び寄せることができない
-- 日本語要件はJFT-Basic合格またはJLPT N4以上（業種によって要求内容が異なる）
 - 技能試験は各分野の所管省庁が実施する；技能実習修了者は免除の場合あり
+- 家族帯同・日本語要件の詳細はneeds_review_addendum参照（DOMAIN確認中）
 
 ## must_not_say
 
@@ -139,21 +166,16 @@ A: 技能実習2号・3号を良好に修了した場合、同一業種・職種
 ```
 【特定技能1号 基本ファクト / {{TODAY_ISO}} 確認済み】
 
-以下は出入国在留管理庁の公式情報に基づく現行ルール。
-
 ・在留上限：通算5年（更新可だが通算5年超不可）
 ・個別許可期間：最長3年（1回あたり）
-・家族帯同：不可（特定技能2号は可）【ai推定・法令照合要】
 ・技能水準：「相当程度の知識又は経験を必要とする技能」
   （各分野の技能試験合格が原則必要）
 ・対象業種（16分野）：介護、農業、漁業、建設、造船、自動車整備、航空、宿泊、
   外食業、飲食料品製造業、鉄道、自動車運送業、林業、木材産業、ビルクリーニング、
   素形材等製造業
-・日本語要件：JFT-Basic合格またはJLPT N4以上（業種により異なる、介護は追加試験あり）【ai推定】
 
 回答時の注意：
 - 5年上限は通算カウント（更新後もリセットされない）
-- 特定技能1号では家族を呼べないことを明示する
 - 「5年後も自動更新できる」とは言わない
 ```
 
@@ -161,6 +183,7 @@ A: 技能実習2号・3号を良好に修了した場合、同一業種・職種
 
 ```
 ※ 本回答に関連して、以下は確認待ち情報のため断定的に回答しないこと：
+・家族帯同の可否（1号家族帯同不可の法令根拠は入管法別表第1の5・所管省令で確認中・`family_accompaniment_law_ref`確認要）
 ・日本語要件の業種別詳細（JFT-Basic可否は業種ごとに確認要）
 ・技能実習修了者の試験免除条件（同一業種・職種の一致要件）
 ・特定技能2号の現行対応分野一覧（2023年以降拡大中）

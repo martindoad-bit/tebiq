@@ -51,6 +51,34 @@ related_links:
     display_label: "出入国在留管理庁 — 高度専門職（在留資格）"
     locator: "ページ内で「高度専門職（在留資格）」を検索"
     relation: "official_reference"
+evidence_points:
+  - claim: "高度専門職1号の取得要件：ポイント計算で70点以上。永住申請短縮ルート：80点以上+1号在留1年以上 → 永住申請可、70〜79点+1号在留3年以上 → 永住申請可。通常の永住ルート（10年）より大幅短縮。"
+    source_title: "出入国在留管理庁：高度専門職（在留資格）"
+    source_url: "https://www.moj.go.jp/isa/applications/status/designatedactivities02_00004.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「高度専門職1号」「ポイント計算」「永住申請」「1年」「3年」の記述を確認"
+    display_label: "高度専門職：70点以上取得・80点→1年・70点→3年で永住申請可"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "高度専門職2号は「在留期限を無期限とし、活動制限を大きく緩和した」在留資格。高度専門職1号の3分類：イ（学術・研究）、ロ（技術・人文・企業内転勤等）、ハ（経営管理・法務会計）。"
+    source_title: "出入国在留管理庁：高度専門職（在留資格）"
+    source_url: "https://www.moj.go.jp/isa/applications/status/designatedactivities02_00004.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「高度専門職2号」「在留期限無期限」「イ・ロ・ハ」の記述を確認"
+    display_label: "高度専門職2号：在留無期限・活動制限緩和。1号はイ・ロ・ハ3分類"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "高度専門職ポイント計算の主要カテゴリ：学歴・職歴・年収・年齢・研究開発・ボーナスポイント。ポイントは「在留資格取得時」に70点以上を満たせばよく、在留中に年収・年齢等で変動しても即座に在留資格取消にはならない（ai推定 — ISAポイント計算表確認要）。"
+    source_title: "出入国在留管理庁：高度専門職（在留資格）"
+    source_url: "https://www.moj.go.jp/isa/applications/status/designatedactivities02_00004.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「ポイント計算」「学歴・職歴・年収・年齢・研究開発・ボーナスポイント」の記述を確認"
+    display_label: "高度専門職：ポイントは学歴・職歴・年収等の総合点・取得時に70点以上で良い（変動しても即取消なし・ai推定）"
+    support_level: "indirect"
+    user_visible: true
+    needs_domain_review: true
 ---
 
 ## current_date_logic

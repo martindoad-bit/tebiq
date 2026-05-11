@@ -71,6 +71,34 @@ related_links:
     display_label: "出入国在留管理庁 — 在留資格認定証明書の電子化Q&A"
     locator: "ページ内で「在留資格認定証明書の電子化Q&A」を検索"
     relation: "official_reference"
+evidence_points:
+  - claim: "COEの用途：「交付された在留資格認定証明書は、在外公館における査証申請や上陸申請の際に提出・提示することにより、速やかに査証発給や上陸許可を受けることができます。」標準処理期間：「１か月～３か月」。手数料：無料。郵送不可：「郵送での提出は受け付けていません」。対象外：短期滞在・永住者はCOE申請の対象外。"
+    source_title: "出入国在留管理庁：在留資格認定証明書交付申請"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/16-1.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「処理期間1〜3か月」「手数料無料」「郵送不可」「対象外（短期滞在・永住者）」の記述を確認"
+    display_label: "COE：処理1〜3か月・手数料無料・郵送不可・短期滞在/永住者は対象外"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "COEの電子化（2023年3月17日〜）：「令和５年３月１７日から、在留資格認定証明書を電子メールで受領することが可能となりました。また、受領した電子メールは、海外に住む外国人本人の方に転送することができ、在留資格認定証明書を海外に郵送する手間、費用、時間がかかりません。」電子COEの在外公館での使用：「海外にいる外国人本人の方は、在外公館で電子メールを提示することで査証申請を行うことができます。」電子COEの空港での使用：「外国人本人の方は、本邦の空海港において、電子メールを提示することで上陸申請を行うことができます。」電子COEの受領登録：「電子メールに記載されたＵＲＬから『受領登録』を行ってください。」"
+    source_title: "出入国在留管理庁：在留資格認定証明書の電子化Q&A"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/10_00136.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「電子化（2023年3月17日〜）」「電子メール転送」「在外公館での提示」「空港での提示」「受領登録」の記述を確認"
+    display_label: "COE電子化（2023年3月17日〜）：電子メール交付・海外転送可・受領登録必須・在外公館/空港でメール提示可"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "COEの申請代理人として認められる者：外国人本人・所属機関（雇用主・学校等）の職員・弁護士・行政書士・法定代理人・親族。申請場所は地方出入国在留管理官署の窓口（平日9〜12時・13〜16時）またはオンライン。郵送での提出は受け付けていない。"
+    source_title: "出入国在留管理庁：在留資格認定証明書交付申請"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/16-1.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内『申請代理人』『申請場所（窓口/オンライン）』『郵送不可』の記述を確認"
+    display_label: "COE申請：代理人は雇用主・行政書士等・窓口またはオンライン・郵送不可"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

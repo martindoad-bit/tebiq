@@ -55,6 +55,34 @@ related_links:
     display_label: "国税庁 No.2020 — 確定申告"
     locator: "ページ内で「確定申告」を検索"
     relation: "official_reference"
+evidence_points:
+  - claim: "確定申告が必要な主要ケース（公式）：①給与収入2,000万円超、②給与1か所受取で給与以外の所得が20万円超（副業等）、③複数の事業所から給与を受ける。"
+    source_title: "国税庁 No.2020 確定申告"
+    source_url: "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/2020.htm"
+    source_organization: "国税庁"
+    source_locator: "ページ内「確定申告が必要な人」「2,000万円」「20万円」の記述を確認"
+    display_label: "確定申告が必要なケース（2,000万超・副業20万超等）"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "確定申告が不要な条件（給与所得者）：給与収入2,000万円以下、かつ1か所から給与を受け全部源泉徴収、かつ給与・退職所得以外の所得が20万円以下である人。"
+    source_title: "国税庁 No.2020 確定申告"
+    source_url: "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/2020.htm"
+    source_organization: "国税庁"
+    source_locator: "ページ内「確定申告をしなくてよい場合」の記述を確認"
+    display_label: "申告不要条件（1か所受取・他所得20万以下）"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "確定申告の申告受付期間は「原則としてその年の翌年2月16日から3月15日まで」。納付期限も翌年3月15日。申告先は住所地の所轄税務署。"
+    source_title: "国税庁 No.2020 確定申告"
+    source_url: "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/2020.htm"
+    source_organization: "国税庁"
+    source_locator: "ページ内「確定申告の申告期限」「2月16日」「3月15日」の記述を確認"
+    display_label: "申告期限：翌年2月16日〜3月15日"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

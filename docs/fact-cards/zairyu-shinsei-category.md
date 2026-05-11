@@ -56,6 +56,34 @@ related_links:
     display_label: "出入国在留管理庁 — 技術・人文知識・国際業務（申請書類）"
     locator: "ページ内で「技術・人文知識・国際業務（申請書類）」を検索"
     relation: "official_reference"
+evidence_points:
+  - claim: "カテゴリー1（9種類のいずれか）：「日本の証券取引所に上場している企業」「保険業を営む相互会社」「日本又は外国の国・地方公共団体」「独立行政法人」「特殊法人・認可法人」「日本の国・地方公共団体認可の公益法人」「法人税法別表第１に掲げる公共法人」「イノベーション創出企業（高度イノベーション推進企業等）」。カテゴリー2の基準：「前年分の給与所得の源泉徴収票等の法定調書合計表中、給与所得の源泉徴収合計表の源泉徴収税額が１，０００万円以上ある団体・個人」。カテゴリー1・2の書類省略：「カテゴリー１及びカテゴリー２については、その他の資料は原則不要」。"
+    source_title: "出入国在留管理庁：技術・人文知識・国際業務（申請書類）"
+    source_url: "https://www.moj.go.jp/isa/applications/status/gijinkoku.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「カテゴリー1（9種類）」「カテゴリー2（源泉1,000万円以上）」「カテゴリー1・2の書類省略」の記述を確認"
+    display_label: "技人国カテゴリー1（上場企業等9種）・カテゴリー2（源泉1,000万以上）・カテゴリー1/2は書類省略可"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "カテゴリー3の定義：前年分の法定調書合計表を提出済みだが源泉徴収税額が1,000万円未満の団体・個人。カテゴリー4の定義：「左のいずれにも該当しない団体・個人」。令和8年4月15日以降の新要件（カテゴリー3・4）：「令和８年４月１５日以降の申請から、カテゴリー３又は４に該当する場合は、以下の添付書類を追加で提出いただく必要があります」— 追加1：「所属機関の代表者に関する申告書」、追加2：「語学力を証明する書類」（対人活動を要する職種の場合）。語学力証明の免除：JLPT N2以上・BJT400点以上・日本語教育機関修了者。"
+    source_title: "出入国在留管理庁：技術・人文知識・国際業務（申請書類）"
+    source_url: "https://www.moj.go.jp/isa/applications/status/gijinkoku.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「カテゴリー3・4の定義」「令和8年4月15日以降の追加書類（代表者申告書・語学力証明）」「語学力免除条件」の記述を確認"
+    display_label: "技人国カテゴリー3（源泉1,000万未満）・カテゴリー4・令和8年4月15日〜追加：代表者申告書＋語学力証明（対人活動職種）"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "カテゴリー3・定義：前年分の法定調書合計表を提出済みだが源泉徴収税額が1,000万円未満の団体・個人。カテゴリー4の定義：「左のいずれにも該当しない団体・個人」（新設企業・法定調書未提出等）。カテゴリーは申請者本人ではなく所属機関（雇用主）の規模・属性で決まる。"
+    source_title: "出入国在留管理庁：技術・人文知識・国際業務（申請書類）"
+    source_url: "https://www.moj.go.jp/isa/applications/status/gijinkoku.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内『カテゴリー3（源泉1,000万未満・法定調書提出済）』『カテゴリー4（いずれにも該当しない）』の定義記述を確認"
+    display_label: "技人国カテゴリー3（法定調書提出済・源泉1,000万未満）・カテゴリー4（新設等）・カテゴリーは所属機関の属性で決定"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic
