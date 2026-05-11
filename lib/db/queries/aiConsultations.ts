@@ -6,7 +6,7 @@
 // Routes that call these MUST handle their own auth — these helpers do
 // not enforce any access control.
 
-import { and, asc, desc, eq, or } from 'drizzle-orm'
+import { and, asc, desc, eq, isNull, or } from 'drizzle-orm'
 import { db } from '@/lib/db'
 import {
   aiConsultations,
@@ -283,6 +283,22 @@ export async function listSavedAiConsultationsForViewer(
     .limit(limit)
 }
 
+/** Recent root consultations for a viewer. Used by "我的咨询" after auto-record. */
+export async function listRecentAiConsultationsForViewer(
+  viewerId: string,
+  limit = 20,
+): Promise<AiConsultation[]> {
+  return await db
+    .select()
+    .from(aiConsultations)
+    .where(and(
+      eq(aiConsultations.viewerId, viewerId),
+      isNull(aiConsultations.parentConsultationId),
+    ))
+    .orderBy(desc(aiConsultations.createdAt))
+    .limit(limit)
+}
+
 /** All consultations for the Learning Console (#41). */
 export async function listAllAiConsultations(limit = 200): Promise<AiConsultation[]> {
   return await db
@@ -323,4 +339,20 @@ export async function setAiConsultationSaved(id: string): Promise<void> {
     .update(aiConsultations)
     .set({ savedQuestion: true })
     .where(eq(aiConsultations.id, id))
+}
+
+export async function deleteAiConsultationChainForViewer(
+  id: string,
+  viewerId: string,
+): Promise<boolean> {
+  const row = await getAiConsultationById(id)
+  if (!row || row.viewerId !== viewerId) return false
+  const rootId = row.parentConsultationId ?? row.id
+  await db
+    .delete(aiConsultations)
+    .where(and(
+      eq(aiConsultations.viewerId, viewerId),
+      or(eq(aiConsultations.id, rootId), eq(aiConsultations.parentConsultationId, rootId)),
+    ))
+  return true
 }

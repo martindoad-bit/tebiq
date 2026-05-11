@@ -27,10 +27,13 @@ export function FactReferenceBlock({
         <span className="text-[12px] font-normal text-[var(--tebiq-cool-gray)]">
           {total} 条
         </span>
+        <span className="ml-auto text-[11px] font-normal text-[var(--tebiq-cool-gray)]">
+          查看来源
+        </span>
       </summary>
       <div className="mt-3 space-y-3">
         <p className="text-[12px] leading-relaxed text-[var(--tebiq-deep-slate)]">
-          以下内容用于帮助整理案情和核对信息，不代表官方背书或最终审查结果。
+          以下信息来自可核对来源，用于辅助理解和整理，不代表官方背书或最终判断。
         </p>
         {injected.length > 0 && (
           <FactReferenceGroup label="已引用资料" cards={injected} />
@@ -71,12 +74,12 @@ function FactReferenceRow({ card }: { card: ConsultationFactCardAuditEntry }) {
         </span>
         {sourceLabels.length > 0 && (
           <span className="rounded-full border border-[var(--tebiq-cool-gray)] px-2 py-0.5 text-[10px] text-[var(--tebiq-deep-slate)]">
-            公开来源
+            官方来源
           </span>
         )}
         {isHighRisk && (
           <span className="rounded-full border border-[var(--tebiq-warm-amber)] px-2 py-0.5 text-[10px] text-[var(--tebiq-deep-slate)]">
-            高风险场景
+            需尽快确认
           </span>
         )}
       </div>
@@ -94,7 +97,7 @@ function FactReferenceRow({ card }: { card: ConsultationFactCardAuditEntry }) {
       )}
       {card.needs_review_flags.length > 0 && (
         <p className="text-[11px] leading-relaxed text-[var(--tebiq-cool-gray)]">
-          有些细节仍需结合材料或窗口说明确认。
+          有些细节仍需结合材料或窗口说明核对。
         </p>
       )}
     </li>

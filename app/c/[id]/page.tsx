@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft, Camera, GitBranch, MessageSquarePlus } from 'lucide-react'
+import TabBar from '@/app/_components/v5/TabBar'
 import {
   BrandHeader,
   ConsultationShell,
@@ -23,7 +24,7 @@ import {
 export const dynamic = 'force-dynamic'
 
 export const metadata = {
-  title: 'TEBIQ — 已保存咨询 (Alpha)',
+  title: 'TEBIQ — 我的咨询 (Alpha)',
   robots: { index: false, follow: false },
 }
 
@@ -47,10 +48,10 @@ export default async function ConsultationDetailPage({ params }: PageProps) {
   const isChain = chain.length > 1
 
   return (
-    <ConsultationShell>
+    <ConsultationShell tabBar={<TabBar />}>
       <div className="space-y-5">
         <BrandHeader
-          eyebrow="已保存咨询"
+          eyebrow="我的咨询"
           title="这次咨询"
           description="这里用于回看问题、回答和补充记录。它不是正式案件。"
           action={
@@ -116,11 +117,11 @@ export default async function ConsultationDetailPage({ params }: PageProps) {
         {isChain && <ChainBlock chain={chain} currentId={row.id} />}
 
         <Surface className="space-y-3">
-          <SectionLabel>保存信息</SectionLabel>
+          <SectionLabel>记录信息</SectionLabel>
           <div className="flex flex-wrap gap-2">
             <MetaPill>{new Date(row.createdAt).toLocaleString('zh-CN')}</MetaPill>
             {row.feedbackType && <MetaPill>反馈：<FeedbackLabel type={row.feedbackType} /></MetaPill>}
-            {row.savedQuestion && <MetaPill>已保存</MetaPill>}
+            <MetaPill>自动记录</MetaPill>
             {row.humanConfirmClicked && <MetaPill tone="focus">需确认</MetaPill>}
           </div>
         </Surface>
@@ -128,7 +129,7 @@ export default async function ConsultationDetailPage({ params }: PageProps) {
         <footer className="flex flex-wrap items-center justify-between gap-3 border-t border-[var(--tebiq-soft-gray)] pt-4 text-[12px]">
           <Link href="/me/consultations" className="inline-flex items-center gap-1 text-[var(--tebiq-deep-slate)]">
             <ArrowLeft className="h-3.5 w-3.5" strokeWidth={1.6} />
-            返回已保存咨询
+            返回我的咨询
           </Link>
           <p className="text-[var(--tebiq-deep-slate)]">具体期限、手续和个案判断，请向行政書士或入管确认。</p>
         </footer>

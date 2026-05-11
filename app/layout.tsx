@@ -12,6 +12,7 @@ import './globals.css'
 export const metadata: Metadata = {
   metadataBase: new URL('https://tebiq.jp'),
   title: 'TEBIQ — 下一步怎么做',
+  manifest: '/manifest.webmanifest',
   description:
     '签证、税金、年金、会社手续和日文通知。先看下一步、材料、期限和办理窗口。',
   openGraph: {

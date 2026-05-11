@@ -11,6 +11,7 @@ import {
 } from 'lucide-react'
 import AppBar from '@/app/_components/v5/AppBar'
 import AppShell from '@/app/_components/v5/AppShell'
+import TabBar from '@/app/_components/v5/TabBar'
 import {
   COLOR_LABEL,
   CONTACT_LABEL,
@@ -113,17 +114,17 @@ export default function ConsultationForm() {
   }
 
   return (
-    <AppShell appBar={<AppBar title="预约咨询" back="/" />}>
+    <AppShell appBar={<AppBar title="预约咨询" back="/scrivener" />} tabBar={<TabBar />}>
       <section className="pt-4">
         <div className="inline-flex items-center gap-1.5 rounded-chip bg-accent-2 px-3 py-1.5 text-[11px] font-medium text-ink">
           <ClipboardList size={13} strokeWidth={1.55} />
             预约咨询
         </div>
         <h1 className="mt-3 max-w-full text-[26px] font-medium leading-[1.18] text-ink">
-          预约专家咨询
+          预约行政书士咨询
         </h1>
         <p className="mt-3 max-w-full break-words text-[13px] leading-[1.7] text-slate">
-          提交后我们会在 24 小时内联系你，根据你的情况匹配合适的专家。
+          留下联系方式后，我们会确认可预约方式和咨询范围。
         </p>
       </section>
 
@@ -267,13 +268,13 @@ export default function ConsultationForm() {
             {submitting ? '提交中...' : (
               <>
                 <Send size={16} strokeWidth={1.55} />
-                提交咨询请求
+                提交预约信息
               </>
             )}
           </button>
 
           <p className="mt-4 border-t border-hairline pt-3 text-[11px] leading-relaxed text-ash">
-            本平台聚合合作专家资源，根据您的情况匹配合适的专业人士。
+            行政书士可基于你提供的信息进行确认和建议，但不保证申请结果。
           </p>
         </form>
       </section>

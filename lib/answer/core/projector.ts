@@ -94,7 +94,7 @@ export function buildProviderTimeoutFallback(input: {
   questionText: string
 }): PublicAnswer {
   const headline = '当前模型响应超时，不是你的输入问题。'
-  const subtext = '你可以稍后重试；如果已识别出相关事项，也可以先保存继续处理。'
+  const subtext = '系统会记录这次咨询；你可以稍后从“我的咨询”查看，或重新生成。'
   return finalize({
     status: 'clarification_needed',
     domain: input.domain,
@@ -108,7 +108,7 @@ export function buildProviderTimeoutFallback(input: {
       { heading: '我理解你的问题是', body: input.detectedIntent.understood_question },
       { heading: '当前状态', body: headline + '\n' + subtext },
     ],
-    next_steps: ['稍后重试', '若已识别出事项可先保存为「待确认事项」'],
+    next_steps: ['稍后从“我的咨询”查看', '需要完整回答时再重新生成'],
     risk_warnings: [],
     clarification_questions: [],
     documents_needed: [],

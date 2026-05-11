@@ -65,7 +65,7 @@ async function readGoldAnswerSeeds(): Promise<AnswerSeed[]> {
       nextSteps: urgent.length ? urgent : steps.slice(0, 3),
       sources: [{ title: 'Gold Answer v2', source_grade: 'B' }],
       boundaryNote: ANSWER_BOUNDARY_NOTE,
-      relatedLinks: [{ title: '继续问', href: '/' }],
+      relatedLinks: [{ title: '提问', href: '/ai-consultation' }],
       actionAnswer,
       intent,
       intentType: templateToIntentType(template),
