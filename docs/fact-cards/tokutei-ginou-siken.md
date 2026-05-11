@@ -60,6 +60,24 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: false
+  - claim: "技能実習2号を良好に修了した者は、同一分野の特定技能1号の試験（技能評価試験・日本語試験の両方）が免除される。"
+    source_title: "出入国在留管理庁：特定技能1号"
+    source_url: "https://www.moj.go.jp/isa/applications/status/tokutei1.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「技能実習2号修了者の試験免除（技能評価試験・日本語試験ともに免除）」の記述を確認"
+    display_label: "技能実習2号修了（同一分野）→特定技能1号の技能試験・日本語試験の両方が免除"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "日本語試験の選択肢：①国際交流基金日本語基礎テスト（JFT-Basic）A2レベル以上、または②日本語能力試験（JLPT）N4以上のいずれか1つ。介護分野はさらに「介護日本語評価試験」も必要。"
+    source_title: "出入国在留管理庁：特定技能1号"
+    source_url: "https://www.moj.go.jp/isa/applications/status/tokutei1.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「日本語試験（JFT-Basic A2以上またはJLPT N4以上）」「介護分野の追加要件（介護日本語評価試験）」の記述を確認"
+    display_label: "日本語試験：JFT-Basic（A2以上）またはJLPT N4以上・介護分野は介護日本語評価試験も必要"
+    support_level: "indirect"
+    user_visible: true
+    needs_domain_review: true
 ---
 
 ## current_date_logic

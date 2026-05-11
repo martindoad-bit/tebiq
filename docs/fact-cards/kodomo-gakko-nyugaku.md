@@ -61,6 +61,24 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: false
+  - claim: "外国人の子どもの就学機会の保障：文部科学省は外国人の子どもに対しても就学機会を保障する方針。市区町村教育委員会が就学案内を外国人世帯に送付するよう求めている。"
+    source_title: "文部科学省：外国人の子どもの就学について"
+    source_url: "https://www.mext.go.jp/a_menu/shotou/clarinet/002.htm"
+    source_organization: "文部科学省"
+    source_locator: "ページ内「外国人の子どもへの就学機会の保障」「市区町村教育委員会が就学案内を送付」の記述を確認"
+    display_label: "外国人の子どもの就学機会を保障：文科省方針・教育委員会が就学案内を外国人世帯に送付"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "日本語指導が必要な外国人児童生徒への「特別の教育課程」：2014年文部科学省告示により法制化。在籍学級と別に、週数時間の日本語指導授業を受けることができる（義務教育段階）。"
+    source_title: "文部科学省：外国人の子どもの就学について"
+    source_url: "https://www.mext.go.jp/a_menu/shotou/clarinet/002.htm"
+    source_organization: "文部科学省"
+    source_locator: "ページ内「日本語指導の特別の教育課程（2014年文部科学省告示による法制化）」「在籍学級と別に週数時間の日本語指導」の記述を確認"
+    display_label: "外国人児童への日本語指導「特別の教育課程」：2014年告示で法制化・週数時間の指導授業あり"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

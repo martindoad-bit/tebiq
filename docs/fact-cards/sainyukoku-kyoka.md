@@ -61,6 +61,24 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: false
+  - claim: "みなし再入国許可の手続き：出国時に空港でEDカード（出帰国記録カード）の「みなし再入国」欄にチェックを入れるだけ。特別な申請・費用は不要。"
+    source_title: "出入国在留管理庁：再入国許可"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri07_00045.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「みなし再入国の手続き（EDカードへのチェック・費用不要）」の記述を確認"
+    display_label: "みなし再入国の手続き：空港でEDカードにチェックするだけ・申請費用不要"
+    support_level: "indirect"
+    user_visible: true
+    needs_domain_review: true
+  - claim: "再入国許可の申請先：出国前に最寄りの地方出入国在留管理官署に申請。オンライン申請（入管オンライン）でも申請可能。有効期間は最長5年。"
+    source_title: "出入国在留管理庁：再入国許可"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri07_00045.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「再入国許可の申請先（地方出入国在留管理官署・オンライン申請）」「有効期間（最長5年）」の記述を確認"
+    display_label: "再入国許可の申請：出国前に地方入管またはオンラインで申請・有効期間最長5年"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

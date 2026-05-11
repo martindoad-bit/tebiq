@@ -62,6 +62,24 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: false
+  - claim: "転入届の提出期限：入国後または転居後14日以内（住民基本台帳法第22条）。14日を超えた場合でも手続きは可能だが、過料の対象になる場合がある。"
+    source_title: "総務省：外国人住民に係る住民基本台帳制度"
+    source_url: "https://www.soumu.go.jp/main_sosiki/jichi_gyousei/daityo/gaikokujin.html"
+    source_organization: "総務省"
+    source_locator: "ページ内「転入届の提出期限（14日以内・住民基本台帳法第22条）」「期限超過時の過料」の記述を確認"
+    display_label: "転入届の提出期限：入国・転居後14日以内（住民基本台帳法第22条）・超過は過料の対象"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "住民票の写しに記載される在留情報：氏名・住所・在留資格・在留期間・国籍・生年月日等（外国人住民は在留資格も記載される）。"
+    source_title: "総務省：外国人住民に係る住民基本台帳制度"
+    source_url: "https://www.soumu.go.jp/main_sosiki/jichi_gyousei/daityo/gaikokujin.html"
+    source_organization: "総務省"
+    source_locator: "ページ内「外国人住民票の記載事項（在留資格・在留期間・国籍・生年月日等）」の記述を確認"
+    display_label: "外国人住民票の記載内容：氏名・住所・在留資格・在留期間・国籍・生年月日等"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

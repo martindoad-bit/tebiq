@@ -62,6 +62,24 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: false
+  - claim: "厚生年金保険料率（2017年以降固定）：18.3%（労使折半。本人負担9.15%）。2004年から段階的に引き上げられ、2017年9月に18.3%で固定された。"
+    source_title: "厚生労働省：社会保険料率"
+    source_url: "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/iryouhoken/iryouhoken07/index.html"
+    source_organization: "厚生労働省"
+    source_locator: "ページ内「厚生年金保険料率（18.3%・2017年9月以降固定）」「労使折半（本人9.15%）」の記述を確認"
+    display_label: "厚生年金保険料率：18.3%（2017年9月以降固定）・労使折半で本人負担9.15%"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "住民税の天引き開始時期：入社1年目（日本初就労）は前年の日本での所得がないため、1年目は住民税の天引きなし。2年目の6月から前年所得分の住民税の天引きが始まる。"
+    source_title: "厚生労働省：社会保険料率"
+    source_url: "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/iryouhoken/iryouhoken07/index.html"
+    source_organization: "厚生労働省"
+    source_locator: "ページ内「住民税の天引き開始（入社1年目は天引きなし・2年目6月から開始）」の記述を確認"
+    display_label: "住民税の天引き：入社1年目は天引きなし・2年目の6月から前年所得分の天引きが開始"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

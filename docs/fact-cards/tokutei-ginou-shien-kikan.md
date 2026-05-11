@@ -60,6 +60,24 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: false
+  - claim: "受入機関は特定技能外国人ごとに支援計画を作成し、出入国在留管理庁に提出する義務がある。支援計画の実施状況を定期的に（4か月に1回以上）入管に報告する義務もある。"
+    source_title: "出入国在留管理庁：登録支援機関"
+    source_url: "https://www.moj.go.jp/isa/applications/status/touroku.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「支援計画の作成・提出義務」「支援計画の実施状況の定期報告（4か月に1回以上）」の記述を確認"
+    display_label: "受入機関の義務：特定技能外国人ごとに支援計画を作成・入管に提出・4か月に1回以上の実施状況報告"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "登録支援機関の登録要件：出入国在留管理庁への登録が必要。登録には過去2年以内に中長期在留者の雇用管理経験があること等の要件がある。"
+    source_title: "出入国在留管理庁：登録支援機関"
+    source_url: "https://www.moj.go.jp/isa/applications/status/touroku.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「登録支援機関の登録要件（ISAへの登録・過去2年以内の中長期在留者雇用管理経験等）」の記述を確認"
+    display_label: "登録支援機関の登録要件：ISAへの登録が必要・過去2年以内の中長期在留者雇用管理経験等"
+    support_level: "indirect"
+    user_visible: true
+    needs_domain_review: true
 ---
 
 ## current_date_logic

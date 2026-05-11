@@ -61,6 +61,24 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: false
+  - claim: "外国人雇用状況の届出義務（雇用対策法28条）：事業主は外国人労働者の雇用・離職の都度、翌月末日までにハローワークへ届出。未届けには30万円以下の罰金。"
+    source_title: "厚生労働省：外国人雇用対策"
+    source_url: "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/koyou/gaikokujin/index.html"
+    source_organization: "厚生労働省"
+    source_locator: "ページ内「外国人雇用状況の届出（雇用対策法28条）」「罰則（30万円以下の罰金）」の記述を確認"
+    display_label: "外国人雇用届出：雇用・離職時に翌月末日までハローワークへ・未届けは30万円以下の罰金"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "失業給付（基本手当）の受給要件：雇用保険の被保険者であった期間が離職前2年間に通算12か月以上（特定受給資格者・特定理由離職者は6か月以上）。"
+    source_title: "厚生労働省：外国人雇用対策"
+    source_url: "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/koyou/gaikokujin/index.html"
+    source_organization: "厚生労働省"
+    source_locator: "ページ内「失業給付（基本手当）の受給要件」「被保険者期間12か月以上（特定受給資格者は6か月以上）」の記述を確認"
+    display_label: "失業給付の受給要件：離職前2年間に被保険者期間12か月以上（会社都合等は6か月以上）"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

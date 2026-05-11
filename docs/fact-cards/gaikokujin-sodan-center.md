@@ -61,6 +61,24 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: false
+  - claim: "外国人在留総合インフォメーションセンター（出入国在留管理庁）の電話番号：0570-013904（ナビダイヤル）。平日8時30分〜17時15分（土日祝日・年末年始を除く）。対応言語：13言語以上。"
+    source_title: "出入国在留管理庁：外国人在留総合インフォメーションセンター"
+    source_url: "https://www.moj.go.jp/isa/support/fresc/fresc01.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「電話番号（0570-013904）」「受付時間（平日8:30〜17:15・土日祝休）」「対応言語（13言語以上）」の記述を確認"
+    display_label: "外国人在留インフォ：0570-013904・平日8:30〜17:15・13言語以上対応（出入国在留管理庁）"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "法務局の外国人人権相談：「みんなの人権110番」（0570-003-110）で差別・不当な扱い等の人権問題に関する相談を受け付けている。法務局の人権擁護機関が対応。"
+    source_title: "出入国在留管理庁：外国人在留総合インフォメーションセンター"
+    source_url: "https://www.moj.go.jp/isa/support/fresc/fresc01.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「みんなの人権110番（0570-003-110）」「差別・不当な扱いの相談」「法務局の人権擁護機関」の記述を確認"
+    display_label: "みんなの人権110番：0570-003-110・差別・不当な扱い等の人権相談・法務局の人権擁護機関が対応"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic
