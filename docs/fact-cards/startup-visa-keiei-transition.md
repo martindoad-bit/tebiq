@@ -122,6 +122,15 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: true
+  - claim: "2025年10月16日以降に在留資格変更申請をする場合、経営・管理の改正後新基準（資本金3,000万円・常勤職員・日本語要件等）が適用されると考えられる。スタートアップビザ保持者への過渡措置の有無は官方ページに明示なし（ai推定 — `transition_conditions_post_2025_10`確認要）。"
+    source_title: "外国人起業活動促進事業（スタートアップビザ）"
+    source_url: "https://www.moj.go.jp/isa/03_00097.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「外国人起業活動促進事業」「経営・管理への在留資格変更」の記述を確認（2025年10月改正との接続は公式明示なし）"
+    display_label: "スタートアップビザ→経営管理変更：2025年10月以降は新基準（3,000万円等）適用の可能性・過渡措置の明示なし（ai推定）"
+    support_level: "indirect"
+    user_visible: true
+    needs_domain_review: true
 ---
 
 # スタートアップビザ（特定活動）から経営・管理への在留資格変更

@@ -78,6 +78,15 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: false
+  - claim: "卒業見込みでの在留資格変更申請受理が可能（卒業証明書は後日提出の運用）（ai推定 — ISA実務に基づく）。申請中は出入国管理特例法により在留期間満了後も適法在留継続（特例期間）が認められる。"
+    source_title: "出入国在留管理庁：在留資格変更許可申請"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/16-2.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「在留資格変更許可申請」「特例期間」の記述を確認"
+    display_label: "留学→技人国：卒業見込みで申請可（卒業証明後日提出・ai推定）・申請中は特例期間として在留継続"
+    support_level: "indirect"
+    user_visible: true
+    needs_domain_review: true
 ---
 
 ## current_date_logic

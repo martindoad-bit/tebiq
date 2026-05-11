@@ -88,6 +88,15 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: false
+  - claim: "在留資格取得許可申請の申請場所：「子の住所地を管轄する地方出入国在留管理官署」（ISA公式）。在留資格取得許可の処分時に在留カードが発行される。16歳未満は申請書への写真貼付が不要（ISA公式）。"
+    source_title: "出入国在留管理庁：在留資格取得許可申請"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/16-10.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「申請場所（子の住所地管轄）」「在留カード発行」「16歳未満写真不要」の記述を確認"
+    display_label: "子の在留資格：申請場所は子の住所地管轄入管・在留カードは許可後発行・16歳未満写真不要"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

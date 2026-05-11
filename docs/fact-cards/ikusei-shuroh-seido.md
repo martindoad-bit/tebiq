@@ -92,6 +92,15 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: false
+  - claim: "育成就労制度の受入れ可能国：「原則として、二国間取決め（協力覚書（MOC））を作成した国からのみ受入れることができます」（ISA Q&A Q61）。送出機関が徴収できる費用の上限：「月給の２か月分まで」（ISA Q&A Q63）。"
+    source_title: "出入国在留管理庁：育成就労制度Q&A"
+    source_url: "https://www.moj.go.jp/isa/applications/faq/ikusei_qa_00002.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "Q&A内「Q61（受入れ可能国・MOC締結国）」「Q63（送出機関費用上限・月給2か月分）」の記述を確認"
+    display_label: "育成就労：受入れはMOC締結国のみ・送出機関費用上限は月給2か月分"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

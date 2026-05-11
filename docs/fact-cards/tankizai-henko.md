@@ -79,6 +79,15 @@ evidence_points:
     support_level: "indirect"
     user_visible: true
     needs_domain_review: true
+  - claim: "短期滞在中の就労（アルバイト・有給活動を含む）は「不法就労」（在留資格外活動）であり、金額・時間に関わらず入管法違反となる。査証免除協定（ビザウェイバー）での入国者も「短期滞在」として在留しており、在留資格変更の扱いは通常の短期滞在ビザと同様（ISA公式の短期滞在の定義に基づく）。"
+    source_title: "出入国在留管理庁：短期滞在（在留資格）"
+    source_url: "https://www.moj.go.jp/isa/applications/status/temporaryvisitor.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「短期滞在の許可活動（観光・親族訪問等のみ）」「就労不可」の記述を確認"
+    display_label: "短期滞在中の就労：入管法違反・金額・時間を問わず不法就労・ビザウェイバーも同様"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

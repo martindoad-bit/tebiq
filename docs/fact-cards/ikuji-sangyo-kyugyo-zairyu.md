@@ -99,6 +99,15 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: false
+  - claim: "育児休業の延長（1歳6か月・2歳まで）が認められる場合でも、在留期限は育休期間に関わらず独立して適用される。育休中も在留期間更新申請は通常通り必要であり、育休中であることで更新が拒否されるわけではない（ai推定 — ISA公式に育休中の更新に関する除外規定なし）。"
+    source_title: "出入国在留管理庁：在留資格取消し（解説）"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/torikeshi_00002.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「在留資格取消し（解説）」および3か月ルール（入管法第22条の4第1項第6号）の記述を確認"
+    display_label: "育休中も在留期間更新は必要・育休を理由とした更新拒否の規定はなし（ai推定）"
+    support_level: "indirect"
+    user_visible: true
+    needs_domain_review: true
 ---
 
 ## current_date_logic

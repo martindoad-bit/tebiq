@@ -89,6 +89,15 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: false
+  - claim: "技人国更新申請の窓口手数料は収入印紙で納付。窓口申請の収入印紙額については複数の記載があり（4,000円・6,000円）、ISA手続きページで最新額を直接確認することを推奨（`fee_amount_confirmation`確認要）。"
+    source_title: "出入国在留管理庁：在留期間更新許可申請"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/16-3.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「手数料」「収入印紙」の記述を確認（金額は要現地確認）"
+    display_label: "技人国更新：窓口手数料は収入印紙納付・金額はISA公式で要確認"
+    support_level: "indirect"
+    user_visible: true
+    needs_domain_review: true
 ---
 
 ## current_date_logic

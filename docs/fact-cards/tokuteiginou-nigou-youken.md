@@ -72,6 +72,15 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: false
+  - claim: "特定技能2号で家族帯同（配偶者・子の「家族滞在」在留資格）が可能（特定技能1号は家族帯同不可）。この点が1号と2号の主要な違いのひとつである（ai推定 — ISA公式ページの1号・2号比較記述に基づく）。"
+    source_title: "出入国在留管理庁：特定技能（在留資格）"
+    source_url: "https://www.moj.go.jp/isa/applications/status/specifiedskilledworker.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「特定技能1号・2号の比較」「家族帯同」の記述を確認"
+    display_label: "特定技能2号：家族帯同可（配偶者・子）・1号は家族帯同不可"
+    support_level: "indirect"
+    user_visible: true
+    needs_domain_review: true
 ---
 
 ## current_date_logic
