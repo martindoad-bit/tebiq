@@ -50,6 +50,19 @@ needs_review_flags:
   - overstay_penalty_source: 入管法73条（3年以下懲役・300万円以下罚金）の直接ソース引用未取得。法令テキスト照合要。
   - reentry_ban_period_source: 出国命令5年・強制退去10年の再入国禁止期間は ai推定。入管法24条の4・24条の5 等の法令テキスト照合要。
   - tokubetsu_kyoka_guideline_source: 在留特別許可の積極/消極考慮事由の根拠は ISA 公表ガイドライン（「在留特別許可に係るガイドライン」）による。直接引用要。
+related_links:
+  - title: "出入国在留管理庁 — 退去強制・出国命令手続きQ&A"
+    url: "https://www.moj.go.jp/isa/deportation/guide/tetuduki_taikyo_qa.html"
+    organization: "出入国在留管理庁"
+    display_label: "出入国在留管理庁 — 退去強制・出国命令手続きQ&A"
+    locator: "ページ内で「退去強制・出国命令手続きQ&A」を検索"
+    relation: "official_reference"
+  - title: "出入国在留管理庁 — 在留特別許可申請"
+    url: "https://www.moj.go.jp/isa/deportation/procedures/08_00044.html"
+    organization: "出入国在留管理庁"
+    display_label: "出入国在留管理庁 — 在留特別許可申請"
+    locator: "ページ内で「在留特別許可申請」を検索"
+    relation: "official_reference"
 ---
 
 ## current_date_logic

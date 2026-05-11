@@ -71,6 +71,19 @@ needs_review_flags:
       在留資格変更申請（status change）と更新申請（renewal）で
       特例期間中の活動に差異があるかどうか（例：変更申請中は旧在留資格の活動のみ？）は
       官方ページで明確に区別されていない。
+related_links:
+  - title: "特例期間の解説"
+    url: "https://www.moj.go.jp/isa/applications/procedures/tokureikikan_00001.html"
+    organization: "出入国在留管理庁"
+    display_label: "特例期間の解説"
+    locator: "ページ内で「特例期間の解説」を検索"
+    relation: "official_reference"
+  - title: "在留期間更新許可申請"
+    url: "https://www.moj.go.jp/isa/applications/procedures/16-3.html"
+    organization: "出入国在留管理庁"
+    display_label: "在留期間更新許可申請"
+    locator: "ページ内で「在留期間更新許可申請」を検索"
+    relation: "official_reference"
 ---
 
 # 在留期限間近の更新・変更申請 — 申請タイミングと特例期間

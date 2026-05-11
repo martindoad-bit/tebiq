@@ -56,6 +56,13 @@ needs_review_flags:
   - jukyo_youken_chukan_shutsukoku: 帰化の住所要件「引き続き5年」の海外出張・一時出国の許容範囲（何日以内・何回まで）はMOJ公式で確認要。
   - seikei_youken_kinyu_shihyo: 生計要件の具体的な収入・資産基準（公式数値）は法務局事前相談で確認要。
   - tokubetsu_kika_sono_ta: 国籍法第7条・第8条の特別帰化（元日本国民・日本生まれ等）の具体的要件の詳細確認要。
+related_links:
+  - title: "法務省 — 帰化申請"
+    url: "https://www.moj.go.jp/MINJI/minji78.html"
+    organization: "出入国在留管理庁"
+    display_label: "法務省 — 帰化申請"
+    locator: "ページ内で「帰化申請」を検索"
+    relation: "official_reference"
 ---
 
 ## current_date_logic

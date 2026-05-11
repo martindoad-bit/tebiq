@@ -48,6 +48,13 @@ needs_review_flags:
   - foreign_national_shikaku_kakunin_sho: 外国人（在留期間連動カード有効期限切れ等）への資格確認書の具体的交付手続き・申請要否の詳細はMHLW/保険者に確認要。
   - existing_card_expiry_transition: 2024年12月2日以前発行の従来の健康保険証の有効期限上限（最長いつまで使えるか）の正式な経過措置期間を確認要。
   - mynumber_card_renewal_and_maina_hoken: 在留期間更新後のマイナンバーカード券面変更申請とマイナ保険証利用登録の継続性（自動継続か再登録必要か）は確認要。
+related_links:
+  - title: "厚生労働省 — マイナンバーカードの健康保険証利用"
+    url: "https://www.mhlw.go.jp/stf/newpage_08277.html"
+    organization: "厚生労働省"
+    display_label: "厚生労働省 — マイナンバーカードの健康保険証利用"
+    locator: "ページ内で「マイナンバーカードの健康保険証利用」を検索"
+    relation: "official_reference"
 ---
 
 ## current_date_logic

@@ -53,6 +53,13 @@ needs_review_flags:
   - zairyu_card_hennoo_hourei: 在留カード返納義務の具体的な法令根拠（入管法第19条の12等）の条文番号の公式確認要。ISA公式ページには条文番号の明示なし。
   - shakaihoken_shikaku_soshitsu: 社会保険（厚生年金・健康保険）の国外転出時の資格喪失手続きの詳細（事業主経由の手続き・タイミング）の確認要。
   - jumin_zei_nennendo_seisan: 出国年・翌年の住民税の精算方法・納税管理人の要否の詳細はNTA/市区町村で確認要。
+related_links:
+  - title: "出入国在留管理庁 — 在留カード等の返納"
+    url: "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00020.html"
+    organization: "出入国在留管理庁"
+    display_label: "出入国在留管理庁 — 在留カード等の返納"
+    locator: "ページ内で「在留カード等の返納」を検索"
+    relation: "official_reference"
 ---
 
 ## current_date_logic

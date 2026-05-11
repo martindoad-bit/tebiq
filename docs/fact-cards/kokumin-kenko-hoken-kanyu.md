@@ -50,6 +50,19 @@ needs_review_flags:
   - delayed_enrollment_medical_gap: 14日の届出期限を過ぎた場合、「原則として手続完了日から医療の給付が可能になります」（中野区公式FAQ）。これは市区町村レベルの公式情報。医療給付の空白期間について国レベルの公式確認待ち。
   - foreign_national_zairyu_threshold: 外国人の加入基準（在留期間3ヶ月超 vs 1年以上見込み）の正確な要件は、厚労省H4.3.31通達と現行住基法の解釈に依存。最新の適用基準は住所地の市区町村窓口で確認要。
   - premium_amount_variability: 保険料は市区町村ごとに異なるため、具体的な金額はこのカードでは示せない。見積もりは住所地の市区町村窓口または自治体の保険料計算ツールで確認要。
+related_links:
+  - title: "厚生労働省 — 国民健康保険の加入・脱退について"
+    url: "https://www.mhlw.go.jp/stf/newpage_21539.html"
+    organization: "厚生労働省"
+    display_label: "厚生労働省 — 国民健康保険の加入・脱退について"
+    locator: "ページ内で「国民健康保険の加入・脱退について」を検索"
+    relation: "official_reference"
+  - title: "厚生労働省 — 国民健康保険料（税）について"
+    url: "https://www.mhlw.go.jp/stf/newpage_21517.html"
+    organization: "厚生労働省"
+    display_label: "厚生労働省 — 国民健康保険料（税）について"
+    locator: "ページ内で「国民健康保険料（税）について」を検索"
+    relation: "official_reference"
 ---
 
 ## current_date_logic

@@ -42,6 +42,13 @@ ai_inferred_fields:
   - 就労資格証明書の発行は在留資格・在留期間を変更・更新するものではない（ai推定）
 needs_review_flags:
   - processing_time_official: 処理期間（窓口当日交付〜数か月）は公式ページに標準値が明記されていない場合あり。ISA窓口・案件内容による。
+related_links:
+  - title: "出入国在留管理庁 — 就労資格証明書交付申請"
+    url: "https://www.moj.go.jp/isa/applications/procedures/16-9.html"
+    organization: "出入国在留管理庁"
+    display_label: "出入国在留管理庁 — 就労資格証明書交付申請"
+    locator: "ページ内で「就労資格証明書交付申請」を検索"
+    relation: "official_reference"
 ---
 
 ## current_date_logic

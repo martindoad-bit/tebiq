@@ -49,6 +49,13 @@ needs_review_flags:
   - divorce_teichu_criteria: 離婚後の定住者変更許可の具体的要件（子供の有無・養育状況・日本での生活実態）はISAの運用基準であり、公式ガイドラインの直接引用要。
   - refugee_teichu_route: 難民認定後の定住者変更ルートの詳細手続き確認要（難民認定申請中の仮滞在との関係含む）。
   - nikkei_coverage: 日系人の定住資格は原則3世まで（4世以上は別途「特定技能」ルート等を検討）。4世以降の扱いの公式確認要。
+related_links:
+  - title: "出入国在留管理庁 — 定住者（在留資格）"
+    url: "https://www.moj.go.jp/isa/applications/status/longtermresident.html"
+    organization: "出入国在留管理庁"
+    display_label: "出入国在留管理庁 — 定住者（在留資格）"
+    locator: "ページ内で「定住者（在留資格）」を検索"
+    relation: "official_reference"
 ---
 
 ## current_date_logic

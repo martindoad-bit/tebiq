@@ -57,6 +57,19 @@ needs_review_flags:
   - fee_amount_confirmation: 窓口申請の収入印紙額については複数の記載があり（4,000円・6,000円）、ISA手続きページで最新額を直接確認することを推奨。
   - cefr_b2_category_scope: CEFR B2語学証明要件（2026-04-15施行）の適用対象者の正確な範囲（カテゴリー3・4の転職後申請者のみか、それとも他にも適用があるか）はISA公式の通知原文で確認要。
   - online_application_details: オンライン申請の具体的な手順・対象者資格・ぴったりサービスの利用条件はai推定。ISA申請サポートセンターまたは公式手順書で確認要。
+related_links:
+  - title: "出入国在留管理庁 — 在留期間更新許可申請"
+    url: "https://www.moj.go.jp/isa/applications/procedures/16-3.html"
+    organization: "出入国在留管理庁"
+    display_label: "出入国在留管理庁 — 在留期間更新許可申請"
+    locator: "ページ内で「在留期間更新許可申請」を検索"
+    relation: "official_reference"
+  - title: "出入国在留管理庁 — 技術・人文知識・国際業務（書類一覧）"
+    url: "https://www.moj.go.jp/isa/content/gijinkoku.html"
+    organization: "出入国在留管理庁"
+    display_label: "出入国在留管理庁 — 技術・人文知識・国際業務（書類一覧）"
+    locator: "ページ内で「技術・人文知識・国際業務（書類一覧）」を検索"
+    relation: "official_reference"
 ---
 
 ## current_date_logic

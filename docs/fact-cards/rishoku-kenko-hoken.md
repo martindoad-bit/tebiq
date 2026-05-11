@@ -53,6 +53,25 @@ ai_inferred_fields:
 needs_review_flags:
   - kenpo_kumiai_difference: 協会けんぽ以外の健保組合の任意継続ルール（保険料上限・期限等）は組合ごとに異なる場合がある。本カードは協会けんぽの公式ソースに基づく。
   - kokuho_late_application: 14日の期限を過ぎた場合の遡及保険料・医療費返還等の具体的ペナルティは市区町村公式ページで直接引用未取得。厚労省newpage_21539から「遡って保険料を納める」との記載を確認。
+evidence_points:
+  - claim: "協会けんぽの任意継続申請期限は退職日翌日から20日以内。加入条件は退職前2か月以上の被保険者期間。保険料は在職時の約2倍（標準報酬月額上限32万円）。最長2年。"
+    source_title: "全国健康保険協会（協会けんぽ）：任意継続"
+    source_url: "https://www.kyoukaikenpo.or.jp/benefit/voluntary_continuation/"
+    source_organization: "全国健康保険協会（協会けんぽ）"
+    source_locator: "ページ内「任意継続の申請方法」「保険料」「2年間」の記述を確認"
+    display_label: "任意継続（20日以内・保険料2倍・最長2年）"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "国民健康保険の申請期限は資格喪失日から14日以内。申請先は住所地の市区町村役場。外国人も在留資格・在留期間が適切な場合は加入対象。"
+    source_title: "厚生労働省：国民健康保険の加入資格"
+    source_url: "https://www.mhlw.go.jp/stf/newpage_21539.html"
+    source_organization: "厚生労働省"
+    source_locator: "ページ内「加入対象者」「届出期限」および「外国人」に関する記述を確認"
+    display_label: "国保加入（14日以内・外国人可）"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

@@ -51,6 +51,13 @@ needs_review_flags:
   - tokutei1_5nen_source: 特定技能1号の通算5年上限の直接法令引用（出入国管理及び難民認定法別表第1の2）が未取得。法令テキスト照合要。
   - tokutei2_no_limit_source: 特定技能2号の通算上限なしの直接法令引用が未取得。法令テキスト照合要。
   - required_documents_tokutei: 特定技能更新申請の具体的必要書類リスト（支援機関証明書等）はISA公式ページで確認要。
+related_links:
+  - title: "出入国在留管理庁 — 在留期間更新許可申請"
+    url: "https://www.moj.go.jp/isa/applications/procedures/16-3.html"
+    organization: "出入国在留管理庁"
+    display_label: "出入国在留管理庁 — 在留期間更新許可申請"
+    locator: "ページ内で「在留期間更新許可申請」を検索"
+    relation: "official_reference"
 ---
 
 ## current_date_logic

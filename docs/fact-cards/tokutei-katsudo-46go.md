@@ -54,6 +54,13 @@ needs_review_flags:
   - certified_senshu_school_list: 認定専修学校専門課程（MEXT令和5年告示第53号）の具体的学校リスト・認定確認方法の詳細はMEXT公式で確認要。
   - n1_requirement_cefr_mapping: JLPT N1とCEFR B2/C1の対応関係・技人国のCEFR B2要件との違いの整合確認要（gijinkoku-koushin-shorui参照）。
   - shokumu_tekiyo_handan: 具体的な業務が「日本語を用いた円滑な意思疎通を要する業務」に該当するかの判断基準の詳細はISA公式事例集・行政書士での確認要。
+related_links:
+  - title: "出入国在留管理庁 — 特定活動（告示第46号）ガイドライン（令和8年4月改定）"
+    url: "https://www.moj.go.jp/isa/applications/status/tokutei46.html"
+    organization: "出入国在留管理庁"
+    display_label: "出入国在留管理庁 — 特定活動（告示第46号）ガイドライン（令和8年4月改定）"
+    locator: "ページ内で「特定活動」を検索"
+    relation: "official_reference"
 ---
 
 ## current_date_logic

@@ -50,6 +50,34 @@ direct_fact_fields:
   - no_separate_immigration_address_form_when_municipality_notice_done
 ai_inferred_fields: []
 needs_review_flags: []
+evidence_points:
+  - claim: "新住居地に移転した日から14日以内に住居地変更の届出が必要。"
+    source_title: "出入国在留管理庁：住居地の変更届出（中長期在留者）"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00023.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「届出期間」欄を確認"
+    display_label: "住居地変更届出（14日以内）"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "在留カードを市区町村の窓口に持参して転入・転居届を提出すれば、入管法上の住居地変更届出をしたものとみなされる（別途入管への届出書提出は不要）。"
+    source_title: "出入国在留管理庁：住居地の変更届出（中長期在留者）"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00023.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「みなし」に関する段落を確認"
+    display_label: "みなし届出（市区町村のみでOK）"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "新たに中長期在留者となった場合の住居地届出も、在留カードを持って市区町村で届出をすればみなし届出として成立する。"
+    source_title: "出入国在留管理庁：在留資格変更等に伴う住居地の届出"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00022.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「みなし」に関する段落を確認"
+    display_label: "新規住居地届出（みなし）"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 # 中長期在留者 — 搬家后的住居地变更届出

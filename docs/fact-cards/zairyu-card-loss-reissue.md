@@ -53,6 +53,34 @@ direct_fact_fields:
   - required_documents_application_photo_passport
 ai_inferred_fields: []
 needs_review_flags: []
+evidence_points:
+  - claim: "在留カードを紛失・盗難・滅失した事実を知った日から14日以内に地方出入国在留管理官署へ再交付申請が必要。"
+    source_title: "出入国在留管理庁：紛失等による在留カードの再交付申請"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00010.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「申請期間」欄を確認"
+    display_label: "在留カード再交付（14日以内）"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "紛失・盗難の場合は警察への届出受理番号が必要。申請内容に応じて遺失届出証明書等の提出を求められる場合がある。"
+    source_title: "出入国在留管理庁：紛失等による在留カードの再交付申請"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00010.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「紛失・盗難に係る陳述書」および「遺失届出証明書」の記述を確認"
+    display_label: "警察届出受理番号・遺失証明"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "再交付申請先は地方出入国在留管理官署（市区町村役所ではない）。"
+    source_title: "出入国在留管理庁：出入国港/市区町村/地方出入国在留管理官署での手続FAQ"
+    source_url: "https://www.moj.go.jp/isa/publications/faq/newimmiact_4_port-city.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「地方出入国在留管理官署での手続」→「在留カードの再交付申請」を確認"
+    display_label: "申請先：地方入管（役所ではない）"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 # 中長期在留者 — 在留カード紛失・盗難時の再交付申請

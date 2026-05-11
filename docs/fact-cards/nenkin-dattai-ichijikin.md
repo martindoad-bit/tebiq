@@ -46,6 +46,13 @@ ai_inferred_fields:
 needs_review_flags:
   - shakaihoken_kyotei_restriction: 社会保障協定締結国出身者への脱退一時金の適用制限の詳細（協定締結国リスト・制限内容）はai推定。日本年金機構の協定ページで確認要。
   - record_erasure_detail: 脱退一時金受取後の年金記録への具体的影響（記録消滅の範囲・後に日本に戻った場合の扱い）は公式ページ上で直接引用できず。FAQ等での確認要。
+related_links:
+  - title: "日本年金機構 — 脱退一時金の制度"
+    url: "https://www.nenkin.go.jp/service/jukyu/seido/sonota-kyufu/dattai-ichiji/20150406.html"
+    organization: "日本年金機構"
+    display_label: "日本年金機構 — 脱退一時金の制度"
+    locator: "ページ内で「脱退一時金の制度」を検索"
+    relation: "official_reference"
 ---
 
 ## current_date_logic

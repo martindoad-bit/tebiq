@@ -53,6 +53,13 @@ needs_review_flags:
   - first_year_non_taxable_mechanism: 来日初年度の住民税非課税の詳細メカニズム（前年1月1日に日本に住民票がない場合の扱い）は各市区町村の公式ページで確認要。一部自治体では「来日1月1日前の期間は課税なし」として明記。
   - municipal_variation: 均等割の税率は一部自治体（市区町村）で標準税率と異なる場合あり。東京都23区基準の非課税限度額を記載しているが他自治体は若干異なる場合あり。
   - forest_environment_tax_2024: 森林環境税（1,000円）は2024年度から開始。2024年度以前は均等割合計が4,000円だった。現行（2026年）は5,000円が正しい。
+related_links:
+  - title: "東京都主税局 — 個人住民税（全国標準税率）"
+    url: "https://www.tax.metro.tokyo.lg.jp/kazei/kojin_ju.html"
+    organization: "tax.metro.tokyo.lg.jp"
+    display_label: "東京都主税局 — 個人住民税（全国標準税率）"
+    locator: "ページ内で「個人住民税（全国標準税率）」を検索"
+    relation: "official_reference"
 ---
 
 ## current_date_logic

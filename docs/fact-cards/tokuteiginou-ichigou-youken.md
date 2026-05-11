@@ -45,6 +45,13 @@ needs_review_flags:
   - japanese_language_test_by_sector: 日本語要件（JFT-Basic可否・N4の代替可否）は業種ごとに異なる。介護は介護日本語評価試験も必要。各業種の要件一覧の官庁ページ照合要。
   - family_accompaniment_prohibition_source: 1号の家族帯同不可は法令（出入国管理及び難民認定法別表第1の2「特定技能」欄）で規定。直接ソース引用は未取得のため確認要。
   - tokutei_ginou_2_family_source: 2号の家族帯同可については公式確認要（ISA別表第1の2「特定技能2号」欄または告示）。
+related_links:
+  - title: "出入国在留管理庁 — 特定技能（在留資格）"
+    url: "https://www.moj.go.jp/isa/applications/status/specifiedskilledworker.html"
+    organization: "出入国在留管理庁"
+    display_label: "出入国在留管理庁 — 特定技能（在留資格）"
+    locator: "ページ内で「特定技能（在留資格）」を検索"
+    relation: "official_reference"
 ---
 
 ## current_date_logic

@@ -48,6 +48,13 @@ ai_inferred_fields:
 needs_review_flags:
   - foreign_earned_income_treatment: 非永住者・非居住者の海外所得の確定申告上の扱い（国外源泉所得の申告要否）については kyojusha-kubun-kazei カードおよびNTA公式ページで確認要。
   - year_end_adjustment_scope: 年末調整（源泉徴収）が完結する給与所得者の申告不要の詳細範囲（各種控除の申告による還付）は税務署または税理士相談要。
+related_links:
+  - title: "国税庁 No.2020 — 確定申告"
+    url: "https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/2020.htm"
+    organization: "国税庁"
+    display_label: "国税庁 No.2020 — 確定申告"
+    locator: "ページ内で「確定申告」を検索"
+    relation: "official_reference"
 ---
 
 ## current_date_logic

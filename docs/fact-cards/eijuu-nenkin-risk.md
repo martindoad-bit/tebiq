@@ -60,6 +60,19 @@ needs_review_flags:
     reason: 国民年金免除期間が申請審査に与える影響（承認申請による正規免除と未納の区別）は官方公表ページに明示なし。実務運用確認が必要。
   - id: shakaihoken_gap_tolerance
     reason: 転職時の社会保険空白期間（例：退職→翌月加入）の許容範囲は明示なし。
+related_links:
+  - title: "永住許可に関するガイドライン（令和８年２月２４日改訂版）"
+    url: "https://www.moj.go.jp/isa/applications/resources/nyukan_nyukan50.html"
+    organization: "出入国在留管理庁"
+    display_label: "永住許可に関するガイドライン（令和８年２月２４日改訂版）"
+    locator: "ページ内で「永住許可に関するガイドライン」を検索"
+    relation: "official_reference"
+  - title: "高度人材外国人の永住許可申請における書類要件"
+    url: "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri07_00133.html"
+    organization: "出入国在留管理庁"
+    display_label: "高度人材外国人の永住許可申請における書類要件"
+    locator: "ページ内で「高度人材外国人の永住許可申請における書類要件」を検索"
+    relation: "official_reference"
 ---
 
 # 永住申請における年金・税金・健康保険 未納リスク

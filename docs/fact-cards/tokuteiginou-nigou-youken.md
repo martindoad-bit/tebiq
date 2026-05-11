@@ -46,6 +46,13 @@ needs_review_flags:
   - tokutei2_family_source: 特定技能2号の家族帯同可の直接法令引用（出入国管理及び難民認定法別表第1の2）が未取得。法令テキスト照合要。
   - tokutei2_transition_requirements: 特定技能1号→2号の移行に必要な技能試験・経験年数等の具体的要件は各分野所管省庁の試験要件ページで確認要。
   - kaigo_2go_exclusion: 介護分野の特定技能2号除外については ISA 公式ページの記載確認要。
+related_links:
+  - title: "出入国在留管理庁 — 特定技能（在留資格）"
+    url: "https://www.moj.go.jp/isa/applications/status/specifiedskilledworker.html"
+    organization: "出入国在留管理庁"
+    display_label: "出入国在留管理庁 — 特定技能（在留資格）"
+    locator: "ページ内で「特定技能（在留資格）」を検索"
+    relation: "official_reference"
 ---
 
 ## current_date_logic

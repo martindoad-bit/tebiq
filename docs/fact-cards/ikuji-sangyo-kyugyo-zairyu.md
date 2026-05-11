@@ -61,6 +61,25 @@ needs_review_flags:
   - ikukyu_seito_na_riyu_shonin: 育児休業が就労資格（技人国等）の3か月ルール（入管法第22条の4第1項第6号）における「正当な理由」に該当するかの公式ISA確認が未取得。ISA公式ページには就労資格に対する「正当な理由」の具体例が公開されていない。
   - ikukyu_eijuu_kikan_sannyuu: 育休・産休期間が永住申請の「引き続き在留」期間として算入されるかのISA公式確認要（実務上は算入との解釈が多いが明文規定なし）。
   - ikukyu_zairyu_koshin_jitsurei: 育休中の在留期間更新申請に必要な書類・審査基準の詳細（担当官の実務判断）はISA/行政書士で確認要。
+related_links:
+  - title: "厚生労働省 — 育児休業等給付Q&A"
+    url: "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000158500.html"
+    organization: "厚生労働省"
+    display_label: "厚生労働省 — 育児休業等給付Q&A"
+    locator: "ページ内で「育児休業等給付Q&A」を検索"
+    relation: "official_reference"
+  - title: "厚生労働省 — 育児休業"
+    url: "https://www.mhlw.go.jp/seisakunitsuite/bunya/koyou_roudou/koyoukintou/ryouritsu/ikuji/childcare/"
+    organization: "厚生労働省"
+    display_label: "厚生労働省 — 育児休業"
+    locator: "ページ内で「育児休業」を検索"
+    relation: "official_reference"
+  - title: "出入国在留管理庁 — 在留資格取消し（解説）"
+    url: "https://www.moj.go.jp/isa/applications/procedures/torikeshi_00002.html"
+    organization: "出入国在留管理庁"
+    display_label: "出入国在留管理庁 — 在留資格取消し（解説）"
+    locator: "ページ内で「在留資格取消し（解説）」を検索"
+    relation: "official_reference"
 ---
 
 ## current_date_logic
