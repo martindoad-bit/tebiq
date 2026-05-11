@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from 'react'
 import {
-  Archive,
   Camera,
   CheckCircle2,
   ClipboardCheck,
@@ -24,10 +23,10 @@ import {
   SectionLabel,
   StatusBadge,
   Surface,
-  cx,
   type AlphaDisplayState,
 } from '@/components/ui/consultation-alpha'
 import { FactReferenceBlock } from '@/components/ui/fact-reference'
+import TabBar from '@/app/_components/v5/TabBar'
 import {
   parseConsultationChunk,
   type ConsultationFactCardAuditEntry,
@@ -111,12 +110,6 @@ type ConsultationStartPayload = {
 }
 
 type WaitingStage = 'early' | 'long' | 'escape'
-
-const FEEDBACK_BUTTONS: Array<{ type: FeedbackType; label: string }> = [
-  { type: 'helpful', label: '有帮助' },
-  { type: 'inaccurate', label: '不准确' },
-  { type: 'human_review', label: '需确认' },
-]
 
 function ensureViewerCookie(): string {
   if (typeof document === 'undefined') return ''
@@ -366,7 +359,7 @@ export default function AiConsultationEntryClient() {
       setActive(prev => prev ? {
         ...prev,
         followUpLimitReached: true,
-        followUpLimitMessage: '这次咨询已经补充过几轮。建议先保存概要；如果是另一个事项，可以重新开始。',
+        followUpLimitMessage: '这次咨询已经补充过几轮。建议先停在这里；如果是另一件事，可以重新开始。',
       } : prev)
       return
     }
@@ -526,14 +519,6 @@ export default function AiConsultationEntryClient() {
     }
   }
 
-  async function saveQuestion() {
-    if (!active || !active.id) return
-    setActive(prev => prev ? { ...prev, saved: true } : prev)
-    try {
-      await fetch(`/api/consultation/${encodeURIComponent(active.id)}/save`, { method: 'POST' })
-    } catch { /* ignore */ }
-  }
-
   function reset() {
     streamRunRef.current += 1
     abortRef.current?.abort()
@@ -554,24 +539,15 @@ export default function AiConsultationEntryClient() {
   }
 
   return (
-    <ConsultationShell>
+    <ConsultationShell tabBar={<TabBar />}>
       <div className="space-y-5">
         <BrandHeader
           eyebrow="AI 在留咨询"
-          title={active ? '咨询回答' : '先整理你的在留问题'}
+          title={active ? '咨询回答' : '说说你的在留问题'}
           description={
             active
-              ? '回答完成后，可以补充同一件事，或先保存这次咨询。'
-              : '写下现在的情况。TEBIQ 会整理可能的风险和下一步确认点。'
-          }
-          action={
-            <a
-              href="/me/consultations"
-              className="inline-flex h-9 w-full items-center justify-center gap-1.5 rounded-btn border border-[var(--tebiq-soft-gray)] px-3 text-[12px] text-[var(--tebiq-deep-slate)] sm:w-auto"
-            >
-              <Archive className="h-3.5 w-3.5" strokeWidth={1.6} />
-              查看已保存
-            </a>
+              ? '这次咨询已自动记录。可以补充同一件事。'
+              : '请尽量描述同一件事，方便整理风险和下一步。'
           }
         />
 
@@ -593,7 +569,7 @@ export default function AiConsultationEntryClient() {
                   className="inline-flex shrink-0 items-center gap-1.5 rounded-btn border border-[var(--tebiq-soft-gray)] px-2.5 py-2 text-[12px] font-medium text-[var(--tebiq-ink-blue)] disabled:opacity-50"
                 >
                   {photo.kind === 'ready' ? <CheckCircle2 className="h-3.5 w-3.5" strokeWidth={1.6} /> : <Camera className="h-3.5 w-3.5" strokeWidth={1.6} />}
-                  {photo.kind === 'ready' ? '已加图片' : '拍照'}
+                  {photo.kind === 'ready' ? '已加图片' : '拍照补充'}
                 </button>
               </div>
               <textarea
@@ -637,7 +613,7 @@ export default function AiConsultationEntryClient() {
             )}
 
             <div className="text-center text-[12px] leading-relaxed text-[var(--tebiq-cool-gray)]">
-              问完后可以保存，稍后从“已保存”继续查看。
+              TEBIQ 会整理案情、提示风险和可核对信息，不代表最终审查结果。
             </div>
           </form>
         )}
@@ -647,7 +623,6 @@ export default function AiConsultationEntryClient() {
             active={active}
             error={error}
             onFeedback={sendFeedback}
-            onSave={saveQuestion}
             onReset={reset}
             onRetry={retryActiveConsultation}
             onFollowUp={submitFollowUp}
@@ -760,7 +735,6 @@ function ActiveConsultationView({
   active,
   error,
   onFeedback,
-  onSave,
   onReset,
   onRetry,
   onFollowUp,
@@ -768,7 +742,6 @@ function ActiveConsultationView({
   active: ActiveConsultation
   error: string | null
   onFeedback: (type: FeedbackType) => void
-  onSave: () => void
   onReset: () => void
   onRetry: () => void
   onFollowUp: (addition: string) => void
@@ -778,7 +751,6 @@ function ActiveConsultationView({
   const answerHasStarted = active.answer.trim().length > 0 || active.phase === 'streaming' || isTerminal(active.phase)
   const isWaitingForAnswer = !answerHasStarted
   const [waitingStage, setWaitingStage] = useState<WaitingStage>('early')
-  const [waitingChoice, setWaitingChoice] = useState<'idle' | 'continue' | 'saved'>('idle')
   const [followUpOpen, setFollowUpOpen] = useState(false)
   const baseDisplayState = getDisplayState(active)
   const displayState: AlphaDisplayState =
@@ -816,11 +788,10 @@ function ActiveConsultationView({
 
   useEffect(() => {
     setWaitingStage('early')
-    setWaitingChoice('idle')
     if (!isWaitingForAnswer) return
 
-    const longTimer = window.setTimeout(() => setWaitingStage('long'), 5_000)
-    const escapeTimer = window.setTimeout(() => setWaitingStage('escape'), 15_000)
+    const longTimer = window.setTimeout(() => setWaitingStage('long'), 30_000)
+    const escapeTimer = window.setTimeout(() => setWaitingStage('escape'), 60_000)
     return () => {
       window.clearTimeout(longTimer)
       window.clearTimeout(escapeTimer)
@@ -966,43 +937,22 @@ function ActiveConsultationView({
                   <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
                     <button
                       type="button"
-                      onClick={() => setWaitingChoice('continue')}
-                      className="inline-flex min-h-10 items-center justify-center rounded-btn bg-[var(--tebiq-ink-blue)] px-3 py-2 text-[13px] font-medium text-[var(--tebiq-off-white)] sm:min-w-[9rem]"
+                      onClick={onRetry}
+                      className="inline-flex min-h-10 items-center justify-center gap-2 rounded-btn border border-[var(--tebiq-soft-gray)] px-3 py-2 text-[13px] font-medium text-[var(--tebiq-ink-blue)]"
                     >
-                      继续等待
+                      <RefreshCcw className="h-3.5 w-3.5" strokeWidth={1.6} />
+                      重新生成
                     </button>
-                    <div className="flex flex-wrap gap-x-4 gap-y-2 text-[12.5px]">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          onSave()
-                          setWaitingChoice('saved')
-                        }}
-                        disabled={!active.id || active.saved}
-                        className="font-medium text-[var(--tebiq-ink-blue)] disabled:opacity-60"
-                      >
-                        {active.saved ? '已保存' : '先保存，稍后回来'}
-                      </button>
-                      <button
-                        type="button"
-                        onClick={onRetry}
-                        className="inline-flex items-center gap-1 font-medium text-[var(--tebiq-deep-slate)]"
-                      >
-                        <RefreshCcw className="h-3.5 w-3.5" strokeWidth={1.6} />
-                        重新生成
-                      </button>
-                    </div>
+                    <a
+                      href="/me/consultations"
+                      className="inline-flex min-h-10 items-center justify-center rounded-btn px-3 py-2 text-[13px] font-medium text-[var(--tebiq-deep-slate)]"
+                    >
+                      稍后从“我的咨询”查看
+                    </a>
                   </div>
-                  {waitingChoice === 'continue' && (
-                    <p className="text-[12px] leading-[1.6] text-[var(--tebiq-cool-gray)]">
-                      会继续在这里等待，正文一出现就会自动显示。
-                    </p>
-                  )}
-                  {waitingChoice === 'saved' && (
-                    <p className="text-[12px] leading-[1.6] text-[var(--tebiq-cool-gray)]">
-                      已保存到咨询记录。稍后可以从记录页回来查看。
-                    </p>
-                  )}
+                  <p className="text-[12px] leading-[1.6] text-[var(--tebiq-cool-gray)]">
+                    原问题已记录；如果正文出现，会自动显示在这里。
+                  </p>
                 </div>
               )}
             </div>
@@ -1038,22 +988,54 @@ function ActiveConsultationView({
           <Surface className="space-y-3">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <SectionLabel>继续问这件事</SectionLabel>
+                <SectionLabel>下一步</SectionLabel>
                 <p className="mt-1 text-[13.5px] leading-[1.7] text-[var(--tebiq-deep-slate)]">
-                  补充同一件事的新背景，TEBIQ 会沿用上面的回答继续整理。
+                  本次咨询已自动记录。补充内容会接着当前咨询继续整理。
                 </p>
               </div>
-              {!followUpLocked && (
+            </div>
+
+            <div className="grid gap-2 sm:grid-cols-2">
+              {!followUpLocked ? (
                 <button
                   type="button"
                   onClick={() => setFollowUpOpen(v => !v)}
                   disabled={hasRunningFollowUp}
-                  className="inline-flex min-h-10 w-full items-center justify-center gap-2 whitespace-nowrap rounded-btn border border-[var(--tebiq-soft-gray)] px-3 py-2 text-[13px] font-medium text-[var(--tebiq-ink-blue)] disabled:opacity-50 sm:w-auto"
+                  className="inline-flex min-h-11 items-center justify-center gap-2 whitespace-nowrap rounded-btn bg-[var(--tebiq-ink-blue)] px-3 py-2 text-[14px] font-medium text-[var(--tebiq-off-white)] disabled:opacity-50"
                 >
-                  {followUpOpen ? '收起' : '继续问'}
+                  <MessageSquarePlus className="h-4 w-4" strokeWidth={1.6} />
+                  {followUpOpen ? '收起补充' : '补充这件事'}
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  disabled
+                  className="inline-flex min-h-11 items-center justify-center rounded-btn bg-[var(--tebiq-ink-blue)] px-3 py-2 text-[14px] font-medium text-[var(--tebiq-off-white)] opacity-50"
+                >
+                  补充已到上限
                 </button>
               )}
+              <button
+                type="button"
+                onClick={canUseNativeShare ? shareConsultationLink : copyConsultationLink}
+                disabled={!active.id}
+                className="inline-flex min-h-11 items-center justify-center gap-2 whitespace-nowrap rounded-btn border border-[var(--tebiq-soft-gray)] px-3 py-2 text-[14px] font-medium text-[var(--tebiq-ink-blue)] disabled:opacity-50"
+              >
+                {shareState === 'shared' || copyState === 'copied'
+                  ? <ClipboardCheck className="h-4 w-4" strokeWidth={1.6} />
+                  : <Share2 className="h-4 w-4" strokeWidth={1.6} />}
+                {shareState === 'shared'
+                  ? '已打开分享'
+                  : copyState === 'copied'
+                    ? '已复制链接'
+                    : '分享概要'}
+              </button>
             </div>
+            {copyState === 'failed' || shareState === 'failed' ? (
+              <p className="text-[12px] leading-[1.65] text-[var(--tebiq-cool-gray)]">
+                分享未完成时，可以复制链接后再发给朋友或专业人士。
+              </p>
+            ) : null}
 
             {followUpOpen && !followUpLocked && (
               <div className="rounded-card border border-[var(--tebiq-soft-gray)] bg-[var(--tebiq-off-white)] px-3 py-3">
@@ -1076,113 +1058,10 @@ function ActiveConsultationView({
             {followUpLocked && (
               <FollowUpLimitCard
                 message={active.followUpLimitMessage}
-                onSave={onSave}
                 onHumanReview={() => onFeedback('human_review')}
                 onNewQuestion={onReset}
               />
             )}
-          </Surface>
-
-          <Surface className="space-y-4">
-            <div className="space-y-3">
-              <div>
-                <SectionLabel>保存概要</SectionLabel>
-                <p className="mt-1 text-[13.5px] leading-[1.7] text-[var(--tebiq-deep-slate)]">
-                  保存后可稍后补充、发给自己，或给专业人士参考。
-                </p>
-              </div>
-              <div>
-                <button
-                  onClick={onSave}
-                  disabled={active.saved}
-                  className="inline-flex min-h-11 w-full items-center justify-center gap-2 whitespace-nowrap rounded-btn bg-[var(--tebiq-ink-blue)] px-3 py-2 text-[14px] font-medium text-[var(--tebiq-off-white)] disabled:opacity-70 sm:w-auto sm:min-w-[11rem]"
-                >
-                  {active.saved ? <CheckCircle2 className="h-4 w-4" strokeWidth={1.6} /> : <Archive className="h-4 w-4" strokeWidth={1.6} />}
-                  {active.saved ? '已保存' : '保存概要'}
-                </button>
-              </div>
-              <p className="text-[12px] leading-[1.65] text-[var(--tebiq-cool-gray)]">
-                {shareContext.isWechat
-                  ? '微信里也可以用右上角菜单发送给自己。复制链接仍然是最稳的方式。'
-                  : shareContext.isDesktop
-                    ? '桌面端要发到微信或邮件时，建议先复制链接，再粘贴过去。'
-                    : '手机浏览器可以复制链接；支持系统分享时，也可以用系统分享。'}
-              </p>
-            </div>
-
-            <details className="rounded-card border border-[var(--tebiq-soft-gray)] px-3 py-2.5 text-[12.5px] leading-[1.65] text-[var(--tebiq-deep-slate)]">
-              <summary className="cursor-pointer font-medium text-[var(--tebiq-ink-blue)]">
-                复制和更多方式
-              </summary>
-              <div className="mt-3 space-y-3">
-                <div className="grid gap-2 sm:grid-cols-2">
-                  <button
-                    onClick={copyConsultationLink}
-                    disabled={!active.id}
-                    className="inline-flex min-h-10 items-center justify-center gap-2 rounded-btn border border-[var(--tebiq-soft-gray)] px-3 py-2 text-[13px] font-medium text-[var(--tebiq-ink-blue)] disabled:opacity-50"
-                  >
-                    {copyState === 'copied' ? <ClipboardCheck className="h-4 w-4" strokeWidth={1.6} /> : <Copy className="h-4 w-4" strokeWidth={1.6} />}
-                    {copyState === 'copied' ? '已复制链接' : copyState === 'failed' ? '复制失败' : '复制链接'}
-                  </button>
-                  <button
-                    onClick={copyConsultationSummary}
-                    disabled={!active.id}
-                    className="inline-flex min-h-10 items-center justify-center gap-2 rounded-btn border border-[var(--tebiq-soft-gray)] px-3 py-2 text-[13px] font-medium text-[var(--tebiq-ink-blue)] disabled:opacity-50"
-                  >
-                    {summaryCopyState === 'copied' ? <ClipboardCheck className="h-4 w-4" strokeWidth={1.6} /> : <Copy className="h-4 w-4" strokeWidth={1.6} />}
-                    {summaryCopyState === 'copied' ? '已复制概要' : summaryCopyState === 'failed' ? '复制失败' : '复制概要'}
-                  </button>
-                  {canUseNativeShare && (
-                    <button
-                      onClick={shareConsultationLink}
-                      disabled={!active.id}
-                      className="inline-flex min-h-10 items-center justify-center gap-2 rounded-btn border border-[var(--tebiq-soft-gray)] px-3 py-2 text-[13px] font-medium text-[var(--tebiq-ink-blue)] disabled:opacity-50"
-                    >
-                      {shareState === 'shared'
-                        ? <CheckCircle2 className="h-4 w-4" strokeWidth={1.6} />
-                        : <Share2 className="h-4 w-4" strokeWidth={1.6} />}
-                      {shareState === 'shared'
-                        ? '已打开分享'
-                        : shareState === 'failed'
-                          ? '分享未完成'
-                          : '打开系统分享'}
-                    </button>
-                  )}
-                  <button
-                    onClick={onReset}
-                    className="inline-flex min-h-10 items-center justify-center gap-2 rounded-btn border border-[var(--tebiq-soft-gray)] px-3 py-2 text-[13px] font-medium text-[var(--tebiq-ink-blue)] disabled:opacity-50"
-                  >
-                    <MessageSquarePlus className="h-4 w-4" strokeWidth={1.6} />
-                    重新开始咨询
-                  </button>
-                </div>
-                <p>如果要发给自己，复制链接最稳定。微信内也可以使用右上角菜单。</p>
-              </div>
-            </details>
-          </Surface>
-
-          <Surface className="space-y-2 p-3.5 sm:p-4">
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-              <p className="text-[13px] font-medium text-[var(--tebiq-ink-blue)]">反馈这条回答</p>
-              <div className="flex flex-wrap gap-2">
-                {FEEDBACK_BUTTONS.map(b => (
-                  <button
-                    key={b.type}
-                    onClick={() => onFeedback(b.type)}
-                    disabled={active.feedback_sent !== null && active.feedback_sent !== b.type}
-                    className={cx(
-                      'min-h-8 rounded-full border px-3 py-1 text-center text-[12px] font-medium whitespace-nowrap',
-                      active.feedback_sent === b.type
-                        ? 'border-[var(--tebiq-ink-blue)] bg-[var(--tebiq-soft-gray)] text-[var(--tebiq-ink-blue)]'
-                        : 'border-[var(--tebiq-soft-gray)] text-[var(--tebiq-deep-slate)]',
-                      'disabled:opacity-50',
-                    )}
-                  >
-                    {b.label}
-                  </button>
-                ))}
-              </div>
-            </div>
           </Surface>
         </>
       )}
@@ -1199,10 +1078,10 @@ function ActiveConsultationView({
             </SectionLabel>
             <p className="mt-1 text-[12.5px] leading-[1.65] text-[var(--tebiq-deep-slate)]">
               {displayState === 'partial'
-                ? '已生成的内容会保留；如果要完整回答，可以重新生成这次回答。'
-                : displayState === 'failed'
-                  ? '请求没有完成。重试会保留原问题重新发起，不是新问题。'
-                  : '这次没有拿到可用完整回答。系统已保留这个问题，可以重新生成，或先保存后稍后回来。'}
+                ? '已生成的内容会保留；如果要完整回答，可以稍后重新生成这次回答。'
+              : displayState === 'failed'
+                ? '请求没有完成。重试会保留原问题重新发起，不是新问题。'
+                : '这次没有拿到可用完整回答。系统已记录这个问题，可以稍后从“我的咨询”查看，或重新生成。'}
             </p>
           </div>
           <div className="grid gap-2 sm:grid-cols-2">
@@ -1214,13 +1093,12 @@ function ActiveConsultationView({
               重新生成这次回答
             </button>
             {active.id && (
-              <button
-                onClick={onSave}
+              <a
+                href="/me/consultations"
                 className="inline-flex items-center justify-center gap-2 rounded-btn border border-[var(--tebiq-soft-gray)] px-3 py-2 text-[13px] font-medium text-[var(--tebiq-ink-blue)]"
               >
-                <Archive className="h-4 w-4" strokeWidth={1.6} />
-                先保存这个问题
-              </button>
+                稍后查看
+              </a>
             )}
           </div>
           <button
@@ -1250,7 +1128,7 @@ function HumanReviewNotice() {
     <Surface className="space-y-2 border-[var(--tebiq-soft-gray)] p-3.5">
       <SectionLabel>确认请求已记录</SectionLabel>
       <p className="text-[13px] leading-[1.7] text-[var(--tebiq-deep-slate)]">
-        这还不是人工受理。需要具体期限、材料或个案判断时，可以带着已保存的概要向行政書士或入管确认。
+        这还不是人工受理。需要具体期限、材料或个案判断时，可以带着这次咨询记录向行政書士或入管确认。
       </p>
     </Surface>
   )
@@ -1380,7 +1258,7 @@ function FollowUpComposer({
           className="inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-btn bg-[var(--tebiq-ink-blue)] px-3 py-2 text-[13px] font-medium text-[var(--tebiq-off-white)] disabled:cursor-not-allowed disabled:opacity-40 sm:w-auto"
         >
           {disabled ? <Loader2 className="h-4 w-4 animate-spin" strokeWidth={1.6} /> : <Send className="h-4 w-4" strokeWidth={1.6} />}
-          继续整理
+          提交补充
         </button>
       </div>
     </form>
@@ -1389,12 +1267,10 @@ function FollowUpComposer({
 
 function FollowUpLimitCard({
   message,
-  onSave,
   onHumanReview,
   onNewQuestion,
 }: {
   message: string | null
-  onSave: () => void
   onHumanReview: () => void
   onNewQuestion: () => void
 }) {
@@ -1403,22 +1279,14 @@ function FollowUpLimitCard({
       <div>
         <SectionLabel>这次咨询先停在这里</SectionLabel>
         <p className="mt-1 text-[13.5px] leading-[1.7] text-[var(--tebiq-deep-slate)]">
-          {message || '这次咨询已经补充过几轮。建议先保存概要；如果是另一个事项，可以重新开始。'}
+          {message || '这次咨询已经补充过几轮。建议先停在这里；如果是另一件事，可以重新开始。'}
         </p>
       </div>
-      <div className="grid gap-2 sm:grid-cols-3">
-        <button
-          type="button"
-          onClick={onSave}
-          className="inline-flex min-h-10 items-center justify-center gap-2 rounded-btn bg-[var(--tebiq-ink-blue)] px-3 py-2 text-[13px] font-medium text-[var(--tebiq-off-white)]"
-        >
-          <Archive className="h-4 w-4" strokeWidth={1.6} />
-          保存
-        </button>
+      <div className="grid gap-2 sm:grid-cols-2">
         <button
           type="button"
           onClick={onHumanReview}
-          className="inline-flex min-h-10 items-center justify-center gap-2 rounded-btn border border-[var(--tebiq-soft-gray)] px-3 py-2 text-[13px] font-medium text-[var(--tebiq-ink-blue)]"
+          className="inline-flex min-h-10 items-center justify-center gap-2 rounded-btn bg-[var(--tebiq-ink-blue)] px-3 py-2 text-[13px] font-medium text-[var(--tebiq-off-white)]"
         >
           确认方式
         </button>
@@ -1674,7 +1542,7 @@ function truncateText(text: string, max: number): string {
 function EncodingIssueNotice() {
   return (
     <div className="rounded-card border border-[var(--tebiq-warm-amber)] px-3 py-2 text-[12.5px] leading-[1.65] text-[var(--tebiq-ink-blue)]">
-      这条回答里检测到显示异常字符。建议重新生成，或点“不准确”让团队复查。
+      这条回答里检测到显示异常字符。建议重新生成，或在反馈里标记“不准确”。
     </div>
   )
 }
@@ -1687,33 +1555,33 @@ function getWaitingStatus(active: ActiveConsultation, waitingStage: WaitingStage
 } {
   if (waitingStage === 'escape') {
     return {
-      main: '仍在处理，可能需要再等一会儿。',
-      sub: '复杂在留问题有时会超过 30 秒。可以继续等，也可以先保存这个问题。',
+      main: '这次比平时更久。',
+      sub: '可以再等一会儿；如果已经超过 1 分钟，也可以重新生成。',
       showSpinner: true,
       stage: 'escape',
     }
   }
   if (waitingStage === 'long' || active.phase === 'still_generating') {
     return {
-      main: '正在整理风险和下一步。',
+      main: '还在整理，复杂问题可能接近 1 分钟。',
       sub: active.routingStatus?.level === 'specific'
         ? `${active.routingStatus.label}。`
-        : '正在把问题拆成可判断的条件。',
+        : '正在把问题拆成可判断的条件，请先不要重复点击。',
       showSpinner: true,
       stage: 'long',
     }
   }
   if (active.phase === 'idle') {
     return {
-      main: '已收到，正在连接咨询服务。',
-      sub: null,
+      main: '已收到，正在整理。',
+      sub: '通常需要 30-60 秒。',
       showSpinner: true,
       stage: 'early',
     }
   }
   return {
-    main: active.routingStatus?.label ?? '已收到，正在判断在留场景。',
-    sub: null,
+    main: active.routingStatus?.label ?? '正在判断在留场景。',
+    sub: '通常需要 30-60 秒。',
     showSpinner: true,
     stage: 'early',
   }

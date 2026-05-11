@@ -3,10 +3,10 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
 const ITEMS = [
-  { href: '/', label: '首页', match: (p: string) => p === '/' },
-  { href: '/photo', label: '拍照', match: (p: string) => p.startsWith('/photo') },
-  { href: '/timeline', label: '提醒', match: (p: string) => p.startsWith('/timeline') || p.startsWith('/my/reminders') },
-  { href: '/my', label: '我的', match: (p: string) => p.startsWith('/my') || p === '/login' },
+  { href: '/ai-consultation', label: '提问', match: (p: string) => p === '/' || p.startsWith('/ai-consultation') },
+  { href: '/me/consultations', label: '我的咨询', match: (p: string) => p.startsWith('/me/consultations') || p.startsWith('/c/') },
+  { href: '/scrivener', label: '找书士', match: (p: string) => p.startsWith('/scrivener') || p.startsWith('/consultation') },
+  { href: '/quick-reference', label: '速查', match: (p: string) => p.startsWith('/quick-reference') },
 ] as const
 
 export default function MobileNav() {
@@ -43,35 +43,39 @@ export default function MobileNav() {
 
 function Icon({ name, active }: { name: string; active: boolean }) {
   const stroke = active ? '#0F2544' : '#9AA0AC'
-  const fill = active ? '#0F2544' : 'none'
-  if (name === '/') {
+  if (name === '/ai-consultation') {
     return (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill={fill} stroke={stroke} strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-        <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-        <polyline points="9 22 9 12 15 12 15 22" stroke={active ? '#FFFFFF' : '#9AA0AC'} fill="none" />
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={stroke} strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z" />
+        <path d="M12 7v6" />
+        <path d="M9 10h6" />
       </svg>
     )
   }
-  if (name === '/photo') {
+  if (name === '/me/consultations') {
     return (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={stroke} strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3Z" />
-        <circle cx="12" cy="13" r="3" />
+        <path d="M21 8v13H3V8" />
+        <path d="M1 3h22v5H1z" />
+        <path d="M10 12h4" />
       </svg>
     )
   }
-  if (name === '/timeline') {
+  if (name === '/scrivener') {
     return (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={stroke} strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 7h18s-3 0-3-7" />
-        <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+        <path d="M16 21v-2a4 4 0 0 0-8 0v2" />
+        <circle cx="12" cy="7" r="4" />
+        <path d="M19 8v6" />
+        <path d="M22 11h-6" />
       </svg>
     )
   }
   return (
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={stroke} strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-      <circle cx="12" cy="7" r="4" />
+      <path d="M9 18h6" />
+      <path d="M10 22h4" />
+      <path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1.5.56 2.86 1.5 3.9.73.8 1.23 1.48 1.41 2.1" />
     </svg>
   )
 }

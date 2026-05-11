@@ -46,12 +46,12 @@ export default async function AnswerPage({
       redirect(`/c/${encodeURIComponent(id)}`)
     }
     return (
-      <ConsultationShell>
+      <ConsultationShell tabBar={<TabBar />}>
         <div className="space-y-5">
           <BrandHeader
             eyebrow="咨询记录"
             title="这条链接暂时打不开"
-            description="这可能是旧版回答链接，或记录已经不存在。可以回到已保存咨询查看，或重新开始。"
+            description="这可能是旧版回答链接，或记录已经不存在。可以回到“我的咨询”查看，或重新开始。"
             action={
               <Link
                 href="/ai-consultation"
@@ -63,14 +63,14 @@ export default async function AnswerPage({
           />
           <Surface className="space-y-3">
             <p className="text-[13.5px] leading-[1.7] text-[var(--tebiq-deep-slate)]">
-              如果这是刚刚复制的咨询链接，请优先打开已保存咨询；新的咨询记录会使用 /c/ 开头的链接。
+              如果这是刚刚复制的咨询链接，请优先打开“我的咨询”；新的咨询记录会使用 /c/ 开头的链接。
             </p>
             <div className="flex flex-wrap gap-2">
               <Link
                 href="/me/consultations"
                 className="inline-flex min-h-10 items-center rounded-btn border border-[var(--tebiq-soft-gray)] px-3 text-[13px] font-medium text-[var(--tebiq-ink-blue)]"
               >
-                查看已保存
+                我的咨询
               </Link>
               <Link
                 href="/ai-consultation"

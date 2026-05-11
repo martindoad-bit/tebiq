@@ -3,30 +3,35 @@
 'use client'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Bell, Camera, Home, User } from 'lucide-react'
+import { Archive, MessageSquarePlus, SearchCheck, UserCheck } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import { trackClient } from '@/lib/analytics/client'
 import { EVENT } from '@/lib/analytics/events'
 
 const TABS: { href: string; label: string; Icon: LucideIcon; match: (p: string) => boolean }[] = [
-  { href: '/', label: '首页', Icon: Home, match: p => p === '/' },
   {
-    href: '/photo',
-    label: '拍照',
-    Icon: Camera,
-    match: p => p.startsWith('/photo'),
+    href: '/ai-consultation',
+    label: '提问',
+    Icon: MessageSquarePlus,
+    match: p => p === '/' || p.startsWith('/ai-consultation'),
   },
   {
-    href: '/timeline',
-    label: '提醒',
-    Icon: Bell,
-    match: p => p.startsWith('/timeline') || p.startsWith('/my/reminders'),
+    href: '/me/consultations',
+    label: '我的咨询',
+    Icon: Archive,
+    match: p => p.startsWith('/me/consultations') || p.startsWith('/c/'),
   },
   {
-    href: '/my/account',
-    label: '我的',
-    Icon: User,
-    match: p => p.startsWith('/my/account') || p.startsWith('/my/archive') || p.startsWith('/my/profile') || p === '/my' || p === '/login',
+    href: '/scrivener',
+    label: '找书士',
+    Icon: UserCheck,
+    match: p => p.startsWith('/scrivener') || p.startsWith('/consultation'),
+  },
+  {
+    href: '/quick-reference',
+    label: '速查',
+    Icon: SearchCheck,
+    match: p => p.startsWith('/quick-reference'),
   },
 ]
 

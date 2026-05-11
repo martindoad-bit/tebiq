@@ -248,7 +248,7 @@ export function isTerminalConsultationEvent(event: ConsultationEvent): boolean {
 // Stream route resets the hard timer on every chunk to enforce idle
 // detection. See app/api/consultation/stream/route.ts.
 export const CONSULTATION_TIMING = {
-  still_generating_at_ms: 25_000,
+  still_generating_at_ms: 30_000,
   hard_timeout_ms: 90_000, // pre-first-token cap (legacy name kept; semantics now "first-token deadline")
   idle_after_chunk_ms: 60_000, // post-first-token idle deadline
   wall_clock_cap_ms: 270_000, // ultimate cap below Vercel maxDuration=300
@@ -266,5 +266,5 @@ export const CONSULTATION_TIMING = {
  */
 export const CONSULTATION_TIMEOUT_FALLBACK_TEXT = [
   '[降级回答]',
-  '当前模型响应超时，不是你的输入问题。你可以稍后重试；如果已识别出相关事项，也可以先保存继续处理。',
+  '当前模型响应超时，不是你的输入问题。系统已记录这次咨询；你可以稍后从“我的咨询”查看，或重新生成。',
 ].join(' ')

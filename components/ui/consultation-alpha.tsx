@@ -39,16 +39,30 @@ export function cx(...values: Array<string | false | null | undefined>): string 
   return values.filter(Boolean).join(' ')
 }
 
-export function ConsultationShell({ children, wide = false }: { children: ReactNode; wide?: boolean }) {
+export function ConsultationShell({
+  children,
+  wide = false,
+  tabBar,
+}: {
+  children: ReactNode
+  wide?: boolean
+  tabBar?: ReactNode
+}) {
   return (
     <div className="min-h-screen overflow-x-hidden bg-[var(--tebiq-off-white)] text-[var(--tebiq-ink-blue)]">
       <AlphaNotice />
       <main className={cx(
         'mx-auto w-full px-4 py-5 sm:px-6 sm:py-7',
+        tabBar ? 'pb-28' : '',
         wide ? 'max-w-6xl' : 'max-w-[min(480px,100vw)]',
       )}>
         {children}
       </main>
+      {tabBar && (
+        <div className="fixed inset-x-0 bottom-0 z-30 mx-auto w-full max-w-[min(480px,100vw)] md:border-x md:border-[var(--tebiq-soft-gray)]">
+          {tabBar}
+        </div>
+      )}
     </div>
   )
 }
