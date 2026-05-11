@@ -103,6 +103,25 @@ related_links:
     display_label: "スタートアップビザ（外国人起業活動促進事業）"
     locator: "ページ内で「スタートアップビザ」を検索"
     relation: "official_reference"
+evidence_points:
+  - claim: "スタートアップビザ（特定活動）の在留期間は「最長２年間であり、この間に起業活動を完了する必要があります。」起業活動完了後は「『経営・管理』への在留資格変更許可申請を行ってください。」（ISA公式引用）。「起業活動が完了した」の具体的定義（法人登記完了・売上発生・従業員雇用等）は官方ページに明示なし（`kigyou_kanryo_definition`確認要）。"
+    source_title: "本邦の大学等を卒業した留学生による起業活動に係る措置について"
+    source_url: "https://www.moj.go.jp/isa/applications/resources/nyuukokukanri07_00001.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「最長２年間」「起業活動を完了」「経営・管理への在留資格変更許可申請」の記述を確認"
+    display_label: "スタートアップビザ：最長2年・起業完了後は経営管理への在留資格変更申請が必要"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: true
+  - claim: "スタートアップビザの前提：「経済産業大臣から認定を受けた地方公共団体又は民間事業者による管理・支援の下、起業準備活動を行うための在留資格を付与され、最長２年間、起業準備活動を行う」（ISA公式引用）。認定機関（地方公共団体または経産大臣認定民間事業者）リスト・手続き詳細は経産省HP参照（METIページ取得失敗 — `no_certificate_organization_options`確認要）。"
+    source_title: "外国人起業活動促進事業（スタートアップビザ）"
+    source_url: "https://www.moj.go.jp/isa/03_00097.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「経済産業大臣から認定を受けた地方公共団体又は民間事業者」「最長２年間」の記述を確認"
+    display_label: "スタートアップビザ：経産大臣認定機関の管理・支援下で起業準備活動（最長2年）"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: true
 ---
 
 # スタートアップビザ（特定活動）から経営・管理への在留資格変更
