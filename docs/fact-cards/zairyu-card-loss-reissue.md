@@ -9,6 +9,19 @@ controlled_alpha_eligible: false
 last_verified_at: 2026-05-10
 reviewer: ai_self_verified
 sprint: Cycle 1 Quality Flywheel / v2
+citation_label: "在留カード紛失・再交付（14日以内・入管申請）"
+citation_summary: "在留カードを紛失・盗難・滅失した場合の再交付申請手続き（14日以内・地方出入国在留管理局）と、警察への遺失届の手順を確認するカード。"
+source_display_names:
+  - "出入国在留管理庁"
+applies_when:
+  - "在留カードを紛失・盗難・滅失した場合の手続きを確認したい"
+  - "在留カード再交付の申請期限を確認したい"
+  - "在留カード再交付の申請先・必要書類を確認したい"
+  - "在留カードをなくした場合どこに届けるか確認したい"
+does_not_cover:
+  - "在留カードの住所変更（zairyu-address-change 参照 — 14日以内・市区町村）"
+  - "在留カードの記載事項変更（氏名・国籍等の変更 — 入管窓口）"
+  - "在留期間更新中に在留カードをなくした場合の具体的対処（入管窓口相談要）"
 ai_pipeline:
   collector_run_at: 2026-05-10
   extractor_model: codex-aql-cycle1
@@ -234,3 +247,4 @@ needs_review_flags: []
 | date | actor | action | from_state | to_state | note |
 |---|---|---|---|---|---|
 | 2026-05-10 | Codex (Cycle 1 self-cycle) | official source extraction + scenario mapping + QA cases | — | ai_verified | Fixes AQL P0 G04 wrong-office regression; risk=high so single explicit loss/reissue trigger can inject; official source only |
+| 2026-05-11 | FACT-OPS (Cycle 2 Batch 4) | Cycle 2メタデータ追加パッチ。citation_label・citation_summary・source_display_names・applies_when・does_not_coverフィールドを追加。事実内容・state変更なし。 | ai_verified | ai_verified | patch |

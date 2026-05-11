@@ -9,6 +9,19 @@ controlled_alpha_eligible: true    # PL signoff 2026-05-07 — Pack 2.2 prod inj
 last_verified_at: 2026-05-07
 reviewer: ai_self_verified
 sprint: 0.6 / Workstream C / Batch 1
+citation_label: "永住申請（年金・税・健康保険の未納リスク）"
+citation_summary: "永住許可申請における年金・住民税・健康保険の未納・滞納がISAガイドラインの消極的評価要因となるリスクを確認するカード。年金・税・健保の確認期間と証明書類の概要。"
+source_display_names:
+  - "出入国在留管理庁"
+applies_when:
+  - "永住申請を検討中で年金・税・健保の納付記録への影響を確認したい"
+  - "年金保険料の未納・猶予・免除期間が永住申請に影響するか確認したい"
+  - "住民税の滞納が永住申請の審査に影響するか確認したい"
+  - "健康保険の加入記録が永住審査の考慮要素になるか確認したい"
+does_not_cover:
+  - "永住申請の在留期間・就労期間要件（eijuu-zairyu-kikan 参照）"
+  - "脱退一時金（日本出国後の年金返還制度 — nenkin-dattai-ichijikin 参照）"
+  - "住民税の課税証明書・納税証明書の取得方法（juminzei-kazei-shomeisho 参照）"
 ai_pipeline:
   collector_run_at: 2026-05-07
   extractor_model: claude-sonnet-4-6 (FACT-OPS Batch 1, WebFetch from official ISA/MOJ sources)
@@ -313,6 +326,7 @@ needs_review_flags:
 | 2026-05-07 | GM (boundary correction) | controlled_alpha_eligible: true → false. FACT autopilot 越界 (FACT_OPS_WINDOW_TASK_PACK §9 明确：仅 PL 可设此字段为 true). critical 卡按 README state machine 默认走 human_reviewed gate. PR review 时由 PL 决定是否 signoff 翻 true. | ai_verified | ai_verified | GM correction |
 | 2026-05-07 | DOMAIN-CC (domain-cc-tebiq) | REQUEST_EDIT audit. confidence high → medium: nenkin/kenko_hoken 2年 + juuminhzei 3年 の証明期間フィールドが高度人材専用ページ(nyuukoku07-00133)からの引用で、一般申請者への適用は ai_inference。一般申請者向けページ(nyuukoku07-00132等)での確認後に high へ再昇格可。core 消極的評価クォートは nyukan50 直引用で正確。内容自体の正確性は高いが sourcing 強化が必要。re-audit 不要。| ai_verified | ai_verified | REQUEST_EDIT — confidence downgraded; sourcing gap flagged |
 | 2026-05-07 | GM (Batch 5) | PL signoff 2026-05-07 — Pack 2.2 prod inject 解锁，FACT_LAYER_ENABLED=true 5-门第 5 项进度。controlled_alpha_eligible: false → true。keyword coverage 追加（技術キーワード 6 bullets）。 | ai_verified | ai_verified | alpha flip + keyword coverage |
+| 2026-05-11 | FACT-OPS (Cycle 2 Batch 4) | Cycle 2メタデータ追加パッチ。citation_label・citation_summary・source_display_names・applies_when・does_not_coverフィールドを追加。事実内容・state変更なし。 | ai_verified | ai_verified | patch |
 
 ## Audit assignment
 
