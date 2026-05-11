@@ -56,6 +56,25 @@ related_links:
     display_label: "出入国在留管理庁 — 定住者（在留資格）"
     locator: "ページ内で「定住者（在留資格）」を検索"
     relation: "official_reference"
+evidence_points:
+  - claim: "定住者の法定告示対象：①日系3世②日系2世の配偶者③日系3世の配偶者④永住者・定住者等の扶養を受ける18歳未満の未婚の子（2022年4月1日改正：旧20歳未満→18歳未満）⑤永住者・定住者等の6歳未満の養子。法務大臣の特別裁量：「特別な事情を考慮して認める」場合あり（難民第三国定住・中国帰国者等）。在留期間：「5年、3年、1年、6か月または法務大臣が個別に指定する期間（5年を超えない）」。"
+    source_title: "出入国在留管理庁：定住者（在留資格）"
+    source_url: "https://www.moj.go.jp/isa/applications/status/longtermresident.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「定住者の法定対象」「在留期間」「法務大臣裁量」の記述を確認"
+    display_label: "定住者：告示5カテゴリ（日系3世等・18歳未満扶養子女）・在留期間最長5年・法務大臣裁量"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "定住者は就労制限なし（日本人と同等に就労可能・ai推定）。離婚後の定住者変更は告示定住外の「法務大臣の特別裁量」カテゴリとして申請可能（日本での養育中の子供がいる等の事情が考慮）。難民認定後の定住者変更も「法務大臣の特別裁量」による（詳細は`divorce_teichu_criteria`・`refugee_teichu_route`確認要）。"
+    source_title: "出入国在留管理庁：定住者（在留資格）"
+    source_url: "https://www.moj.go.jp/isa/applications/status/longtermresident.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「就労制限なし」「法務大臣裁量」の記述を確認（就労制限なしはai推定 — 公式ページ上の明示確認要）"
+    display_label: "定住者：就労制限なし（ai推定）・離婚後/難民認定後は法務大臣裁量（確認要）"
+    support_level: "indirect"
+    user_visible: true
+    needs_domain_review: true
 ---
 
 ## current_date_logic

@@ -61,6 +61,34 @@ related_links:
     display_label: "出入国在留管理庁 — 特定活動（告示第46号）ガイドライン（令和8年4月改定）"
     locator: "ページ内で「特定活動」を検索"
     relation: "official_reference"
+evidence_points:
+  - claim: "対象者（学歴要件）：本邦の4年制大学・大学院・認定専修学校専門課程を卒業した者。「外国の大学卒業者及び大学院修了者並びに認定専修学校専門課程ではない専修学校専門課程や専攻科の修了者は対象となりません」（ISA公式）。"
+    source_title: "出入国在留管理庁：特定活動（告示第46号）ガイドライン"
+    source_url: "https://www.moj.go.jp/isa/applications/status/tokutei46.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「対象となる方」「学歴要件」「外国の大学卒業者は対象となりません」の記述を確認"
+    display_label: "対象：本邦大学等卒業のみ（外国大学は対象外）"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "日本語要件：「日本語能力試験Ｎ１又はＢＪＴビジネス日本語能力テストで４８０点以上を有する方が対象です。」（N2は不可）。就労形態：「フルタイムの職員としての稼働に限られ、短時間のパートタイムやアルバイトは対象になりません。」派遣就労も不可。"
+    source_title: "出入国在留管理庁：特定活動（告示第46号）ガイドライン"
+    source_url: "https://www.moj.go.jp/isa/applications/status/tokutei46.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「日本語能力試験Ｎ１」「BJT480点」「フルタイム」「パートタイムは対象になりません」の記述を確認"
+    display_label: "JLPT N1/BJT480必須（N2不可）・フルタイム常勤のみ"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "転職時は新たな「在留資格変更許可申請」が必要（14日以内の届出では不可）。技人国では認められない飲食・小売・製造・介護業務も「日本語を用いた円滑な意思疎通を要する業務に従事するものを含む」活動であれば可能。"
+    source_title: "出入国在留管理庁：特定活動（告示第46号）ガイドライン"
+    source_url: "https://www.moj.go.jp/isa/applications/status/tokutei46.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「転職時」「在留資格変更許可申請」「技術・人文知識・国際業務との違い」の記述を確認"
+    display_label: "転職：在留変更申請必要・飲食/製造/介護業務も可（技人国より幅広）"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

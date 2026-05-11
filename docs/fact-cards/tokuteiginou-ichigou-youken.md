@@ -52,6 +52,25 @@ related_links:
     display_label: "出入国在留管理庁 — 特定技能（在留資格）"
     locator: "ページ内で「特定技能（在留資格）」を検索"
     relation: "official_reference"
+evidence_points:
+  - claim: "特定技能1号の技能水準は「相当程度の知識又は経験を必要とする技能」。個別許可期間は最長3年、通算在留上限は5年。対象業種は介護・農業・漁業・建設・造船・自動車整備・航空・宿泊・外食業・飲食料品製造業・鉄道・自動車運送業・林業・木材産業等16分野。"
+    source_title: "出入国在留管理庁：特定技能（在留資格）"
+    source_url: "https://www.moj.go.jp/isa/applications/status/specifiedskilledworker.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「特定技能1号」「技能水準」「通算在留上限」「対象分野」の記述を確認"
+    display_label: "特定技能1号：技能水準・通算5年上限・16分野"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "特定技能2号の技能水準は「熟練した技能」（1号より上位）。在留期間の上限はなく「3年・2年・1年・6か月」を繰り返し更新可能。1号は家族帯同不可、2号は家族帯同可（各ai推定・法令照合要）。"
+    source_title: "出入国在留管理庁：特定技能（在留資格）"
+    source_url: "https://www.moj.go.jp/isa/applications/status/specifiedskilledworker.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「特定技能1号・2号の比較」「熟練した技能」「上限なし」「家族帯同」の記述を確認"
+    display_label: "1号vs2号：通算上限あり/なし・家族帯同不可/可"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

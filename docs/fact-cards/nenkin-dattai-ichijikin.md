@@ -53,6 +53,16 @@ related_links:
     display_label: "日本年金機構 — 脱退一時金の制度"
     locator: "ページ内で「脱退一時金の制度」を検索"
     relation: "official_reference"
+evidence_points:
+  - claim: "脱退一時金の受給要件：①日本国籍を有していないこと②公的年金制度の被保険者でないこと（資格喪失後）③老齢年金の受給資格期間（10年以上）を満たしていないこと④障害年金等の受給権がないこと⑤日本国内に住所を有していないこと⑥保険料納付済期間等の合計が6月以上あること。申請期限：「日本に住所を有しなくなった日から2年以内」。上限月数：2021年4月以降は60月（5年）（以前は36月）。"
+    source_title: "日本年金機構：脱退一時金の制度"
+    source_url: "https://www.nenkin.go.jp/service/jukyu/seido/sonota-kyufu/dattai-ichiji/20150406.html"
+    source_organization: "日本年金機構"
+    source_locator: "ページ内「脱退一時金の受給要件」「申請期限2年」「月数上限60か月」の記述を確認"
+    display_label: "脱退一時金：受給6条件・出国後2年以内申請・月数上限60か月（5年・2021年4月以降）"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

@@ -60,6 +60,25 @@ related_links:
     display_label: "出入国在留管理庁 — 在留カード等の返納"
     locator: "ページ内で「在留カード等の返納」を検索"
     relation: "official_reference"
+evidence_points:
+  - claim: "在留カードは「中長期在留者が出国（再入国許可による出国を除く。）したとき」失効する。失効事由「出国」の場合は「直ちに出入国港において返納」（空港の出入国審査カウンターで提出）。「期限内に返納しないと罰金に処せられることがあります。」（ISA公式）。"
+    source_title: "出入国在留管理庁：在留カード等の返納"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00020.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「在留カード返納義務」「失効」「直ちに出入国港において返納」の記述を確認"
+    display_label: "帰国時：在留カードは空港出国審査で直ちに返納義務・返納しないと罰金リスク"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "国外転出届の提出期限：「引っ越しの14日前から、引っ越ししてから14日以内」（住民基本台帳法第24条）。転出届不履行の罰則：「5万円以下の過料」（住民基本台帳法第52条第2項）。国民健康保険は国外転出届提出（住民票抹消）により転出日をもって自動喪失する。外国人マイナンバーカードは国外転出により失効・返納義務が生じる（継続利用制度は日本国籍者のみ対象）。"
+    source_title: "出入国在留管理庁：在留カード等の返納"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00020.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「国外転出届」「転出届不履行」「国民健康保険喪失」「マイナンバーカード」の記述を確認"
+    display_label: "帰国時：国外転出届14日以内（不履行5万円過料）・国保自動喪失・マイナカード失効"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

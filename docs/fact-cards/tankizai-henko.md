@@ -60,6 +60,25 @@ related_links:
     display_label: "出入国在留管理庁 — 短期滞在（在留資格）"
     locator: "ページ内で「短期滞在（在留資格）」を検索"
     relation: "official_reference"
+evidence_points:
+  - claim: "短期滞在の許可活動：観光・保養・スポーツ・親族訪問・見学・講習・会合への参加・業務連絡等。在留期間：90日・30日・15日以下。在留資格変更申請は「変更事由が生じてから在留期間満了日以前」に申請が必要。変更の審査基準：「行おうとする活動が虚偽のものでなく、在留資格の変更を適当と認めるに足りる相当の理由があること」。"
+    source_title: "出入国在留管理庁：短期滞在（在留資格）"
+    source_url: "https://www.moj.go.jp/isa/applications/status/temporaryvisitor.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「許可活動」「在留期間（90日・30日・15日）」の記述を確認"
+    display_label: "短期滞在：許可活動（観光・親族訪問等）・在留期間90/30/15日"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "短期滞在からの就労・長期滞在目的の在留資格変更は「原則として認められていない」（ISA運用方針・ai推定。`official_policy_statement`確認要）。正規ルートは在外公館（日本大使館・領事館）での申請。就労系ビザの場合、雇用企業が在留資格認定証明書を取得し申請者が海外で就労ビザを申請して入国するのが正規手順。"
+    source_title: "出入国在留管理庁：在留資格変更許可申請"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/16-2.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「在留資格変更許可申請」の審査基準・変更事由・申請時期を確認（短期滞在からの変更不可の公式明示なし — ai推定）"
+    display_label: "短期滞在→就労/長期ビザ変更：原則不許可（ISA運用・ai推定）・正規ルートは在外申請"
+    support_level: "indirect"
+    user_visible: true
+    needs_domain_review: true
 ---
 
 ## current_date_logic

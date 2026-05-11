@@ -14,7 +14,7 @@ import {
 import type { LucideIcon } from 'lucide-react'
 
 export const ALPHA_NOTICE =
-  'TEBIQ Alpha — 先整理在留问题和下一步，不替代最终专业判断。'
+  'TEBIQ Alpha：先整理问题和下一步，不替代专业判断。'
 
 export const RISK_HINT =
   '这个问题可能涉及在留风险，建议不要只靠 AI 回答做最终决定。'
@@ -52,7 +52,7 @@ export function ConsultationShell({
     <div className="min-h-screen overflow-x-hidden bg-[var(--tebiq-off-white)] text-[var(--tebiq-ink-blue)]">
       <AlphaNotice />
       <main className={cx(
-        'mx-auto w-full px-4 py-5 text-[16px] sm:px-6 sm:py-7',
+        'mx-auto w-full px-4 py-5 text-[17px] sm:px-6 sm:py-7',
         tabBar ? 'pb-28' : '',
         wide ? 'max-w-6xl' : 'max-w-[min(480px,100vw)]',
       )}>
@@ -97,13 +97,13 @@ export function BrandHeader({
           <img
             src="/brand/tebiq-v07/svg/tebiq-v07-logo-horizontal.svg"
             alt="TEBIQ"
-            className="h-auto w-[120px]"
+            className="h-auto w-[128px]"
           />
           <div>
             <p className="text-[12px] font-medium uppercase tracking-normal text-[var(--tebiq-cool-gray)]">
               {eyebrow}
             </p>
-            <h1 className="mt-1 text-[28px] font-semibold leading-[1.14] tracking-normal text-[var(--tebiq-ink-blue)] sm:text-[28px]">
+            <h1 className="mt-1 text-[31px] font-semibold leading-[1.13] tracking-normal text-[var(--tebiq-ink-blue)] sm:text-[30px]">
               {title}
             </h1>
           </div>
@@ -111,7 +111,7 @@ export function BrandHeader({
         {action && <div className="shrink-0">{action}</div>}
       </div>
       {description && (
-        <p className="max-w-[34rem] break-words text-[15.5px] leading-[1.75] text-[var(--tebiq-deep-slate)] sm:text-[15.5px]">
+        <p className="max-w-[34rem] break-words text-[16.5px] leading-[1.75] text-[var(--tebiq-deep-slate)] sm:text-[16px]">
           {description}
         </p>
       )}

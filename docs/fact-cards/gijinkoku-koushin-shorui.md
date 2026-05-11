@@ -70,6 +70,25 @@ related_links:
     display_label: "出入国在留管理庁 — 技術・人文知識・国際業務（書類一覧）"
     locator: "ページ内で「技術・人文知識・国際業務（書類一覧）」を検索"
     relation: "official_reference"
+evidence_points:
+  - claim: "技人国在留期間更新申請の申請開始時期：「在留期間の満了する概ね3か月前から」（6か月以上の在留期間保有者）。標準処理期間：「2週間〜1か月」。共通必須書類：在留期間更新許可申請書・写真1葉（16歳未満免除）・パスポート・在留カード・カテゴリー該当証明書類・所属機関代表者申告書・住民税の課税（非課税）証明書および納税証明書 各1通。"
+    source_title: "出入国在留管理庁：在留期間更新許可申請"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/16-3.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「申請時期」「処理期間」「必要書類（共通）」の記述を確認"
+    display_label: "技人国更新：3か月前から・処理2週間〜1か月・共通必須書類6種"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "転職後（カテゴリー3・4）の更新では追加書類（労働条件通知書等・登記事項証明書・事業内容案内書・直近決算書）が必要。2026年4月15日施行：一部申請者にCEFR B2相当以上の語学能力証明書の提出が新たに必要（適用対象範囲は`cefr_b2_category_scope`確認要）。"
+    source_title: "出入国在留管理庁：技術・人文知識・国際業務（書類一覧）"
+    source_url: "https://www.moj.go.jp/isa/content/gijinkoku.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「転職後の追加書類」「CEFR B2語学能力証明」の記述を確認"
+    display_label: "技人国更新：転職後追加書類4種・2026年4月CEFR B2新設要件"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

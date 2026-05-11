@@ -78,6 +78,25 @@ related_links:
     display_label: "出入国在留管理庁 — 特定活動（就労継続支援）"
     locator: "ページ内で「特定活動（就労継続支援）」を検索"
     relation: "official_reference"
+evidence_points:
+  - claim: "退職・失業後の届出義務：「契約機関との契約が終了した場合、新たな契約を締結した場合は、１４日以内に届出を行う必要があります」（ISA届出ページ）。無職になった場合も届出義務あり（ISA FAQ Q94）。届出方法：オンライン・窓口持参・郵送。在留資格取消しの3か月ルール（入管法第22条の4第1項第6号）：「当該在留資格に係る活動を継続して３か月以上行っていない場合（正当な理由がある場合を除く。）」に取消し対象。"
+    source_title: "出入国在留管理庁：所属（契約）機関に関する届出"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00015.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「14日以内届出義務」「無職」「Q94」の記述を確認"
+    display_label: "失業：退職後14日以内届出義務・就労活動3か月以上停止で在留資格取消リスク"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "特定活動（就労継続支援）の対象：「やむを得ない事情により就労が継続できなくなった方が、特定技能への移行を目指す場合に、技能試験や日本語試験を受験するまでの間、移行後の就労予定先で就労できるよう在留資格変更許可申請を行うことができます」（ISA公式）。在留資格取消し後の出国猶予：「３０日を上限として出国のために必要な期間」が指定される（ISA取消し解説ページ）。"
+    source_title: "出入国在留管理庁：特定活動（就労継続支援）"
+    source_url: "https://www.moj.go.jp/isa/10_00213.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「就労継続支援」「特定技能移行」「取消し後30日猶予」の記述を確認"
+    display_label: "失業：特定活動（就労継続支援）は特定技能移行目的・取消し後30日猶予"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

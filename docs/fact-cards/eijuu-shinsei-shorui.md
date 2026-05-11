@@ -79,6 +79,34 @@ related_links:
     display_label: "出入国在留管理庁 — 永住者の在留資格への変更許可申請"
     locator: "ページ内で「永住者の在留資格への変更許可申請」を検索"
     relation: "official_reference"
+evidence_points:
+  - claim: "永住許可の審査基準3要件（公式）：①素行が善良であること ②独立の生計を営むに足りる資産又は技能を有すること ③永住が日本国の利益に合すると認められること。処理期間4〜6か月。手数料10,000円（許可時・収入印紙）。"
+    source_title: "出入国在留管理庁：永住許可申請（就労資格者等向け）必要書類"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/zairyu_eijyu03.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「審査基準」「処理期間」「手数料」の記述を確認"
+    display_label: "永住審査基準3要件・処理期間4〜6か月・手数料10,000円"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "就労資格者等の主要書類：住民税の課税証明書・納税証明書（直近5年分）、国税納税証明書（その3）、年金の被保険者記録照会等（直近2年分）、健康保険の納付証明（直近2年分）。日本発行の証明書は全て発行日から3か月以内のものが必要。"
+    source_title: "出入国在留管理庁：永住許可申請（就労資格者等向け）必要書類"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/zairyu_eijyu03.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「住民税証明書」「直近５年分」「年金」「直近２年間」「発行日から３か月以内」の記述を確認"
+    display_label: "主要書類：住民税5年分・年金健保2年分・証明書3か月有効"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "了解書（2021年10月1日から必須・多言語版あり）を提出すること。2024年12月2日以降：マイナ保険証所持者はマイナポータルの資格取得年月日確認画面の写し（3か月以内）を提出。マイナ保険証非所持者は資格確認証（写し）を提出。"
+    source_title: "出入国在留管理庁：永住許可申請（就労資格者等向け）必要書類"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/zairyu_eijyu03.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「了解書」「マイナ保険証」「資格確認証」の記述を確認"
+    display_label: "了解書必須（2021年10月〜）・マイナ保険証対応（2024年12月〜）"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

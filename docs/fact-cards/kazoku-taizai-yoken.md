@@ -57,6 +57,25 @@ related_links:
     display_label: "家族滞在（在留資格）"
     locator: "ページ内で「家族滞在（在留資格）」を検索"
     relation: "official_reference"
+evidence_points:
+  - claim: "家族滞在の対象となる主ビザ（就労系・留学・文化活動等）：教授、芸術、宗教、報道、高度専門職、経営・管理、法律・会計業務、医療、研究、教育、技術・人文知識・国際業務、企業内転勤、介護、興行、技能、特定技能2号、文化活動、留学。特定技能1号は含まれない。在留期間：「5年、3年、1年、6月または3月のうち、法務大臣が指定する期間」。"
+    source_title: "出入国在留管理庁：家族滞在（在留資格）"
+    source_url: "https://www.moj.go.jp/isa/applications/status/dependent.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「対象者（在留資格の種類）」「在留期間」の記述を確認"
+    display_label: "家族滞在：対象主ビザ一覧・特定技能1号除外・在留期間最長5年"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "家族滞在ビザ保持者の許可活動は「この在留資格をもって在留する者の扶養を受ける配偶者又は子として行う日常的な活動」。就労（アルバイト含む）は日常的な活動に含まれず、別途資格外活動許可が必要（ai推定）。"
+    source_title: "出入国在留管理庁：家族滞在（在留資格）"
+    source_url: "https://www.moj.go.jp/isa/applications/status/dependent.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「活動内容」「日常的な活動」の記述を確認"
+    display_label: "家族滞在：日常的な活動のみ可・就労は資格外活動許可が必要"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

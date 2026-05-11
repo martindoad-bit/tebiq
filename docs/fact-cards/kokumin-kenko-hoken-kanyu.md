@@ -63,6 +63,34 @@ related_links:
     display_label: "厚生労働省 — 国民健康保険料（税）について"
     locator: "ページ内で「国民健康保険料（税）について」を検索"
     relation: "official_reference"
+evidence_points:
+  - claim: "日本国内に住所を有し、他の医療保険・後期高齢者医療・生活保護に該当しない者は国民健康保険の被保険者となる義務がある。資格取得日から14日以内に住所地の市区町村役場で届出が必要。"
+    source_title: "厚生労働省：国民健康保険の加入・脱退について"
+    source_url: "https://www.mhlw.go.jp/stf/newpage_21539.html"
+    source_organization: "厚生労働省"
+    source_locator: "ページ内「被保険者となる方」「14日以内」「市町村の国民健康保険の窓口」の記述を確認"
+    display_label: "国保加入義務・14日以内・申請先（市区町村役場）"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "「短期滞在在留外国人の方」は国民健康保険の被保険者にならない。短期滞在以外（就労・留学・永住等）の在留資格で住民票登録がある外国人は加入対象。"
+    source_title: "厚生労働省：国民健康保険の加入・脱退について"
+    source_url: "https://www.mhlw.go.jp/stf/newpage_21539.html"
+    source_organization: "厚生労働省"
+    source_locator: "ページ内「被保険者とならない方」「短期滞在在留外国人」の記述を確認"
+    display_label: "外国人：短期滞在は対象外・長期在留者は加入対象"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "国民健康保険料（税）は世帯単位で算定し、前年の所得をもとに計算される。具体的な算定方法は各市町村の条例等で定められるため金額は市区町村によって異なる。"
+    source_title: "厚生労働省：国民健康保険料（税）について"
+    source_url: "https://www.mhlw.go.jp/stf/newpage_21517.html"
+    source_organization: "厚生労働省"
+    source_locator: "ページ内「保険料の算定」「前年の所得」「市町村」の記述を確認"
+    display_label: "保険料：前年所得基準・市区町村ごとに異なる"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

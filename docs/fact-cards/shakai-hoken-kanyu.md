@@ -57,6 +57,25 @@ related_links:
     display_label: "日本年金機構 — 適用事業所と被保険者"
     locator: "ページ内で「適用事業所と被保険者」を検索"
     relation: "official_reference"
+evidence_points:
+  - claim: "社会保険（健康保険・厚生年金）加入義務：「70歳未満の方は、国籍や性別、年金の受給の有無にかかわらず、厚生年金保険の被保険者となります」（日本年金機構）。強制適用事業所（法人）：株式会社等の法人は全て強制適用。強制適用事業所（個人）：常時5人以上の従業員を雇用する個人事業所（適用除外業種を除く）。試用期間中でも報酬支払いがあれば被保険者となる。"
+    source_title: "日本年金機構：適用事業所と被保険者"
+    source_url: "https://www.nenkin.go.jp/service/kounen/tekiyo/jigyosho/20150518.html"
+    source_organization: "日本年金機構"
+    source_locator: "ページ内「国籍・性別不問」「強制適用事業所（法人・個人）」「試用期間」の記述を確認"
+    display_label: "社会保険：外国人も国籍不問で加入義務・法人全て強制・個人5人以上"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "3/4ルール（パート等）：「1週間の所定労働時間および1か月の所定労働日数が、通常の労働者の4分の3以上」は被保険者。短時間労働者の拡大適用（特定適用事業所）：①週20時間以上②月額8.8万円以上（年収106万円以上相当）③学生でないこと。資格取得届の提出期限：事業主が「5日以内に日本年金機構へ提出」（日本年金機構）。"
+    source_title: "日本年金機構：適用事業所と被保険者"
+    source_url: "https://www.nenkin.go.jp/service/kounen/tekiyo/jigyosho/20150518.html"
+    source_organization: "日本年金機構"
+    source_locator: "ページ内「3/4ルール」「短時間労働者の拡大適用（週20時間・月8.8万円）」「資格取得届5日以内」の記述を確認"
+    display_label: "社会保険：3/4ルール・短時間拡大（週20h・月8.8万円・非学生）・取得届5日以内"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

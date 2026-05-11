@@ -50,11 +50,11 @@ export function FactReferenceBlock({
         <BookOpen className="mt-0.5 h-4 w-4 shrink-0 text-[var(--tebiq-ink-blue)]" strokeWidth={1.7} />
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-            <h2 className="text-[15px] font-medium leading-snug text-[var(--tebiq-ink-blue)]">
-              可核对资料
+            <h2 className="text-[15.5px] font-medium leading-snug text-[var(--tebiq-ink-blue)]">
+              参考资料
             </h2>
             <span className="rounded-full bg-[var(--tebiq-soft-gray)] px-2 py-0.5 text-[12px] text-[var(--tebiq-cool-gray)]">
-              {cards.length} 条资料
+              {cards.length} 条
             </span>
             {exactCount > 0 && (
               <span className="rounded-full bg-[var(--tebiq-soft-blue)] px-2 py-0.5 text-[12px] text-[var(--tebiq-ink-blue)]">
@@ -63,7 +63,7 @@ export function FactReferenceBlock({
             )}
           </div>
           <p className="mt-1.5 text-[12.5px] leading-[1.6] text-[var(--tebiq-cool-gray)]">
-            可以点开来源核对原文；标为“相关参考”的链接只作背景参考，不代表对应每一句结论。
+            这些资料用于核对信息，不代表官方背书或个案最终判断。
             {reviewCount > 0 ? ' 部分资料仍需结合个案确认。' : ''}
           </p>
         </div>
@@ -95,9 +95,9 @@ function FactReferenceCard({
     : '已用于回答'
 
   return (
-    <div className="rounded-card border border-[var(--tebiq-soft-gray)] bg-white px-3 py-3">
+    <div className="rounded-card border border-[var(--tebiq-soft-gray)] bg-white px-3.5 py-3.5">
       <div className="flex flex-wrap items-center gap-2">
-        <span className="min-w-0 flex-1 text-[14.5px] font-medium leading-snug text-[var(--tebiq-ink-blue)]">
+        <span className="min-w-0 flex-1 text-[15px] font-medium leading-snug text-[var(--tebiq-ink-blue)]">
           {card.title?.trim() || 'TEBIQ 知识资料'}
         </span>
         <span className="whitespace-nowrap rounded-full bg-[var(--tebiq-soft-gray)] px-2 py-0.5 text-[11.5px] text-[var(--tebiq-deep-slate)]">
@@ -110,7 +110,7 @@ function FactReferenceCard({
         )}
       </div>
 
-      <ul className="mt-2.5 space-y-2">
+      <ul className="mt-3 space-y-2">
         {items.slice(0, 3).map(item => (
           <li key={item.key}>
             <ReferenceLink item={item} />
@@ -139,27 +139,30 @@ function ReferenceLink({ item }: { item: ReferenceItem }) {
       href={item.url}
       target="_blank"
       rel="noreferrer noopener"
-      className="focus-ring group block rounded-[8px] border border-[var(--tebiq-soft-gray)] bg-[var(--tebiq-soft-gray)]/25 px-3 py-2.5 text-[13px] text-[var(--tebiq-deep-slate)] active:bg-[var(--tebiq-soft-gray)]"
+      className="focus-ring group block rounded-[10px] border border-[var(--tebiq-soft-gray)] bg-[var(--tebiq-off-white)] px-3 py-3 text-[13px] text-[var(--tebiq-deep-slate)] active:bg-[var(--tebiq-soft-gray)]"
     >
       <div className="flex min-w-0 items-start gap-2">
         <span className="min-w-0 flex-1">
           <span className="flex flex-wrap items-center gap-1.5">
-            <span className="rounded-full bg-white px-2 py-0.5 text-[11.5px] text-[var(--tebiq-cool-gray)]">
+            <span className="rounded-full bg-white px-2 py-0.5 text-[11.5px] text-[var(--tebiq-deep-slate)]">
               {supportLabel(item)}
             </span>
-            <span className="min-w-0 truncate font-medium text-[var(--tebiq-ink-blue)]">
+            <span className="min-w-0 flex-1 text-[13.5px] font-medium leading-snug text-[var(--tebiq-ink-blue)] line-clamp-2">
               {item.title}
             </span>
           </span>
           <span className="mt-1 block text-[12px] leading-[1.55] text-[var(--tebiq-cool-gray)]">
             {item.organization}
-            {item.locator ? ` · 打开后看：${item.locator}` : ''}
+            {item.locator ? ` · 原文位置：${item.locator}` : ''}
           </span>
           {item.claim && (
             <span className="mt-1 block text-[12.5px] leading-[1.55] text-[var(--tebiq-deep-slate)]">
               对应：{item.claim}
             </span>
           )}
+          <span className="mt-2 inline-flex min-h-8 items-center rounded-btn border border-[var(--tebiq-soft-gray)] bg-white px-2.5 text-[12.5px] font-medium text-[var(--tebiq-ink-blue)]">
+            查看原文
+          </span>
         </span>
         <ExternalLink
           className="mt-1 h-3.5 w-3.5 shrink-0 text-[var(--tebiq-cool-gray)] transition-colors group-hover:text-[var(--tebiq-ink-blue)]"
@@ -220,9 +223,9 @@ function dedupeReferenceItems(items: ReferenceItem[]): ReferenceItem[] {
 
 function supportLabel(item: ReferenceItem): string {
   if (item.needsDomainReview) return '需核对'
-  if (item.support === 'direct') return '直接对应'
+  if (item.support === 'direct') return '直接依据'
   if (item.support === 'indirect') return '相关参考'
-  if (item.support === 'official') return '官方资料'
+  if (item.support === 'official') return '相关页面'
   return '背景资料'
 }
 
@@ -240,6 +243,13 @@ function sourceLabelFor(url: string): string {
   if (/nta\.go\.jp$/i.test(host)) return '国税庁'
   if (/digital\.go\.jp$/i.test(host)) return 'デジタル庁'
   if (/kyoukaikenpo\.or\.jp$/i.test(host)) return '全国健康保険協会'
+  if (/mlit\.go\.jp$/i.test(host)) return '国土交通省'
+  if (/fsa\.go\.jp$/i.test(host)) return '金融庁'
+  if (/cfa\.go\.jp$/i.test(host)) return 'こども家庭庁'
+  if (/mext\.go\.jp$/i.test(host)) return '文部科学省'
+  if (/npa\.go\.jp$/i.test(host)) return '警察庁'
+  if (/mofa\.go\.jp$/i.test(host)) return '外務省'
+  if (/laws\.e-gov\.go\.jp$/i.test(host) || /elaws\.e-gov\.go\.jp$/i.test(host)) return 'e-Gov法令検索'
   if (/\.lg\.jp$/i.test(host)) return '自治体官网'
   if (/\.go\.jp$/i.test(host)) return '日本政府官网'
   return '官方资料'
