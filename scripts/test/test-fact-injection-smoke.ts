@@ -103,7 +103,13 @@ async function main() {
       const uniqueTotal = new Set(card.triggerKeywords.map(k => k.toLowerCase())).size
       const score = Math.min(1, matched.length / Math.max(1, uniqueTotal))
       const isHigh = card.riskLevel === 'high' || card.riskLevel === 'critical'
-      if (!isHigh && score < matcherMod._matcherInternals.SCORE_THRESHOLD_LOW_MEDIUM) continue
+      if (
+        !isHigh &&
+        score < matcherMod._matcherInternals.SCORE_THRESHOLD_LOW_MEDIUM &&
+        matched.length < matcherMod._matcherInternals.MIN_ABSOLUTE_MATCHES_LOW_MEDIUM
+      ) {
+        continue
+      }
       raws.push({ card, matched: matched.length, score })
     }
 
@@ -231,6 +237,26 @@ async function main() {
       id: 'C7.eijuu-住满几年',
       question: '永住申请需要住满几年',
       expect_inject_includes: ['eijuu-zairyu-kikan'],
+    },
+    {
+      id: 'D1.rishoku-国民年金中文',
+      question: '离职后厚生年金怎么办，要去区役所办国民年金吗',
+      expect_inject_includes: ['rishoku-kokumin-nenkin-kirikae'],
+    },
+    {
+      id: 'D2.rishoku-健康保险中文',
+      question: '退职后健康保险怎么办，国保和任意继续怎么选',
+      expect_inject_includes: ['rishoku-kenko-hoken'],
+    },
+    {
+      id: 'D3.tensyoku-换工作中文',
+      question: '换工作了要向入管报告吗，转职后14天内要提交什么',
+      expect_inject_includes: ['tensyoku-zairyu'],
+    },
+    {
+      id: 'D4.koyo-外国人雇佣中文',
+      question: '雇佣外国人要向 Hello Work 届出吗，外国人雇佣届出什么时候提交',
+      expect_inject_includes: ['gaikokujin-koyo-todokede'],
     },
   ]
 

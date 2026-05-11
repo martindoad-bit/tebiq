@@ -60,6 +60,12 @@ export interface MatchOptions {
  *  fires) per Pack §4 / design doc §"Matcher" v0.6. */
 const SCORE_THRESHOLD_LOW_MEDIUM = 0.15
 
+/** A second gate for expanded fact cards. As cards accumulate Chinese and
+ *  Japanese trigger variants, ratio-only scoring makes useful low/medium
+ *  cards harder to hit. Three distinct keyword hits is enough evidence for
+ *  procedural cards (年金/健保/税 etc.) even when the ratio is diluted. */
+const MIN_ABSOLUTE_MATCHES_LOW_MEDIUM = 3
+
 /** Maximum cards to surface to the prompt budget (Pack §4 / design
  *  §"Matcher" cap). Cards beyond this are dropped silently — they don't
  *  count toward audit. */
@@ -178,7 +184,13 @@ function scoreCardAgainst(card: FactCard, haystackLower: string): RawMatch | nul
 
   // Threshold gate. high/critical cards bypass per Pack §4.
   const isHighRisk = card.riskLevel === 'high' || card.riskLevel === 'critical'
-  if (!isHighRisk && score < SCORE_THRESHOLD_LOW_MEDIUM) return null
+  if (
+    !isHighRisk &&
+    score < SCORE_THRESHOLD_LOW_MEDIUM &&
+    matched.length < MIN_ABSOLUTE_MATCHES_LOW_MEDIUM
+  ) {
+    return null
+  }
 
   return { card, matchedKeywords: matched, score }
 }
@@ -270,6 +282,7 @@ export const _matcherInternals = {
   RISK_RANK,
   FACT_ID_REQUIRED_CONTEXT,
   SCORE_THRESHOLD_LOW_MEDIUM,
+  MIN_ABSOLUTE_MATCHES_LOW_MEDIUM,
   MAX_INJECTED,
   PRODUCTION_CANDIDATE_STATES,
   DRY_RUN_CANDIDATE_STATES,
