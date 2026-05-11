@@ -11,6 +11,19 @@ reviewer: DOMAIN-CC
 approved_at: 2026-05-07
 approved_by: DOMAIN-CC (claude-sonnet-4-6, audit-full-20260507)
 sprint: 0.6 / Workstream C / Batch 2
+citation_label: "資格外活動・副業（許可なき就労活動のリスク）"
+citation_summary: "在留資格の許可された活動範囲外での就労・副業を行う際の許可制度（資格外活動許可）と、無許可就労のリスクを確認するカード。留学生28時間ルールも含む。"
+source_display_names:
+  - "出入国在留管理庁"
+applies_when:
+  - "在留資格以外の活動（副業・アルバイト）の可否を確認したい"
+  - "留学生がアルバイトをする場合の時間制限を確認したい"
+  - "技人国保有者が副業・ダブルワークを行う場合の許可要件を確認したい"
+  - "資格外活動許可の申請方法・対象を確認したい"
+does_not_cover:
+  - "永住者・定住者・日本人の配偶者等（法別表第2）の就労制限（対象外）"
+  - "資格外活動の具体的な罰則・刑事責任の詳細（入管窓口・弁護士相談要）"
+  - "特定技能保持者の副業規制（別途確認要）"
 ai_pipeline:
   collector_run_at: 2026-05-07
   extractor_model: claude-sonnet-4-6 (FACT-OPS Batch 2, WebFetch from official ISA/MOJ sources)
@@ -335,6 +348,7 @@ needs_review_flags:
 | 2026-05-07 | AI (claude-sonnet-4-6 / FACT-OPS Batch 2) | extraction from moj-isa-shikakugai-00001 + moj-isa-nyuukoku07-00003 | — | ai_extracted | 入管法19条原則・別表2例外・28時間ルール・休業中1日8時間 確認 |
 | 2026-05-07 | AI self-verification | 13項 チェックリスト全項目確認; 罰則・技人国副業条件を needs_review に格納; certain_block + addendum 分割完了 | ai_extracted | ai_verified | risk=high, confidence=high; controlled_alpha_eligible=false (FACT 自律遵守 §9) |
 | 2026-05-07 | DOMAIN-CC (audit-full-20260507) | §2 full checklist PASS; 6 direct_fact_fields all sourced; 週28h/1日8h dual rule confirmed; 別表2 holders exception confirmed; injection_certain_block clean | ai_verified | human_reviewed | APPROVE |
+| 2026-05-11 | FACT-OPS (Cycle 2 Batch 3) | Cycle 2メタデータ追加パッチ。citation_label・citation_summary・source_display_names・applies_when・does_not_coverフィールドを追加。事実内容・state変更なし。 | human_reviewed | human_reviewed | patch |
 
 ## Audit assignment
 

@@ -53,6 +53,10 @@ Every card declares one `state`:
 | `high` | YES (more conservative copy required) | YES (enters human audit queue) |
 | `critical` | only if `controlled_alpha_eligible: true` is set on the card AND PL has signed off in the card's changelog; otherwise requires `human_reviewed` | requires `human_reviewed` unless explicit PL override in changelog |
 
+Sync additionally hard-fails `ai_verified + critical + controlled_alpha_eligible=true`
+unless `confidence: high`. Medium-confidence critical cards must stay hint-only
+until the flagged source gaps are resolved.
+
 **Per-field gating within an `ai_verified` card**:
 
 A card may be `ai_verified` overall but mark specific fields with
@@ -85,7 +89,11 @@ Only these are acceptable as `official_sources`:
 - e-Gov 法令検索 (`elaws.e-gov.go.jp`)
 - 厚生労働省 (`mhlw.go.jp`) — for 年金・健康保険・労務
 - 国税庁 (`nta.go.jp`) — for 税金関連
+- 総務省 (`soumu.go.jp`) — for 住民税・地方税制度
+- デジタル庁 (`digital.go.jp`) — for マイナンバー / マイナ保険証制度
+- 全国健康保険協会 (`kyoukaikenpo.or.jp`) — for 協会けんぽ・任意継続
 - 各市町村区役所 official pages — for 住民税・国民健康保険 procedural
+- 自治体公式ドメイン (`*.lg.jp`) — for local tax / NHI / address procedures
 - 政府公式 PDF / 告示 / 省令
 
 **NOT acceptable as source**: 行政書士ブログ, 中文中介公众号, 小红书,

@@ -9,6 +9,19 @@ controlled_alpha_eligible: false
 last_verified_at: "2026-05-07"
 reviewer: ai_self_verified
 sprint: "0.6 / Workstream C / Batch 3"
+citation_label: "永住申請（在留期間・就労期間積算要件と短縮特例）"
+citation_summary: "永住許可申請に必要な在留期間（原則10年）・就労期間（5年以上）の積算要件と、高度専門職・日本人配偶者等の短縮特例を確認するカード。技能実習・特定技能1号は積算対象外。"
+source_display_names:
+  - "出入国在留管理庁"
+applies_when:
+  - "永住申請に必要な在留期間の要件を確認したい"
+  - "技能実習・特定技能1号の期間が永住申請に算入できるか確認したい"
+  - "高度専門職保持者の永住申請短縮特例（1年または3年）を確認したい"
+  - "日本人・永住者の配偶者の永住申請要件を確認したい"
+does_not_cover:
+  - "永住申請の税・年金・健保要件（eijuu-nenkin-risk 参照）"
+  - "永住申請の具体的な必要書類（ISA手続きページ参照）"
+  - "永住不許可後の対処・再申請タイミング（行政書士相談要）"
 ai_pipeline:
   collector_run_at: "2026-05-07"
   extractor_model: "claude-opus-4-5"
@@ -284,6 +297,7 @@ qa_cases:
 |------|-------|--------|-------|
 | 2026-05-07 | FACT-OPS Batch 3 | src-01（永住許可ガイドライン）から直接引用、全direct_fact確認 | draft → ai_extracted |
 | 2026-05-07 | FACT-OPS Batch 3 | 13項チェックリスト通過 | ai_extracted → ai_verified |
+| 2026-05-11 | FACT-OPS (Cycle 2 Batch 3) | Cycle 2メタデータ追加パッチ。citation_label・citation_summary・source_display_names・applies_when・does_not_coverフィールドを追加。事実内容・state変更なし。 | ai_verified (no change) |
 
 ## Audit assignment
 

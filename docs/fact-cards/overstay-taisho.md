@@ -9,6 +9,19 @@ controlled_alpha_eligible: false
 last_verified_at: "2026-05-07"
 reviewer: FACT-OPS (Batch 7)
 sprint: "0.6"
+citation_label: "オーバーステイ（不法残留）— 対処法と退去強制リスク"
+citation_summary: "在留期限を超えて在留している外国人（不法残留）が取りうる対処法（出頭申告・在留特別許可）と退去強制・上陸拒否のリスクを確認するカード。"
+source_display_names:
+  - "出入国在留管理庁"
+applies_when:
+  - "在留期限を過ぎてしまった場合の対処を確認したい"
+  - "不法残留（オーバーステイ）のリスクと退去強制リスクを確認したい"
+  - "出頭申告（自首）した場合の扱いを確認したい"
+  - "在留特別許可の可能性があるか確認したい"
+does_not_cover:
+  - "在留期限間近（まだ期限内）の更新申請（zairyu-expiry-renewal-change 参照）"
+  - "不法残留の具体的な刑事罰則・収容期間の詳細（弁護士・行政書士相談要）"
+  - "退去強制後の上陸拒否期間（個別ケースによる — 専門家相談要）"
 ai_pipeline: WebFetch → FACT-OPS review
 official_sources:
   - url: https://www.moj.go.jp/isa/deportation/guide/tetuduki_taikyo_qa.html
@@ -150,3 +163,4 @@ A: 強制退去は摘発・収容後に行われ、原則10年の再入国禁止
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
 |------|------|----------|--------------|-------------|------|
 | 2026-05-07 | FACT-OPS (Batch 7) | 新規作成。不法残留・オーバーステイ対処。出頭申告・出国命令・在留特別許可の基本情報。罰則・再入国禁止期間はai_inferred + needs_review_flag。risk_level=critical。 | — | ai_verified | new |
+| 2026-05-11 | FACT-OPS (Cycle 2 Batch 4) | Cycle 2メタデータ追加パッチ。citation_label・citation_summary・source_display_names・applies_when・does_not_coverフィールドを追加。事実内容・state変更なし。 | ai_verified | ai_verified | patch |

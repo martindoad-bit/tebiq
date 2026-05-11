@@ -55,26 +55,26 @@ export default async function AnswerPage({
             action={
               <Link
                 href="/ai-consultation"
-                className="inline-flex h-9 items-center gap-1.5 rounded-btn bg-[var(--tebiq-ink-blue)] px-3 text-[12px] font-medium text-[var(--tebiq-off-white)]"
+                className="inline-flex h-10 items-center gap-1.5 whitespace-nowrap rounded-btn bg-[var(--tebiq-ink-blue)] px-3 text-[13px] font-medium text-[var(--tebiq-off-white)]"
               >
-                新问题
+                提问
               </Link>
             }
           />
           <Surface className="space-y-3">
-            <p className="text-[13.5px] leading-[1.7] text-[var(--tebiq-deep-slate)]">
+            <p className="text-[14.5px] leading-[1.7] text-[var(--tebiq-deep-slate)]">
               如果这是刚刚复制的咨询链接，请优先打开“我的咨询”；新的咨询记录会使用 /c/ 开头的链接。
             </p>
             <div className="flex flex-wrap gap-2">
               <Link
                 href="/me/consultations"
-                className="inline-flex min-h-10 items-center rounded-btn border border-[var(--tebiq-soft-gray)] px-3 text-[13px] font-medium text-[var(--tebiq-ink-blue)]"
+                className="inline-flex min-h-11 items-center whitespace-nowrap rounded-btn border border-[var(--tebiq-soft-gray)] px-3 text-[14px] font-medium text-[var(--tebiq-ink-blue)]"
               >
                 我的咨询
               </Link>
               <Link
                 href="/ai-consultation"
-                className="inline-flex min-h-10 items-center rounded-btn bg-[var(--tebiq-ink-blue)] px-3 text-[13px] font-medium text-[var(--tebiq-off-white)]"
+                className="inline-flex min-h-11 items-center whitespace-nowrap rounded-btn bg-[var(--tebiq-ink-blue)] px-3 text-[14px] font-medium text-[var(--tebiq-off-white)]"
               >
                 重新咨询
               </Link>

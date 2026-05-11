@@ -40,10 +40,13 @@ export default function TabBar() {
 
   return (
     <nav
-      className="flex-shrink-0 h-16 bg-surface border-t border-hairline"
-      style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
+      className="flex-shrink-0 border-t border-hairline bg-surface"
+      style={{
+        height: 'calc(68px + env(safe-area-inset-bottom))',
+        paddingBottom: 'env(safe-area-inset-bottom)',
+      }}
     >
-      <ul className="grid h-16 grid-cols-4">
+      <ul className="grid h-[68px] grid-cols-4">
         {TABS.map(({ href, label, Icon, match }) => {
           const active = match(pathname)
           return (
@@ -59,11 +62,11 @@ export default function TabBar() {
                 }`}
               >
                 <Icon
-                  size={20}
+                  size={22}
                   strokeWidth={1.5}
                   color={active ? '#0F2544' : '#9AA0AC'}
                 />
-                <span className="text-[11px] font-normal">{label}</span>
+                <span className="whitespace-nowrap text-[12px] font-normal leading-none">{label}</span>
               </Link>
             </li>
           )

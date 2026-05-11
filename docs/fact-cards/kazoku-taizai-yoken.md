@@ -9,6 +9,18 @@ controlled_alpha_eligible: false
 last_verified_at: "2026-05-07"
 reviewer: ai_self_verified
 sprint: "0.6 / Workstream C / Batch 3"
+citation_label: "家族滞在ビザ（対象主ビザ要件・特定技能1号除外・活動範囲）"
+citation_summary: "家族滞在（配偶者・子）として在留できる主ビザの種別と、特定技能1号が対象外であることを確認するカード。家族滞在者の就労活動は原則禁止（資格外活動許可が必要）。"
+source_display_names:
+  - "出入国在留管理庁"
+applies_when:
+  - "家族を日本に帯同する場合の在留資格（家族滞在）の対象条件を確認したい"
+  - "特定技能1号の保有者が家族滞在ビザで家族を呼べるか確認したい"
+  - "家族滞在ビザの活動範囲・就労の可否を確認したい"
+does_not_cover:
+  - "家族滞在者のアルバイト（資格外活動許可）の申請手続き（shikakugai-fukugyou 参照）"
+  - "永住者の配偶者等・日本人の配偶者等（別の在留資格）"
+  - "特定技能2号の家族帯同（別途在留資格ページで確認要）"
 ai_pipeline:
   collector_run_at: "2026-05-07"
   extractor_model: "claude-opus-4-5"
@@ -250,6 +262,7 @@ qa_cases:
 |------|-------|--------|-------|
 | 2026-05-07 | FACT-OPS Batch 3 | src-01（ISA 家族滞在ページ）から全direct_fact確認 | draft → ai_extracted |
 | 2026-05-07 | FACT-OPS Batch 3 | 13項チェックリスト通過 | ai_extracted → ai_verified |
+| 2026-05-11 | FACT-OPS (Cycle 2 Batch 3) | Cycle 2メタデータ追加パッチ。citation_label・citation_summary・source_display_names・applies_when・does_not_coverフィールドを追加。事実内容・state変更なし。 | ai_verified (no change) |
 
 ## Audit assignment
 

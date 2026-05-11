@@ -9,6 +9,17 @@ controlled_alpha_eligible: false
 last_verified_at: 2026-05-07
 reviewer: ai_self_verified
 sprint: 0.6 / Workstream C / Batch 2
+citation_label: "スタートアップビザ（特定活動）→経営管理ビザ移行の条件・手続き"
+citation_summary: "スタートアップビザ（特定活動46号・起業活動促進事業）から経営・管理ビザへの在留資格変更の条件・タイミング・必要書類を確認するカード（ai_extractedステート・DOMAIN審査待ち）。"
+source_display_names:
+  - "出入国在留管理庁"
+  - "経済産業省"
+applies_when:
+  - "スタートアップビザ（特定活動）で在留中に経営管理ビザへの移行を検討している"
+  - "スタートアップビザの有効期間・更新・移行条件を確認したい"
+does_not_cover:
+  - "経営管理ビザの要件詳細（keiei-kanri-2025-10 参照 — 2025年10月以降新基準）"
+  - "スタートアップビザの自治体認定手続き（自治体ごとに異なる — 窓口確認要）"
 ai_pipeline:
   collector_run_at: 2026-05-07
   extractor_model: claude-sonnet-4-6 (FACT-OPS Batch 2, WebFetch from official ISA/MOJ sources)
@@ -289,6 +300,7 @@ needs_review_flags:
 |---|---|---|---|---|---|
 | 2026-05-07 | AI (claude-sonnet-4-6 / FACT-OPS Batch 2) | initial extraction from moj-isa-nyuukoku07-00001 + moj-isa-03-00097; METI page fetch timeout | — | ai_extracted | 最長2年・起業完了後変更申請の枠組みのみ確認; 核心条件は needs_review; FACT 自律遵守 §5 — confidence medium 卡禁止升 ai_verified |
 | 2026-05-07 | DOMAIN-CC (audit-full-20260507) | DOMAIN professional resolution of transition_conditions_post_2025_10: スタートアップビザ→経営管理は「在留資格変更許可申請」= 既存保持者の「更新申請」ではないため、既存保持者過渡措置 NOT applicable。2025-10-16以降の変更申請には新基準（3,000万円・常勤1名・N2等）が完全適用と判断。FACT指示: ai_inferred_fields に追加・body記載。METI page未解決 (meti_page_source_gap + kigyou_kanryo_definition) のため state: ai_extracted 維持。 | ai_extracted | ai_extracted | NOT UPGRADED — METI page required for ai_verified |
+| 2026-05-11 | FACT-OPS (Cycle 2 Batch 5) | Cycle 2メタデータ追加パッチ。citation_label・citation_summary・source_display_names・applies_when・does_not_coverフィールドを追加。事実内容・state変更なし。 | ai_extracted | ai_extracted | patch |
 
 ## Audit assignment
 

@@ -11,6 +11,18 @@ reviewer: DOMAIN-CC
 approved_at: 2026-05-07
 approved_by: DOMAIN-CC (claude-sonnet-4-6, audit-full-20260507)
 sprint: 0.6 / Workstream C / Batch 2
+citation_label: "在留期限間近の更新・変更申請（申請タイミング・特例期間）"
+citation_summary: "在留期間の満了前に更新・変更許可を申請できるタイミングと、申請中に在留期限が来た場合の特例期間（最長2か月）の内容を確認するカード。"
+source_display_names:
+  - "出入国在留管理庁"
+applies_when:
+  - "在留期限が近づき、更新・変更申請のタイミングを確認したい"
+  - "申請中に在留期限が来た場合の在留状況（特例期間）を確認したい"
+  - "在留期限を過ぎた場合のリスクを確認したい"
+does_not_cover:
+  - "技人国更新申請の具体的書類一覧（gijinkoku-koushin-shorui 参照）"
+  - "在留資格変更申請の書類（各資格別の申請手続きページ参照）"
+  - "不許可になった場合の具体的対処（入管窓口・行政書士相談要）"
 ai_pipeline:
   collector_run_at: 2026-05-07
   extractor_model: claude-sonnet-4-6 (FACT-OPS Batch 2, WebFetch from official ISA/MOJ sources)
@@ -338,6 +350,7 @@ AIは「出国して再申請すればよい」とも、「出国前に専門家
 | 2026-05-07 | AI self-verification | 13項 チェックリスト全項目確認; 不許可後・期限後申請を needs_review に格納; certain_block + addendum 分割完了 | ai_extracted | ai_verified | risk=high, confidence=high; controlled_alpha_eligible=false (FACT 自律遵守 §9) |
 | 2026-05-07 | DOMAIN-CC (audit-full-20260507) | §2 full checklist PASS; 特例期間 definition + 2か月上限 + 従前活動継続 all sourced; limiting cases (不許可即終了, 期限後申請対象外) confirmed in must_not_say and injection_certain_block | ai_verified | human_reviewed | APPROVE |
 | 2026-05-10 | Codex (claim-boundary correction) | F06 過剰警告を修正。通知書期限内の自主出国を一律に5年上陸拒否と断定しない境界、審査請求/再申請/将来再入国/不法滞在等の分岐を追加。 | human_reviewed | human_reviewed | boundary correction; needs DOMAIN re-ack if promoted beyond current card |
+| 2026-05-11 | FACT-OPS (Cycle 2 Batch 3) | Cycle 2メタデータ追加パッチ。citation_label・citation_summary・source_display_names・applies_when・does_not_coverフィールドを追加。事実内容・state変更なし。 | human_reviewed | human_reviewed | patch |
 
 ## Audit assignment
 

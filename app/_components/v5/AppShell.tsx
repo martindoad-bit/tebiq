@@ -34,13 +34,13 @@ export default function AppShell({
       <div className="flex h-[100dvh] w-full max-w-full flex-col overflow-hidden md:mx-auto md:max-w-phone md:border-x md:border-hairline md:bg-canvas">
         {appBar}
         <main
-          className={`min-h-0 flex-1 overflow-x-hidden overflow-y-auto px-5 pb-6 ${bodyClassName}`}
+          className={`min-h-0 flex-1 overflow-x-hidden overflow-y-auto px-4 pb-6 text-[16px] sm:px-5 ${bodyClassName}`}
           style={{
-            paddingBottom: tabBar ? 'calc(76px + env(safe-area-inset-bottom))' : 'env(safe-area-inset-bottom)',
+            paddingBottom: tabBar ? 'calc(88px + env(safe-area-inset-bottom))' : 'env(safe-area-inset-bottom)',
           }}
         >
           {children}
-          <footer className="mt-8 border-t border-hairline pt-4 text-center text-[10.5px] leading-[1.6] text-haze">
+          <footer className="mt-8 border-t border-hairline pt-4 text-center text-[11.5px] leading-[1.6] text-haze">
             <Link href="/privacy-policy" className="underline-offset-4 hover:text-ink">
               隐私政策 / Privacy Policy
             </Link>

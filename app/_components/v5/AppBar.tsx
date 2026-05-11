@@ -28,7 +28,7 @@ export default function AppBar({ title, back, right, transparent }: Props) {
   }
   return (
     <header
-      className={`flex-shrink-0 h-[56px] px-5 flex items-center justify-between ${
+      className={`flex h-[58px] flex-shrink-0 items-center justify-between px-4 sm:px-5 ${
         transparent ? '' : 'bg-canvas'
       }`}
       style={{ paddingTop: 'env(safe-area-inset-top, 0)' }}
@@ -45,7 +45,7 @@ export default function AppBar({ title, back, right, transparent }: Props) {
       ) : (
         <span className="w-10" />
       )}
-      <h1 className="truncate text-[18px] font-medium leading-none text-ink">
+      <h1 className="truncate text-[19px] font-medium leading-none text-ink">
         {title}
       </h1>
       <div className="flex w-10 items-center justify-end">{right}</div>

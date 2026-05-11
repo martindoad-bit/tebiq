@@ -21,7 +21,7 @@ export function StatusBadge({
 }) {
   return (
     <span
-      className={`inline-flex min-h-[22px] items-center rounded-chip px-2 text-[10.5px] font-normal leading-none ${badgeToneClass[tone]}`}
+      className={`inline-flex min-h-[25px] shrink-0 items-center rounded-chip px-2.5 text-[11.5px] font-normal leading-none whitespace-nowrap ${badgeToneClass[tone]}`}
     >
       {children}
     </span>
@@ -37,7 +37,7 @@ export function RiskMark({
 }) {
   return (
     <span
-      className={`inline-flex min-h-[20px] items-center rounded-[6px] px-1.5 text-[10.5px] font-normal leading-none ${
+      className={`inline-flex min-h-[24px] shrink-0 items-center rounded-[6px] px-2 text-[11.5px] font-normal leading-none whitespace-nowrap ${
         tone === 'warning'
           ? 'bg-[#FFF4E1] text-warning'
           : 'bg-paper text-ash'
@@ -59,9 +59,9 @@ export function SectionLabel({
 }) {
   return (
     <div className="mt-6 flex items-center justify-between px-0.5">
-      <h2 className="text-[14px] font-medium leading-none text-ink">{title}</h2>
+      <h2 className="text-[15px] font-medium leading-none text-ink">{title}</h2>
       {action && href && (
-        <Link href={href} className="flex items-center text-[12px] leading-none text-ash">
+        <Link href={href} className="flex items-center text-[13px] leading-none text-ash">
           {action}
           <ChevronRight size={14} strokeWidth={1.5} />
         </Link>
@@ -99,9 +99,9 @@ export function ListRow({
     <>
       {icon && <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center text-ink">{icon}</span>}
       <span className="min-w-0 flex-1">
-        <span className="block truncate text-[15px] font-normal leading-snug text-ink">{title}</span>
+        <span className="block truncate text-[16px] font-normal leading-snug text-ink">{title}</span>
         {subtitle && (
-          <span className="mt-0.5 block truncate text-[12px] leading-snug text-ash">{subtitle}</span>
+          <span className="mt-0.5 block truncate text-[13px] leading-snug text-ash">{subtitle}</span>
         )}
       </span>
       {right ?? <ChevronRight size={18} strokeWidth={1.5} className="flex-shrink-0 text-haze" />}
