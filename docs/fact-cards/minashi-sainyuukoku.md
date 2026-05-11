@@ -287,6 +287,7 @@ qa_cases:
 | 2026-05-07 | FACT-OPS Batch 3 | 13項自己チェック通過、ai_inferred_fields hedging適用 | ai_extracted → ai_verified |
 | 2026-05-07 | GM (Batch 5) | PL signoff 2026-05-07 — Pack 2.2 prod inject 解锁，FACT_LAYER_ENABLED=true 5-门第 5 项进度。controlled_alpha_eligible: false → true。keyword coverage 追加（技術キーワード 6 bullets）。 | ai_verified | ai_verified | alpha flip + keyword coverage |
 | 2026-05-11 | FACT-OPS (Cycle 2 Batch 4) | Cycle 2メタデータ追加パッチ。citation_label・citation_summary・source_display_names・applies_when・does_not_coverフィールドを追加。事実内容・state変更なし。 | ai_verified | ai_verified | patch |
+| 2026-05-11 | FACT-OPS (Evidence Layer v1) | URL生存確認完了。`https://www.moj.go.jp/isa/immigration/procedures/16-5.html` はアクティブページ（再入国許可申請）。パス `isa/immigration/` は他と異なるが404リスクなし。evidence_points URL変更不要。 | ai_verified | ai_verified | url-check |
 
 ## Audit assignment
 
