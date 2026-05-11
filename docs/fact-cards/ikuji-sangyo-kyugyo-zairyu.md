@@ -80,6 +80,25 @@ related_links:
     display_label: "出入国在留管理庁 — 在留資格取消し（解説）"
     locator: "ページ内で「在留資格取消し（解説）」を検索"
     relation: "official_reference"
+evidence_points:
+  - claim: "産前休業（労働基準法第65条第1項）：6週間（多胎妊娠は14週間）以内に出産予定の女性が請求した場合、就業させてはならない。産後休業（同第2項）：産後8週間を経過しない女性を就業させてはならない。育児休業の基本期間：子が1歳になった日の前日まで（保育所入所不可等の場合は1歳6か月・2歳まで延長可）。労働基準法第3条により国籍差別禁止。外国人にも適用。"
+    source_title: "厚生労働省：育児休業等給付Q&A"
+    source_url: "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000158500.html"
+    source_organization: "厚生労働省"
+    source_locator: "Q&A内「産前産後休業」「育児休業期間」「Q14・Q15・Q16」の記述を確認"
+    display_label: "産前6週/産後8週・育休子1歳（延長あり）・外国人にも適用"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "育児休業給付金の支給率：休業開始から180日間は賃金日額×支給日数×67%、181日目以降は50%（雇用保険法第61条の7）。受給要件：育児休業開始日前2年間に賃金支払基礎日数11日以上の月が12か月以上あること。在留資格の3か月ルール（入管法第22条の4第1項第6号）に対する育休の「正当な理由」扱いの公式明示はなし（ISA公式確認済み）。"
+    source_title: "厚生労働省：育児休業等給付Q&A"
+    source_url: "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000158500.html"
+    source_organization: "厚生労働省"
+    source_locator: "Q&A内「Q11（受給要件）」「Q12（支給率67%・50%）」の記述を確認"
+    display_label: "育休給付金：67%→50%・受給は雇用保険12か月・3か月ルール正当理由の公式明示なし"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

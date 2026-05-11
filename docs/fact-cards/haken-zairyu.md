@@ -65,6 +65,25 @@ related_links:
     display_label: "出入国在留管理庁 — 技術・人文知識・国際業務（申請書類）"
     locator: "ページ内で「技術・人文知識・国際業務（申請書類）」を検索"
     relation: "official_reference"
+evidence_points:
+  - claim: "技人国ビザによる派遣就労は認められている（ISA申請書類に「派遣契約に基づいて就労する場合」の書類が明示）。所属機関は「派遣元」（派遣会社）。2026年3月9日以降、申請時点で派遣先が未確定の場合は在留諸申請の許可等を受けることができない（ISA PDF 2026年2月24日）。"
+    source_title: "出入国在留管理庁 — 技人国をもって派遣形態で就労する場合の取扱い（2026年2月24日）"
+    source_url: "https://www.moj.go.jp/isa/content/001457164.pdf"
+    source_organization: "出入国在留管理庁"
+    source_locator: "PDF内「申請時点において派遣先が確定していない場合は…許可等を受けることができません」の記述を確認"
+    display_label: "技人国派遣：2026年3月9日以降・申請時派遣先確定必須・所属機関=派遣元"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "派遣先変更時：「申請人の派遣先に変更があった場合には、その都度同様の対応を行うこと」（ISA誓約書）。ISAは派遣先への実地調査権限を有する（「派遣先においても当該調査に応じることを確認していること」）。在留期間は派遣契約期間に応じて決定される（ISA PDF）。"
+    source_title: "出入国在留管理庁 — 技人国をもって派遣形態で就労する場合の取扱い（2026年2月24日）"
+    source_url: "https://www.moj.go.jp/isa/content/001457164.pdf"
+    source_organization: "出入国在留管理庁"
+    source_locator: "PDF内「派遣先変更時の対応義務」「実地調査」「在留期間と派遣契約期間の連動」の記述を確認"
+    display_label: "技人国派遣：派遣先変更ごとに対応義務・ISA実地調査権・期間=派遣契約連動"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

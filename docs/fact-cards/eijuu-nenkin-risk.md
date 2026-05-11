@@ -73,6 +73,25 @@ related_links:
     display_label: "高度人材外国人の永住許可申請における書類要件"
     locator: "ページ内で「高度人材外国人の永住許可申請における書類要件」を検索"
     relation: "official_reference"
+evidence_points:
+  - claim: "永住許可に関するISAガイドラインにおける公租公課の納付義務：「公租公課を適切に納付していること」が消極的評価要因とならないことが求められる。年金・住民税・健康保険の未納・滞納は「日本の法律を遵守していない」として消極的評価を受ける可能性がある。"
+    source_title: "出入国在留管理庁：永住許可に関するガイドライン（令和８年２月２４日改訂版）"
+    source_url: "https://www.moj.go.jp/isa/applications/resources/nyukan_nyukan50.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ガイドライン内「公租公課の適切な納付」「消極的評価要因」の記述を確認"
+    display_label: "永住申請：公租公課未納は消極的評価要因（ISAガイドライン）"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "高度専門職永住申請の書類要件（一般申請と同一要件かは`general_applicant_lookback_verification`確認要）：年金保険料の直近2年分の支払記録・健康保険の直近2年分の記録・住民税の直近3年分の課税証明・納税証明書の提出が求められる。"
+    source_title: "出入国在留管理庁：高度人材外国人の永住許可申請における書類要件"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri07_00133.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「年金記録」「健康保険」「住民税」の提出書類一覧を確認"
+    display_label: "永住申請書類：年金・健保2年分・住民税3年分（高度専門職ページ）"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 # 永住申請における年金・税金・健康保険 未納リスク
