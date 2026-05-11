@@ -73,6 +73,34 @@ related_links:
     display_label: "出入国在留管理庁 — 永住許可制度の適正化に関するQ&A"
     locator: "ページ内で「永住許可制度の適正化に関するQ&A」を検索"
     relation: "official_reference"
+evidence_points:
+  - claim: "第6号：在留資格の活動を継続して3か月以上行わない場合（高度専門職は6か月）取消対象。第7号：配偶者としての活動を継続して6か月以上行わない場合取消対象。いずれも正当理由がある場合を除く。"
+    source_title: "出入国在留管理庁：在留資格の取消しについて（入管法第22条の4）"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/torikeshi_00002.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「第６号」「３か月以上」「第7号」「６か月以上」の取消事由の記述を確認"
+    display_label: "取消事由：3か月無活動（第6号）・配偶者6か月（第7号）"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "第8号：入国後90日以内に住居地届出なし。第9号：転居後90日以内に新住居地届出なし。第10号：虚偽住居地届出。第5〜10号該当の場合は取消後に最長30日の出国猶予が指定される。"
+    source_title: "出入国在留管理庁：在留資格の取消しについて（入管法第22条の4）"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/torikeshi_00002.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「第８号」「第9号」「90日以内」「出国猶予期間」「30日」の記述を確認"
+    display_label: "取消事由：住居地届出90日（第8・9号）・出国猶予最長30日"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "2024年改正（施行日確認要）：永住者への新取消事由。「故意に公租公課の支払をしないこと」「窃盗・詐欺・危険運転致死傷等の重大刑罰法令違反」。病気・失業等やむを得ない場合は公租公課不払いの取消対象外。"
+    source_title: "出入国在留管理庁：永住許可制度の適正化に関するQ&A"
+    source_url: "https://www.moj.go.jp/isa/immigration/faq/kanri_qa_00003.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「公租公課」「故意」「刑罰」「取消し」に関するQ&Aを確認"
+    display_label: "2024年改正：永住者取消事由（公租公課故意不払い・重大刑罰）"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

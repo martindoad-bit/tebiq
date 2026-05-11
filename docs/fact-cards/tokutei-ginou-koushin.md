@@ -58,6 +58,25 @@ related_links:
     display_label: "出入国在留管理庁 — 在留期間更新許可申請"
     locator: "ページ内で「在留期間更新許可申請」を検索"
     relation: "official_reference"
+evidence_points:
+  - claim: "特定技能の在留期間更新申請：6か月以上残留期間がある場合は概ね3か月前から申請可能。処理期間2週間〜1か月。費用：窓口6,000円（収入印紙）、オンライン5,500円。申請人本人が日本に滞在していることが必要。"
+    source_title: "出入国在留管理庁：在留期間更新許可申請"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/16-3.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「申請時期」「概ね３か月前」「処理期間」「手数料」「本人滞在」の記述を確認"
+    display_label: "更新申請：3か月前から・費用6,000円・本人在日必須"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "特定技能2号の更新期間は「3年、2年、1年又は6か月」を繰り返して更新可能。申請書への押印は原則として不要。申請書様式は別記第30号の２様式。"
+    source_title: "出入国在留管理庁：在留期間更新許可申請"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/16-3.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「特定技能2号」「3年・2年・1年又は6か月」「押印不要」の記述を確認"
+    display_label: "特定技能2号：3年・2年・1年・6か月で繰り返し更新可・押印不要"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

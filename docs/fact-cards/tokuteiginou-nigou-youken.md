@@ -53,6 +53,25 @@ related_links:
     display_label: "出入国在留管理庁 — 特定技能（在留資格）"
     locator: "ページ内で「特定技能（在留資格）」を検索"
     relation: "official_reference"
+evidence_points:
+  - claim: "特定技能2号の技能水準は「熟練した技能を要する業務」。在留期間の種類は「３年、２年、１年又は６月」を繰り返し更新可能（通算上限なし）。1号の通算5年上限とは異なる。"
+    source_title: "出入国在留管理庁：特定技能（在留資格）"
+    source_url: "https://www.moj.go.jp/isa/applications/status/specifiedskilledworker.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「特定技能2号」「熟練した技能」「3年・2年・1年・6か月」「通算上限」の記述を確認"
+    display_label: "特定技能2号：熟練技能・3年/2年/1年/6か月更新・上限なし"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "特定技能2号の対象分野（2023年拡大後11分野）：ビルクリーニング・工業製品製造業（機械金属加工・電気電子機器組立て・金属表面処理の業務区分のみ）・建設・造船舶用・自動車整備・航空・宿泊・農業・漁業・飲食料品製造業・外食業。自動車運送業・鉄道・林業・木材産業は1号のみ。"
+    source_title: "出入国在留管理庁：特定技能（在留資格）"
+    source_url: "https://www.moj.go.jp/isa/applications/status/specifiedskilledworker.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「特定技能2号の対象分野」「機械金属加工」「電気電子機器組立て」「金属表面処理」の記述を確認"
+    display_label: "2号対象11分野・工業製品製造業は3業務区分のみ"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

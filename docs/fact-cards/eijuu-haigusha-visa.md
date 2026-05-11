@@ -51,6 +51,25 @@ related_links:
     display_label: "出入国在留管理庁 — 永住者の配偶者等（在留資格）"
     locator: "ページ内で「永住者の配偶者等（在留資格）」を検索"
     relation: "official_reference"
+evidence_points:
+  - claim: "対象者：「永住者または特別永住者の配偶者、または日本で生まれ引き続き在留している永住者・特別永住者の子」。在留期間の種類：「5年、3年、1年または6か月」。主な申請必要書類：婚姻証明書・財力証明・永住者配偶者の身元保証書・世帯全員の住民票等。"
+    source_title: "出入国在留管理庁：永住者の配偶者等（在留資格）"
+    source_url: "https://www.moj.go.jp/isa/applications/status/spouseorchildofpermanentresident.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「対象者」「在留期間」「提出書類」の記述を確認"
+    display_label: "対象：永住者の配偶者・日本生まれの子。在留5年/3年/1年/6か月"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "就労制限なし（身分系在留資格として活動内容に制限なし）（ai推定・`no_work_restriction_source`確認要）。更新時に婚姻実態の確認あり。永住者スポンサーの死亡・離婚時は在留資格変更が必要。"
+    source_title: "出入国在留管理庁：永住者の配偶者等（在留資格）"
+    source_url: "https://www.moj.go.jp/isa/applications/status/spouseorchildofpermanentresident.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「活動内容」「就労」「更新」の記述を確認"
+    display_label: "就労制限なし・更新時婚姻実態確認・スポンサー死亡/離婚時は変更要"
+    support_level: "indirect"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

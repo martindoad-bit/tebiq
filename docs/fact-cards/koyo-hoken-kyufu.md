@@ -73,6 +73,34 @@ related_links:
     display_label: "厚生労働省ハローワーク — 基本手当の所定給付日数"
     locator: "ページ内で「基本手当の所定給付日数」を検索"
     relation: "official_reference"
+evidence_points:
+  - claim: "受給資格（一般）：離職日以前2年間で被保険者期間通算12か月以上。特定受給資格者・特定理由離職者：1年間で6か月以上。待期期間：求職申込み後7日間は基本手当が支給されない。"
+    source_title: "厚生労働省ハローワーク：基本手当について"
+    source_url: "https://www.hellowork.mhlw.go.jp/insurance/insurance_basicbenefit.html"
+    source_organization: "厚生労働省"
+    source_locator: "ページ内「受給資格」「被保険者期間が通算して12か月」「待期期間」「7日間」の記述を確認"
+    display_label: "受給資格（12か月以上）・待期7日"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "自己都合退職（5年間3回未満）の給付制限：待期後2か月間不支給（3回以上で3か月）。基本手当日額：賃金日額のおよそ50〜80%。受給期間は離職翌日から原則1年間。"
+    source_title: "厚生労働省ハローワーク：基本手当について"
+    source_url: "https://www.hellowork.mhlw.go.jp/insurance/insurance_basicbenefit.html"
+    source_organization: "厚生労働省"
+    source_locator: "ページ内「給付制限」「2か月間」「基本手当日額」「50〜80%」「受給期間」の記述を確認"
+    display_label: "自己都合：給付制限2か月・日額50〜80%・受給期間1年"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "所定給付日数は90日〜360日の範囲（離職理由・年齢・被保険者期間による）。一般受給資格者（自己都合等）：10年未満90日、10〜20年未満150日、20年以上150日。"
+    source_title: "厚生労働省ハローワーク：基本手当の所定給付日数"
+    source_url: "https://www.hellowork.mhlw.go.jp/insurance/insurance_benefitdays.html"
+    source_organization: "厚生労働省"
+    source_locator: "ページ内「所定給付日数」「一般受給資格者」の表を確認"
+    display_label: "給付日数：自己都合90〜150日・会社都合最大330日"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

@@ -63,6 +63,34 @@ related_links:
     display_label: "出入国在留管理庁 — 在留特別許可申請"
     locator: "ページ内で「在留特別許可申請」を検索"
     relation: "official_reference"
+evidence_points:
+  - claim: "外国人が地方出入国在留管理官署に出頭申告しても、直ちに不法残留等の状態が解消されるわけではない。出頭申告後は原則就労禁止。"
+    source_title: "出入国在留管理庁：退去強制・出国命令手続きQ&A"
+    source_url: "https://www.moj.go.jp/isa/deportation/guide/tetuduki_taikyo_qa.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「出頭申告」「就労禁止」に関するQ&Aを確認"
+    display_label: "出頭申告の効果（不法残留継続・就労禁止）"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "自発的出頭者が一定条件を満たす場合、収容なしに出国命令制度による簡易帰国が可能。出国命令の再入国禁止は5年。強制退去の場合は原則10年（ai推定）。"
+    source_title: "出入国在留管理庁：退去強制・出国命令手続きQ&A"
+    source_url: "https://www.moj.go.jp/isa/deportation/guide/tetuduki_taikyo_qa.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「出国命令」「収容」「再入国禁止」に関するQ&Aを確認"
+    display_label: "出国命令制度（収容なし・再入国禁止5年）"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "在留特別許可は「個々の事案ごとに諸般の事情を総合的に考慮」する特別措置。申請は被収容者・仮放免者・監視措置対象者が地方入管局に出頭して申請。"
+    source_title: "出入国在留管理庁：在留特別許可申請"
+    source_url: "https://www.moj.go.jp/isa/deportation/procedures/08_00044.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「在留特別許可」「申請者の範囲」の記述を確認"
+    display_label: "在留特別許可（個別考慮の特別措置・保証なし）"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

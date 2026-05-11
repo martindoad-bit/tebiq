@@ -63,6 +63,34 @@ related_links:
     display_label: "法務省 — 帰化申請"
     locator: "ページ内で「帰化申請」を検索"
     relation: "official_reference"
+evidence_points:
+  - claim: "普通帰化の住所要件（国籍法第5条）：「引き続き５年以上日本に住んでいることが必要」。年齢要件：18歳以上（本国法でも成人）（2022年4月民法改正後）。"
+    source_title: "法務省：帰化申請"
+    source_url: "https://www.moj.go.jp/MINJI/minji78.html"
+    source_organization: "法務省"
+    source_locator: "ページ内「帰化の条件（要件）」「住所要件」「年齢要件」の記述を確認"
+    display_label: "普通帰化：引き続き5年以上在住・18歳以上"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "帰化申請は住所地管轄の法務局または地方法務局に本人が直接出頭して申請（郵送・オンライン不可）。手数料は無料。帰化の効力は官報への告示日に発生（国籍法第10条）。"
+    source_title: "法務省：帰化申請"
+    source_url: "https://www.moj.go.jp/MINJI/minji78.html"
+    source_organization: "法務省"
+    source_locator: "ページ内「申請先」「手数料」「手続きの流れ」の記述を確認"
+    display_label: "申請：法務局本人出頭・手数料無料・官報告示で効力発生"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "特別帰化（国籍法第6条第1号）：日本人の配偶者で婚姻3年以上かつ日本に引き続き1年以上住所を有する者は、普通帰化の住所5年要件が緩和される。日本は二重国籍を原則認めない。"
+    source_title: "法務省：帰化申請"
+    source_url: "https://www.moj.go.jp/MINJI/minji78.html"
+    source_organization: "法務省"
+    source_locator: "ページ内「特別帰化」「国籍法第6条」「二重国籍」の記述を確認"
+    display_label: "特別帰化（日本人配偶者：婚姻3年+在住1年）・二重国籍不可"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic
