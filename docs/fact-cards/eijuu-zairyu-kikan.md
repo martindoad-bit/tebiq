@@ -92,6 +92,15 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: false
+  - claim: "永住申請には現在の在留資格の「最長の在留期間をもって在留していること」が必要：「出入国管理及び難民認定法施行規則別表第２に規定されている最長の在留期間をもって在留していること」（永住許可ガイドライン）。多くの就労系在留資格では3年または5年更新が最長在留期間にあたり、1年更新のままでは申請が困難。"
+    source_title: "出入国在留管理庁：永住許可に関するガイドライン"
+    source_url: "https://www.moj.go.jp/isa/applications/resources/nyukan_nyukan50.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ガイドライン内「出入国管理及び難民認定法施行規則別表第２に規定されている最長の在留期間をもって在留していること」の記述を確認"
+    display_label: "永住申請：最長在留期間での在留が必要（1年更新では申請困難）"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic

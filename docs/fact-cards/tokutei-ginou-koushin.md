@@ -77,6 +77,15 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: false
+  - claim: "特定技能1号の通算在留上限は5年。5年上限到達後は在留期間更新は不可であり、特定技能2号への在留資格変更申請（別手続き）または帰国が必要。特定技能2号には通算在留上限はなく更新を繰り返せる（いずれもai推定・法令別表第1の2の直接引用要）。"
+    source_title: "出入国在留管理庁：在留期間更新許可申請"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/16-3.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「特定技能1号」「通算」「5年」および「特定技能2号」「上限」の記述から推論（tokutei1_5nen_source・tokutei2_no_limit_source確認要）"
+    display_label: "特定技能1号：通算5年上限到達で更新不可・2号移行または帰国（ai推定）"
+    support_level: "indirect"
+    user_visible: true
+    needs_domain_review: true
 ---
 
 ## current_date_logic

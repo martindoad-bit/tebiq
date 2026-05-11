@@ -71,6 +71,15 @@ evidence_points:
     support_level: "indirect"
     user_visible: true
     needs_domain_review: false
+  - claim: "日本人の配偶者等ビザから永住申請への移行：日本人の配偶者等で在留実績が3年以上（かつ1年以上継続在留）の場合、永住申請の在留期間短縮特例の基礎要件を満たす可能性がある（ai推定・永住許可ガイドラインの配偶者特例と整合）。他の永住要件（公租公課・素行・生計独立等）も同時に充足が必要。"
+    source_title: "出入国在留管理庁：日本人の配偶者等（在留資格）"
+    source_url: "https://www.moj.go.jp/isa/applications/status/spouseorchildofjapanese.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「日本人の配偶者等」の在留資格概要と永住許可ガイドライン（nyukan_nyukan50）の配偶者特例要件（3年以上婚姻+1年以上在留）から推論"
+    display_label: "日本人配偶者等ビザ：3年以上婚姻+1年以上在留で永住短縮特例の基礎（ai推定）"
+    support_level: "indirect"
+    user_visible: true
+    needs_domain_review: true
 ---
 
 ## current_date_logic

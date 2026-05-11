@@ -72,6 +72,15 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: false
+  - claim: "みなし再入国許可の有効期間（出国から1年以内）は在留期限が1年より前に来る場合、在留期限が実質的な上限となる：在留期限を超えた在留継続は不可のため、みなし再入国許可の残存期間が在留期限当日までに短縮される（ai推定・行政運用上の解釈）。"
+    source_title: "出入国在留管理庁：再入国許可申請"
+    source_url: "https://www.moj.go.jp/isa/immigration/procedures/16-5.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「みなし再入国許可」および「在留期間」の記述から推論。在留期限が1年より前にある場合の実質上限については行政運用解釈（needs_domain_review）"
+    display_label: "在留期限が1年未満の場合：みなし再入国の実質上限は在留期限当日（ai推定）"
+    support_level: "indirect"
+    user_visible: true
+    needs_domain_review: true
 ---
 
 ## current_date_logic

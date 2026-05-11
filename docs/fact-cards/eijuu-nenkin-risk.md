@@ -92,6 +92,15 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: false
+  - claim: "申請時点で未納分を一括納付しても遅延の事実自体が消極的評価される：「申請時点において納税（納付）済みであったとしても、当初の納税（納付）期間内に履行されていない場合は、原則として消極的に評価されます」（ISAガイドライン直接引用）。"
+    source_title: "出入国在留管理庁：永住許可に関するガイドライン（令和８年２月２４日改訂版）"
+    source_url: "https://www.moj.go.jp/isa/applications/resources/nyukan_nyukan50.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ガイドライン内「当初の納税（納付）期間内に履行されていない場合は、原則として消極的に評価されます」の記述を確認"
+    display_label: "申請前に補払いしても遅延の事実は消極評価（ISAガイドライン直接引用）"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 # 永住申請における年金・税金・健康保険 未納リスク

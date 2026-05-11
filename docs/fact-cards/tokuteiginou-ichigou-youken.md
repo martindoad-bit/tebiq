@@ -71,6 +71,15 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: false
+  - claim: "特定技能1号の日本語要件：国際交流基金日本語基礎テスト（JFT-Basic）合格またはJLPT N4以上合格が必要。介護分野では加えて「介護日本語評価試験」も必要。業種によって要求される試験の種類が異なる（ai推定・業種別試験要件は各分野所管省庁で確認要）。"
+    source_title: "出入国在留管理庁：特定技能（在留資格）"
+    source_url: "https://www.moj.go.jp/isa/applications/status/specifiedskilledworker.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「日本語能力」「JFT-Basic」「JLPT N4」「介護日本語評価試験」の記述から推論（japanese_language_test_by_sector確認要）"
+    display_label: "特定技能1号：JFT-Basic又はN4以上必要・介護は追加試験あり（ai推定）"
+    support_level: "indirect"
+    user_visible: true
+    needs_domain_review: true
 ---
 
 ## current_date_logic

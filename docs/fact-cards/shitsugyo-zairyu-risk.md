@@ -97,6 +97,15 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: false
+  - claim: "所属機関届出の方法：届出はオンライン（24時間受付）・地方出入国在留管理局への持参・郵送の3方法で可能。新たな契約機関との契約締結時も同じく14日以内に届出が必要（ISA届出ページ）。14日以内の届出を怠った場合は在留管理義務違反となる可能性がある（ai推定・ペナルティ詳細は`14nichi_fujikai_sanction`確認要）。"
+    source_title: "出入国在留管理庁：所属（契約）機関に関する届出"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00015.html"
+    source_organization: "出入国在留管理庁"
+    source_locator: "ページ内「届出方法」「オンライン」「郵送」「持参」「新たな契約を締結した場合」の記述を確認"
+    display_label: "届出方法：オンライン（24時間）・持参・郵送。転職時も14日以内届出義務"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic
