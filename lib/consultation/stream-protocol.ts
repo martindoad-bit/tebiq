@@ -95,6 +95,29 @@ export interface ConsultationSummary {
   last_answer_key_points: string[]
 }
 
+export type ConsultationEvidenceSupportLevel = 'direct' | 'indirect' | 'background'
+
+export interface ConsultationEvidencePoint {
+  claim: string
+  source_title: string
+  source_url: string
+  source_organization?: string
+  source_locator?: string
+  display_label?: string
+  support_level: ConsultationEvidenceSupportLevel
+  user_visible: boolean
+  needs_domain_review: boolean
+}
+
+export interface ConsultationRelatedLink {
+  title: string
+  url: string
+  organization?: string
+  display_label?: string
+  locator?: string
+  relation?: string
+}
+
 /**
  * 0.6 Sprint Workstream C (ENGINE Pack 2.2): per-card audit row that
  * rides on the `fact_cards_injected` SSE event AND is persisted on
@@ -117,6 +140,11 @@ export interface ConsultationFactCardAuditEntry {
   source_quality: string
   /** Verbatim source URLs from the card's `official_sources`. */
   official_sources: ReadonlyArray<string>
+  /** Claim-level evidence. Older persisted rows may omit this field;
+   *  readers must treat missing as empty and fall back to official_sources. */
+  evidence_points: ReadonlyArray<ConsultationEvidencePoint>
+  /** Card-level related links. May be broader than exact claim evidence. */
+  related_links: ReadonlyArray<ConsultationRelatedLink>
   /** Field IDs that ENGINE counts as "this card actually contributed
    *  these facts to the prompt". For decision='inject' this is the
    *  card's `direct_fact_fields` list (sync derives them); for

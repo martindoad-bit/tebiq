@@ -358,6 +358,8 @@ async function main() {
       injectionNeedsReviewAddendum: null,
       needsReviewFlags: [],
       sourceUrls: [],
+      evidencePoints: [],
+      relatedLinks: [],
       reviewer: null,
       lastVerifiedAt: new Date(),
       approvedAt: null,

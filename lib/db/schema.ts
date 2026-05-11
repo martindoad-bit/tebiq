@@ -1395,6 +1395,30 @@ export const factCards = pgTable(
      *  ai_verified. */
     needsReviewFlags: jsonb('needs_review_flags').$type<string[]>().notNull().default(sql`'[]'::jsonb`),
     sourceUrls: jsonb('source_urls').$type<string[]>().notNull(),
+    /** Claim-level evidence for user-visible source cards. Each item
+     *  should tie a specific claim to a specific official/quasi-official
+     *  source and locator. */
+    evidencePoints: jsonb('evidence_points').$type<Array<{
+      claim: string
+      source_title: string
+      source_url: string
+      source_organization?: string
+      source_locator?: string
+      display_label?: string
+      support_level: 'direct' | 'indirect' | 'background'
+      user_visible: boolean
+      needs_domain_review: boolean
+    }>>().notNull().default(sql`'[]'::jsonb`),
+    /** Card-level related links. These may be broader than claim-level
+     *  evidence and should be labeled as related references in UI. */
+    relatedLinks: jsonb('related_links').$type<Array<{
+      title: string
+      url: string
+      organization?: string
+      display_label?: string
+      locator?: string
+      relation?: string
+    }>>().notNull().default(sql`'[]'::jsonb`),
     reviewer: text('reviewer'),
     lastVerifiedAt: timestamp('last_verified_at', { withTimezone: true }).notNull(),
     approvedAt: timestamp('approved_at', { withTimezone: true }),
