@@ -408,6 +408,10 @@ Cycle 3 workpack:
 
 - [`LEGAL_SOURCE_P0_CYCLE3_WORKPACK.md`](./LEGAL_SOURCE_P0_CYCLE3_WORKPACK.md)
 
+Cycle 4 workpack:
+
+- [`LEGAL_SOURCE_P0_CYCLE4_WORKPACK.md`](./LEGAL_SOURCE_P0_CYCLE4_WORKPACK.md)
+
 ---
 
 ## 8. Primary Reference Links
