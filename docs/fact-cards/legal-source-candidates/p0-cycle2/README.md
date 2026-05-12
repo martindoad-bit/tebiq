@@ -29,7 +29,7 @@ official landing criterion
 | `BATCH1_REPORT.md` | LS-P0C2-001 to LS-P0C2-019: source-role anchors + 技人国 criteria | landed as `ai_extracted`; validated by dry-run matrix |
 | `BATCH2_REPORT.md` | LS-P0C2-030 to LS-P0C2-039: 経営・管理 2025 amended criteria | landed as `ai_extracted`; validated by separate dry-run matrix |
 | `BATCH3_REPORT.md` | LS-P0C2-050 to LS-P0C2-063: 留学 / 家族滞在 criteria | landed as `ai_extracted`; validated by separate dry-run matrix |
-| `BATCH4_REPORT.md` | LS-P0C2-070 to LS-P0C2-092: 特定技能 / 企業内転勤 / 技能 | pending |
+| `BATCH4_REPORT.md` | LS-P0C2-070 to LS-P0C2-092: 特定技能 / 企業内転勤 / 技能 | landed as `ai_extracted`; validated by separate dry-run matrix |
 | `BATCH5_REPORT.md` | LS-P0C2-100 to LS-P0C2-122 plus rewrites | pending |
 
 ---
