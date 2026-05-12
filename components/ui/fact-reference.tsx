@@ -99,18 +99,20 @@ function FactReferenceCard({
 
   return (
     <div className="rounded-card border border-[var(--tebiq-soft-gray)] bg-white px-3.5 py-3.5">
-      <div className="flex flex-wrap items-center gap-2">
-        <span className="min-w-0 flex-1 text-[15px] font-medium leading-snug text-[var(--tebiq-ink-blue)]">
+      <div className="space-y-2">
+        <h3 className="text-[15px] font-medium leading-snug text-[var(--tebiq-ink-blue)]">
           {card.title?.trim() || 'TEBIQ 知识资料'}
-        </span>
-        <span className="whitespace-nowrap rounded-full bg-[var(--tebiq-soft-gray)] px-2 py-0.5 text-[11.5px] text-[var(--tebiq-deep-slate)]">
-          {groupLabel}
-        </span>
-        {isHighRisk && (
-          <span className="whitespace-nowrap rounded-full border border-[var(--tebiq-warm-amber)] px-2 py-0.5 text-[11.5px] text-[var(--tebiq-deep-slate)]">
-            影响较大
+        </h3>
+        <div className="flex flex-wrap gap-1.5">
+          <span className="whitespace-nowrap rounded-full bg-[var(--tebiq-soft-gray)] px-2 py-0.5 text-[11.5px] text-[var(--tebiq-deep-slate)]">
+            {groupLabel}
           </span>
-        )}
+          {isHighRisk && (
+            <span className="whitespace-nowrap rounded-full border border-[var(--tebiq-warm-amber)] px-2 py-0.5 text-[11.5px] text-[var(--tebiq-deep-slate)]">
+              影响较大
+            </span>
+          )}
+        </div>
       </div>
 
       <ul className="mt-3 space-y-2">
@@ -144,16 +146,20 @@ function ReferenceLink({ item }: { item: ReferenceItem }) {
       rel="noreferrer noopener"
       className="focus-ring group block rounded-[10px] border border-[var(--tebiq-soft-gray)] bg-[var(--tebiq-off-white)] px-3 py-3 text-[13px] text-[var(--tebiq-deep-slate)] transition-colors hover:border-[var(--tebiq-cool-gray)] active:bg-[var(--tebiq-soft-gray)]"
     >
-      <div className="flex min-w-0 items-start gap-2">
-        <span className="min-w-0 flex-1">
-          <span className="flex flex-wrap items-center gap-1.5">
-            <span className="rounded-full bg-white px-2 py-0.5 text-[11.5px] text-[var(--tebiq-deep-slate)]">
-              {supportLabel(item)}
-            </span>
-            <span className="min-w-0 flex-1 text-[13.5px] font-medium leading-snug text-[var(--tebiq-ink-blue)] line-clamp-2">
-              {item.title}
-            </span>
+      <div className="min-w-0">
+        <div className="flex items-start justify-between gap-2">
+          <span className="shrink-0 rounded-full bg-white px-2 py-0.5 text-[11.5px] text-[var(--tebiq-deep-slate)]">
+            {supportLabel(item)}
           </span>
+          <ExternalLink
+            className="mt-1 h-3.5 w-3.5 shrink-0 text-[var(--tebiq-cool-gray)] transition-colors group-hover:text-[var(--tebiq-ink-blue)]"
+            strokeWidth={1.7}
+          />
+        </div>
+        <span className="mt-2 block min-w-0 text-[13.5px] font-medium leading-snug text-[var(--tebiq-ink-blue)]">
+          {item.title}
+        </span>
+        <span className="min-w-0">
           <span className="mt-1 block text-[12px] leading-[1.55] text-[var(--tebiq-cool-gray)]">
             {item.organization}
             {item.locator ? ` · 原文位置：${item.locator}` : ''}
@@ -167,10 +173,6 @@ function ReferenceLink({ item }: { item: ReferenceItem }) {
             查看原文
           </span>
         </span>
-        <ExternalLink
-          className="mt-1 h-3.5 w-3.5 shrink-0 text-[var(--tebiq-cool-gray)] transition-colors group-hover:text-[var(--tebiq-ink-blue)]"
-          strokeWidth={1.7}
-        />
       </div>
     </a>
   )

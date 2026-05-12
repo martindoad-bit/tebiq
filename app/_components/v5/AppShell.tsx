@@ -31,7 +31,7 @@ export default function AppShell({
 }: Props) {
   return (
     <div className={`tebiq-viewport-lock h-[100dvh] overflow-x-hidden ${shellClassName}`}>
-      <div className="tebiq-app-shell mx-0 flex h-[100dvh] min-w-0 max-w-[390px] flex-col overflow-hidden sm:mx-auto sm:max-w-phone md:border-x md:border-hairline md:bg-canvas">
+      <div className="tebiq-app-shell mx-auto flex h-[100dvh] min-w-0 max-w-[430px] flex-col overflow-hidden sm:max-w-phone md:border-x md:border-hairline md:bg-canvas">
         {appBar}
         <main
           className={`min-h-0 min-w-0 max-w-full flex-1 overflow-x-hidden overflow-y-auto px-3 pb-6 text-[17px] min-[390px]:px-4 sm:px-5 ${bodyClassName}`}

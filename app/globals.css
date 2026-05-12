@@ -109,11 +109,12 @@ body:lang(ja),
 }
 
 .tebiq-fixed-tabbar {
-  left: 0;
-  right: 0;
-  margin-inline: 0;
+  left: 50%;
+  right: auto;
+  margin-inline: auto;
+  transform: translateX(-50%);
   width: 100%;
-  max-width: min(390px, 100vw);
+  max-width: min(430px, 100vw);
 }
 
 @supports (width: 100dvw) {
@@ -123,28 +124,25 @@ body:lang(ja),
   }
 
   .tebiq-fixed-tabbar {
-    max-width: min(390px, 100dvw);
+    max-width: min(430px, 100dvw);
   }
 }
 
 @media (max-width: 767px) {
   .tebiq-app-shell {
     width: 100% !important;
-    max-width: min(390px, 100vw) !important;
+    max-width: min(430px, 100vw) !important;
   }
 
   @supports (width: 100dvw) {
     .tebiq-app-shell {
-      max-width: min(390px, 100dvw) !important;
+      max-width: min(430px, 100dvw) !important;
     }
   }
 }
 
 @media (min-width: 768px) {
   .tebiq-fixed-tabbar {
-    left: 50%;
-    right: auto;
-    transform: translateX(-50%);
     max-width: 480px;
   }
 }

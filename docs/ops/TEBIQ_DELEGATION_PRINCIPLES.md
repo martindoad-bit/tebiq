@@ -38,6 +38,9 @@
 
 ### 2.1 CODEXUI — UI/UX 专业判断
 
+**必须读取**:
+- `docs/product/TEBIQ_PRODUCT_UI_GUARDRAILS.md`
+
 **GM 给**:
 - 用户场景
 - 当前体验问题
@@ -84,6 +87,9 @@
 
 ### 2.4 ENGINE — 工程实现
 
+涉及用户端 UI / app shell / evidence / answer rendering 时，**必须读取**:
+- `docs/product/TEBIQ_PRODUCT_UI_GUARDRAILS.md`
+
 **GM 给** (默认):
 - 目标行为
 - 接口边界
@@ -94,6 +100,9 @@
 **GM 不写代码级微指令**，**除非属于 §6 例外**。
 
 ### 2.5 QA — 质量验证 + 失败归因
+
+涉及用户端体验时，**必须读取**:
+- `docs/product/TEBIQ_PRODUCT_UI_GUARDRAILS.md`
 
 **GM 给** (要求 QA 验):
 - 用户路径是否成立

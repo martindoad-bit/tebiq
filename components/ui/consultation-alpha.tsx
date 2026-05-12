@@ -52,7 +52,7 @@ export function ConsultationShell({
     <div className="tebiq-viewport-lock min-h-screen overflow-x-hidden bg-[var(--tebiq-off-white)] text-[var(--tebiq-ink-blue)]">
       <AlphaNotice />
       <main className={cx(
-        'mx-0 w-full min-w-0 max-w-[390px] overflow-x-hidden px-3 py-5 text-[17px] min-[390px]:px-4 sm:mx-auto sm:max-w-[480px] sm:px-6 sm:py-7',
+        'mx-auto w-full min-w-0 max-w-[430px] overflow-x-hidden px-3 py-5 text-[17px] min-[390px]:px-4 sm:max-w-[480px] sm:px-6 sm:py-7',
         tabBar ? 'pb-28' : '',
         wide ? 'max-w-6xl' : '',
       )}>

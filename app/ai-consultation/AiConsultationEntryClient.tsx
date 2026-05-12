@@ -582,7 +582,7 @@ export default function AiConsultationEntryClient() {
               ? active.id
                 ? '这次咨询已自动记录。可以补充同一件事。'
                 : '整理完成后会自动记录。可以补充同一件事。'
-              : '换工作、更新、离婚、年金、搬家。把现在的情况写下来，TEBIQ 会帮你整理风险、依据和下一步。'
+              : '换工作、更新、离婚、年金、搬家。'
           }
         />
 
@@ -910,6 +910,45 @@ function ActiveConsultationView({
           </div>
         )}
 
+        {canRecover && (
+          <div className="rounded-card border border-[var(--tebiq-soft-gray)] bg-[var(--tebiq-off-white)] px-3 py-3">
+            <SectionLabel>
+              {displayState === 'partial'
+                ? '这次只保留了部分内容'
+                : '这次没有整理完成'}
+            </SectionLabel>
+            <p className="mt-1 text-[14px] leading-[1.65] text-[var(--tebiq-deep-slate)]">
+              {displayState === 'partial'
+                ? '已保留的内容会继续显示。需要重新整理时，可以重试。'
+                : '重试会保留原问题；这不是新的咨询。'}
+            </p>
+            <div className="mt-3 grid gap-2 sm:grid-cols-2">
+              <button
+                onClick={onRetry}
+                className="inline-flex min-h-11 items-center justify-center gap-2 whitespace-nowrap rounded-btn bg-[var(--tebiq-ink-blue)] px-3 py-2 text-[14px] font-medium text-[var(--tebiq-off-white)]"
+              >
+                <RefreshCcw className="h-4 w-4" strokeWidth={1.6} />
+                重试
+              </button>
+              {active.id && (
+                <a
+                  href="/me/consultations"
+                  className="inline-flex min-h-11 items-center justify-center gap-2 whitespace-nowrap rounded-btn border border-[var(--tebiq-soft-gray)] px-3 py-2 text-[14px] font-medium text-[var(--tebiq-ink-blue)]"
+                >
+                  稍后查看
+                </a>
+              )}
+            </div>
+            <button
+              type="button"
+              onClick={onReset}
+              className="mt-2 text-left text-[13px] font-medium text-[var(--tebiq-deep-slate)]"
+            >
+              改成新问题
+            </button>
+          </div>
+        )}
+
         <article className="min-h-[7.5rem] text-[17px] leading-[1.8] text-[var(--tebiq-ink-blue)]">
           {displayState === 'fallback' && active.fallback_text && (
             <p className="mb-3 text-[16px] leading-[1.7] text-[var(--tebiq-deep-slate)]">{active.fallback_text}</p>
@@ -968,7 +1007,7 @@ function ActiveConsultationView({
           )}
         </article>
 
-        {answerHasStarted && (
+        {answerHasStarted && !canRecover && (
           <FactReferenceBlock audit={active.fact_cards} variant="compact" />
         )}
 
@@ -1067,51 +1106,6 @@ function ActiveConsultationView({
             )}
           </Surface>
         </>
-      )}
-
-      {canRecover && (
-        <Surface className="space-y-3">
-          <div>
-            <SectionLabel>
-              {displayState === 'partial'
-                ? '这次只保留了部分内容'
-                : displayState === 'failed'
-                  ? '这次没有整理完成'
-                : '这次没有整理完成'}
-            </SectionLabel>
-            <p className="mt-1 text-[14px] leading-[1.65] text-[var(--tebiq-deep-slate)]">
-              {displayState === 'partial'
-                ? '已保留的内容会继续显示。需要重新整理时，可以重试。'
-              : displayState === 'failed'
-                ? '这次没有整理完成。重试会保留原问题，不是新问题。'
-                : '这次没有整理完成。这个问题已记录，可以稍后从“我的咨询”查看，或重试。'}
-            </p>
-          </div>
-          <div className="grid gap-2 sm:grid-cols-2">
-            <button
-              onClick={onRetry}
-              className="inline-flex min-h-11 items-center justify-center gap-2 whitespace-nowrap rounded-btn bg-[var(--tebiq-ink-blue)] px-3 py-2 text-[14px] font-medium text-[var(--tebiq-off-white)]"
-            >
-              <RefreshCcw className="h-4 w-4" strokeWidth={1.6} />
-              重试
-            </button>
-            {active.id && (
-              <a
-                href="/me/consultations"
-                className="inline-flex min-h-11 items-center justify-center gap-2 whitespace-nowrap rounded-btn border border-[var(--tebiq-soft-gray)] px-3 py-2 text-[14px] font-medium text-[var(--tebiq-ink-blue)]"
-              >
-                稍后查看
-              </a>
-            )}
-          </div>
-          <button
-            type="button"
-            onClick={onReset}
-            className="text-left text-[13px] font-medium text-[var(--tebiq-deep-slate)]"
-          >
-            改成新问题
-          </button>
-        </Surface>
       )}
 
       {error && (

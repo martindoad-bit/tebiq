@@ -2,7 +2,7 @@
 
 > 本文件是 QA / Codex / DOMAIN-CC 在审计 PR、页面、文案、API、Eval 数据时的**门禁基准**。
 >
-> 长期产品宪法见 `TEBIQ_CONTEXT_PACK.md`；当前主线状态见 `TEBIQ_CURRENT_STATE.md`；用户端文案原则见 `TEBIQ_COPY_SOURCE.md`。
+> 长期产品宪法见 `TEBIQ_CONTEXT_PACK.md`；当前主线状态见 `TEBIQ_CURRENT_STATE.md`；用户端文案原则见 `TEBIQ_COPY_SOURCE.md`；用户端 UI 不变量见 `TEBIQ_PRODUCT_UI_GUARDRAILS.md`。
 
 ---
 
@@ -19,7 +19,7 @@ QA 的工作是回答两个问题：
 
 - 任何审计 PR / 页面 / 文案 / API 时必须读取本文件
 - 本文件不替代 `TEBIQ_CONTEXT_PACK.md`，两者必须同时读取
-- 与 `TEBIQ_COPY_SOURCE.md` 禁用词清单不一致时，以更严格者为准
+- 与 `TEBIQ_COPY_SOURCE.md` / `TEBIQ_PRODUCT_UI_GUARDRAILS.md` 不一致时，以更严格者为准
 
 ---
 
@@ -219,6 +219,42 @@ annotation 行必须保留以下字段（缺一即视为标注未完成）：
 
 ---
 
+## 5.5 Product UI Guardrails Gate
+
+> 任何影响用户端 UI / copy / evidence / answer rendering / app shell / bottom tab 的 PR，必须同时读取 `TEBIQ_PRODUCT_UI_GUARDRAILS.md`。
+
+### 触发范围
+
+- `/ai-consultation`
+- `/answer/[id]`
+- `/me/consultations`
+- `/quick-reference`
+- bottom navigation / app shell
+- evidence / source card display
+- answer status / failed / incomplete / retry states
+- homepage fixed copy / button labels / placeholders
+
+### Blocking checks
+
+以下任一项出现即按 `TEBIQ_PRODUCT_UI_GUARDRAILS.md §7` 阻塞：
+
+- iPhone 13 Pro 上内容 rail 明显漂移
+- 页面标题对齐规则不一致且无例外说明
+- 失败 / 未完成状态的恢复动作被放到 supporting content 后面
+- evidence card 在移动端出现窄列、竖排、截断、不可读
+- 未完成的速查能力被当作完整 tab 暴露
+- bottom navigation 遮挡主内容或主动作
+
+### Required evidence
+
+PR / QA report 必须包含：
+
+- iPhone 13 Pro 级别截图或明确说明该路径未触发；
+- Ask / Answer / My Consultations / Quick Reference 中被改路径的检查结果；
+- 如有例外，写明例外理由和 Project Lead 是否接受。
+
+---
+
 ## 6. 上线 Gate（Ship Gate）
 
 > **自动化 QA 通过不等于可以上线。**
@@ -229,6 +265,7 @@ annotation 行必须保留以下字段（缺一即视为标注未完成）：
 - [ ] **Semantic QA**：§3 列表逐项检查通过；P0 = 0
 - [ ] **Domain QA**：DOMAIN-CC 已对**至少 10 个核心题**做人工抽查
 - [ ] **UX Trust QA**：未出现"包坏"现象
+- [ ] **Product UI Guardrails**：如触发 §5.5，P0 = 0；任何 P1 已修复或由产品负责人显式接受
 - [ ] **Comparison Gate**：§5 对比数据已跑过，无倒退或倒退已被产品负责人显式接受
 - [ ] **方向题 / 高风险题人工判断**：列入此 PR 的方向题、补材料题、不许可题、永住题、配偶离婚题至少各 1 道经过人工方向核对
 - [ ] **产品负责人 / 用户最终裁决**：在 PR description 或 Decision Log 留痕

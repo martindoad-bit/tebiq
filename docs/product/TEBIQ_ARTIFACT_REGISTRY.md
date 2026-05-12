@@ -150,6 +150,7 @@
 
 | 资产名称 | 路径 | Owner | Status | 消费方 | Last Updated |
 |---------|------|-------|--------|--------|-------------|
+| Product UI Guardrails | `docs/product/TEBIQ_PRODUCT_UI_GUARDRAILS.md` | Codex GM-OPS + Project Lead | canonical / prelaunch gate | ENGINE / CODEXUI / QA / Copy / GM | 2026-05-12 |
 | UI Directory README | `docs/ui/README.md` | CODEXUI + GM | active | CODEXUI / ENGINE / QA | 2026-05-05 |
 | 1.0 UI Role | `docs/ui/TEBIQ_1_0_UI_ROLE.md` | CODEXUI + GM | draft / Alpha-only | CODEXUI / ENGINE / QA | 2026-05-05 |
 | 1.0 UI Scope | `docs/ui/TEBIQ_1_0_UI_SCOPE.md` | TEBIQ-CODEXUI | draft / internal / preview-only | GM / ENGINE / QA / VOICE / DOMAIN | 2026-05-05 |
