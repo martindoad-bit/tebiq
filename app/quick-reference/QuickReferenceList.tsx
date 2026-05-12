@@ -92,6 +92,10 @@ export default function QuickReferenceList({
       ),
     [topics],
   )
+  const topicMap = useMemo(
+    () => new Map(orderedTopics.map((topic) => [topic.id, topic])),
+    [orderedTopics],
+  )
   const [query, setQuery] = useState('')
   const [openTopicId, setOpenTopicId] = useState<string | null>(
     orderedTopics[0]?.id ?? null,
@@ -140,7 +144,10 @@ export default function QuickReferenceList({
       setOpenTopicId(null)
       return
     }
-    if (!filteredTopics.some((topic) => topic.id === openTopicId)) {
+    if (
+      openTopicId !== null &&
+      !filteredTopics.some((topic) => topic.id === openTopicId)
+    ) {
       setOpenTopicId(filteredTopics[0].id)
     }
   }, [filteredTopics, openTopicId])
@@ -207,6 +214,7 @@ export default function QuickReferenceList({
           <ChecklistCard
             key={topic.id}
             topic={topic}
+            topicMap={topicMap}
             open={openTopicId === topic.id}
             onOpenChange={(isOpen) => {
               setOpenTopicId((current) => {
@@ -235,10 +243,12 @@ export default function QuickReferenceList({
 
 function ChecklistCard({
   topic,
+  topicMap,
   open,
   onOpenChange,
 }: {
   topic: QuickReferenceTopic
+  topicMap: Map<string, QuickReferenceTopic>
   open: boolean
   onOpenChange: (open: boolean) => void
 }) {
@@ -324,6 +334,7 @@ function ChecklistCard({
               key={`${topic.id}-${section.title}`}
               section={section}
               sourceMap={sourceMap}
+              topicMap={topicMap}
             />
           ))}
         </div>
@@ -372,13 +383,22 @@ function ChecklistCard({
           <p className="mt-2 text-[14px] leading-[1.7] text-slate">
             {topic.checkNote}
           </p>
-          <Link
-            href={askHref}
-            className="focus-ring mt-3 inline-flex min-h-10 items-center gap-2 rounded-btn border border-hairline bg-paper px-3 text-[14px] font-medium text-ink"
-          >
-            <MessageSquarePlus size={16} strokeWidth={1.6} />
-            带着清单提问
-          </Link>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <Link
+              href={askHref}
+              className="focus-ring inline-flex min-h-10 items-center gap-2 rounded-btn border border-hairline bg-paper px-3 text-[14px] font-medium text-ink"
+            >
+              <MessageSquarePlus size={16} strokeWidth={1.6} />
+              带着清单提问
+            </Link>
+            <Link
+              href="/ai-consultation"
+              className="focus-ring inline-flex min-h-10 items-center gap-2 rounded-btn border border-hairline bg-surface px-3 text-[14px] font-medium text-slate"
+            >
+              <MessageSquarePlus size={16} strokeWidth={1.6} />
+              问新问题
+            </Link>
+          </div>
         </div>
 
         <details className="border-t border-hairline pt-4">
@@ -403,9 +423,11 @@ function ChecklistCard({
 function MaterialSection({
   section,
   sourceMap,
+  topicMap,
 }: {
   section: QuickReferenceSection
   sourceMap: Map<string | undefined, QuickReferenceSource>
+  topicMap: Map<string, QuickReferenceTopic>
 }) {
   return (
     <section className="border-t border-hairline pt-4">
@@ -424,6 +446,7 @@ function MaterialSection({
           <MaterialRow
             key={material.id}
             material={material}
+            topicMap={topicMap}
             sources={(material.sourceIds ?? [])
               .map((id) => sourceMap.get(id))
               .filter((source): source is QuickReferenceSource =>
@@ -438,35 +461,71 @@ function MaterialSection({
 
 function MaterialRow({
   material,
+  topicMap,
   sources,
 }: {
   material: QuickReferenceMaterial
+  topicMap: Map<string, QuickReferenceTopic>
   sources: QuickReferenceSource[]
 }) {
+  const relatedTopics = (material.relatedTopicIds ?? [])
+    .map((id) => topicMap.get(id))
+    .filter((topic): topic is QuickReferenceTopic => Boolean(topic))
+
   return (
-    <div className="py-3.5">
-      <div className="flex min-w-0 items-start justify-between gap-3">
-        <div className="min-w-0">
-          <h4 className="break-words text-[15px] font-medium leading-snug text-ink">
-            {material.name}
-          </h4>
-          {material.nameJa && (
-            <p className="mt-0.5 break-words text-[12.5px] leading-snug text-ash">
-              {material.nameJa}
-            </p>
-          )}
+    <details className="group/material py-3.5">
+      <summary className="flex cursor-pointer list-none items-start justify-between gap-3 focus:outline-none focus-visible:rounded-[8px] focus-visible:shadow-focus">
+        <div className="min-w-0 flex-1">
+          <div className="flex min-w-0 items-start gap-2">
+            <ChevronDown
+              className="mt-0.5 h-4 w-4 shrink-0 text-ash transition-transform group-open/material:rotate-180"
+              strokeWidth={1.6}
+            />
+            <div className="min-w-0">
+              <h4 className="break-words text-[15px] font-medium leading-snug text-ink">
+                {material.name}
+              </h4>
+              {material.nameJa && (
+                <p className="mt-0.5 break-words text-[12.5px] leading-snug text-ash">
+                  {material.nameJa}
+                </p>
+              )}
+              <p className="mt-1 text-[12.5px] leading-none text-ash">
+                <span className="group-open/material:hidden">查看准备方式</span>
+                <span className="hidden group-open/material:inline">收起</span>
+              </p>
+            </div>
+          </div>
         </div>
         <StatusBadge tone={materialStatusTone[material.status]}>
           {materialStatusLabel[material.status]}
         </StatusBadge>
-      </div>
-      <dl className="mt-2 grid gap-1.5 text-[13.5px] leading-[1.6] text-slate">
+      </summary>
+      <dl className="mt-3 grid gap-1.5 pl-6 text-[13.5px] leading-[1.6] text-slate">
         <Description label="谁准备" value={material.owner} />
         <Description label="去哪取" value={material.getFrom} />
         <Description label="注意" value={material.note} />
       </dl>
+      {relatedTopics.length > 0 && (
+        <div className="mt-3 pl-6">
+          <p className="text-[12.5px] font-medium leading-none text-ash">
+            常一起准备
+          </p>
+          <div className="mt-2 flex flex-wrap gap-1.5">
+            {relatedTopics.map((topic) => (
+              <a
+                key={topic.id}
+                href={`#${topic.id}`}
+                className="focus-ring inline-flex min-h-8 items-center rounded-btn border border-hairline bg-paper px-2.5 text-[12.5px] font-medium text-ink"
+              >
+                看{topic.shortTitle}
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
       {sources.length > 0 && (
-        <div className="mt-2 flex flex-wrap gap-1.5">
+        <div className="mt-2 flex flex-wrap gap-1.5 pl-6">
           {sources.map((source) => (
             <StatusBadge
               key={source.url}
@@ -477,7 +536,7 @@ function MaterialRow({
           ))}
         </div>
       )}
-    </div>
+    </details>
   )
 }
 

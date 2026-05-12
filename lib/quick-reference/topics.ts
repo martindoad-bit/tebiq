@@ -24,6 +24,7 @@ export interface QuickReferenceMaterial {
   getFrom: string
   note: string
   sourceIds?: string[]
+  relatedTopicIds?: string[]
 }
 
 export interface QuickReferenceSection {
@@ -168,6 +169,7 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
             getFrom: '市区町村窗口或可用渠道。',
             note: '入管页面列为直近 1 年分；有效期和年度按窗口确认。',
             sourceIds: ['isa-family'],
+            relatedTopicIds: ['tax-certificate-material'],
           },
         ],
       },
@@ -388,6 +390,7 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
             getFrom: '住所地市区町村窗口或可用的线上渠道。',
             note: '年度、是否需要非课税证明、是否需要最新年度，按入管和个人情况确认。',
             sourceIds: ['isa-renewal'],
+            relatedTopicIds: ['tax-certificate-material'],
           },
           {
             id: 'financial-statement',
@@ -716,6 +719,7 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
             getFrom: '1 月 1 日住所地的市区町村。',
             note: '直近 1 年分；需记载总所得和纳税状况。',
             sourceIds: ['isa-spouse'],
+            relatedTopicIds: ['tax-certificate-material'],
           },
           {
             id: 'spouse-guarantee',
@@ -872,6 +876,7 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
             getFrom: '市区町村、打工单位、银行或经费支付人。',
             note: '是否需要取决于学校种别、出身国地区、资格外活动指导记录等。',
             sourceIds: ['isa-student-pdf-university'],
+            relatedTopicIds: ['tax-certificate-material'],
           },
           {
             id: 'student-under-18',
@@ -1020,6 +1025,7 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
             getFrom: '市区町村窗口或可用线上渠道。',
             note: '就劳资格者等通常看直近 5 年分；配偶路线等可能不同。',
             sourceIds: ['isa-eijuu'],
+            relatedTopicIds: ['tax-certificate-material'],
           },
           {
             id: 'eijuu-national-tax',
@@ -1030,6 +1036,7 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
             getFrom: '税务署或 e-Tax。',
             note: '税目范围按入管页面确认，不要和住民税证明混同。',
             sourceIds: ['isa-eijuu'],
+            relatedTopicIds: ['tax-certificate-material'],
           },
           {
             id: 'eijuu-pension',
