@@ -5,10 +5,12 @@ import test from 'node:test'
 
 const SURFACE_ROOTS = [
   'app/ai-consultation',
+  'app/c/[id]/page.tsx',
   'app/quick-reference',
   'components/ui/consultation-alpha.tsx',
   'components/ui/fact-reference.tsx',
   'components/ui/quick-reference-bridge.tsx',
+  'lib/answer/prompt/consultation-alpha-v1.ts',
 ]
 
 const FORBIDDEN_COPY: Array<{ label: string; pattern: RegExp }> = [
@@ -23,6 +25,10 @@ const FORBIDDEN_COPY: Array<{ label: string; pattern: RegExp }> = [
   {
     label: 'structural purpose statement',
     pattern: /用于整理|用于核对|这个页面用于|本页用于/,
+  },
+  {
+    label: 'visible answer scaffold labels',
+    pattern: /<SectionLabel>先看|font-medium">先看|^\s*'   先看(?:这里|方向)[：']|^\s*'   先别这样做：|chips:\s*\['先看/,
   },
 ]
 

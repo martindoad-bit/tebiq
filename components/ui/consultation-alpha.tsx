@@ -247,7 +247,7 @@ function riskHintPresentation(hits: string[]): { title: string; body: string; ch
   return {
     title: '需要留意',
     body: RISK_HINT,
-    chips: ['先看条件', '确认期限', '保留记录'],
+    chips: ['确认条件', '确认期限', '保留记录'],
   }
 }
 
