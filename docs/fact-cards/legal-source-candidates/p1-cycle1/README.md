@@ -12,6 +12,7 @@ This cycle extends the P0 legal backbone into the first high-impact L3 notice la
 |---|---:|---|
 | Batch 1 | 17 cards | [`BATCH1_REPORT.md`](./BATCH1_REPORT.md) |
 | Batch 2 | 18 cards | [`BATCH2_REPORT.md`](./BATCH2_REPORT.md) |
+| Batch 3 | 19 cards | [`BATCH3_REPORT.md`](./BATCH3_REPORT.md) |
 
 ## Gate
 
