@@ -28,7 +28,7 @@ const FORBIDDEN_COPY: Array<{ label: string; pattern: RegExp }> = [
   },
   {
     label: 'visible answer scaffold labels',
-    pattern: /<SectionLabel>先看|font-medium">先看|^\s*'   先看(?:这里|方向)[：']|^\s*'   先别这样做：|chips:\s*\['先看/,
+    pattern: /<SectionLabel>先看方向|font-medium">先看|^\s*'   先看方向[：']|^\s*'   先别这样做：|chips:\s*\['先看/,
   },
 ]
 

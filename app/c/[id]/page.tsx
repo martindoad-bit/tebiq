@@ -276,10 +276,11 @@ function AnswerDetailProse({ text }: { text: string }) {
     <div className="space-y-4">
       {firstLook && (
         <div className="rounded-card border border-[var(--tebiq-soft-gray)] bg-[var(--tebiq-soft-gray)]/35 px-3.5 py-3">
-          <div className="space-y-1.5 text-[15px] leading-[1.65] text-[var(--tebiq-ink-blue)]">
-            <p>{firstLook.conclusion}</p>
-            <p>{firstLook.action}</p>
-            {firstLook.avoid && <p>{firstLook.avoid}</p>}
+          <SectionLabel>先看这里</SectionLabel>
+          <div className="mt-2 space-y-1.5 text-[15px] leading-[1.65] text-[var(--tebiq-ink-blue)]">
+            <p><span className="font-medium">当前判断：</span>{firstLook.conclusion}</p>
+            <p><span className="font-medium">建议动作：</span>{firstLook.action}</p>
+            {firstLook.avoid && <p><span className="font-medium">暂缓事项：</span>{firstLook.avoid}</p>}
           </div>
         </div>
       )}
@@ -312,9 +313,9 @@ function extractFirstLook(text: string): { firstLook: FirstLookBlock | null; res
     return match[1].trim()
   }
 
-  const conclusion = take(['判断', '当前判断', '结论', '先看方向'])
-  const action = take(['下一步', '建议动作', '优先行动', '今天先做', '今天可以先确认', '今天先确认', '先做'])
-  const avoid = take(['注意', '注意事项', '暂缓事项', '先别这样做', '先不要做', '先避免', '暂时不要', '暂时不要做'])
+  const conclusion = take(['当前判断', '判断', '结论', '先看方向'])
+  const action = take(['建议动作', '下一步', '优先行动', '今天先做', '今天可以先确认', '今天先确认', '先做'])
+  const avoid = take(['暂缓事项', '注意', '注意事项', '先别这样做', '先不要做', '先避免', '暂时不要', '暂时不要做'])
   if (!conclusion || !action) return { firstLook: null, rest: text }
 
   while (cursor < lines.length && lines[cursor].trim() === '') cursor += 1
