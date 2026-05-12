@@ -242,7 +242,7 @@
 
 | 问题 | 优先级 |
 |------|--------|
-| **実子の場合**：本次 ISA HTML 取材未见明确的「親子関係を証する文書」（戸籍謄本等）列出。是否已包含在チェックシートPDF中？实务上是否需要提交？ | **P1（关键缺失）** |
+| **実子の場合**：pdfplumber による実子チェックシート PDF 確認でも「親子関係を証する文書」（戸籍謄本等）の明示的な列挙なし。HTML・PDF 双方で不在を確認。実務上の必要性は DOMAIN/行政書士への直接確認要 | **P1（PDF確認済み・DOMAIN継続）** |
 | 配偶者案：实质婚姻关系终止但未办离婚手续的情况，更新申请会被如何处理？ | P1 |
 | 日本人配偶者若是最近归化的日本人，戸籍謄本的历史记录可能有限，是否有补充文件要求？ | P2 |
 | 外国婚姻证书的日文翻译：是否必须公证翻译，还是自行翻译即可？ | P2 |
@@ -250,7 +250,7 @@
 ### 不适合直接用户展示的内容
 
 - 能否通过更新审查的判断（需考量婚姻实质、同居状况等）
-- 実子の親子关系证明文件的完整清单（来源 PDF 未读取，存在信息缺口）
+- 実子の親子关系证明文件の完全清单（HTML・PDF両方で戸籍謄本等の明示記載なし — DOMAIN P1 確認前は展示不可）
 
 ---
 
@@ -422,5 +422,45 @@ pdfplumber でバイナリ展開（pypdf は本バッチ PDF で crash するた
 **経営管理の過渡措置**：2025-10改正内容在官方页面可读，但哪些新要件适用于过渡期内的续签申请尚不明确。建议在产品中对経営管理单独标注「改正影响期间，请向行政书士确认适用版本」，而非展示确定性材料清单。
 
 ---
+
+---
+
+## 汇总：取材方法修訂（2026-05-12 pdfplumber 批量取材後）
+
+| 清单 | 原状態 | 修訂後 | 核心情報来源 |
+|------|--------|--------|------------|
+| 技人国 | HTML `direct_source` | **不変** | ISA HTML（含カテゴリー表） |
+| 経営管理 | HTML `direct_source` + 改正ページ | **不変**（PDF全文取得成功） | ISA HTML + 改正ページ + pdfplumber |
+| 家族滞在 | HTML + PDF（`pdf_linked`） | **PDF確認：HTMLと一致** | HTML + pdfplumber（差異なし） |
+| 日本人配偶者等（実子） | PDF `ai_inferred`（未読取） | **PDF確認：戸籍謄本等の明示的列挙なし** | pdfplumber取材：实子チェックシートに親子関係証明の記載なし。P1 DOMAIN確認継続 |
+| 留学 | `ai_inferred`（全件推断） | **`direct_source`（PDF 7種全件）** | pdfplumber 7種PDFから取材（本修訂の主要成果） |
+| 永住 | HTML `direct_source` | **不変** | ISA HTML（最も詳細） |
+
+---
+
+## 解法まとめ（Codex / FACT への引継ぎ用）
+
+ISA の PDF は素の fetch で 919 bytes（エラーページにリダイレクト）。**ISA サーバーは Referer header を検証している**。
+
+```bash
+# 正しい取得方法
+curl -A "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36" \
+     -H "Referer: https://www.moj.go.jp/isa/applications/status/XXX.html" \
+     "https://www.moj.go.jp/isa/content/XXXXXXX.pdf" -o output.pdf
+
+# PDF テキスト展開
+pip install pdfplumber
+# ※ pypdf は ISA PDF の一部でクラッシュするため pdfplumber を使用
+```
+
+```python
+import pdfplumber
+with pdfplumber.open("output.pdf") as pdf:
+    for page in pdf.pages:
+        print(page.extract_text())
+```
+
+**注意**: 取材対象 PDF の Referer は、そのPDFへのリンクが掲載されている ISA ページ URL を使用すること。
+
 
 *FACT 取材完了。来源全件から `ai_inferred` 内容は产品注入禁止。DOMAIN 复核 P1 项目に対するFACT follow-up は Cycle 3 以降の fetch タスクとして登録推奨。*
