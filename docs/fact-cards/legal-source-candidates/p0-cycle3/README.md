@@ -31,7 +31,7 @@ This is not a materials-checklist cycle. Cards should describe official procedur
 | Batch 1 | 更新 / 変更 / 特例期間 | 15 cards — [`BATCH1_REPORT.md`](./BATCH1_REPORT.md) |
 | Batch 2 | 取得 / 資格外活動 | 14 cards — [`BATCH2_REPORT.md`](./BATCH2_REPORT.md) |
 | Batch 3 | 所属機関 / 配偶者届出 | 20 cards — [`BATCH3_REPORT.md`](./BATCH3_REPORT.md) |
-| Batch 4 | 在留カード / 住所 / 返納 | 14-16 cards |
+| Batch 4 | 在留カード / 住所 / 返納 | 19 cards — [`BATCH4_REPORT.md`](./BATCH4_REPORT.md) |
 | Batch 5 | 再入国 / みなし再入国 / procedure guardrails | 12-14 cards |
 
 All Cycle 3 cards start as `ai_extracted` with empty injection blocks.
