@@ -6,14 +6,14 @@ import QuickReferenceList from '@/app/quick-reference/QuickReferenceList'
 import { QUICK_REFERENCE_TOPICS } from '@/lib/quick-reference/topics'
 
 export const metadata: Metadata = {
-  title: '速查 - TEBIQ',
-  description: 'TEBIQ 速查：换工作、搬家、年金、税金、在留卡等常见手续的简明核对。',
+  title: '材料清单 - TEBIQ',
+  description: 'TEBIQ 材料清单：常见在留资格续签和永住申请材料的中文核对。',
   alternates: { canonical: '/quick-reference' },
 }
 
 export default function QuickReferencePage() {
   return (
-    <AppShell appBar={<AppBar title="速查" />} tabBar={<TabBar />}>
+    <AppShell appBar={<AppBar title="材料清单" />} tabBar={<TabBar />}>
       <div className="pt-1">
         <QuickReferenceList topics={QUICK_REFERENCE_TOPICS} />
 

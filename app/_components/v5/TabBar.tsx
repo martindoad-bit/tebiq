@@ -3,35 +3,46 @@
 'use client'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Archive, MessageSquarePlus, SearchCheck, UserCheck } from 'lucide-react'
+import {
+  Archive,
+  ClipboardList,
+  MessageSquarePlus,
+  UserCheck,
+} from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import { trackClient } from '@/lib/analytics/client'
 import { EVENT } from '@/lib/analytics/events'
 
-const TABS: { href: string; label: string; Icon: LucideIcon; match: (p: string) => boolean; disabled?: boolean }[] = [
+const TABS: {
+  href: string
+  label: string
+  Icon: LucideIcon
+  match: (p: string) => boolean
+  disabled?: boolean
+}[] = [
   {
     href: '/ai-consultation',
     label: '提问',
     Icon: MessageSquarePlus,
-    match: p => p === '/' || p.startsWith('/ai-consultation'),
+    match: (p) => p === '/' || p.startsWith('/ai-consultation'),
   },
   {
     href: '/me/consultations',
     label: '我的咨询',
     Icon: Archive,
-    match: p => p.startsWith('/me/consultations') || p.startsWith('/c/'),
+    match: (p) => p.startsWith('/me/consultations') || p.startsWith('/c/'),
   },
   {
     href: '/scrivener',
     label: '找书士',
     Icon: UserCheck,
-    match: p => p.startsWith('/scrivener') || p.startsWith('/consultation'),
+    match: (p) => p.startsWith('/scrivener') || p.startsWith('/consultation'),
   },
   {
     href: '/quick-reference',
-    label: '速查',
-    Icon: SearchCheck,
-    match: p => p.startsWith('/quick-reference'),
+    label: '材料',
+    Icon: ClipboardList,
+    match: (p) => p.startsWith('/quick-reference'),
   },
 ]
 
@@ -50,7 +61,11 @@ export default function TabBar() {
         {TABS.map(({ href, label, Icon, match, disabled }) => {
           const active = !disabled && match(pathname)
           const className = `focus-ring flex h-full w-full min-w-0 max-w-full flex-col items-center justify-center gap-0.5 rounded-none px-0.5 transition-colors ${
-            disabled ? 'cursor-not-allowed text-haze opacity-55' : active ? 'text-ink' : 'text-haze'
+            disabled
+              ? 'cursor-not-allowed text-haze opacity-55'
+              : active
+                ? 'text-ink'
+                : 'text-haze'
           }`
           return (
             <li key={href}>
@@ -59,18 +74,24 @@ export default function TabBar() {
                   type="button"
                   disabled
                   aria-disabled="true"
-                  title="速查正在整理中"
+                  title="材料清单正在整理中"
                   className={className}
                 >
                   <Icon size={21} strokeWidth={1.5} color="#9AA0AC" />
-                  <span className="max-w-full truncate whitespace-nowrap text-[10.5px] font-normal leading-none min-[390px]:text-[11px]">{label}</span>
+                  <span className="max-w-full truncate whitespace-nowrap text-[10.5px] font-normal leading-none min-[390px]:text-[11px]">
+                    {label}
+                  </span>
                 </button>
               ) : (
                 <Link
                   href={href}
                   onClick={() => {
                     if (active) return
-                    trackClient(EVENT.TAB_SWITCH, { from: pathname, to: href, label })
+                    trackClient(EVENT.TAB_SWITCH, {
+                      from: pathname,
+                      to: href,
+                      label,
+                    })
                   }}
                   className={className}
                 >
@@ -79,7 +100,9 @@ export default function TabBar() {
                     strokeWidth={1.5}
                     color={active ? '#0F2544' : '#9AA0AC'}
                   />
-                  <span className="max-w-full truncate whitespace-nowrap text-[10.5px] font-normal leading-none min-[390px]:text-[11px]">{label}</span>
+                  <span className="max-w-full truncate whitespace-nowrap text-[10.5px] font-normal leading-none min-[390px]:text-[11px]">
+                    {label}
+                  </span>
                 </Link>
               )}
             </li>
