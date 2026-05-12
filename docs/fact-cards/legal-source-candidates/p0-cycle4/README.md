@@ -30,7 +30,7 @@ This is not a permanent-residence approval predictor and not a materials-checkli
 | Batch 2 | 税 / 年金 / 公的医療保険 / materials boundary | 14 cards — [`BATCH2_REPORT.md`](./BATCH2_REPORT.md) |
 | Batch 3 | cancellation triggers and status-stability risk signals | 20 cards — [`BATCH3_REPORT.md`](./BATCH3_REPORT.md) |
 | Batch 4 | PR card distinction, exception burn-down, source gaps | 13 cards — [`BATCH4_REPORT.md`](./BATCH4_REPORT.md) |
-| Batch 5 | integration, duplicate merge, promotion queue | 8-12 cards plus rewrites |
+| Batch 5 | integration, duplicate merge, promotion queue | 9 cards — [`BATCH5_REPORT.md`](./BATCH5_REPORT.md) |
 
 All Cycle 4 cards start as `ai_extracted` with empty injection blocks.
 
