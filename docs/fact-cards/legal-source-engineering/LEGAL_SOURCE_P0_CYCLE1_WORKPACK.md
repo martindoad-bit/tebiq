@@ -4,7 +4,7 @@
 **Parent**: [`LEGAL_SOURCE_STRUCTURE_ENGINEERING.md`](./LEGAL_SOURCE_STRUCTURE_ENGINEERING.md)  
 **Scope**: 入管法別表第一・第二 + ISA 在留資格一覧表  
 **Goal**: activity/status skeleton for residence status scope and work restriction distinction  
-**Status**: draft workpack; no production fact cards yet  
+**Status**: cycle completed as internal `ai_extracted` draft cards; see [`CYCLE1_SUMMARY.md`](../legal-source-candidates/p0-cycle1/CYCLE1_SUMMARY.md)
 
 ---
 
@@ -227,23 +227,8 @@ Block Cycle 1 promotion if:
 
 ---
 
-## 7. Immediate Next Move
+## 7. Current Next Move
 
-Start **Batch 1 formal extraction** only:
+Cycle 1 extraction has landed as internal `ai_extracted` draft cards.
 
-```text
-LS-P0C1-001 to LS-P0C1-008
-```
-
-Batch 1 output must include:
-
-- formal card draft or card-ready structured payload;
-- source quote with locator;
-- authority_layer and legal_source_type;
-- applicable scope and exclusion scope;
-- matcher phrases;
-- must_say / must_not_say;
-- at least 2 QA fixtures per card;
-- recommended existing fact-layer state mapping.
-
-No production injection until Batch 1 has gone through dry-run/AQL/QA.
+The next move is not more answer generation. Build the fixed dry-run fixture matrix described in [`CYCLE1_SUMMARY.md`](../legal-source-candidates/p0-cycle1/CYCLE1_SUMMARY.md), then use the same questions for baseline vs candidate answer A/B after the matcher gate is stable.
