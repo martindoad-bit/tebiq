@@ -15,6 +15,11 @@ import {
   Search,
 } from 'lucide-react'
 import { StatusBadge } from '@/components/ui/tebiq'
+import {
+  COMMON_MATERIALS,
+  commonMaterialSearchText,
+  type CommonMaterial,
+} from '@/lib/quick-reference/materials'
 import type {
   MaterialStatus,
   QuickReferenceReadiness,
@@ -50,11 +55,17 @@ const readinessTone: Record<QuickReferenceReadiness, 'checked' | 'attention'> =
 const topicPriority: Record<string, number> = {
   'keiei-kanri-koushin-materials': 0,
   'gijinkoku-koushin-materials': 1,
-  'kazoku-taizai-koushin-materials': 2,
-  'nihonjin-haigusha-koushin-materials': 3,
-  'ryugaku-koushin-materials': 4,
-  'eijuu-shinsei-materials': 5,
-  'tax-certificate-material': 6,
+  'gijinkoku-henko-materials': 2,
+  'keiei-kanri-henko-materials': 3,
+  'eijuu-shinsei-materials': 4,
+  'eijuu-spouse-route-materials': 5,
+  'kazoku-taizai-koushin-materials': 6,
+  'kazoku-taizai-henko-materials': 7,
+  'nihonjin-haigusha-koushin-materials': 8,
+  'ryugaku-koushin-materials': 9,
+  'ryugaku-non-tekisei-koushin-materials': 10,
+  'tokutei-ginou-ichigo-materials': 11,
+  'tax-certificate-material': 12,
 }
 
 const quickSearches = [
@@ -63,21 +74,50 @@ const quickSearches = [
   '日配',
   '留学',
   '永住',
+  '特定技能',
   '家族滞在',
   '税证明',
+  '住民票',
+  '年金',
 ]
 
 const searchAliases: ReadonlyArray<ReadonlyArray<string>> = [
   ['经营管理', '经管', '経営管理', '公司', '决算', '办公室', '3000万'],
   ['技人国', '人文签', '技术人文知识国际业务', '就劳签', '工作签证'],
+  ['特定技能', '特定技能1号', '特定技能一号', '技能签'],
   ['家族滞在', '家属签', '家族签', '扶养'],
   ['日配', '日本人配偶', '配偶者签', '配偶签', '婚姻'],
   ['留学', '学生签', '出席率', '成绩证明', '资格外'],
   ['永住', '永久', '身元保证人', '了解书'],
   ['税证明', '课税证明', '纳税证明', '納税証明', '住民税', '国税'],
   ['年金', '健康保险', '健保', '国保', 'マイナ保険証'],
+  ['住民票', '居民票', '世帯全員', '住所证明'],
+  ['公司资料', '登記事項', '决算', '会社案内', '事业内容'],
+  ['身元保证书', '保证人', '身元保証書'],
   ['续签', '更新', '在留期间更新', '在留期間更新'],
 ]
+
+const commonMaterialMap = new Map(
+  COMMON_MATERIALS.map((material) => [material.id, material]),
+)
+
+function getTopicCommonMaterials(topic: QuickReferenceTopic) {
+  const seen = new Set<string>()
+  const materials: CommonMaterial[] = []
+
+  for (const section of topic.sections) {
+    for (const item of section.materials) {
+      for (const id of item.relatedMaterialIds ?? []) {
+        if (seen.has(id)) continue
+        seen.add(id)
+        const material = commonMaterialMap.get(id)
+        if (material) materials.push(material)
+      }
+    }
+  }
+
+  return materials
+}
 
 export default function QuickReferenceList({
   topics,
@@ -97,9 +137,7 @@ export default function QuickReferenceList({
     [orderedTopics],
   )
   const [query, setQuery] = useState('')
-  const [openTopicId, setOpenTopicId] = useState<string | null>(
-    orderedTopics[0]?.id ?? null,
-  )
+  const [openTopicId, setOpenTopicId] = useState<string | null>(null)
 
   const normalizedQuery = normalizeSearchText(query)
   const queryTerms = expandSearchTerms(normalizedQuery)
@@ -110,6 +148,18 @@ export default function QuickReferenceList({
       return queryTerms.some((term) => normalizedHaystack.includes(term))
     })
   }, [normalizedQuery, orderedTopics, queryTerms])
+  const filteredMaterials = useMemo(() => {
+    return COMMON_MATERIALS.filter((material) => {
+      if (!normalizedQuery) return true
+      const normalizedHaystack = normalizeSearchText(
+        commonMaterialSearchText(material),
+      )
+      return queryTerms.some((term) => normalizedHaystack.includes(term))
+    })
+  }, [normalizedQuery, queryTerms])
+  const visibleMaterials = normalizedQuery
+    ? filteredMaterials
+    : COMMON_MATERIALS.slice(0, 8)
 
   const activeTopic =
     filteredTopics.find((topic) => topic.id === openTopicId) ??
@@ -148,7 +198,7 @@ export default function QuickReferenceList({
       openTopicId !== null &&
       !filteredTopics.some((topic) => topic.id === openTopicId)
     ) {
-      setOpenTopicId(filteredTopics[0].id)
+      setOpenTopicId(null)
     }
   }, [filteredTopics, openTopicId])
 
@@ -205,9 +255,17 @@ export default function QuickReferenceList({
         <div className="grid grid-cols-3 gap-2">
           <Metric label="清单" value={String(filteredTopics.length)} />
           <Metric label="材料" value={String(materialCount)} />
-          <Metric label="来源" value={String(activeTopic.sources.length)} />
+          <Metric label="材料库" value={String(COMMON_MATERIALS.length)} />
         </div>
       ) : null}
+
+      {visibleMaterials.length > 0 && (
+        <CommonMaterialsPanel
+          materials={visibleMaterials}
+          isFiltered={Boolean(normalizedQuery)}
+          total={COMMON_MATERIALS.length}
+        />
+      )}
 
       <div className="space-y-3">
         {filteredTopics.map((topic) => (
@@ -226,7 +284,7 @@ export default function QuickReferenceList({
         ))}
       </div>
 
-      {filteredTopics.length === 0 && (
+      {filteredTopics.length === 0 && filteredMaterials.length === 0 && (
         <div className="rounded-card border border-hairline bg-surface px-4 py-6 text-[15px] leading-[1.75] text-ash">
           还没有对应清单。可以换成人文签、经管签、永住、税证明搜索，或直接提问。
           <Link
@@ -237,6 +295,58 @@ export default function QuickReferenceList({
           </Link>
         </div>
       )}
+    </section>
+  )
+}
+
+function CommonMaterialsPanel({
+  materials,
+  isFiltered,
+  total,
+}: {
+  materials: CommonMaterial[]
+  isFiltered: boolean
+  total: number
+}) {
+  return (
+    <section className="rounded-card border border-hairline bg-surface px-4 py-4">
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <p className="text-[13px] font-medium leading-none text-ash">
+            共通材料
+          </p>
+          <h2 className="mt-2 text-[17px] font-semibold leading-snug text-ink">
+            常用材料先看这里
+          </h2>
+        </div>
+        <StatusBadge tone="neutral">
+          {isFiltered ? `${materials.length} 个匹配` : `${total} 个材料`}
+        </StatusBadge>
+      </div>
+      <div className="mt-3 grid gap-2 sm:grid-cols-2">
+        {materials.slice(0, isFiltered ? 12 : 8).map((material) => (
+          <Link
+            key={material.id}
+            href={`/quick-reference/materials/${material.id}`}
+            className="focus-ring block rounded-[10px] border border-hairline bg-paper px-3 py-2.5 text-ink active:bg-surface"
+          >
+            <div className="flex min-w-0 items-start justify-between gap-2">
+              <div className="min-w-0">
+                <p className="break-words text-[14px] font-medium leading-snug">
+                  {material.name}
+                </p>
+                <p className="mt-0.5 break-words text-[12.5px] leading-snug text-ash">
+                  {material.nameJa}
+                </p>
+              </div>
+              <ExternalLink
+                className="mt-0.5 h-3.5 w-3.5 shrink-0 text-ash"
+                strokeWidth={1.6}
+              />
+            </div>
+          </Link>
+        ))}
+      </div>
     </section>
   )
 }
@@ -257,9 +367,10 @@ function ChecklistCard({
     0,
   )
   const sourceMap = new Map(topic.sources.map((source) => [source.id, source]))
+  const topicCommonMaterials = getTopicCommonMaterials(topic)
   const askPrompt = [
     topic.askPrompt ?? `${topic.title}，我想确认材料怎么准备。`,
-    '请先解释材料准备，不要只凭清单判断我是否符合申请、是否会许可；如果涉及资格、材料替代、经营管理、永住或技人国的个案问题，请先问我关键情况。',
+    '我不确定只看材料能不能判断，也想请你先帮我确认还缺哪些关键信息。',
   ].join('\n\n')
   const askHref = `/ai-consultation?q=${encodeURIComponent(askPrompt)}`
 
@@ -328,6 +439,25 @@ function ChecklistCard({
           </div>
         )}
 
+        {topicCommonMaterials.length > 0 && (
+          <div className="space-y-2">
+            <p className="text-[13px] font-medium text-ash">
+              本清单材料解释
+            </p>
+            <div className="flex flex-wrap gap-1.5">
+              {topicCommonMaterials.map((material) => (
+                <Link
+                  key={material.id}
+                  href={`/quick-reference/materials/${material.id}`}
+                  className="focus-ring inline-flex min-h-8 items-center rounded-btn border border-hairline bg-paper px-2.5 text-[12.5px] font-medium text-ink"
+                >
+                  看{material.name}
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
+
         <div className="space-y-5">
           {topic.sections.map((section) => (
             <MaterialSection
@@ -384,6 +514,13 @@ function ChecklistCard({
             {topic.checkNote}
           </p>
           <div className="mt-3 flex flex-wrap gap-2">
+            <Link
+              href={`/quick-reference/${topic.id}`}
+              className="focus-ring inline-flex min-h-10 items-center gap-2 rounded-btn border border-hairline bg-surface px-3 text-[14px] font-medium text-slate"
+            >
+              <ExternalLink size={15} strokeWidth={1.6} />
+              单独打开
+            </Link>
             <Link
               href={askHref}
               className="focus-ring inline-flex min-h-10 items-center gap-2 rounded-btn border border-hairline bg-paper px-3 text-[14px] font-medium text-ink"
@@ -447,6 +584,7 @@ function MaterialSection({
             key={material.id}
             material={material}
             topicMap={topicMap}
+            commonMaterialMap={commonMaterialMap}
             sources={(material.sourceIds ?? [])
               .map((id) => sourceMap.get(id))
               .filter((source): source is QuickReferenceSource =>
@@ -462,15 +600,20 @@ function MaterialSection({
 function MaterialRow({
   material,
   topicMap,
+  commonMaterialMap,
   sources,
 }: {
   material: QuickReferenceMaterial
   topicMap: Map<string, QuickReferenceTopic>
+  commonMaterialMap: Map<string, CommonMaterial>
   sources: QuickReferenceSource[]
 }) {
   const relatedTopics = (material.relatedTopicIds ?? [])
     .map((id) => topicMap.get(id))
     .filter((topic): topic is QuickReferenceTopic => Boolean(topic))
+  const relatedMaterials = (material.relatedMaterialIds ?? [])
+    .map((id) => commonMaterialMap.get(id))
+    .filter((item): item is CommonMaterial => Boolean(item))
 
   return (
     <details className="group/material py-3.5">
@@ -520,6 +663,24 @@ function MaterialRow({
               >
                 看{topic.shortTitle}
               </a>
+            ))}
+          </div>
+        </div>
+      )}
+      {relatedMaterials.length > 0 && (
+        <div className="mt-3 pl-6">
+          <p className="text-[12.5px] font-medium leading-none text-ash">
+            材料解释
+          </p>
+          <div className="mt-2 flex flex-wrap gap-1.5">
+            {relatedMaterials.map((item) => (
+              <Link
+                key={item.id}
+                href={`/quick-reference/materials/${item.id}`}
+                className="focus-ring inline-flex min-h-8 items-center rounded-btn border border-hairline bg-paper px-2.5 text-[12.5px] font-medium text-ink"
+              >
+                看{item.name}
+              </Link>
             ))}
           </div>
         </div>

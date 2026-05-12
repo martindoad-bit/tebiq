@@ -2,6 +2,10 @@ import assert from 'node:assert/strict'
 import test from 'node:test'
 
 import {
+  COMMON_MATERIALS,
+  getCommonMaterial,
+} from './materials'
+import {
   QUICK_REFERENCE_TOPICS,
   getQuickReferenceTopicsForFactCards,
 } from './topics'
@@ -52,7 +56,8 @@ test('quick reference separates ready checklists from confirmation-heavy checkli
   assert.ok(readyIds.includes('kazoku-taizai-koushin-materials'))
   assert.ok(readyIds.includes('nihonjin-haigusha-koushin-materials'))
   assert.ok(readyIds.includes('ryugaku-koushin-materials'))
-  assert.ok(needsConfirmationIds.includes('keiei-kanri-koushin-materials'))
+  assert.ok(readyIds.includes('keiei-kanri-koushin-materials'))
+  assert.ok(readyIds.includes('keiei-kanri-henko-materials'))
   assert.ok(needsConfirmationIds.includes('eijuu-shinsei-materials'))
 })
 
@@ -65,6 +70,43 @@ test('quick reference V1 keeps renewal and application checklists discoverable',
   assert.match(titles, /日本人配偶者/)
   assert.match(titles, /留学/)
   assert.match(titles, /永住/)
+  assert.match(titles, /特定技能/)
+  assert.match(titles, /变更/)
+})
+
+test('quick reference has a reusable common material library', () => {
+  assert.ok(COMMON_MATERIALS.length >= 20)
+  assert.equal(
+    new Set(COMMON_MATERIALS.map((material) => material.id)).size,
+    COMMON_MATERIALS.length,
+    'common material ids must be unique',
+  )
+
+  for (const material of COMMON_MATERIALS) {
+    assert.ok(material.name.length > 0, `${material.id} missing name`)
+    assert.ok(material.nameJa.length > 0, `${material.id} missing Japanese name`)
+    assert.ok(material.sourceUrl.startsWith('https://'), `${material.id} source must be URL`)
+    assert.ok(material.commonUses.length > 0, `${material.id} missing common uses`)
+  }
+
+  assert.equal(getCommonMaterial('pension-record')?.sourceId, 'M-015')
+})
+
+test('checklist material cross references point to common material pages', () => {
+  const materialIds = new Set(COMMON_MATERIALS.map((material) => material.id))
+
+  for (const topic of QUICK_REFERENCE_TOPICS) {
+    for (const section of topic.sections) {
+      for (const material of section.materials) {
+        for (const id of material.relatedMaterialIds ?? []) {
+          assert.ok(
+            materialIds.has(id),
+            `${topic.id}/${material.id} references missing material ${id}`,
+          )
+        }
+      }
+    }
+  }
 })
 
 test('quick reference can bridge from answer fact cards back to material checklists', () => {
