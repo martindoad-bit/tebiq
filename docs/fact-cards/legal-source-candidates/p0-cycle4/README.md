@@ -28,7 +28,7 @@ This is not a permanent-residence approval predictor and not a materials-checkli
 |---|---|---:|
 | Batch 1 | 永住 legal/guideline anchors + cancellation system entry | 20 cards — [`BATCH1_REPORT.md`](./BATCH1_REPORT.md) |
 | Batch 2 | 税 / 年金 / 公的医療保険 / materials boundary | 14 cards — [`BATCH2_REPORT.md`](./BATCH2_REPORT.md) |
-| Batch 3 | cancellation triggers and status-stability risk signals | 12-16 cards |
+| Batch 3 | cancellation triggers and status-stability risk signals | 20 cards — [`BATCH3_REPORT.md`](./BATCH3_REPORT.md) |
 | Batch 4 | PR card distinction, exception burn-down, source gaps | 10-14 cards |
 | Batch 5 | integration, duplicate merge, promotion queue | 8-12 cards plus rewrites |
 
