@@ -1,7 +1,7 @@
 # Legal Source P0 Cycle 1 — Batch 1 Report
 
 **Date**: 2026-05-12  
-**Parent workpack**: [`LEGAL_SOURCE_P0_CYCLE1_WORKPACK.md`](../../LEGAL_SOURCE_P0_CYCLE1_WORKPACK.md)  
+**Parent workpack**: [`LEGAL_SOURCE_P0_CYCLE1_WORKPACK.md`](../../legal-source-engineering/LEGAL_SOURCE_P0_CYCLE1_WORKPACK.md)
 **FACT operator**: Russell / Current Fact Layer Operator  
 **Codex status**: normalized candidate report; no production fact cards yet  
 
@@ -214,3 +214,77 @@ Next step:
 3. Ask QA to identify whether LS-P0C1-003 or 008 should stay `needs_review` or become non-injecting guardrails.
 4. Only after AQL/QA, convert approved candidates into formal draft card files.
 
+---
+
+## 6. AQL Validation Result
+
+**Verdict**: Batch 1 improves answer direction, but only as structure/routing guardrail.
+
+Coverage:
+
+- Sufficient for direction correction: Q1 永住换工作, Q2 日配打工, Q3 永配开公司, Q4 定住者夜班, Q25 经管是不是工作签.
+- Partial only: 家族滞在工作, 技人国/经管 activity scope, 留学/短期滞在 work, 特定技能, 换公司, 资格外活动许可.
+- Not sufficient: 特定技能家属, 日配离婚后工作, 永住/定住父母, 永住申请中换工作/开公司.
+
+Candidate decisions:
+
+| Candidate | AQL Decision | Notes |
+|---|---|---|
+| LS-P0C1-001 | pass | parent skeleton, not standalone specific activity answer |
+| LS-P0C1-002 | pass | corrects status qualification work-limit confusion |
+| LS-P0C1-003 | hold | routing guardrail only; not standalone final-answer fact |
+| LS-P0C1-004 | pass | low-risk category card |
+| LS-P0C1-005 | pass | category/routing card; specific criteria require Cycle 2 |
+| LS-P0C1-006 | pass | category/routing card; must connect to qualification-outside-activity |
+| LS-P0C1-007 | pass | prevents generic 特定活動 overgeneralization |
+| LS-P0C1-008 | hold / rewrite | duration/probability guardrail only |
+
+---
+
+## 7. QA Validation Result
+
+**Verdict**: No current P0 because nothing is injected. **BLOCK for production injection**.
+
+P0 conditional blockers:
+
+- If LS-P0C1-003 or LS-P0C1-008 is injected as standalone answer source, block as P0.
+
+P1 issues:
+
+- Each formal card needs at least two fixed dry-run fixtures.
+- LS-P0C1-005 must include independent matcher/must_say/must_not_say in formal draft.
+- LS-P0C1-004 wording must not call 技人国/経営・管理 "table-two"; they are 別表第一二の表, not 別表第二.
+- LS-P0C1-006 must route 留学/家族滞在 work questions to qualification-outside-activity cards, not answer them standalone.
+- A/B answers have not run yet.
+
+Required minimum fixtures:
+
+| Card | Required Fixture Pair |
+|---|---|
+| LS-P0C1-001 | "活動資格是什么意思？" hits 001; "永住者能换工作吗？" excludes 001 primary and routes to 002 |
+| LS-P0C1-002 | "永住者副业要资格外活动许可吗？" hits 002/excludes qualification-outside-activity requirement; "技人国能做什么工作？" excludes 002 |
+| LS-P0C1-003 | "日配能打工吗？" guardrail/routing only; "家族滞在可以全职吗？" routes to qualification-outside-activity/change, not 003 final |
+| LS-P0C1-004 | "教授签属于哪类？" hits 004; "技人国是不是一の表？" excludes 004 |
+| LS-P0C1-005 | "经营管理属于哪类资格？" hits 005; "经管资本金要多少？" excludes 005 standalone and routes to Cycle 2/specific card |
+| LS-P0C1-006 | "留学属于非就劳资格吗？" hits 006; "留学生每周能打工多久？" excludes 006 final and routes to qualification-outside-activity |
+| LS-P0C1-007 | "特定活動是不是都一样？" hits 007; "特定活動46号能做什么？" routes to specific designated-activity source |
+| LS-P0C1-008 | "列表写5年是不是一定给5年？" guardrail only; "经管续签能拿几年？" guardrail plus route specific, no probability answer |
+
+---
+
+## 8. Batch 1 Normalization Decision
+
+Proceed:
+
+- Convert LS-P0C1-001, 002, 004, 005, 006, 007 into formal `state: ai_extracted` draft cards.
+
+Hold:
+
+- LS-P0C1-003 remains candidate guardrail until DOMAIN wording review / matcher design.
+- LS-P0C1-008 remains candidate guardrail until duration/probability design.
+
+Do not:
+
+- Do not set any Batch 1 card to `ai_verified`.
+- Do not sync/inject into production.
+- Do not use these cards to answer specific 技人国/経営管理/留学/家族滞在/特定技能 criteria.

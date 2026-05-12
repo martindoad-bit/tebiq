@@ -381,7 +381,7 @@ The first move is:
 Recommended first FACT instruction:
 
 ```text
-Read docs/fact-cards/LEGAL_SOURCE_STRUCTURE_ENGINEERING.md.
+Read docs/fact-cards/legal-source-engineering/LEGAL_SOURCE_STRUCTURE_ENGINEERING.md.
 Do not produce cards yet.
 Produce P0 Source Registry Draft:
 - official source title

@@ -4,7 +4,7 @@
 **Sprint**: 0.6 — Workstream C
 **Authority**: PL 0.6 sprint kickoff, decision (c) AI-first Fact Layer (2026-05-07)
 
-**Strategic source map**: [`LEGAL_SOURCE_STRUCTURE_ENGINEERING.md`](./LEGAL_SOURCE_STRUCTURE_ENGINEERING.md) defines the legal source universe, P0/P1/P2/P3 priority layers, and the P0 card-count production loops for the next-scale fact layer.
+**Strategic source map**: [`LEGAL_SOURCE_STRUCTURE_ENGINEERING.md`](./legal-source-engineering/LEGAL_SOURCE_STRUCTURE_ENGINEERING.md) defines the legal source universe, P0/P1/P2/P3 priority layers, and the P0 card-count production loops for the next-scale fact layer.
 
 ---
 
