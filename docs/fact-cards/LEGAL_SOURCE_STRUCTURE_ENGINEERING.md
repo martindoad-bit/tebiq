@@ -395,6 +395,10 @@ Produce P0 Source Registry Draft:
 Then propose P0 Cycle 1 card list, target 50-70 cards.
 ```
 
+Cycle 1 workpack:
+
+- [`LEGAL_SOURCE_P0_CYCLE1_WORKPACK.md`](./LEGAL_SOURCE_P0_CYCLE1_WORKPACK.md)
+
 ---
 
 ## 8. Primary Reference Links
