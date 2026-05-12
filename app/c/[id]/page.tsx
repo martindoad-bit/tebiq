@@ -15,6 +15,7 @@ import {
   type AlphaDisplayState,
 } from '@/components/ui/consultation-alpha'
 import { FactReferenceBlock } from '@/components/ui/fact-reference'
+import { QuickReferenceBridge } from '@/components/ui/quick-reference-bridge'
 import type { ConsultationFactCardAuditEntry } from '@/lib/consultation/stream-protocol'
 import {
   getAiConsultationById,
@@ -114,6 +115,7 @@ export default async function ConsultationDetailPage({ params }: PageProps) {
         </Surface>
 
         <FactReferenceBlock audit={factCardAudit} variant="compact" />
+        <QuickReferenceBridge audit={factCardAudit} />
 
         {isChain && <ChainBlock chain={chain} currentId={row.id} />}
 
