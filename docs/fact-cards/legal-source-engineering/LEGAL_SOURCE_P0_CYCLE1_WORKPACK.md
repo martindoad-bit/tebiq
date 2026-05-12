@@ -116,6 +116,8 @@ State: candidate list only, no formal card body.
 | LS-P0C1-061 | 永住者在留期间为无期限 | S2 | duration_locator | 永住者 | 永住期限, 无期限 |
 | LS-P0C1-062 | 日本人配偶者等包含配偶者/特别养子/出生子 | S1/S2 | status_scope_detail | 日本人の配偶者等 | 日配, 特别养子 |
 | LS-P0C1-063 | 永住者配偶者等包含配偶者及日本出生继续在留子 | S1/S2 | status_scope_detail | 永住者の配偶者等 | 永配孩子, 日本出生 |
+| LS-P0C1-064 | 家族滞在工作限制路由候选 | S1 + later L2/L4 | work_restriction_router | 家族滞在 | 家族滞在打工, 正社员, 资格外活动 |
+| LS-P0C1-065 | 留学工作限制路由候选 | S1 + later L2/L4 | work_restriction_router | 留学 | 留学生打工, 28小时, 毕业后打工 |
 
 ---
 
@@ -126,7 +128,7 @@ Cycle 1 should be extracted in batches that preserve validation value.
 | Batch | Candidate IDs | Purpose |
 |---|---|---|
 | Batch 1 | LS-P0C1-001 to LS-P0C1-008 | qualification skeleton and duration boundary |
-| Batch 2 | LS-P0C1-019, 024, 029, 030, 039, 040, 041, 042, 043 | high-frequency status/activity anchors |
+| Batch 2 | LS-P0C1-019, 024, 028, 037, 039, 041, 043, 064, 065 | high-frequency status/activity anchors plus work-restriction routers |
 | Batch 3 | LS-P0C1-046 to LS-P0C1-060 | exclusion and risk-sensitive details |
 | Batch 4 | Remaining activity-scope status cards | full coverage and long tail |
 | Batch 5 | LS-P0C1-061 to LS-P0C1-063 plus rewrites | duration/status detail and cleanup |
@@ -245,4 +247,3 @@ Batch 1 output must include:
 - recommended existing fact-layer state mapping.
 
 No production injection until Batch 1 has gone through dry-run/AQL/QA.
-
