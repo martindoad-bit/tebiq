@@ -26,25 +26,25 @@ These cards are source-spine and routing cards. They do not replace existing pro
 
 | ID | Claim Type | Source | Role |
 |---|---|---|---|
-| `resident-card-non-address-change-scope` | procedure_scope | C3-F16 | separates non-address card item changes from address changes |
-| `resident-card-non-address-change-fourteen-day` | deadline_window | C3-F16 | 14-day deadline for name/nationality/sex/date-of-birth changes |
-| `resident-card-non-address-change-immigration-office-router` | procedure_router | C3-F16 | routes non-address card item changes to regional immigration |
-| `resident-card-non-address-change-evidence-documents` | required_document | C3-F16 | captures proof-of-change document requirement |
-| `residence-address-notification-new-mid-long-term-scope` | procedure_scope | C3-F19 | new mid/long-term resident address notification |
-| `residence-address-notification-new-landing-fourteen-day` | deadline_window | C3-F21 | new-landing mid/long-term resident address notification |
-| `residence-address-notification-fourteen-day-municipality` | deadline_window | C3-F19 | 14-day window from determining residence |
-| `residence-address-change-fourteen-day-municipality` | deadline_window | C3-F23 | moving-address notification window and municipal office route |
-| `residence-address-notification-deemed-by-municipality` | procedure_method | C3-F19/C3-F23 | municipal filing with residence card deemed as residence notification |
-| `resident-card-loss-reissue-fourteen-day` | deadline_window | C3-F17 | loss/theft/destruction reissue window |
-| `resident-card-loss-police-report-number` | required_document | C3-F17 | police report acceptance number for loss/theft |
-| `resident-card-damaged-reissue-router` | procedure_router | C3-F24 | damaged/soiled/IC-damaged card reissue route |
-| `resident-card-validity-renewal-targets` | procedure_scope | C3-F18 | PR/HSP2/under-16 card validity renewal targets |
-| `resident-card-validity-renewal-window` | deadline_window | C3-F18 | 2-month / 6-month application windows |
-| `resident-card-validity-vs-residence-period-boundary` | procedure_boundary | C3-F18 | separates card validity renewal from residence period renewal |
-| `resident-card-return-expiry-triggers` | procedure_trigger | C3-F20 | card invalidation and return triggers |
-| `resident-card-return-deadline-by-trigger` | deadline_window | C3-F20 | return deadline varies by trigger |
-| `resident-card-return-mail-or-office-method` | procedure_method | C3-F20 | direct return or mail return route |
-| `resident-card-found-old-card-return-after-reissue` | deadline_window | C3-F20 | old card found after reissue must be returned within 14 days |
+| `resident-card-non-address-change-scope` | procedure_scope | ISA 00009 | separates non-address card item changes from address changes |
+| `resident-card-non-address-change-fourteen-day` | deadline_window | ISA 00009 | 14-day deadline for name/nationality/sex/date-of-birth changes |
+| `resident-card-non-address-change-immigration-office-router` | procedure_router | ISA 00009 | routes non-address card item changes to regional immigration |
+| `resident-card-non-address-change-evidence-documents` | required_document | ISA 00009 | captures proof-of-change document requirement |
+| `residence-address-notification-new-mid-long-term-scope` | procedure_scope | ISA 00022 | new mid/long-term resident address notification |
+| `residence-address-notification-new-landing-fourteen-day` | deadline_window | ISA 00021 | new-landing mid/long-term resident address notification |
+| `residence-address-notification-fourteen-day-municipality` | deadline_window | ISA 00022 | 14-day window from determining residence |
+| `residence-address-change-fourteen-day-municipality` | deadline_window | ISA 00023 | moving-address notification window and municipal office route |
+| `residence-address-notification-deemed-by-municipality` | procedure_method | ISA 00021/00022/00023 | municipal filing with residence card deemed as residence notification |
+| `resident-card-loss-reissue-fourteen-day` | deadline_window | ISA 00010 | loss/theft/destruction reissue window |
+| `resident-card-loss-police-report-number` | required_document | ISA 00010 | police report acceptance number for loss/theft |
+| `resident-card-damaged-reissue-router` | procedure_router | ISA 00012 | damaged/soiled/IC-damaged card reissue route |
+| `resident-card-validity-renewal-targets` | procedure_scope | ISA 00011 | PR/HSP2/under-16 card validity renewal targets |
+| `resident-card-validity-renewal-window` | deadline_window | ISA 00011 | 2-month / 6-month application windows |
+| `resident-card-validity-vs-residence-period-boundary` | procedure_boundary | ISA 00011 | separates card validity renewal from residence period renewal |
+| `resident-card-return-expiry-triggers` | procedure_trigger | ISA 00020 | card invalidation and return triggers |
+| `resident-card-return-deadline-by-trigger` | deadline_window | ISA 00020 | return deadline varies by trigger |
+| `resident-card-return-mail-or-office-method` | procedure_method | ISA 00020 | direct return or mail return route |
+| `resident-card-found-old-card-return-after-reissue` | deadline_window | ISA 00020 | old card found after reissue must be returned within 14 days |
 
 ---
 
