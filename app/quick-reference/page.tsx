@@ -8,7 +8,7 @@ import { QUICK_REFERENCE_TOPICS } from '@/lib/quick-reference/topics'
 
 export const metadata: Metadata = {
   title: '速查 - TEBIQ',
-  description: 'TEBIQ 速查：在留卡、出入境、打工、换工作、永住等常见手续的简明参考。',
+  description: 'TEBIQ 速查：换工作、搬家、年金、税金、在留卡等常见手续的简明核对。',
   alternates: { canonical: '/quick-reference' },
 }
 
@@ -23,10 +23,10 @@ export default function QuickReferencePage() {
             </span>
             <div className="min-w-0">
               <h1 className="text-[20px] font-medium leading-snug text-ink">
-                常见手续先核对
+                常见手续，先核对。
               </h1>
               <p className="mt-1 text-[14px] leading-[1.65] text-ash">
-                用于核对常见手续；情况复杂时，可以带材料继续提问。
+                适合已经知道大概方向，想快速确认期限、去哪办和来源。
               </p>
             </div>
           </div>

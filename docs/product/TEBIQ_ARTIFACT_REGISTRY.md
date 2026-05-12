@@ -13,6 +13,13 @@
 
 ---
 
+## Product Specs
+
+| 资产名称 | 路径 | Owner | Status | Review Required | 消费方 | Source Commit | Last Updated |
+|---------|------|-------|--------|----------------|--------|--------------|-------------|
+| Quick Reference Spec | `docs/product/TEBIQ_QUICK_REFERENCE_SPEC.md` | Codex GM-OPS + Project Lead | active / product-engineering spec | Project Lead for positioning changes | ENGINE / CODEXUI / FACT / DOMAIN / QA | — | 2026-05-12 |
+| Deep Water Registry | `docs/product/TEBIQ_DEEP_WATER_REGISTRY.md` | Codex GM-OPS + Project Lead | draft / pre-scrivener workshop | Scrivener + DOMAIN before production wiring | ENGINE / AQL / DOMAIN / FACT / QA | — | 2026-05-12 |
+
 ## VOICE 资产
 
 | 资产名称 | 路径 | Owner | Status | Review Required | 消费方 | Source Commit | Last Updated |

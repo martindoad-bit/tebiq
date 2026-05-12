@@ -32,7 +32,6 @@ const TABS: { href: string; label: string; Icon: LucideIcon; match: (p: string) 
     label: '速查',
     Icon: SearchCheck,
     match: p => p.startsWith('/quick-reference'),
-    disabled: true,
   },
 ]
 
