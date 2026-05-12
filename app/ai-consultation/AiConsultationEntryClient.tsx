@@ -575,14 +575,14 @@ export default function AiConsultationEntryClient() {
       <div className="space-y-5">
         <BrandHeader
           eyebrow="在留咨询"
-          title={active ? '咨询结果' : '先把这件事说清楚'}
+          title={active ? '咨询结果' : '在留问题，先问一下。'}
           align={active ? 'left' : 'center'}
           description={
             active
               ? active.id
                 ? '这次咨询已自动记录。可以补充同一件事。'
                 : '整理完成后会自动记录。可以补充同一件事。'
-              : '把你现在担心的情况写下来，TEBIQ 会整理风险、下一步和可核对资料。'
+              : '换工作、更新、离婚、年金、搬家。把现在的情况写下来，TEBIQ 会帮你整理风险、依据和下一步。'
           }
         />
 
@@ -597,48 +597,39 @@ export default function AiConsultationEntryClient() {
               className="hidden"
             />
             <Surface className="space-y-3.5 bg-white/70">
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                <div className="flex min-w-0 items-start gap-2">
-                  <MessageSquarePlus className="h-4 w-4 shrink-0 text-[var(--tebiq-ink-blue)]" strokeWidth={1.6} />
-                  <div className="min-w-0">
-                    <SectionLabel>写下问题</SectionLabel>
-                    <p className="text-[16px] leading-[1.65] text-[var(--tebiq-deep-slate)]">
-                      不用整理成正式材料，按你现在知道的写。
-                    </p>
-                  </div>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => fileInputRef.current?.click()}
-                  disabled={photo.kind === 'recognizing'}
-                  className="inline-flex min-h-11 w-full shrink-0 items-center justify-center gap-1.5 whitespace-nowrap rounded-btn border border-[var(--tebiq-soft-gray)] bg-[var(--tebiq-off-white)] px-3 py-2 text-[14px] font-medium text-[var(--tebiq-ink-blue)] disabled:opacity-50 sm:w-auto"
-                >
-                  {photo.kind === 'ready' ? <CheckCircle2 className="h-3.5 w-3.5" strokeWidth={1.6} /> : <Camera className="h-3.5 w-3.5" strokeWidth={1.6} />}
-                  {photo.kind === 'ready' ? '已添加' : '加照片'}
-                </button>
-              </div>
               <textarea
                 value={question}
                 onChange={e => setQuestion(e.target.value)}
                 maxLength={4000}
                 rows={5}
                 placeholder="例：我换工作了，需要向入管报告吗？"
-                className="min-h-[148px] w-full resize-y rounded-card border border-[var(--tebiq-soft-gray)] bg-[var(--tebiq-off-white)] p-4 text-[18px] leading-[1.72] text-[var(--tebiq-ink-blue)] outline-none focus-visible:shadow-focus"
+                className="min-h-[190px] w-full resize-y rounded-card border border-[var(--tebiq-soft-gray)] bg-[var(--tebiq-off-white)] p-4 text-[18px] leading-[1.72] text-[var(--tebiq-ink-blue)] outline-none focus-visible:shadow-focus"
                 required
               />
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                <span className="text-[12.5px] text-[var(--tebiq-cool-gray)]">{question.length} / 4000</span>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between gap-3">
+                  <span className="text-[12.5px] text-[var(--tebiq-cool-gray)]">{question.length} / 4000</span>
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={photo.kind === 'recognizing'}
+                    className="inline-flex min-h-11 max-w-full shrink-0 items-center justify-center gap-1.5 whitespace-nowrap rounded-btn border border-[var(--tebiq-soft-gray)] bg-[var(--tebiq-off-white)] px-3.5 py-2 text-[14px] font-medium text-[var(--tebiq-ink-blue)] disabled:opacity-50"
+                  >
+                    {photo.kind === 'ready' ? <CheckCircle2 className="h-3.5 w-3.5" strokeWidth={1.6} /> : <Camera className="h-3.5 w-3.5" strokeWidth={1.6} />}
+                    {photo.kind === 'ready' ? '已添加照片' : '加一张材料照片'}
+                  </button>
+                </div>
                 <button
                   type="submit"
                   disabled={!question.trim() || photo.kind === 'recognizing'}
-                  className="inline-flex min-h-12 w-full items-center justify-center gap-2 whitespace-nowrap rounded-btn bg-[var(--tebiq-ink-blue)] px-4 py-3 text-[16px] font-medium text-[var(--tebiq-off-white)] disabled:cursor-not-allowed disabled:opacity-40 sm:w-auto"
+                  className="inline-flex min-h-12 w-full items-center justify-center gap-2 whitespace-nowrap rounded-btn bg-[var(--tebiq-ink-blue)] px-4 py-3 text-[16px] font-medium text-[var(--tebiq-off-white)] disabled:cursor-not-allowed disabled:opacity-40"
                 >
                   {photo.kind === 'recognizing' ? (
                     <Loader2 className="h-4 w-4 animate-spin" strokeWidth={1.6} />
                   ) : (
                     <Send className="h-4 w-4" strokeWidth={1.6} />
                   )}
-                  {photo.kind === 'recognizing' ? '读取中' : '开始整理'}
+                  {photo.kind === 'recognizing' ? '读取中' : '开始咨询'}
                 </button>
               </div>
             </Surface>
