@@ -7,6 +7,7 @@ const TABS: Array<{ href: string; label: string }> = [
   { href: '/admin', label: '概览' },
   { href: '/admin/analytics', label: 'KPI' },
   { href: '/admin/users', label: '用户' },
+  { href: '/admin/scrivener-leads', label: '书士线索' },
   { href: '/admin/consultations', label: '咨询' },
   { href: '/admin/questions', label: '问题' },
   { href: '/admin/review-lite', label: 'Review' },
