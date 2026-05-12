@@ -688,7 +688,7 @@ function PhotoLiteCard({
           <div>
             <SectionLabel>上传材料照片</SectionLabel>
             <p className="text-[14px] leading-[1.6] text-[var(--tebiq-deep-slate)]">
-              适合入管通知、年金税金、雇佣材料；可先遮住无关号码。
+              入管通知、年金、税金、雇佣材料都可以；可先遮住无关号码。
             </p>
           </div>
         </div>
@@ -1000,7 +1000,7 @@ function ActiveConsultationView({
           {active.phase === 'received' && active.answer !== '' && (
             <span className="inline-flex items-center gap-2 text-[15px] leading-[1.7] text-[var(--tebiq-deep-slate)]">
               <Loader2 className="h-4 w-4 animate-spin" strokeWidth={1.6} />
-              已收到，正在整理咨询方向
+              已收到，正在整理
             </span>
           )}
           {active.phase === 'streaming' && (

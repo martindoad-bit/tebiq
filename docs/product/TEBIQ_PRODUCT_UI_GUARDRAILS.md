@@ -205,6 +205,26 @@ Avoid labels that only fit some cases:
 
 Use labels that work across immigration, tax, pension, work, family, and notification cases.
 
+### 4.4 Do Not Show Product-Structure Copy To Users
+
+User-facing copy must speak in the user's situation, not in product design language.
+
+Forbidden on launch surfaces:
+
+- audience framing such as "适合已经知道大概方向";
+- purpose framing such as "本页用于..." or "用于核对...";
+- internal implementation language such as "模型响应", "降级回答", "OCR 档案系统", "系统分享";
+- UI taxonomy used as a title, such as "常见手续，先核对。"
+
+Use direct user language instead:
+
+- "搬家后要办什么";
+- "换工作后要做什么";
+- "问问我的情况";
+- "可以打开原文核对。"
+
+This rule is backed by `lib/ui/copy-guard.test.ts` and `npm run audit:user-facing-copy`.
+
 ---
 
 ## 5. Evidence Layer Rules

@@ -20,6 +20,29 @@ const FORBIDDEN_PATTERNS: Array<{ label: string; pattern: RegExp }> = [
   },
 ]
 
+const LAUNCH_SURFACE_PATHS = [
+  'app/ai-consultation/',
+  'app/quick-reference/',
+  'components/ui/consultation-alpha.tsx',
+  'components/ui/fact-reference.tsx',
+  'components/ui/quick-reference-bridge.tsx',
+]
+
+const FORBIDDEN_LAUNCH_COPY: Array<{ label: string; pattern: RegExp }> = [
+  {
+    label: 'structural audience copy',
+    pattern: /适合已经|适合.*用户|大概方向|快速确认|常见手续，先核对/,
+  },
+  {
+    label: 'internal product framing',
+    pattern: /模型响应|安全降级|降级回答|OCR 档案系统|系统分享|咨询方向|不是重新开一个问题/,
+  },
+  {
+    label: 'visible structure wording',
+    pattern: /用于整理|用于核对|这个页面用于|本页用于/,
+  },
+]
+
 interface Hit {
   file: string
   line: number
@@ -44,6 +67,18 @@ async function main() {
             term: item.label,
             text: line.trim().slice(0, 220),
           })
+        }
+      }
+      if (LAUNCH_SURFACE_PATHS.some(prefix => relative.startsWith(prefix) || relative === prefix)) {
+        for (const item of FORBIDDEN_LAUNCH_COPY) {
+          if (item.pattern.test(line)) {
+            hits.push({
+              file: relative,
+              line: idx + 1,
+              term: item.label,
+              text: line.trim().slice(0, 220),
+            })
+          }
         }
       }
     })

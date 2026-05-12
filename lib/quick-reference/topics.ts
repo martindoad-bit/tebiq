@@ -33,8 +33,8 @@ export interface QuickReferenceTopic {
 export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
   {
     id: 'address-change',
-    title: '搬家后的住所届',
-    summary: '中长期在留者搬家后，需要按住所变更规则处理。',
+    title: '搬家后要办什么',
+    summary: '搬到新地址后，通常要先到市区町村办住所变更。',
     category: '在留卡',
     factCardIds: ['zairyu-address-change'],
     aliases: ['搬家', '地址变更', '住址', '住所', '转入', '转居'],
@@ -54,7 +54,7 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
         verification: 'source-backed',
       },
     ],
-    checkNote: '同城搬家、跨市区町村搬家、家族一起搬家时，市区町村要求可能不同。',
+    checkNote: '同城、跨市区町村、家族一起搬家，窗口要求可能不同。',
     sources: [
       {
         label: '出入国在留管理庁：住居地の変更届出',
@@ -64,8 +64,8 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
   },
   {
     id: 'card-loss',
-    title: '在留卡丢失或被盗',
-    summary: '先取得遗失、盗难等说明资料，再申请再交付。',
+    title: '在留卡丢了',
+    summary: '先拿遗失或被盗的证明，再向入管申请补发。',
     category: '在留卡',
     factCardIds: ['zairyu-card-loss-reissue'],
     aliases: ['在留卡丢了', '钱包丢了', '被盗', '再交付', '补办'],
@@ -85,7 +85,7 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
         verification: 'source-backed',
       },
     ],
-    checkNote: '在海外发现丢失、卡片破损、本人无法到场等情形，需要个别确认。',
+    checkNote: '在海外发现丢失、卡片破损、本人无法到场时，处理方式会不同。',
     sources: [
       {
         label: '出入国在留管理庁：紛失等による在留カードの再交付申請',
@@ -95,8 +95,8 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
   },
   {
     id: 'card-carry',
-    title: '在留卡要不要随身带',
-    summary: '中长期在留者有在留卡常时携带和提示义务。',
+    title: '在留卡要随身带吗',
+    summary: '中长期在留者通常要随身带在留卡，被要求时要出示。',
     category: '在留卡',
     factCardIds: ['zairyu-card-keitai-gimu'],
     aliases: ['随身', '忘带', '警察检查', '提示', '携带义务'],
@@ -126,8 +126,8 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
   },
   {
     id: 'job-change',
-    title: '换工作后的入管手续',
-    summary: '技人国、特定技能等身份转职后，先看 14 日届出和资格变更要否。',
+    title: '换工作后要做什么',
+    summary: '先看 14 日内的入管届出，再看工作内容是否还在原资格范围内。',
     category: '工作',
     factCardIds: [
       'tensyoku-zairyu',
@@ -152,7 +152,7 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
         verification: 'needs-check',
       },
     ],
-    checkNote: '“只换公司”与“工作内容也变了”不是一回事；业务范围拿不准时可考虑就劳资格证明书或专业确认。',
+    checkNote: '只换公司和工作内容也变了不是一回事；业务范围拿不准时先问。',
     sources: [
       {
         label: '出入国在留管理庁：所属（契約）機関に関する届出',
@@ -162,8 +162,8 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
   },
   {
     id: 'retirement-risk',
-    title: '离职、失业后的在留风险',
-    summary: '退职后不是马上失效，但有届出义务和活动空白风险。',
+    title: '离职后还能留多久',
+    summary: '离职后不是马上失效，但通常有 14 日届出和活动空白风险。',
     category: '工作',
     factCardIds: ['shitsugyo-zairyu-risk', 'tensyoku-zairyu'],
     aliases: ['离职', '退职', '失业', '辞职', '被解雇', '找工作'],
@@ -198,7 +198,7 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
   {
     id: 'deemed-reentry',
     title: 'みなし再入国',
-    summary: '短期离开日本时，确认是否能用みなし再入国。',
+    summary: '短期回国或出境前，先确认能不能用みなし再入国。',
     category: '出入境',
     factCardIds: ['minashi-sainyuukoku', 'sainyukoku-kyoka'],
     aliases: ['临时回国', '再入国', 'みなし', '出国', '回国', '离境'],
@@ -228,8 +228,8 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
   },
   {
     id: 'health-insurance-after-leaving-job',
-    title: '退职后的健康保险',
-    summary: '退职后要在任意继续和国民健康保险之间确认路径和期限。',
+    title: '离职后的健康保险',
+    summary: '离职后要确认继续原健保、加入国保，还是进入家属扶养。',
     category: '社保',
     factCardIds: ['rishoku-kenko-hoken', 'kokumin-kenko-hoken-kanyu'],
     aliases: ['健保', '健康保险', '国保', '任意继续', '扶养', '社保'],
@@ -239,17 +239,17 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
     askPrompt: '我退职了，想确认健康保险是任意继续、国保还是扶养。',
     facts: [
       {
-        label: '任意继续',
+        label: '继续原来的健保',
         text: '协会健保任意继续通常有退职后 20 日以内申请等时间要求。',
         verification: 'source-backed',
       },
       {
-        label: '国保',
+        label: '加入国民健康保险',
         text: '没有加入其他健康保险时，国民健康保险通常需要向住所地市区町村办理。',
         verification: 'source-backed',
       },
     ],
-    checkNote: '任意继续、国保、家属扶养的条件和费用不同；先确认退职日、健保资格丧失日和住所地。',
+    checkNote: '继续原健保、国保、扶养的条件和费用不同；先确认退职日和资格丧失日。',
     sources: [
       {
         label: '全国健康保険協会：任意継続',
@@ -263,8 +263,8 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
   },
   {
     id: 'pension-after-leaving-job',
-    title: '退职后的国民年金切换',
-    summary: '厚生年金资格结束后，先确认是否需要切到国民年金第 1 号。',
+    title: '离职后的年金',
+    summary: '厚生年金结束后，通常要确认国民年金切换。',
     category: '年金',
     factCardIds: ['rishoku-kokumin-nenkin-kirikae'],
     aliases: ['年金', '厚生年金', '国民年金', '退职', '离职', '免除'],
@@ -294,8 +294,8 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
   },
   {
     id: 'tax-certificate',
-    title: '住民税和课税/纳税证明',
-    summary: '在留更新、永住、收入证明相关问题经常会用到税证明。',
+    title: '税证明怎么开',
+    summary: '续签、永住、收入证明时，经常会用到课税证明和纳税证明。',
     category: '税金',
     factCardIds: ['juminzei-kazei-shomeisho'],
     aliases: ['住民税', '课税证明', '纳税证明', '納税証明', '税证明', '永住材料'],
@@ -329,8 +329,8 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
   },
   {
     id: 'part-time-permission',
-    title: '资格外活动与打工',
-    summary: '留学、家族滞在等身份打工前，先确认许可范围。',
+    title: '留学生/家族签打工',
+    summary: '打工前先确认有没有资格外活动许可，以及时间上限。',
     category: '工作',
     factCardIds: ['ryugakusei-baito-28jikan', 'shikakugai-fukugyou'],
     aliases: ['打工', '兼职', '资格外', '資格外活動', '留学生打工', '家族滞在打工'],
@@ -364,8 +364,8 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
   },
   {
     id: 'foreign-employment-notification',
-    title: '雇主的外国人雇用届出',
-    summary: '雇用外国人时，事业主侧也有向 Hello Work 届出的义务。',
+    title: '公司雇外国人要申报吗',
+    summary: '公司雇用或雇用结束外国人时，通常有 Hello Work 届出义务。',
     category: '雇用',
     factCardIds: ['gaikokujin-koyo-todokede'],
     aliases: ['雇主', '公司', '外国人雇用', 'hello work', 'ハローワーク', '届出'],
@@ -395,7 +395,7 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
   },
   {
     id: 'permanent-resident-card-renewal',
-    title: '永住者在留卡更新',
+    title: '永住卡快到期',
     summary: '永住身份本身和在留卡有效期限是两件事。',
     category: '永住',
     factCardIds: ['eijuu-card-koushin'],
@@ -426,8 +426,8 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
   },
   {
     id: 'renewal-review-factors',
-    title: '更新、变更时的常见审查点',
-    summary: '更新或变更不是单项打勾；入管会综合看情况。',
+    title: '续签/变更会看什么',
+    summary: '入管不只看一项材料，会综合看身份、义务履行和实际情况。',
     category: '更新变更',
     factCardIds: [
       'zairyu-expiry-renewal-change',

@@ -63,7 +63,7 @@ export function FactReferenceBlock({
             )}
           </div>
           <p className="mt-1.5 text-[12.5px] leading-[1.6] text-[var(--tebiq-cool-gray)]">
-            这些资料用于核对相关规则或事实，不代表官方背书或个案最终判断。
+            可以打开原文核对。具体个案仍以窗口或专业确认为准。
             {reviewCount > 0 ? ' 部分资料仍需结合个案确认。' : ''}
           </p>
         </div>
@@ -94,7 +94,7 @@ function FactReferenceCard({
 }) {
   const isHighRisk = card.risk_level === 'high' || card.risk_level === 'critical'
   const groupLabel = card.decision === 'hint_only' || card.needs_review_flags.length > 0
-    ? '需结合个案'
+      ? '看情况'
     : '相关资料'
 
   return (
@@ -125,13 +125,13 @@ function FactReferenceCard({
 
       {items.length > limit && (
         <p className="mt-2 text-[12px] text-[var(--tebiq-cool-gray)]">
-          另有 {items.length - limit} 条来源，已保留在记录中。
+          另有 {items.length - limit} 条资料，已保留在记录中。
         </p>
       )}
 
       {card.needs_review_flags.length > 0 && (
         <p className="mt-2.5 text-[12px] leading-[1.6] text-[var(--tebiq-cool-gray)]">
-          这条资料有些细节需要结合材料或窗口说明再确认。
+          这条资料有些细节要结合材料或窗口说明再确认。
         </p>
       )}
     </div>
@@ -228,7 +228,7 @@ function dedupeReferenceItems(items: ReferenceItem[]): ReferenceItem[] {
 
 function supportLabel(item: ReferenceItem): string {
   if (item.needsDomainReview) return '需确认'
-  if (item.support === 'direct') return '可核对'
+  if (item.support === 'direct') return '直接依据'
   if (item.support === 'indirect') return '相关'
   if (item.support === 'official') return '来源'
   return '背景资料'

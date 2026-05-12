@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import type { ReactNode } from 'react'
 import { BookOpenText, ChevronDown, ExternalLink, MessageSquarePlus, Search } from 'lucide-react'
 import { StatusBadge } from '@/components/ui/tebiq'
@@ -13,15 +13,15 @@ import type {
 } from '@/lib/quick-reference/topics'
 
 const verificationLabel: Record<QuickReferenceVerification, string> = {
-  'source-backed': '可核对',
-  'needs-check': '需确认',
+  'source-backed': '有依据',
+  'needs-check': '看情况',
 }
 
 const quickSearches = [
   { label: '换工作', query: '换工作 转职 所属机关 就劳资格证明' },
   { label: '搬家', query: '搬家 住所 地址 在留卡' },
   { label: '离职', query: '离职 退职 失业 健保 年金' },
-  { label: '年金税金', query: '年金 住民税 课税 纳税 健保' },
+  { label: '年金', query: '年金 厚生年金 国民年金 脱退一时金' },
   { label: '永住', query: '永住 在留卡 税金 更新' },
 ]
 
@@ -45,15 +45,11 @@ export default function QuickReferenceList({
   topics: QuickReferenceTopic[]
 }) {
   const [query, setQuery] = useState('')
-  const [category, setCategory] = useState('全部')
   const [openTopicId, setOpenTopicId] = useState<string | null>(null)
 
-  const categories = useMemo(() => ['全部', ...Array.from(new Set(topics.map(topic => topic.category)))], [topics])
   const normalizedQuery = normalizeSearchText(query)
   const queryTerms = expandSearchTerms(normalizedQuery)
   const filteredTopics = topics.filter(topic => {
-    const inCategory = category === '全部' || topic.category === category
-    if (!inCategory) return false
     if (!normalizedQuery) return true
     const haystack = [
       topic.title,
@@ -78,7 +74,6 @@ export default function QuickReferenceList({
       const id = decodeURIComponent(raw)
       if (!topics.some(topic => topic.id === id)) return
       setQuery('')
-      setCategory('全部')
       setOpenTopicId(id)
       window.requestAnimationFrame(() => {
         document.getElementById(id)?.scrollIntoView({ block: 'start' })
@@ -98,7 +93,7 @@ export default function QuickReferenceList({
           <input
             value={query}
             onChange={event => setQuery(event.target.value)}
-            placeholder="搜：换工作、搬家、税金"
+            placeholder="搜：换工作、搬家、永住"
             className="min-w-0 flex-1 bg-transparent text-[16px] leading-none text-ink outline-none placeholder:text-haze"
           />
         </label>
@@ -110,7 +105,6 @@ export default function QuickReferenceList({
               type="button"
               onClick={() => {
                 setQuery(item.query)
-                setCategory('全部')
               }}
               className="min-h-9 shrink-0 whitespace-nowrap rounded-btn bg-paper px-3 text-[13px] font-medium text-slate"
             >
@@ -119,22 +113,15 @@ export default function QuickReferenceList({
           ))}
         </div>
 
-        <div className="mt-2 flex gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          {categories.map(item => (
-            <button
-              key={item}
-              type="button"
-              onClick={() => setCategory(item)}
-              className={`min-h-10 shrink-0 whitespace-nowrap rounded-btn border px-3.5 text-[14px] font-medium ${
-                category === item
-                  ? 'border-ink bg-ink text-white'
-                  : 'border-hairline bg-surface text-ink'
-              }`}
-            >
-              {item}
-            </button>
-          ))}
-        </div>
+        {query && (
+          <button
+            type="button"
+            onClick={() => setQuery('')}
+            className="mt-2 text-[13px] font-medium text-ash"
+          >
+            清除搜索
+          </button>
+        )}
       </div>
 
       <div className="space-y-3">
@@ -155,7 +142,7 @@ export default function QuickReferenceList({
 
       {filteredTopics.length === 0 && (
         <div className="rounded-card border border-hairline bg-surface px-4 py-5 text-[15px] leading-[1.75] text-ash">
-          没找到对应事项。可以换个说法，例如“换工作”“住民税”“在留卡”；如果是具体情况，直接去提问更合适。
+          没找到。可以换个词搜，或者直接提问。
         </div>
       )}
     </section>
@@ -186,8 +173,8 @@ function TopicCard({
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2">
               <StatusBadge>{topic.category}</StatusBadge>
-              <StatusBadge tone="checked">来源 {topic.sources.length}</StatusBadge>
-              {needsCheck && <StatusBadge tone="attention">需确认</StatusBadge>}
+              <StatusBadge tone="checked">资料 {topic.sources.length}</StatusBadge>
+              {needsCheck && <StatusBadge tone="attention">看情况</StatusBadge>}
             </div>
             <h2 className="mt-2.5 break-words text-[19px] font-semibold leading-snug text-ink">
               {topic.title}
@@ -208,7 +195,7 @@ function TopicCard({
       </summary>
 
       <div className="mt-4 space-y-4 border-t border-hairline pt-4">
-        <SectionTitle>先核对</SectionTitle>
+        <SectionTitle>要点</SectionTitle>
         <dl className="space-y-2.5">
           {topic.facts.map(fact => (
             <FactRow key={`${topic.id}-${fact.label}`} fact={fact} />
@@ -239,7 +226,7 @@ function TopicCard({
 
         <div className="rounded-[10px] border border-hairline bg-paper px-3.5 py-3">
           <p className="text-[14px] leading-[1.7] text-ash">
-            <span className="font-medium text-ink">还要看你的情况：</span>
+            <span className="font-medium text-ink">不确定时：</span>
             {topic.checkNote}
           </p>
           <Link
@@ -247,7 +234,7 @@ function TopicCard({
             className="focus-ring mt-3 inline-flex min-h-10 items-center gap-2 rounded-btn border border-hairline bg-surface px-3 text-[14px] font-medium text-ink"
           >
             <MessageSquarePlus size={16} strokeWidth={1.6} />
-            带着这件事提问
+            问问我的情况
           </Link>
         </div>
 
@@ -255,7 +242,7 @@ function TopicCard({
           <summary className="flex cursor-pointer list-none items-center justify-between gap-3 focus:outline-none focus-visible:rounded-[8px] focus-visible:shadow-focus">
             <span className="flex items-center gap-2 text-[14px] font-medium text-ink">
               <BookOpenText size={16} strokeWidth={1.5} />
-              可核对来源
+              资料来源
             </span>
             <span className="text-[13px] text-ash">展开</span>
           </summary>
@@ -317,18 +304,20 @@ function SourceLink({ source }: { source: QuickReferenceSource }) {
         <BookOpenText className="mt-0.5 h-4 w-4 shrink-0 text-ash" strokeWidth={1.5} />
         <div className="min-w-0 flex-1">
           <div className="flex min-w-0 items-start gap-2">
-            <StatusBadge tone={relation === 'direct' ? 'checked' : undefined}>
-              {relation === 'direct' ? '直接依据' : '相关'}
-            </StatusBadge>
             <span className="min-w-0 flex-1 break-words text-[13.5px] font-medium leading-snug">
               {source.label}
             </span>
             <ExternalLink className="mt-0.5 h-3.5 w-3.5 shrink-0 text-ash" strokeWidth={1.6} />
           </div>
+          <div className="mt-2 flex flex-wrap gap-1.5">
+            <StatusBadge tone={relation === 'direct' ? 'checked' : undefined}>
+              {relation === 'direct' ? '直接依据' : '相关资料'}
+            </StatusBadge>
+          </div>
           <p className="mt-1.5 text-[12.5px] leading-[1.6] text-ash">
             {source.organization ?? organizationFor(source.url)}
             {' · '}
-            {source.locator ? `原文位置：${source.locator}` : '可核对原文'}
+            {source.locator ? source.locator : '可查看原文'}
           </p>
         </div>
       </div>

@@ -24,10 +24,10 @@ export function QuickReferenceBridge({
         <FileText className="mt-0.5 h-4 w-4 shrink-0 text-[var(--tebiq-ink-blue)]" strokeWidth={1.6} />
         <div className="min-w-0 flex-1">
           <p className="text-[13.5px] font-medium leading-snug text-[var(--tebiq-ink-blue)]">
-            可快速核对
+            也可以看清单
           </p>
           <p className="mt-1 text-[12.5px] leading-[1.6] text-[var(--tebiq-cool-gray)]">
-            想看期限、去哪办和准备资料，可以打开对应速查。
+            有对应资料时，可以直接看期限、窗口和来源。
           </p>
           <div className="mt-2 flex flex-wrap gap-2">
             {topics.map(topic => (
