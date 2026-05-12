@@ -252,9 +252,10 @@ export async function matchFactCards(
   // complete.
   const out: FactCardMatch[] = []
   let injectsSeen = 0
+  const surfaceDropMatches = options.include_dry_run_states === true
   for (const r of raws) {
     const decision = gateDecision(r.card)
-    if (decision === 'drop') continue
+    if (decision === 'drop' && !surfaceDropMatches) continue
     if (decision === 'inject') {
       if (injectsSeen >= MAX_INJECTED) continue
       injectsSeen += 1

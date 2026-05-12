@@ -13,6 +13,9 @@
 //   - Returns { matches[], certain_blocks[],
 //               needs_review_addenda[], would_inject_in_prod[],
 //               gate_decisions[] }
+//   - In include_dry_run_states mode, `matches` can include
+//     ai_extracted cards with decision='drop' so QA can preview
+//     matcher hits without implying production injection.
 //   - Never calls the LLM.
 //   - Never reachable from the user-facing app — gated by
 //     EVAL_LAB_ENABLED env var (404 when off).

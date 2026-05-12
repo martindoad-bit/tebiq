@@ -143,6 +143,7 @@ Validation after Batch 5:
 | `npx tsx scripts/fact-layer-sync.ts --dry-run` | pass; scanned 136 cards, errors 0 |
 | `npx tsx scripts/test/test-fact-layer.ts` | pass; 46/46 |
 | `npx tsx scripts/test/test-fact-injection-smoke.ts` | pass; 18/18 |
+| `npx tsx scripts/test/test-p0-cycle1-dry-run-fixtures.ts` | pass; 61/61 |
 
 ---
 
@@ -150,7 +151,7 @@ Validation after Batch 5:
 
 Do not start answer A/B immediately.
 
-Before A/B, build a fixed dry-run fixture matrix from the batch reports and AQL gates:
+Before A/B, keep the fixed dry-run fixture matrix green:
 
 - user question
 - expected primary hit
@@ -160,7 +161,15 @@ Before A/B, build a fixed dry-run fixture matrix from the batch reports and AQL 
 - user-visible policy
 - severity if wrong
 
-Minimum matrix coverage:
+Implemented fixture gate:
+
+- script: `scripts/test/test-p0-cycle1-dry-run-fixtures.ts`
+- scope: Cycle 1 legal-source candidates only
+- fixtures: 29 user-question scenarios / 61 assertions
+- required behavior: Cycle 1 cards can be observed by dry-run matcher, but remain `decision='drop'` and never appear in production-state prediction
+- leakage guard: user-visible card fields must not expose internal process terms
+
+Minimum matrix coverage now included:
 
 - 別表第一 vs 別表第二
 - 身份系资格 must not route to 資格外活動 as primary
@@ -172,7 +181,9 @@ Minimum matrix coverage:
 - 日配 / 永配 family-scope over-expansion
 - 短期滞在 work/remote-work ambiguity
 
-Only after this dry-run matrix is stable should the same question set be used for baseline vs candidate answer A/B.
+Only after this dry-run matrix stays stable should the same question set be used for baseline vs candidate answer A/B.
+
+Known next risk: the full-stack matcher overlay can still rank older production cards above Cycle 1 legal-source candidates. That is acceptable for this candidate-layer gate, but must be measured before any Cycle 1 card promotion.
 
 ---
 
