@@ -56,7 +56,7 @@ review_notes: null
 - 你被卷入悪質 サブスク / リース 詐欺 → 找 [国民生活センター](https://www.kokusen.go.jp/) 或 弁護士
 - 涉及 在留資格 信息错位（地址不一致导致 NTT / SoftBank 拒否 = 你的住民票 / 在留カード 信息其实有问题）
 
-需要专业判断时，建议咨询行政書士。TEBIQ 提供专业咨询服务（[预约](/consultation)）。
+需要专业判断时，建议带材料向行政书士确认。
 
 ## 信息来源
 - [総務省 電気通信事業](https://www.soumu.go.jp/main_sosiki/joho_tsusin/d_syohi/)（取得日 2026-04-28）

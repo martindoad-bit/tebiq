@@ -60,7 +60,7 @@ related_links:
     locator: "ページ内で「技術・人文知識・国際業務（在留資格）」を検索"
     relation: "official_reference"
 evidence_points:
-  - claim: "留学→技人国 在留資格変更の標準処理期間：1か月〜2か月。申請は変更事由が生じてから在留期間満了日以前に必要。審査基準：「行おうとする活動が虚偽のものでなく、在留資格の変更を適当と認めるに足りる相当の理由があること」。申請中は特例期間として在留期間満了後も適法在留継続可能（ai推定）。"
+  - claim: "留学→技人国 在留資格変更の標準処理期間：1か月〜2か月。申請は変更事由が生じてから在留期間満了日以前に必要。審査基準：「行おうとする活動が虚偽のものでなく、在留資格の変更を適当と認めるに足りる相当の理由があること」。"
     source_title: "出入国在留管理庁：在留資格変更許可申請"
     source_url: "https://www.moj.go.jp/isa/applications/procedures/16-2.html"
     source_organization: "出入国在留管理庁"
@@ -74,10 +74,10 @@ evidence_points:
     source_url: "https://www.moj.go.jp/isa/applications/status/gijinkoku.html"
     source_organization: "出入国在留管理庁"
     source_locator: "ページ内「許可活動」「学歴・実務要件」「2026年4月CEFR B2」の記述を確認"
-    display_label: "技人国：対象活動例・学歴/実務要件・2026年4月CEFR B2新設（確認要）"
-    support_level: "direct"
+    display_label: "技人国：対象活動例・学歴/実務要件・CEFR B2適用範囲は要確認"
+    support_level: "indirect"
     user_visible: true
-    needs_domain_review: false
+    needs_domain_review: true
   - claim: "卒業見込みでの在留資格変更申請受理が可能（卒業証明書は後日提出の運用）（ai推定 — ISA実務に基づく）。申請中は出入国管理特例法により在留期間満了後も適法在留継続（特例期間）が認められる。"
     source_title: "出入国在留管理庁：在留資格変更許可申請"
     source_url: "https://www.moj.go.jp/isa/applications/procedures/16-2.html"

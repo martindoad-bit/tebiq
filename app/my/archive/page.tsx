@@ -70,7 +70,7 @@ export default async function ArchivePage() {
       return {
         id: `quiz-${r.id}`,
         kind: 'quiz' as const,
-        title: '续签材料准备检查结果',
+        title: '在留准备自查结果',
         source: VISA_LABEL[r.visaType] ?? r.visaType,
         date: fmtDate(r.createdAt),
         timestamp: r.createdAt.getTime(),

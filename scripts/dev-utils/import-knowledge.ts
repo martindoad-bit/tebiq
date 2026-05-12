@@ -83,9 +83,11 @@ function asQuestionList(value: unknown): Array<Record<string, unknown>> | null {
   return rows.length > 0 ? rows : null
 }
 
-function articleStatusFromFrontmatter(value: string | undefined): 'draft' | 'published' {
+function articleStatusFromFrontmatter(value: string | undefined, slug: string): 'draft' | 'published' {
   const status = value?.trim().toLowerCase()
   if (status === 'draft' || status === 'archived') return 'draft'
+  if (slug.startsWith('archive-')) return 'draft'
+  if (slug.startsWith('check-')) return 'draft'
   return 'published'
 }
 
@@ -101,7 +103,7 @@ async function upsertOne(parsed: ParsedDoc): Promise<'created' | 'updated' | 'sk
     (title ? suggestArticleSlug(title) : null)
   if (!title || !category || !slug || !parsed.body.trim()) return 'skipped'
 
-  const status = articleStatusFromFrontmatter(parsed.frontmatter.status)
+  const status = articleStatusFromFrontmatter(parsed.frontmatter.status, slug)
   const sourcesCount =
     typeof parsed.frontmatter.sources_count === 'number'
       ? parsed.frontmatter.sources_count

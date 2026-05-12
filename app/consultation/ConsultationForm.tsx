@@ -38,6 +38,7 @@ export default function ConsultationForm() {
 
   const visaParam = params.get('visa') ?? 'unknown'
   const colorParam = params.get('color') ?? 'unknown'
+  const consultationId = params.get('consultation_id')?.trim() ?? ''
 
   const [ctx, setCtx] = useState<PageContext>({
     visaType: visaParam,
@@ -97,6 +98,7 @@ export default function ConsultationForm() {
           triggeredItems: ctx.triggeredItems,
           sourceVisa: ctx.visaType,
           sourcePage: typeof window !== 'undefined' ? window.location.pathname + window.location.search : '',
+          sourceConsultationId: consultationId || undefined,
         }),
       })
       if (!res.ok) {
@@ -124,13 +126,24 @@ export default function ConsultationForm() {
           预约行政书士咨询
         </h1>
         <p className="mt-3 max-w-full break-words text-[13px] leading-[1.7] text-slate">
-          留下联系方式后，我们会确认可预约方式和咨询范围。
+          提交信息用于确认预约方式和咨询范围。
+        </p>
+        <p className="mt-2 max-w-full break-words text-[12px] leading-[1.65] text-ash">
+          参考费用：¥5,000 / 30 分钟。提交不会自动预约或收费。
         </p>
       </section>
 
       {/* 用户情况摘要 */}
       <section className="mt-5">
-        <ContextCard ctx={ctx} />
+        {consultationId && (
+          <div className="mb-3 rounded-card border border-hairline bg-accent-2 px-4 py-3">
+            <p className="text-[12px] font-medium text-ink">已带入这条咨询记录</p>
+            <p className="mt-1 text-[12px] leading-relaxed text-slate">
+              预约时可以参考这条记录；提交信息不代表已经委托办理。
+            </p>
+          </div>
+        )}
+        {!consultationId && <ContextCard ctx={ctx} />}
       </section>
 
       <section className="mt-4 pb-4">
@@ -200,7 +213,7 @@ export default function ConsultationForm() {
             </select>
           </Field>
 
-          <Field label="希望处理时间" required>
+          <Field label="希望咨询时间" required>
             <div className="space-y-2">
               {(Object.keys(URGENCY_LABEL) as Urgency[]).map(u => (
                 <label
@@ -245,16 +258,16 @@ export default function ConsultationForm() {
               关于你的信息
             </p>
             <ul className="space-y-1 text-[11px] leading-relaxed text-ash">
-              <li>提交的信息仅用于本次咨询对接</li>
+              <li>提交的信息仅用于确认预约方式和咨询范围</li>
               <li>不会用于其他营销用途</li>
-              <li>不会出售或共享给第三方</li>
+              <li>如需由行政书士确认，后续方式以预约说明为准</li>
               <li>
                 详见
                 <Link
                   href="/privacy-policy"
                   className="mx-0.5 text-ink underline underline-offset-2"
                 >
-                  プライバシーポリシー
+                  隐私政策
                 </Link>
               </li>
             </ul>
@@ -265,7 +278,7 @@ export default function ConsultationForm() {
             disabled={submitting}
             className="mt-4 flex min-h-[50px] w-full items-center justify-center gap-2 rounded-btn bg-accent px-4 text-[14px] font-medium text-white shadow-cta transition-transform active:translate-y-px disabled:opacity-60"
           >
-            {submitting ? '提交中...' : (
+            {submitting ? '提交中' : (
               <>
                 <Send size={16} strokeWidth={1.55} />
                 提交预约信息
@@ -274,7 +287,7 @@ export default function ConsultationForm() {
           </button>
 
           <p className="mt-4 border-t border-hairline pt-3 text-[11px] leading-relaxed text-ash">
-            行政书士可基于你提供的信息进行确认和建议；费用抵扣等细节以预约说明为准。
+            参考费用为 ¥5,000 / 30 分钟；提交信息不代表已委托办理，费用抵扣等细节以预约说明为准。
           </p>
         </form>
       </section>

@@ -3,14 +3,15 @@ import Link from 'next/link'
 import { SeoBullet as Bullet, SeoSection as Section, SeoVisaArticleShell } from '@/app/_components/v5/SeoVisaArticleShell'
 
 export const metadata: Metadata = {
-  title: '技人国签证续签完整指南 2026 | TEBIQ',
+  title: '技人国签证续签参考整理 | TEBIQ',
   description:
-    '在日技术・人文知识・国际业务（技人国）签证续签完整指南。涵盖 2026 年 4 月新增书类要求、派遣形态严格化、常见踩坑与准备时间。3 分钟自查续签待确认事项。',
+    '在日技术・人文知识・国际业务（技人国）签证续签参考整理。具体材料和期限请以官方来源、窗口说明和个案判断为准。',
+  robots: { index: false, follow: false },
   alternates: { canonical: '/gijinkoku' },
   openGraph: {
-    title: '技人国签证续签完整指南 2026',
+    title: '技人国签证续签参考整理',
     description:
-      '在日技人国签证续签完整指南。2026 年新政、常见踩坑、准备建议一次看完。',
+      '在日技人国签证续签参考整理。具体材料和期限请以官方来源和个案判断为准。',
     url: 'https://tebiq.jp/gijinkoku',
     siteName: 'TEBIQ',
     locale: 'zh_CN',
@@ -21,9 +22,9 @@ export const metadata: Metadata = {
 const articleSchema = {
   '@context': 'https://schema.org',
   '@type': 'Article',
-  headline: '技人国签证续签完整指南 2026',
+  headline: '技人国签证续签参考整理',
   description:
-    '在日技术・人文知识・国际业务（技人国）签证续签完整指南，含 2026 年 4 月入管新规与常见踩坑。',
+    '在日技术・人文知识・国际业务（技人国）签证续签参考整理。',
   inLanguage: 'zh-CN',
   author: { '@type': 'Organization', name: 'TEBIQ' },
   publisher: {
@@ -41,7 +42,10 @@ const articleSchema = {
 
 export default function GijinkokuLandingPage() {
   return (
-    <SeoVisaArticleShell articleSchema={articleSchema} title={"技人国签证续签完整指南 2026"} updated={"最新更新：2026-04-24 · 基于出入国在留管理庁公开资料整理"}>
+    <SeoVisaArticleShell articleSchema={articleSchema} title={"技人国签证续签参考整理"} updated={"更新：2026-04-24 · 基于公开资料整理"}>
+          <p className="mb-6 rounded-card border border-hairline bg-paper px-4 py-3 text-[12.5px] leading-[1.7] text-slate">
+            本页用于一般信息核对，不代表个案结论。具体材料、期限和适用范围，请以官方来源、窗口说明和专业确认结果为准。
+          </p>
 
           {/* 目录 */}
           <nav
@@ -62,7 +66,7 @@ export default function GijinkokuLandingPage() {
               </li>
               <li>
                 <a href="#policy-2026" className="text-ink underline underline-offset-4">
-                  2025-2026 最新政策变化
+                  2025-2026 政策动向
                 </a>
               </li>
               <li>
@@ -94,7 +98,7 @@ export default function GijinkokuLandingPage() {
             <p>续签审查围绕以下几条主线展开，缺一项就可能转为不许可或缩短在留期间：</p>
             <ul className="space-y-2">
               <Bullet>
-                <strong>工作内容连续性：</strong>实际从事的业务仍与原签证许可的内容一致。换岗、调动到与学历无关的工作是高准备事项。
+                <strong>工作内容连续性：</strong>实际从事的业务仍与原签证许可的内容一致。换岗、调动到与学历无关的工作属于待确认事项。
               </Bullet>
               <Bullet>
                 <strong>雇主公司稳定性：</strong>公司经营持续、有完整决算、按时缴纳社保和源泉税。
@@ -114,18 +118,18 @@ export default function GijinkokuLandingPage() {
             </ul>
           </Section>
 
-          <Section id="policy-2026" title="2025-2026 最新政策变化">
+          <Section id="policy-2026" title="2025-2026 政策动向">
             <p>
               2026 年是技人国审查重大变化的一年，至少两项新规已经生效，建议在准备材料前确认是否适用：
             </p>
             <ul className="space-y-3">
               <Bullet>
                 <strong>2026 年 4 月 15 日 — 类别 3/4 公司新增书类：</strong>
-                所有类别 3 或 4 公司的技人国申请，必须提交「所属机构代表者申报书」。主要从事对人业务（翻译、营业、前台等）时，需要追加 CEFR B2 相当的语言能力证明（JLPT N2 / BJT 400 点等可对应）。
+                类别 3 或 4 公司的技人国申请，可能需要追加所属机构相关书类。主要从事对人业务时，语言能力证明的适用范围需以入管最新公告或窗口确认为准。
               </Bullet>
               <Bullet>
                 <strong>2026 年 3 月 9 日 — 派遣形态大幅严格化：</strong>
-                派遣元・派遣先誓约书、劳动条件通知书、派遣管理台账等成为必须提交材料；申请时必须确定派遣先；在留期间可能按派遣合同长度决定，3 个月合同可能只给 1 年在留。入管局也可能直接向派遣先确认或实地调查。
+                派遣形态下，可能需要准备派遣元・派遣先誓约书、劳动条件通知书、派遣管理台账等材料；申请前需确认派遣先和合同内容，具体材料与在留期间以入管要求为准。
               </Bullet>
               <Bullet>
                 <strong>审查时间整体延长：</strong>2025 年起更新申请的平均处理日数已比往年延长，2026 年新规生效后部分案件再延长，请尽量提前 4-5 个月开始准备。
@@ -139,19 +143,19 @@ export default function GijinkokuLandingPage() {
           <Section id="pitfalls" title="常见踩坑">
             <ul className="space-y-2">
               <Bullet>
-                <strong>住民税延迟缴纳：</strong>哪怕只迟交一期，纳税证明上的记录都会被审查官看到，是被缩短在留期间最常见的原因。
+                <strong>住民税延迟缴纳：</strong>住民税有延迟记录时，可能需要说明原因；是否影响在留期间会看整体情况。
               </Bullet>
               <Bullet>
-                <strong>换工作未申报：</strong>离职、入职新公司后 14 天内必须向入管局提交「契約機関に関する届出」，漏报会被视为不诚实。
+                <strong>换工作未申报：</strong>离职、入职新公司后 14 天内必须向入管局提交「契約機関に関する届出」，未申报可能成为不利记录或需要说明。
               </Bullet>
               <Bullet>
-                <strong>新岗位与学历无关：</strong>例如经济学专业转去从事单纯店员、工厂作业，会被判定为脱离技人国范围。
+                <strong>新岗位与学历无关：</strong>例如经济学专业转去从事单纯店员、工厂作业，可能被认为不符合技人国活动范围。
               </Bullet>
               <Bullet>
-                <strong>用「技人国」做对人服务但语言能力无法证明：</strong>2026 年 4 月起，前台、翻译、营业等岗位需准备 N2 / BJT 等证书。
+                <strong>对人服务岗位材料准备不足：</strong>前台、翻译、营业等岗位可能被要求说明语言能力和业务内容，适用范围以入管最新公告或窗口确认为准。
               </Bullet>
               <Bullet>
-                <strong>派遣形态准备不足：</strong>没有派遣先誓约书、合同期短、台账缺漏，是 2026 年 3 月新规下被拒的高发原因。
+                <strong>派遣形态准备不足：</strong>派遣先誓约书、合同期、台账等材料不完整时，可能需要补充说明或追加材料；具体以入管要求为准。
               </Bullet>
             </ul>
           </Section>
@@ -168,10 +172,10 @@ export default function GijinkokuLandingPage() {
                 <strong>留意公司类别：</strong>类别 1/2 与 3/4 的材料清单完全不同。先向公司人事确认所属类别。
               </Bullet>
               <Bullet>
-                <strong>受理票务必保管：</strong>提交申请后，受理票就是你在「特例期间」合法居住和工作的唯一凭证。
+                <strong>受理票务必保管：</strong>提交申请后，请保管受理票或受理记录。等待期间的在留与工作范围，请按受理内容、原在留资格和入管说明确认。
               </Bullet>
               <Bullet>
-                <strong>有疑问及早咨询：</strong>不许可后再补救成本更高，提前找专家判断 1 次比事后修正更省时间。
+                <strong>有疑问及早咨询：</strong>有不确定点时，建议在递交前先确认材料和说明方式。
               </Bullet>
             </ul>
             <p className="mt-4">
@@ -191,7 +195,7 @@ export default function GijinkokuLandingPage() {
             href="/check"
             className="mt-5 flex min-h-[48px] w-full items-center justify-center rounded-btn bg-accent px-4 py-3 text-[13px] font-medium text-white shadow-cta"
           >
-            3 分钟开始技人国续签材料准备检查 →
+            技人国在留准备自查 →
           </Link>
 
           <p className="text-center text-ash text-[11px] mt-8 leading-relaxed">

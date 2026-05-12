@@ -13,6 +13,7 @@
   --tebiq-deep-slate:  #3D4F66;
   --tebiq-cool-gray:   #A3AAB5;
   --tebiq-soft-gray:   #E6E9EE;
+  --tebiq-soft-blue:   #EDF3F8;
   --tebiq-off-white:   #FAF8F5;
   --tebiq-warm-amber:  #D4A23A;
 
@@ -21,6 +22,9 @@
 }
 
 html, body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
   background-color: #FAFAF7;
   color: #0F2544;
   font-family: -apple-system, BlinkMacSystemFont, 'Noto Sans CJK SC', 'Noto Sans SC',
@@ -33,14 +37,116 @@ html, body {
   line-height: 1.58;
 }
 
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+main,
+section,
+article,
+aside,
+nav,
+header,
+footer,
+form,
+fieldset,
+div {
+  min-width: 0;
+}
+
+img,
+svg,
+video,
+canvas {
+  max-width: 100%;
+}
+
+button,
+a {
+  max-width: 100%;
+  min-width: 0;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+li,
+dt,
+dd,
+span {
+  overflow-wrap: anywhere;
+}
+
 html {
   font-size: clamp(16px, 0.45vw + 14.5px, 17px);
+}
+
+@media (max-width: 430px) {
+  html {
+    font-size: 17px;
+  }
 }
 
 body:lang(ja),
 .jp-text {
   letter-spacing: 0.015em;
   line-height: 1.72;
+}
+
+.tebiq-viewport-lock {
+  width: 100%;
+  max-width: 100vw;
+}
+
+.tebiq-app-shell,
+.tebiq-tabbar {
+  width: 100%;
+  max-width: 100%;
+}
+
+.tebiq-fixed-tabbar {
+  left: 0;
+  right: 0;
+  margin-inline: 0;
+  width: 100%;
+  max-width: min(390px, 100vw);
+}
+
+@supports (width: 100dvw) {
+  .tebiq-viewport-lock,
+  .tebiq-fixed-tabbar {
+    width: 100dvw;
+  }
+
+  .tebiq-fixed-tabbar {
+    max-width: min(390px, 100dvw);
+  }
+}
+
+@media (max-width: 767px) {
+  .tebiq-app-shell {
+    width: 100% !important;
+    max-width: min(390px, 100vw) !important;
+  }
+
+  @supports (width: 100dvw) {
+    .tebiq-app-shell {
+      max-width: min(390px, 100dvw) !important;
+    }
+  }
+}
+
+@media (min-width: 768px) {
+  .tebiq-fixed-tabbar {
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    max-width: 480px;
+  }
 }
 
 .numeric,

@@ -167,7 +167,7 @@ export async function upsertDimensionsFromQuiz(input: {
       status,
       riskFlag: definition.riskFlag ?? null,
       reason: triggered?.fixHint ?? null,
-      actionLabel: triggered ? '递交前确认' : '已确认',
+      actionLabel: triggered ? '递交前确认' : '基本齐备',
       sourceRecordId: input.quizResultId,
       sourceRecordType: 'quiz_result',
       lastCheckedAt: new Date(),

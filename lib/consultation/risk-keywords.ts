@@ -100,4 +100,4 @@ export function detectRiskKeywords(userQuestion: string | null | undefined): str
  * Surfaced ABOVE the answer area, NOT inside the LLM stream.
  */
 export const RISK_HINT_COPY =
-  '这个问题可能涉及在留风险，建议不要只靠 AI 回答做最终决定。'
+  '这个问题可能影响在留手续或之后的判断，建议先核对期限和材料。'

@@ -1,6 +1,6 @@
-// 旧 /check/teijusha/quiz 路由 → 新 /check/teijusha
+// 旧 /check/teijusha/quiz 路由 → 定住者参考页
 import { redirect } from 'next/navigation'
 
 export default function TeijushaQuizRedirect() {
-  redirect('/check/permanent_resident_preparation/quiz')
+  redirect('/teijusha')
 }

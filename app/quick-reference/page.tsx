@@ -23,10 +23,10 @@ export default function QuickReferencePage() {
             </span>
             <div className="min-w-0">
               <h1 className="text-[20px] font-medium leading-snug text-ink">
-                速查
+                常见手续先核对
               </h1>
               <p className="mt-1 text-[14px] leading-[1.65] text-ash">
-                常见事项和官方来源入口。先核对规则，再按自己的材料判断。
+                用于核对常见手续；情况复杂时，可以带材料继续提问。
               </p>
             </div>
           </div>
@@ -35,7 +35,7 @@ export default function QuickReferencePage() {
         <QuickReferenceList topics={QUICK_REFERENCE_TOPICS} />
 
         <p className="mt-5 text-center text-[12.5px] leading-[1.65] text-ash">
-          本页不是法律意见，也不判断个案能否许可。最终以官方公告、窗口要求和专业意见为准。
+          本页用于核对常见信息，不代表个案结论。具体要求以官方来源和窗口说明为准。
         </p>
       </div>
     </AppShell>

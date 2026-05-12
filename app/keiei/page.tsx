@@ -3,14 +3,15 @@ import Link from 'next/link'
 import { SeoBullet as Bullet, SeoSection as Section, SeoVisaArticleShell } from '@/app/_components/v5/SeoVisaArticleShell'
 
 export const metadata: Metadata = {
-  title: '经营管理签证续签 2026 完全解析 | TEBIQ',
+  title: '经营管理签证续签参考整理 | TEBIQ',
   description:
-    '2025 年 10 月 16 日新规生效后的经营管理签证续签完整解析。资本金 3000 万、常勤员工、日语 N2、3 年经营经验、过渡期安排一次看懂。',
+    '经营管理签证续签参考整理。具体材料、期限和过渡安排请以官方来源、窗口说明和个案判断为准。',
+  robots: { index: false, follow: false },
   alternates: { canonical: '/keiei' },
   openGraph: {
-    title: '经营管理签证续签 2026 完全解析',
+    title: '经营管理签证续签参考整理',
     description:
-      '资本金 3000 万、常勤员工、N2 语言、3 年经营经验。新规下的续签全图。',
+      '经营管理签证续签参考整理，具体适用请以官方来源和个案判断为准。',
     url: 'https://tebiq.jp/keiei',
     siteName: 'TEBIQ',
     locale: 'zh_CN',
@@ -21,9 +22,9 @@ export const metadata: Metadata = {
 const articleSchema = {
   '@context': 'https://schema.org',
   '@type': 'Article',
-  headline: '经营管理签证续签 2026 完全解析',
+  headline: '经营管理签证续签参考整理',
   description:
-    '2025 年 10 月 16 日入管新规生效后的经营管理签证续签完整解析与准备建议。',
+    '经营管理签证续签参考整理与准备建议。',
   inLanguage: 'zh-CN',
   author: { '@type': 'Organization', name: 'TEBIQ' },
   publisher: {
@@ -41,7 +42,10 @@ const articleSchema = {
 
 export default function KeieiLandingPage() {
   return (
-    <SeoVisaArticleShell articleSchema={articleSchema} title={"经营管理签证续签 2026 完全解析"} updated={"最新更新：2026-04-24 · 涵盖令和 7 年 10 月 16 日施行新规"}>
+    <SeoVisaArticleShell articleSchema={articleSchema} title={"经营管理签证续签参考整理"} updated={"更新：2026-04-24 · 基于公开资料整理"}>
+          <p className="mb-6 rounded-card border border-hairline bg-paper px-4 py-3 text-[12.5px] leading-[1.7] text-slate">
+            本页用于一般信息核对，不代表个案结论。具体材料、期限和过渡安排，请以官方来源、窗口说明和专业确认结果为准。
+          </p>
 
           <nav
             aria-label="目录"
@@ -61,7 +65,7 @@ export default function KeieiLandingPage() {
               </li>
               <li>
                 <a href="#policy-2026" className="text-ink underline underline-offset-4">
-                  2025-2026 最新政策变化
+                  2025-2026 政策动向
                 </a>
               </li>
               <li>
@@ -90,7 +94,7 @@ export default function KeieiLandingPage() {
           </Section>
 
           <Section id="core-conditions" title="续签的核心条件（新规）">
-            <p>2025 年 10 月 16 日起新规要求以下条件<strong>同时满足</strong>：</p>
+            <p>2025 年 10 月 16 日起的新规下，需要重点确认以下项目；既有持有人过渡期内通常还会结合经营状况和改善计划综合判断。</p>
             <ul className="space-y-2">
               <Bullet>
                 <strong>资本金：</strong>3,000 万日元以上（旧标准为 500 万日元）。
@@ -113,7 +117,7 @@ export default function KeieiLandingPage() {
             </ul>
           </Section>
 
-          <Section id="policy-2026" title="2025-2026 最新政策变化">
+          <Section id="policy-2026" title="2025-2026 政策动向">
             <p>
               本次改正是经营管理签证 10 余年来最大规模的一次见直し，影响极大：
             </p>
@@ -128,7 +132,7 @@ export default function KeieiLandingPage() {
                 <strong>日语能力首次明文化：</strong>本人或员工中要有 1 人达到 N2 等级。
               </Bullet>
               <Bullet>
-                <strong>过渡期至 2028 年 10 月 16 日：</strong>已持有经营管理签证者，在该日期前的更新审查中，入管局会综合评判经营状况和今后展望；但「过渡期」绝非「可以不达标」，建议尽早向新要求靠拢。
+                <strong>过渡期至 2028 年 10 月 15 日：</strong>已持有经营管理签证者，在该日期前的更新审查中，入管局会综合评判经营状况和今后展望；但「过渡期」绝非「可以不达标」，建议尽早向新要求靠拢。
               </Bullet>
             </ul>
             <p className="text-ash text-[11px] mt-3">
@@ -148,7 +152,7 @@ export default function KeieiLandingPage() {
                 <strong>沿用自宅兼办公室：</strong>新规原则不可，准备时需要独立办公室合同与照片。
               </Bullet>
               <Bullet>
-                <strong>事业计划书没有专家盖章：</strong>缺少税理士或中小企业诊断士确认，会被直接退回补充。
+                <strong>事业计划书确认不足：</strong>缺少税理士或中小企业诊断士确认时，可能被要求补正或重新整理。
               </Bullet>
               <Bullet>
                 <strong>长期出国：</strong>有报道指出长期不在日本可能被判断为「实际不在经营」，影响续签。
@@ -191,7 +195,7 @@ export default function KeieiLandingPage() {
             href="/check/keiei/quiz"
             className="mt-5 flex min-h-[48px] w-full items-center justify-center rounded-btn bg-accent px-4 py-3 text-[13px] font-medium text-white shadow-cta"
           >
-            3 分钟开始经营管理续签材料准备检查 →
+            经营管理在留准备自查 →
           </Link>
 
           <p className="text-center text-ash text-[11px] mt-8 leading-relaxed">

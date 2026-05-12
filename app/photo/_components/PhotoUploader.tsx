@@ -174,15 +174,15 @@ export default function PhotoUploader() {
       }
       if (status < 200 || status >= 300 || !json || json.ok !== true) {
         const msg =
-          json && json.ok === false ? json.error.message : `识别失败（${status}）`
+          json && json.ok === false ? json.error.message : '没有读取成功，请稍后再试。'
         setErrMsg(msg)
         setStage({ kind: 'idle' })
         return
       }
       const suffix = json.data.emailPrompt ? '?email=prompt' : ''
       router.push(`/photo/result/${json.data.documentId}${suffix}`)
-    } catch (err) {
-      setErrMsg(err instanceof Error ? err.message : '上传失败')
+    } catch {
+      setErrMsg('上传没有完成，请稍后再试。')
       setStage({ kind: 'idle' })
     } finally {
       // 允许重选同一张
@@ -281,7 +281,7 @@ export default function PhotoUploader() {
 
       <p className="mb-3 flex min-h-[44px] items-center gap-3 rounded-card border border-hairline bg-surface px-4 text-[13px] text-ash">
         <LockKeyhole size={18} strokeWidth={1.5} />
-        结果会进入我的提醒，之后在账号内查看
+        结果会进入你的记录，之后在账号内查看
       </p>
 
       <input

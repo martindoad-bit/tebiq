@@ -293,6 +293,6 @@ export const CONSULTATION_TIMING = {
  * AnswerRun shape, this is a streaming-frame string.
  */
 export const CONSULTATION_TIMEOUT_FALLBACK_TEXT = [
-  '[降级回答]',
-  '当前模型响应超时，不是你的输入问题。系统已记录这次咨询；你可以稍后从“我的咨询”查看，或重新生成。',
+  '这次没有整理完成，不是你的输入问题。',
+  '这次咨询会自动记录；你可以稍后从“我的咨询”查看，或重试。',
 ].join(' ')

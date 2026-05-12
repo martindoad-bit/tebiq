@@ -93,22 +93,22 @@ export function buildProviderTimeoutFallback(input: {
   detectedIntent: DetectedIntent
   questionText: string
 }): PublicAnswer {
-  const headline = '当前模型响应超时，不是你的输入问题。'
-  const subtext = '系统会记录这次咨询；你可以稍后从“我的咨询”查看，或重新生成。'
+  const headline = '这次没有整理完成，不是你的输入问题。'
+  const subtext = '这次咨询会自动记录；你可以稍后从“我的咨询”查看，或重试。'
   return finalize({
     status: 'clarification_needed',
     domain: input.domain,
     // VOICE S-07 marker — "[降级回答]" prefix so this row is visually
     // distinguishable from a normal answered/clarification result. The
     // marker is also surfaced via fallback_reason on the run side.
-    title: '[降级回答] ' + headline,
+    title: headline,
     summary: headline + subtext,
     conclusion: headline + subtext,
     sections: [
       { heading: '我理解你的问题是', body: input.detectedIntent.understood_question },
       { heading: '当前状态', body: headline + '\n' + subtext },
     ],
-    next_steps: ['稍后从“我的咨询”查看', '需要完整回答时再重新生成'],
+    next_steps: ['稍后从“我的咨询”查看', '需要重新整理时重试'],
     risk_warnings: [],
     clarification_questions: [],
     documents_needed: [],
@@ -352,7 +352,7 @@ function buildAnsweredSections(source: AnswerSource): PublicAnswer['sections'] {
 
   const expert = source.legacy_expert_handoff ?? []
   if (expert.length > 0) {
-    sections.push({ heading: '什么情况下要找专家', body: expert.map(e => `· ${scrub(e)}`).join('\n') })
+    sections.push({ heading: '需要确认的情况', body: expert.map(e => `· ${scrub(e)}`).join('\n') })
   }
 
   return sections.filter(s => s.heading && s.body)

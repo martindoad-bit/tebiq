@@ -47,10 +47,10 @@ review_notes: null
 不使用档案不会影响续签申請本身，但临时翻找 1-3 年的文书需要分别跑市役所、税务署、雇主，单次取材时间通常 2-4 小时。少拿一份文书会导致申請窗口受理延迟，補正通知 后再补提交会拉长审查周期。
 
 ## 什么时候你应该找专家
-档案齐全、自查无风险（绿色），可自行提交。档案显示风险点（纳税滞纳、年金未缴月数较多、转职記録 多次）、或在留資格变更（家族滞在 → 技人国 等），建议咨询行政書士。TEBIQ 提供专业咨询服务（[预约](/consultation)）。
+档案齐全、自查无风险（绿色），可自行提交。档案显示风险点（纳税滞纳、年金未缴月数较多、转职記録 多次）、或在留資格变更（家族滞在 → 技人国 等），建议带材料向行政书士确认。
 
 ## 信息来源
-- [在留期間更新許可申請（出入国在留管理庁）](https://www.moj.go.jp/isa/applications/procedures/16-2.html)（取得日 2026-04-28）
+- [在留期間更新許可申請（出入国在留管理庁）](https://www.moj.go.jp/isa/applications/procedures/16-3.html)（取得日 2026-04-28）
 - [課税証明書の発行（総務省 / 各市町村）](https://www.soumu.go.jp/main_sosiki/jichi_zeisei/czaisei/czaisei_seido/individual/kazei.html)（取得日 2026-04-28）
 - [納税証明書の交付（国税庁）](https://www.nta.go.jp/taxes/nozei/nozei-shoumeisho/01.htm)（取得日 2026-04-28）
 仅供参考，具体以官方网站或专家为准。

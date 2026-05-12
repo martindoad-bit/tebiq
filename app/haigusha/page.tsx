@@ -3,14 +3,15 @@ import Link from 'next/link'
 import { SeoBullet as Bullet, SeoSection as Section, SeoVisaArticleShell } from '@/app/_components/v5/SeoVisaArticleShell'
 
 export const metadata: Metadata = {
-  title: '配偶者签证续签指南 2026 | TEBIQ',
+  title: '配偶者签证续签参考整理 | TEBIQ',
   description:
-    '日本人配偶者・永住者配偶者签证续签完整指南。婚姻实质性、同居证明、收入要件、常见踩坑、准备清单。3 分钟自查续签待确认事项。',
+    '日本人配偶者・永住者配偶者签证续签参考整理。具体材料、期限和婚姻实质判断请以官方来源、窗口说明和个案判断为准。',
+  robots: { index: false, follow: false },
   alternates: { canonical: '/haigusha' },
   openGraph: {
-    title: '配偶者签证续签指南 2026',
+    title: '配偶者签证续签参考整理',
     description:
-      '日本人配偶者・永住者配偶者续签完整指南。婚姻实质性、同居证明与准备清单。',
+      '日本人配偶者・永住者配偶者续签参考整理。具体适用请以官方来源和个案判断为准。',
     url: 'https://tebiq.jp/haigusha',
     siteName: 'TEBIQ',
     locale: 'zh_CN',
@@ -21,9 +22,9 @@ export const metadata: Metadata = {
 const articleSchema = {
   '@context': 'https://schema.org',
   '@type': 'Article',
-  headline: '配偶者签证续签指南 2026',
+  headline: '配偶者签证续签参考整理',
   description:
-    '日本人配偶者・永住者配偶者签证续签完整指南，含婚姻实质性、同居证明与准备建议。',
+    '日本人配偶者・永住者配偶者签证续签参考整理。',
   inLanguage: 'zh-CN',
   author: { '@type': 'Organization', name: 'TEBIQ' },
   publisher: {
@@ -41,7 +42,10 @@ const articleSchema = {
 
 export default function HaigushaLandingPage() {
   return (
-    <SeoVisaArticleShell articleSchema={articleSchema} title={"配偶者签证续签指南 2026"} updated={"最新更新：2026-04-24 · 适用「日本人配偶者等」「永住者配偶者等」"}>
+    <SeoVisaArticleShell articleSchema={articleSchema} title={"配偶者签证续签参考整理"} updated={"更新：2026-04-24 · 基于公开资料整理"}>
+          <p className="mb-6 rounded-card border border-hairline bg-paper px-4 py-3 text-[12.5px] leading-[1.7] text-slate">
+            本页用于一般信息核对，不代表个案结论。婚姻实质、同居证明、材料和期限，请以官方来源、窗口说明和专业确认结果为准。
+          </p>
 
           <nav
             aria-label="目录"
@@ -107,7 +111,7 @@ export default function HaigushaLandingPage() {
                 <strong>身份事项申报：</strong>结婚、离婚、住所变更等 14 天内向入管局或市役所申报。
               </Bullet>
               <Bullet>
-                <strong>无重大违规：</strong>无刑事记录，无严重交通违规。
+                <strong>重大违规记录：</strong>如有刑事处分或严重交通违规，需要说明，可能产生不利影响。
               </Bullet>
             </ul>
           </Section>
@@ -121,7 +125,7 @@ export default function HaigushaLandingPage() {
                 <strong>「假结婚」审查趋严：</strong>对于年龄差大、相识时间短、没有共同语言、住址迅速变动等组合，入管局可能要求提交大量补充资料（共同照片、聊天记录、汇款记录、共同账户等）。
               </Bullet>
               <Bullet>
-                <strong>归化要件影响联动：</strong>2026 年 4 月 1 日起，归化原则居住要件从 5 年严格化为 10 年（法务省运用变更）；持配偶者签证将来计划归化的人需要提前规划。
+                <strong>归化规划需另行核对：</strong>归化与在留资格是不同制度，居住年数和运用变化请以法务省公告、窗口说明和专业确认结果为准。
               </Bullet>
               <Bullet>
                 <strong>身份系外国人在经营管理新规中的角色：</strong>2025 年 10 月经营管理新规明确「永住者・日本人配偶者等」可计入常勤员工，这意味着配偶者身份在就业市场的稀缺度有所提升。
@@ -135,7 +139,7 @@ export default function HaigushaLandingPage() {
           <Section id="pitfalls" title="常见踩坑">
             <ul className="space-y-2">
               <Bullet>
-                <strong>分居却没有合理说明：</strong>住民票分开但又没有派遣、看护等可证明的事由，会被怀疑婚姻已有名无实。
+                <strong>分居却没有合理说明：</strong>住民票分开时，可能需要说明分居原因和婚姻实质。
               </Bullet>
               <Bullet>
                 <strong>离婚后未申报继续使用配偶者签证：</strong>离婚或配偶死亡后 14 天内必须申报，并应在 6 个月内变更其他在留资格，否则可能被取消在留资格。

@@ -76,9 +76,9 @@ evidence_points:
     source_organization: "tax.metro.tokyo.lg.jp"
     source_locator: "ページ内「特別徴収」「普通徴収」「非課税限度額」の記述を確認"
     display_label: "住民税：給与天引き6〜翌5月・非課税所得45万以下・初年度非課税ai推定"
-    support_level: "direct"
+    support_level: "indirect"
     user_visible: true
-    needs_domain_review: false
+    needs_domain_review: true
   - claim: "住民税の非課税限度額（扶養あり・東京都23区基準）：「35万円×（本人＋配偶者＋扶養親族の合計）＋31万円」以下の所得であれば均等割・所得割ともに全額非課税。普通徴収（自営業者等）の納付は6月・8月・10月・翌年1月の4期。"
     source_title: "東京都主税局：個人住民税（全国標準税率）"
     source_url: "https://www.tax.metro.tokyo.lg.jp/kazei/kojin_ju.html"

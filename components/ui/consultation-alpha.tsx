@@ -14,10 +14,10 @@ import {
 import type { LucideIcon } from 'lucide-react'
 
 export const ALPHA_NOTICE =
-  'TEBIQ Alpha：先整理问题和下一步，不替代专业判断。'
+  'TEBIQ 用于整理风险、下一步和可核对资料，不代表最终审查结果。'
 
 export const RISK_HINT =
-  '这个问题可能涉及在留风险，建议不要只靠 AI 回答做最终决定。'
+  '这个问题可能影响在留手续或之后的判断，建议先核对期限和材料。'
 
 export type AlphaDisplayState =
   | 'completed'
@@ -49,17 +49,17 @@ export function ConsultationShell({
   tabBar?: ReactNode
 }) {
   return (
-    <div className="min-h-screen overflow-x-hidden bg-[var(--tebiq-off-white)] text-[var(--tebiq-ink-blue)]">
+    <div className="tebiq-viewport-lock min-h-screen overflow-x-hidden bg-[var(--tebiq-off-white)] text-[var(--tebiq-ink-blue)]">
       <AlphaNotice />
       <main className={cx(
-        'mx-auto w-full px-4 py-5 text-[17px] sm:px-6 sm:py-7',
+        'mx-0 w-full min-w-0 max-w-[390px] overflow-x-hidden px-3 py-5 text-[17px] min-[390px]:px-4 sm:mx-auto sm:max-w-[480px] sm:px-6 sm:py-7',
         tabBar ? 'pb-28' : '',
-        wide ? 'max-w-6xl' : 'max-w-[min(480px,100vw)]',
+        wide ? 'max-w-6xl' : '',
       )}>
         {children}
       </main>
       {tabBar && (
-        <div className="fixed inset-x-0 bottom-0 z-30 mx-auto w-full max-w-[min(480px,100vw)] md:border-x md:border-[var(--tebiq-soft-gray)]">
+        <div className="tebiq-fixed-tabbar fixed bottom-0 z-30 overflow-hidden md:border-x md:border-[var(--tebiq-soft-gray)]">
           {tabBar}
         </div>
       )}
@@ -83,27 +83,36 @@ export function BrandHeader({
   title,
   description,
   action,
+  align = 'left',
 }: {
   eyebrow: string
   title: string
   description?: ReactNode
   action?: ReactNode
+  align?: 'left' | 'center'
 }) {
+  const centered = align === 'center'
   return (
-    <header className="space-y-3.5">
-      <div className="flex flex-col items-start justify-between gap-3.5 sm:flex-row">
-        <div className="space-y-2.5">
+    <header className={cx('space-y-3.5', centered && 'text-center')}>
+      <div className={cx(
+        'flex flex-col justify-between gap-3.5 sm:flex-row',
+        centered ? 'items-center sm:items-center sm:justify-center' : 'items-start',
+      )}>
+        <div className={cx('space-y-2.5', centered && 'flex flex-col items-center')}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/brand/tebiq-v07/svg/tebiq-v07-logo-horizontal.svg"
             alt="TEBIQ"
-            className="h-auto w-[128px]"
+            className={cx('h-auto', centered ? 'w-[118px]' : 'w-[128px]')}
           />
           <div>
             <p className="text-[12px] font-medium uppercase tracking-normal text-[var(--tebiq-cool-gray)]">
               {eyebrow}
             </p>
-            <h1 className="mt-1 text-[31px] font-semibold leading-[1.13] tracking-normal text-[var(--tebiq-ink-blue)] sm:text-[30px]">
+            <h1 className={cx(
+              'mt-1 font-semibold leading-[1.13] tracking-normal text-[var(--tebiq-ink-blue)]',
+              centered ? 'text-[34px] sm:text-[34px]' : 'text-[31px] sm:text-[30px]',
+            )}>
               {title}
             </h1>
           </div>
@@ -111,7 +120,10 @@ export function BrandHeader({
         {action && <div className="shrink-0">{action}</div>}
       </div>
       {description && (
-        <p className="max-w-[34rem] break-words text-[16.5px] leading-[1.75] text-[var(--tebiq-deep-slate)] sm:text-[16px]">
+        <p className={cx(
+          'w-full max-w-full break-words text-[16.5px] leading-[1.75] text-[var(--tebiq-deep-slate)] sm:text-[16px]',
+          centered ? 'mx-auto sm:max-w-[27rem]' : 'sm:max-w-[34rem]',
+        )}>
           {description}
         </p>
       )}
@@ -174,12 +186,12 @@ export function MetaPill({
 export function StatusBadge({ state }: { state: AlphaDisplayState }) {
   const config: Record<AlphaDisplayState, { label: string; icon: LucideIcon; focus?: boolean }> = {
     completed: { label: '完成', icon: CheckCircle2 },
-    partial: { label: '不完整', icon: TriangleAlert, focus: true },
+    partial: { label: '部分内容', icon: TriangleAlert, focus: true },
     streaming: { label: '正在整理', icon: Loader2 },
-    timeout_waiting: { label: '处理中', icon: Clock3, focus: true },
+    timeout_waiting: { label: '还在整理', icon: Clock3, focus: true },
     timeout: { label: '未完成', icon: Clock3, focus: true },
-    failed: { label: '失败', icon: RefreshCcw, focus: true },
-    fallback: { label: '降级回答', icon: TriangleAlert, focus: true },
+    failed: { label: '未完成', icon: RefreshCcw, focus: true },
+    fallback: { label: '部分内容', icon: TriangleAlert, focus: true },
   }
   const item = config[state]
   return (
@@ -227,9 +239,9 @@ function riskHintPresentation(hits: string[]): { title: string; body: string; ch
   const hasHighRisk = hits.some(hit => highRiskHits.has(hit))
   if (hasHighRisk) {
     return {
-      title: '高风险确认',
+      title: '需尽快确认',
       body: '这类问题可能影响更新、变更、届出期限或之后的在留判断。',
-      chips: ['先确认事实', '不要急着提交/离境', '必要时专业确认'],
+      chips: ['确认期限/通知', '整理事实和材料', '必要时专业确认'],
     }
   }
   return {

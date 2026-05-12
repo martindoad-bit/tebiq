@@ -2,7 +2,6 @@ import Link from 'next/link'
 import { ChevronRight, ClipboardCheck, ListChecks } from 'lucide-react'
 import AppShell from '@/app/_components/v5/AppShell'
 import AppBar from '@/app/_components/v5/AppBar'
-import QuestionIntakeBox from '@/app/_components/QuestionIntakeBox'
 import {
   CHECK_VISA_META,
   type CanonicalCheckVisa,
@@ -12,7 +11,7 @@ import {
 
 const STATUS_LABEL: Record<DimensionStatus, string> = {
   unchecked: '待确认',
-  checked: '已确认',
+  checked: '基本齐备',
   needs_action: '需要补齐',
   recent: '基本齐备',
   expired: '待确认',
@@ -27,18 +26,22 @@ const RISK_LABEL: Record<string, string> = {
 export default function CheckDimensionList({
   visa,
   dimensions,
-  sourcePage = '/check',
 }: {
   visa: CanonicalCheckVisa
   dimensions: DimensionView[]
-  sourcePage?: string
 }) {
   const meta = CHECK_VISA_META[visa]
   const needsAction = dimensions.filter(item => item.status === 'needs_action').length
   const checked = dimensions.filter(item => item.status === 'checked' || item.status === 'recent').length
+  const pending = dimensions.filter(item => item.status === 'unchecked' || item.status === 'expired').length
+  const summaryText = [
+    pending > 0 ? `${pending} 项待确认` : null,
+    checked > 0 ? `${checked} 项基本齐备` : null,
+    needsAction > 0 ? `${needsAction} 项需要补齐` : null,
+  ].filter(Boolean).join(' / ') || '暂无自查项'
 
   return (
-    <AppShell appBar={<AppBar title="续签材料准备检查" back="/" />}>
+    <AppShell appBar={<AppBar title="在留准备自查" back="/" />}>
       <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-4 shadow-card">
         <div className="flex items-start gap-3">
           <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-[13px] bg-cool-blue text-ink">
@@ -47,15 +50,21 @@ export default function CheckDimensionList({
           <div className="min-w-0 flex-1">
             <h1 className="text-[16px] font-medium text-ink">{meta.label}</h1>
             <p className="mt-1 text-[12px] leading-[1.65] text-ash">
-              {checked} 项已确认 / {needsAction} 项需要补齐
+              {summaryText}
             </p>
           </div>
         </div>
-        <div className="mt-3 flex items-center justify-between border-t border-hairline pt-3">
-          <span className="text-[11px] text-ash">完整检查约 5 分钟</span>
-          <Link href={`/check/${visa}/quiz`} className="text-[12px] font-medium text-ink underline-offset-4 hover:underline">
-            完整检查
-          </Link>
+        <div className="mt-3 flex items-center justify-between gap-3 border-t border-hairline pt-3">
+          <span className="text-[11px] text-ash">
+            {meta.legacyQuizVisa ? '自查问卷约 5 分钟' : '先看维度清单'}
+          </span>
+          {meta.legacyQuizVisa ? (
+            <Link href={`/check/${visa}/quiz`} className="text-[12px] font-medium text-ink underline-offset-4 hover:underline">
+              进入问卷
+            </Link>
+          ) : (
+            <span className="text-[12px] font-medium text-ash">看清单即可</span>
+          )}
         </div>
       </section>
 
@@ -109,9 +118,18 @@ export default function CheckDimensionList({
         </ul>
       </section>
 
-      <div className="mt-5">
-        <QuestionIntakeBox sourcePage={sourcePage} compact />
-      </div>
+      <section className="mt-5 rounded-card border border-hairline bg-surface px-4 py-4 shadow-card">
+        <p className="text-[11px] font-medium text-ash">带情况提问</p>
+        <p className="mt-1 text-[13px] leading-[1.6] text-ink">
+          如果自查后仍不确定，可以把当前情况写给 TEBIQ，回答会进入“我的咨询”记录。
+        </p>
+        <Link
+          href="/ai-consultation"
+          className="mt-3 inline-flex min-h-[42px] items-center rounded-[10px] border border-hairline px-4 text-[13px] font-medium text-ink hover:border-ink/25"
+        >
+          去提问
+        </Link>
+      </section>
     </AppShell>
   )
 }

@@ -38,6 +38,7 @@ export async function POST(req: Request) {
   const urgency = trim(body.urgency, 20)
   const visaType = trim(body.visaType, 50) || 'unknown'
   const sourcePage = trim(body.sourcePage, 200) || ''
+  const sourceConsultationId = trim(body.sourceConsultationId, 80) || ''
   const resultColorRaw = trim(body.resultColor, 20)
   const userName = trim(body.userName, 80) || undefined
   const location = trim(body.location, 80) || undefined
@@ -76,6 +77,7 @@ export async function POST(req: Request) {
     location,
     additionalInfo,
     sourcePage,
+    sourceConsultationId,
   })
 
   const channelMap: Record<ContactMethod, { phone?: string; email?: string; lineId?: string }> = {
@@ -107,6 +109,7 @@ function composeContent(parts: {
   location?: string
   additionalInfo?: string
   sourcePage?: string
+  sourceConsultationId?: string
 }): string {
   const lines: string[] = []
   lines.push(`签证：${parts.visaType}`)
@@ -117,6 +120,7 @@ function composeContent(parts: {
     lines.push(`触发项：\n  · ${parts.triggeredItems.join('\n  · ')}`)
   }
   if (parts.additionalInfo) lines.push(`补充：${parts.additionalInfo}`)
+  if (parts.sourceConsultationId) lines.push(`咨询记录：/c/${parts.sourceConsultationId}`)
   if (parts.sourcePage) lines.push(`来源：${parts.sourcePage}`)
   return lines.join('\n')
 }

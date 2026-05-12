@@ -214,7 +214,7 @@ function knowledgeSeedToAnswer(seed: KnowledgeSeed, _questionText: string): Answ
     : [{ heading: '整理内容', body: plainMarkdown(seed.body).slice(0, 1000) }]
   const related = seed.visaType && seed.dimensionKey
     ? [{ title: '打开对应检查项', href: `/check/${seed.visaType}/${seed.dimensionKey}` }]
-    : [{ title: '续签材料准备检查', href: '/check' }]
+    : [{ title: '在留准备自查', href: '/check' }]
   return {
     ok: true,
     answer_type: 'matched',
@@ -266,7 +266,7 @@ function ruleBasedAnswer(questionText: string, normalized: string): AnswerResult
     next_steps: defaultNextSteps(questionText),
     related_links: [
       { title: '拍照识别文书', href: '/photo' },
-      { title: '续签材料准备检查', href: '/check' },
+      { title: '在留准备自查', href: '/check' },
     ],
     sources: [],
     query_id: null,
@@ -305,7 +305,7 @@ function cannotDetermineAnswer(_questionText: string): AnswerResult {
     ],
     related_links: [
       { title: '拍照识别文书', href: '/photo' },
-      { title: '我的提醒', href: '/timeline' },
+      { title: '我的咨询', href: '/me/consultations' },
     ],
     sources: [],
     query_id: null,
@@ -411,7 +411,7 @@ function ruleBasedAnswerForIntent(questionText: string, intent: AnswerIntent): A
         ],
         documents_needed: ['在留カード', '旧雇主退职证明', '新雇主雇用契約書', '新支援计划'],
         deadline_or_timing: ['契約変更後 14 日内提交届出。'],
-        consequences: ['14 日届出超期或没做支援计划，会成为下次续签的减分项；分野不一致还可能直接构成不法就労。'],
+        consequences: ['14 日届出超期或没做支援计划，会成为下次续签的减分项；分野不一致还可能构成不法就労风险。'],
         expert_handoff: ['如果分野不一致、雇主无登録支援機関、或已经超过 14 日，带新旧雇主资料咨询行政書士。'],
         boundary_note: ANSWER_BOUNDARY_NOTE,
       },
@@ -467,7 +467,7 @@ function ruleBasedAnswerForIntent(questionText: string, intent: AnswerIntent): A
         { heading: '先确认', body: '确认厚生年金和健康保险是否已经资格丧失、资格丧失日是哪天、是否拿到资格丧失证明。' },
       ],
       next_steps: ['确认资格丧失日。', '取得健康保険・厚生年金資格喪失証明書。', '去区役所 / 市役所国保年金窗口确认国民年金和国民健康保险。'],
-      related_links: [{ title: '我的提醒', href: '/timeline' }],
+      related_links: [{ title: '我的咨询', href: '/me/consultations' }],
       sources: [{ title: '日本年金機構 / 市区町村 国保年金課' }],
       query_id: null,
       answer_id: null,
@@ -498,7 +498,7 @@ function ruleBasedAnswerForIntent(questionText: string, intent: AnswerIntent): A
         { heading: '先做顺序', body: '先确定住址并办理住民登记，再用住民票和在留卡处理手机号、银行、公司或保险相关手续。' },
       ],
       next_steps: ['先办理住民票 / 転入届。', '再处理手机号、银行账户和公司入职或经营管理相关手续。', '把在留卡、住居资料和窗口回执归档。'],
-      related_links: [{ title: '我的提醒', href: '/timeline' }],
+      related_links: [{ title: '我的咨询', href: '/me/consultations' }],
       sources: [{ title: '市区町村 転入届 / 住民票手続' }],
       query_id: null,
       answer_id: null,
@@ -739,7 +739,7 @@ function ruleBasedAnswerForIntent(questionText: string, intent: AnswerIntent): A
         '取得健康保険・厚生年金資格喪失証明書。',
         '到区役所 / 市役所的国保年金窗口处理国民年金和国民健康保险。',
       ],
-      related_links: [{ title: '我的提醒', href: '/timeline' }],
+      related_links: [{ title: '我的咨询', href: '/me/consultations' }],
       sources: [{ title: '日本年金機構 資格喪失届', url: 'https://www.nenkin.go.jp/' }],
       query_id: null,
       answer_id: null,
@@ -914,7 +914,6 @@ function loadKnowledgeSeeds(): Promise<KnowledgeSeed[]> {
 
 async function readKnowledgeSeeds(): Promise<KnowledgeSeed[]> {
   const dirs = [
-    path.join(process.cwd(), 'docs/knowledge-seed/check-dimensions'),
     path.join(process.cwd(), 'docs/knowledge-seed/dimensions-visa-specific'),
   ]
   const files = (await Promise.all(dirs.map(dir => listMarkdownFiles(dir).catch(() => [])))).flat()
@@ -989,7 +988,7 @@ function parseAnswerSeedBlocks(raw: string, _filePath: string): AnswerSeed[] {
       nextSteps: nextSteps.length > 0 ? nextSteps : defaultNextSteps(question),
       sources: sourceHints.map(title => ({ title, source_grade: sourceGrade })),
       boundaryNote: boundaryNote ?? ANSWER_BOUNDARY_NOTE,
-      relatedLinks: [{ title: '续签材料准备检查', href: '/check' }],
+      relatedLinks: [{ title: '在留准备自查', href: '/check' }],
       firstScreenAnswer: firstScreenAnswer ?? undefined,
       whyNotSimpleAnswer: whyNotSimpleAnswer ?? undefined,
       expertHandoff: expertHandoff ?? undefined,

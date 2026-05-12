@@ -17,7 +17,6 @@ import {
   type JudgeResult,
 } from '@/lib/check/questions/gijinkoku'
 import { buildSummary } from '@/lib/check/summary'
-import MaterialsPackage from './MaterialsPackage'
 import SignupBanner from './SignupBanner'
 import ShareLinkButton from './ShareLinkButton'
 import RiskList from './components/RiskList'
@@ -352,7 +351,7 @@ function SaveResultButton({
         try {
           await navigator.share({
             files: [file],
-            title: 'TEBIQ 续签材料准备检查结果',
+            title: 'TEBIQ 在留准备自查结果',
             text: SHARE_TEXT,
           })
           return
@@ -387,22 +386,7 @@ function SaveResultButton({
       className={`no-capture focus-ring flex min-h-[48px] w-full items-center justify-center gap-2 rounded-btn px-4 py-3 text-[13px] font-medium transition-colors disabled:opacity-50 ${colorClass}`}
     >
       <Download size={15} strokeWidth={1.6} />
-      {busy ? '处理中...' : '保存结果为图片'}
-    </button>
-  )
-}
-
-// ============ Premium 按钮预留（任务 7） ============
-
-function PremiumCallout() {
-  return (
-    <button
-      type="button"
-      disabled
-      className="min-h-[48px] w-full cursor-not-allowed rounded-btn border border-dashed border-hairline bg-surface px-4 py-3 text-[13px] text-ash"
-      title="即将推出"
-    >
-      升级到完整服务（即将推出）
+      {busy ? '正在保存' : '保存结果为图片'}
     </button>
   )
 }
@@ -437,7 +421,7 @@ function ResultHero({
         <Icon size={26} strokeWidth={1.6} />
       </div>
       <div className="mt-3 text-[11px] font-medium leading-none text-ash">
-        TEBIQ · 续签材料准备检查
+        TEBIQ · 在留准备自查
       </div>
       <h1 className="mt-2 text-[22px] font-medium leading-snug text-ink">{title}</h1>
       <p className="mx-auto mt-2 max-w-[300px] text-[13px] leading-relaxed text-slate/74">
@@ -475,7 +459,7 @@ function GreenResult({ summary }: { summary: string }) {
         <ResultHero
           verdict="green"
           title="可以开始准备材料"
-          description="前置条件全部通过，没有发现明显准备事项。"
+          description="本轮回答中未发现明显红黄项，仍需按官方清单核对材料。"
         />
       }
     >
@@ -487,7 +471,6 @@ function GreenResult({ summary }: { summary: string }) {
         <ShareLinkButton verdict="green" summary={summary} />
         <InviteRewardCallout />
         <SaveToAccountPrompt verdict="green" count={0} />
-        <PremiumCallout />
       </div>
 
       {/* PC 端左右分栏：左结论右清单；移动端纵向 */}
@@ -505,12 +488,11 @@ function GreenResult({ summary }: { summary: string }) {
 
           <CTABlock
             verdict="green"
-            description="材料齐全后即可前往最近的入管局递交。如果在准备过程中遇到任何不确定的地方，可以咨询专家。"
+            description="材料准备后，请按窗口要求确认提交方式。如果在准备过程中遇到不确定的地方，可以咨询行政书士等专业人士。"
           />
         </div>
 
         <div className="mt-4 md:mt-0">
-          <MaterialsPackage />
           <MaterialChecklist />
         </div>
       </div>
@@ -563,15 +545,14 @@ function YellowResult({ result, summary }: { result: JudgeResult; summary: strin
         items={needPro}
         accentColor="amber"
         sortBySeverity={false}
-        heading={{ text: `建议咨询专家（${needPro.length} 项）`, tone: 'amber' }}
+        heading={{ text: `建议专业确认（${needPro.length} 项）`, tone: 'amber' }}
       />
 
       <CTABlock
         verdict="yellow"
-        description="这些问题不是绝对致命，但自行处理容易留下隐患。建议在递交申请前请专家过一遍材料和情况说明书。"
+        description="这些问题不一定影响结果，但建议在递交前核对材料和说明。"
       />
 
-      <MaterialsPackage />
       <CollapsibleChecklist />
     </ResultShell>
   )
@@ -595,7 +576,7 @@ function RedResult({ result, summary }: { result: JudgeResult; summary: string }
       banner={
         <ResultHero
           verdict="red"
-          title="检测到高准备事项"
+          title="发现需确认事项"
           description={`发现 ${reds.length} 项待确认事项，请先确认处理方案。`}
         />
       }
@@ -613,8 +594,7 @@ function RedResult({ result, summary }: { result: JudgeResult; summary: string }
 
       <div className="mb-6 rounded-card border border-warning/55 bg-surface p-4">
         <p className="text-[13px] leading-relaxed text-ink">
-          下列任何一项都可能直接导致续签被拒，甚至影响今后在留资格。
-          强烈建议先与专家确认应对方案，再决定如何提交申请。
+          下列事项可能影响续签判断，建议先确认处理方式。
         </p>
       </div>
 
@@ -622,7 +602,7 @@ function RedResult({ result, summary }: { result: JudgeResult; summary: string }
 
       <CTABlock
         verdict="red"
-        description="请务必在提交申请前咨询专家。每多拖一天，处理空间都会变小。"
+        description="如期限临近，建议尽快确认处理方式。"
         emphasizeDescription
       />
 

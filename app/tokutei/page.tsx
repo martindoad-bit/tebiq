@@ -3,14 +3,15 @@ import Link from 'next/link'
 import { SeoBullet as Bullet, SeoSection as Section, SeoVisaArticleShell } from '@/app/_components/v5/SeoVisaArticleShell'
 
 export const metadata: Metadata = {
-  title: '特定技能签证指南 2026 | TEBIQ',
+  title: '特定技能签证参考整理 | TEBIQ',
   description:
-    '日本特定技能 1 号 / 2 号签证完整指南。适用行业、考试要件、转籍换工作、续签条件、与技人国 / 技能实习的区别一次看懂。',
+    '日本特定技能 1 号 / 2 号签证参考整理。具体行业、考试、转籍和续签条件请以官方来源、窗口说明和个案判断为准。',
+  robots: { index: false, follow: false },
   alternates: { canonical: '/tokutei' },
   openGraph: {
-    title: '特定技能签证指南 2026',
+    title: '特定技能签证参考整理',
     description:
-      '特定技能 1 号 / 2 号、适用行业、转籍换工作与续签要件。',
+      '特定技能 1 号 / 2 号参考整理，具体适用请以官方来源和个案判断为准。',
     url: 'https://tebiq.jp/tokutei',
     siteName: 'TEBIQ',
     locale: 'zh_CN',
@@ -21,9 +22,9 @@ export const metadata: Metadata = {
 const articleSchema = {
   '@context': 'https://schema.org',
   '@type': 'Article',
-  headline: '特定技能签证指南 2026',
+  headline: '特定技能签证参考整理',
   description:
-    '特定技能 1 号 / 2 号签证完整指南，含适用行业、考试要件与续签条件。',
+    '特定技能 1 号 / 2 号签证参考整理。',
   inLanguage: 'zh-CN',
   author: { '@type': 'Organization', name: 'TEBIQ' },
   publisher: {
@@ -41,7 +42,10 @@ const articleSchema = {
 
 export default function TokuteiLandingPage() {
   return (
-    <SeoVisaArticleShell articleSchema={articleSchema} title={"特定技能签证指南 2026"} updated={"最新更新：2026-04-24 · 涵盖特定技能 1 号 / 2 号"}>
+    <SeoVisaArticleShell articleSchema={articleSchema} title={"特定技能签证参考整理"} updated={"更新：2026-04-24 · 基于公开资料整理"}>
+          <p className="mb-6 rounded-card border border-hairline bg-paper px-4 py-3 text-[12.5px] leading-[1.7] text-slate">
+            本页用于一般信息核对，不代表个案结论。适用行业、考试、转籍和续签条件，请以官方来源、窗口说明和专业确认结果为准。
+          </p>
 
           <nav
             aria-label="目录"
@@ -129,11 +133,11 @@ export default function TokuteiLandingPage() {
                 <strong>2 号扩展：</strong>2023 年起 2 号已大幅扩张，覆盖几乎所有 1 号行业。这意味着熟练后可长期工作并携带家族。
               </Bullet>
               <Bullet>
-                <strong>归化运用收紧：</strong>2026 年 4 月起归化原则居住要件 10 年化（运用变更），影响特定技能将来归化路径。
+                <strong>归化规划另行核对：</strong>归化与在留资格是不同制度，居住年数、工作稳定性和公的义务需要按法务省公告、窗口说明和专业确认结果判断。
               </Bullet>
             </ul>
             <p className="text-ash text-[11px] mt-3">
-              来源：出入国在留管理庁公开资料 / 法務省
+              来源：出入国在留管理庁公开资料。归化相关请另以法務省公告和窗口说明核对。
             </p>
           </Section>
 
@@ -172,7 +176,7 @@ export default function TokuteiLandingPage() {
                 <strong>转职前先咨询：</strong>1 号转职手续复杂，建议在辞职前确认下一家是否符合受入机关要件。
               </Bullet>
               <Bullet>
-                <strong>纳税与社保按月确认：</strong>住民税、年金任何延迟都会影响续签印象。
+                <strong>纳税与社保按月确认：</strong>住民税、年金有延迟记录时，可能需要说明原因。
               </Bullet>
             </ul>
             <p className="mt-4">

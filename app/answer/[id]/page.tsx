@@ -38,6 +38,7 @@ export default async function AnswerPage({
   params: Promise<{ id: string }>
 }) {
   const { id } = await params
+  if (id === 'test') redirect('/ai-consultation')
   const draft = await getAnswerDraftById(id).catch(() => null)
 
   if (!draft) {
@@ -51,7 +52,7 @@ export default async function AnswerPage({
           <BrandHeader
             eyebrow="咨询记录"
             title="这条链接暂时打不开"
-            description="这可能是旧版回答链接，或记录已经不存在。可以回到“我的咨询”查看，或重新开始。"
+            description="这可能是较早生成的回答链接，或记录已经不存在。可以回到“我的咨询”查看，或重新开始。"
             action={
               <Link
                 href="/ai-consultation"
@@ -63,7 +64,7 @@ export default async function AnswerPage({
           />
           <Surface className="space-y-3">
             <p className="text-[14.5px] leading-[1.7] text-[var(--tebiq-deep-slate)]">
-              如果这是刚刚复制的咨询链接，请优先打开“我的咨询”；新的咨询记录会使用 /c/ 开头的链接。
+              如果这是刚刚复制的咨询链接，请优先打开“我的咨询”；新的咨询记录请从“我的咨询”打开。
             </p>
             <div className="flex flex-wrap gap-2">
               <Link

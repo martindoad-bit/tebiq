@@ -3,10 +3,10 @@
  *
  * 视觉跟 docs/prototype/v5-mockup.html 1831-1918。
  *
- * 1.0 数据来源：member 字段（visa_expiry / last_visa_renewal_at）。
- * 数据稀薄时 fall back 到 4 张固定的占位提醒（block 4 才接通知系统）。
+ * 1.0 数据来源：member 字段（visa_expiry）。
+ * 不从无关字段推导社保/税务提醒，避免给用户制造错误期限。
  *
- * CN/JP 混排规则：在留期間更新 / 健康保険 / 年金 / 住民税 = 日文原文。
+ * CN/JP 混排规则：在留期間更新 / 年金 / 住民税 = 日文原文。
  */
 import { redirect } from 'next/navigation'
 import AppShell from '@/app/_components/v5/AppShell'
@@ -51,62 +51,6 @@ export default async function RemindersPage() {
         kind: 'expiring',
       })
     }
-  }
-
-  // 2. 健康保険更新 — 粗略：上次续签 + 1 年
-  if (user.lastVisaRenewalAt) {
-    const last = new Date(`${user.lastVisaRenewalAt}T00:00:00`)
-    const next = new Date(last)
-    next.setFullYear(next.getFullYear() + 1)
-    const days = daysUntil(next, now)
-    if (days >= 0 && days <= 120) {
-      items.push({
-        id: 'health-insurance',
-        title: '健康保険更新',
-        meta1: `还有 ${days} 天到期`,
-        meta2: fmtDate(next),
-        urgent: days <= 14,
-        kind: 'expiring',
-      })
-    }
-  }
-
-  // 3. 数据稀薄时使用占位（block 4 接 notifications 后移除）
-  if (items.length === 0) {
-    items.push(
-      {
-        id: 'mock-zairyu',
-        title: '在留期間更新',
-        meta1: '还有 60 天到期',
-        meta2: '2024/07/15',
-        urgent: false,
-        kind: 'expiring',
-      },
-      {
-        id: 'mock-juminzei',
-        title: '住民税缴纳',
-        meta1: '还有 10 天截止',
-        meta2: '2024/05/20',
-        urgent: true,
-        kind: 'important',
-      },
-      {
-        id: 'mock-nenkin',
-        title: '年金更新',
-        meta1: '还有 30 天到期',
-        meta2: '2024/06/10',
-        urgent: false,
-        kind: 'expiring',
-      },
-      {
-        id: 'mock-kenko',
-        title: '健康保険更新',
-        meta1: '还有 45 天到期',
-        meta2: '2024/06/25',
-        urgent: false,
-        kind: 'expiring',
-      },
-    )
   }
 
   return (

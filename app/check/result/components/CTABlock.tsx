@@ -1,4 +1,5 @@
 import type { Verdict } from '@/lib/check/questions/gijinkoku'
+import Link from 'next/link'
 
 const WRAPPER_CLASS: Record<Verdict, string> = {
   red: 'bg-surface border border-warning/55 rounded-card p-5',
@@ -13,9 +14,9 @@ const BUTTON_CLASS: Record<Verdict, string> = {
 }
 
 const DEFAULT_CTA_LABEL: Record<Verdict, string> = {
-  red: '咨询专家确认',
-  yellow: '咨询专家确认',
-  green: '咨询专家确认',
+  red: '建议专业确认',
+  yellow: '建议专业确认',
+  green: '建议专业确认',
 }
 
 const BUTTON_HEIGHT: Record<Verdict, string> = {
@@ -43,11 +44,12 @@ export default function CTABlock({
   return (
     <div className={WRAPPER_CLASS[verdict]}>
       <p className={descClass}>{description}</p>
-      <div
+      <Link
+        href="/scrivener"
         className={`flex items-center justify-center w-full ${BUTTON_HEIGHT[verdict]} ${BUTTON_CLASS[verdict]} font-medium py-4 rounded-btn text-sm`}
       >
         {ctaLabel ?? DEFAULT_CTA_LABEL[verdict]}
-      </div>
+      </Link>
     </div>
   )
 }

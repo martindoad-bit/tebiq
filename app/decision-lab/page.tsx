@@ -2,7 +2,6 @@ import Link from 'next/link'
 import { ArrowRight, DatabaseZap } from 'lucide-react'
 import AppShell from '@/app/_components/v5/AppShell'
 import AppBar from '@/app/_components/v5/AppBar'
-import QuestionIntakeBox from '@/app/_components/QuestionIntakeBox'
 import { listDecisionCards } from '@/lib/decision/cards'
 import {
   ANSWER_LEVEL_LABEL,
@@ -51,9 +50,13 @@ export default async function DecisionLabPage() {
         <DecisionSearchClient />
       </div>
 
-      <div className="mt-3">
-        <QuestionIntakeBox sourcePage="/decision-lab" compact />
-      </div>
+      <Link
+        href="/ai-consultation"
+        className="mt-3 flex min-h-[46px] items-center justify-between rounded-card border border-hairline bg-surface px-4 text-[13px] font-medium text-ink shadow-card"
+      >
+        <span>带情况提问</span>
+        <ArrowRight size={15} className="text-haze" />
+      </Link>
 
       <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-3 shadow-card">
         <h2 className="text-[13px] font-medium text-ink">已整理 case</h2>

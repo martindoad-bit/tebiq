@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import type { AnswerViewModel, PublicAnswer } from '@/lib/answer/core/types'
-import SaveMatterButton from '@/app/_components/SaveMatterButton'
 
 // Answer Core V1 renderer.
 //
@@ -158,7 +157,7 @@ export default function AnswerResultView({
               <BulletList title="需要注意的风险因素" items={p.risk_warnings} />
             )}
             {p.consult_trigger && (
-              <BulletList title="什么情况下要找专家" items={[p.consult_trigger]} />
+              <BulletList title="需要确认的情况" items={[p.consult_trigger]} />
             )}
           </div>
         </section>
@@ -177,24 +176,9 @@ export default function AnswerResultView({
         </section>
       )}
 
-      {/* V0 — Matter Draft save button. Only surfaced for actionable
-          modes (answered / preliminary). clarification / oos don't
-          have a path worth saving yet. */}
-      {showActionTemplate && answerId && (
-        <section className="mt-5 flex justify-end">
-          <SaveMatterButton
-            answer_id={answerId}
-            question={viewModel.question}
-            title={p.title}
-            summary={p.summary || p.conclusion}
-            urgency={status === 'answered' ? 'soon' : 'later'}
-          />
-        </section>
-      )}
-
       {showActionTemplate && (
         <details className="mt-5 rounded-[14px] border border-hairline bg-surface px-4 py-3">
-          <summary className="cursor-pointer text-[14px] font-medium text-ink">复制 TEBIQ 的建议</summary>
+          <summary className="cursor-pointer text-[14px] font-medium text-ink">复制整理内容</summary>
           <p className="mt-3 text-[13.5px] leading-[1.7] text-slate [overflow-wrap:anywhere]">{copySource}</p>
           <button
             type="button"
@@ -225,13 +209,13 @@ export default function AnswerResultView({
                   : 'border-hairline bg-canvas text-slate active:bg-paper'
               }`}
             >
-              {busyFeedback === option.type ? '处理中...' : option.label}
+            {busyFeedback === option.type ? '记录中' : option.label}
             </button>
           ))}
         </div>
         {feedback && (
           <p className="mt-3 rounded-[10px] bg-paper px-3 py-2 text-[13px] leading-[1.6] text-slate">
-            已记录。TEBIQ 会根据反馈继续修正内容。
+            已记录。反馈会用于改进整理质量。
           </p>
         )}
       </section>
@@ -295,7 +279,7 @@ const HEADINGS_RENDERED_ELSEWHERE = new Set([
   '需要材料', // documents_needed bullets
   '不做会怎样', // (legacy heading) — deduped
   '需要注意的风险因素', // risk_warnings bullets
-  '什么情况下要找专家', // consult_trigger
+  '需要确认的情况', // consult_trigger
   '需要先确认', // clarification_questions
   '请补充', // out_of_scope clarifications
   '我理解你的问题是', // panel above

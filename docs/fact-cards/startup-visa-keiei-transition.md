@@ -110,7 +110,7 @@ evidence_points:
     source_organization: "出入国在留管理庁"
     source_locator: "ページ内「最長２年間」「起業活動を完了」「経営・管理への在留資格変更許可申請」の記述を確認"
     display_label: "スタートアップビザ：最長2年・起業完了後は経営管理への在留資格変更申請が必要"
-    support_level: "direct"
+    support_level: "indirect"
     user_visible: true
     needs_domain_review: true
   - claim: "スタートアップビザの前提：「経済産業大臣から認定を受けた地方公共団体又は民間事業者による管理・支援の下、起業準備活動を行うための在留資格を付与され、最長２年間、起業準備活動を行う」（ISA公式引用）。認定機関（地方公共団体または経産大臣認定民間事業者）リスト・手続き詳細は経産省HP参照（METIページ取得失敗 — `no_certificate_organization_options`確認要）。"
@@ -119,7 +119,7 @@ evidence_points:
     source_organization: "出入国在留管理庁"
     source_locator: "ページ内「経済産業大臣から認定を受けた地方公共団体又は民間事業者」「最長２年間」の記述を確認"
     display_label: "スタートアップビザ：経産大臣認定機関の管理・支援下で起業準備活動（最長2年）"
-    support_level: "direct"
+    support_level: "indirect"
     user_visible: true
     needs_domain_review: true
   - claim: "2025年10月16日以降に在留資格変更申請をする場合、経営・管理の改正後新基準（資本金3,000万円・常勤職員・日本語要件等）が適用されると考えられる。スタートアップビザ保持者への過渡措置の有無は官方ページに明示なし（ai推定 — `transition_conditions_post_2025_10`確認要）。"

@@ -5,8 +5,8 @@ const BASE = 'https://tebiq.jp'
 const routes = [
   '',
   '/visa-select',
-  '/tools',
-  '/timeline',
+  '/quick-reference',
+  '/scrivener',
   '/pricing',
   '/check',
   '/check/select',
@@ -14,7 +14,6 @@ const routes = [
   '/check/keiei',
   '/check/haigusha',
   '/check/tokutei',
-  '/check/teijusha',
   '/check/moving',
   '/knowledge',
   '/knowledge/updates',

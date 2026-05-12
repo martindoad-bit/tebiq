@@ -66,7 +66,7 @@ export default function SaveMatterButton({
       }
       aria-pressed={saved}
     >
-      {saved ? '已保存到我的事项' : '保存这个事项'}
+      {saved ? '已标记' : '标记待处理'}
     </button>
   )
 }

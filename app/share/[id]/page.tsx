@@ -12,7 +12,7 @@ export const revalidate = 0
 const VERDICT_META = {
   red: {
     label: '红色',
-    sub: '存在高准备事项',
+    sub: '存在需确认事项',
     hero: 'bg-[rgba(198,79,69,0.10)] border-danger text-danger',
     chip: 'bg-[rgba(198,79,69,0.10)] text-danger',
     icon: CircleAlert,
@@ -26,7 +26,7 @@ const VERDICT_META = {
   },
   green: {
     label: '绿色',
-    sub: '前置条件均通过',
+    sub: '暂未发现明显待确认项',
     hero: 'bg-[rgba(46,125,101,0.12)] border-success text-success',
     chip: 'bg-[rgba(46,125,101,0.12)] text-success',
     icon: CheckCircle2,
@@ -54,7 +54,7 @@ export async function generateMetadata({ params }: PageProps) {
   const v = VERDICT_META[record.verdict]
   return {
     title: `朋友分享了一次 TEBIQ 自查（${v.label}） | TEBIQ`,
-    description: `你的朋友刚刚做了 TEBIQ 续签材料准备检查，结果是${v.label}。你也来看看自己的情况吧。`,
+    description: `你的朋友刚刚做了 TEBIQ 在留准备自查，结果是${v.label}。你也来看看自己的情况吧。`,
   }
 }
 

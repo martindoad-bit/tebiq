@@ -35,7 +35,7 @@ review_notes: null
 3. **签約时一次拿齐**：賃貸借契約書 副本、入居日记录、鍵 引き渡し书面、保証会社 契約書。
 
 ### Day 6-7：身份激活
-1. **拿到住所当天 / 第二天去 市役所 / 区役所** 办 [住居地届出（転入届）](https://www.moj.go.jp/isa/applications/procedures/16-3.html)。带：在留カード、パスポート、賃貸借契約書 或 住所が確認できる書類。窗口会把住所写到 在留カード 背面。
+1. **拿到住所当天 / 第二天去 市役所 / 区役所** 办 [住居地届出（転入届）](https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00023.html)。带：在留カード、パスポート、賃貸借契約書 或 住所が確認できる書類。窗口会把住所写到 在留カード 背面。
 2. **同窗口（或邻窗口）触发** 住民票 登録 + マイナンバー 通知書 邮寄（按现行制度，マイナンバーカード 通知书在登録后 1-2 周邮寄到登録住所，不是当场拿）。
 3. **国民健康保険 加入**：如果你不是公司社保对象（社員 / 自営業 / 学生 / 家族滞在 等），同日在国保窗口加入。带：在留カード、住民票（当日可同时取）。资格自 来日 当日 起算（不是登録 当日）。
 
@@ -50,10 +50,10 @@ review_notes: null
 - 家族滞在 配偶 / 子女随后入境，需要同步申请 在留資格認定証明書
 - 経営管理 在留 来日，事业所选址直接影响 在留審査
 
-需要专业判断时，建议咨询行政書士。TEBIQ 提供专业咨询服务（[预约](/consultation)）。
+需要专业判断时，建议带材料向行政书士确认。
 
 ## 信息来源
-- [出入国在留管理庁 住居地の届出](https://www.moj.go.jp/isa/applications/procedures/16-3.html)（取得日 2026-04-28）
+- [出入国在留管理庁 住居地の届出](https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00023.html)（取得日 2026-05-12）
 - [総務省 住民基本台帳制度](https://www.soumu.go.jp/main_sosiki/jichi_gyousei/c-gyousei/zairyu.html)（取得日 2026-04-28）
 - [厚生労働省 国民健康保険](https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000050492.html)（取得日 2026-04-28）
 - [出入国在留管理庁 在留カードとは](https://www.moj.go.jp/isa/applications/procedures/zairyu_card.html)（取得日 2026-04-28）

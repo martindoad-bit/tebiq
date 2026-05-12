@@ -117,7 +117,7 @@ result_actions:
 6. `## 价值 expiry 说明`（为什么 expiry_days 是这个数字）
 
 复杂 case 在「处理建议 → 红」末尾用唯一引流句：
-> 建议咨询行政書士。TEBIQ 提供专业咨询服务（[预约](/consultation)）。
+> 建议带材料向行政书士确认。
 
 ---
 

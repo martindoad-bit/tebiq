@@ -41,11 +41,11 @@ export default function ScrivenerPage() {
             <span className="pb-1 text-[14px] text-slate">/ 30 分钟</span>
           </div>
           <p className="mt-3 text-[14px] leading-[1.7] text-slate">
-            如后续委托办理，可按预约时说明抵扣办理费用。
+            如后续委托办理，可按预约时说明抵扣办理费用。查看预约方式不会自动预约或收费。
           </p>
         </section>
 
-        <section className="rounded-card border border-hairline bg-surface px-4 py-4">
+        <section className="px-1 py-1">
           <div className="flex items-center gap-2 text-[14px] font-medium text-ink">
             <ClipboardList size={16} strokeWidth={1.5} />
             咨询前建议准备
@@ -66,7 +66,7 @@ export default function ScrivenerPage() {
           </ul>
         </section>
 
-        <section className="rounded-card border border-hairline bg-paper px-4 py-4">
+        <section className="rounded-card bg-paper px-4 py-3">
           <div className="flex items-start gap-2">
             <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-ink" strokeWidth={1.5} />
             <p className="text-[13.5px] leading-[1.7] text-slate">
@@ -79,7 +79,7 @@ export default function ScrivenerPage() {
           href="/consultation"
           className="focus-ring flex min-h-[50px] w-full items-center justify-center gap-2 whitespace-nowrap rounded-btn bg-ink px-4 py-3 text-[15px] font-medium leading-none text-white"
         >
-          查看预约方式
+          了解预约方式
           <ArrowRight size={16} strokeWidth={1.5} />
         </Link>
       </div>

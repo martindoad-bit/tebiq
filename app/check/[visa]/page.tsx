@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 import TrackOnMount from '@/app/_components/v5/TrackOnMount'
 import CheckDimensionList from '../CheckDimensionList'
 import { EVENT } from '@/lib/analytics/events'
@@ -21,9 +21,16 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const visa = normalizeCheckVisa(params.visa)
   const meta = CHECK_VISA_META[visa]
+  if (params.visa === 'teijusha') {
+    return {
+      title: '定住者参考整理 | TEBIQ',
+      description: '定住者に関する参考整理。',
+      robots: { index: false, follow: false },
+    }
+  }
   return {
-    title: `${meta.label} 续签材料准备检查 | TEBIQ`,
-    description: `${meta.label} 材料准备清单。完整检查约 5 分钟。`,
+    title: `${meta.label} 在留准备自查 | TEBIQ`,
+    description: `${meta.label} 的材料、期限和记录核对清单。`,
     alternates: { canonical: `/check/${visa}` },
   }
 }
@@ -33,6 +40,7 @@ export default async function CheckVisaPage({
 }: {
   params: { visa: string }
 }) {
+  if (params.visa === 'teijusha') redirect('/teijusha')
   const visa = normalizeCheckVisa(params.visa)
   if (!CHECK_VISA_META[visa]) notFound()
   const user = await getCurrentUser().catch(() => null)
@@ -42,7 +50,7 @@ export default async function CheckVisaPage({
   return (
     <>
       <TrackOnMount event={EVENT.QUIZ_VISA_SELECTED} payload={{ visa }} />
-      <CheckDimensionList visa={visa} dimensions={dimensions} sourcePage={`/check/${visa}`} />
+      <CheckDimensionList visa={visa} dimensions={dimensions} />
     </>
   )
 }

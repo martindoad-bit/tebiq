@@ -3,14 +3,15 @@ import Link from 'next/link'
 import { SeoBullet as Bullet, SeoSection as Section, SeoVisaArticleShell } from '@/app/_components/v5/SeoVisaArticleShell'
 
 export const metadata: Metadata = {
-  title: '定住者签证指南 2026 | TEBIQ',
+  title: '定住者签证参考整理 | TEBIQ',
   description:
-    '日本定住者签证（告示・非告示）完整指南。日系三世、离婚定住、抚养日本人实子等典型类型，续签要件、常见踩坑与准备清单。',
+    '日本定住者签证（告示・非告示）参考整理。具体类型、材料和审查判断请以官方来源、窗口说明和个案判断为准。',
+  robots: { index: false, follow: false },
   alternates: { canonical: '/teijusha' },
   openGraph: {
-    title: '定住者签证指南 2026',
+    title: '定住者签证参考整理',
     description:
-      '定住者签证完整指南：典型类型、续签要件与准备清单。',
+      '定住者签证参考整理，具体适用请以官方来源和个案判断为准。',
     url: 'https://tebiq.jp/teijusha',
     siteName: 'TEBIQ',
     locale: 'zh_CN',
@@ -21,9 +22,9 @@ export const metadata: Metadata = {
 const articleSchema = {
   '@context': 'https://schema.org',
   '@type': 'Article',
-  headline: '定住者签证指南 2026',
+  headline: '定住者签证参考整理',
   description:
-    '定住者签证完整指南，含典型类型、续签要件与准备建议。',
+    '定住者签证参考整理。',
   inLanguage: 'zh-CN',
   author: { '@type': 'Organization', name: 'TEBIQ' },
   publisher: {
@@ -41,7 +42,10 @@ const articleSchema = {
 
 export default function TeijushaLandingPage() {
   return (
-    <SeoVisaArticleShell articleSchema={articleSchema} title={"定住者签证指南 2026"} updated={"最新更新：2026-04-24 · 适用「定住者」（告示・非告示）"}>
+    <SeoVisaArticleShell articleSchema={articleSchema} title={"定住者签证参考整理"} updated={"更新：2026-04-24 · 基于公开资料整理"}>
+          <p className="mb-6 rounded-card border border-hairline bg-paper px-4 py-3 text-[12.5px] leading-[1.7] text-slate">
+            本页用于一般信息核对，不代表个案结论。定住者的适用类型、材料和裁量判断，请以官方来源、窗口说明和专业确认结果为准。
+          </p>
 
           <nav
             aria-label="目录"
@@ -104,7 +108,7 @@ export default function TeijushaLandingPage() {
                 <strong>社保加入：</strong>健康保险、年金按月加入。
               </Bullet>
               <Bullet>
-                <strong>无重大违规：</strong>无刑事违规，无严重交通违规。
+                <strong>重大违规记录：</strong>如有刑事处分或严重交通违规，需要说明，可能产生不利影响。
               </Bullet>
               <Bullet>
                 <strong>身份事项申报：</strong>住所、姓氏、亲属关系变化等 14 天内申报。
@@ -118,7 +122,7 @@ export default function TeijushaLandingPage() {
                 <strong>定住者地位在新规下的特殊作用：</strong>2025 年 10 月经营管理新规明确：常勤员工口径中，定住者与日本人配偶者等并列可计入常勤。这让定住者在就业市场的可雇性进一步提升。
               </Bullet>
               <Bullet>
-                <strong>归化运用变更：</strong>2026 年 4 月起归化原则居住要件从 5 年提高到 10 年。持定住者签证将来计划归化的人需要早规划。
+                <strong>归化规划需另行核对：</strong>归化与在留资格是不同制度，居住年数和运用变化请以法务省公告、窗口说明和专业确认结果为准。
               </Bullet>
               <Bullet>
                 <strong>非告示定住审查个案性强：</strong>近年实务上对子女抚养关系、共同生活实质等的审查越来越细致，材料准备需要时间线清晰。
@@ -138,7 +142,7 @@ export default function TeijushaLandingPage() {
                 <strong>住民税 / 年金延迟：</strong>定住者审查同样看纳税与社保，与永住接近。
               </Bullet>
               <Bullet>
-                <strong>住址变化未申报：</strong>14 天内市役所申报是义务，漏报会留下负面记录。
+                <strong>住址变化未申报：</strong>住址变化通常需要在 14 天内申报；未申报可能成为不利记录或需要说明。
               </Bullet>
               <Bullet>
                 <strong>长期出国：</strong>长时间不在日本可能被认为「定住事由」实质性中断。
@@ -181,10 +185,10 @@ export default function TeijushaLandingPage() {
           </Section>
 
           <Link
-            href="/check/teijusha/quiz"
+            href="/ai-consultation"
             className="mt-5 flex min-h-[48px] w-full items-center justify-center rounded-btn bg-accent px-4 py-3 text-[13px] font-medium text-white shadow-cta"
           >
-            3 分钟开始定住者签证自查 →
+            带情况提问 →
           </Link>
 
           <p className="text-center text-ash text-[11px] mt-8 leading-relaxed">

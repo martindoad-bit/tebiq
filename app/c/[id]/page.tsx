@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, Camera, GitBranch, MessageSquarePlus } from 'lucide-react'
+import { ArrowLeft, Camera, GitBranch, MessageSquarePlus, UserCheck } from 'lucide-react'
+import ConsultationShareButton from '@/app/_components/ConsultationShareButton'
 import TabBar from '@/app/_components/v5/TabBar'
 import {
   BrandHeader,
@@ -24,7 +25,7 @@ import {
 export const dynamic = 'force-dynamic'
 
 export const metadata = {
-  title: 'TEBIQ — 我的咨询 (Alpha)',
+  title: 'TEBIQ — 我的咨询',
   robots: { index: false, follow: false },
 }
 
@@ -53,7 +54,7 @@ export default async function ConsultationDetailPage({ params }: PageProps) {
         <BrandHeader
           eyebrow="我的咨询"
           title="这次咨询"
-          description="这里用于回看问题、回答和补充记录。它不是正式案件。"
+          description="这里用于回看本次咨询内容和补充记录。"
           action={
             <Link
               href="/ai-consultation"
@@ -88,21 +89,21 @@ export default async function ConsultationDetailPage({ params }: PageProps) {
 
         <Surface className="space-y-3">
           <div className="flex items-center justify-between gap-3">
-            <SectionLabel>AI 回答</SectionLabel>
+          <SectionLabel>咨询回答</SectionLabel>
             <StatusBadge state={displayState} />
           </div>
           {(displayState === 'partial' || displayState === 'fallback' || displayState === 'timeout' || displayState === 'failed') && (
             <div className="rounded-card border border-[var(--tebiq-warm-amber)] px-3 py-2 text-[13.5px] leading-relaxed text-[var(--tebiq-ink-blue)]">
-              {displayState === 'partial' && '这条记录有部分回答，但没有完整完成。'}
-              {displayState === 'fallback' && '这条记录使用了安全降级文案，不应看作完整回答。'}
-              {displayState === 'timeout' && '这条记录没有生成可用完整回答。'}
-              {displayState === 'failed' && '这条记录生成失败。'}
+              {displayState === 'partial' && '这条记录只保留了部分内容。'}
+              {displayState === 'fallback' && '这条记录只保留了部分可用内容。'}
+              {displayState === 'timeout' && '这条记录没有整理完成。'}
+              {displayState === 'failed' && '这条记录没有整理完成。'}
               {row.timeoutReason ? ` ${userSafeDetail(row.timeoutReason)}` : ''}
             </div>
           )}
           {hasEncodingIssue(answer) && (
             <div className="rounded-card border border-[var(--tebiq-warm-amber)] px-3 py-2 text-[13.5px] leading-relaxed text-[var(--tebiq-ink-blue)]">
-              这条回答里检测到显示异常字符。建议重新生成，或在反馈里标记“不准确”。
+              这条回答显示可能不完整。建议重试，或反馈为“不准确”。
             </div>
           )}
           {answer ? (
@@ -112,9 +113,33 @@ export default async function ConsultationDetailPage({ params }: PageProps) {
           )}
         </Surface>
 
-        <FactReferenceBlock audit={factCardAudit} />
+        <FactReferenceBlock audit={factCardAudit} variant="compact" />
 
         {isChain && <ChainBlock chain={chain} currentId={row.id} />}
+
+        <Surface className="space-y-3">
+          <SectionLabel>接下来可以做</SectionLabel>
+          <div className="grid gap-2 sm:grid-cols-3">
+            <Link
+              href={`/ai-consultation?q=${encodeURIComponent(`关于这条咨询，我想补充：${row.userQuestionText.slice(0, 120)}`)}`}
+              className="inline-flex min-h-11 items-center justify-center gap-2 whitespace-nowrap rounded-btn bg-[var(--tebiq-ink-blue)] px-3 py-2 text-[14px] font-medium text-[var(--tebiq-off-white)]"
+            >
+              <MessageSquarePlus className="h-4 w-4" strokeWidth={1.6} />
+              带背景提问
+            </Link>
+            <Link
+              href={`/consultation?consultation_id=${encodeURIComponent(row.id)}`}
+              className="inline-flex min-h-11 items-center justify-center gap-2 whitespace-nowrap rounded-btn border border-[var(--tebiq-soft-gray)] px-3 py-2 text-[14px] font-medium text-[var(--tebiq-ink-blue)]"
+            >
+              <UserCheck className="h-4 w-4" strokeWidth={1.6} />
+              带记录预约
+            </Link>
+            <ConsultationShareButton url={`/c/${encodeURIComponent(row.id)}`} />
+          </div>
+          <p className="text-[12.5px] leading-[1.6] text-[var(--tebiq-cool-gray)]">
+            会打开提问页并带入这条记录的背景；不会修改当前记录。分享链接会包含问题和回答；敏感内容可以先不要分享。
+          </p>
+        </Surface>
 
         <Surface className="space-y-3">
           <SectionLabel>记录信息</SectionLabel>
@@ -130,7 +155,7 @@ export default async function ConsultationDetailPage({ params }: PageProps) {
             <ArrowLeft className="h-3.5 w-3.5" strokeWidth={1.6} />
             返回我的咨询
           </Link>
-          <p className="text-[var(--tebiq-deep-slate)]">具体期限、手续和个案判断，请向行政書士或入管确认。</p>
+            <p className="text-[var(--tebiq-deep-slate)]">具体期限、手续和个案判断，请向行政书士或入管确认。</p>
         </footer>
       </div>
     </ConsultationShell>
@@ -251,9 +276,9 @@ function AnswerDetailProse({ text }: { text: string }) {
         <div className="rounded-card border border-[var(--tebiq-soft-gray)] bg-[var(--tebiq-soft-gray)]/35 px-3.5 py-3">
           <SectionLabel>先看这里</SectionLabel>
           <div className="mt-2 space-y-1.5 text-[15px] leading-[1.65] text-[var(--tebiq-ink-blue)]">
-            <p><span className="font-medium">当前判断：</span>{firstLook.conclusion}</p>
-            <p><span className="font-medium">建议动作：</span>{firstLook.action}</p>
-            {firstLook.avoid && <p><span className="font-medium">暂缓事项：</span>{firstLook.avoid}</p>}
+            <p><span className="font-medium">先看方向：</span>{firstLook.conclusion}</p>
+            <p><span className="font-medium">下一步：</span>{firstLook.action}</p>
+            {firstLook.avoid && <p><span className="font-medium">先别这样做：</span>{firstLook.avoid}</p>}
           </div>
         </div>
       )}
@@ -286,9 +311,9 @@ function extractFirstLook(text: string): { firstLook: FirstLookBlock | null; res
     return match[1].trim()
   }
 
-  const conclusion = take(['当前判断', '结论'])
-  const action = take(['建议动作', '优先行动', '今天先做', '今天可以先确认', '今天先确认', '先做'])
-  const avoid = take(['暂缓事项', '先避免', '暂时不要', '暂时不要做', '先不要做'])
+  const conclusion = take(['先看方向', '当前判断', '结论'])
+  const action = take(['下一步', '建议动作', '优先行动', '今天先做', '今天可以先确认', '今天先确认', '先做'])
+  const avoid = take(['先别这样做', '先不要做', '注意事项', '暂缓事项', '先避免', '暂时不要', '暂时不要做'])
   if (!conclusion || !action) return { firstLook: null, rest: text }
 
   while (cursor < lines.length && lines[cursor].trim() === '') cursor += 1
@@ -305,7 +330,7 @@ function cleanDisplayText(text: string): string {
 function userSafeDetail(detail: string): string {
   const text = detail.trim()
   if (!text) return ''
-  if (looksTechnicalDetail(text)) return '可以重新生成，或稍后再试。'
+  if (looksTechnicalDetail(text)) return '可以重试，或稍后再试。'
   return `原因：${cleanDisplayText(text)}`
 }
 

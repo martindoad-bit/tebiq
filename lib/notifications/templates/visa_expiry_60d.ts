@@ -54,7 +54,7 @@ export const template = {
                   <li style="margin-bottom:6px;">向公司人事或会社确认配合时间</li>
                   <li style="margin-bottom:6px;">如更换工作或地址有变，提前梳理变更资料</li>
                 </ul>
-                <p style="margin:0 0 12px;">完成更新前可凭<strong>受理証明書</strong>继续在日生活；提交后享 2 个月特例期間，请放心。</p>
+                <p style="margin:0 0 12px;">在留期限前提交更新申请后，请保留受理相关记录，并确认等待期间的在留与工作范围。</p>
               </td>
             </tr>
             <tr>
@@ -85,7 +85,7 @@ export const template = {
 - 向公司人事或会社确认配合时间
 - 如更换工作或地址有变，提前梳理变更资料
 
-完成更新前可凭受理証明書继续在日生活；提交后享 2 个月特例期間，请放心。
+在留期限前提交更新申请后，请保留受理相关记录，并确认等待期间的在留与工作范围。
 
 查看我的档案：${ARCHIVE_URL}
 

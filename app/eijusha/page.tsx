@@ -5,14 +5,15 @@ import TrackedLink from '@/app/_components/v5/TrackedLink'
 import { EVENT } from '@/lib/analytics/events'
 
 export const metadata: Metadata = {
-  title: '永住者申请完整攻略 2026 | TEBIQ',
+  title: '永住申请参考整理 | TEBIQ',
   description:
-    '在日永住者申请完整攻略。10 年居住要件、纳税社保、在留期间 3 年以上、归化与永住对比、2026 年最新政策动向一次看完。',
+    '在日永住申请参考整理。居住年数、纳税社保、在留期间等具体要求请以官方来源、窗口说明和个案判断为准。',
+  robots: { index: false, follow: false },
   alternates: { canonical: '/eijusha' },
   openGraph: {
-    title: '永住者申请完整攻略 2026',
+    title: '永住申请参考整理',
     description:
-      '在日永住者申请完整攻略：10 年要件、纳税社保、申请费用动向。',
+      '在日永住申请参考整理，具体要求请以官方来源和个案判断为准。',
     url: 'https://tebiq.jp/eijusha',
     siteName: 'TEBIQ',
     locale: 'zh_CN',
@@ -23,9 +24,9 @@ export const metadata: Metadata = {
 const articleSchema = {
   '@context': 'https://schema.org',
   '@type': 'Article',
-  headline: '永住者申请完整攻略 2026',
+  headline: '永住申请参考整理',
   description:
-    '在日永住者申请完整攻略与 2026 年最新政策动向，含纳税社保与归化比较。',
+    '在日永住申请参考整理，含纳税社保与归化比较。',
   inLanguage: 'zh-CN',
   author: { '@type': 'Organization', name: 'TEBIQ' },
   publisher: {
@@ -43,7 +44,10 @@ const articleSchema = {
 
 export default function EijushaLandingPage() {
   return (
-    <SeoVisaArticleShell articleSchema={articleSchema} title={"永住者申请完整攻略 2026"} updated={"最新更新：2026-04-24 · 含 2026 年归化运用变更对比"}>
+    <SeoVisaArticleShell articleSchema={articleSchema} title={"永住申请参考整理"} updated={"更新：2026-04-24 · 基于公开资料整理"}>
+          <p className="mb-6 rounded-card border border-hairline bg-paper px-4 py-3 text-[12.5px] leading-[1.7] text-slate">
+            本页用于一般信息核对，不代表个案结论。永住的材料年数、审查口径和费用变化，请以官方来源、窗口说明和专业确认结果为准。
+          </p>
 
           <nav
             aria-label="目录"
@@ -97,16 +101,16 @@ export default function EijushaLandingPage() {
                 <strong>居住要件：</strong>原则在日连续居住 10 年以上，其中含就劳或居住资格 5 年以上。
               </Bullet>
               <Bullet>
-                <strong>素行善良：</strong>无刑事违规，无重大交通违规（醉驾、超速大幅度等）。
+                <strong>素行善良：</strong>如有刑事处分或严重交通违规，需要说明，可能产生不利影响。
               </Bullet>
               <Bullet>
                 <strong>独立生计：</strong>本人或家庭有稳定收入与资产，不依赖生活保护。
               </Bullet>
               <Bullet>
-                <strong>纳税义务：</strong>住民税、所得税完整缴纳，最近 5 年无延迟与欠缴。
+                <strong>公的义务：</strong>永住申请会重视住民税、所得税、年金、健康保险等履行记录；具体核对几年、哪些证明、延迟或补缴如何评价，要按申请路线和官方资料确认。
               </Bullet>
               <Bullet>
-                <strong>社保加入：</strong>健康保险、年金按月缴纳，最近 2 年无断缴 / 未滞纳。
+                <strong>社保 / 年金：</strong>健康保险和年金记录需要提前核对；如果有空白、迟纳或补缴，建议递交前确认说明方式。
               </Bullet>
               <Bullet>
                 <strong>在留期间：</strong>申请时持有的在留资格期间为 3 年或 5 年（1 年原则上无法申请）。
@@ -120,10 +124,10 @@ export default function EijushaLandingPage() {
           <Section id="policy-2026" title="2025-2026 政策动向">
             <ul className="space-y-3">
               <Bullet>
-                <strong>归化原则要件 2026 年 4 月起严格化：</strong>法务省运用变更，归化的「居住要件」从原则 5 年提高到原则 10 年。国籍法条文未修改，但实际审查按 10 年运用。永住与归化的居住时间门槛因此趋于一致。
+                <strong>归化原则要件的公开信息需要另行确认：</strong>归化与永住是不同制度，居住年数、审查口径和运用变化请以法务省公告、窗口说明和专业确认结果为准。
               </Bullet>
               <Bullet>
-                <strong>申请费用调整讨论中：</strong>永住申请费用提高的法案正在审议中（媒体报道最高可能至 ¥300,000），具体生效时间和金额尚未确定，建议持续关注法务省与入管庁公告。
+                <strong>申请费用：</strong>永住许可申请的手数料请以入管庁最新页面为准；当前已核对资料为许可时 10,000 円。
               </Bullet>
               <Bullet>
                 <strong>纳税与社保审查更细：</strong>近年实务上对住民税缴纳延迟、年金未加入等情况追究越来越严格，过去「补缴一次就过」的灵活度在缩小。
@@ -140,10 +144,10 @@ export default function EijushaLandingPage() {
           <Section id="pitfalls" title="常见踩坑">
             <ul className="space-y-2">
               <Bullet>
-                <strong>住民税延迟交一次：</strong>许多人因为换公司或市役所通知漏看，导致一次延迟，结果在永住审查中被一票否决。
+                <strong>住民税或年金有延迟记录：</strong>住民税或年金的延迟、未纳记录可能成为永住审查中的不利因素。具体影响会看延迟时间、是否补正、申请路线和整体履历。
               </Bullet>
               <Bullet>
-                <strong>年金未加入或断缴：</strong>跨工作之间没有及时加入国民年金，2 年内有缺漏会被严查。
+                <strong>年金未加入或断缴：</strong>跨工作之间没有及时加入国民年金时，材料年数与审查范围请按申请路线、官方资料或窗口说明确认。
               </Bullet>
               <Bullet>
                 <strong>在留期间只有 1 年：</strong>必须先续到 3 年或 5 年才能申请，提前规划。
@@ -189,12 +193,12 @@ export default function EijushaLandingPage() {
           </Section>
 
           <TrackedLink
-            href="/check"
+            href="/check/permanent_resident_preparation"
             eventName={EVENT.HOME_CHECK_CARD_CLICK}
             payload={{ source: 'eijusha_page', visa: 'eijusha' }}
             className="mt-5 flex min-h-[48px] w-full items-center justify-center rounded-btn bg-accent px-4 py-3 text-[13px] font-medium text-white shadow-cta"
           >
-            先做材料准备检查 →
+            永住申请准备自查 →
           </TrackedLink>
 
           <p className="text-center text-ash text-[11px] mt-8 leading-relaxed">

@@ -25,11 +25,11 @@ export default function SaveToArchiveButton() {
   return (
     <>
       <Button variant="secondary" onClick={onSave} disabled={saved}>
-        {saved ? '已进入我的提醒' : '确认进入我的提醒'}
+        {saved ? '已进入记录' : '保存到记录'}
       </Button>
       {saved && (
         <p className="text-center text-[11px] text-ash mt-1">
-          可在「我的提醒」中查看
+          可在账号记录中查看
         </p>
       )}
     </>

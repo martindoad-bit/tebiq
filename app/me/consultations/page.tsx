@@ -30,8 +30,14 @@ export default async function MyConsultationsPage() {
   const viewerId = cookieStore.get('tebiq_viewer')?.value ?? null
 
   let rows: AiConsultation[] = []
+  let recordsUnavailable = false
   if (viewerId) {
-    rows = await listRecentAiConsultationsForViewer(viewerId, 20)
+    try {
+      rows = await listRecentAiConsultationsForViewer(viewerId, 20)
+    } catch (error) {
+      recordsUnavailable = true
+      console.error('[my-consultations] failed to load recent records', error)
+    }
   }
 
   return (
@@ -40,7 +46,7 @@ export default async function MyConsultationsPage() {
         <BrandHeader
           eyebrow="自动记录"
           title="我的咨询"
-          description="这里会自动记录你问过的在留问题。可以回看、删除，或把链接发给别人。"
+          description="同一浏览器会自动记录你问过的在留问题。可以回看、删除，也可以自己决定是否分享。"
           action={
             <Link
               href="/ai-consultation"
@@ -52,27 +58,33 @@ export default async function MyConsultationsPage() {
           }
         />
 
-        <Surface className="space-y-2">
-          <div className="flex items-end gap-2">
+        {rows.length > 0 && (
+          <Surface className="space-y-2">
             <SectionLabel>最近记录</SectionLabel>
-            <p className="text-[28px] font-semibold leading-none text-[var(--tebiq-ink-blue)]">{rows.length}</p>
-          </div>
-          <p className="text-[13.5px] leading-relaxed text-[var(--tebiq-deep-slate)]">
-            当前显示最近 20 条；换浏览器或清空记录后，可能看不到旧咨询。
-          </p>
-        </Surface>
+            <p className="text-[13.5px] leading-relaxed text-[var(--tebiq-deep-slate)]">
+              当前显示最近 20 条；记录跟随这台设备和浏览器，更换设备或清空记录后可能看不到旧咨询。
+            </p>
+          </Surface>
+        )}
 
-        {!viewerId && (
+        {recordsUnavailable && (
           <EmptyRecordState
-            title="还没有浏览器记录"
-            body="提出一个具体问题后，会自动保存在这里。"
+            title="记录暂时没取到"
+            body="这不影响继续提问。稍后再打开这里，通常就能看到自动记录。"
           />
         )}
 
-        {viewerId && rows.length === 0 && (
+        {!recordsUnavailable && !viewerId && (
           <EmptyRecordState
             title="还没有咨询记录"
-            body="提出一个具体问题后，会自动保存在这里。"
+            body="提出一个具体问题后，会自动记录在这里。"
+          />
+        )}
+
+        {!recordsUnavailable && viewerId && rows.length === 0 && (
+          <EmptyRecordState
+            title="还没有咨询记录"
+            body="提出一个具体问题后，会自动记录在这里。"
           />
         )}
 
@@ -93,18 +105,18 @@ export default async function MyConsultationsPage() {
                     </div>
                   </Link>
                   <div className="flex flex-wrap gap-2">
-                    {row.hasImage && <MetaPill icon={Camera}>图片咨询</MetaPill>}
-                    {row.feedbackType && <MetaPill>反馈：<FeedbackLabel type={row.feedbackType} /></MetaPill>}
+                    {row.hasImage && <MetaPill icon={Camera}>有图片</MetaPill>}
+                    {row.feedbackType && <MetaPill>已反馈：<FeedbackLabel type={row.feedbackType} /></MetaPill>}
                     {(row.factCardIds ?? []).length > 0 && (
-                      <MetaPill icon={BookOpen}>参考资料 ×{(row.factCardIds ?? []).length}</MetaPill>
+                      <MetaPill icon={BookOpen}>来源 ×{(row.factCardIds ?? []).length}</MetaPill>
                     )}
                     {(row.riskKeywordHits ?? []).length > 0 && (
-                      <MetaPill tone="focus">有风险提示</MetaPill>
+                      <MetaPill tone="focus">有提示</MetaPill>
                     )}
                   </div>
                   <div className="flex items-center justify-between gap-3">
                     <Link href={`/c/${encodeURIComponent(row.id)}`} className="inline-flex min-h-9 items-center gap-1 text-[13.5px] font-medium text-[var(--tebiq-ink-blue)]">
-                      查看回答
+                      查看记录
                       <ArrowRight className="h-3.5 w-3.5" strokeWidth={1.6} />
                     </Link>
                     <ConsultationDeleteButton id={row.id} />

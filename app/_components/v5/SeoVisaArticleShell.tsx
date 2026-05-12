@@ -24,7 +24,7 @@ export function SeoVisaArticleShell({
       <article className="pt-3 pb-5">
         <header className="rounded-card border border-hairline bg-surface px-4 py-4">
           <div className="mb-2 inline-flex rounded-[8px] bg-paper px-2 py-1 text-[10px] font-medium leading-none text-ink">
-            SEO 指南
+            参考指南
           </div>
           <h1 className="text-[21px] font-medium leading-[1.42] text-ink">{title}</h1>
           <p className="mt-2 text-[11px] leading-[1.6] text-ash">{updated}</p>

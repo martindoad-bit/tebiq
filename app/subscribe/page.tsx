@@ -103,7 +103,7 @@ export default function SubscribePage() {
       <ConsumerProtectionNotice />
 
       <p className="mt-4 text-center text-[12px] text-ash">
-        <Link href="/timeline" className="underline-offset-4 hover:text-ink">查看我的提醒</Link>
+        <Link href="/me/consultations" className="underline-offset-4 hover:text-ink">查看我的咨询</Link>
       </p>
     </AppShell>
   )
@@ -117,7 +117,7 @@ function ConsumerProtectionNotice() {
         <NoticeRow label="续费" value="月度 / 年度自动续费" />
         <NoticeRow label="取消" value="取消后可使用至当前周期结束" />
         <NoticeRow label="数据" value="可在设置中导出或提交删除请求" />
-        <NoticeRow label="图片" value="原始图片不保存，OCR 后删除" />
+        <NoticeRow label="图片" value="原始图片不保存，读取文字后删除" />
       </dl>
       <p className="mt-3 border-t border-hairline pt-3 text-[11px] leading-[1.6] text-ash">
         运营主体: 刺狐合同会社 / 联系入口: contact@tebiq.jp

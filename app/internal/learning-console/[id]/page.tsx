@@ -95,7 +95,7 @@ export default async function LearningConsoleDetailPage({ params }: PageProps) {
               </div>
               {(displayState === 'partial' || displayState === 'fallback' || displayState === 'timeout' || displayState === 'failed') && (
                 <div className="rounded-card border border-[var(--tebiq-warm-amber)] px-3 py-2 text-[12px] leading-relaxed text-[var(--tebiq-ink-blue)]">
-                  {displayState === 'partial' && '这条记录有部分回答，但未完整完成。'}
+                  {displayState === 'partial' && '这条记录只保留了部分内容。'}
                   {displayState === 'fallback' && '这条记录使用了安全降级文案。'}
                   {displayState === 'timeout' && '这条记录没有生成可用完整回答。'}
                   {displayState === 'failed' && '这条记录生成失败。'}

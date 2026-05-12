@@ -182,7 +182,7 @@ export const KEYWORD_BUCKETS: Record<KeywordBucketId, KeywordBucket> = {
     ],
     status_label_initial: STATUS_LABEL_INITIAL_DEFAULT,
     status_label_specific: '正在核对在留期限、更新窗口和特例期间。',
-    risk_hint_copy: '在留期限超过未申请会进入特例期间，每多一日都增加更新难度；剩 1 个月内强烈建议立即向行政書士确认。',
+    risk_hint_copy: '在留期限临近时，先确认是否已经在期限前提交更新或变更申请；还没提交时不要等到期后处理，尽快向入管窗口或行政书士确认。',
   },
 }
 

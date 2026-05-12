@@ -9,13 +9,13 @@ controlled_alpha_eligible: false
 last_verified_at: "2026-05-07"
 reviewer: FACT-OPS (Batch 8)
 sprint: "0.6"
-citation_label: "永住者の配偶者等ビザ（申請要件・婚姻実態・就労制限なし）"
-citation_summary: "永住者・特別永住者の配偶者または子に与えられる在留資格「永住者の配偶者等」の申請要件・在留期間・就労制限・更新注意点を確認するカード。"
+citation_label: "永住者の配偶者等ビザ（申請要件・在留期間）"
+citation_summary: "永住者・特別永住者の配偶者または子に与えられる在留資格「永住者の配偶者等」の申請要件・在留期間を確認するカード。"
 source_display_names:
   - "出入国在留管理庁"
 applies_when:
   - "永住者または特別永住者の配偶者として在留資格を取得・更新したい"
-  - "永住者の配偶者等ビザの就労制限・活動範囲を確認したい"
+  - "永住者の配偶者等ビザの申請要件・在留期間を確認したい"
   - "永住者の配偶者等ビザから永住申請への要件・在留期間を確認したい"
 does_not_cover:
   - "離婚・別居後の在留資格リスク（spouse-divorce-separation 参照）"
@@ -66,10 +66,10 @@ evidence_points:
     source_url: "https://www.moj.go.jp/isa/applications/status/spouseorchildofpermanentresident.html"
     source_organization: "出入国在留管理庁"
     source_locator: "ページ内「活動内容」「就労」「更新」の記述を確認"
-    display_label: "就労制限なし・更新時婚姻実態確認・スポンサー死亡/離婚時は変更要"
+    display_label: "就労範囲・更新時婚姻実態・スポンサー死亡/離婚時の取扱いは確認要"
     support_level: "indirect"
-    user_visible: true
-    needs_domain_review: false
+    user_visible: false
+    needs_domain_review: true
   - claim: "永住者の配偶者等ビザから永住申請への移行：「永住者の配偶者等」で3年以上かつ1年以上継続在留した場合、永住申請の在留期間短縮特例の基礎要件を満たす可能性がある（ai推定・永住許可ガイドラインの配偶者特例要件と整合）。他の永住要件（公租公課・素行等）も同時に満たす必要がある。"
     source_title: "出入国在留管理庁：永住者の配偶者等（在留資格）"
     source_url: "https://www.moj.go.jp/isa/applications/status/spouseorchildofpermanentresident.html"

@@ -40,13 +40,13 @@ export default function TabBar() {
 
   return (
     <nav
-      className="flex-shrink-0 border-t border-hairline bg-surface"
+      className="tebiq-tabbar w-full max-w-full flex-shrink-0 overflow-hidden border-t border-hairline bg-surface"
       style={{
         height: 'calc(68px + env(safe-area-inset-bottom))',
         paddingBottom: 'env(safe-area-inset-bottom)',
       }}
     >
-      <ul className="grid h-[68px] grid-cols-4">
+      <ul className="grid h-[68px] w-full min-w-0 max-w-full grid-cols-4">
         {TABS.map(({ href, label, Icon, match }) => {
           const active = match(pathname)
           return (
@@ -57,16 +57,16 @@ export default function TabBar() {
                   if (active) return
                   trackClient(EVENT.TAB_SWITCH, { from: pathname, to: href, label })
                 }}
-                className={`focus-ring flex h-full flex-col items-center justify-center gap-1 rounded-none transition-colors ${
+                className={`focus-ring flex h-full min-w-0 max-w-full flex-col items-center justify-center gap-0.5 rounded-none px-0.5 transition-colors ${
                   active ? 'text-ink' : 'text-haze'
                 }`}
               >
                 <Icon
-                  size={22}
+                  size={21}
                   strokeWidth={1.5}
                   color={active ? '#0F2544' : '#9AA0AC'}
                 />
-                <span className="whitespace-nowrap text-[12px] font-normal leading-none">{label}</span>
+                <span className="max-w-full truncate whitespace-nowrap text-[10.5px] font-normal leading-none min-[390px]:text-[11px]">{label}</span>
               </Link>
             </li>
           )

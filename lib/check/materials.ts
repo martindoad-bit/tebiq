@@ -50,7 +50,7 @@ const _data: MaterialCategory[] = [
         cost: '800 - 1500 日元',
         online: false,
         pitfall:
-          '必须 4cm×3cm，3 个月内拍摄，白底无装饰。千万别用手机自拍——不规范的照片会被退件',
+          '照片需为 4cm×3cm、3 个月内拍摄、白底无装饰；不符合规格时可能需要重拍或补正',
       },
       {
         id: 'passport',
@@ -73,7 +73,7 @@ const _data: MaterialCategory[] = [
         duration: '即用',
         cost: '免费',
         online: false,
-        pitfall: '必须复印正反两面（背面有住址变更记录），漏背面会被退',
+        pitfall: '建议复印正反两面；背面有住址变更记录时也会用于确认，漏印可能需要补交。',
       },
       {
         id: 'juminhyo',
@@ -114,7 +114,7 @@ const _data: MaterialCategory[] = [
         cost: '免费',
         online: false,
         pitfall:
-          '必须含职位、入职日、工作内容、年收入、公司印章。让人事用入管标准格式填写——简陋的版本会被退',
+          '建议包含职位、入职日、工作内容、年收入和公司印章，并请人事按入管常用格式开具。',
       },
       {
         id: 'company-registry',
@@ -178,7 +178,7 @@ const _data: MaterialCategory[] = [
         cost: '免费',
         online: false,
         pitfall:
-          '必须详细描述工作内容、与所学专业的关联性。最大的雷是写得太泛——入管要看到具体职责，不是「office 工作」这种模糊词',
+          '建议具体写明工作内容及与学历或经历的关联，避免只写「office 工作」等笼统表述。',
       },
       {
         id: 'business-card',
@@ -218,7 +218,7 @@ const _data: MaterialCategory[] = [
         cost: '300 日元 / 份',
         online: true,
         pitfall:
-          '证明你「已经缴纳」。如果有未缴部分会显示出来——务必先补缴再开，否则等于自爆',
+          '如果有未缴部分，证明书上可能显示；建议先确认并处理后再申请',
       },
       {
         id: 'gensen',

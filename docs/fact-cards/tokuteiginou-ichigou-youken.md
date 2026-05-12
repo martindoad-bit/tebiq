@@ -39,12 +39,12 @@ direct_fact_fields:
   - 特定技能2号のみ対象：機械金属加工、電気電子機器組立て、金属表面処理（製造3分野）
 ai_inferred_fields:
   - 特定技能1号の日本語要件：国際交流基金日本語基礎テスト（JFT-Basic）合格 または 日本語能力試験（JLPT）N4以上合格（業種によって要求試験が異なる）
-  - 特定技能1号は配偶者・子の家族帯同不可；特定技能2号は家族帯同可
+  - 特定技能1号・2号の家族帯同可否は、配偶者・子の在留資格や扶養状況を含めて別途確認が必要
   - 技能試験（各分野所管省庁が実施する技能水準確認試験）の合格が原則必要（技能実習2号・3号修了者等は免除の場合あり）
 needs_review_flags:
   - japanese_language_test_by_sector: 日本語要件（JFT-Basic可否・N4の代替可否）は業種ごとに異なる。介護は介護日本語評価試験も必要。各業種の要件一覧の官庁ページ照合要。
   - family_accompaniment_prohibition_source: 1号の家族帯同不可は法令（出入国管理及び難民認定法別表第1の2「特定技能」欄）で規定。直接ソース引用は未取得のため確認要。
-  - tokutei_ginou_2_family_source: 2号の家族帯同可については公式確認要（ISA別表第1の2「特定技能2号」欄または告示）。
+  - tokutei_ginou_2_family_source: 2号の家族帯同可否については公式確認要（ISA別表第1の2「特定技能2号」欄または告示）。
 related_links:
   - title: "出入国在留管理庁 — 特定技能（在留資格）"
     url: "https://www.moj.go.jp/isa/applications/status/specifiedskilledworker.html"
@@ -62,15 +62,15 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: false
-  - claim: "特定技能2号の技能水準は「熟練した技能」（1号より上位）。在留期間の上限はなく「3年・2年・1年・6か月」を繰り返し更新可能。1号は家族帯同不可、2号は家族帯同可（各ai推定・法令照合要）。"
+  - claim: "特定技能2号の技能水準は「熟練した技能」（1号より上位）。在留期間の上限はなく「3年・2年・1年・6か月」を繰り返し更新可能。家族帯同可否は、配偶者・子の在留資格や扶養状況を含めて別途確認が必要。"
     source_title: "出入国在留管理庁：特定技能（在留資格）"
     source_url: "https://www.moj.go.jp/isa/applications/status/specifiedskilledworker.html"
     source_organization: "出入国在留管理庁"
-    source_locator: "ページ内「特定技能1号・2号の比較」「熟練した技能」「上限なし」「家族帯同」の記述を確認"
-    display_label: "1号vs2号：通算上限あり/なし・家族帯同不可/可"
-    support_level: "direct"
-    user_visible: true
-    needs_domain_review: false
+    source_locator: "ページ内「特定技能1号・2号の比較」「熟練した技能」「上限なし」の記述を確認。家族帯同は別途要件確認"
+    display_label: "1号vs2号：通算上限あり/なし・家族帯同は別途確認"
+    support_level: "indirect"
+    user_visible: false
+    needs_domain_review: true
   - claim: "特定技能1号の日本語要件：国際交流基金日本語基礎テスト（JFT-Basic）合格またはJLPT N4以上合格が必要。介護分野では加えて「介護日本語評価試験」も必要。業種によって要求される試験の種類が異なる（ai推定・業種別試験要件は各分野所管省庁で確認要）。"
     source_title: "出入国在留管理庁：特定技能（在留資格）"
     source_url: "https://www.moj.go.jp/isa/applications/status/specifiedskilledworker.html"
@@ -78,7 +78,7 @@ evidence_points:
     source_locator: "ページ内「日本語能力」「JFT-Basic」「JLPT N4」「介護日本語評価試験」の記述から推論（japanese_language_test_by_sector確認要）"
     display_label: "特定技能1号：JFT-Basic又はN4以上必要・介護は追加試験あり（ai推定）"
     support_level: "indirect"
-    user_visible: true
+    user_visible: false
     needs_domain_review: true
 ---
 
@@ -187,6 +187,7 @@ A: 技能実習2号・3号を良好に修了した場合、同一業種・職種
 ・日本語要件の業種別詳細（JFT-Basic可否は業種ごとに確認要）
 ・技能実習修了者の試験免除条件（同一業種・職種の一致要件）
 ・特定技能2号の現行対応分野一覧（2023年以降拡大中）
+・特定技能2号の家族帯同可否（別途法令・手続き確認要）
 ```
 
 ## changelog
@@ -195,3 +196,4 @@ A: 技能実習2号・3号を良好に修了した場合、同一業種・職種
 |------|------|----------|--------------|-------------|------|
 | 2026-05-07 | FACT-OPS (Batch 6) | 新規作成。特定技能1号の業種・要件（5年上限・家族帯同不可・日本語要件）。ai_verified: 5+ direct_fact_fields確認。N4/家族帯同はai_inferred + needs_review_flag。 | — | ai_verified | new |
 | 2026-05-11 | FACT-OPS (Cycle 2 Batch 5) | Cycle 2メタデータ追加パッチ。citation_label・citation_summary・source_display_names・applies_when・does_not_coverフィールドを追加。事実内容・state変更なし。 | ai_verified | ai_verified | patch |
+| 2026-05-12 | Codex | 特定技能2号の家族帯同を断定せず、別途要件確認に統一。 | ai_verified | ai_verified | evidence-boundary |

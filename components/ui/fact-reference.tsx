@@ -58,12 +58,12 @@ export function FactReferenceBlock({
             </span>
             {exactCount > 0 && (
               <span className="rounded-full bg-[var(--tebiq-soft-blue)] px-2 py-0.5 text-[12px] text-[var(--tebiq-ink-blue)]">
-                {exactCount} 条直接依据
+                {exactCount} 条可核对来源
               </span>
             )}
           </div>
           <p className="mt-1.5 text-[12.5px] leading-[1.6] text-[var(--tebiq-cool-gray)]">
-            这些资料用于核对信息，不代表官方背书或个案最终判断。
+            这些资料用于核对相关规则或事实，不代表官方背书或个案最终判断。
             {reviewCount > 0 ? ' 部分资料仍需结合个案确认。' : ''}
           </p>
         </div>
@@ -75,6 +75,7 @@ export function FactReferenceBlock({
             key={card.fact_id}
             card={card}
             items={items}
+            limit={variant === 'compact' ? 2 : 3}
           />
         ))}
       </div>
@@ -85,14 +86,16 @@ export function FactReferenceBlock({
 function FactReferenceCard({
   card,
   items,
+  limit,
 }: {
   card: ConsultationFactCardAuditEntry
   items: ReferenceItem[]
+  limit: number
 }) {
   const isHighRisk = card.risk_level === 'high' || card.risk_level === 'critical'
   const groupLabel = card.decision === 'hint_only' || card.needs_review_flags.length > 0
-    ? '需核对'
-    : '已用于回答'
+    ? '需结合个案'
+    : '相关资料'
 
   return (
     <div className="rounded-card border border-[var(--tebiq-soft-gray)] bg-white px-3.5 py-3.5">
@@ -105,28 +108,28 @@ function FactReferenceCard({
         </span>
         {isHighRisk && (
           <span className="whitespace-nowrap rounded-full border border-[var(--tebiq-warm-amber)] px-2 py-0.5 text-[11.5px] text-[var(--tebiq-deep-slate)]">
-            高风险
+            影响较大
           </span>
         )}
       </div>
 
       <ul className="mt-3 space-y-2">
-        {items.slice(0, 3).map(item => (
+        {items.slice(0, limit).map(item => (
           <li key={item.key}>
             <ReferenceLink item={item} />
           </li>
         ))}
       </ul>
 
-      {items.length > 3 && (
+      {items.length > limit && (
         <p className="mt-2 text-[12px] text-[var(--tebiq-cool-gray)]">
-          另有 {items.length - 3} 条来源，已保留在记录中。
+          另有 {items.length - limit} 条来源，已保留在记录中。
         </p>
       )}
 
       {card.needs_review_flags.length > 0 && (
         <p className="mt-2.5 text-[12px] leading-[1.6] text-[var(--tebiq-cool-gray)]">
-          这条资料有些细节需要结合材料或窗口说明再核对，不能只凭这一条直接行动。
+          这条资料有些细节需要结合材料或窗口说明再确认。
         </p>
       )}
     </div>
@@ -139,7 +142,7 @@ function ReferenceLink({ item }: { item: ReferenceItem }) {
       href={item.url}
       target="_blank"
       rel="noreferrer noopener"
-      className="focus-ring group block rounded-[10px] border border-[var(--tebiq-soft-gray)] bg-[var(--tebiq-off-white)] px-3 py-3 text-[13px] text-[var(--tebiq-deep-slate)] active:bg-[var(--tebiq-soft-gray)]"
+      className="focus-ring group block rounded-[10px] border border-[var(--tebiq-soft-gray)] bg-[var(--tebiq-off-white)] px-3 py-3 text-[13px] text-[var(--tebiq-deep-slate)] transition-colors hover:border-[var(--tebiq-cool-gray)] active:bg-[var(--tebiq-soft-gray)]"
     >
       <div className="flex min-w-0 items-start gap-2">
         <span className="min-w-0 flex-1">
@@ -157,7 +160,7 @@ function ReferenceLink({ item }: { item: ReferenceItem }) {
           </span>
           {item.claim && (
             <span className="mt-1 block text-[12.5px] leading-[1.55] text-[var(--tebiq-deep-slate)]">
-              对应：{item.claim}
+              相关内容：{item.claim}
             </span>
           )}
           <span className="mt-2 inline-flex min-h-8 items-center rounded-btn border border-[var(--tebiq-soft-gray)] bg-white px-2.5 text-[12.5px] font-medium text-[var(--tebiq-ink-blue)]">
@@ -222,16 +225,16 @@ function dedupeReferenceItems(items: ReferenceItem[]): ReferenceItem[] {
 }
 
 function supportLabel(item: ReferenceItem): string {
-  if (item.needsDomainReview) return '需核对'
-  if (item.support === 'direct') return '直接依据'
-  if (item.support === 'indirect') return '相关参考'
-  if (item.support === 'official') return '相关页面'
+  if (item.needsDomainReview) return '需确认'
+  if (item.support === 'direct') return '可核对'
+  if (item.support === 'indirect') return '相关'
+  if (item.support === 'official') return '来源'
   return '背景资料'
 }
 
 function sourceTitleFor(url: string): string {
   const label = sourceLabelFor(url)
-  return label === '官方资料' ? hostnameOf(url) : `${label}：相关页面`
+  return label === '来源页面' ? hostnameOf(url) : `${label}：相关页面`
 }
 
 function sourceLabelFor(url: string): string {
@@ -252,7 +255,7 @@ function sourceLabelFor(url: string): string {
   if (/laws\.e-gov\.go\.jp$/i.test(host) || /elaws\.e-gov\.go\.jp$/i.test(host)) return 'e-Gov法令検索'
   if (/\.lg\.jp$/i.test(host)) return '自治体官网'
   if (/\.go\.jp$/i.test(host)) return '日本政府官网'
-  return '官方资料'
+  return '来源页面'
 }
 
 function hostnameOf(url: string): string {

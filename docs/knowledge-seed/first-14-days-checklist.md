@@ -27,7 +27,7 @@ review_notes: null
 ### 必办清单（按顺序）
 
 **1. 転入届 / 住居地届出**（决定住所之日起 14 日内）
-- 法律根据：[入管法 第 19-7 条](https://www.moj.go.jp/isa/applications/procedures/16-3.html)、住民基本台帳法
+- 法律根据：[入管法 第 19-7 条](https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00023.html)、住民基本台帳法
 - 在哪办：住所所属的 市役所 / 区役所「住民課 / 市民課」窗口
 - 带什么：在留カード、パスポート、賃貸借契約書（住所証明）。家族同时办则全员的 在留カード。
 - 完成后：在留カード 背面会写上住所，住民票 同时生成。
@@ -72,10 +72,10 @@ review_notes: null
 - 経営管理 来日且公司事務所与居住住所分离
 - 在留期間 不足 6 ヶ月 时 銀行 / 通信 一连串拒否
 
-需要专业判断时，建议咨询行政書士。TEBIQ 提供专业咨询服务（[预约](/consultation)）。
+需要专业判断时，建议带材料向行政书士确认。
 
 ## 信息来源
-- [出入国在留管理庁 住居地の届出](https://www.moj.go.jp/isa/applications/procedures/16-3.html)（取得日 2026-04-28）
+- [出入国在留管理庁 住居地の届出](https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00023.html)（取得日 2026-05-12）
 - [総務省 住民基本台帳ネットワーク](https://www.soumu.go.jp/main_sosiki/jichi_gyousei/c-gyousei/zairyu.html)（取得日 2026-04-28）
 - [総務省 マイナンバー制度](https://www.soumu.go.jp/kojinbango_card/)（取得日 2026-04-28）
 - [日本年金機構 国民年金](https://www.nenkin.go.jp/service/kokunen/index.html)（取得日 2026-04-28）

@@ -4,7 +4,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: 'TEBIQ',
     short_name: 'TEBIQ',
-    description: 'AI 在留咨询整理工具',
+    description: '在留咨询整理工具',
     start_url: '/ai-consultation',
     display: 'standalone',
     background_color: '#FAFAF7',

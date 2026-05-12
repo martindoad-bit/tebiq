@@ -103,7 +103,7 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: false
-  - claim: "在留期間更新許可申請の費用：窓口申請は6,000円（収入印紙）、オンライン申請は5,500円（2025年4月1日以降受理分。それ以前は4,000円）。処理期間は2週間〜1か月。申請書への押印は原則として不要。"
+  - claim: "在留期間更新許可申請の費用：窓口申請は6,000円（収入印紙）、オンライン申請は5,500円（2025年4月1日以降受理分）。処理期間は2週間〜1か月。申請書への押印は原則として不要。"
     source_title: "出入国在留管理庁：在留期間更新許可申請"
     source_url: "https://www.moj.go.jp/isa/applications/procedures/16-3.html"
     source_organization: "出入国在留管理庁"

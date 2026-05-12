@@ -15,7 +15,7 @@ export default function PrivacyPolicyPage() {
             隐私政策 / プライバシーポリシー
           </h1>
           <p className="mt-2 text-[12px] leading-[1.7] text-ash">
-            TEBIQ 仅为日文文书识别、文字理解、自查记录和提醒提供工具性处理。信息仅供参考，具体以官方公式 website 或专家为准。
+            TEBIQ 仅为日文文书识别、文字理解、自查记录和提醒提供工具性处理。信息仅供参考，具体以官方网站或专业人士确认为准。
           </p>
         </section>
 

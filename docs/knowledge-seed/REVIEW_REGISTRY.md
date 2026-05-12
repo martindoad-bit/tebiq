@@ -111,7 +111,7 @@
 | 51 | `scenarios/child-school-transfer.md` | 帰国生 / 海外校から日本公立校 編入時 学年判定基準（年齢相当 vs 学習進度相当）自治体差 | 否 |
 | 52 | `scenarios/china-return-prep.md` | 脱退一時金 5 年分上限 計算式（2021.4 改正後 60 ヶ月相当）+ 日中社会保障協定 通算規定 最新運用 | 否 |
 | 53 | `scenarios/disaster-relief.md` | 地域別 義援金 配分基準 / 自治体 独自支援制度 災害ごとに異なる | 否 |
-| 54 | `scenarios/eijuu-prep-1year.md` | 2026/2/24 永住法改正「公的義務不履行 → 永住取消」具体運用基準 / 経過期間 | 否 |
+| 54 | `scenarios/eijuu-prep-1year.md` | 2026/2/24 永住許可ガイドライン改訂「公的義務不履行 → 永住取消」具体運用基準 / 経過期間 | 否 |
 | 55 | `scenarios/high-medical-cost.md` | 2025.8 / 2027.8 段階的実施予定 高額療養費 限度額引上げ案 施行状況 | 否 |
 | 56 | `scenarios/kika-prep-6months.md` | 中国侧「退出中国国籍许可」具体手続与所要時間（领事馆別） | 否 |
 | 57 | `scenarios/parents-visit-visa.md` | マルチエントリー（数次）査証 最新発給条件 + 中国査証申請センター（JVAC）指定旅行代理店経由義務範囲 | 否 |

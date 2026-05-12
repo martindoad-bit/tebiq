@@ -178,7 +178,7 @@ export default async function PhotoResultPage({
         </Link>
         {result.needsExpertAdvice && (
           <div className="rounded-btn border border-hairline bg-surface px-4 py-3 text-center text-[13px] font-medium text-ink">
-            涉及法律 / 税务 / 签证决策时，建议咨询专家
+            涉及法律 / 税务 / 签证决策时，建议向窗口或专业人士确认
           </div>
         )}
         {user ? <SaveToArchiveButton /> : <RegisterAfterPhotoCard docId={doc.id} />}
@@ -210,7 +210,7 @@ function RegisterAfterPhotoCard({ docId }: { docId: string }) {
             保存识别记录和到期提醒
           </h2>
           <p className="mt-1 text-[11px] leading-[1.55] text-ash">
-            注册账号，邮箱 / 手机号都可以。刚才的识别会自动进入我的提醒。
+            注册账号，邮箱 / 手机号都可以。刚才的识别会进入你的记录。
           </p>
         </div>
       </div>

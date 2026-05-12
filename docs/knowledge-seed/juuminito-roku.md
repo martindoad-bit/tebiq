@@ -76,11 +76,11 @@ review_notes: null
 - 离婚、配偶分居等情况下需分离 世帯，世帯主 认定不清。
 - 在留資格 即将更新，过去有住居地届出迟延记录。
 
-涉及 在留資格 与 住民登録 履历的关联评估、补救路径设计，建议咨询行政書士。TEBIQ 提供专业咨询服务（[预约](/consultation)）。
+涉及 在留資格 与 住民登録 履历的关联评估、补救路径设计，建议带材料向行政书士确认。
 
 ## 信息来源
 
 - [総務省「住民基本台帳制度（外国人住民に係る住民基本台帳制度）」](https://www.soumu.go.jp/main_sosiki/jichi_gyousei/c-gyousei/zairyu.html)（取得日 2026-04-28）
-- [出入国在留管理庁「住居地の届出」](https://www.moj.go.jp/isa/applications/procedures/16-3.html)（取得日 2026-04-28）
-- [出入国在留管理庁「在留カードの記載事項に変更が生じた場合の届出」](https://www.moj.go.jp/isa/applications/procedures/16-4.html)（取得日 2026-04-28）
+- [出入国在留管理庁「住居地の届出」](https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00023.html)（取得日 2026-05-12）
+- [出入国在留管理庁「在留カードの記載事項に変更が生じた場合の届出」](https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00022.html)（取得日 2026-05-12）
 - [e-Gov 法令検索「住民基本台帳法」](https://elaws.e-gov.go.jp/document?lawid=342AC0000000081)（取得日 2026-04-28）

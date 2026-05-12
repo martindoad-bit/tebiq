@@ -62,7 +62,7 @@ export const FREQUENT_QA_SEEDS: AnswerSeed[] = [
     sources: [
       { title: '出入国在留管理庁 在留資格変更許可申請', url: 'https://www.moj.go.jp/isa/' },
     ],
-    relatedLinks: [{ title: '续签材料准备检查', href: '/check' }],
+    relatedLinks: [{ title: '在留准备自查', href: '/check' }],
   },
   {
     slug: 'residence-tax-late-pr',

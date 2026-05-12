@@ -10,7 +10,6 @@ import Link from 'next/link'
 import { AlertTriangle, CheckCircle2, ClipboardList, Gift, ListChecks } from 'lucide-react'
 import AppShell from './v5/AppShell'
 import AppBar from './v5/AppBar'
-import Button from './v5/Button'
 import ComplianceFooter from './v5/ComplianceFooter'
 import TrackOnMount from './v5/TrackOnMount'
 import { trackClient } from '@/lib/analytics/client'
@@ -64,7 +63,7 @@ function severityVisual(verdict: Verdict, riskCount: number): SeverityVisual {
       text: 'text-danger',
       symbol: '',
       label: '待确认',
-      desc: `检测到 ${riskCount} 项需要优先确认的事项，建议咨询专家`,
+      desc: `检测到 ${riskCount} 项需要优先确认的事项，建议递交前确认材料和说明方式`,
   }
 }
 
@@ -146,11 +145,12 @@ export default function QuizResultView({
         </>
       )}
 
-      <div className="mt-5">
-        <Button onClick={() => alert('保存到「我的档案」功能即将开放')}>
-          保存结果到我的档案
-        </Button>
-      </div>
+      <Link
+        href="/ai-consultation"
+        className="mt-5 flex min-h-[48px] items-center justify-center rounded-btn bg-ink px-4 py-3 text-[14px] font-medium text-white"
+      >
+        带结果提问
+      </Link>
       <Link
         href="/invite"
         onClick={() =>

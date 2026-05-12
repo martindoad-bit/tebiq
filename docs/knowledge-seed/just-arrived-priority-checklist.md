@@ -92,7 +92,7 @@ review_notes: null
 
 ## 不做的后果
 
-- **14 天 住居地届出 漏办**：直接构成入管法违反，下次更新 / 变更 在留資格 时被审查。罚款最高 20 万日元。
+- **14 天 住居地届出 漏办**：可能构成入管法上的届出义务违反，下次更新 / 变更 在留資格 时会被审查。罚款最高 20 万日元。
 - **国民年金 不主动加入或拖欠**：永住、帰化 审查会调取年金缴纳记录，空白期是常见拒签原因。
 - **在留カード 住址与 住民票 不一致**：搬家后未及时更新，会影响 健康保険証、银行通知、確定申告 文件邮寄。
 - **国民健康保険 未加入期间生病**：医疗费 100% 自付，且加入时需补缴空白期保费。
@@ -108,11 +108,11 @@ review_notes: null
 - 入境时间已超 14 天还未办 住居地届出，需要补救处理
 - 在留カード 信息与护照不一致、已经收到入管警告
 
-TEBIQ 提供专业咨询服务（[预约](/consultation)）。
+如需个案确认，建议带材料向行政书士咨询。
 
 ## 信息来源
 
-- [出入国在留管理庁「中長期在留者の住居地届出」](https://www.moj.go.jp/isa/applications/procedures/16-3.html)（取得日 2026-04-28）
+- [出入国在留管理庁「中長期在留者の住居地届出」](https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00023.html)（取得日 2026-05-12）
 - [総務省「外国人住民に係る住民基本台帳制度」](https://www.soumu.go.jp/main_sosiki/jichi_gyousei/c-gyousei/zairyu.html)（取得日 2026-04-28）
 - [日本年金機構「国民年金に加入するための手続き」](https://www.nenkin.go.jp/service/kokunen/kanyu/20140710.html)（取得日 2026-04-28）
 - [厚生労働省「日本の医療保険制度について」](https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/iryouhoken/index.html)（取得日 2026-04-28）

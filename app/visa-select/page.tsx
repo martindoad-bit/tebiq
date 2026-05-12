@@ -18,13 +18,13 @@ interface Visa {
 
 export default function VisaSelectPage() {
   return (
-    <AppShell appBar={<AppBar title="续签材料准备检查" back="/" />}>
+    <AppShell appBar={<AppBar title="在留准备自查" back="/" />}>
       <div className="py-5">
         <h1 className="text-[25px] font-medium leading-tight text-ink">
-          选择你要续签的在留资格
+          选择要核对的在留类型
         </h1>
         <p className="mt-3 text-[13px] leading-[1.7] text-slate">
-          目前「技人国」支持完整自查问卷，其他类型提供说明与建议。
+          部分类型可进入问卷；其余先看概要、常见风险和可核对资料。
         </p>
 
         <div className="mt-6 space-y-3">
@@ -70,7 +70,7 @@ function Badge({ type }: { type: BadgeType }) {
   if (type === 'ready') {
     return (
       <div className="flex-shrink-0 self-start rounded-[8px] bg-accent px-2 py-1 text-[10px] font-medium text-white">
-        已支持
+        可自查
       </div>
     )
   }
@@ -83,7 +83,7 @@ function Badge({ type }: { type: BadgeType }) {
   }
   return (
     <div className="flex-shrink-0 self-start rounded-[8px] bg-cool-blue px-2 py-1 text-[10px] font-medium text-ink">
-      了解详情
+      看概要
     </div>
   )
 }
@@ -122,16 +122,16 @@ const VISAS: Visa[] = [
     nameZh: '定住者',
     audience: '日系人、长期居留经法务大臣特别认可者',
     badge: 'detail',
-    href: '/check/teijusha/quiz',
+    href: '/teijusha',
     icon: <Home size={21} strokeWidth={1.55} />,
   },
   {
     id: 'eijusha',
-    name: '永住者',
-    nameZh: '永住者',
-    audience: '已取得日本永久居留权（在留卡更新流程说明）',
+    name: '永住申请准备',
+    nameZh: '永住',
+    audience: '准备申请永住前，先核对税金、年金和在留记录',
     badge: 'detail',
-    href: '/check/eijusha',
+    href: '/check/permanent_resident_preparation',
     icon: <ShieldCheck size={21} strokeWidth={1.55} />,
   },
   {

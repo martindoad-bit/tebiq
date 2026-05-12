@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import { useSearchParams } from 'next/navigation'
 import {
   Camera,
   CheckCircle2,
@@ -123,6 +124,7 @@ function ensureViewerCookie(): string {
 }
 
 export default function AiConsultationEntryClient() {
+  const searchParams = useSearchParams()
   const [question, setQuestion] = useState('')
   const [active, setActive] = useState<ActiveConsultation | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -131,13 +133,25 @@ export default function AiConsultationEntryClient() {
   const fileInputRef = useRef<HTMLInputElement | null>(null)
   const abortRef = useRef<AbortController | null>(null)
   const streamRunRef = useRef(0)
+  const photoRunRef = useRef(0)
+  const photoAbortRef = useRef<AbortController | null>(null)
+  const seededQuestionRef = useRef(false)
 
   useEffect(() => {
     setViewerId(ensureViewerCookie())
   }, [])
 
+  useEffect(() => {
+    if (seededQuestionRef.current) return
+    const seeded = searchParams.get('q')?.trim()
+    if (!seeded) return
+    seededQuestionRef.current = true
+    setQuestion(seeded.slice(0, 4000))
+  }, [searchParams])
+
   useEffect(() => () => {
     abortRef.current?.abort()
+    photoAbortRef.current?.abort()
     if (photo.kind === 'recognizing' || photo.kind === 'ready') {
       try { URL.revokeObjectURL(photo.preview) } catch { /* ignore */ }
     }
@@ -146,6 +160,9 @@ export default function AiConsultationEntryClient() {
   async function onPickFile(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
     if (!file) return
+    photoAbortRef.current?.abort()
+    const runId = photoRunRef.current + 1
+    photoRunRef.current = runId
     if (photo.kind === 'recognizing' || photo.kind === 'ready') {
       try { URL.revokeObjectURL(photo.preview) } catch { /* ignore */ }
     }
@@ -163,8 +180,10 @@ export default function AiConsultationEntryClient() {
       const fd = new FormData()
       fd.append('file', file)
       const ac = new AbortController()
+      photoAbortRef.current = ac
       uploadTimeoutId = window.setTimeout(() => ac.abort(), 45_000)
       const r = await fetch('/api/consultation/upload', { method: 'POST', body: fd, signal: ac.signal })
+      if (photoRunRef.current !== runId) return
       if (uploadTimeoutId !== null) {
         window.clearTimeout(uploadTimeoutId)
         uploadTimeoutId = null
@@ -177,9 +196,11 @@ export default function AiConsultationEntryClient() {
         detail?: string
       }
       if (!r.ok || !j.image_summary || !j.image_storage_ref) {
+        if (photoRunRef.current !== runId) return
         setPhoto({ kind: 'error', message: userSafePhotoMessage(j.detail || j.error || `识别失败 HTTP ${r.status}`) })
         return
       }
+      if (photoRunRef.current !== runId) return
       setPhoto({
         kind: 'ready',
         preview,
@@ -189,14 +210,19 @@ export default function AiConsultationEntryClient() {
         confidence: j.recognition?.confidence ?? 'unknown',
       })
     } catch (err) {
+      if (photoRunRef.current !== runId) return
       setPhoto({ kind: 'error', message: userSafePhotoMessage(err instanceof Error ? err.message : String(err)) })
     } finally {
       if (uploadTimeoutId !== null) window.clearTimeout(uploadTimeoutId)
+      if (photoRunRef.current === runId) photoAbortRef.current = null
       e.target.value = ''
     }
   }
 
   function clearPhoto() {
+    photoRunRef.current += 1
+    photoAbortRef.current?.abort()
+    photoAbortRef.current = null
     if (photo.kind === 'recognizing' || photo.kind === 'ready') {
       try { URL.revokeObjectURL(photo.preview) } catch { /* ignore */ }
     }
@@ -344,8 +370,8 @@ export default function AiConsultationEntryClient() {
             fallback_text: ev.fallback_text,
             partial_answer_saved: ev.partial_answer_saved,
             detail: ev.partial_answer_saved
-              ? '已保留部分回答；这条不能当作完整回答。'
-              : '没有生成可用完整回答。',
+              ? '已保留部分内容；这条还不能作为完整整理。'
+              : '这次没有整理出可用内容。',
           }
         case 'failed':
           return { ...prev, phase: 'failed', detail: ev.detail }
@@ -478,8 +504,8 @@ export default function AiConsultationEntryClient() {
               fallback_text: ev.fallback_text,
               partial_answer_saved: ev.partial_answer_saved,
               detail: ev.partial_answer_saved
-                ? '已保留部分回答；这条不能当作完整回答。'
-                : '没有生成可用完整回答。',
+                ? '已保留部分内容；这条还不能作为完整整理。'
+                : '这次没有整理出可用内容。',
             }
           case 'failed':
             return { ...turn, phase: 'failed', detail: ev.detail }
@@ -518,7 +544,7 @@ export default function AiConsultationEntryClient() {
       })
       if (!r.ok) {
         const j = (await r.json().catch(() => ({}))) as { error?: string }
-        setError(j.error ?? `反馈提交失败 HTTP ${r.status}`)
+        setError(j.error ?? '反馈没有提交成功，请稍后再试。')
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err))
@@ -549,11 +575,14 @@ export default function AiConsultationEntryClient() {
       <div className="space-y-5">
         <BrandHeader
           eyebrow="在留咨询"
-          title={active ? '咨询回答' : '说说你的在留问题'}
+          title={active ? '咨询结果' : '先把这件事说清楚'}
+          align={active ? 'left' : 'center'}
           description={
             active
-              ? '这次咨询已自动记录。可以补充同一件事。'
-              : '一次先说一件事，TEBIQ 会整理风险和下一步。'
+              ? active.id
+                ? '这次咨询已自动记录。可以补充同一件事。'
+                : '整理完成后会自动记录。可以补充同一件事。'
+              : '把你现在担心的情况写下来，TEBIQ 会整理风险、下一步和可核对资料。'
           }
         />
 
@@ -567,20 +596,22 @@ export default function AiConsultationEntryClient() {
               onChange={onPickFile}
               className="hidden"
             />
-            <Surface className="space-y-3.5">
-              <div className="flex items-start justify-between gap-2.5">
+            <Surface className="space-y-3.5 bg-white/70">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                 <div className="flex min-w-0 items-start gap-2">
                   <MessageSquarePlus className="h-4 w-4 shrink-0 text-[var(--tebiq-ink-blue)]" strokeWidth={1.6} />
                   <div className="min-w-0">
-                    <SectionLabel>写问题</SectionLabel>
-                    <p className="text-[15.5px] leading-[1.65] text-[var(--tebiq-deep-slate)]">按现在情况写即可。</p>
+                    <SectionLabel>写下问题</SectionLabel>
+                    <p className="text-[16px] leading-[1.65] text-[var(--tebiq-deep-slate)]">
+                      不用整理成正式材料，按你现在知道的写。
+                    </p>
                   </div>
                 </div>
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
                   disabled={photo.kind === 'recognizing'}
-                  className="inline-flex min-h-11 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-btn border border-[var(--tebiq-soft-gray)] px-3 py-2 text-[14px] font-medium text-[var(--tebiq-ink-blue)] disabled:opacity-50"
+                  className="inline-flex min-h-11 w-full shrink-0 items-center justify-center gap-1.5 whitespace-nowrap rounded-btn border border-[var(--tebiq-soft-gray)] bg-[var(--tebiq-off-white)] px-3 py-2 text-[14px] font-medium text-[var(--tebiq-ink-blue)] disabled:opacity-50 sm:w-auto"
                 >
                   {photo.kind === 'ready' ? <CheckCircle2 className="h-3.5 w-3.5" strokeWidth={1.6} /> : <Camera className="h-3.5 w-3.5" strokeWidth={1.6} />}
                   {photo.kind === 'ready' ? '已添加' : '加照片'}
@@ -626,9 +657,6 @@ export default function AiConsultationEntryClient() {
               </Surface>
             )}
 
-            <div className="text-center text-[12px] leading-relaxed text-[var(--tebiq-cool-gray)]">
-              TEBIQ 会整理案情、提示风险和可核对信息，不代表最终审查结果。
-            </div>
           </form>
         )}
 
@@ -644,7 +672,7 @@ export default function AiConsultationEntryClient() {
         )}
 
         <footer className="space-y-1 border-t border-[var(--tebiq-soft-gray)] pt-4 text-[12px] leading-relaxed text-[var(--tebiq-deep-slate)]">
-          <p>具体期限、手续和个案判断，请向行政書士或入管确认。</p>
+          <p>具体期限、手续和个案判断，请向行政书士或入管确认。</p>
         </footer>
       </div>
     </ConsultationShell>
@@ -666,13 +694,15 @@ function PhotoLiteCard({
         <div className="flex items-center gap-2">
           <Camera className="h-4 w-4 text-[var(--tebiq-ink-blue)]" strokeWidth={1.6} />
           <div>
-            <SectionLabel>拍日文材料问一问</SectionLabel>
-            <p className="text-[14px] leading-[1.6] text-[var(--tebiq-deep-slate)]">适合入管通知、年金税金、雇佣相关材料。</p>
+            <SectionLabel>上传材料照片</SectionLabel>
+            <p className="text-[14px] leading-[1.6] text-[var(--tebiq-deep-slate)]">
+              适合入管通知、年金税金、雇佣材料；可先遮住无关号码。
+            </p>
           </div>
         </div>
         {photo.kind === 'ready' && (
           <button type="button" onClick={clearPhoto} className="whitespace-nowrap text-[13px] text-[var(--tebiq-deep-slate)]">
-            移除
+            移除图片
           </button>
         )}
       </div>
@@ -688,7 +718,7 @@ function PhotoLiteCard({
               正在读取图片内容
             </p>
             <p className="mt-1 text-[12.5px] leading-[1.55] text-[var(--tebiq-cool-gray)]">
-              通常需要几秒到二十秒。等得太久时，可以取消图片，先用文字提问。
+              通常需要几秒。太久时可取消，先用文字提问。
             </p>
             <button type="button" onClick={clearPhoto} className="mt-2 text-[13px] font-medium text-[var(--tebiq-ink-blue)]">
               取消图片
@@ -702,10 +732,10 @@ function PhotoLiteCard({
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={photo.preview} alt="预览" className="h-20 w-20 shrink-0 rounded-card border border-[var(--tebiq-soft-gray)] object-cover" />
           <div className="min-w-0 text-[14px] leading-relaxed">
-            <SectionLabel>识别摘要</SectionLabel>
+            <SectionLabel>图片摘要</SectionLabel>
             <p className="mt-1 text-[var(--tebiq-ink-blue)]">{photo.summary}</p>
             <p className="mt-1 text-[12px] text-[var(--tebiq-cool-gray)]">
-              这不是最终判断。识别可信度：{photo.confidence}
+              图片内容仅供本次整理参考，仍以原文和窗口要求为准。
             </p>
           </div>
         </div>
@@ -854,7 +884,7 @@ function ActiveConsultationView({
           <div className="min-w-0 text-[14.5px] leading-[1.7]">
             <SectionLabel>图片摘要</SectionLabel>
             <p className="mt-1 text-[var(--tebiq-deep-slate)]">{active.photoSummary}</p>
-            <p className="mt-1 text-[12px] text-[var(--tebiq-cool-gray)]">只作为本次咨询上下文，不是文书判断。</p>
+            <p className="mt-1 text-[12px] text-[var(--tebiq-cool-gray)]">图片内容仅供本次整理参考，仍以原文为准。</p>
           </div>
         </Surface>
       )}
@@ -878,14 +908,14 @@ function ActiveConsultationView({
 
         {(displayState === 'partial' || displayState === 'fallback' || displayState === 'timeout') && (
           <div className="rounded-card border border-[var(--tebiq-warm-amber)] px-3 py-2 text-[12.5px] leading-[1.65] text-[var(--tebiq-ink-blue)]">
-            {displayState === 'partial' && '回答中断，下面只保留已生成部分。'}
-            {displayState === 'fallback' && '模型响应超时，下面是安全降级提示，不是完整咨询回答。'}
-            {displayState === 'timeout' && '没有生成可用完整回答。'}
+            {displayState === 'partial' && '这次只保留了部分内容。'}
+            {displayState === 'fallback' && '这次只保留了部分可用内容。'}
+            {displayState === 'timeout' && '这次没有整理完成。'}
           </div>
         )}
         {displayState === 'failed' && (
           <div className="rounded-card border border-[var(--tebiq-warm-amber)] px-3 py-2 text-[12.5px] leading-[1.65] text-[var(--tebiq-ink-blue)]">
-            这次请求没有完成。可以直接重新生成这次回答，不需要重新输入问题。
+            这次没有整理完成。可以重试，原问题会保留。
           </div>
         )}
 
@@ -967,9 +997,9 @@ function ActiveConsultationView({
           <Surface className="space-y-3">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <SectionLabel>后续</SectionLabel>
+                <SectionLabel>补充这件事</SectionLabel>
                 <p className="mt-1 text-[14.5px] leading-[1.7] text-[var(--tebiq-deep-slate)]">
-                  本次咨询已自动记录。补充内容会接着当前咨询继续整理。
+                  本次咨询已自动记录。补充内容会沿用上面的回答继续整理。
                 </p>
               </div>
             </div>
@@ -1004,12 +1034,15 @@ function ActiveConsultationView({
                   ? <ClipboardCheck className="h-4 w-4" strokeWidth={1.6} />
                   : <Share2 className="h-4 w-4" strokeWidth={1.6} />}
                 {shareState === 'shared'
-                  ? '已打开'
+                  ? '分享已打开'
                   : copyState === 'copied'
                     ? '已复制'
                     : '分享'}
               </button>
             </div>
+            <p className="text-[12.5px] leading-[1.6] text-[var(--tebiq-cool-gray)]">
+              分享的是这条咨询链接，包含问题和回答；含敏感内容时可先不要分享。
+            </p>
             {copyState === 'failed' || shareState === 'failed' ? (
               <p className="text-[13px] leading-[1.65] text-[var(--tebiq-cool-gray)]">
                 分享未完成时，可以复制链接后再发给朋友或专业人士。
@@ -1050,17 +1083,17 @@ function ActiveConsultationView({
           <div>
             <SectionLabel>
               {displayState === 'partial'
-                ? '这次回答可能不完整'
+                ? '这次只保留了部分内容'
                 : displayState === 'failed'
-                  ? '这次生成失败'
-                  : '这次没有完整回答'}
+                  ? '这次没有整理完成'
+                : '这次没有整理完成'}
             </SectionLabel>
             <p className="mt-1 text-[14px] leading-[1.65] text-[var(--tebiq-deep-slate)]">
               {displayState === 'partial'
-                ? '已生成的内容会保留；如果要完整回答，可以稍后重新生成这次回答。'
+                ? '已保留的内容会继续显示。需要重新整理时，可以重试。'
               : displayState === 'failed'
-                ? '请求没有完成。重试会保留原问题重新发起，不是新问题。'
-                : '这次没有拿到可用完整回答。系统已记录这个问题，可以稍后从“我的咨询”查看，或重新生成。'}
+                ? '这次没有整理完成。重试会保留原问题，不是新问题。'
+                : '这次没有整理完成。这个问题已记录，可以稍后从“我的咨询”查看，或重试。'}
             </p>
           </div>
           <div className="grid gap-2 sm:grid-cols-2">
@@ -1069,7 +1102,7 @@ function ActiveConsultationView({
               className="inline-flex min-h-11 items-center justify-center gap-2 whitespace-nowrap rounded-btn bg-[var(--tebiq-ink-blue)] px-3 py-2 text-[14px] font-medium text-[var(--tebiq-off-white)]"
             >
               <RefreshCcw className="h-4 w-4" strokeWidth={1.6} />
-              重新生成这次回答
+              重试
             </button>
             {active.id && (
               <a
@@ -1096,19 +1129,25 @@ function ActiveConsultationView({
         </div>
       )}
       {active.feedback_sent === 'human_review' && (
-        <HumanReviewNotice />
+        <HumanReviewNotice consultationId={active.id} />
       )}
     </section>
   )
 }
 
-function HumanReviewNotice() {
+function HumanReviewNotice({ consultationId }: { consultationId: string }) {
   return (
     <Surface className="space-y-2 border-[var(--tebiq-soft-gray)] p-3.5">
-      <SectionLabel>需确认已记录</SectionLabel>
+      <SectionLabel>已标记需确认</SectionLabel>
       <p className="text-[14px] leading-[1.7] text-[var(--tebiq-deep-slate)]">
-        这不是人工受理。需要具体期限、材料或个案判断时，可以带着这次咨询记录向行政書士或入管确认。
+        已标记需确认。具体期限、材料或个案判断，请带记录向行政书士或入管确认。
       </p>
+      <a
+        href={`/consultation?consultation_id=${encodeURIComponent(consultationId)}`}
+        className="inline-flex min-h-10 items-center justify-center rounded-btn border border-[var(--tebiq-soft-gray)] px-3 py-2 text-[13.5px] font-medium text-[var(--tebiq-ink-blue)]"
+      >
+        带记录预约
+      </a>
     </Surface>
   )
 }
@@ -1143,9 +1182,9 @@ function FollowUpTurnCard({ turn, index }: { turn: FollowUpTurn; index: number }
       {(displayState === 'partial' || displayState === 'fallback' || displayState === 'timeout') && (
         <div className="rounded-card border border-[var(--tebiq-warm-amber)] px-3 py-2 text-[12.5px] leading-[1.65] text-[var(--tebiq-ink-blue)]">
           {turn.phase === 'limit_reached' && (turn.detail || '这次咨询的补充轮数已到上限。')}
-          {turn.phase !== 'limit_reached' && displayState === 'partial' && '回答中断，下面只保留已生成部分。'}
-          {turn.phase !== 'limit_reached' && displayState === 'fallback' && '模型响应超时，下面是安全降级提示，不是完整咨询回答。'}
-          {turn.phase !== 'limit_reached' && displayState === 'timeout' && '没有生成可用完整回答。'}
+          {turn.phase !== 'limit_reached' && displayState === 'partial' && '这次只保留了部分内容。'}
+          {turn.phase !== 'limit_reached' && displayState === 'fallback' && '这次只保留了部分可用内容。'}
+          {turn.phase !== 'limit_reached' && displayState === 'timeout' && '这次没有整理完成。'}
         </div>
       )}
 
@@ -1172,7 +1211,7 @@ function FollowUpTurnCard({ turn, index }: { turn: FollowUpTurn; index: number }
         {turn.phase === 'idle' && (
           <span className="inline-flex items-center gap-2 text-[15px] leading-[1.7] text-[var(--tebiq-deep-slate)]">
             <Loader2 className="h-4 w-4 animate-spin" strokeWidth={1.6} />
-            已收到补充，正在接到当前咨询里整理。
+            已收到补充，正在继续整理。
           </span>
         )}
         {turn.phase === 'streaming' && (
@@ -1267,7 +1306,7 @@ function FollowUpLimitCard({
           onClick={onHumanReview}
           className="inline-flex min-h-11 items-center justify-center gap-2 whitespace-nowrap rounded-btn bg-[var(--tebiq-ink-blue)] px-3 py-2 text-[14px] font-medium text-[var(--tebiq-off-white)]"
         >
-          记录需确认
+          标记需确认
         </button>
         <button
           type="button"
@@ -1327,7 +1366,7 @@ function getCrisisAction(hits: string[]): CrisisAction | null {
   }
   if (hitSet.has('证件扣押')) {
     return {
-      title: '先把证件和记录拿回来',
+      title: '先确认并保留证件相关记录',
       body: '在留卡、护照等证件被扣押时，先处理证件本身和沟通记录，再判断工作或在留影响。',
       steps: ['保存公司要求、聊天记录和证件被收走的经过。', '必要时联系警察、入管相談或支援窗口确认取回方式。', '不要只听公司口头说法，再整理是否涉及退职、转职或在留期限。'],
     }
@@ -1395,10 +1434,10 @@ function FirstLookCard({ firstLook }: { firstLook: FirstLookBlock }) {
     <div className="rounded-card border border-[var(--tebiq-soft-gray)] bg-[var(--tebiq-soft-gray)]/35 px-3.5 py-3">
       <SectionLabel>先看这里</SectionLabel>
       <div className="mt-2 space-y-1.5 text-[16px] leading-[1.65] text-[var(--tebiq-ink-blue)]">
-        <p><span className="font-medium">当前判断：</span>{renderInline(firstLook.conclusion)}</p>
-        <p><span className="font-medium">建议动作：</span>{renderInline(firstLook.action)}</p>
+        <p><span className="font-medium">先看方向：</span>{renderInline(firstLook.conclusion)}</p>
+        <p><span className="font-medium">下一步：</span>{renderInline(firstLook.action)}</p>
         {firstLook.avoid && (
-          <p><span className="font-medium">暂缓事项：</span>{renderInline(firstLook.avoid)}</p>
+          <p><span className="font-medium">先别这样做：</span>{renderInline(firstLook.avoid)}</p>
         )}
       </div>
     </div>
@@ -1425,9 +1464,9 @@ function extractFirstLook(text: string): { firstLook: FirstLookBlock | null; res
     return match[1].trim()
   }
 
-  const conclusion = take(['当前判断', '结论'])
-  const action = take(['建议动作', '优先行动', '今天先做', '今天可以先确认', '今天先确认', '先做'])
-  const avoid = take(['暂缓事项', '先避免', '暂时不要', '暂时不要做', '先不要做'])
+  const conclusion = take(['先看方向', '当前判断', '结论'])
+  const action = take(['下一步', '建议动作', '优先行动', '今天先做', '今天可以先确认', '今天先确认', '先做'])
+  const avoid = take(['先别这样做', '先不要做', '注意事项', '暂缓事项', '先避免', '暂时不要', '暂时不要做'])
   if (!conclusion || !action) return { firstLook: null, rest: text }
 
   while (cursor < lines.length && lines[cursor].trim() === '') cursor += 1
@@ -1453,7 +1492,7 @@ function userSafeDetail(
   const text = detail.trim()
   if (!text) return null
   if (phase === 'failed' || looksTechnicalDetail(text)) {
-    return '这次生成没有完成。可以重新生成，或稍后再试。'
+    return '这次没有整理完成。可以重试，或稍后再试。'
   }
   return cleanDisplayText(text)
 }
@@ -1473,7 +1512,7 @@ function userSafePhotoMessage(message: string | null | undefined): string {
 function EncodingIssueNotice() {
   return (
     <div className="rounded-card border border-[var(--tebiq-warm-amber)] px-3 py-2 text-[12.5px] leading-[1.65] text-[var(--tebiq-ink-blue)]">
-      这条回答里检测到显示异常字符。建议重新生成，或在反馈里标记“不准确”。
+      这条回答显示可能不完整。建议重试，或反馈为“不准确”。
     </div>
   )
 }
@@ -1486,7 +1525,7 @@ function getWaitingStatus(active: ActiveConsultation, waitingStage: WaitingStage
 } {
   if (waitingStage === 'escape') {
     return {
-      main: '已经超过 60 秒。',
+      main: '处理时间稍长。',
       sub: '问题已自动记录。可以稍后查看；如果长时间没有结果，再重试一次。',
       showSpinner: true,
       stage: 'escape',
@@ -1511,7 +1550,7 @@ function getWaitingStatus(active: ActiveConsultation, waitingStage: WaitingStage
     }
   }
   return {
-    main: active.routingStatus?.label ?? '正在判断在留场景。',
+      main: active.routingStatus?.label ?? '正在整理问题类型。',
     sub: '通常需要 30-60 秒，完成后会自动显示。',
     showSpinner: true,
     stage: 'early',
@@ -1531,7 +1570,7 @@ function getFollowUpWaitingStatus(turn: FollowUpTurn): {
     }
   }
   return {
-    main: turn.routingStatus?.label ?? '已收到补充，正在接到当前咨询里整理。',
+    main: turn.routingStatus?.label ?? '已收到补充，正在继续整理。',
     sub: null,
     showSpinner: true,
   }

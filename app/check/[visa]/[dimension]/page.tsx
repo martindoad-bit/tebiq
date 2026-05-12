@@ -1,5 +1,6 @@
 import { and, eq } from 'drizzle-orm'
 import Link from 'next/link'
+import { redirect } from 'next/navigation'
 import { ClipboardCheck } from 'lucide-react'
 import AppShell from '@/app/_components/v5/AppShell'
 import AppBar from '@/app/_components/v5/AppBar'
@@ -22,6 +23,7 @@ export default async function DimensionCheckPage({
 }: {
   params: { visa: string; dimension: string }
 }) {
+  if (params.visa === 'teijusha') redirect('/teijusha')
   const visaType = normalizeCheckVisa(params.visa)
   const [dbArticle] = process.env.DATABASE_URL
     ? await db
@@ -141,11 +143,11 @@ function DimensionPreparingPage({
           {title}
         </h1>
         <p className="mx-auto mt-3 max-w-[300px] text-[12px] leading-[1.7] text-ash">
-          该维度准备中。可以先返回清单，或做一次完整材料准备检查。
+          这项内容还在整理中。可以先返回清单，或直接带着情况提问。
         </p>
         <div className="mt-5 grid gap-2">
-          <Link href={`/check/${visaType}/quiz`}>
-            <Button>完整材料准备检查</Button>
+          <Link href="/ai-consultation">
+            <Button>去提问</Button>
           </Link>
           <Link
             href={`/check/${visaType}`}

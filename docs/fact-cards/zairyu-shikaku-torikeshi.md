@@ -98,9 +98,9 @@ evidence_points:
     source_organization: "出入国在留管理庁"
     source_locator: "ページ内「公租公課」「故意」「刑罰」「取消し」に関するQ&Aを確認"
     display_label: "2024年改正：永住者取消事由（公租公課故意不払い・重大刑罰）"
-    support_level: "direct"
+    support_level: "indirect"
     user_visible: true
-    needs_domain_review: false
+    needs_domain_review: true
 ---
 
 ## current_date_logic

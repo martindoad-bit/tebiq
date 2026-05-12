@@ -34,6 +34,9 @@ export async function POST(req: Request) {
     }
     const canonicalVisa = normalizeCheckVisa(visaTypeRaw)
     const legacyVisa = CHECK_VISA_META[canonicalVisa].legacyQuizVisa
+    if (!legacyVisa) {
+      return NextResponse.json({ error: '这个自查类型暂不支持完整答题' }, { status: 410 })
+    }
     const bank = getBank(legacyVisa)
     const judgeResult = judge(bank, history)
     const summary = buildSummary(judgeResult.verdict, judgeResult, history)
@@ -70,7 +73,7 @@ export async function POST(req: Request) {
     }))
     const relatedEvents = await findRelatedTimelineEvents({
       owner: { memberId: user?.id ?? null, sessionId },
-      docType: `${record.visaType} 续签材料准备检查`,
+      docType: `${record.visaType} 在留准备自查`,
       excludeId: timelineEvent.id,
       limit: 3,
     })

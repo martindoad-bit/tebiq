@@ -12,8 +12,30 @@ import type {
 
 const verificationLabel: Record<QuickReferenceVerification, string> = {
   'source-backed': '可核对',
-  'needs-check': '需核对',
+  'needs-check': '需确认',
 }
+
+const quickSearches = [
+  { label: '换工作', query: '换工作 转职 离职 退职 工作' },
+  { label: '在留卡', query: '在留卡 丢失 搬家 地址 随身' },
+  { label: '年金税金', query: '年金 税金 住民税 健保 社保' },
+  { label: '永住', query: '永住 永久 配偶者' },
+  { label: '出入境', query: '出国 回国 再入国 超期 不许可' },
+]
+
+const searchAliases: ReadonlyArray<ReadonlyArray<string>> = [
+  ['换工作', '转职', '転職', '换公司', '所属机构', '所属機関'],
+  ['离职', '退职', '退職', '失业', '失職', '辞职'],
+  ['保险', '健保', '健康保险', '健康保険', '国保', '社保'],
+  ['年金', '厚生年金', '国民年金', '脱退一时金', '脱退一時金'],
+  ['税', '税金', '住民税', '课税', '納税', '纳税'],
+  ['搬家', '地址', '住所', '住居地', '迁居'],
+  ['永住', '永久', 'eijuu'],
+  ['配偶', '老婆', '老公', '日配', '日本人配偶者'],
+  ['留学', '学生', '打工', '兼职', '资格外', '資格外'],
+  ['出国', '离境', '回国', '再入国', 'みなし再入国'],
+  ['不许可', '拒签', '不許可', '补材料', '追加資料'],
+]
 
 export default function QuickReferenceList({
   topics,
@@ -24,7 +46,8 @@ export default function QuickReferenceList({
   const [category, setCategory] = useState('全部')
 
   const categories = useMemo(() => ['全部', ...Array.from(new Set(topics.map(topic => topic.category)))], [topics])
-  const normalizedQuery = query.trim().toLowerCase()
+  const normalizedQuery = normalizeSearchText(query)
+  const queryTerms = expandSearchTerms(normalizedQuery)
   const filteredTopics = topics.filter(topic => {
     const inCategory = category === '全部' || topic.category === category
     if (!inCategory) return false
@@ -35,8 +58,10 @@ export default function QuickReferenceList({
       topic.category,
       topic.checkNote,
       ...topic.facts.flatMap(fact => [fact.label, fact.text]),
+      ...topic.sources.flatMap(source => [source.label, source.organization ?? '', source.locator ?? '']),
     ].join(' ').toLowerCase()
-    return haystack.includes(normalizedQuery)
+    const normalizedHaystack = normalizeSearchText(haystack)
+    return queryTerms.some(term => normalizedHaystack.includes(term))
   })
 
   return (
@@ -51,7 +76,22 @@ export default function QuickReferenceList({
             className="min-w-0 flex-1 bg-transparent text-[15px] text-ink outline-none placeholder:text-haze"
           />
         </label>
-        <div className="mt-3 flex gap-2 overflow-x-auto pb-1">
+        <div className="mt-3 flex flex-wrap gap-2">
+          {quickSearches.map(item => (
+            <button
+              key={item.label}
+              type="button"
+              onClick={() => {
+                setQuery(item.query)
+                setCategory('全部')
+              }}
+              className="min-h-8 shrink-0 whitespace-nowrap rounded-btn bg-paper px-3 text-[12.5px] font-medium text-slate"
+            >
+              {item.label}
+            </button>
+          ))}
+        </div>
+        <div className="mt-2 flex flex-wrap gap-2">
           {categories.map(item => (
             <button
               key={item}
@@ -74,16 +114,16 @@ export default function QuickReferenceList({
           <details
             key={topic.id}
             id={topic.id}
-            className="group rounded-card border border-hairline bg-surface px-4 py-3.5"
+            className="group min-w-0 max-w-full overflow-hidden rounded-card border border-hairline bg-surface px-4 py-3.5"
           >
             <summary className="cursor-pointer list-none">
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
                   <div className="flex flex-wrap items-center gap-2">
                     <StatusBadge>{topic.category}</StatusBadge>
-                    <StatusBadge tone="checked">资料 {topic.sources.length}</StatusBadge>
+                    <StatusBadge tone="checked">来源 {topic.sources.length}</StatusBadge>
                     {topic.facts.some(fact => fact.verification === 'needs-check') && (
-                      <StatusBadge tone="attention">需核对</StatusBadge>
+                      <StatusBadge tone="attention">需确认</StatusBadge>
                     )}
                   </div>
                   <h2 className="mt-2.5 text-[18px] font-medium leading-snug text-ink">
@@ -111,6 +151,7 @@ export default function QuickReferenceList({
 
             <div className="mt-4 border-t border-hairline pt-4">
               <div className="min-w-0">
+                <p className="mb-2 text-[12px] font-medium text-ash">先看规则</p>
                 <dl className="space-y-2.5">
                   {topic.facts.map(fact => (
                     <FactRow key={`${topic.id}-${fact.label}`} fact={fact} />
@@ -119,13 +160,13 @@ export default function QuickReferenceList({
 
                 <div className="mt-4 rounded-[8px] border border-hairline bg-paper px-3 py-2.5">
                   <p className="text-[13px] leading-[1.6] text-ash">
-                    <span className="font-medium text-ink">需要再核对：</span>
+                    <span className="font-medium text-ink">还要看你的情况：</span>
                     {topic.checkNote}
                   </p>
                 </div>
 
                 <div className="mt-4">
-                  <p className="mb-2 text-[12px] font-medium text-ash">官方来源</p>
+                  <p className="mb-2 text-[12px] font-medium text-ash">来源</p>
                   <div className="grid gap-2">
                   {topic.sources.map(source => (
                     <SourceLink key={source.url} source={source} />
@@ -140,7 +181,7 @@ export default function QuickReferenceList({
 
       {filteredTopics.length === 0 && (
         <div className="rounded-card border border-hairline bg-surface px-4 py-5 text-[14px] leading-[1.65] text-ash">
-          没有找到对应事项。可以换个关键词，或直接问 TEBIQ，它会按你的情况整理。
+          没有找到对应事项。可以换个说法，例如“换工作”“税金”“在留卡”；也可以直接提问，让 TEBIQ 按你的情况整理。
         </div>
       )}
     </section>
@@ -178,7 +219,7 @@ function SourceLink({ source }: { source: QuickReferenceSource }) {
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-1.5">
             <StatusBadge tone={relation === 'direct' ? 'checked' : undefined}>
-              {relation === 'direct' ? '直接依据' : '相关资料'}
+              {relation === 'direct' ? '可核对' : '相关'}
             </StatusBadge>
             <span className="min-w-0 flex-1 text-[13.5px] font-medium leading-snug line-clamp-2">
               {source.label}
@@ -204,7 +245,7 @@ function organizationFor(url: string): string {
   try {
     host = new URL(url).hostname.replace(/^www\./, '')
   } catch {
-    return '官方资料'
+    return '来源页面'
   }
   if (/moj\.go\.jp$/i.test(host) || /isa\.go\.jp$/i.test(host)) return '出入国在留管理庁'
   if (/mhlw\.go\.jp$/i.test(host)) return '厚生労働省'
@@ -222,4 +263,20 @@ function organizationFor(url: string): string {
   if (/\.lg\.jp$/i.test(host)) return '自治体官网'
   if (/\.go\.jp$/i.test(host)) return '日本政府官网'
   return host
+}
+
+function normalizeSearchText(value: string): string {
+  return value.trim().toLowerCase().replace(/\s+/g, '')
+}
+
+function expandSearchTerms(normalizedQuery: string): string[] {
+  if (!normalizedQuery) return []
+  const terms = new Set<string>([normalizedQuery])
+  for (const group of searchAliases) {
+    const normalizedGroup = group.map(normalizeSearchText)
+    if (normalizedGroup.some(item => normalizedQuery.includes(item) || item.includes(normalizedQuery))) {
+      normalizedGroup.forEach(item => terms.add(item))
+    }
+  }
+  return Array.from(terms)
 }

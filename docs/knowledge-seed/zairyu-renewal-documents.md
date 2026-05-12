@@ -32,7 +32,7 @@ review_notes: null
 - 在留期間更新許可申請書（最新版本，可从 出入国在留管理庁 官网下载）
 - 写真 1 枚（4×3cm，3 个月以内拍摄，无背景，正面无遮挡）
 - パスポート 与 在留カード（提示原件，部分窗口需提交复印件）
-- 手数料 4,000 円（许可时以 収入印紙 缴纳）
+- 手数料（许可时缴纳）：2025年4月以后的更新/变更手续通常为窗口 6,000 円、在线 5,500 円；以入管庁最新手数料页为准
 
 差异化材料因 在留資格 类型而异。出入国在留管理庁 收到申请后会先做形式审查，材料不全会触发 補正通知，要求补充提交。补正会让实际审查时间延长 1–2 个月。
 
@@ -98,11 +98,11 @@ review_notes: null
 - 收到过 補正通知 或 不許可通知 后再申请
 - 中途有过转职、副业、起业等变化
 
-TEBIQ 提供专业咨询服务（[预约](/consultation)）。
+如需个案确认，建议带材料向行政书士咨询。
 
 ## 信息来源
 
-- [出入国在留管理庁「在留期間更新許可申請」](https://www.moj.go.jp/isa/applications/procedures/16-2.html)（取得日 2026-04-28）
+- [出入国在留管理庁「在留期間更新許可申請」](https://www.moj.go.jp/isa/applications/procedures/16-3.html)（取得日 2026-04-28）
 - [出入国在留管理庁「『技術・人文知識・国際業務』在留期間更新 必要書類」](https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri07_00120.html)（取得日 2026-04-28）
 - [出入国在留管理庁「『経営・管理』在留期間更新 必要書類」](https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri07_00131.html)（取得日 2026-04-28）
 - [出入国在留管理庁「『家族滞在』在留期間更新 必要書類」](https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri07_00097.html)（取得日 2026-04-28）

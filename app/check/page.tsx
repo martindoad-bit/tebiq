@@ -10,8 +10,8 @@ import { listDimensionViews } from '@/lib/db/queries/checkDimensions'
 export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
-  title: '续签材料准备检查 | TEBIQ',
-  description: '按维度确认递交前要看的材料准备事项。完整检查约 5 分钟。',
+  title: '在留准备自查 | TEBIQ',
+  description: '按维度核对递交前要看的材料、期限和记录。',
   alternates: { canonical: '/check' },
 }
 

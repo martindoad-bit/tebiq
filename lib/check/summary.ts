@@ -57,21 +57,21 @@ function greenSummary(history: AnsweredItem[]): string {
   if (a['6'] === 0) points.push('社保全程参保')
   if (a['7'] === 0 || a['7'] === 2) points.push('未出现不法残留')
 
-  if (points.length === 0) points.push('关键准备事项均通过')
+  if (points.length === 0) points.push('暂未发现明显红黄项')
 
-  return `你的情况：${points.slice(0, 3).join('，')}。主要需要确认材料完整性即可。`
+  return `你的情况：${points.slice(0, 3).join('，')}。本轮未发现明显红黄项，仍需按官方清单核对材料。`
 }
 
 function yellowSummary(triggered: TriggeredItem[]): string {
   const sorted = sortBySeverityPriority(triggered)
   const top = sorted[0]
   const pro = triggered.filter(t => !t.selfFix).length
-  const proPart = pro > 0 ? `，其中 ${pro} 项建议咨询专家` : ''
+  const proPart = pro > 0 ? `，其中 ${pro} 项建议向入管窗口或行政书士等专业人士确认` : ''
   return `发现 ${triggered.length} 项需要处理：最关键是「${top.triggerLabel}」${proPart}。`
 }
 
 function redSummary(triggered: TriggeredItem[]): string {
   const reds = triggered.filter(t => t.severity === 'red')
   const top = sortBySeverityPriority(reds)[0]
-  return `发现 ${reds.length} 项待确认事项，最优先要解决：「${top.triggerLabel}」。在这之前不建议自行递签。`
+  return `发现 ${reds.length} 项待确认事项，最优先要解决：「${top.triggerLabel}」。递交前请先确认这些事项。`
 }

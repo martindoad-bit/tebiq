@@ -105,7 +105,7 @@ ${profilePart}
 1. 直接给出"需要特别注意的地方"，不要重复摘要
 2. 200 字以内，分 2-3 个要点
 3. 陈述事实，不做法律判断，不说"会被拒"
-4. 复杂情况建议咨询专家
+4. 复杂情况建议向入管窗口或行政书士等专业人士确认
 5. 末尾不要加任何免责声明（程序会另行添加）`
 }
 
@@ -113,7 +113,7 @@ async function callAi(systemPrompt: string): Promise<string> {
   const awsKey = process.env.AWS_ACCESS_KEY_ID
   const awsSecret = process.env.AWS_SECRET_ACCESS_KEY
   if (!awsKey || !awsSecret) {
-    return '请根据上方准备事项逐条处理，材料齐全后再行递交。复杂情况建议咨询专家。'
+    return '请根据上方准备事项逐条处理，材料齐全后再行递交。复杂情况建议向入管窗口或行政书士等专业人士确认。'
   }
   try {
     const AnthropicBedrock = (await import('@anthropic-ai/bedrock-sdk')).default
@@ -133,7 +133,7 @@ async function callAi(systemPrompt: string): Promise<string> {
   } catch {
     /* fall-through to fallback */
   }
-  return '请根据上方准备事项逐条处理，材料齐全后再行递交。复杂情况建议咨询专家。'
+  return '请根据上方准备事项逐条处理，材料齐全后再行递交。复杂情况建议向入管窗口或行政书士等专业人士确认。'
 }
 
 export async function POST(req: Request) {

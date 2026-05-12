@@ -18,12 +18,12 @@ export default function ComplianceFooter({
         <div className="space-y-1.5">
           <p>
             以上为参考信息，<strong className="text-slate">非法律意见</strong>。
-            具体以官方 website 或专家为准。
+            具体以官方网站、窗口说明或专业人士确认为准。
           </p>
           {includeMunicipalityNote && (
             <p>
-              市役所相关行动各区役所流程略有差异，
-              <strong className="text-slate">具体以居住地市役所窗口公式为准</strong>。
+              市役所相关手续因地区而异，
+              <strong className="text-slate">具体以居住地市役所窗口说明为准</strong>。
             </p>
           )}
           {extra && <p>{extra}</p>}

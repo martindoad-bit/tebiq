@@ -117,6 +117,9 @@ const DRY_RUN_CANDIDATE_STATES = [
   'ai_verified', 'human_reviewed', 'needs_review', 'ai_extracted',
 ] as const
 
+const UNCERTAIN_INJECTION_LINE =
+  /(ai推定|AI推定|確認要|要確認|確認中|法令照合|DOMAIN確認|審査基準要確認|未確認)/
+
 // ---------------------------------------------------------------------------
 // State × risk gate (per docs/fact-cards/README.md state machine)
 // ---------------------------------------------------------------------------
@@ -271,7 +274,7 @@ export async function matchFactCards(
       evidence_points: r.card.evidencePoints ?? [],
       related_links: r.card.relatedLinks ?? [],
       needs_review_flags: (r.card.needsReviewFlags ?? []) as string[],
-      injection_certain_block: r.card.injectionCertainBlock,
+      injection_certain_block: sanitizeInjectionCertainBlock(r.card.injectionCertainBlock),
       injection_needs_review_addendum: r.card.injectionNeedsReviewAddendum ?? null,
     })
   }
@@ -279,10 +282,20 @@ export async function matchFactCards(
   return out
 }
 
+function sanitizeInjectionCertainBlock(block: string): string {
+  return block
+    .split('\n')
+    .filter(line => !UNCERTAIN_INJECTION_LINE.test(line))
+    .join('\n')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim()
+}
+
 // ---------------------------------------------------------------------------
 // Pure helpers exposed for unit tests (DB-free)
 // ---------------------------------------------------------------------------
 export const _matcherInternals = {
+  sanitizeInjectionCertainBlock,
   gateDecision,
   scoreCardAgainst,
   RISK_RANK,

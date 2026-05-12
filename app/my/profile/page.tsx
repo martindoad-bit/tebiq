@@ -180,12 +180,12 @@ function ExpiryReminder({ expiryDate }: { expiryDate: string }) {
   let sub = ''
   if (days < 30) {
     bg = 'bg-danger'
-    title = `非常紧急：剩余 ${days} 天`
-    sub = '请立刻确认材料并咨询专家'
+    title = `期限临近：剩余 ${days} 天`
+    sub = '请先确认材料和提交方式'
   } else if (days < 60) {
     bg = 'bg-accent'
     title = `需要尽快提交：剩余 ${days} 天`
-    sub = '建议立刻准备材料并提交申请'
+    sub = '建议开始准备材料，并确认提交方式'
   } else if (days < 90) {
     bg = 'bg-ink'
     title = `建议开始准备：剩余 ${days} 天`
@@ -227,7 +227,7 @@ const MARITAL_OPTIONS: { v: MaritalStatus; l: string }[] = [
 ]
 const COMPANY_OPTIONS: { v: CompanyTypeNew; l: string }[] = [
   { v: 'category_1', l: '类别 1（上市公司等）' },
-  { v: 'category_2', l: '类别 2（前年纳税额 1500 万以上）' },
+  { v: 'category_2', l: '类别 2（前年源泉徴収税额 1000 万円以上）' },
   { v: 'category_3', l: '类别 3（前年纳税额 100 万以上）' },
   { v: 'category_4', l: '类别 4（其他）' },
   { v: 'not_applicable', l: '不适用（自营 / 非技人国 / 不确定）' },
@@ -520,7 +520,7 @@ function HistoryRow({ record }: { record: HistoryRecord }) {
           {verdictLabel.text}
         </div>
         <div className="flex-1 min-w-0">
-          <div className="text-[13px] font-medium leading-snug text-ink">技人国续签材料准备检查</div>
+          <div className="text-[13px] font-medium leading-snug text-ink">技人国在留准备自查</div>
           <div className="mt-1 text-[10.5px] text-ash">{dateStr}</div>
           {record.triggeredItems.length > 0 && (
             <div className="mt-1 text-[10.5px] text-ash">触发 {record.triggeredItems.length} 项待确认事项</div>

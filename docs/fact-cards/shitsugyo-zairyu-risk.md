@@ -85,9 +85,9 @@ evidence_points:
     source_organization: "出入国在留管理庁"
     source_locator: "ページ内「14日以内届出義務」「無職」「Q94」の記述を確認"
     display_label: "失業：退職後14日以内届出義務・就労活動3か月以上停止で在留資格取消リスク"
-    support_level: "direct"
+    support_level: "indirect"
     user_visible: true
-    needs_domain_review: false
+    needs_domain_review: true
   - claim: "特定活動（就労継続支援）の対象：「やむを得ない事情により就労が継続できなくなった方が、特定技能への移行を目指す場合に、技能試験や日本語試験を受験するまでの間、移行後の就労予定先で就労できるよう在留資格変更許可申請を行うことができます」（ISA公式）。在留資格取消し後の出国猶予：「３０日を上限として出国のために必要な期間」が指定される（ISA取消し解説ページ）。"
     source_title: "出入国在留管理庁：特定活動（就労継続支援）"
     source_url: "https://www.moj.go.jp/isa/10_00213.html"
@@ -97,7 +97,7 @@ evidence_points:
     support_level: "direct"
     user_visible: true
     needs_domain_review: false
-  - claim: "所属機関届出の方法：届出はオンライン（24時間受付）・地方出入国在留管理局への持参・郵送の3方法で可能。新たな契約機関との契約締結時も同じく14日以内に届出が必要（ISA届出ページ）。14日以内の届出を怠った場合は在留管理義務違反となる可能性がある（ai推定・ペナルティ詳細は`14nichi_fujikai_sanction`確認要）。"
+  - claim: "所属機関届出の方法：届出はオンライン（24時間受付）・地方出入国在留管理局への持参・郵送の3方法で可能。新たな契約機関との契約締結時も同じく14日以内に届出が必要（ISA届出ページ）。"
     source_title: "出入国在留管理庁：所属（契約）機関に関する届出"
     source_url: "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00015.html"
     source_organization: "出入国在留管理庁"

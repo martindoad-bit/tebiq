@@ -19,7 +19,7 @@ export default async function TimelineEventPage({
 }: {
   params: { event_id: string }
 }) {
-  if (params.event_id === 'demo') return <TimelineDemoDetail />
+  if (params.event_id === 'demo') notFound()
 
   const owner = await getTimelineRequestOwner()
   if (!owner.memberId && !owner.sessionId) notFound()
@@ -111,57 +111,6 @@ export default async function TimelineEventPage({
       )}
 
       <RelatedKnowledge tags={tags} />
-    </AppShell>
-  )
-}
-
-function TimelineDemoDetail() {
-  return (
-    <AppShell appBar={<AppBar title="提醒详情" back />}>
-      <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-4">
-        <div className="flex items-start gap-3">
-          <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-[10px] border border-hairline bg-paper text-ink">
-            <Archive size={19} strokeWidth={1.5} />
-          </span>
-          <div className="min-w-0 flex-1">
-            <p className="text-[10.5px] font-medium text-ash">2026/05/15</p>
-            <h1 className="mt-1 text-[17px] font-medium leading-snug text-ink">
-              住民税 納付通知書
-            </h1>
-            <p className="mt-1 text-[12px] leading-[1.6] text-ash">
-              江戸川区役所 / 期限 2026-06-30 / 已识别
-            </p>
-          </div>
-          <span className="rounded-[8px] bg-cool-blue px-2 py-1 text-[10px] font-medium text-ink">
-            已识别
-          </span>
-        </div>
-      </section>
-
-      <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-4">
-        <h2 className="text-[13px] font-medium text-ink">记录内容</h2>
-        <dl className="mt-3 grid gap-2 text-[12px]">
-          <InfoRow label="文书" value="住民税 納付通知書" empty="暂未记录文书类型" />
-          <InfoRow label="来源" value="江戸川区役所" empty="暂未记录来源机构" />
-          <InfoRow label="期限" value="2026-06-30" empty="暂未记录期限" />
-          <InfoRow label="金额" value="¥38,500" empty="暂未记录金额" />
-          <InfoRow label="记录来源" value="文书识别" empty="TEBIQ 记录" />
-        </dl>
-      </section>
-
-      <section className="mt-3 rounded-card border border-hairline bg-surface px-4 py-4">
-        <h2 className="text-[13px] font-medium text-ink">下一步</h2>
-        <ol className="mt-3 grid gap-2">
-          {['确认原文件上的納付期限。', '按原文件金额缴纳。', '保留缴费记录。'].map((step, index) => (
-            <li key={step} className="grid grid-cols-[24px_1fr] gap-2 text-[12px] leading-[1.65] text-slate">
-              <span className="flex h-6 w-6 items-center justify-center rounded-[8px] bg-paper text-[11px] tabular-nums text-ink">
-                {index + 1}
-              </span>
-              <span>{step}</span>
-            </li>
-          ))}
-        </ol>
-      </section>
     </AppShell>
   )
 }

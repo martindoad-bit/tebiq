@@ -10,23 +10,10 @@ interface ProcessingTimeRecord {
   source: string
 }
 
-const SOURCE_URL =
-  'https://www.moj.go.jp/isa/applications/resources/shinsakikann.html'
-
-const PLACEHOLDER: Record<string, number> = {
-  gijinkoku: 45,
-  keiei: 80,
-  haigusha: 50,
-  tokutei: 60,
-  teijusha: 55,
-  eijusha: 120,
-}
-
 // GET /api/processing-time?visa=gijinkoku
-// 返回审查处理参考时间。当前为占位实现：
+// 返回已核对的审查处理参考时间：
 // - 优先读 KV (key: processing-time:{visa})
-// - 回落到内置 PLACEHOLDER
-// - 由后续 cron 任务定期抓取入管局官网更新 KV
+// - 无缓存时不返回推定天数，避免把占位数据误认为官方口径
 export async function GET(req: Request) {
   const url = new URL(req.url)
   const visa = url.searchParams.get('visa') ?? 'gijinkoku'
@@ -36,11 +23,10 @@ export async function GET(req: Request) {
     return NextResponse.json(cached)
   }
 
-  const fallback: ProcessingTimeRecord = {
+  return NextResponse.json({
     visaType: visa,
-    daysAvg: PLACEHOLDER[visa] ?? 60,
+    available: false,
     fetchedAt: new Date().toISOString(),
-    source: SOURCE_URL,
-  }
-  return NextResponse.json({ ...fallback, placeholder: true })
+    message: '处理时间暂未核对。请以入管庁最新公开资料或窗口说明为准。',
+  })
 }

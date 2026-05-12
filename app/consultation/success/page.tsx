@@ -18,14 +18,14 @@ export default function ConsultationSuccessPage() {
           </span>
           <h1 className="mt-5 text-[24px] font-medium leading-tight text-ink">提交成功</h1>
           <p className="mt-3 text-[13px] leading-[1.75] text-slate">
-            我们会根据你留下的联系方式确认可预约方式。<br />
+            预约信息已提交。后续方式以预约说明为准。<br />
             如需补充背景，也可以先在 TEBIQ 里继续整理。
           </p>
 
           <div className="my-6 rounded-[13px] bg-accent-2 px-4 py-3 text-left">
             <p className="text-[12px] font-medium text-ink">提醒</p>
             <p className="mt-1.5 text-[12px] leading-relaxed text-slate">
-              这还不是正式案件受理。行政书士可基于你提供的信息确认和建议，但不保证申请结果。
+              提交信息不代表已委托办理；行政书士可基于你提供的信息确认和建议，但不保证申请结果。
             </p>
           </div>
 

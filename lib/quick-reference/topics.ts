@@ -142,7 +142,7 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
         verification: 'source-backed',
       },
     ],
-    checkNote: '正在认真就职活动是否属于“正当理由”，需要结合材料和实际行动记录判断。',
+    checkNote: '是否属于“正当理由”，需要结合求职记录和实际活动判断。',
     sources: [
       {
         label: '出入国在留管理庁：所属（契約）機関に関する届出',
@@ -225,7 +225,7 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
         verification: 'source-backed',
       },
     ],
-    checkNote: '马上进入新公司的厚生年金、配偶者扶养第 3 号、保险料免除申请，路径会不同。',
+    checkNote: '如果很快加入新公司的厚生年金、转为配偶扶养第 3 号，或申请保险料免除，处理路径会不同。',
     sources: [
       {
         label: '日本年金機構：会社を退職したときの国民年金の手続き',

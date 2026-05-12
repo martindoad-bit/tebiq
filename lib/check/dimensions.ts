@@ -27,7 +27,7 @@ export interface DimensionView extends CheckDimensionDefinition {
 
 export const CHECK_VISA_META: Record<CanonicalCheckVisa, {
   label: string
-  legacyQuizVisa: VisaSlug
+  legacyQuizVisa: VisaSlug | null
 }> = {
   technical_humanities_international: {
     label: '技術・人文知識・国際業務',
@@ -43,7 +43,7 @@ export const CHECK_VISA_META: Record<CanonicalCheckVisa, {
   },
   permanent_resident_preparation: {
     label: '永住准备',
-    legacyQuizVisa: 'teijusha',
+    legacyQuizVisa: null,
   },
   specified_skilled_worker: {
     label: '特定技能',
@@ -211,7 +211,7 @@ export function defaultActionForStatus(status: DimensionStatus): string {
     case 'expired':
       return '待确认'
     case 'checked':
-      return '已确认'
+      return '基本齐备'
     default:
       return '待确认'
   }

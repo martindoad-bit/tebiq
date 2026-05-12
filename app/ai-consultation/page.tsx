@@ -14,8 +14,8 @@ import AiConsultationEntryClient from './AiConsultationEntryClient'
 export const dynamic = 'force-dynamic'
 
 export const metadata = {
-  title: 'TEBIQ — 在留咨询 Alpha',
-  description: 'TEBIQ 1.0 Alpha — 输入你的在留问题获得咨询方向。Alpha 阶段，回答仅供参考。',
+  title: 'TEBIQ — 在留咨询',
+  description: '输入在留问题，整理风险、下一步和可核对资料。',
   robots: { index: false, follow: false }, // Alpha — limited release per Charter §9
 }
 
