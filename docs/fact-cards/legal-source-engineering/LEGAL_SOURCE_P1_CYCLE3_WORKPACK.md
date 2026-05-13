@@ -68,7 +68,7 @@ Existing cards are useful but not enough as promotion-grade source atoms:
 |---|---:|---|
 | Batch 1 | 18 cards | 1号/2号 core distinction, total period, family-stay boundary, activity vs field criteria, status disambiguation |
 | Batch 2 | 24 cards | 特定技能雇用契約, receiving organization, equal treatment, full-time/direct/dispatched boundary, support-plan framework |
-| Batch 3 | 16-22 cards | certificate/change/renewal materials, procedure source role, preparation 特定活動 integration, no approval guarantee |
+| Batch 3 | 19 cards | certificate/change/renewal material-table structure, applicant-side tax/social-insurance/pension materials, field-table boundaries, permission-boundary guard |
 | Batch 4 | 16-22 cards | receiving-organization change, employer/support organization notifications, acceptance difficulty, periodic reports, registered support organization |
 | Batch 5 | 20-30 cards | field-specific source anchors and A/B false-positive burn-down against 技能実習, 技能, 技人国, 家族滞在, J-Find, 経営管理, generic job-change questions |
 
