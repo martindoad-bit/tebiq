@@ -45,5 +45,5 @@ This batch makes the 特定技能 material layer usable for checklist-style rout
 
 - Positive coverage: 23 direct fixture questions.
 - Negative coverage: generic tax, pension, health insurance, contract, agriculture, spouse, dependent-family, company-health-insurance, company-pension, and prior Batch 1/2 SSW questions.
-- Production isolation: all 18 cards must remain dropped under production gate.
+- Production isolation: all 19 cards must remain dropped under production gate.
 - User-visible text leakage: no internal workflow labels in title/citation/evidence/injection fields.

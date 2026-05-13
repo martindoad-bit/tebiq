@@ -69,7 +69,7 @@ Existing cards are useful but not enough as promotion-grade source atoms:
 | Batch 1 | 18 cards | 1号/2号 core distinction, total period, family-stay boundary, activity vs field criteria, status disambiguation |
 | Batch 2 | 24 cards | 特定技能雇用契約, receiving organization, equal treatment, full-time/direct/dispatched boundary, support-plan framework |
 | Batch 3 | 19 cards | certificate/change/renewal material-table structure, applicant-side tax/social-insurance/pension materials, field-table boundaries, permission-boundary guard |
-| Batch 4 | 16-22 cards | receiving-organization change, employer/support organization notifications, acceptance difficulty, periodic reports, registered support organization |
+| Batch 4 | 22 cards | employer/support organization notifications, acceptance difficulty, support implementation difficulty, annual periodic reports, registered support organization |
 | Batch 5 | 20-30 cards | field-specific source anchors and A/B false-positive burn-down against 技能実習, 技能, 技人国, 家族滞在, J-Find, 経営管理, generic job-change questions |
 
 All cards remain `ai_extracted` until review and promotion.
@@ -98,6 +98,33 @@ All cards remain `ai_extracted` until review and promotion.
 | P1C3-B1-018 | `ssw2-field-availability-not-all-ssw1-fields-source` | field_boundary | 2号 target fields and work categories must be checked separately from 1号. |
 
 Batch 1 can add extra atoms if FACT identifies direct current source text for total period, family treatment, or field count.
+
+## Batch 4 Completed Atoms
+
+| Candidate ID | fact_id | Claim Type | Core Claim |
+|---|---|---|---|
+| P1C3-B4-001 | `ssw-notification-ad-hoc-and-annual-deadline-source` | notification_deadline_boundary | 特定技能の随時届出は14日以内、定期届出は年1回期限で見る。 |
+| P1C3-B4-002 | `ssw-notification-noncompliance-penalty-risk-source` | risk_signal | 特定技能所属機関の届出不履行や虚偽届出は罰則リスクになる。 |
+| P1C3-B4-003 | `ssw-org-notification-not-delegable-to-rso-source` | responsibility_boundary | 所属機関の随時届出は登録支援機関へ委託できない。 |
+| P1C3-B4-004 | `ssw-employment-contract-notification-14day-source` | notification_requirement | 特定技能雇用契約の変更・終了・新規締結は14日以内届出を確認する。 |
+| P1C3-B4-005 | `ssw-employment-contract-end-acceptance-difficulty-boundary-source` | notification_boundary | 契約終了理由によって受入れ困難届出も確認する。 |
+| P1C3-B4-006 | `ssw-support-plan-change-notification-14day-source` | notification_requirement | 1号支援計画変更は14日以内届出を確認する。 |
+| P1C3-B4-007 | `ssw-support-contract-notification-14day-source` | notification_requirement | 支援委託契約の締結・変更・終了は14日以内届出を確認する。 |
+| P1C3-B4-008 | `ssw-acceptance-difficulty-notification-14day-source` | notification_requirement | 継続受入れが困難になった場合は14日以内届出を確認する。 |
+| P1C3-B4-009 | `ssw-acceptance-difficulty-one-month-inactivity-source` | notification_trigger | 1か月以上活動できない事由は受入れ困難届出で確認する。 |
+| P1C3-B4-010 | `ssw-acceptance-difficulty-missing-person-source` | notification_trigger | 行方不明が判明した場合は受入れ困難届出を確認する。 |
+| P1C3-B4-011 | `ssw-standard-nonconformity-notification-14day-source` | notification_requirement | 雇用契約・支援計画の基準不適合を知った場合は14日以内届出を確認する。 |
+| P1C3-B4-012 | `ssw-support-implementation-difficulty-notification-source` | notification_requirement | 支援計画の実施困難は認知日から14日以内届出を確認する。 |
+| P1C3-B4-013 | `ssw-support-implementation-difficulty-attachments-source` | material_boundary | 支援実施困難では相談記録・面談報告・理由書等を確認する。 |
+| P1C3-B4-014 | `ssw-periodic-notification-integrated-annual-form-source` | transition_rule | 定期届出は年1回の受入れ・活動・支援実施状況で確認する。 |
+| P1C3-B4-015 | `ssw-outsourced-support-periodic-report-via-host-source` | responsibility_boundary | 全部委託時の支援実施状況は所属機関経由で定期届出を確認する。 |
+| P1C3-B4-016 | `ssw-rso-registration-change-14day-source` | notification_requirement | 登録支援機関の登録事項変更は14日以内届出を確認する。 |
+| P1C3-B4-017 | `ssw-rso-suspend-abolish-restart-notification-source` | notification_requirement | 支援業務の休止・廃止・再開は届出時期を分けて確認する。 |
+| P1C3-B4-018 | `ssw-rso-office-change-vs-suspension-boundary-source` | notification_boundary | 一部事務所の休止や新事務所開始は登録事項変更で確認する。 |
+| P1C3-B4-019 | `ssw-rso-registration-scope-and-period-source` | registration_requirement | 全部支援を受託する機関は登録申請と5年有効期間を確認する。 |
+| P1C3-B4-020 | `ssw-rso-renewal-window-source` | renewal_deadline | 更新申請は有効期間満了月の6か月前初日から4か月前月末で確認する。 |
+| P1C3-B4-021 | `ssw-rso-renewal-lapse-no-support-source` | registration_boundary | 期限内に更新を受けられない場合は支援業務を行えない点を確認する。 |
+| P1C3-B4-022 | `ssw-rso-notification-nonperformance-cancellation-risk-source` | risk_signal | 登録支援機関の届出不履行や虚偽届出は登録取消しリスクとして確認する。 |
 
 ## Batch 1 Test Gate
 
