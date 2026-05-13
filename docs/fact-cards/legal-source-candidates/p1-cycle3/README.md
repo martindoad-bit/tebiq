@@ -9,6 +9,7 @@ This directory tracks reports for P1 Cycle 3. Candidate cards are stored in `doc
 | Batch | Topic | Count | State | Report |
 |---|---:|---:|---|---|
 | Batch 1 | 1号/2号 core, total period, family, field, procedure, and status-mix boundaries | 18 | `ai_extracted` | [`BATCH1_REPORT.md`](./BATCH1_REPORT.md) |
+| Batch 2 | employment contract, accepting organization, dispatch, remuneration, support-plan, and support-delegation boundaries | 24 | `ai_extracted` | [`BATCH2_REPORT.md`](./BATCH2_REPORT.md) |
 
 ## Promotion Rule
 
