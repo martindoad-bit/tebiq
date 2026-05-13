@@ -12,6 +12,7 @@ This cycle separates high-skilled point-system answers from J-Skip,高度専門�
 |---|---:|---|
 | Batch 1 | 14 cards | [`BATCH1_REPORT.md`](./BATCH1_REPORT.md) |
 | Batch 2 | 20 cards | [`BATCH2_REPORT.md`](./BATCH2_REPORT.md) |
+| Batch 3 | 18 cards | [`BATCH3_REPORT.md`](./BATCH3_REPORT.md) |
 
 ## Gate
 
