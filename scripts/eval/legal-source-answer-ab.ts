@@ -111,6 +111,42 @@ const CUSTOM_ROWS: ShadowRow[] = [
     status: 'custom',
     needsAnswerAB: true,
   },
+  {
+    id: 'LS-CUSTOM-001-FU',
+    priority: 'P0',
+    family: '日配/离婚再婚/手续追问',
+    question: [
+      '我是日配，我出轨离婚了，现在又和另一个日本人再婚了，我的签证怎么办，是变更还是更新。',
+      '追问：我的书士告诉我，难度上是变更，但是实际手续申请，是更新，他说的对吗，还是他填错表了敷衍我？',
+    ].join('\n'),
+    candidateOnlyIds: [
+      'residence-renewal-same-status-extension',
+      'residence-change-activity-purpose-change',
+      'spouse-notification-not-status-change-substitute',
+      'spouse-divorce-notification-cancellation-distinction',
+      'spouse-cancellation-change-or-pr-opportunity',
+    ],
+    status: 'custom-followup',
+    needsAnswerAB: true,
+  },
+  {
+    id: 'LS-CUSTOM-002-FU',
+    priority: 'P0',
+    family: '经管/高才人文/公司处理追问',
+    question: [
+      '我是经管签，我准备转高才人文签，已经拿到了企业内定。我是否可以先把公司休眠，再提交变更申请，对方要求我先休眠，确保变更成功率。',
+      '追问：我的公司不想要了，我即使变更不成功我也会放弃经管签的，所以我要早点处理掉公司。而且我的在留期限是2026年6月2日，我会在到期前提交变更申请。那我能先休眠、注销或转让公司吗？如果不处理公司，交理由书是不是反而增加风险？',
+    ].join('\n'),
+    candidateOnlyIds: [
+      'business-manager-activity-stop-risk-router',
+      'residence-change-activity-purpose-change',
+      'special-period-previous-status-activity-only',
+      'highly-skilled-one-activity-institution-change-application',
+      'guard-hsp-materials-not-approval-guarantee',
+    ],
+    status: 'custom-followup',
+    needsAnswerAB: true,
+  },
 ]
 
 async function main() {
@@ -457,6 +493,10 @@ function renderMarkdown(generatedAt: string, rows: AnswerABRow[]): string {
   lines.push(`- B success: ${rows.filter(row => row.b.ok).length}/${rows.length}`)
   lines.push('- Automated heuristic is only a debugging hint; final judgment should be human/AQL review over the full answer pairs.')
   lines.push('')
+  if (rows.some(row => row.id.endsWith('-FU'))) {
+    lines.push(...renderCustomProductionLeadRead('##'))
+    lines.push('')
+  }
   lines.push('## AQL Review Table')
   lines.push('')
   lines.push('The `Heuristic` column is not a quality score. It only flags crude string-level hints and should not replace reading the answer pair.')
@@ -498,6 +538,8 @@ function renderMarkdown(generatedAt: string, rows: AnswerABRow[]): string {
   lines.push('')
   lines.push('```bash')
   lines.push('npx tsx scripts/eval/legal-source-answer-ab.ts')
+  lines.push('# Custom high-risk questions:')
+  lines.push('npx tsx scripts/eval/legal-source-answer-ab.ts --custom --concurrency=2')
   lines.push('```')
   lines.push('')
   return `${lines.join('\n')}\n`
@@ -533,8 +575,12 @@ function renderCustomAppendix(generatedAt: string, rows: AnswerABRow[]): string 
   lines.push('')
   lines.push('- 这部分是用户追加的单题答案 A/B，不属于原 15 题主样本。')
   lines.push('- A 组仍是生产 TEBIQ 当前答案；B 组仍是候选法源上下文答案。')
-  lines.push('- 这两个问题均按高风险深水区样本处理，需人肉判断。')
+  lines.push('- 这些问题均按高风险深水区样本处理，需人肉判断。')
   lines.push('')
+  if (rows.some(row => row.id.endsWith('-FU'))) {
+    lines.push(...renderCustomProductionLeadRead('###'))
+    lines.push('')
+  }
   lines.push('| ID | Family | Question | Candidate cards | A fact cards |')
   lines.push('|---|---|---|---|---|')
   for (const row of rows) {
@@ -562,6 +608,17 @@ function renderCustomAppendix(generatedAt: string, rows: AnswerABRow[]): string 
     lines.push('')
   }
   return `${lines.join('\n')}\n`
+}
+
+function renderCustomProductionLeadRead(heading: '##' | '###'): string[] {
+  return [
+    `${heading} Production Lead Read`,
+    '',
+    '- `LS-CUSTOM-001-FU`：A/B 都没有吃到用户补充的实务细节。真实风险点不是“书士一定填错”，而是同名「日本人の配偶者等」下，可能实际使用更新申请表，但审查内容接近重新确认新婚姻基础。当前 A/B 都把“应填变更表”说死，尤其 A 直接建议暂停书士操作，风险偏高。',
+    '- `LS-CUSTOM-002-FU`：A/B 都过度机械地要求“许可前维持公司”。用户补充的实务场景是：本人已不想保留経営・管理，且会在 2026-06-02 到期前提交变更；公司休眠、注销或转让可能本身就是变更策略的一部分，不处理反而需要理由书并增加风险。当前事实卡只覆盖“活动停止可能触发取消风险”，不足以支撑“绝对不要处理公司”的行动建议。',
+    '- AQL follow-up：`LS-CUSTOM-001-FU` 是 B 略安全但两者都不合格；`LS-CUSTOM-002-FU` 是 A 略安全于 B，但两者都机械禁止。第一题应改成“资格基础变了、审查实质接近重新审查，但同名资格可能实务上用更新表，重点是书士如何披露离婚/再婚/14日届出和新婚姻真实性”。第二题应改成“三路径风险比较”：许可后处理公司最保守；到期前提交变更并同步/事前处置公司可能是实务策略但要统一设计时间线和理由；先停业很久再申请风险最高。',
+    '- 结论：追问轮里 B 组不再稳定优于 A 组。候选法源卡提升了程序边界，但缺少“同名资格下表格实务”和“经管放弃/公司处置/临期变更策略”的 DOMAIN 层，导致模型过度禁止。下一步应把这两题登记为 deep-water practice gaps，不应直接把当前 A/B 答案模式推入生产。',
+  ]
 }
 
 function escapeRegExp(value: string): string {
