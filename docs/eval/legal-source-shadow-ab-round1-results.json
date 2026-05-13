@@ -1,0 +1,3174 @@
+{
+  "generatedAt": "2026-05-13T02:57:01.068Z",
+  "mode": "retrieval_shadow_ab",
+  "productionStates": [
+    "ai_verified",
+    "human_reviewed",
+    "needs_review"
+  ],
+  "dryRunStates": [
+    "ai_verified",
+    "human_reviewed",
+    "needs_review",
+    "ai_extracted"
+  ],
+  "cardCount": 560,
+  "rows": [
+    {
+      "id": "LS-001",
+      "priority": "P0",
+      "family": "特定技能",
+      "question": "特定技能 换公司 只要14天届出",
+      "expectedCandidateIds": [
+        "ssw-organization-change-requires-status-change-source"
+      ],
+      "productionMatches": [
+        {
+          "fact_id": "tensyoku-zairyu",
+          "title": "転職時の在留資格手続き（14日届出義務・入管法第19条の16・資格変更要否・就労資格証明書）",
+          "matched_keywords": [
+            "14天"
+          ],
+          "score": 0.0476,
+          "state": "ai_verified",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "cycle2-batch21"
+        },
+        {
+          "fact_id": "tokuteiginou-ichigou-youken",
+          "title": "特定技能1号の対象業種・要件概要（語学・家族帯同・5年上限）",
+          "matched_keywords": [
+            "特定技能"
+          ],
+          "score": 0.0385,
+          "state": "ai_verified",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "0.6"
+        }
+      ],
+      "dryRunMatches": [
+        {
+          "fact_id": "ssw-organization-change-requires-status-change-source",
+          "title": "特定技能 — 所属機関変更は変更許可申請を確認する",
+          "matched_keywords": [
+            "特定技能 换公司 只要14天届出"
+          ],
+          "score": 0.1429,
+          "state": "ai_extracted",
+          "risk_level": "critical",
+          "decision": "drop",
+          "sprint": "Legal Source Engineering / P1 Cycle 3 / Batch 1"
+        },
+        {
+          "fact_id": "tensyoku-zairyu",
+          "title": "転職時の在留資格手続き（14日届出義務・入管法第19条の16・資格変更要否・就労資格証明書）",
+          "matched_keywords": [
+            "14天"
+          ],
+          "score": 0.0476,
+          "state": "ai_verified",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "cycle2-batch21"
+        },
+        {
+          "fact_id": "tokuteiginou-ichigou-youken",
+          "title": "特定技能1号の対象業種・要件概要（語学・家族帯同・5年上限）",
+          "matched_keywords": [
+            "特定技能"
+          ],
+          "score": 0.0385,
+          "state": "ai_verified",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "0.6"
+        },
+        {
+          "fact_id": "skilled-labor-activity-anchor",
+          "title": "技能 — 産業上の特殊な分野に属する熟練技能活動",
+          "matched_keywords": [
+            "技能",
+            "特定技能"
+          ],
+          "score": 0.2222,
+          "state": "ai_extracted",
+          "risk_level": "medium",
+          "decision": "drop",
+          "sprint": "Legal Source Engineering / P0 Cycle 1 / Batch 2"
+        }
+      ],
+      "expectedHitIds": [
+        "ssw-organization-change-requires-status-change-source"
+      ],
+      "candidateOnlyIds": [
+        "ssw-organization-change-requires-status-change-source"
+      ],
+      "status": "candidate_gain",
+      "needsAnswerAB": true
+    },
+    {
+      "id": "LS-002",
+      "priority": "P0",
+      "family": "特定技能",
+      "question": "特定技能1号 配偶孩子 家族滞在",
+      "expectedCandidateIds": [
+        "ssw1-family-stay-not-sponsor-source"
+      ],
+      "productionMatches": [
+        {
+          "fact_id": "kazoku-taizai-yoken",
+          "title": "家族滞在ビザ 対象主ビザ要件・特定技能1号の除外・活動範囲",
+          "matched_keywords": [
+            "家族滞在",
+            "特定技能1号",
+            "特定技能"
+          ],
+          "score": 0.1071,
+          "state": "ai_verified",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "0.6 / Workstream C / Batch 3"
+        },
+        {
+          "fact_id": "tokuteiginou-ichigou-youken",
+          "title": "特定技能1号の対象業種・要件概要（語学・家族帯同・5年上限）",
+          "matched_keywords": [
+            "特定技能",
+            "特定技能1号"
+          ],
+          "score": 0.0769,
+          "state": "ai_verified",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "0.6"
+        }
+      ],
+      "dryRunMatches": [
+        {
+          "fact_id": "ssw1-family-stay-not-sponsor-source",
+          "title": "特定技能1号 — 家族滞在の扶養者欄に載っていない",
+          "matched_keywords": [
+            "特定技能1号 配偶孩子 家族滞在"
+          ],
+          "score": 0.1429,
+          "state": "ai_extracted",
+          "risk_level": "critical",
+          "decision": "drop",
+          "sprint": "Legal Source Engineering / P1 Cycle 3 / Batch 1"
+        },
+        {
+          "fact_id": "dependent-sponsor-and-family-member-scope",
+          "title": "家族滞在 — 扶养者资格范围与配偶者・子女对象范围",
+          "matched_keywords": [
+            "家族滞在",
+            "子"
+          ],
+          "score": 0.2222,
+          "state": "ai_extracted",
+          "risk_level": "high",
+          "decision": "drop",
+          "sprint": "Legal Source Engineering / P0 Cycle 1 / Batch 4"
+        },
+        {
+          "fact_id": "specified-skilled-worker-1-designated-field-skill-scope",
+          "title": "特定技能1号 — 指定分野と相当程度の知識又は経験",
+          "matched_keywords": [
+            "特定技能1号"
+          ],
+          "score": 0.1429,
+          "state": "ai_extracted",
+          "risk_level": "high",
+          "decision": "drop",
+          "sprint": "Legal Source Engineering / P0 Cycle 1 / Batch 4"
+        },
+        {
+          "fact_id": "kazoku-taizai-yoken",
+          "title": "家族滞在ビザ 対象主ビザ要件・特定技能1号の除外・活動範囲",
+          "matched_keywords": [
+            "家族滞在",
+            "特定技能1号",
+            "特定技能"
+          ],
+          "score": 0.1071,
+          "state": "ai_verified",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "0.6 / Workstream C / Batch 3"
+        },
+        {
+          "fact_id": "tokuteiginou-ichigou-youken",
+          "title": "特定技能1号の対象業種・要件概要（語学・家族帯同・5年上限）",
+          "matched_keywords": [
+            "特定技能",
+            "特定技能1号"
+          ],
+          "score": 0.0769,
+          "state": "ai_verified",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "0.6"
+        },
+        {
+          "fact_id": "skilled-labor-activity-anchor",
+          "title": "技能 — 産業上の特殊な分野に属する熟練技能活動",
+          "matched_keywords": [
+            "技能",
+            "特定技能"
+          ],
+          "score": 0.2222,
+          "state": "ai_extracted",
+          "risk_level": "medium",
+          "decision": "drop",
+          "sprint": "Legal Source Engineering / P0 Cycle 1 / Batch 2"
+        }
+      ],
+      "expectedHitIds": [
+        "ssw1-family-stay-not-sponsor-source"
+      ],
+      "candidateOnlyIds": [
+        "ssw1-family-stay-not-sponsor-source"
+      ],
+      "status": "candidate_gain",
+      "needsAnswerAB": true
+    },
+    {
+      "id": "LS-003",
+      "priority": "P1",
+      "family": "特定技能",
+      "question": "特定技能2号 家族滞在",
+      "expectedCandidateIds": [
+        "ssw2-family-stay-sponsor-dependent-scope-source"
+      ],
+      "productionMatches": [
+        {
+          "fact_id": "tokutei-ginou-2go-bunya",
+          "title": "特定技能2号 — 2023年拡大後の対象分野と在留更新",
+          "matched_keywords": [
+            "特定技能2号",
+            "特定技能2号 家族"
+          ],
+          "score": 0.1429,
+          "state": "ai_verified",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "cycle2-new-batch16"
+        },
+        {
+          "fact_id": "tokuteiginou-nigou-youken",
+          "title": "特定技能2号の対象分野・要件（2023年拡大後・通算上限なし）",
+          "matched_keywords": [
+            "特定技能2号",
+            "特定技能2号 家族"
+          ],
+          "score": 0.1333,
+          "state": "ai_verified",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "cycle2-batch9"
+        }
+      ],
+      "dryRunMatches": [
+        {
+          "fact_id": "specified-skilled-worker-2-skilled-scope",
+          "title": "特定技能2号 — 指定分野の熟練技能",
+          "matched_keywords": [
+            "特定技能2号"
+          ],
+          "score": 0.2,
+          "state": "ai_extracted",
+          "risk_level": "high",
+          "decision": "drop",
+          "sprint": "Legal Source Engineering / P0 Cycle 1 / Batch 4"
+        },
+        {
+          "fact_id": "ssw2-family-stay-sponsor-dependent-scope-source",
+          "title": "特定技能2号 — 家族滞在は配偶者・子の扶養活動として確認する",
+          "matched_keywords": [
+            "特定技能2号 家族滞在"
+          ],
+          "score": 0.1667,
+          "state": "ai_extracted",
+          "risk_level": "high",
+          "decision": "drop",
+          "sprint": "Legal Source Engineering / P1 Cycle 3 / Batch 1"
+        },
+        {
+          "fact_id": "tokutei-ginou-2go-bunya",
+          "title": "特定技能2号 — 2023年拡大後の対象分野と在留更新",
+          "matched_keywords": [
+            "特定技能2号",
+            "特定技能2号 家族"
+          ],
+          "score": 0.1429,
+          "state": "ai_verified",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "cycle2-new-batch16"
+        },
+        {
+          "fact_id": "tokuteiginou-nigou-youken",
+          "title": "特定技能2号の対象分野・要件（2023年拡大後・通算上限なし）",
+          "matched_keywords": [
+            "特定技能2号",
+            "特定技能2号 家族"
+          ],
+          "score": 0.1333,
+          "state": "ai_verified",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "cycle2-batch9"
+        },
+        {
+          "fact_id": "dependent-sponsor-and-family-member-scope",
+          "title": "家族滞在 — 扶养者资格范围与配偶者・子女对象范围",
+          "matched_keywords": [
+            "家族滞在"
+          ],
+          "score": 0.1111,
+          "state": "ai_extracted",
+          "risk_level": "high",
+          "decision": "drop",
+          "sprint": "Legal Source Engineering / P0 Cycle 1 / Batch 4"
+        },
+        {
+          "fact_id": "skilled-labor-activity-anchor",
+          "title": "技能 — 産業上の特殊な分野に属する熟練技能活動",
+          "matched_keywords": [
+            "技能",
+            "特定技能"
+          ],
+          "score": 0.2222,
+          "state": "ai_extracted",
+          "risk_level": "medium",
+          "decision": "drop",
+          "sprint": "Legal Source Engineering / P0 Cycle 1 / Batch 2"
+        }
+      ],
+      "expectedHitIds": [
+        "ssw2-family-stay-sponsor-dependent-scope-source"
+      ],
+      "candidateOnlyIds": [
+        "ssw2-family-stay-sponsor-dependent-scope-source"
+      ],
+      "status": "candidate_gain",
+      "needsAnswerAB": true
+    },
+    {
+      "id": "LS-004",
+      "priority": "P0",
+      "family": "特定技能",
+      "question": "特定技能 契約終了 受入れ困難 届出",
+      "expectedCandidateIds": [
+        "ssw-employment-contract-end-acceptance-difficulty-boundary-source"
+      ],
+      "productionMatches": [
+        {
+          "fact_id": "tokuteiginou-ichigou-youken",
+          "title": "特定技能1号の対象業種・要件概要（語学・家族帯同・5年上限）",
+          "matched_keywords": [
+            "特定技能"
+          ],
+          "score": 0.0385,
+          "state": "ai_verified",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "0.6"
+        }
+      ],
+      "dryRunMatches": [
+        {
+          "fact_id": "ssw-employment-contract-end-acceptance-difficulty-boundary-source",
+          "title": "特定技能 — 契約終了理由によって受入れ困難届出も確認する",
+          "matched_keywords": [
+            "特定技能 契約終了 受入れ困難 届出"
+          ],
+          "score": 0.1667,
+          "state": "ai_extracted",
+          "risk_level": "critical",
+          "decision": "drop",
+          "sprint": "Legal Source Engineering / P1 Cycle 3 / Batch 4"
+        },
+        {
+          "fact_id": "tokuteiginou-ichigou-youken",
+          "title": "特定技能1号の対象業種・要件概要（語学・家族帯同・5年上限）",
+          "matched_keywords": [
+            "特定技能"
+          ],
+          "score": 0.0385,
+          "state": "ai_verified",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "0.6"
+        },
+        {
+          "fact_id": "skilled-labor-activity-anchor",
+          "title": "技能 — 産業上の特殊な分野に属する熟練技能活動",
+          "matched_keywords": [
+            "技能",
+            "特定技能"
+          ],
+          "score": 0.2222,
+          "state": "ai_extracted",
+          "risk_level": "medium",
+          "decision": "drop",
+          "sprint": "Legal Source Engineering / P0 Cycle 1 / Batch 2"
+        }
+      ],
+      "expectedHitIds": [
+        "ssw-employment-contract-end-acceptance-difficulty-boundary-source"
+      ],
+      "candidateOnlyIds": [
+        "ssw-employment-contract-end-acceptance-difficulty-boundary-source"
+      ],
+      "status": "candidate_gain",
+      "needsAnswerAB": true
+    },
+    {
+      "id": "LS-005",
+      "priority": "P1",
+      "family": "特定技能",
+      "question": "特定技能 1か月以上 活動できない 届出",
+      "expectedCandidateIds": [
+        "ssw-acceptance-difficulty-one-month-inactivity-source"
+      ],
+      "productionMatches": [
+        {
+          "fact_id": "tokuteiginou-ichigou-youken",
+          "title": "特定技能1号の対象業種・要件概要（語学・家族帯同・5年上限）",
+          "matched_keywords": [
+            "特定技能"
+          ],
+          "score": 0.0385,
+          "state": "ai_verified",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "0.6"
+        }
+      ],
+      "dryRunMatches": [
+        {
+          "fact_id": "ssw-acceptance-difficulty-one-month-inactivity-source",
+          "title": "特定技能 — 1か月以上活動できない事由は受入れ困難届出で確認する",
+          "matched_keywords": [
+            "特定技能 1か月以上 活動できない 届出"
+          ],
+          "score": 0.1429,
+          "state": "ai_extracted",
+          "risk_level": "high",
+          "decision": "drop",
+          "sprint": "Legal Source Engineering / P1 Cycle 3 / Batch 4"
+        },
+        {
+          "fact_id": "tokuteiginou-ichigou-youken",
+          "title": "特定技能1号の対象業種・要件概要（語学・家族帯同・5年上限）",
+          "matched_keywords": [
+            "特定技能"
+          ],
+          "score": 0.0385,
+          "state": "ai_verified",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "0.6"
+        },
+        {
+          "fact_id": "skilled-labor-activity-anchor",
+          "title": "技能 — 産業上の特殊な分野に属する熟練技能活動",
+          "matched_keywords": [
+            "技能",
+            "特定技能"
+          ],
+          "score": 0.2222,
+          "state": "ai_extracted",
+          "risk_level": "medium",
+          "decision": "drop",
+          "sprint": "Legal Source Engineering / P0 Cycle 1 / Batch 2"
+        }
+      ],
+      "expectedHitIds": [
+        "ssw-acceptance-difficulty-one-month-inactivity-source"
+      ],
+      "candidateOnlyIds": [
+        "ssw-acceptance-difficulty-one-month-inactivity-source"
+      ],
+      "status": "candidate_gain",
+      "needsAnswerAB": true
+    },
+    {
+      "id": "LS-006",
+      "priority": "P1",
+      "family": "特定技能",
+      "question": "特定技能 行方不明 届出",
+      "expectedCandidateIds": [
+        "ssw-acceptance-difficulty-missing-person-source"
+      ],
+      "productionMatches": [
+        {
+          "fact_id": "tokuteiginou-ichigou-youken",
+          "title": "特定技能1号の対象業種・要件概要（語学・家族帯同・5年上限）",
+          "matched_keywords": [
+            "特定技能"
+          ],
+          "score": 0.0385,
+          "state": "ai_verified",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "0.6"
+        }
+      ],
+      "dryRunMatches": [
+        {
+          "fact_id": "ssw-acceptance-difficulty-missing-person-source",
+          "title": "特定技能 — 行方不明が判明した場合は受入れ困難届出を確認する",
+          "matched_keywords": [
+            "特定技能 行方不明 届出"
+          ],
+          "score": 0.1429,
+          "state": "ai_extracted",
+          "risk_level": "critical",
+          "decision": "drop",
+          "sprint": "Legal Source Engineering / P1 Cycle 3 / Batch 4"
+        },
+        {
+          "fact_id": "tokuteiginou-ichigou-youken",
+          "title": "特定技能1号の対象業種・要件概要（語学・家族帯同・5年上限）",
+          "matched_keywords": [
+            "特定技能"
+          ],
+          "score": 0.0385,
+          "state": "ai_verified",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "0.6"
+        },
+        {
+          "fact_id": "skilled-labor-activity-anchor",
+          "title": "技能 — 産業上の特殊な分野に属する熟練技能活動",
+          "matched_keywords": [
+            "技能",
+            "特定技能"
+          ],
+          "score": 0.2222,
+          "state": "ai_extracted",
+          "risk_level": "medium",
+          "decision": "drop",
+          "sprint": "Legal Source Engineering / P0 Cycle 1 / Batch 2"
+        }
+      ],
+      "expectedHitIds": [
+        "ssw-acceptance-difficulty-missing-person-source"
+      ],
+      "candidateOnlyIds": [
+        "ssw-acceptance-difficulty-missing-person-source"
+      ],
+      "status": "candidate_gain",
+      "needsAnswerAB": true
+    },
+    {
+      "id": "LS-007",
+      "priority": "P1",
+      "family": "特定技能",
+      "question": "特定技能 支援 全部委託 定期届出",
+      "expectedCandidateIds": [
+        "ssw-outsourced-support-periodic-report-via-host-source"
+      ],
+      "productionMatches": [
+        {
+          "fact_id": "tokuteiginou-ichigou-youken",
+          "title": "特定技能1号の対象業種・要件概要（語学・家族帯同・5年上限）",
+          "matched_keywords": [
+            "特定技能"
+          ],
+          "score": 0.0385,
+          "state": "ai_verified",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "0.6"
+        }
+      ],
+      "dryRunMatches": [
+        {
+          "fact_id": "ssw-outsourced-support-periodic-report-via-host-source",
+          "title": "特定技能1号 — 全部委託時の支援実施状況は所属機関経由で定期届出を確認する",
+          "matched_keywords": [
+            "特定技能 支援 全部委託 定期届出"
+          ],
+          "score": 0.1429,
+          "state": "ai_extracted",
+          "risk_level": "high",
+          "decision": "drop",
+          "sprint": "Legal Source Engineering / P1 Cycle 3 / Batch 4"
+        },
+        {
+          "fact_id": "ssw1-support-plan-registered-support-org-delegation-source",
+          "title": "特定技能1号 — 登録支援機関へ全部委託する場合の記載",
+          "matched_keywords": [
+            "特定技能 支援 全部委託"
+          ],
+          "score": 0.1429,
+          "state": "ai_extracted",
+          "risk_level": "high",
+          "decision": "drop",
+          "sprint": "Legal Source Engineering / P1 Cycle 3 / Batch 2"
+        },
+        {
+          "fact_id": "tokuteiginou-ichigou-youken",
+          "title": "特定技能1号の対象業種・要件概要（語学・家族帯同・5年上限）",
+          "matched_keywords": [
+            "特定技能"
+          ],
+          "score": 0.0385,
+          "state": "ai_verified",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "0.6"
+        },
+        {
+          "fact_id": "skilled-labor-activity-anchor",
+          "title": "技能 — 産業上の特殊な分野に属する熟練技能活動",
+          "matched_keywords": [
+            "技能",
+            "特定技能"
+          ],
+          "score": 0.2222,
+          "state": "ai_extracted",
+          "risk_level": "medium",
+          "decision": "drop",
+          "sprint": "Legal Source Engineering / P0 Cycle 1 / Batch 2"
+        }
+      ],
+      "expectedHitIds": [
+        "ssw-outsourced-support-periodic-report-via-host-source"
+      ],
+      "candidateOnlyIds": [
+        "ssw-outsourced-support-periodic-report-via-host-source"
+      ],
+      "status": "candidate_gain",
+      "needsAnswerAB": true
+    },
+    {
+      "id": "LS-008",
+      "priority": "P1",
+      "family": "特定技能",
+      "question": "登録支援機関 更新 間に合わない 支援できる",
+      "expectedCandidateIds": [
+        "ssw-rso-renewal-lapse-no-support-source"
+      ],
+      "productionMatches": [
+        {
+          "fact_id": "zairyu-expiry-renewal-change",
+          "title": "在留期限間近の更新・変更申請 — 申請タイミングと特例期間",
+          "matched_keywords": [
+            "更新"
+          ],
+          "score": 0.0204,
+          "state": "human_reviewed",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "0.6 / Workstream C / Batch 2"
+        }
+      ],
+      "dryRunMatches": [
+        {
+          "fact_id": "ssw-rso-renewal-lapse-no-support-source",
+          "title": "登録支援機関 — 期限内に更新を受けられない場合は支援業務を行えない点を確認する",
+          "matched_keywords": [
+            "登録支援機関 更新 間に合わない 支援できる"
+          ],
+          "score": 0.1429,
+          "state": "ai_extracted",
+          "risk_level": "critical",
+          "decision": "drop",
+          "sprint": "Legal Source Engineering / P1 Cycle 3 / Batch 4"
+        },
+        {
+          "fact_id": "zairyu-expiry-renewal-change",
+          "title": "在留期限間近の更新・変更申請 — 申請タイミングと特例期間",
+          "matched_keywords": [
+            "更新"
+          ],
+          "score": 0.0204,
+          "state": "human_reviewed",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "0.6 / Workstream C / Batch 2"
+        }
+      ],
+      "expectedHitIds": [
+        "ssw-rso-renewal-lapse-no-support-source"
+      ],
+      "candidateOnlyIds": [
+        "ssw-rso-renewal-lapse-no-support-source"
+      ],
+      "status": "candidate_gain",
+      "needsAnswerAB": true
+    },
+    {
+      "id": "LS-009",
+      "priority": "P2",
+      "family": "特定技能",
+      "question": "特定技能 支援計画 変更 届出 14日",
+      "expectedCandidateIds": [
+        "ssw-support-plan-change-notification-14day-source"
+      ],
+      "productionMatches": [
+        {
+          "fact_id": "tensyoku-zairyu",
+          "title": "転職時の在留資格手続き（14日届出義務・入管法第19条の16・資格変更要否・就労資格証明書）",
+          "matched_keywords": [
+            "14日"
+          ],
+          "score": 0.0476,
+          "state": "ai_verified",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "cycle2-batch21"
+        },
+        {
+          "fact_id": "tokuteiginou-ichigou-youken",
+          "title": "特定技能1号の対象業種・要件概要（語学・家族帯同・5年上限）",
+          "matched_keywords": [
+            "特定技能"
+          ],
+          "score": 0.0385,
+          "state": "ai_verified",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "0.6"
+        }
+      ],
+      "dryRunMatches": [
+        {
+          "fact_id": "ssw-support-plan-change-notification-14day-source",
+          "title": "特定技能1号 — 支援計画変更は14日以内届出を確認する",
+          "matched_keywords": [
+            "特定技能 支援計画 変更 届出 14日"
+          ],
+          "score": 0.1667,
+          "state": "ai_extracted",
+          "risk_level": "high",
+          "decision": "drop",
+          "sprint": "Legal Source Engineering / P1 Cycle 3 / Batch 4"
+        },
+        {
+          "fact_id": "ssw1-contract-support-plan-router",
+          "title": "特定技能1号 — 雇用契約・受入機関・支援計画は別枠確認",
+          "matched_keywords": [
+            "支援計画"
+          ],
+          "score": 0.1111,
+          "state": "ai_extracted",
+          "risk_level": "high",
+          "decision": "drop",
+          "sprint": "Legal Source Engineering / P0 Cycle 2 / Batch 4"
+        },
+        {
+          "fact_id": "tensyoku-zairyu",
+          "title": "転職時の在留資格手続き（14日届出義務・入管法第19条の16・資格変更要否・就労資格証明書）",
+          "matched_keywords": [
+            "14日"
+          ],
+          "score": 0.0476,
+          "state": "ai_verified",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "cycle2-batch21"
+        },
+        {
+          "fact_id": "tokuteiginou-ichigou-youken",
+          "title": "特定技能1号の対象業種・要件概要（語学・家族帯同・5年上限）",
+          "matched_keywords": [
+            "特定技能"
+          ],
+          "score": 0.0385,
+          "state": "ai_verified",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "0.6"
+        },
+        {
+          "fact_id": "skilled-labor-activity-anchor",
+          "title": "技能 — 産業上の特殊な分野に属する熟練技能活動",
+          "matched_keywords": [
+            "技能",
+            "特定技能"
+          ],
+          "score": 0.2222,
+          "state": "ai_extracted",
+          "risk_level": "medium",
+          "decision": "drop",
+          "sprint": "Legal Source Engineering / P0 Cycle 1 / Batch 2"
+        }
+      ],
+      "expectedHitIds": [
+        "ssw-support-plan-change-notification-14day-source"
+      ],
+      "candidateOnlyIds": [
+        "ssw-support-plan-change-notification-14day-source"
+      ],
+      "status": "candidate_gain",
+      "needsAnswerAB": false
+    },
+    {
+      "id": "LS-010",
+      "priority": "P2",
+      "family": "特定技能",
+      "question": "特定技能 定期届出 年1回",
+      "expectedCandidateIds": [
+        "ssw-periodic-notification-integrated-annual-form-source"
+      ],
+      "productionMatches": [
+        {
+          "fact_id": "tokuteiginou-ichigou-youken",
+          "title": "特定技能1号の対象業種・要件概要（語学・家族帯同・5年上限）",
+          "matched_keywords": [
+            "特定技能"
+          ],
+          "score": 0.0385,
+          "state": "ai_verified",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "0.6"
+        }
+      ],
+      "dryRunMatches": [
+        {
+          "fact_id": "ssw-periodic-notification-integrated-annual-form-source",
+          "title": "特定技能 — 定期届出は年1回の受入れ・活動・支援実施状況で確認する",
+          "matched_keywords": [
+            "特定技能 定期届出 年1回"
+          ],
+          "score": 0.1429,
+          "state": "ai_extracted",
+          "risk_level": "high",
+          "decision": "drop",
+          "sprint": "Legal Source Engineering / P1 Cycle 3 / Batch 4"
+        },
+        {
+          "fact_id": "tokuteiginou-ichigou-youken",
+          "title": "特定技能1号の対象業種・要件概要（語学・家族帯同・5年上限）",
+          "matched_keywords": [
+            "特定技能"
+          ],
+          "score": 0.0385,
+          "state": "ai_verified",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "0.6"
+        },
+        {
+          "fact_id": "skilled-labor-activity-anchor",
+          "title": "技能 — 産業上の特殊な分野に属する熟練技能活動",
+          "matched_keywords": [
+            "技能",
+            "特定技能"
+          ],
+          "score": 0.2222,
+          "state": "ai_extracted",
+          "risk_level": "medium",
+          "decision": "drop",
+          "sprint": "Legal Source Engineering / P0 Cycle 1 / Batch 2"
+        }
+      ],
+      "expectedHitIds": [
+        "ssw-periodic-notification-integrated-annual-form-source"
+      ],
+      "candidateOnlyIds": [
+        "ssw-periodic-notification-integrated-annual-form-source"
+      ],
+      "status": "candidate_gain",
+      "needsAnswerAB": false
+    },
+    {
+      "id": "LS-011",
+      "priority": "P0",
+      "family": "永住",
+      "question": "永住申請 更新 違い",
+      "expectedCandidateIds": [
+        "permanent-residence-permission-separate-from-renewal"
+      ],
+      "productionMatches": [
+        {
+          "fact_id": "eijuu-nenkin-risk",
+          "title": "永住申請における年金・税金・健康保険 未納リスク",
+          "matched_keywords": [
+            "永住",
+            "永住申請"
+          ],
+          "score": 0.0571,
+          "state": "ai_verified",
+          "risk_level": "critical",
+          "decision": "hint_only",
+          "sprint": "0.6 / Workstream C / Batch 1"
+        },
+        {
+          "fact_id": "eijuu-zairyu-kikan",
+          "title": "永住許可申請 在留期間・就労期間積算要件と短縮特例",
+          "matched_keywords": [
+            "永住",
+            "永住申請"
+          ],
+          "score": 0.0667,
+          "state": "ai_verified",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "0.6 / Workstream C / Batch 3"
+        },
+        {
+          "fact_id": "zairyu-expiry-renewal-change",
+          "title": "在留期限間近の更新・変更申請 — 申請タイミングと特例期間",
+          "matched_keywords": [
+            "更新"
+          ],
+          "score": 0.0204,
+          "state": "human_reviewed",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "0.6 / Workstream C / Batch 2"
+        }
+      ],
+      "dryRunMatches": [
+        {
+          "fact_id": "eijuu-nenkin-risk",
+          "title": "永住申請における年金・税金・健康保険 未納リスク",
+          "matched_keywords": [
+            "永住",
+            "永住申請"
+          ],
+          "score": 0.0571,
+          "state": "ai_verified",
+          "risk_level": "critical",
+          "decision": "hint_only",
+          "sprint": "0.6 / Workstream C / Batch 1"
+        },
+        {
+          "fact_id": "permanent-residence-permission-separate-from-renewal",
+          "title": "永住許可申請 — 在留期間更新とは別の許可手続",
+          "matched_keywords": [
+            "永住申請 更新 違い"
+          ],
+          "score": 0.1667,
+          "state": "ai_extracted",
+          "risk_level": "high",
+          "decision": "drop",
+          "sprint": "Legal Source Engineering / P0 Cycle 4 / Batch 1"
+        },
+        {
+          "fact_id": "eijuu-zairyu-kikan",
+          "title": "永住許可申請 在留期間・就労期間積算要件と短縮特例",
+          "matched_keywords": [
+            "永住",
+            "永住申請"
+          ],
+          "score": 0.0667,
+          "state": "ai_verified",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "0.6 / Workstream C / Batch 3"
+        },
+        {
+          "fact_id": "zairyu-expiry-renewal-change",
+          "title": "在留期限間近の更新・変更申請 — 申請タイミングと特例期間",
+          "matched_keywords": [
+            "更新"
+          ],
+          "score": 0.0204,
+          "state": "human_reviewed",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "0.6 / Workstream C / Batch 2"
+        }
+      ],
+      "expectedHitIds": [
+        "permanent-residence-permission-separate-from-renewal"
+      ],
+      "candidateOnlyIds": [
+        "permanent-residence-permission-separate-from-renewal"
+      ],
+      "status": "candidate_gain",
+      "needsAnswerAB": true
+    },
+    {
+      "id": "LS-012",
+      "priority": "P0",
+      "family": "永住",
+      "question": "永住申請中 更新 必要",
+      "expectedCandidateIds": [
+        "permanent-application-does-not-extend-current-status"
+      ],
+      "productionMatches": [
+        {
+          "fact_id": "eijuu-nenkin-risk",
+          "title": "永住申請における年金・税金・健康保険 未納リスク",
+          "matched_keywords": [
+            "永住",
+            "永住申請"
+          ],
+          "score": 0.0571,
+          "state": "ai_verified",
+          "risk_level": "critical",
+          "decision": "hint_only",
+          "sprint": "0.6 / Workstream C / Batch 1"
+        },
+        {
+          "fact_id": "eijuu-zairyu-kikan",
+          "title": "永住許可申請 在留期間・就労期間積算要件と短縮特例",
+          "matched_keywords": [
+            "永住",
+            "永住申請"
+          ],
+          "score": 0.0667,
+          "state": "ai_verified",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "0.6 / Workstream C / Batch 3"
+        },
+        {
+          "fact_id": "zairyu-expiry-renewal-change",
+          "title": "在留期限間近の更新・変更申請 — 申請タイミングと特例期間",
+          "matched_keywords": [
+            "更新"
+          ],
+          "score": 0.0204,
+          "state": "human_reviewed",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "0.6 / Workstream C / Batch 2"
+        }
+      ],
+      "dryRunMatches": [
+        {
+          "fact_id": "permanent-application-does-not-extend-current-status",
+          "title": "永住許可申請中 — 現在の在留期限は別に管理する",
+          "matched_keywords": [
+            "永住申請中 更新 必要"
+          ],
+          "score": 0.1667,
+          "state": "ai_extracted",
+          "risk_level": "critical",
+          "decision": "drop",
+          "sprint": "Legal Source Engineering / P0 Cycle 4 / Batch 1"
+        },
+        {
+          "fact_id": "eijuu-nenkin-risk",
+          "title": "永住申請における年金・税金・健康保険 未納リスク",
+          "matched_keywords": [
+            "永住",
+            "永住申請"
+          ],
+          "score": 0.0571,
+          "state": "ai_verified",
+          "risk_level": "critical",
+          "decision": "hint_only",
+          "sprint": "0.6 / Workstream C / Batch 1"
+        },
+        {
+          "fact_id": "eijuu-zairyu-kikan",
+          "title": "永住許可申請 在留期間・就労期間積算要件と短縮特例",
+          "matched_keywords": [
+            "永住",
+            "永住申請"
+          ],
+          "score": 0.0667,
+          "state": "ai_verified",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "0.6 / Workstream C / Batch 3"
+        },
+        {
+          "fact_id": "zairyu-expiry-renewal-change",
+          "title": "在留期限間近の更新・変更申請 — 申請タイミングと特例期間",
+          "matched_keywords": [
+            "更新"
+          ],
+          "score": 0.0204,
+          "state": "human_reviewed",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "0.6 / Workstream C / Batch 2"
+        }
+      ],
+      "expectedHitIds": [
+        "permanent-application-does-not-extend-current-status"
+      ],
+      "candidateOnlyIds": [
+        "permanent-application-does-not-extend-current-status"
+      ],
+      "status": "candidate_gain",
+      "needsAnswerAB": true
+    },
+    {
+      "id": "LS-013",
+      "priority": "P0",
+      "family": "永住",
+      "question": "永住 材料齐了 一定能过",
+      "expectedCandidateIds": [
+        "permanent-residence-materials-vs-eligibility-boundary"
+      ],
+      "productionMatches": [
+        {
+          "fact_id": "eijuu-nenkin-risk",
+          "title": "永住申請における年金・税金・健康保険 未納リスク",
+          "matched_keywords": [
+            "永住"
+          ],
+          "score": 0.0286,
+          "state": "ai_verified",
+          "risk_level": "critical",
+          "decision": "hint_only",
+          "sprint": "0.6 / Workstream C / Batch 1"
+        },
+        {
+          "fact_id": "eijuu-zairyu-kikan",
+          "title": "永住許可申請 在留期間・就労期間積算要件と短縮特例",
+          "matched_keywords": [
+            "永住"
+          ],
+          "score": 0.0333,
+          "state": "ai_verified",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "0.6 / Workstream C / Batch 3"
+        }
+      ],
+      "dryRunMatches": [
+        {
+          "fact_id": "permanent-residence-materials-vs-eligibility-boundary",
+          "title": "永住申請 — 提出書類と許可要件を混同しない",
+          "matched_keywords": [
+            "永住 材料齐了 一定能过"
+          ],
+          "score": 0.1667,
+          "state": "ai_extracted",
+          "risk_level": "critical",
+          "decision": "drop",
+          "sprint": "Legal Source Engineering / P0 Cycle 4 / Batch 5"
+        },
+        {
+          "fact_id": "eijuu-nenkin-risk",
+          "title": "永住申請における年金・税金・健康保険 未納リスク",
+          "matched_keywords": [
+            "永住"
+          ],
+          "score": 0.0286,
+          "state": "ai_verified",
+          "risk_level": "critical",
+          "decision": "hint_only",
+          "sprint": "0.6 / Workstream C / Batch 1"
+        },
+        {
+          "fact_id": "eijuu-zairyu-kikan",
+          "title": "永住許可申請 在留期間・就労期間積算要件と短縮特例",
+          "matched_keywords": [
+            "永住"
+          ],
+          "score": 0.0333,
+          "state": "ai_verified",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "0.6 / Workstream C / Batch 3"
+        }
+      ],
+      "expectedHitIds": [
+        "permanent-residence-materials-vs-eligibility-boundary"
+      ],
+      "candidateOnlyIds": [
+        "permanent-residence-materials-vs-eligibility-boundary"
+      ],
+      "status": "candidate_gain",
+      "needsAnswerAB": true
+    },
+    {
+      "id": "LS-014",
+      "priority": "P1",
+      "family": "永住",
+      "question": "永住 年金 2年",
+      "expectedCandidateIds": [
+        "permanent-residence-pension-two-year-record-materials"
+      ],
+      "productionMatches": [
+        {
+          "fact_id": "eijuu-nenkin-risk",
+          "title": "永住申請における年金・税金・健康保険 未納リスク",
+          "matched_keywords": [
+            "永住",
+            "年金"
+          ],
+          "score": 0.0571,
+          "state": "ai_verified",
+          "risk_level": "critical",
+          "decision": "hint_only",
+          "sprint": "0.6 / Workstream C / Batch 1"
+        },
+        {
+          "fact_id": "eijuu-zairyu-kikan",
+          "title": "永住許可申請 在留期間・就労期間積算要件と短縮特例",
+          "matched_keywords": [
+            "永住"
+          ],
+          "score": 0.0333,
+          "state": "ai_verified",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "0.6 / Workstream C / Batch 3"
+        }
+      ],
+      "dryRunMatches": [
+        {
+          "fact_id": "permanent-residence-pension-two-year-record-materials",
+          "title": "永住許可申請 — 公的年金は過去2年間の加入制度に応じた資料対象",
+          "matched_keywords": [
+            "永住 年金 2年"
+          ],
+          "score": 0.1667,
+          "state": "ai_extracted",
+          "risk_level": "critical",
+          "decision": "drop",
+          "sprint": "Legal Source Engineering / P0 Cycle 4 / Batch 2"
+        },
+        {
+          "fact_id": "eijuu-nenkin-risk",
+          "title": "永住申請における年金・税金・健康保険 未納リスク",
+          "matched_keywords": [
+            "永住",
+            "年金"
+          ],
+          "score": 0.0571,
+          "state": "ai_verified",
+          "risk_level": "critical",
+          "decision": "hint_only",
+          "sprint": "0.6 / Workstream C / Batch 1"
+        },
+        {
+          "fact_id": "eijuu-zairyu-kikan",
+          "title": "永住許可申請 在留期間・就労期間積算要件と短縮特例",
+          "matched_keywords": [
+            "永住"
+          ],
+          "score": 0.0333,
+          "state": "ai_verified",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "0.6 / Workstream C / Batch 3"
+        }
+      ],
+      "expectedHitIds": [
+        "permanent-residence-pension-two-year-record-materials"
+      ],
+      "candidateOnlyIds": [
+        "permanent-residence-pension-two-year-record-materials"
+      ],
+      "status": "candidate_gain",
+      "needsAnswerAB": true
+    },
+    {
+      "id": "LS-015",
+      "priority": "P1",
+      "family": "永住",
+      "question": "永住 年金免除",
+      "expectedCandidateIds": [
+        "permanent-residence-public-obligation-exemption-deferment-gap"
+      ],
+      "productionMatches": [
+        {
+          "fact_id": "eijuu-nenkin-risk",
+          "title": "永住申請における年金・税金・健康保険 未納リスク",
+          "matched_keywords": [
+            "永住",
+            "年金"
+          ],
+          "score": 0.0571,
+          "state": "ai_verified",
+          "risk_level": "critical",
+          "decision": "hint_only",
+          "sprint": "0.6 / Workstream C / Batch 1"
+        },
+        {
+          "fact_id": "eijuu-zairyu-kikan",
+          "title": "永住許可申請 在留期間・就労期間積算要件と短縮特例",
+          "matched_keywords": [
+            "永住"
+          ],
+          "score": 0.0333,
+          "state": "ai_verified",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "0.6 / Workstream C / Batch 3"
+        }
+      ],
+      "dryRunMatches": [
+        {
+          "fact_id": "permanent-public-obligations-tax-pension-health",
+          "title": "永住許可ガイドライン — 納税・年金・医療保険など公的義務の履行",
+          "matched_keywords": [
+            "永住 年金免除"
+          ],
+          "score": 0.1667,
+          "state": "ai_extracted",
+          "risk_level": "critical",
+          "decision": "drop",
+          "sprint": "Legal Source Engineering / P0 Cycle 4 / Batch 1"
+        },
+        {
+          "fact_id": "permanent-residence-public-obligation-exemption-deferment-gap",
+          "title": "永住許可申請 — 年金免除・猶予は期限後納付とは別論点",
+          "matched_keywords": [
+            "永住 年金免除"
+          ],
+          "score": 0.1667,
+          "state": "ai_extracted",
+          "risk_level": "critical",
+          "decision": "drop",
+          "sprint": "Legal Source Engineering / P0 Cycle 4 / Batch 2"
+        },
+        {
+          "fact_id": "eijuu-nenkin-risk",
+          "title": "永住申請における年金・税金・健康保険 未納リスク",
+          "matched_keywords": [
+            "永住",
+            "年金"
+          ],
+          "score": 0.0571,
+          "state": "ai_verified",
+          "risk_level": "critical",
+          "decision": "hint_only",
+          "sprint": "0.6 / Workstream C / Batch 1"
+        },
+        {
+          "fact_id": "eijuu-zairyu-kikan",
+          "title": "永住許可申請 在留期間・就労期間積算要件と短縮特例",
+          "matched_keywords": [
+            "永住"
+          ],
+          "score": 0.0333,
+          "state": "ai_verified",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "0.6 / Workstream C / Batch 3"
+        }
+      ],
+      "expectedHitIds": [
+        "permanent-residence-public-obligation-exemption-deferment-gap"
+      ],
+      "candidateOnlyIds": [
+        "permanent-residence-public-obligation-exemption-deferment-gap"
+      ],
+      "status": "candidate_gain",
+      "needsAnswerAB": true
+    },
+    {
+      "id": "LS-016",
+      "priority": "P1",
+      "family": "永住",
+      "question": "永住 国税 納税証明書 その3",
+      "expectedCandidateIds": [
+        "permanent-residence-national-tax-certificate-materials"
+      ],
+      "productionMatches": [
+        {
+          "fact_id": "eijuu-nenkin-risk",
+          "title": "永住申請における年金・税金・健康保険 未納リスク",
+          "matched_keywords": [
+            "永住",
+            "納税"
+          ],
+          "score": 0.0571,
+          "state": "ai_verified",
+          "risk_level": "critical",
+          "decision": "hint_only",
+          "sprint": "0.6 / Workstream C / Batch 1"
+        },
+        {
+          "fact_id": "eijuu-zairyu-kikan",
+          "title": "永住許可申請 在留期間・就労期間積算要件と短縮特例",
+          "matched_keywords": [
+            "永住"
+          ],
+          "score": 0.0333,
+          "state": "ai_verified",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "0.6 / Workstream C / Batch 3"
+        }
+      ],
+      "dryRunMatches": [
+        {
+          "fact_id": "eijuu-nenkin-risk",
+          "title": "永住申請における年金・税金・健康保険 未納リスク",
+          "matched_keywords": [
+            "永住",
+            "納税"
+          ],
+          "score": 0.0571,
+          "state": "ai_verified",
+          "risk_level": "critical",
+          "decision": "hint_only",
+          "sprint": "0.6 / Workstream C / Batch 1"
+        },
+        {
+          "fact_id": "permanent-residence-national-tax-certificate-materials",
+          "title": "永住許可申請 — 国税の納税証明書その3は5税目が資料対象",
+          "matched_keywords": [
+            "永住 国税"
+          ],
+          "score": 0.1667,
+          "state": "ai_extracted",
+          "risk_level": "high",
+          "decision": "drop",
+          "sprint": "Legal Source Engineering / P0 Cycle 4 / Batch 2"
+        },
+        {
+          "fact_id": "eijuu-zairyu-kikan",
+          "title": "永住許可申請 在留期間・就労期間積算要件と短縮特例",
+          "matched_keywords": [
+            "永住"
+          ],
+          "score": 0.0333,
+          "state": "ai_verified",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "0.6 / Workstream C / Batch 3"
+        }
+      ],
+      "expectedHitIds": [
+        "permanent-residence-national-tax-certificate-materials"
+      ],
+      "candidateOnlyIds": [
+        "permanent-residence-national-tax-certificate-materials"
+      ],
+      "status": "candidate_gain",
+      "needsAnswerAB": true
+    },
+    {
+      "id": "LS-017",
+      "priority": "P1",
+      "family": "永住",
+      "question": "永住 了解書 必要",
+      "expectedCandidateIds": [
+        "permanent-residence-understanding-letter-required"
+      ],
+      "productionMatches": [
+        {
+          "fact_id": "eijuu-nenkin-risk",
+          "title": "永住申請における年金・税金・健康保険 未納リスク",
+          "matched_keywords": [
+            "永住"
+          ],
+          "score": 0.0286,
+          "state": "ai_verified",
+          "risk_level": "critical",
+          "decision": "hint_only",
+          "sprint": "0.6 / Workstream C / Batch 1"
+        },
+        {
+          "fact_id": "eijuu-zairyu-kikan",
+          "title": "永住許可申請 在留期間・就労期間積算要件と短縮特例",
+          "matched_keywords": [
+            "永住"
+          ],
+          "score": 0.0333,
+          "state": "ai_verified",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "0.6 / Workstream C / Batch 3"
+        }
+      ],
+      "dryRunMatches": [
+        {
+          "fact_id": "eijuu-nenkin-risk",
+          "title": "永住申請における年金・税金・健康保険 未納リスク",
+          "matched_keywords": [
+            "永住"
+          ],
+          "score": 0.0286,
+          "state": "ai_verified",
+          "risk_level": "critical",
+          "decision": "hint_only",
+          "sprint": "0.6 / Workstream C / Batch 1"
+        },
+        {
+          "fact_id": "permanent-residence-understanding-letter-required",
+          "title": "永住許可申請 — 了解書は2021年10月1日から提出資料",
+          "matched_keywords": [
+            "永住 了解書",
+            "永住 了解書 必要"
+          ],
+          "score": 0.3333,
+          "state": "ai_extracted",
+          "risk_level": "high",
+          "decision": "drop",
+          "sprint": "Legal Source Engineering / P0 Cycle 4 / Batch 2"
+        },
+        {
+          "fact_id": "eijuu-zairyu-kikan",
+          "title": "永住許可申請 在留期間・就労期間積算要件と短縮特例",
+          "matched_keywords": [
+            "永住"
+          ],
+          "score": 0.0333,
+          "state": "ai_verified",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "0.6 / Workstream C / Batch 3"
+        }
+      ],
+      "expectedHitIds": [
+        "permanent-residence-understanding-letter-required"
+      ],
+      "candidateOnlyIds": [
+        "permanent-residence-understanding-letter-required"
+      ],
+      "status": "candidate_gain",
+      "needsAnswerAB": true
+    },
+    {
+      "id": "LS-018",
+      "priority": "P1",
+      "family": "永住",
+      "question": "高度専門職 永住 80点 1年",
+      "expectedCandidateIds": [
+        "highly-skilled-permanent-residence-70-80-year-router"
+      ],
+      "productionMatches": [
+        {
+          "fact_id": "minashi-sainyuukoku",
+          "title": "みなし再入国許可・通常再入国許可と長期出国による在留資格リスク",
+          "matched_keywords": [
+            "1年"
+          ],
+          "score": 0.0345,
+          "state": "ai_verified",
+          "risk_level": "critical",
+          "decision": "hint_only",
+          "sprint": "0.6 / Workstream C / Batch 3"
+        },
+        {
+          "fact_id": "eijuu-nenkin-risk",
+          "title": "永住申請における年金・税金・健康保険 未納リスク",
+          "matched_keywords": [
+            "永住"
+          ],
+          "score": 0.0286,
+          "state": "ai_verified",
+          "risk_level": "critical",
+          "decision": "hint_only",
+          "sprint": "0.6 / Workstream C / Batch 1"
+        },
+        {
+          "fact_id": "eijuu-zairyu-kikan",
+          "title": "永住許可申請 在留期間・就労期間積算要件と短縮特例",
+          "matched_keywords": [
+            "永住",
+            "高度専門職",
+            "80点"
+          ],
+          "score": 0.1,
+          "state": "ai_verified",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "0.6 / Workstream C / Batch 3"
+        },
+        {
+          "fact_id": "kodo-senmon-shoku-eijuu",
+          "title": "高度専門職ポイント制と永住申請短縮ルート（3年・1年）",
+          "matched_keywords": [
+            "高度専門職",
+            "80点"
+          ],
+          "score": 0.0741,
+          "state": "ai_verified",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "0.6"
+        }
+      ],
+      "dryRunMatches": [
+        {
+          "fact_id": "minashi-sainyuukoku",
+          "title": "みなし再入国許可・通常再入国許可と長期出国による在留資格リスク",
+          "matched_keywords": [
+            "1年"
+          ],
+          "score": 0.0345,
+          "state": "ai_verified",
+          "risk_level": "critical",
+          "decision": "hint_only",
+          "sprint": "0.6 / Workstream C / Batch 3"
+        },
+        {
+          "fact_id": "eijuu-nenkin-risk",
+          "title": "永住申請における年金・税金・健康保険 未納リスク",
+          "matched_keywords": [
+            "永住"
+          ],
+          "score": 0.0286,
+          "state": "ai_verified",
+          "risk_level": "critical",
+          "decision": "hint_only",
+          "sprint": "0.6 / Workstream C / Batch 1"
+        },
+        {
+          "fact_id": "eijuu-zairyu-kikan",
+          "title": "永住許可申請 在留期間・就労期間積算要件と短縮特例",
+          "matched_keywords": [
+            "永住",
+            "高度専門職",
+            "80点"
+          ],
+          "score": 0.1,
+          "state": "ai_verified",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "0.6 / Workstream C / Batch 3"
+        },
+        {
+          "fact_id": "kodo-senmon-shoku-eijuu",
+          "title": "高度専門職ポイント制と永住申請短縮ルート（3年・1年）",
+          "matched_keywords": [
+            "高度専門職",
+            "80点"
+          ],
+          "score": 0.0741,
+          "state": "ai_verified",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "0.6"
+        }
+      ],
+      "expectedHitIds": [],
+      "candidateOnlyIds": [],
+      "status": "miss",
+      "needsAnswerAB": false
+    },
+    {
+      "id": "LS-019",
+      "priority": "P0",
+      "family": "更新/变更",
+      "question": "特例期间 是什么",
+      "expectedCandidateIds": [
+        "special-period-renewal-change-applies"
+      ],
+      "productionMatches": [
+        {
+          "fact_id": "zairyu-expiry-renewal-change",
+          "title": "在留期限間近の更新・変更申請 — 申請タイミングと特例期間",
+          "matched_keywords": [
+            "特例"
+          ],
+          "score": 0.0204,
+          "state": "human_reviewed",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "0.6 / Workstream C / Batch 2"
+        }
+      ],
+      "dryRunMatches": [
+        {
+          "fact_id": "special-period-renewal-change-applies",
+          "title": "特例期間 — 更新・変更申請が満了日までに処分されない場合に問題となる",
+          "matched_keywords": [
+            "特例期间 是什么"
+          ],
+          "score": 0.1667,
+          "state": "ai_extracted",
+          "risk_level": "high",
+          "decision": "drop",
+          "sprint": "Legal Source Engineering / P0 Cycle 3 / Batch 1"
+        },
+        {
+          "fact_id": "zairyu-expiry-renewal-change",
+          "title": "在留期限間近の更新・変更申請 — 申請タイミングと特例期間",
+          "matched_keywords": [
+            "特例"
+          ],
+          "score": 0.0204,
+          "state": "human_reviewed",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "0.6 / Workstream C / Batch 2"
+        }
+      ],
+      "expectedHitIds": [
+        "special-period-renewal-change-applies"
+      ],
+      "candidateOnlyIds": [
+        "special-period-renewal-change-applies"
+      ],
+      "status": "candidate_gain",
+      "needsAnswerAB": true
+    },
+    {
+      "id": "LS-020",
+      "priority": "P0",
+      "family": "更新/变更",
+      "question": "变更申请中 能先上班吗",
+      "expectedCandidateIds": [
+        "change-approval-before-new-activity-guardrail"
+      ],
+      "productionMatches": [],
+      "dryRunMatches": [
+        {
+          "fact_id": "change-approval-before-new-activity-guardrail",
+          "title": "在留資格変更 — 新資格活動は許可前に開始したと扱わない",
+          "matched_keywords": [
+            "变更申请中 能先上班吗"
+          ],
+          "score": 0.1667,
+          "state": "ai_extracted",
+          "risk_level": "high",
+          "decision": "drop",
+          "sprint": "Legal Source Engineering / P0 Cycle 3 / Batch 1"
+        }
+      ],
+      "expectedHitIds": [
+        "change-approval-before-new-activity-guardrail"
+      ],
+      "candidateOnlyIds": [
+        "change-approval-before-new-activity-guardrail"
+      ],
+      "status": "candidate_gain",
+      "needsAnswerAB": true
+    },
+    {
+      "id": "LS-021",
+      "priority": "P1",
+      "family": "更新/变更",
+      "question": "特例期间 以前の資格 活動",
+      "expectedCandidateIds": [
+        "special-period-previous-status-activity-only"
+      ],
+      "productionMatches": [
+        {
+          "fact_id": "zairyu-expiry-renewal-change",
+          "title": "在留期限間近の更新・変更申請 — 申請タイミングと特例期間",
+          "matched_keywords": [
+            "特例"
+          ],
+          "score": 0.0204,
+          "state": "human_reviewed",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "0.6 / Workstream C / Batch 2"
+        }
+      ],
+      "dryRunMatches": [
+        {
+          "fact_id": "zairyu-expiry-renewal-change",
+          "title": "在留期限間近の更新・変更申請 — 申請タイミングと特例期間",
+          "matched_keywords": [
+            "特例"
+          ],
+          "score": 0.0204,
+          "state": "human_reviewed",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "0.6 / Workstream C / Batch 2"
+        }
+      ],
+      "expectedHitIds": [],
+      "candidateOnlyIds": [],
+      "status": "miss",
+      "needsAnswerAB": false
+    },
+    {
+      "id": "LS-022",
+      "priority": "P1",
+      "family": "更新/变更",
+      "question": "更新申请 3ヶ月前",
+      "expectedCandidateIds": [
+        "residence-renewal-application-window"
+      ],
+      "productionMatches": [
+        {
+          "fact_id": "gijinkoku-job-mismatch",
+          "title": "技術・人文知識・国際業務 — 業務内容と在留資格の不一致リスク",
+          "matched_keywords": [
+            "3ヶ月"
+          ],
+          "score": 0.0303,
+          "state": "ai_verified",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "0.6 / Workstream C / Batch 1"
+        },
+        {
+          "fact_id": "zairyu-expiry-renewal-change",
+          "title": "在留期限間近の更新・変更申請 — 申請タイミングと特例期間",
+          "matched_keywords": [
+            "更新"
+          ],
+          "score": 0.0204,
+          "state": "human_reviewed",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "0.6 / Workstream C / Batch 2"
+        }
+      ],
+      "dryRunMatches": [
+        {
+          "fact_id": "gijinkoku-job-mismatch",
+          "title": "技術・人文知識・国際業務 — 業務内容と在留資格の不一致リスク",
+          "matched_keywords": [
+            "3ヶ月"
+          ],
+          "score": 0.0303,
+          "state": "ai_verified",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "0.6 / Workstream C / Batch 1"
+        },
+        {
+          "fact_id": "zairyu-expiry-renewal-change",
+          "title": "在留期限間近の更新・変更申請 — 申請タイミングと特例期間",
+          "matched_keywords": [
+            "更新"
+          ],
+          "score": 0.0204,
+          "state": "human_reviewed",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "0.6 / Workstream C / Batch 2"
+        }
+      ],
+      "expectedHitIds": [],
+      "candidateOnlyIds": [],
+      "status": "miss",
+      "needsAnswerAB": false
+    },
+    {
+      "id": "LS-023",
+      "priority": "P1",
+      "family": "更新/变更",
+      "question": "変更申請 いつから",
+      "expectedCandidateIds": [
+        "residence-change-application-window"
+      ],
+      "productionMatches": [
+        {
+          "fact_id": "zairyu-expiry-renewal-change",
+          "title": "在留期限間近の更新・変更申請 — 申請タイミングと特例期間",
+          "matched_keywords": [
+            "変更申請"
+          ],
+          "score": 0.0204,
+          "state": "human_reviewed",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "0.6 / Workstream C / Batch 2"
+        }
+      ],
+      "dryRunMatches": [
+        {
+          "fact_id": "zairyu-expiry-renewal-change",
+          "title": "在留期限間近の更新・変更申請 — 申請タイミングと特例期間",
+          "matched_keywords": [
+            "変更申請"
+          ],
+          "score": 0.0204,
+          "state": "human_reviewed",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "0.6 / Workstream C / Batch 2"
+        }
+      ],
+      "expectedHitIds": [],
+      "candidateOnlyIds": [],
+      "status": "miss",
+      "needsAnswerAB": false
+    },
+    {
+      "id": "LS-024",
+      "priority": "P0",
+      "family": "届出",
+      "question": "出生后30天内申请",
+      "expectedCandidateIds": [
+        "status-acquisition-30-day-application-window"
+      ],
+      "productionMatches": [],
+      "dryRunMatches": [
+        {
+          "fact_id": "status-acquisition-30-day-application-window",
+          "title": "在留資格取得 — 申請期間は取得事由発生日から30日以内",
+          "matched_keywords": [
+            "出生后30天内申请"
+          ],
+          "score": 0.1667,
+          "state": "ai_extracted",
+          "risk_level": "high",
+          "decision": "drop",
+          "sprint": "Legal Source Engineering / P0 Cycle 3 / Batch 2"
+        }
+      ],
+      "expectedHitIds": [
+        "status-acquisition-30-day-application-window"
+      ],
+      "candidateOnlyIds": [
+        "status-acquisition-30-day-application-window"
+      ],
+      "status": "candidate_gain",
+      "needsAnswerAB": true
+    },
+    {
+      "id": "LS-025",
+      "priority": "P1",
+      "family": "届出",
+      "question": "小孩出生 60天 日本 国籍",
+      "expectedCandidateIds": [
+        "status-acquisition-over-60-days-trigger"
+      ],
+      "productionMatches": [],
+      "dryRunMatches": [],
+      "expectedHitIds": [],
+      "candidateOnlyIds": [],
+      "status": "miss",
+      "needsAnswerAB": false
+    },
+    {
+      "id": "LS-026",
+      "priority": "P1",
+      "family": "届出",
+      "question": "离婚 14天 届出",
+      "expectedCandidateIds": [
+        "spouse-notification-divorce-death-fourteen-day"
+      ],
+      "productionMatches": [
+        {
+          "fact_id": "spouse-divorce-separation",
+          "title": "日本人・永住者の配偶者 — 離婚・別居後の在留リスク",
+          "matched_keywords": [
+            "离婚"
+          ],
+          "score": 0.0313,
+          "state": "human_reviewed",
+          "risk_level": "critical",
+          "decision": "inject",
+          "sprint": "0.6 / Workstream C / Batch 1"
+        },
+        {
+          "fact_id": "tensyoku-zairyu",
+          "title": "転職時の在留資格手続き（14日届出義務・入管法第19条の16・資格変更要否・就労資格証明書）",
+          "matched_keywords": [
+            "14天"
+          ],
+          "score": 0.0476,
+          "state": "ai_verified",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "cycle2-batch21"
+        }
+      ],
+      "dryRunMatches": [
+        {
+          "fact_id": "spouse-divorce-separation",
+          "title": "日本人・永住者の配偶者 — 離婚・別居後の在留リスク",
+          "matched_keywords": [
+            "离婚"
+          ],
+          "score": 0.0313,
+          "state": "human_reviewed",
+          "risk_level": "critical",
+          "decision": "inject",
+          "sprint": "0.6 / Workstream C / Batch 1"
+        },
+        {
+          "fact_id": "tensyoku-zairyu",
+          "title": "転職時の在留資格手続き（14日届出義務・入管法第19条の16・資格変更要否・就労資格証明書）",
+          "matched_keywords": [
+            "14天"
+          ],
+          "score": 0.0476,
+          "state": "ai_verified",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "cycle2-batch21"
+        }
+      ],
+      "expectedHitIds": [],
+      "candidateOnlyIds": [],
+      "status": "miss",
+      "needsAnswerAB": false
+    },
+    {
+      "id": "LS-027",
+      "priority": "P1",
+      "family": "届出",
+      "question": "换工作 14天届出 等于变更许可吗",
+      "expectedCandidateIds": [
+        "guard-shozoku-notification-does-not-replace-status-change"
+      ],
+      "productionMatches": [
+        {
+          "fact_id": "tensyoku-zairyu",
+          "title": "転職時の在留資格手続き（14日届出義務・入管法第19条の16・資格変更要否・就労資格証明書）",
+          "matched_keywords": [
+            "换工作",
+            "14天"
+          ],
+          "score": 0.0952,
+          "state": "ai_verified",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "cycle2-batch21"
+        },
+        {
+          "fact_id": "gijinkoku-job-mismatch",
+          "title": "技術・人文知識・国際業務 — 業務内容と在留資格の不一致リスク",
+          "matched_keywords": [
+            "换工作"
+          ],
+          "score": 0.0303,
+          "state": "ai_verified",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "0.6 / Workstream C / Batch 1"
+        }
+      ],
+      "dryRunMatches": [
+        {
+          "fact_id": "tensyoku-zairyu",
+          "title": "転職時の在留資格手続き（14日届出義務・入管法第19条の16・資格変更要否・就労資格証明書）",
+          "matched_keywords": [
+            "换工作",
+            "14天"
+          ],
+          "score": 0.0952,
+          "state": "ai_verified",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "cycle2-batch21"
+        },
+        {
+          "fact_id": "gijinkoku-job-mismatch",
+          "title": "技術・人文知識・国際業務 — 業務内容と在留資格の不一致リスク",
+          "matched_keywords": [
+            "换工作"
+          ],
+          "score": 0.0303,
+          "state": "ai_verified",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "0.6 / Workstream C / Batch 1"
+        }
+      ],
+      "expectedHitIds": [],
+      "candidateOnlyIds": [],
+      "status": "miss",
+      "needsAnswerAB": false
+    },
+    {
+      "id": "LS-028",
+      "priority": "P1",
+      "family": "再入国",
+      "question": "みなし再入国 海外で延長",
+      "expectedCandidateIds": [
+        "special-reentry-no-overseas-extension"
+      ],
+      "productionMatches": [
+        {
+          "fact_id": "minashi-sainyuukoku",
+          "title": "みなし再入国許可・通常再入国許可と長期出国による在留資格リスク",
+          "matched_keywords": [
+            "再入国",
+            "みなし再入国"
+          ],
+          "score": 0.069,
+          "state": "ai_verified",
+          "risk_level": "critical",
+          "decision": "hint_only",
+          "sprint": "0.6 / Workstream C / Batch 3"
+        },
+        {
+          "fact_id": "sainyukoku-kyoka",
+          "title": "再入国許可・みなし再入国 — 在留資格を保持したまま出国する",
+          "matched_keywords": [
+            "みなし再入国"
+          ],
+          "score": 0.0714,
+          "state": "ai_verified",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "cycle2-new-batch16"
+        }
+      ],
+      "dryRunMatches": [
+        {
+          "fact_id": "minashi-sainyuukoku",
+          "title": "みなし再入国許可・通常再入国許可と長期出国による在留資格リスク",
+          "matched_keywords": [
+            "再入国",
+            "みなし再入国"
+          ],
+          "score": 0.069,
+          "state": "ai_verified",
+          "risk_level": "critical",
+          "decision": "hint_only",
+          "sprint": "0.6 / Workstream C / Batch 3"
+        },
+        {
+          "fact_id": "sainyukoku-kyoka",
+          "title": "再入国許可・みなし再入国 — 在留資格を保持したまま出国する",
+          "matched_keywords": [
+            "みなし再入国"
+          ],
+          "score": 0.0714,
+          "state": "ai_verified",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "cycle2-new-batch16"
+        }
+      ],
+      "expectedHitIds": [],
+      "candidateOnlyIds": [],
+      "status": "miss",
+      "needsAnswerAB": false
+    },
+    {
+      "id": "LS-029",
+      "priority": "P1",
+      "family": "再入国",
+      "question": "みなし再入国 1年 在留期限",
+      "expectedCandidateIds": [
+        "special-reentry-one-year-or-status-expiry"
+      ],
+      "productionMatches": [
+        {
+          "fact_id": "minashi-sainyuukoku",
+          "title": "みなし再入国許可・通常再入国許可と長期出国による在留資格リスク",
+          "matched_keywords": [
+            "再入国",
+            "みなし再入国",
+            "1年"
+          ],
+          "score": 0.1034,
+          "state": "ai_verified",
+          "risk_level": "critical",
+          "decision": "hint_only",
+          "sprint": "0.6 / Workstream C / Batch 3"
+        },
+        {
+          "fact_id": "sainyukoku-kyoka",
+          "title": "再入国許可・みなし再入国 — 在留資格を保持したまま出国する",
+          "matched_keywords": [
+            "みなし再入国"
+          ],
+          "score": 0.0714,
+          "state": "ai_verified",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "cycle2-new-batch16"
+        },
+        {
+          "fact_id": "zairyu-expiry-renewal-change",
+          "title": "在留期限間近の更新・変更申請 — 申請タイミングと特例期間",
+          "matched_keywords": [
+            "在留期限",
+            "期限"
+          ],
+          "score": 0.0408,
+          "state": "human_reviewed",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "0.6 / Workstream C / Batch 2"
+        }
+      ],
+      "dryRunMatches": [
+        {
+          "fact_id": "minashi-sainyuukoku",
+          "title": "みなし再入国許可・通常再入国許可と長期出国による在留資格リスク",
+          "matched_keywords": [
+            "再入国",
+            "みなし再入国",
+            "1年"
+          ],
+          "score": 0.1034,
+          "state": "ai_verified",
+          "risk_level": "critical",
+          "decision": "hint_only",
+          "sprint": "0.6 / Workstream C / Batch 3"
+        },
+        {
+          "fact_id": "sainyukoku-kyoka",
+          "title": "再入国許可・みなし再入国 — 在留資格を保持したまま出国する",
+          "matched_keywords": [
+            "みなし再入国"
+          ],
+          "score": 0.0714,
+          "state": "ai_verified",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "cycle2-new-batch16"
+        },
+        {
+          "fact_id": "zairyu-expiry-renewal-change",
+          "title": "在留期限間近の更新・変更申請 — 申請タイミングと特例期間",
+          "matched_keywords": [
+            "在留期限",
+            "期限"
+          ],
+          "score": 0.0408,
+          "state": "human_reviewed",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "0.6 / Workstream C / Batch 2"
+        }
+      ],
+      "expectedHitIds": [],
+      "candidateOnlyIds": [],
+      "status": "miss",
+      "needsAnswerAB": false
+    },
+    {
+      "id": "LS-030",
+      "priority": "P1",
+      "family": "取消/稳定性",
+      "question": "日配 离婚 会马上失效吗",
+      "expectedCandidateIds": [
+        "residence-cancellation-spouse-status-six-months"
+      ],
+      "productionMatches": [
+        {
+          "fact_id": "spouse-divorce-separation",
+          "title": "日本人・永住者の配偶者 — 離婚・別居後の在留リスク",
+          "matched_keywords": [
+            "离婚"
+          ],
+          "score": 0.0313,
+          "state": "human_reviewed",
+          "risk_level": "critical",
+          "decision": "inject",
+          "sprint": "0.6 / Workstream C / Batch 1"
+        }
+      ],
+      "dryRunMatches": [
+        {
+          "fact_id": "residence-cancellation-spouse-status-six-months",
+          "title": "在留資格取消 — 配偶者としての活動を継続していない場合の6か月入口",
+          "matched_keywords": [
+            "日配 离婚 会马上失效吗"
+          ],
+          "score": 0.1667,
+          "state": "ai_extracted",
+          "risk_level": "critical",
+          "decision": "drop",
+          "sprint": "Legal Source Engineering / P0 Cycle 4 / Batch 1"
+        },
+        {
+          "fact_id": "spouse-divorce-separation",
+          "title": "日本人・永住者の配偶者 — 離婚・別居後の在留リスク",
+          "matched_keywords": [
+            "离婚"
+          ],
+          "score": 0.0313,
+          "state": "human_reviewed",
+          "risk_level": "critical",
+          "decision": "inject",
+          "sprint": "0.6 / Workstream C / Batch 1"
+        }
+      ],
+      "expectedHitIds": [
+        "residence-cancellation-spouse-status-six-months"
+      ],
+      "candidateOnlyIds": [
+        "residence-cancellation-spouse-status-six-months"
+      ],
+      "status": "candidate_gain",
+      "needsAnswerAB": true
+    },
+    {
+      "id": "LS-031",
+      "priority": "P1",
+      "family": "取消/稳定性",
+      "question": "技人国 失业 会马上取消吗",
+      "expectedCandidateIds": [
+        "job-loss-cancellation-not-automatic-router"
+      ],
+      "productionMatches": [
+        {
+          "fact_id": "gijinkoku-job-mismatch",
+          "title": "技術・人文知識・国際業務 — 業務内容と在留資格の不一致リスク",
+          "matched_keywords": [
+            "技人国"
+          ],
+          "score": 0.0303,
+          "state": "ai_verified",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "0.6 / Workstream C / Batch 1"
+        }
+      ],
+      "dryRunMatches": [
+        {
+          "fact_id": "gijinkoku-requires-contract-with-japan-organization",
+          "title": "技人国 — 本邦機関との契約アンカー",
+          "matched_keywords": [
+            "技人国"
+          ],
+          "score": 0.125,
+          "state": "ai_extracted",
+          "risk_level": "high",
+          "decision": "drop",
+          "sprint": "Legal Source Engineering / P0 Cycle 1 / Batch 4"
+        },
+        {
+          "fact_id": "technical-humanities-international-activity-anchor",
+          "title": "技術・人文知識・国際業務 — 専門知識又は外国文化基盤業務の活動範囲",
+          "matched_keywords": [
+            "技人国"
+          ],
+          "score": 0.0909,
+          "state": "ai_extracted",
+          "risk_level": "high",
+          "decision": "drop",
+          "sprint": "Legal Source Engineering / P0 Cycle 1 / Batch 2"
+        },
+        {
+          "fact_id": "gijinkoku-job-mismatch",
+          "title": "技術・人文知識・国際業務 — 業務内容と在留資格の不一致リスク",
+          "matched_keywords": [
+            "技人国"
+          ],
+          "score": 0.0303,
+          "state": "ai_verified",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "0.6 / Workstream C / Batch 1"
+        }
+      ],
+      "expectedHitIds": [],
+      "candidateOnlyIds": [],
+      "status": "miss",
+      "needsAnswerAB": false
+    },
+    {
+      "id": "LS-032",
+      "priority": "P1",
+      "family": "取消/稳定性",
+      "question": "在留資格取消 意見聴取",
+      "expectedCandidateIds": [
+        "residence-cancellation-opinion-hearing-rights"
+      ],
+      "productionMatches": [
+        {
+          "fact_id": "zairyu-shikaku-torikeshi",
+          "title": "在留資格取消（入管法第22条の4）— 3か月無活動・配偶者6か月・住居地届出90日・2024年改正",
+          "matched_keywords": [
+            "在留資格取消"
+          ],
+          "score": 0.0526,
+          "state": "ai_verified",
+          "risk_level": "critical",
+          "decision": "hint_only",
+          "sprint": "cycle2-batch10"
+        },
+        {
+          "fact_id": "gijinkoku-job-mismatch",
+          "title": "技術・人文知識・国際業務 — 業務内容と在留資格の不一致リスク",
+          "matched_keywords": [
+            "在留資格取消"
+          ],
+          "score": 0.0303,
+          "state": "ai_verified",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "0.6 / Workstream C / Batch 1"
+        }
+      ],
+      "dryRunMatches": [
+        {
+          "fact_id": "residence-cancellation-procedure-not-automatic",
+          "title": "在留資格取消 — 取消事由は自動失効ではなく手続を伴う",
+          "matched_keywords": [
+            "在留資格取消 意見聴取"
+          ],
+          "score": 0.1667,
+          "state": "ai_extracted",
+          "risk_level": "critical",
+          "decision": "drop",
+          "sprint": "Legal Source Engineering / P0 Cycle 4 / Batch 1"
+        },
+        {
+          "fact_id": "zairyu-shikaku-torikeshi",
+          "title": "在留資格取消（入管法第22条の4）— 3か月無活動・配偶者6か月・住居地届出90日・2024年改正",
+          "matched_keywords": [
+            "在留資格取消"
+          ],
+          "score": 0.0526,
+          "state": "ai_verified",
+          "risk_level": "critical",
+          "decision": "hint_only",
+          "sprint": "cycle2-batch10"
+        },
+        {
+          "fact_id": "gijinkoku-job-mismatch",
+          "title": "技術・人文知識・国際業務 — 業務内容と在留資格の不一致リスク",
+          "matched_keywords": [
+            "在留資格取消"
+          ],
+          "score": 0.0303,
+          "state": "ai_verified",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "0.6 / Workstream C / Batch 1"
+        }
+      ],
+      "expectedHitIds": [],
+      "candidateOnlyIds": [],
+      "status": "miss",
+      "needsAnswerAB": false
+    },
+    {
+      "id": "LS-033",
+      "priority": "P1",
+      "family": "取消/稳定性",
+      "question": "虚假资料入国 在留取消",
+      "expectedCandidateIds": [
+        "residence-cancellation-fraud-false-application-entry"
+      ],
+      "productionMatches": [],
+      "dryRunMatches": [],
+      "expectedHitIds": [],
+      "candidateOnlyIds": [],
+      "status": "miss",
+      "needsAnswerAB": false
+    },
+    {
+      "id": "LS-034",
+      "priority": "P0",
+      "family": "经营管理",
+      "question": "经营管理 没有营业",
+      "expectedCandidateIds": [
+        "business-manager-activity-stop-risk-router"
+      ],
+      "productionMatches": [
+        {
+          "fact_id": "keiei-kanri-2025-10",
+          "title": "経営・管理ビザ 2025年10月16日 改正後 新基準",
+          "matched_keywords": [
+            "经营管理"
+          ],
+          "score": 0.0286,
+          "state": "human_reviewed",
+          "risk_level": "critical",
+          "decision": "inject",
+          "sprint": "0.6 / Workstream C"
+        },
+        {
+          "fact_id": "keiei-kanri-existing-holder-update",
+          "title": "既存の経営・管理ビザ保持者の更新時 — 2028-10-15 までの過渡措置",
+          "matched_keywords": [
+            "经营管理"
+          ],
+          "score": 0.0385,
+          "state": "human_reviewed",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "0.6 / Workstream C"
+        }
+      ],
+      "dryRunMatches": [
+        {
+          "fact_id": "business-manager-activity-stop-risk-router",
+          "title": "経営・管理 — 事業停止や休眠は活動不履行リスクとして扱う",
+          "matched_keywords": [
+            "经营管理 没有营业"
+          ],
+          "score": 0.1667,
+          "state": "ai_extracted",
+          "risk_level": "critical",
+          "decision": "drop",
+          "sprint": "Legal Source Engineering / P0 Cycle 4 / Batch 3"
+        },
+        {
+          "fact_id": "keiei-kanri-2025-10",
+          "title": "経営・管理ビザ 2025年10月16日 改正後 新基準",
+          "matched_keywords": [
+            "经营管理"
+          ],
+          "score": 0.0286,
+          "state": "human_reviewed",
+          "risk_level": "critical",
+          "decision": "inject",
+          "sprint": "0.6 / Workstream C"
+        },
+        {
+          "fact_id": "startup-visa-keiei-transition",
+          "title": "スタートアップビザ（特定活動）から経営・管理への在留資格変更",
+          "matched_keywords": [
+            "经营管理"
+          ],
+          "score": 0.0526,
+          "state": "ai_extracted",
+          "risk_level": "high",
+          "decision": "drop",
+          "sprint": "0.6 / Workstream C / Batch 2"
+        },
+        {
+          "fact_id": "keiei-kanri-existing-holder-update",
+          "title": "既存の経営・管理ビザ保持者の更新時 — 2028-10-15 までの過渡措置",
+          "matched_keywords": [
+            "经营管理"
+          ],
+          "score": 0.0385,
+          "state": "human_reviewed",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "0.6 / Workstream C"
+        }
+      ],
+      "expectedHitIds": [
+        "business-manager-activity-stop-risk-router"
+      ],
+      "candidateOnlyIds": [
+        "business-manager-activity-stop-risk-router"
+      ],
+      "status": "candidate_gain",
+      "needsAnswerAB": true
+    },
+    {
+      "id": "LS-035",
+      "priority": "P1",
+      "family": "经营管理",
+      "question": "経営管理 事業停止 ビザ",
+      "expectedCandidateIds": [
+        "business-manager-activity-stop-risk-router"
+      ],
+      "productionMatches": [
+        {
+          "fact_id": "keiei-kanri-2025-10",
+          "title": "経営・管理ビザ 2025年10月16日 改正後 新基準",
+          "matched_keywords": [
+            "経営管理"
+          ],
+          "score": 0.0286,
+          "state": "human_reviewed",
+          "risk_level": "critical",
+          "decision": "inject",
+          "sprint": "0.6 / Workstream C"
+        },
+        {
+          "fact_id": "keiei-kanri-existing-holder-update",
+          "title": "既存の経営・管理ビザ保持者の更新時 — 2028-10-15 までの過渡措置",
+          "matched_keywords": [
+            "経営管理"
+          ],
+          "score": 0.0385,
+          "state": "human_reviewed",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "0.6 / Workstream C"
+        }
+      ],
+      "dryRunMatches": [
+        {
+          "fact_id": "business-manager-activity-stop-risk-router",
+          "title": "経営・管理 — 事業停止や休眠は活動不履行リスクとして扱う",
+          "matched_keywords": [
+            "経営管理 事業停止 ビザ"
+          ],
+          "score": 0.1667,
+          "state": "ai_extracted",
+          "risk_level": "critical",
+          "decision": "drop",
+          "sprint": "Legal Source Engineering / P0 Cycle 4 / Batch 3"
+        },
+        {
+          "fact_id": "keiei-kanri-2025-10",
+          "title": "経営・管理ビザ 2025年10月16日 改正後 新基準",
+          "matched_keywords": [
+            "経営管理"
+          ],
+          "score": 0.0286,
+          "state": "human_reviewed",
+          "risk_level": "critical",
+          "decision": "inject",
+          "sprint": "0.6 / Workstream C"
+        },
+        {
+          "fact_id": "business-manager-activity-anchor",
+          "title": "経営・管理 — 事業の経営又は管理に従事する活動",
+          "matched_keywords": [
+            "経営管理"
+          ],
+          "score": 0.1,
+          "state": "ai_extracted",
+          "risk_level": "high",
+          "decision": "drop",
+          "sprint": "Legal Source Engineering / P0 Cycle 1 / Batch 2"
+        },
+        {
+          "fact_id": "startup-visa-keiei-transition",
+          "title": "スタートアップビザ（特定活動）から経営・管理への在留資格変更",
+          "matched_keywords": [
+            "経営管理"
+          ],
+          "score": 0.0526,
+          "state": "ai_extracted",
+          "risk_level": "high",
+          "decision": "drop",
+          "sprint": "0.6 / Workstream C / Batch 2"
+        },
+        {
+          "fact_id": "keiei-kanri-existing-holder-update",
+          "title": "既存の経営・管理ビザ保持者の更新時 — 2028-10-15 までの過渡措置",
+          "matched_keywords": [
+            "経営管理"
+          ],
+          "score": 0.0385,
+          "state": "human_reviewed",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "0.6 / Workstream C"
+        }
+      ],
+      "expectedHitIds": [
+        "business-manager-activity-stop-risk-router"
+      ],
+      "candidateOnlyIds": [
+        "business-manager-activity-stop-risk-router"
+      ],
+      "status": "candidate_gain",
+      "needsAnswerAB": true
+    },
+    {
+      "id": "LS-036",
+      "priority": "P1",
+      "family": "经营管理",
+      "question": "经营管理 法律会计业务",
+      "expectedCandidateIds": [
+        "business-manager-excludes-legal-accounting-qualified-business"
+      ],
+      "productionMatches": [
+        {
+          "fact_id": "keiei-kanri-2025-10",
+          "title": "経営・管理ビザ 2025年10月16日 改正後 新基準",
+          "matched_keywords": [
+            "经营管理"
+          ],
+          "score": 0.0286,
+          "state": "human_reviewed",
+          "risk_level": "critical",
+          "decision": "inject",
+          "sprint": "0.6 / Workstream C"
+        },
+        {
+          "fact_id": "keiei-kanri-existing-holder-update",
+          "title": "既存の経営・管理ビザ保持者の更新時 — 2028-10-15 までの過渡措置",
+          "matched_keywords": [
+            "经营管理"
+          ],
+          "score": 0.0385,
+          "state": "human_reviewed",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "0.6 / Workstream C"
+        }
+      ],
+      "dryRunMatches": [
+        {
+          "fact_id": "keiei-kanri-2025-10",
+          "title": "経営・管理ビザ 2025年10月16日 改正後 新基準",
+          "matched_keywords": [
+            "经营管理"
+          ],
+          "score": 0.0286,
+          "state": "human_reviewed",
+          "risk_level": "critical",
+          "decision": "inject",
+          "sprint": "0.6 / Workstream C"
+        },
+        {
+          "fact_id": "startup-visa-keiei-transition",
+          "title": "スタートアップビザ（特定活動）から経営・管理への在留資格変更",
+          "matched_keywords": [
+            "经营管理"
+          ],
+          "score": 0.0526,
+          "state": "ai_extracted",
+          "risk_level": "high",
+          "decision": "drop",
+          "sprint": "0.6 / Workstream C / Batch 2"
+        },
+        {
+          "fact_id": "keiei-kanri-existing-holder-update",
+          "title": "既存の経営・管理ビザ保持者の更新時 — 2028-10-15 までの過渡措置",
+          "matched_keywords": [
+            "经营管理"
+          ],
+          "score": 0.0385,
+          "state": "human_reviewed",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "0.6 / Workstream C"
+        },
+        {
+          "fact_id": "business-manager-excludes-legal-accounting-qualified-business",
+          "title": "経営・管理 — 法律・会計資格業務の排除",
+          "matched_keywords": [
+            "经营管理",
+            "法律会计业务"
+          ],
+          "score": 0.2857,
+          "state": "ai_extracted",
+          "risk_level": "medium",
+          "decision": "drop",
+          "sprint": "Legal Source Engineering / P0 Cycle 1 / Batch 4"
+        }
+      ],
+      "expectedHitIds": [
+        "business-manager-excludes-legal-accounting-qualified-business"
+      ],
+      "candidateOnlyIds": [
+        "business-manager-excludes-legal-accounting-qualified-business"
+      ],
+      "status": "candidate_gain",
+      "needsAnswerAB": true
+    },
+    {
+      "id": "LS-037",
+      "priority": "P0",
+      "family": "高度人才",
+      "question": "高度人材 转职 14天",
+      "expectedCandidateIds": [
+        "guard-hsp1-institution-change-not-14day-only"
+      ],
+      "productionMatches": [
+        {
+          "fact_id": "tensyoku-zairyu",
+          "title": "転職時の在留資格手続き（14日届出義務・入管法第19条の16・資格変更要否・就労資格証明書）",
+          "matched_keywords": [
+            "转职",
+            "14天"
+          ],
+          "score": 0.0952,
+          "state": "ai_verified",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "cycle2-batch21"
+        },
+        {
+          "fact_id": "kodo-senmon-shoku-eijuu",
+          "title": "高度専門職ポイント制と永住申請短縮ルート（3年・1年）",
+          "matched_keywords": [
+            "高度人材"
+          ],
+          "score": 0.037,
+          "state": "ai_verified",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "0.6"
+        }
+      ],
+      "dryRunMatches": [
+        {
+          "fact_id": "guard-hsp1-institution-change-not-14day-only",
+          "title": "高度専門職1号転職 — 14日届出だけで終わらせない",
+          "matched_keywords": [
+            "高度人材 转职 14天"
+          ],
+          "score": 0.1667,
+          "state": "ai_extracted",
+          "risk_level": "critical",
+          "decision": "drop",
+          "sprint": "Legal Source Engineering / P1 Cycle 2 / Batch 3"
+        },
+        {
+          "fact_id": "tensyoku-zairyu",
+          "title": "転職時の在留資格手続き（14日届出義務・入管法第19条の16・資格変更要否・就労資格証明書）",
+          "matched_keywords": [
+            "转职",
+            "14天"
+          ],
+          "score": 0.0952,
+          "state": "ai_verified",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "cycle2-batch21"
+        },
+        {
+          "fact_id": "kodo-senmon-shoku-eijuu",
+          "title": "高度専門職ポイント制と永住申請短縮ルート（3年・1年）",
+          "matched_keywords": [
+            "高度人材"
+          ],
+          "score": 0.037,
+          "state": "ai_verified",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "0.6"
+        }
+      ],
+      "expectedHitIds": [
+        "guard-hsp1-institution-change-not-14day-only"
+      ],
+      "candidateOnlyIds": [
+        "guard-hsp1-institution-change-not-14day-only"
+      ],
+      "status": "candidate_gain",
+      "needsAnswerAB": true
+    },
+    {
+      "id": "LS-038",
+      "priority": "P1",
+      "family": "高度人才",
+      "question": "J-Skip 転職 14日",
+      "expectedCandidateIds": [
+        "guard-hsp1-institution-change-not-14day-only"
+      ],
+      "productionMatches": [
+        {
+          "fact_id": "gijinkoku-job-mismatch",
+          "title": "技術・人文知識・国際業務 — 業務内容と在留資格の不一致リスク",
+          "matched_keywords": [
+            "転職",
+            "14日"
+          ],
+          "score": 0.0606,
+          "state": "ai_verified",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "0.6 / Workstream C / Batch 1"
+        },
+        {
+          "fact_id": "tensyoku-zairyu",
+          "title": "転職時の在留資格手続き（14日届出義務・入管法第19条の16・資格変更要否・就労資格証明書）",
+          "matched_keywords": [
+            "14日"
+          ],
+          "score": 0.0476,
+          "state": "ai_verified",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "cycle2-batch21"
+        }
+      ],
+      "dryRunMatches": [
+        {
+          "fact_id": "guard-hsp1-institution-change-not-14day-only",
+          "title": "高度専門職1号転職 — 14日届出だけで終わらせない",
+          "matched_keywords": [
+            "J-Skip 転職 14日"
+          ],
+          "score": 0.1667,
+          "state": "ai_extracted",
+          "risk_level": "critical",
+          "decision": "drop",
+          "sprint": "Legal Source Engineering / P1 Cycle 2 / Batch 3"
+        },
+        {
+          "fact_id": "gijinkoku-job-mismatch",
+          "title": "技術・人文知識・国際業務 — 業務内容と在留資格の不一致リスク",
+          "matched_keywords": [
+            "転職",
+            "14日"
+          ],
+          "score": 0.0606,
+          "state": "ai_verified",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "0.6 / Workstream C / Batch 1"
+        },
+        {
+          "fact_id": "tensyoku-zairyu",
+          "title": "転職時の在留資格手続き（14日届出義務・入管法第19条の16・資格変更要否・就労資格証明書）",
+          "matched_keywords": [
+            "14日"
+          ],
+          "score": 0.0476,
+          "state": "ai_verified",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "cycle2-batch21"
+        }
+      ],
+      "expectedHitIds": [
+        "guard-hsp1-institution-change-not-14day-only"
+      ],
+      "candidateOnlyIds": [
+        "guard-hsp1-institution-change-not-14day-only"
+      ],
+      "status": "candidate_gain",
+      "needsAnswerAB": true
+    },
+    {
+      "id": "LS-039",
+      "priority": "P1",
+      "family": "高度人才",
+      "question": "J-Skip 经理 经营管理 3000万",
+      "expectedCandidateIds": [
+        "guard-jskip-manager-not-business-manager-3000man"
+      ],
+      "productionMatches": [
+        {
+          "fact_id": "keiei-kanri-2025-10",
+          "title": "経営・管理ビザ 2025年10月16日 改正後 新基準",
+          "matched_keywords": [
+            "经营管理"
+          ],
+          "score": 0.0286,
+          "state": "human_reviewed",
+          "risk_level": "critical",
+          "decision": "inject",
+          "sprint": "0.6 / Workstream C"
+        },
+        {
+          "fact_id": "keiei-kanri-existing-holder-update",
+          "title": "既存の経営・管理ビザ保持者の更新時 — 2028-10-15 までの過渡措置",
+          "matched_keywords": [
+            "经营管理"
+          ],
+          "score": 0.0385,
+          "state": "human_reviewed",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "0.6 / Workstream C"
+        }
+      ],
+      "dryRunMatches": [
+        {
+          "fact_id": "keiei-kanri-2025-10",
+          "title": "経営・管理ビザ 2025年10月16日 改正後 新基準",
+          "matched_keywords": [
+            "经营管理"
+          ],
+          "score": 0.0286,
+          "state": "human_reviewed",
+          "risk_level": "critical",
+          "decision": "inject",
+          "sprint": "0.6 / Workstream C"
+        },
+        {
+          "fact_id": "keiei-kanri-capital-asset-3000man-criterion",
+          "title": "経営・管理 — 3000万円以上の財産規模基準",
+          "matched_keywords": [
+            "经营管理 3000万"
+          ],
+          "score": 0.0588,
+          "state": "ai_extracted",
+          "risk_level": "high",
+          "decision": "drop",
+          "sprint": "Legal Source Engineering / P0 Cycle 2 / Batch 2"
+        },
+        {
+          "fact_id": "startup-visa-keiei-transition",
+          "title": "スタートアップビザ（特定活動）から経営・管理への在留資格変更",
+          "matched_keywords": [
+            "经营管理"
+          ],
+          "score": 0.0526,
+          "state": "ai_extracted",
+          "risk_level": "high",
+          "decision": "drop",
+          "sprint": "0.6 / Workstream C / Batch 2"
+        },
+        {
+          "fact_id": "keiei-kanri-existing-holder-update",
+          "title": "既存の経営・管理ビザ保持者の更新時 — 2028-10-15 までの過渡措置",
+          "matched_keywords": [
+            "经营管理"
+          ],
+          "score": 0.0385,
+          "state": "human_reviewed",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "0.6 / Workstream C"
+        }
+      ],
+      "expectedHitIds": [],
+      "candidateOnlyIds": [],
+      "status": "miss",
+      "needsAnswerAB": false
+    },
+    {
+      "id": "LS-040",
+      "priority": "P1",
+      "family": "技人国",
+      "question": "技人国专业不一致",
+      "expectedCandidateIds": [
+        "gijinkoku-background-relevance-required"
+      ],
+      "productionMatches": [
+        {
+          "fact_id": "gijinkoku-job-mismatch",
+          "title": "技術・人文知識・国際業務 — 業務内容と在留資格の不一致リスク",
+          "matched_keywords": [
+            "技人国"
+          ],
+          "score": 0.0303,
+          "state": "ai_verified",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "0.6 / Workstream C / Batch 1"
+        }
+      ],
+      "dryRunMatches": [
+        {
+          "fact_id": "gijinkoku-background-relevance-required",
+          "title": "技人国 — 業務と技術・知識の関連性",
+          "matched_keywords": [
+            "技人国专业不一致"
+          ],
+          "score": 0.1429,
+          "state": "ai_extracted",
+          "risk_level": "high",
+          "decision": "drop",
+          "sprint": "Legal Source Engineering / P0 Cycle 2 / Batch 1"
+        },
+        {
+          "fact_id": "gijinkoku-requires-contract-with-japan-organization",
+          "title": "技人国 — 本邦機関との契約アンカー",
+          "matched_keywords": [
+            "技人国"
+          ],
+          "score": 0.125,
+          "state": "ai_extracted",
+          "risk_level": "high",
+          "decision": "drop",
+          "sprint": "Legal Source Engineering / P0 Cycle 1 / Batch 4"
+        },
+        {
+          "fact_id": "technical-humanities-international-activity-anchor",
+          "title": "技術・人文知識・国際業務 — 専門知識又は外国文化基盤業務の活動範囲",
+          "matched_keywords": [
+            "技人国"
+          ],
+          "score": 0.0909,
+          "state": "ai_extracted",
+          "risk_level": "high",
+          "decision": "drop",
+          "sprint": "Legal Source Engineering / P0 Cycle 1 / Batch 2"
+        },
+        {
+          "fact_id": "gijinkoku-job-mismatch",
+          "title": "技術・人文知識・国際業務 — 業務内容と在留資格の不一致リスク",
+          "matched_keywords": [
+            "技人国"
+          ],
+          "score": 0.0303,
+          "state": "ai_verified",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "0.6 / Workstream C / Batch 1"
+        }
+      ],
+      "expectedHitIds": [
+        "gijinkoku-background-relevance-required"
+      ],
+      "candidateOnlyIds": [
+        "gijinkoku-background-relevance-required"
+      ],
+      "status": "candidate_gain",
+      "needsAnswerAB": true
+    },
+    {
+      "id": "LS-041",
+      "priority": "P1",
+      "family": "技人国",
+      "question": "人文签销售",
+      "expectedCandidateIds": [
+        "gijinkoku-job-mismatch"
+      ],
+      "productionMatches": [],
+      "dryRunMatches": [
+        {
+          "fact_id": "technical-humanities-international-activity-anchor",
+          "title": "技術・人文知識・国際業務 — 専門知識又は外国文化基盤業務の活動範囲",
+          "matched_keywords": [
+            "人文签",
+            "销售"
+          ],
+          "score": 0.1818,
+          "state": "ai_extracted",
+          "risk_level": "high",
+          "decision": "drop",
+          "sprint": "Legal Source Engineering / P0 Cycle 1 / Batch 2"
+        },
+        {
+          "fact_id": "gijinkoku-background-relevance-required",
+          "title": "技人国 — 業務と技術・知識の関連性",
+          "matched_keywords": [
+            "人文签销售"
+          ],
+          "score": 0.1429,
+          "state": "ai_extracted",
+          "risk_level": "high",
+          "decision": "drop",
+          "sprint": "Legal Source Engineering / P0 Cycle 2 / Batch 1"
+        },
+        {
+          "fact_id": "gijinkoku-requires-contract-with-japan-organization",
+          "title": "技人国 — 本邦機関との契約アンカー",
+          "matched_keywords": [
+            "人文签"
+          ],
+          "score": 0.125,
+          "state": "ai_extracted",
+          "risk_level": "high",
+          "decision": "drop",
+          "sprint": "Legal Source Engineering / P0 Cycle 1 / Batch 4"
+        }
+      ],
+      "expectedHitIds": [],
+      "candidateOnlyIds": [],
+      "status": "miss",
+      "needsAnswerAB": false
+    },
+    {
+      "id": "LS-042",
+      "priority": "P2",
+      "family": "留学/变更",
+      "question": "留学转工作 审查中 上班",
+      "expectedCandidateIds": [
+        "change-approval-before-new-activity-guardrail"
+      ],
+      "productionMatches": [
+        {
+          "fact_id": "zairyu-expiry-renewal-change",
+          "title": "在留期限間近の更新・変更申請 — 申請タイミングと特例期間",
+          "matched_keywords": [
+            "审查中"
+          ],
+          "score": 0.0204,
+          "state": "human_reviewed",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "0.6 / Workstream C / Batch 2"
+        }
+      ],
+      "dryRunMatches": [
+        {
+          "fact_id": "change-approval-before-new-activity-guardrail",
+          "title": "在留資格変更 — 新資格活動は許可前に開始したと扱わない",
+          "matched_keywords": [
+            "留学转工作 审查中 上班"
+          ],
+          "score": 0.1667,
+          "state": "ai_extracted",
+          "risk_level": "high",
+          "decision": "drop",
+          "sprint": "Legal Source Engineering / P0 Cycle 3 / Batch 1"
+        },
+        {
+          "fact_id": "zairyu-expiry-renewal-change",
+          "title": "在留期限間近の更新・変更申請 — 申請タイミングと特例期間",
+          "matched_keywords": [
+            "审查中"
+          ],
+          "score": 0.0204,
+          "state": "human_reviewed",
+          "risk_level": "high",
+          "decision": "inject",
+          "sprint": "0.6 / Workstream C / Batch 2"
+        }
+      ],
+      "expectedHitIds": [
+        "change-approval-before-new-activity-guardrail"
+      ],
+      "candidateOnlyIds": [
+        "change-approval-before-new-activity-guardrail"
+      ],
+      "status": "candidate_gain",
+      "needsAnswerAB": false
+    }
+  ]
+}
