@@ -13,6 +13,7 @@
  *   npx tsx scripts/eval/legal-source-answer-ab.ts
  *   npx tsx scripts/eval/legal-source-answer-ab.ts --limit=5
  *   npx tsx scripts/eval/legal-source-answer-ab.ts --concurrency=3
+ *   npx tsx scripts/eval/legal-source-answer-ab.ts --custom
  */
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
@@ -79,14 +80,46 @@ const AQL_FIRST_PASS_IDS = new Set([
   'LS-024', 'LS-030', 'LS-034', 'LS-037', 'LS-040',
 ])
 
+const CUSTOM_ROWS: ShadowRow[] = [
+  {
+    id: 'LS-CUSTOM-001',
+    priority: 'P0',
+    family: '日配/离婚再婚',
+    question: '我是日配，我出轨离婚了，现在又和另一个日本人再婚了，我的签证怎么办，是变更还是更新',
+    candidateOnlyIds: [
+      'spouse-notification-divorce-death-fourteen-day',
+      'spouse-notification-not-status-change-substitute',
+      'residence-cancellation-spouse-status-six-months',
+      'spouse-divorce-notification-cancellation-distinction',
+      'spouse-or-child-of-japanese-status-includes-spouse-special-adopted-child-child-born',
+    ],
+    status: 'custom',
+    needsAnswerAB: true,
+  },
+  {
+    id: 'LS-CUSTOM-002',
+    priority: 'P0',
+    family: '经管/高才人文',
+    question: '我是经管签，我准备转高才人文签，已经拿到了企业内定。我是否可以先把公司休眠，再提交变更申请，对方要求我先休眠，确保变更成功率',
+    candidateOnlyIds: [
+      'business-manager-activity-stop-risk-router',
+      'highly-skilled-three-activity-categories',
+      'highly-skilled-one-activity-institution-change-application',
+      'guard-hsp1-institution-change-not-14day-only',
+      'guard-hsp-materials-not-approval-guarantee',
+    ],
+    status: 'custom',
+    needsAnswerAB: true,
+  },
+]
+
 async function main() {
   const limit = readLimit()
   const concurrency = readConcurrency()
-  const shadow = JSON.parse(
-    readFileSync(join(process.cwd(), 'docs/eval/legal-source-shadow-ab-round1-results.json'), 'utf8'),
-  ) as { rows: ShadowRow[] }
-  const selected = shadow.rows.filter(row => AQL_FIRST_PASS_IDS.has(row.id) && row.candidateOnlyIds.length > 0)
-    .slice(0, limit ?? undefined)
+  const customMode = hasFlag('--custom')
+  const selected = customMode
+    ? CUSTOM_ROWS.slice(0, limit ?? undefined)
+    : readRound1Rows(limit)
 
   console.log(`legal-source-answer-ab: selected=${selected.length} concurrency=${concurrency}`)
   const rows = await mapWithConcurrency(selected, concurrency, async (row, idx) => {
@@ -126,14 +159,21 @@ async function main() {
   const outDir = join(process.cwd(), 'docs/eval')
   if (!existsSync(outDir)) mkdirSync(outDir, { recursive: true })
   const isSample = limit !== null
-  const jsonPath = join(outDir, isSample
+  const jsonPath = join(outDir, customMode
+    ? 'legal-source-answer-ab-custom-results.json'
+    : isSample
     ? 'legal-source-answer-ab-round1-sample-results.json'
     : 'legal-source-answer-ab-round1-results.json')
-  const mdPath = join(outDir, isSample
+  const mdPath = join(outDir, customMode
+    ? 'LEGAL_SOURCE_ANSWER_AB_CUSTOM.md'
+    : isSample
     ? 'LEGAL_SOURCE_ANSWER_AB_ROUND1_SAMPLE.md'
     : 'LEGAL_SOURCE_ANSWER_AB_ROUND1.md')
   writeFileSync(jsonPath, `${JSON.stringify(output, null, 2)}\n`)
   writeFileSync(mdPath, renderMarkdown(generatedAt, rows))
+  if (customMode) {
+    upsertCustomAppendix(generatedAt, rows)
+  }
 
   const okA = rows.filter(row => row.a.ok).length
   const okB = rows.filter(row => row.b.ok).length
@@ -142,12 +182,24 @@ async function main() {
   console.log(`wrote ${jsonPath}`)
 }
 
+function readRound1Rows(limit: number | null): ShadowRow[] {
+  const shadow = JSON.parse(
+    readFileSync(join(process.cwd(), 'docs/eval/legal-source-shadow-ab-round1-results.json'), 'utf8'),
+  ) as { rows: ShadowRow[] }
+  return shadow.rows.filter(row => AQL_FIRST_PASS_IDS.has(row.id) && row.candidateOnlyIds.length > 0)
+    .slice(0, limit ?? undefined)
+}
+
 function readLimit(): number | null {
   return readPositiveIntArg('--limit') ?? null
 }
 
 function readConcurrency(): number {
   return readPositiveIntArg('--concurrency') ?? 3
+}
+
+function hasFlag(name: string): boolean {
+  return process.argv.includes(name)
 }
 
 function readPositiveIntArg(name: string): number | null {
@@ -274,7 +326,7 @@ async function withRetries<T extends { ok: boolean; error?: string; attempts?: n
 
 function isTransientAnswerError(result: { ok: boolean; error?: string }): boolean {
   if (result.ok) return false
-  return /timeout|empty|pipeline_failed|http_5|curl|fetch|exception/i.test(result.error ?? '')
+  return /timeout|empty|length|pipeline_failed|http_5|curl|fetch|exception/i.test(result.error ?? '')
 }
 
 function sleep(ms: number): Promise<void> {
@@ -305,6 +357,7 @@ function buildCandidatePrompt(question: string, contexts: FactContext[]): string
     '不要使用 Markdown 粗体、标题、分割线或表格。',
     '官方机构名写「出入国在留管理庁」或「入管」，不要改写成其他中文机关名。',
     '不要保证申请一定通过 / 不通过；有个案判断时说明需要向入管或行政書士确认。',
+    '总长度控制在 650 个中文字符以内，避免展开过长。',
     '',
     '=== 用户问题 ===',
     question,
@@ -448,6 +501,71 @@ function renderMarkdown(generatedAt: string, rows: AnswerABRow[]): string {
   lines.push('```')
   lines.push('')
   return `${lines.join('\n')}\n`
+}
+
+function upsertCustomAppendix(generatedAt: string, rows: AnswerABRow[]): void {
+  const mainPath = join(process.cwd(), 'docs/eval/LEGAL_SOURCE_ANSWER_AB_ROUND1.md')
+  if (!existsSync(mainPath)) return
+  const start = '<!-- CUSTOM_ANSWER_AB_START -->'
+  const end = '<!-- CUSTOM_ANSWER_AB_END -->'
+  const current = readFileSync(mainPath, 'utf8')
+  const withoutOld = current.includes(start) && current.includes(end)
+    ? current.replace(new RegExp(`\\n?${escapeRegExp(start)}[\\s\\S]*?${escapeRegExp(end)}\\n?`), '\n')
+    : current
+  const appendix = [
+    start,
+    renderCustomAppendix(generatedAt, rows).trimEnd(),
+    end,
+    '',
+  ].join('\n')
+  const marker = '\n## How To Reproduce'
+  const next = withoutOld.includes(marker)
+    ? withoutOld.replace(marker, `\n${appendix}${marker}`)
+    : `${withoutOld.trimEnd()}\n\n${appendix}`
+  writeFileSync(mainPath, next.endsWith('\n') ? next : `${next}\n`)
+}
+
+function renderCustomAppendix(generatedAt: string, rows: AnswerABRow[]): string {
+  const lines: string[] = []
+  lines.push('## Custom High-Risk Questions')
+  lines.push('')
+  lines.push(`Generated: ${generatedAt}`)
+  lines.push('')
+  lines.push('- 这部分是用户追加的单题答案 A/B，不属于原 15 题主样本。')
+  lines.push('- A 组仍是生产 TEBIQ 当前答案；B 组仍是候选法源上下文答案。')
+  lines.push('- 这两个问题均按高风险深水区样本处理，需人肉判断。')
+  lines.push('')
+  lines.push('| ID | Family | Question | Candidate cards | A fact cards |')
+  lines.push('|---|---|---|---|---|')
+  for (const row of rows) {
+    lines.push([
+      row.id,
+      row.family,
+      escapePipe(row.question),
+      row.candidateOnlyIds.map(code).join('<br>'),
+      (row.a.fact_card_ids ?? []).map(code).join('<br>') || '—',
+    ].join(' | ').replace(/^/, '| ').replace(/$/, ' |'))
+  }
+  lines.push('')
+  for (const row of rows) {
+    lines.push(`### ${row.id} — ${row.question}`)
+    lines.push('')
+    lines.push(`Candidate cards: ${row.candidateOnlyIds.map(code).join(', ')}`)
+    lines.push('')
+    lines.push('#### A 当前生产答案')
+    lines.push('')
+    lines.push(row.a.ok ? fenced(row.a.visible_text ?? '') : `ERROR: ${row.a.error}`)
+    lines.push('')
+    lines.push('#### B 候选法源上下文答案')
+    lines.push('')
+    lines.push(row.b.ok ? fenced(row.b.text ?? '') : `ERROR: ${row.b.error}`)
+    lines.push('')
+  }
+  return `${lines.join('\n')}\n`
+}
+
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 }
 
 function fenced(text: string): string {
