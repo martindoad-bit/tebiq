@@ -1,17 +1,18 @@
 # FACT Progress — Phase 2 P0/P1 Guardrails
 
-Last updated: 2026-05-15 CST (Batch 003 complete)
+Last updated: 2026-05-15 CST (Batch 004 complete)
 
 ## Current Status
 
 - total planned in Workpack 001 core batch: 10
-- completed: 24
+- completed: 29
 - in progress: 0
 - blocked: 0
-- needs DOMAIN: 73
+- needs DOMAIN: 85
 - Batch 001 core: completed 10/10
 - Batch 002 continuation: completed 5
 - Batch 003 continuation: completed 9 (G23 skipped — insufficient official source)
+- Batch 004 continuation: completed 5 (G26-G30)
 
 ## Completed Cards
 
@@ -41,6 +42,11 @@ Last updated: 2026-05-15 CST (Batch 003 complete)
 | guardrail-zairyu-card-expiry-vs-status-period | guardrail-zairyu-card-expiry-vs-status-period.md | completed | official ISA card-validity-renewal page | yes | atlas_draft. Card validity ≠ 在留期間. 永住 holders: status permanent but card has own validity (must renew separately). Expired card ≠ status expired; expired card ≠ must leave Japan. |
 | guardrail-shikakugai-hokatsu-vs-kobetsu | guardrail-shikakugai-hokatsu-vs-kobetsu.md | completed | official ISA 資格外活動許可 pages | yes | atlas_draft. 包括許可: standard limits, typically auto-granted with 留学. 個別許可: non-standard activities, separate formal application required. Activities within 包括 scope do not need separate 個別 application. |
 | guardrail-kika-vs-eijuu-different-routes | guardrail-kika-vs-eijuu-different-routes.md | completed | official MoJ 帰化 page + ISA 永住 page | yes | atlas_draft. 帰化: 法務局 filing → Japanese nationality; original nationality relinquished. 永住: ISA filing → 在留資格 only; foreign national status unchanged. Fundamental different authorities, different outcomes. |
+| guardrail-zairyu-shikaku-torikeshi-22-4 | guardrail-zairyu-shikaku-torikeshi-22-4.md | completed | official ISA 在留資格取消 page | yes | atlas_draft. 在留期間 remaining ≠ immunity from cancellation. Article 22-4 grounds (1)–(10): fraud, non-performance, address failures. Consequences: grounds (1)(2) = immediate deportation; grounds (3)–(10) = up to 30-day departure period. |
+| guardrail-shinsei-kisai-seikakusei | guardrail-shinsei-kisai-seikakusei.md | completed | official MoJ application guidance + ISA 第22条の4 + 入管法 第70条/71条 | yes | atlas_draft. Explicit truthfulness requirement: 「活動が虚偽のものでなく」. False docs = cancellation ground (3) remains even after permission. Criminal: 第70条 up to 3yr/300万円. Employer coaching = joint liability territory. |
+| guardrail-tokutei-katsudo-scope-boundary | guardrail-tokutei-katsudo-scope-boundary.md | completed (needs_domain) | official ISA 特定活動 pages + 法務省告示 index | yes | needs_domain P1. 特定活動 = 指定書-bound, NOT catch-all. 「法務大臣が個々の外国人について特に指定する活動」. 内定者 = waiting period only; 求職者 = job-search only. Specific 告示 category text needs_domain. |
+| guardrail-todoke-gimu-ihan-kekka | guardrail-todoke-gimu-ihan-kekka.md | completed | official ISA notification duty pages + ISA 取消 page + 入管法 第71条/71条の3 | yes | atlas_draft. 14-day deadlines confirmed (all 3 notification types). False notification: 第71条 = 1yr/20万円. Non-filing: 第71条の3 = 20万円. Address violation = 取消 ground. Employer duty is parallel NOT substitute (G14 cross-ref). |
+| guardrail-juusho-fuitchi-risk | guardrail-juusho-fuitchi-risk.md | completed (needs_domain) | derived from G18 (住所変更) + G26 (取消) confirmed sources | yes | needs_domain P1. 住民票 and 在留カード address must both be updated. Online 転入届 without card may not satisfy ISA duty. Mismatch affects renewal application accuracy and ISA notice delivery. Specific consequence of mismatch at renewal: needs_domain. |
 
 ## In Progress
 
@@ -122,6 +128,21 @@ None. All WORKPACK_001 continuation candidates completed. See next batch candida
 | dom-hokatsu-001 | guardrail-shikakugai-hokatsu-vs-kobetsu | For non-留学 statuses (e.g., 家族滞在, 文化活動), what is the official process for obtaining 個別許可, and what kinds of activities typically qualify vs. are refused? | P1 | 個別許可 scope is not fully defined on ISA pages; prevents over-promising access to non-standard activities. |
 | dom-kika-001 | guardrail-kika-vs-eijuu-different-routes | Are there confirmed exceptions to the 5-year continuous residence requirement for 帰化 — specifically for spouses of Japanese nationals, persons of Japanese descent, or former Japanese nationals? | P1 | Common claim circulates online; must not confirm unless official source explicitly states exception conditions. |
 | dom-kika-002 | guardrail-kika-vs-eijuu-different-routes | Is Japan's 重国籍防止 condition for 帰化 absolutely enforced in all cases, or are there documented exceptions where dual nationality is effectively retained? | P1 | Some countries do not allow voluntary renunciation; what happens in those cases is DOMAIN territory. |
+| dom-torikeshi-001 | guardrail-zairyu-shikaku-torikeshi-22-4 | What practical situations qualify as "正当な理由" for non-performance of status activities, for 就労系 statuses and 配偶者 status specifically? | P1 | Official ISA page states exception exists but does not define it. TEBIQ cannot assess without confirmed examples. |
+| dom-torikeshi-002 | guardrail-zairyu-shikaku-torikeshi-22-4 | What is the correct TEBIQ answer route when a user appears to be within the 3-month or 6-month non-activity window but has not yet received an ISA inquiry? | P1 | Pre-inquiry routing needs professional guidance; TEBIQ must not predict cancellation probability. |
+| dom-torikeshi-003 | guardrail-zairyu-shikaku-torikeshi-22-4 | Can a 在留資格取消 proceeding be suspended or withdrawn if the person resumes qualifying activity before the hearing? | P1 | Affects whether "resume activity immediately" is a safe interim action recommendation. |
+| dom-torikeshi-004 | guardrail-zairyu-shikaku-torikeshi-22-4 | What is the appeal or judicial review route after a 在留資格取消 decision? | P1 | Legal defense territory; needs professional confirmation for routing. |
+| dom-shinsei-001 | guardrail-shinsei-kisai-seikakusei | Is there a voluntary disclosure procedure at ISA for applicants who realize they submitted false information, and does voluntary disclosure reduce cancellation/criminal risk? | P1 | If a safe voluntary route exists, TEBIQ could reference it; currently must route to lawyer regardless. |
+| dom-shinsei-002 | guardrail-shinsei-kisai-seikakusei | What is the correct TEBIQ answer route when a user explicitly asks "can I write X even though Y is the actual situation?" before submission? | P1 | TEBIQ must refuse to advise any misrepresentation; safe refusal framing needs confirmation. |
+| dom-shinsei-003 | guardrail-shinsei-kisai-seikakusei | Are there gradations of "false" — minor date error vs. fundamental activity misrepresentation — and how should TEBIQ distinguish? | P1 | Must not conflate typos with intentional fraud, but also must not minimize material misrepresentation as "just a minor error." |
+| dom-tokutei-001 | guardrail-tokutei-katsudo-scope-boundary | Confirm the exact 告示 categories and designated activity descriptions for 内定者, 求職者, ワーキングホリデー — what specific activities are permitted and what are prohibited? | P1 | Required before runtime use of G28 answer patterns for 内定者/求職者 routing. |
+| dom-tokutei-002 | guardrail-tokutei-katsudo-scope-boundary | Can a 特定活動 holder hold a concurrent 資格外活動許可 for activities not listed in their 指定書? | P1 | If yes, the G28/G16 intersection must be documented for safe routing. |
+| dom-tokutei-003 | guardrail-tokutei-katsudo-scope-boundary | What is the correct route when an 内定者 特定活動 holder has already started work before status change? | P0 | Remediation for unauthorized work during 特定活動 is P0 — professional/lawyer routing required. |
+| dom-todoke-001 | guardrail-todoke-gimu-ihan-kekka | Is there a practical amnesty or reduced-enforcement approach for single-instance late notifications when the delay is short? | P1 | Affects how urgently TEBIQ must push professional referral for short-delay cases. |
+| dom-todoke-002 | guardrail-todoke-gimu-ihan-kekka | How does ISA treat a renewal application where the applicant discloses a history of missed notifications — is this a routine denial factor? | P1 | Affects safe pre-renewal remediation routing. |
+| dom-juusho-001 | guardrail-juusho-fuitchi-risk | Does online 転入届 or proxy without card satisfy the ISA address duty in any municipality? | P1 | Official page implies not; but variation across municipalities is unclear. |
+| dom-juusho-002 | guardrail-juusho-fuitchi-risk | What is the actual application risk assessment when a renewal applicant's stated current address differs from the 在留カード recorded address? | P1 | Required before runtime use of G30 answer patterns in renewal context. |
+| dom-juusho-003 | guardrail-juusho-fuitchi-risk | Is there a process for retroactively correcting a missed address change notification at ISA, and what is the route? | P1 | Affects late-correction routing recommendation. |
 
 ## Source Log
 
@@ -185,6 +206,12 @@ None. All WORKPACK_001 continuation candidates completed. See next batch candida
 | 在留カード有効期間の更新申請 | 出入国在留管理庁「在留カードの有効期間の更新申請」 | https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00011.html | 2026-05-15 | Confirms card validity renewal is a separate procedure from status renewal. Application window: 2 months before card expiry until card expiry. Under 16: expires on 16th birthday, 6-month advance window. Used for G22. |
 | 帰化許可申請 | 法務省「帰化許可申請」 | https://www.moj.go.jp/MINJI/minji78.html | 2026-05-15 | Filing office: 法務局・地方法務局 (NOT ISA). Residence: 5 years continuous. Age: 18. Outcome: 日本国籍取得. Original nationality: 喪失（重国籍防止条件）. Used for G25. |
 | 永住許可申請 | 出入国在留管理庁「永住許可申請」 | https://www.moj.go.jp/isa/applications/procedures/16-4.html | 2026-05-15 | Filing office: ISA. Outcome: 在留資格「永住者」変更. Nationality: unchanged, remains foreign national. Used for G25. |
+| 在留資格の取消し | 出入国在留管理庁「在留資格の取消し（入管法第22条の4）」 | https://www.moj.go.jp/isa/applications/procedures/torikeshi_00002.html | 2026-05-15 | Legal basis: 入管法 第22条の4第1項. Grounds (1)–(10) enumerated. Hearing procedure: 意見聴取 required. Consequences: grounds (1)(2) = immediate deportation; grounds (3)–(10) = up to 30-day departure. Used for G26 and cross-referenced in G27, G29, G30. |
+| 申請書正確性要件 | 法務省「上陸許可基準関連申請指針」 | https://www.moj.go.jp/isa/applications/procedures/16-2.html | 2026-05-15 | Quote: 「申請に係る本邦において行おうとする活動が虚偽のものでなく」 — explicit truthfulness requirement. Used for G27. |
+| 入管法 第70条・第71条・第71条の3 | 出入国管理及び難民認定法 | https://laws.e-gov.go.jp/law/326CO0000000319 | 2026-05-15 | 第70条: fraudulent status acquisition → 3年以下懲役/300万円罰金. 第71条: false notification → 1年以下懲役/20万円罰金. 第71条の3: non-filing penalty → 20万円以下罰金. Confidence: medium (agent access, corroborated with secondary sources). Used for G27 and G29. |
+| 特定活動（法務大臣告示カテゴリ） | 出入国在留管理庁「特定活動」 | https://www.moj.go.jp/isa/applications/status/designatedactivities.html | 2026-05-15 | Key quote: 「法務大臣が個々の外国人について特に指定する活動」. Legal basis: 入管法 第7条第1項第2号. ~30 categories. 法務省告示第131号. Used for G28. |
+| 特定活動（インターンシップ等告示番号） | 出入国在留管理庁「特定活動（短期滞在中のインターンシップ等）」 | https://www.moj.go.jp/isa/applications/status/designatedactivities03.html | 2026-05-15 | Lists 告示9号 (インターンシップ), 告示12号 (サマージョブ), 告示15号 (国際文化交流). Used for G28. |
+| 届出義務・住居地・配偶者・所属機関 | 出入国在留管理庁（各届出ページ） | multiple | 2026-05-15 | All three notification duty pages confirm 14-day deadline. None include penalty text. Penalty text sourced from 入管法 第71条/71条の3. Used for G29. |
 
 ## Handoff Notes To Codex
 
@@ -215,3 +242,11 @@ None. All WORKPACK_001 continuation candidates completed. See next batch candida
   - G25 (kika-vs-eijuu-different-routes): atlas_draft. 帰化 (法務局, nationality acquisition) vs 永住 (ISA, status only) are fundamentally different — different authority, different outcome, different nationality effect.
   - New P0 DOMAIN items: dom-pending-001/002/003 (G17), dom-fuhyo-001/002 (G20), dom-tokubetsu-001 (G21). Must be resolved before any runtime use of G17/G20/G21.
   - Next batch (Batch 004) candidates: G23 (申請書記載正確性 — pending better source), 在留資格取消事由（第22条の4）詳細, 特定活動ビザ範囲, 届出義務違反の法的結果, 住民票と在留カード住所不一致リスク.
+- 2026-05-15: Batch 004 completed (5 cards: G26-G30; G23 promoted → G27 in this batch). Total completed: 29. Summary:
+  - G26 (zairyu-shikaku-torikeshi-22-4): atlas_draft P1. 在留期間 remaining ≠ immunity from cancellation. Article 22-4 grounds (1)–(10): fraud, non-performance of activities, address failures. Consequences: grounds (1)(2) = immediate deportation; grounds (3)–(10) = up to 30-day departure.
+  - G27 (shinsei-kisai-seikakusei): atlas_draft P1. Explicit truthfulness requirement: 「申請に係る活動が虚偽のものでなく」. False docs/info = cancellation ground even after permission granted. 入管法 第70条 criminal penalties. 不正の手段 definition confirmed.
+  - G28 (tokutei-katsudo-scope-boundary): needs_domain P1. 特定活動 = 指定書-bound by 法務大臣告示. Key quote: 「法務大臣が個々の外国人について特に指定する活動」. 内定者 = waiting period not work; 求職者 = job-search not employment. Specific 告示 text needs_domain.
+  - G29 (todoke-gimu-ihan-kekka): atlas_draft P1. 14-day deadlines confirmed for all 3 notification types. False notification: 第71条 criminal penalty. Non-filing: 第71条の3 罰金. Address violation = 取消 ground. Employer duty parallel NOT substitute (G14 cross-ref).
+  - G30 (juusho-fuitchi-risk): needs_domain P1. 住民票 and 在留カード address must both be updated via card at city hall. Online 転入届 without card may not satisfy ISA duty. Mismatch affects renewal accuracy and notice delivery.
+  - New P0 DOMAIN item: dom-tokutei-003 (内定者 already started work before status change = unauthorized work).
+  - Next batch (Batch 005) candidates: 在留資格更新・変更の具体的な審査基準（素行・生計・必要性）, 社会保険未加入リスクと在留審査, 特定技能1号/2号の業種・試験要件境界, 高度専門職ポイント計算の誤信パターン, 日本語能力認定と業務要件（技人国）.
