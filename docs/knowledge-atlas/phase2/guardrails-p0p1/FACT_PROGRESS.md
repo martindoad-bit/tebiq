@@ -1,14 +1,14 @@
 # FACT Progress — Phase 2 P0/P1 Guardrails
 
-Last updated: 2026-05-15 CST (Batch 016 complete)
+Last updated: 2026-05-15 CST (Batch 017 complete)
 
 ## Current Status
 
 - total planned in Workpack 001 core batch: 10
-- completed: 89
+- completed: 94
 - in progress: 0
 - blocked: 0
-- needs DOMAIN: 224
+- needs DOMAIN: 232
 - Batch 001 core: completed 10/10
 - Batch 002 continuation: completed 5
 - Batch 003 continuation: completed 9 (G23 skipped — insufficient official source)
@@ -25,6 +25,7 @@ Last updated: 2026-05-15 CST (Batch 016 complete)
 - Batch 014 continuation: completed 5 (G76-G80)
 - Batch 015 continuation: completed 5 (G81-G85)
 - Batch 016 continuation: completed 5 (G86-G90)
+- Batch 017 continuation: completed 5 (G91-G95)
 
 ## Completed Cards
 
@@ -330,6 +331,14 @@ None. All WORKPACK_001 continuation candidates completed. See next batch candida
 | dom-iryo-002 | guardrail-iryo-hoken-gaikokujin | Complete list of Japan's social security agreement countries and specific conditions under which Japanese social insurance enrollment is exempted. | P1 | Structural answer: agreements exist with multiple countries; complete operational list and conditions not confirmed from accessed official text. |
 | dom-kaigo-001 | guardrail-kaigo-visa-yoken | For 技能実習2号「介護」良好修了者transitioning to 特定技能「介護」1号 — is the 介護日本語評価試験 also waived, or still required? | P1 | Care-sector specific Japanese evaluation test waiver status is not confirmed from accessed official text. |
 | dom-kaigo-002 | guardrail-kaigo-visa-yoken | What are the confirmed conditions and exam requirements for 特定技能「介護」2号 (unlimited stay option)? | P1 | ISA sources confirm 介護 was added to 2号 eligible sectors but exam details are not fully accessible as of 2026-05-15. |
+| dom-kogyou-001 | guardrail-kogyou-visa-yoken | What are the specific venue/capacity and agency criteria for 興行 ルート① (受入機関要件)? Official text of 上陸基準省令「興行」has not been directly accessed. | P1 | Without specific numeric thresholds, TEBIQ cannot confirm whether a given venue/agency satisfies ルート①. |
+| dom-kogyou-002 | guardrail-kogyou-visa-yoken | What is the recognized standard for "相当程度の芸術上の実績" for 興行 ルート② applications? Unofficial sources suggest award-winners and internationally recognized artists qualify, but official definition not confirmed. | P1 | Required before any runtime guidance on whether a specific artist qualifies for ルート②. |
+| dom-nenkin-dattai-001 | guardrail-nenkin-dattai-ichijikin | For persons who received 脱退一時金 and then returned to Japan on a new visa — can prior contribution periods (before the lump-sum was taken) be restored by repaying the lump-sum amount? | P1 | The restoration (追納) mechanism for 脱退一時金 is not confirmed from accessed official text. |
+| dom-tokure-shutsukoku-001 | guardrail-tokureikikan-chushutsu-risk | Does the 特例期間 definitively end at the moment of departure from Japan, with no ability to maintain the pending application? ISA's 特例期間 page does not explicitly state the effect of departure; this has been inferred from the legal structure. | P0 | Formal official confirmation is critical given the P0 risk of inability to re-enter Japan. |
+| dom-nanmin-001 | guardrail-nanmin-shinsei-zairyu | What are the specific conditions under which the 6-month post-application 就労許可 (特定活動) is granted for 難民認定申請者? Official ISA text mentions the possibility but does not enumerate the conditions clearly. | P1 | Required before any runtime answer pattern on refugee applicant employment eligibility. |
+| dom-nanmin-002 | guardrail-nanmin-shinsei-zairyu | How is 補完的保護 (established in 2023) being applied in practice? What types of situations (non-refugee-convention but life/physical safety risk) have been granted 補完的保護認定? | P1 | Cannot confirm eligibility patterns without domain knowledge of actual 2023-2026 case practice. |
+| dom-fudosan-001 | guardrail-gaikokujin-fudosan-shutoku | Under what specific conditions does the 外為法 post-acquisition reporting obligation apply to foreign nationals who are already residing in Japan (中長期在留者 vs 非居住者)? | P1 | The financial ministry page was accessed but the exact residency-based threshold for reporting was not fully confirmed. |
+| dom-fudosan-002 | guardrail-gaikokujin-fudosan-shutoku | Can rental income from Japanese real estate, owned by a foreign national on a non-business visa (e.g., 技人国), constitute a violation of 在留資格's activity restrictions? The boundary between passive investment income and "business activity" requiring 経営管理 is not clearly confirmed from accessed official sources. | P1 | If rental income is classified as 経営管理 activity, TEBIQ must alert 技人国 holders about the status mismatch risk. |
 | dom-kenkyu-001 | guardrail-kenkyu-kyoju-geijutsu-shukyo | Can a foreign religious worker be sponsored by a Japanese 宗教法人 with no overseas parent organization, or is the "外国の宗教団体からの派遣" strictly required? | P1 | ISA religious.html describes the 外国派遣 requirement but does not explicitly address purely Japanese institution sponsorship. |
 | dom-kenkyu-002 | guardrail-kenkyu-kyoju-geijutsu-shukyo | For researchers employed by a private company but stationed at a national university or public research institute — is the appropriate status 研究 or 技人国? | P1 | The determining criterion for seconded corporate researchers at public institutions is not confirmed from accessed official text. |
 | dom-jocho-001 | guardrail-fuhoshurou-jocho-sekinin | What is the legal standard for employer good-faith defense when a fraudulent residence card was presented — intent required or strict liability? | P1 | ISA enforcement practice on this specific defense has not been confirmed from official text. |
@@ -471,6 +480,17 @@ None. All WORKPACK_001 continuation candidates completed. See next batch candida
 | 在留申請書類・外国語書類の翻訳文要件 | 出入国在留管理庁「申請書類について」 | https://www.moj.go.jp/isa/applications/procedures/index.html | 2026-05-15 | 外国語書類=日本語訳文必要; 翻訳者資格不要・本人可; 翻訳者氏名記載必要. Used for G89. |
 | 居住者・非居住者の区分と全世界所得課税 | 国税庁「居住者と非居住者の区分」 | https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1910.htm | 2026-05-15 | 日本国内に住所または1年以上の居所を持つ者=居住者; 国内外すべての所得が課税対象. Used for G90. |
 | 住民税の仕組み（前年所得・翌年課税・1月1日ルール） | 総務省「個人住民税」 | https://www.soumu.go.jp/main_sosiki/jichi_zeisei/czaisei/czaisei_seido/149767_03.html | 2026-05-15 | 住民税=前年所得×税率; 翌年1月1日時点の住所地市区町村が課税; 翌年6月から課税開始. Used for G90. |
+| 在留資格「興行」活動定義・申請要件 | 出入国在留管理庁「在留資格『興行』」 | https://www.moj.go.jp/isa/applications/status/entertainment.html | 2026-05-15 | 活動定義（演劇・演芸・演奏・スポーツ等）; 2申請ルート（受入機関規模 or 本人芸術的実績）; 人身売買対策による審査厳格化. Used for G91. |
+| 短期滞在での公演禁止 | G59 cross-ref（guardrail-tanki-taizai-shuro-kinshi） | internal | 2026-05-15 | 短期滞在での報酬を受ける就労=不法就労; 雇用主への刑事罰（入管法第73条の2）. Used for G91. |
+| 脱退一時金の受給要件・手続き | 日本年金機構「脱退一時金」 | https://www.nenkin.go.jp/service/jukyu/taishokukyufu/dattai/20150406.html | 2026-05-15 | 受給要件（外国籍・6か月以上加入・帰国後2年以内・日本居住中は申請不可）; 計算式. Used for G92. |
+| 老齢年金受給資格（10年要件） | 日本年金機構「老齢年金の受給資格」 | https://www.nenkin.go.jp/service/jukyu/roureinenkin/jukyu-yoken/20150401-01.html | 2026-05-15 | 受給資格期間10年以上; 外国人にも同様に適用; 外国銀行口座への送金可能. Used for G92. |
+| 社会保障協定（二重加入免除） | 日本年金機構「社会保障協定」 | https://www.nenkin.go.jp/int/treaty/index.html | 2026-05-15 | 協定国一覧; 適用対象（派遣期間5年以内等）; 手続き（適用証明書取得が必要; 自動適用ではない）. Used for G92. |
+| 特例期間の仕組みと出国リスク | ISA「特例期間とは？」+ 入管法の法的構造 | https://www.moj.go.jp/isa/applications/procedures/tokureikikan_00001.html | 2026-05-15 | 特例期間=在留期間内申請後・処分前の在留許容期間; 出国=在留終了=特例期間終了（法的構造から導出）. Used for G93. |
+| みなし再入国許可と特例期間の関係 | ISA「再入国許可申請」(16-5.html) | https://www.moj.go.jp/isa/applications/procedures/16-5.html | 2026-05-15 | みなし再入国は在留資格保有者が対象; 特例期間中は在留期間満了後のため対象外の可能性. Used for G93. |
+| 難民認定申請手続き概要 | 出入国在留管理庁「難民認定申請手続」 | https://www.moj.go.jp/isa/applications/procedures/refugee_index.html | 2026-05-15 | 難民認定申請の手続き概要; 申請中の在留; 特定活動への変更; 6か月後の就労許可実務. Used for G94. |
+| 2023年入管法改正（送還停止効制限・補完的保護新設） | 出入国在留管理庁「入管法改正（令和5年）」 | https://www.moj.go.jp/isa/nyuukokukanri01_00207.html | 2026-05-15 | 3回目以降の難民申請=送還停止効が制限; 補完的保護制度新設（難民条約上の難民でないが生命等のリスクがある者）. Used for G94. |
+| 外国人による不動産取得の自由 | 財務省「外為法に基づく不動産取得の届出」 | https://www.mof.go.jp/policy/international_policy/gaitame_kawase/gaitame/fudosan.htm | 2026-05-15 | 非居住者による不動産取得には外為法上の事後届出義務（取得後2週間以内）が生じる場合がある; 居住外国人（中長期在留者）は条件次第. Used for G95. |
+| 永住申請と不動産所有の関係 | ISA「永住許可に関するガイドライン」 | https://www.moj.go.jp/isa/applications/procedures/16-4_00001.html | 2026-05-15 | 不動産所有は永住申請の明示的要件ではない; 永住審査の主要件=独立生計・公的義務・素行・在留期間. Used for G95. |
 
 ## Handoff Notes To Codex
 
@@ -605,3 +625,11 @@ None. All WORKPACK_001 continuation candidates completed. See next batch candida
   - G90 (gaikokujin-zeimukokuchi): atlas_draft P1. 日本居住の外国人は全世界所得が課税対象（在留資格不問）。住民税=前年所得・翌年6月課税・1月1日ルール（来日年は通常課税なし）。税務申告不履行・滞納は在留申請の公的義務評価（素行）に影響; 永住申請では直近2年の適正納付が審査要件（G60・G71参照）。
   - New DOMAIN items: dom-kenkyu-001/002, dom-jocho-001, dom-tk46-001, dom-shorui-001, dom-zei-001 (6 new items, 5追加のため) + 1スキップ. Total DOMAIN: 224.
   - Next batch (Batch 017) candidates: 在留資格「興行」の要件と芸能活動の規制（人身売買防止の視点）, 外国人の年金受給権（脱退一時金・老齢年金・社会保障協定）, 在留資格変更中の出国（特例期間中の出国リスク）, 難民認定申請中の在留資格（申請中の就労・在留保護の範囲）, 外国人の不動産取得と在留資格の関係.
+- 2026-05-15: Batch 017 completed (5 cards: G91-G95). Total completed: 94. DOMAIN items: 232. Summary:
+  - G91 (kogyou-visa-yoken): atlas_draft P1. 報酬を受ける公演活動（コンサート・ライブ等）には在留資格「興行」または「芸術」が必要; 短期滞在での有償公演=不法就労。申請は2ルート: ①受入機関（会場・主催者）の規模要件、②申請者本人の芸術上の実績（「相当程度」）。人身売買対策で2006年以降審査が厳格化。needs_domain P1: ルート①の会場規模・収容人数基準; ルート②の「相当程度の実績」の定義.
+  - G92 (nenkin-dattai-ichijikin): atlas_draft P1. 厚生年金・国民年金に6か月以上加入した外国人は帰国後2年以内に脱退一時金申請可; 申請は日本出国後（在住中は申請不可）; 脱退一時金受領後は該当期間の年金受給権が消滅。10年以上加入=老齢年金受給資格（外国口座送金可）。社会保障協定=手続き必要（自動適用なし）。needs_domain P1: 脱退一時金受領後の再加入・期間復活（追納）の可否.
+  - G93 (tokureikikan-chushutsu-risk): atlas_draft P0. 特例期間中（在留期間満了後・申請処分前）に出国すると特例期間終了リスク; 帰国後は在留資格がない状態で入国できない可能性（P0リスク）。出国が必要な場合は在留期間満了前（申請前）に再入国許可取得が最も安全。永住申請中は特例期間が発生しない（G15参照）。needs_domain P0: 特例期間中の出国で特例期間が即時終了することの公式テキストによる確認（現在は法的構造からの推論）.
+  - G94 (nanmin-shinsei-zairyu): atlas_draft P1. 難民認定申請は申請中の在留を自動保証しない（有効な在留資格がある者はその資格で在留継続; 不法在留状態での申請は合法化されない）; 申請書受理から概ね6か月後に就労可能な特定活動が付与される場合がある。2023年入管法改正（3回目以降の難民申請は送還停止効が制限; 補完的保護制度新設）; ノン・ルフールマン原則（迫害リスク国への強制送還禁止; 難民条約第33条）。needs_domain P1: 6か月就労許可の具体的条件; 補完的保護の実務的認定状況.
+  - G95 (gaikokujin-fudosan-shutoku): atlas_draft P1. 外国人も原則として日本の不動産を自由に取得可（在留資格・国籍問わず）; 外為法上の届出義務は一定条件下で生じる（非居住者等）。不動産取得は在留資格更新・永住申請の直接的加点要素ではない。永住者も長期出国（1年以上）で在留資格消滅リスク（不動産所有では防げない; G82参照）。固定資産税・不動産取得税・賃貸収入の確定申告義務（G90参照）。needs_domain P1: 居住外国人の外為法届出条件; 賃貸収入と在留資格（経営・管理）の境界.
+  - New DOMAIN items: dom-kogyou-001/002, dom-nenkin-dattai-001, dom-tokure-shutsukoku-001, dom-nanmin-001/002, dom-fudosan-001/002 (8 new items). Total DOMAIN: 232.
+  - Next batch (Batch 018) candidates: 外国人の銀行口座開設と在留資格（在留資格別の口座開設条件）, 特別永住者制度（特別永住者と一般永住者の違い）, 外国人の自動車免許と国際運転免許（在留資格との関係）, 在留資格「文化活動」の活動範囲と収入制限, 在留資格の「みなし」規定（入管法上の間なし処理の全体像）.
