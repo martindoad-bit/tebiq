@@ -1,18 +1,19 @@
 # FACT Progress — Phase 2 P0/P1 Guardrails
 
-Last updated: 2026-05-15 CST (Batch 004 complete)
+Last updated: 2026-05-15 CST (Batch 005 complete)
 
 ## Current Status
 
 - total planned in Workpack 001 core batch: 10
-- completed: 29
+- completed: 34
 - in progress: 0
 - blocked: 0
-- needs DOMAIN: 85
+- needs DOMAIN: 100
 - Batch 001 core: completed 10/10
 - Batch 002 continuation: completed 5
 - Batch 003 continuation: completed 9 (G23 skipped — insufficient official source)
 - Batch 004 continuation: completed 5 (G26-G30)
+- Batch 005 continuation: completed 5 (G31-G35)
 
 ## Completed Cards
 
@@ -47,6 +48,11 @@ Last updated: 2026-05-15 CST (Batch 004 complete)
 | guardrail-tokutei-katsudo-scope-boundary | guardrail-tokutei-katsudo-scope-boundary.md | completed (needs_domain) | official ISA 特定活動 pages + 法務省告示 index | yes | needs_domain P1. 特定活動 = 指定書-bound, NOT catch-all. 「法務大臣が個々の外国人について特に指定する活動」. 内定者 = waiting period only; 求職者 = job-search only. Specific 告示 category text needs_domain. |
 | guardrail-todoke-gimu-ihan-kekka | guardrail-todoke-gimu-ihan-kekka.md | completed | official ISA notification duty pages + ISA 取消 page + 入管法 第71条/71条の3 | yes | atlas_draft. 14-day deadlines confirmed (all 3 notification types). False notification: 第71条 = 1yr/20万円. Non-filing: 第71条の3 = 20万円. Address violation = 取消 ground. Employer duty is parallel NOT substitute (G14 cross-ref). |
 | guardrail-juusho-fuitchi-risk | guardrail-juusho-fuitchi-risk.md | completed (needs_domain) | derived from G18 (住所変更) + G26 (取消) confirmed sources | yes | needs_domain P1. 住民票 and 在留カード address must both be updated. Online 転入届 without card may not satisfy ISA duty. Mismatch affects renewal application accuracy and ISA notice delivery. Specific consequence of mismatch at renewal: needs_domain. |
+| guardrail-koshin-henkou-shinsa-kijun | guardrail-koshin-henkou-shinsa-kijun.md | completed | official ISA renewal/change guideline | yes | atlas_draft P1. Renewal/change is NOT automatic — ministerial discretion confirmed. Key quote: 「これらの事項にすべて該当する場合であっても…許可しないこともあります。」 Four evaluation factors: 素行, 生計, 活動の対応, 在留必要性. |
+| guardrail-shakai-hoken-mishukaku-risk | guardrail-shakai-hoken-mishukaku-risk.md | completed (needs_domain) | official ISA PR guideline + PR application materials pages | yes | needs_domain P1. 公的義務の適正履行 = explicit PR requirement. Non-enrollment affects 素行 evaluation. Renewal/change impact not confirmed from official page. |
+| guardrail-tokutei-gino-1go-2go-boundary | guardrail-tokutei-gino-1go-2go-boundary.md | completed | official ISA 特定技能 job content + FAQ + 通算在留 + 閣議決定 | yes | atlas_draft P1. 1号→2号 NOT automatic — 「自動的に2号に移行されません」. 1号 family ban confirmed. 2号 = 11 sectors only. Multiple employer prohibited. 2024-03-29 four new sectors added. |
+| guardrail-hsp-points-miscalculation | guardrail-hsp-points-miscalculation.md | completed | official ISA HSP Q&A + evaluation page | yes | atlas_draft P1. Overtime/housing/commuting excluded from income. Bonuses included. 70pt = HSP; 70pt+3yr or 80pt+1yr = PR shortcut. Points must be maintained at renewal. Specific point bracket values: needs_domain. |
+| guardrail-gijinkoku-gyomu-youken-boundary | guardrail-gijinkoku-gyomu-youken-boundary.md | completed (needs_domain) | official ISA 技人国 status page + renewal guideline | yes | needs_domain P1. Three subcategories (技術/人文知識/国際業務) confirmed. Manual/production work exclusion widely held but not directly quoted from official source. Employer assignment ≠ visa scope expansion. |
 
 ## In Progress
 
@@ -143,6 +149,18 @@ None. All WORKPACK_001 continuation candidates completed. See next batch candida
 | dom-juusho-001 | guardrail-juusho-fuitchi-risk | Does online 転入届 or proxy without card satisfy the ISA address duty in any municipality? | P1 | Official page implies not; but variation across municipalities is unclear. |
 | dom-juusho-002 | guardrail-juusho-fuitchi-risk | What is the actual application risk assessment when a renewal applicant's stated current address differs from the 在留カード recorded address? | P1 | Required before runtime use of G30 answer patterns in renewal context. |
 | dom-juusho-003 | guardrail-juusho-fuitchi-risk | Is there a process for retroactively correcting a missed address change notification at ISA, and what is the route? | P1 | Affects late-correction routing recommendation. |
+| dom-kijun-001 | guardrail-koshin-henkou-shinsa-kijun | What is the safe framing for a user with conduct issues (e.g., tax late payment, minor violations) that are below the automatic denial threshold? | P1 | TEBIQ must not over-alarm but cannot confirm safety; calibrated framing needed. |
+| dom-kijun-002 | guardrail-koshin-henkou-shinsa-kijun | When a user's activities during the period partially mismatched their status, is this a renewal denial risk or a disclosure-and-explain situation? | P1 | Partial-mismatch scenarios need professional categorization. |
+| dom-hoken-001 | guardrail-shakai-hoken-mishukaku-risk | What is the official 素行 evaluation weight for social insurance non-enrollment in standard renewal/change applications (not PR)? | P1 | Affects how urgently TEBIQ must push professional referral for non-enrollment in renewal contexts. |
+| dom-hoken-002 | guardrail-shakai-hoken-mishukaku-risk | How are employer-side 社会保険未加入 situations treated — does the employee bear immigration risk for the employer's non-compliance? | P1 | Dual-liability scenario; may require both immigration and labor routing. |
+| dom-hoken-003 | guardrail-shakai-hoken-mishukaku-risk | What is the correct framing for 免除/猶予 applicants in PR applications — must they 追納, or can exempt periods be disclosed without 追納? | P1 | Prevents either over-alarming or under-warning exempt-period holders. |
+| dom-ssw-001 | guardrail-tokutei-gino-1go-2go-boundary | What is the transition route from 技能実習2号/3号 to 特定技能1号 — which exams are waived and what documentation is required? | P1 | Common pathway; currently unconfirmed from official source. |
+| dom-ssw-002 | guardrail-tokutei-gino-1go-2go-boundary | What happens to a 特定技能1号 holder's status at the 5-year cumulative limit — must they leave, or can they change to another status? | P1 | Affects routing for users approaching 5-year ceiling without 2号 qualification. |
+| dom-hsp-001 | guardrail-hsp-points-miscalculation | Confirm the specific point values for each category (学歴, 職歴, 年収 brackets, 年齢) from a direct ISA point-evaluation page text. | P1 | Point bracket values came from secondary sources; official page text needed before runtime use. |
+| dom-hsp-002 | guardrail-hsp-points-miscalculation | How is annual income defined when compensation structure is highly variable (RSU, bonuses, multi-employer)? | P1 | Complex compensation cases require professional income classification before points calculation. |
+| dom-gijin-001 | guardrail-gijinkoku-gyomu-youken-boundary | What is the official language defining excluded activities for 技人国 — specifically which types are named as 単純作業 or excluded? | P1 | Required before runtime use of G35 boundary answers. |
+| dom-gijin-002 | guardrail-gijinkoku-gyomu-youken-boundary | What is the safe answer for a user who has already been performing partially out-of-scope work — remediation options? | P0 | Unauthorized work consequences require professional routing; remediation advice is legal territory. |
+| dom-gijin-003 | guardrail-gijinkoku-gyomu-youken-boundary | How does ISA assess "primarily" qualifying work — percentage guideline or qualitative? | P1 | Majority-of-duties assessment affects borderline role classification. |
 
 ## Source Log
 
@@ -212,6 +230,9 @@ None. All WORKPACK_001 continuation candidates completed. See next batch candida
 | 特定活動（法務大臣告示カテゴリ） | 出入国在留管理庁「特定活動」 | https://www.moj.go.jp/isa/applications/status/designatedactivities.html | 2026-05-15 | Key quote: 「法務大臣が個々の外国人について特に指定する活動」. Legal basis: 入管法 第7条第1項第2号. ~30 categories. 法務省告示第131号. Used for G28. |
 | 特定活動（インターンシップ等告示番号） | 出入国在留管理庁「特定活動（短期滞在中のインターンシップ等）」 | https://www.moj.go.jp/isa/applications/status/designatedactivities03.html | 2026-05-15 | Lists 告示9号 (インターンシップ), 告示12号 (サマージョブ), 告示15号 (国際文化交流). Used for G28. |
 | 届出義務・住居地・配偶者・所属機関 | 出入国在留管理庁（各届出ページ） | multiple | 2026-05-15 | All three notification duty pages confirm 14-day deadline. None include penalty text. Penalty text sourced from 入管法 第71条/71条の3. Used for G29. |
+| 在留資格変更・更新許可ガイドライン | 出入国在留管理庁「在留資格の変更、在留期間の更新許可のガイドライン」 | https://www.moj.go.jp/isa/applications/resources/nyuukokukanri07_00058.html | 2026-05-15 | Key quotes: (1) 「専ら法務大臣の自由な裁量に委ねられ」; (2) 「すべて該当する場合であっても…許可しないこともあります。」; (3) Four evaluation factors: 素行, 生計, 活動, 在留必要性. Used for G31 and G35 (cross-ref). |
+| 特定技能1号・2号 業種・家族・移行 | 出入国在留管理庁（特定技能 FAQ/業種/通算在留/閣議決定） | multiple | 2026-05-15 | 1号 = 16 sectors; 2号 = 11 sectors; 家族帯同: 1号不可/2号可; 非自動移行「自動的に2号に移行されません」; 2024-03-29閣議決定 4分野追加. Used for G33. |
+| 高度人材ポイント制 Q&A | 出入国在留管理庁「高度人材ポイント制Ｑ＆Ａ」 | https://www.moj.go.jp/isa/applications/resources/newimmiact_3_qa.html | 2026-05-15 | Income inclusion (基本給, 勤勉手当, 賞与) and exclusion (通勤手当, 住宅手当, 残業代, 株式運用利益). Thresholds: 70pt=HSP; 70pt+3yr / 80pt+1yr = PR shortcut. Points must be maintained at renewal. Used for G34. |
 
 ## Handoff Notes To Codex
 
@@ -250,3 +271,11 @@ None. All WORKPACK_001 continuation candidates completed. See next batch candida
   - G30 (juusho-fuitchi-risk): needs_domain P1. 住民票 and 在留カード address must both be updated via card at city hall. Online 転入届 without card may not satisfy ISA duty. Mismatch affects renewal accuracy and notice delivery.
   - New P0 DOMAIN item: dom-tokutei-003 (内定者 already started work before status change = unauthorized work).
   - Next batch (Batch 005) candidates: 在留資格更新・変更の具体的な審査基準（素行・生計・必要性）, 社会保険未加入リスクと在留審査, 特定技能1号/2号の業種・試験要件境界, 高度専門職ポイント計算の誤信パターン, 日本語能力認定と業務要件（技人国）.
+- 2026-05-15: Batch 005 completed (5 cards: G31-G35). Total completed: 34. Summary:
+  - G31 (koshin-henkou-shinsa-kijun): atlas_draft P1. Renewal NOT automatic — ministerial discretion explicit. Key quote: 「すべて該当する場合であっても…許可しないこともあります。」 Four evaluation factors confirmed from ISA guideline.
+  - G32 (shakai-hoken-mishukaku-risk): needs_domain P1. 公的義務の適正履行 = explicit PR requirement. Social insurance payment history evaluated in PR. Renewal/change impact: needs_domain.
+  - G33 (tokutei-gino-1go-2go-boundary): atlas_draft P1. NOT automatic 1号→2号 transition confirmed. 1号 family ban confirmed. 2号 = 11 sectors (not 16). 2024-03-29: 4 new sectors added to 1号. Multiple employer prohibited.
+  - G34 (hsp-points-miscalculation): atlas_draft P1. Overtime/housing/commuting excluded from income. Bonuses included. 70pt/80pt + 3yr/1yr thresholds confirmed. Points must be maintained at renewal. Specific point values need direct ISA page confirmation.
+  - G35 (gijinkoku-gyomu-youken-boundary): needs_domain P1. Three-category framework confirmed. Manual/production work exclusion = widely held but official text not extracted. Employer assignment ≠ visa scope expansion.
+  - New P0 DOMAIN item: dom-gijin-002 (already performing out-of-scope work — remediation is legal territory).
+  - Next batch (Batch 006) candidates: 在留資格「特定活動」告示カテゴリ詳細（内定者・求職者の正確な指定書内容）, 技能実習法改正（2024年）と特定技能移行の実務変更, 高度専門職2号への変更要件, 在留期間別の更新申請書類の違い, 就労資格証明書の実務上の使用場面.
