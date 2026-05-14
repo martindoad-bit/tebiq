@@ -1,14 +1,14 @@
 # FACT Progress — Phase 2 P0/P1 Guardrails
 
-Last updated: 2026-05-15 CST (Batch 012 complete)
+Last updated: 2026-05-15 CST (Batch 013 complete)
 
 ## Current Status
 
 - total planned in Workpack 001 core batch: 10
-- completed: 69
+- completed: 74
 - in progress: 0
 - blocked: 0
-- needs DOMAIN: 183
+- needs DOMAIN: 193
 - Batch 001 core: completed 10/10
 - Batch 002 continuation: completed 5
 - Batch 003 continuation: completed 9 (G23 skipped — insufficient official source)
@@ -21,6 +21,7 @@ Last updated: 2026-05-15 CST (Batch 012 complete)
 - Batch 010 continuation: completed 5 (G56-G60)
 - Batch 011 continuation: completed 5 (G61-G65)
 - Batch 012 continuation: completed 5 (G66-G70)
+- Batch 013 continuation: completed 5 (G71-G75)
 
 ## Completed Cards
 
@@ -95,6 +96,11 @@ Last updated: 2026-05-15 CST (Batch 012 complete)
 | guardrail-shinsei-kokunai-kaigai-rute | guardrail-shinsei-kokunai-kaigai-rute.md | completed | ISA 16-2.html（在留資格変更=在日申請）; ISA 16-1.html + G43 cross-ref（CoE=スポンサー在日申請） | yes | atlas_draft P1. G68. 海外在住者→CoEルート（日本国内スポンサーがISAに申請→在外公館でビザ申請→入国）. 在日者→在留資格変更許可申請（ISA）. 短期滞在→就労系への変更=原則不可（実務上ほぼ不許可）. CoE取得時点・ビザ発給時点では就労開始不可. |
 | guardrail-hsp2-vs-eijuu-hikaku | guardrail-hsp2-vs-eijuu-hikaku.md | completed | G38/G60/G34/G62 cross-refs; ISA HSP status page | yes | atlas_draft P1. G69. HSP2（無期限在留期間だが高度専門職活動継続が前提・活動停止で取消リスクあり）vs 永住（活動制限なし・取消リスク低い）. HSP2取得が永住の前提条件ではない. HSP1でも永住ショートカット（70pt+3yr / 80pt+1yr）利用可. 配偶者就労=一定範囲の特別許可（無制限ではない）. |
 | guardrail-tokutei-gino-shien-keikaku | guardrail-tokutei-gino-shien-keikaku.md | completed | ISA supportssw.html + nyuukokukanri07_00047.html; G44 cross-ref | yes | atlas_draft P1. G70. 特定技能1号雇用主は10項目の支援計画を実施義務（RSOは任意; 使わない場合は所属機関が直接実施）. 支援計画は在留資格申請時に提出必要; 形式的記載では不許可リスク; 実施しなければ更新拒否・取消リスク. 支援計画義務は特定技能1号のみ（2号は対象外）. |
+| guardrail-kouteki-gimu-koshin-hyoka | guardrail-kouteki-gimu-koshin-hyoka.md | completed | ISA renewal guideline (G31 cross-ref); ISA PR guideline 令和6年改定版 (G60 cross-ref); G66 cross-ref | yes | atlas_draft P1. G71. 公的義務（税・年金・保険）評価はPR申請だけでなく更新・変更審査の「素行」評価でも参照. 特定技能1号更新では書類として直接確認（G66). 雇用主の社会保険未加入は本人の代替加入義務免責にならない. 事後完済でも遅延事実は残る可能性. |
+| guardrail-gijinkoku-freelance-fukugyo | guardrail-gijinkoku-freelance-fukugyo.md | completed | ISA gijinkoku.html; G35/G47/G55 cross-refs; 入管法第19条 | yes | atlas_draft P1. G72. 技人国の副業・フリーランスは業務内容で判断; 雇用形態は問わない. 飲食店・工場ライン等の範囲外業務は不法就労. 会社設立で実質経営管理を行う場合は経営管理ビザへの変更が必要. |
+| guardrail-tokutei-gino-gyomu-kukubun-iten | guardrail-tokutei-gino-gyomu-kukubun-iten.md | completed | ISA FAQ Q13+Q36 (G51 cross-ref); ISA 特定技能分野ページ | yes | atlas_draft P1. G73. 特定技能1号転職=同一業務区分内 or 共通性確認済み区分間のみ. 分野超え転職=在留資格変更許可申請必要. 所属機関変更=14日以内届出義務. needs_domain P1: 完全な業務区分共通性マッピング未確認. |
+| guardrail-eijusha-zairyu-torikeshi-risk | guardrail-eijusha-zairyu-torikeshi-risk.md | completed | ISA torikeshi_00002.html; 入管法第22条の4; G19/G26/G29/G53/G61/G65 cross-refs | yes | atlas_draft P1. G74. 永住者も在留資格取消の対象（虚偽申請・届出義務違反等）. みなし再入国1年超過で永住資格喪失リスク. 在留カード有効期限 ≠ 在留資格消滅. 刑事事件は退去強制事由と別扱い. |
+| guardrail-kika-haigusha-tokure | guardrail-kika-haigusha-tokure.md | completed | 国籍法第7条・第5条（e-Gov法令）; 法務省 minji78.html; G64/G25/G8 cross-refs | yes | atlas_draft P1. G75. 日本人配偶者の簡易帰化（第7条）=婚姻継続3年以上+日本在住1年以上の両方が必要. 帰化は申請制（法務局）で自動取得ではない. 離婚後は第7条不適用（第5条の一般要件に戻る）. |
 
 ## In Progress
 
@@ -277,6 +283,16 @@ None. All WORKPACK_001 continuation candidates completed. See next batch candida
 | dom-hsp2-eijuu-002 | guardrail-hsp2-vs-eijuu-hikaku | What is the specific scope of the HSP2 spouse's special employment permission — which activities are explicitly covered and which require separate authorization? | P1 | Spouse employment is a common practical question; official scope of HSP2 指定書 spouse permission not confirmed from accessed sources. |
 | dom-shienkeikaku-001 | guardrail-tokutei-gino-shien-keikaku | Under the 全部委託ルール, can employers delegate some but not all of the 10 support items to an RSO? Or must they either delegate all or implement all themselves? | P1 | Partial delegation creates compliance ambiguity; official clarification needed before routing. |
 | dom-shienkeikaku-002 | guardrail-tokutei-gino-shien-keikaku | What are the specific ISA criteria for determining that a small employer has sufficient 体制 (capacity) to self-implement the 10-item support plan? What documentation is required? | P1 | Self-implementation capability threshold is not confirmed from accessed ISA sources. |
+| dom-gimu-001 | guardrail-kouteki-gimu-koshin-hyoka | What is the safe framing for single-instance short-delay late payments (e.g., 住民税 1-2 months late) in 技人国 or 経営管理 renewal contexts? Is it a meaningful 素行 flag or a minor factor in ISA's operational practice? | P1 | Cannot quantify ISA discretion; professional confirmation needed before advising relative severity of short delinquency. |
+| dom-gimu-002 | guardrail-kouteki-gimu-koshin-hyoka | When an employer has not enrolled an employee in social insurance and the employee also failed to join 国民健康保険 — how does ISA assess who bears the immigration risk? | P1 | Dual-liability scenario with no confirmed official answer on employer vs. employee responsibility allocation. |
+| dom-freelance-001 | guardrail-gijinkoku-freelance-fukugyo | What is the ISA operational standard for distinguishing "技人国 business commission" from "経営管理 activity" when a 技人国 holder is also a shareholder/director of their own company? | P1 | Gray area: founders who provide technical services vs. manage the company — the threshold is not confirmed from accessed official sources. |
+| dom-freelance-002 | guardrail-gijinkoku-freelance-fukugyo | Does ISA have a published or operational position on IT freelancers holding 技人国 who contract with multiple companies simultaneously? Standard 技人国 or special determination? | P1 | Multi-company contracting is common for IT freelancers; official ISA position not confirmed from accessed sources. |
+| dom-kukubun-001 | guardrail-tokutei-gino-gyomu-kukubun-iten | What is the complete official ISA mapping of 業務区分 combinations where 技能水準共通性 has been officially confirmed beyond the manufacturing 3 sectors? | P1 | Without this list TEBIQ cannot confirm cross-category transferability; the manufacturing 3-sector example is the only confirmed case from accessible sources. |
+| dom-kukubun-002 | guardrail-tokutei-gino-gyomu-kukubun-iten | What is the maximum permissible gap between leaving one 特定技能 employer and starting with a new employer before non-activity period triggers in-activity status concerns? | P1 | Employer closure/resignation timing gap is a live practical question; officially permitted period not confirmed. |
+| dom-eijusha-risk-001 | guardrail-eijusha-zairyu-torikeshi-risk | For 永住者 who overstayed a みなし re-entry or 正規再入国許可 — what is the actual legal mechanism of status loss and is there any remedy pathway (consular procedure, etc.)? | P1 | Status loss mechanism (automatic vs. administrative act) not confirmed from accessed official sources; remedy pathway is major practical gap. |
+| dom-eijusha-risk-002 | guardrail-eijusha-zairyu-torikeshi-risk | What is the realistic ISA enforcement practice for permanent residents who have repeatedly failed address notification duties without any other compliance issue? | P1 | Enforcement practice for notification-only violations by 永住者 not confirmed; may range from warning to cancellation depending on frequency/severity. |
+| dom-kika-h-001 | guardrail-kika-haigusha-tokure | What is the 法務省 operational standard for "引き続き" (continuous) residence or marriage under Article 7 — specifically, how much time abroad breaks continuity? | P1 | Cannot confirm a specific absence threshold without official 法務省 guidance; "引き続き" interpretation is a common practical question. |
+| dom-kika-h-002 | guardrail-kika-haigusha-tokure | Is Article 7 available for same-sex couples where the foreign national has entered a legal same-sex marriage recognized in Japan? | P1 | Same-sex marriage recognition in Japan is an evolving legal area; Article 7 applicability for same-sex couples is legally unsettled. |
 
 ## Source Log
 
@@ -385,6 +401,9 @@ None. All WORKPACK_001 continuation candidates completed. See next batch candida
 | 在留資格認定証明書交付申請（CoEルート） | 出入国在留管理庁「在留資格認定証明書交付申請」 | https://www.moj.go.jp/isa/applications/procedures/16-1.html | 2026-05-15 | 海外在住者向けのCoEルート確認. スポンサー（雇用主等）が日本国内のISAに申請. CoE有効期間=3か月（G43 cross-ref）. Used for G68. |
 | 高度専門職2号 活動範囲・変更要件 | 出入国在留管理庁「在留資格『高度専門職』」 | https://www.moj.go.jp/isa/applications/status/designatedactivities02_00004.html | 2026-05-15 | HSP2活動範囲: 「ほぼすべての就労活動」が認められる. 変更要件（G38 cross-ref）. HSP2は活動継続が在留前提. Used for G69. |
 | 特定技能支援計画・登録支援機関 | 出入国在留管理庁「１号特定技能外国人支援計画」 | https://www.moj.go.jp/isa/policies/ssw/nyuukokukanri07_00047.html | 2026-05-15 | 支援計画の法的根拠・10項目の義務内容・申請時提出要件確認. Used for G70. |
+| 更新・変更審査ガイドライン（素行評価） | 出入国在留管理庁「在留資格の変更、在留期間の更新許可のガイドライン」 | https://www.moj.go.jp/isa/applications/resources/nyuukokukanri07_00058.html | 2026-05-15 | 更新・変更審査の4要素（素行・生計・活動・在留必要性）; 素行の中に公的義務履行が含まれると解釈される。G31 cross-ref. Used for G71. |
+| 国籍法第7条（配偶者簡易帰化条文） | 国籍法 第7条 | https://laws.e-gov.go.jp/law/324AC0000000147 | 2026-05-15 | 「婚姻の後三年を経過し，かつ，引き続き一年以上日本に住所を有するもの」という数値要件を条文で直接確認. Used for G75. |
+| 特定技能の業務区分ページ | 出入国在留管理庁「特定技能の分野・業務区分」 | https://www.moj.go.jp/isa/policies/ssw/nyuukokukanri07_00147.html | 2026-05-15 | 特定技能の分野・業務区分の一覧が分野別に規定されていることを確認. Used for G73. |
 
 ## Handoff Notes To Codex
 
@@ -487,3 +506,11 @@ None. All WORKPACK_001 continuation candidates completed. See next batch candida
   - G70 (tokutei-gino-shien-keikaku): atlas_draft P1. 特定技能1号雇用主は10項目の支援を義務的に実施する必要（RSOは任意）。支援計画書は申請時提出必須で実質的内容が必要。不実施=更新拒否・取消リスク。支援計画義務は1号のみ（2号は対象外）。Sources: ISA supportssw.html + nyuukokukanri07_00047.html; G44 cross-ref。
   - New DOMAIN items: dom-shorui-001/002, dom-koyohoken-001/002, dom-route-001/002, dom-hsp2-eijuu-001/002, dom-shienkeikaku-001/002 (10 new items). Total DOMAIN: 183.
   - Next batch (Batch 013) candidates: 在留期間ごとの素行要件と公的義務評価（PR以外の更新への影響）, 技人国保有者の副業・フリーランス（業務範囲の詳細）, 特定技能の複数業務区分間の転籍条件（業務区分共通性マッピング）, 永住後の在留資格取消事由（永住者に特有の取消リスク）, 外国人配偶者と帰化（国籍法第7条の日本人配偶者特例の実務詳細）.
+- 2026-05-15: Batch 013 completed (5 cards: G71-G75). Total completed: 74. DOMAIN items: 193. Summary:
+  - G71 (kouteki-gimu-koshin-hyoka): atlas_draft P1. 公的義務（税・年金・保険）の不履行は永住申請のみならず更新・変更審査の「素行」評価でも参照される。特定技能1号更新では書類として直接確認。雇用主の社保未加入は本人の代替義務免責にならない。事後完済でも遅延事実は残る可能性。Sources: ISA更新ガイドライン（G31 cross-ref）; PRガイドライン令和6年版（G60 cross-ref）; G66 cross-ref。
+  - G72 (gijinkoku-freelance-fukugyo): atlas_draft P1. 技人国の副業・フリーランスは業務内容（技術・人文知識・国際業務の範囲内）で判断。雇用形態（業務委託・フリーランス）は問わない。飲食店スタッフ・工場ライン等の範囲外業務は不法就労。会社設立で実質経営管理=経営管理ビザ必要。Sources: ISA gijinkoku.html + G35/G47/G55 cross-refs。
+  - G73 (tokutei-gino-gyomu-kukubun-iten): atlas_draft P1. 特定技能1号転職=同一業務区分内 or 共通性確認済み区分間のみ。分野超え=在留資格変更許可申請必要。所属機関変更=14日以内届出義務。工業製品製造業3区分間は共通性確認済み。needs_domain P1: 完全な業務区分共通性マッピング未確認。Sources: ISA FAQ Q13/Q36（G51 cross-ref）。
+  - G74 (eijusha-zairyu-torikeshi-risk): atlas_draft P1. 永住者も在留資格取消の対象（虚偽申請・届出義務違反・カード偽造等）。みなし再入国1年超過で永住資格喪失リスク。在留カード有効期限 ≠ 在留資格消滅（G53参照）。刑事事件は退去強制事由（入管法第24条）と別扱い。Sources: ISA torikeshi_00002.html; 入管法第22条の4; G19/G26/G29/G53 cross-refs。
+  - G75 (kika-haigusha-tokure): atlas_draft P1. 国籍法第7条簡易帰化=婚姻継続3年以上+日本在住1年以上の両方必要。帰化は申請制（法務局）で自動取得ではない。離婚後は第7条不適用（第5条の5年一般要件に戻る）。重国籍防止（第11条）は第7条ルートにも適用。Sources: 国籍法第7条・第5条（e-Gov法令）; G64/G25 cross-refs。
+  - New DOMAIN items: dom-gimu-001/002, dom-freelance-001/002, dom-kukubun-001/002, dom-eijusha-risk-001/002, dom-kika-h-001/002 (10 new items). Total DOMAIN: 193.
+  - Next batch (Batch 014) candidates: 在留資格別の家族帯同要件（家族滞在ビザの取得条件・所得要件）, 特定技能の通算在留期間（5年上限の計算方法）, 高度専門職ポイントの年収評価（海外給与・株式報酬・ボーナスの扱い）, 技能実習から育成就労への移行（経過措置と新制度の実務）, 在留資格「定住者」の要件と審査基準.
