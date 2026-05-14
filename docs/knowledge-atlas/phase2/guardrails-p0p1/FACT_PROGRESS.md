@@ -1,14 +1,14 @@
 # FACT Progress — Phase 2 P0/P1 Guardrails
 
-Last updated: 2026-05-15 CST (Batch 013 complete)
+Last updated: 2026-05-15 CST (Batch 014 complete)
 
 ## Current Status
 
 - total planned in Workpack 001 core batch: 10
-- completed: 74
+- completed: 79
 - in progress: 0
 - blocked: 0
-- needs DOMAIN: 193
+- needs DOMAIN: 203
 - Batch 001 core: completed 10/10
 - Batch 002 continuation: completed 5
 - Batch 003 continuation: completed 9 (G23 skipped — insufficient official source)
@@ -22,6 +22,7 @@ Last updated: 2026-05-15 CST (Batch 013 complete)
 - Batch 011 continuation: completed 5 (G61-G65)
 - Batch 012 continuation: completed 5 (G66-G70)
 - Batch 013 continuation: completed 5 (G71-G75)
+- Batch 014 continuation: completed 5 (G76-G80)
 
 ## Completed Cards
 
@@ -101,6 +102,11 @@ Last updated: 2026-05-15 CST (Batch 013 complete)
 | guardrail-tokutei-gino-gyomu-kukubun-iten | guardrail-tokutei-gino-gyomu-kukubun-iten.md | completed | ISA FAQ Q13+Q36 (G51 cross-ref); ISA 特定技能分野ページ | yes | atlas_draft P1. G73. 特定技能1号転職=同一業務区分内 or 共通性確認済み区分間のみ. 分野超え転職=在留資格変更許可申請必要. 所属機関変更=14日以内届出義務. needs_domain P1: 完全な業務区分共通性マッピング未確認. |
 | guardrail-eijusha-zairyu-torikeshi-risk | guardrail-eijusha-zairyu-torikeshi-risk.md | completed | ISA torikeshi_00002.html; 入管法第22条の4; G19/G26/G29/G53/G61/G65 cross-refs | yes | atlas_draft P1. G74. 永住者も在留資格取消の対象（虚偽申請・届出義務違反等）. みなし再入国1年超過で永住資格喪失リスク. 在留カード有効期限 ≠ 在留資格消滅. 刑事事件は退去強制事由と別扱い. |
 | guardrail-kika-haigusha-tokure | guardrail-kika-haigusha-tokure.md | completed | 国籍法第7条・第5条（e-Gov法令）; 法務省 minji78.html; G64/G25/G8 cross-refs | yes | atlas_draft P1. G75. 日本人配偶者の簡易帰化（第7条）=婚姻継続3年以上+日本在住1年以上の両方が必要. 帰化は申請制（法務局）で自動取得ではない. 離婚後は第7条不適用（第5条の一般要件に戻る）. |
+| guardrail-kazoku-taizai-shutoku-yoken | guardrail-kazoku-taizai-shutoku-yoken.md | completed | ISA kazokutaizai.html; G33/G48 cross-refs; 入管法別表第一の五 | yes | atlas_draft P1. G76. 家族滞在の対象=法律婚配偶者+実子/特別養子のみ; 内縁・事実婚は対象外. 特定技能1号は扶養者になれない（G33）. 扶養能力の審査あり. 家族滞在保有者の就労は資格外活動許可が必要（28h/week）（G48）. |
+| guardrail-tokutei-gino-tsusanzairyu-5nen | guardrail-tokutei-gino-tsusanzairyu-5nen.md | completed | ISA nyuukokukanri07_00147.html; ISA FAQ; G33 cross-ref | yes | atlas_draft P1. G77. 特定技能1号の通算在留上限は5年（累積在日日数; 出国期間除外）. 1回の在留期間は最長1年で更新可（5年未満の範囲内）. 5年到達後は特定技能1号継続不可. 技能実習期間は通算しない. 選択肢: 2号移行/他資格変更/帰国. |
+| guardrail-hsp-nenshu-hyoka-kozo | guardrail-hsp-nenshu-hyoka-kozo.md | completed | ISA Q&A newimmiact_3_qa.html (G34 cross-ref); G62 cross-ref | yes | atlas_draft P1. G78. HSPポイント年収: 基本給・賞与含む; 通勤手当・住宅手当・残業代・株式運用益は除外（ISA Q&A明示）. 海外給与は日本での高度専門職活動対応分のみ含む. RSU/ストックオプションは一般的に除外（needs_domain）. |
+| guardrail-ikusei-shuro-keikameasure | guardrail-ikusei-shuro-keikameasure.md | completed | ISA ikusei/index.html + ikusei/qa.html; G37/G46 cross-refs | yes | atlas_draft P1. G79. 技能実習法廃止2027年4月1日; 既存技能実習生は経過措置継続. 育成就労の最大の違い=転籍が1-2年後に可能. 育成就労→特定技能1号は在留資格変更申請必要（自動ではない）. needs_domain P1: 育成就労修了者の試験免除条件. |
+| guardrail-teijusha-yoken-shinsa | guardrail-teijusha-yoken-shinsa.md | completed | ISA teijusha.html; 法務省令（告示定住カテゴリー）; G31/G45/G25 cross-refs | yes | atlas_draft P1. G80. 定住者=告示定住（日系人等・要件告示明確）と告示外定住（大臣裁量・個別事情）に分かれる. 離婚後の元配偶者=告示外定住（法的権利ではない）. 定住者は就労制限なし・在留期間有限（永住との根本的違い）. |
 
 ## In Progress
 
@@ -293,6 +299,16 @@ None. All WORKPACK_001 continuation candidates completed. See next batch candida
 | dom-eijusha-risk-002 | guardrail-eijusha-zairyu-torikeshi-risk | What is the realistic ISA enforcement practice for permanent residents who have repeatedly failed address notification duties without any other compliance issue? | P1 | Enforcement practice for notification-only violations by 永住者 not confirmed; may range from warning to cancellation depending on frequency/severity. |
 | dom-kika-h-001 | guardrail-kika-haigusha-tokure | What is the 法務省 operational standard for "引き続き" (continuous) residence or marriage under Article 7 — specifically, how much time abroad breaks continuity? | P1 | Cannot confirm a specific absence threshold without official 法務省 guidance; "引き続き" interpretation is a common practical question. |
 | dom-kika-h-002 | guardrail-kika-haigusha-tokure | Is Article 7 available for same-sex couples where the foreign national has entered a legal same-sex marriage recognized in Japan? | P1 | Same-sex marriage recognition in Japan is an evolving legal area; Article 7 applicability for same-sex couples is legally unsettled. |
+| dom-kazoku-003 | guardrail-kazoku-taizai-shutoku-yoken | What is ISA's operational income threshold (if any) for 扶養能力 assessment in 家族滞在 applications? Any published internal guidelines? | P1 | No official published threshold; professional confirmation needed before advising minimum income. |
+| dom-kazoku-004 | guardrail-kazoku-taizai-shutoku-yoken | Can recognized 認知 (paternity acknowledgment) of a non-marital child qualify the child as "子" for 家族滞在 purposes? | P1 | Non-marital child status and 認知 documentation requirements not confirmed from accessed official sources. |
+| dom-tsusanzairyu-001 | guardrail-tokutei-gino-tsusanzairyu-5nen | After exhausting the 5-year 特定技能1号 limit, can a person re-enter Japan on a new 特定技能1号 status (i.e., does the cumulative clock reset after departure)? | P1 | Official ISA position on whether the cumulative period is per-individual-lifetime or resets after departure not confirmed. |
+| dom-tsusanzairyu-002 | guardrail-tokutei-gino-tsusanzairyu-5nen | For short departures (under みなし再入国 = under 1 year), are those days subtracted from the 5-year cumulative period or treated as continuous in-Japan time? | P1 | Precise calculation methodology for short departures not confirmed from accessed ISA sources. |
+| dom-hsp-nenshu-001 | guardrail-hsp-nenshu-hyoka-kozo | For RSU income treated as 給与所得 on the Japanese tax return — does ISA include this in the HSP year income calculation or treat it as excluded 株式運用利益? | P1 | Gap between Japanese tax treatment (employment income) and ISA immigration treatment (possibly excluded); professional confirmation needed. |
+| dom-hsp-nenshu-002 | guardrail-hsp-nenshu-hyoka-kozo | For executives with complex compensation (base + bonus + long-term incentive + equity) — what is the confirmed ISA operational standard for which components are included in HSP year income? | P1 | Complex compensation structures require professional review; no official ISA breakdown beyond basic Q&A. |
+| dom-ikusei-001 | guardrail-ikusei-shuro-keikameasure | What are the specific exam exemption conditions for 育成就労 修了者 transitioning to 特定技能1号? Are they the same as for 技能実習2号 良好修了者 (G46)? | P1 | Critical practical question; exam exemption for new system not yet officially confirmed as of 2026-05-15. |
+| dom-ikusei-002 | guardrail-ikusei-shuro-keikameasure | What are the confirmed conditions for early 転籍 exception (before the 1-2 year mark) in cases of abusive working conditions under 育成就労? | P1 | Emergency 転籍 exception conditions have not been confirmed from ISA official guidance accessed to date. |
+| dom-teijusha-001 | guardrail-teijusha-yoken-shinsa | What are the historically accepted criteria patterns for 告示外定住 for divorced former spouses of Japanese nationals — child age, custody, residence length, income? | P1 |告示外定住 for post-divorce scenarios has no official written standard; routing must acknowledge the high discretion. |
+| dom-teijusha-002 | guardrail-teijusha-yoken-shinsa | Can a 定住者 holder sponsor a non-Japanese spouse for 家族滞在? Is 定住者 a recognized 扶養者 在留資格 for 家族滞在 applications? | P1 | Whether 定住者 qualifies as a recognized 扶養者 in 家族滞在 applications is not confirmed from accessed official sources. |
 
 ## Source Log
 
@@ -404,6 +420,14 @@ None. All WORKPACK_001 continuation candidates completed. See next batch candida
 | 更新・変更審査ガイドライン（素行評価） | 出入国在留管理庁「在留資格の変更、在留期間の更新許可のガイドライン」 | https://www.moj.go.jp/isa/applications/resources/nyuukokukanri07_00058.html | 2026-05-15 | 更新・変更審査の4要素（素行・生計・活動・在留必要性）; 素行の中に公的義務履行が含まれると解釈される。G31 cross-ref. Used for G71. |
 | 国籍法第7条（配偶者簡易帰化条文） | 国籍法 第7条 | https://laws.e-gov.go.jp/law/324AC0000000147 | 2026-05-15 | 「婚姻の後三年を経過し，かつ，引き続き一年以上日本に住所を有するもの」という数値要件を条文で直接確認. Used for G75. |
 | 特定技能の業務区分ページ | 出入国在留管理庁「特定技能の分野・業務区分」 | https://www.moj.go.jp/isa/policies/ssw/nyuukokukanri07_00147.html | 2026-05-15 | 特定技能の分野・業務区分の一覧が分野別に規定されていることを確認. Used for G73. |
+| 家族滞在 活動定義・扶養者要件 | 出入国在留管理庁「在留資格『家族滞在』」 | https://www.moj.go.jp/isa/applications/status/familystay.html | 2026-05-15 | 対象=法律婚配偶者+実子/特別養子（内縁・事実婚は対象外）. 扶養者要件（扶養能力の審査）. G33（特定技能1号は扶養者不可）・G48（就労制限）cross-ref. Used for G76. |
+| 特定技能1号 通算在留期間5年上限 | 出入国在留管理庁「特定技能制度の概要」 | https://www.moj.go.jp/isa/policies/ssw/nyuukokukanri07_00147.html | 2026-05-15 | 通算5年上限; 1回の在留期間=最長1年. Used for G77. |
+| 特定技能1号 通算在留期間の計算 | 出入国在留管理庁「特定技能制度に関するQ&A」 | https://www.moj.go.jp/isa/policies/ssw/faq.html | 2026-05-15 | 出国期間は通算に含まれない（日本に在留した期間の合計）; 技能実習期間は通算しない（別資格）. Used for G77. |
+| 高度専門職ポイント 年収算入・除外項目 | 出入国在留管理庁「高度人材ポイント制Ｑ＆Ａ」 | https://www.moj.go.jp/isa/applications/resources/newimmiact_3_qa.html | 2026-05-15 | 含まれる: 基本給・賞与・勤勉手当. 除外: 通勤手当・住宅手当・残業代・株式運用利益（Q&Aで明示）. 海外給与=日本での活動対応分のみ. Used for G78. |
+| 育成就労制度 概要・経過措置 | 出入国在留管理庁「育成就労制度について」 | https://www.moj.go.jp/isa/policies/ikusei/index.html | 2026-05-15 | 育成就労法施行日=2027年4月1日; 技能実習法廃止=2027年4月1日; 経過措置: 既存技能実習生は継続可. Used for G79. |
+| 育成就労制度 Q&A（転籍・移行要件） | 出入国在留管理庁「育成就労制度に関するQ&A」 | https://www.moj.go.jp/isa/policies/ikusei/qa.html | 2026-05-15 | 転籍可能条件（1-2年後）; 育成就労→特定技能1号の移行は在留資格変更申請が必要（自動ではない）. Used for G79. |
+| 定住者 告示定住・告示外定住 | 出入国在留管理庁「在留資格『定住者』」 | https://www.moj.go.jp/isa/applications/status/teijusha.html | 2026-05-15 | 告示定住のカテゴリー（日系人等）; 告示外定住（大臣裁量）の存在確認. 定住者は就労制限なし・在留期間有限. Used for G80. |
+| 定住者 告示定住の具体的要件 | 法務省「定住者の在留資格を決定する基準を定める省令」（告示） | https://laws.e-gov.go.jp/law/362M50000010135 | 2026-05-15 | 告示定住の対象カテゴリー（日系2世・3世等）と在留期間. Used for G80. |
 
 ## Handoff Notes To Codex
 
@@ -514,3 +538,11 @@ None. All WORKPACK_001 continuation candidates completed. See next batch candida
   - G75 (kika-haigusha-tokure): atlas_draft P1. 国籍法第7条簡易帰化=婚姻継続3年以上+日本在住1年以上の両方必要。帰化は申請制（法務局）で自動取得ではない。離婚後は第7条不適用（第5条の5年一般要件に戻る）。重国籍防止（第11条）は第7条ルートにも適用。Sources: 国籍法第7条・第5条（e-Gov法令）; G64/G25 cross-refs。
   - New DOMAIN items: dom-gimu-001/002, dom-freelance-001/002, dom-kukubun-001/002, dom-eijusha-risk-001/002, dom-kika-h-001/002 (10 new items). Total DOMAIN: 193.
   - Next batch (Batch 014) candidates: 在留資格別の家族帯同要件（家族滞在ビザの取得条件・所得要件）, 特定技能の通算在留期間（5年上限の計算方法）, 高度専門職ポイントの年収評価（海外給与・株式報酬・ボーナスの扱い）, 技能実習から育成就労への移行（経過措置と新制度の実務）, 在留資格「定住者」の要件と審査基準.
+- 2026-05-15: Batch 014 completed (5 cards: G76-G80). Total completed: 79. DOMAIN items: 203. Summary:
+  - G76 (kazoku-taizai-shutoku-yoken): atlas_draft P1. 家族滞在の対象は法律婚配偶者+実子/特別養子のみ（内縁・事実婚は対象外）。扶養能力の審査あり。特定技能1号は扶養者になれない（G33 cross-ref）。家族滞在保有者の就労は資格外活動許可が必要（28h/week上限）。
+  - G77 (tokutei-gino-tsusanzairyu-5nen): atlas_draft P1. 特定技能1号の通算在留上限は5年（累積在日日数; 出国期間は含まない）。1回の在留期間は最長1年で更新可（5年未満の範囲内）。5年到達後は特定技能1号継続不可。技能実習期間は通算しない（別の在留資格）。選択肢: 2号移行/他資格変更/帰国。
+  - G78 (hsp-nenshu-hyoka-kozo): atlas_draft P1. HSPポイント計算の年収: 基本給・賞与・勤勉手当は含む; 通勤手当・住宅手当・残業代・株式運用益は除外（ISA Q&A明示）。海外給与は日本での高度専門職活動対応分のみ含む。RSU/ストックオプションは一般的に除外（needs_domain P1）。
+  - G79 (ikusei-shuro-keikameasure): atlas_draft P1. 技能実習法廃止2027年4月1日; 育成就労法施行2027年4月1日。既存技能実習生は経過措置で継続（即日無効ではない）。育成就労の最大の違い=転籍が1-2年後に可能。育成就労→特定技能1号は在留資格変更申請が必要（自動ではない）。
+  - G80 (teijusha-yoken-shinsa): atlas_draft P1. 定住者=告示定住（日系人等; 要件が告示で明確）と告示外定住（大臣裁量; 個別事情）に分かれる。日本人との離婚後の元配偶者への定住者付与は告示外定住（法的権利ではなく裁量的許可）。定住者は就労制限なし・在留期間有限（永住との根本的違い）。
+  - New DOMAIN items: dom-kazoku-003/004, dom-tsusanzairyu-001/002, dom-hsp-nenshu-001/002, dom-ikusei-001/002, dom-teijusha-001/002 (10 new items). Total DOMAIN: 203.
+  - Next batch (Batch 015) candidates: 在留申請オンラインシステムの機能と制限（eLTRC対象資格・非対象資格・手続き種別）, 海外居住者の在留カードと長期出国時の手続き（みなし再入国超過対応）, 就労系在留資格から永住への戦略的ルート比較（技人国/特定技能/HSP別の最短ルート）, 在留資格と医療保険制度の全体像（国民健康保険vs健康保険の外国人適用ルール）, 在留資格「介護」の要件と技能実習/特定技能との違い.
