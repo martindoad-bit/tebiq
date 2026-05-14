@@ -1,14 +1,14 @@
 # FACT Progress — Phase 2 P0/P1 Guardrails
 
-Last updated: 2026-05-15 CST (Batch 021 complete)
+Last updated: 2026-05-15 CST (Batch 022 complete)
 
 ## Current Status
 
 - total planned in Workpack 001 core batch: 10
-- completed: 114
+- completed: 119
 - in progress: 0
 - blocked: 0
-- needs DOMAIN: 272
+- needs DOMAIN: 282
 - Batch 001 core: completed 10/10
 - Batch 002 continuation: completed 5
 - Batch 003 continuation: completed 9 (G23 skipped — insufficient official source)
@@ -30,6 +30,7 @@ Last updated: 2026-05-15 CST (Batch 021 complete)
 - Batch 019 continuation: completed 5 (G101-G105)
 - Batch 020 continuation: completed 5 (G106-G110)
 - Batch 021 continuation: completed 5 (G111-G115)
+- Batch 022 continuation: completed 5 (G116-G120)
 
 ## Completed Cards
 
@@ -149,6 +150,11 @@ Last updated: 2026-05-15 CST (Batch 021 complete)
 | guardrail-gaikokujin-rodo-kumiai | guardrail-gaikokujin-rodo-kumiai.md | completed | 労働組合法第3条・第7条; 労働関係調整法; G99/G107 cross-refs | yes | atlas_draft P1. G113. 外国人も在留資格問わず労働組合に加入可（労働組合法第3条）; 組合活動理由の不利益取扱い=不当労働行為（第7条; 外国人にも適用）; 適法ストライキ=在留資格取消し事由にならない; 不法就労者も労働組合法上の「労働者」とされうる（判例・労働委員会実務）. needs_domain P1: 不法就労者の組合加入権に関する最高裁判例の特定; 長期ストライキと在留更新審査へのISA官式見解. |
 | guardrail-gaikokujin-iryo-shussan | guardrail-gaikokujin-iryo-shussan.md | completed | ISA「出産に関する在留資格の手続き」; 国籍法第2条; 厚生労働省「出産育児一時金」 | yes | atlas_draft P1. G114. 外国人の子が日本で生まれても日本国籍を取得しない（血統主義）; 出生後60日以内に在留資格取得申請が必要（G100）; 在留期間は入院・出産中でも停止しない; 緊急医療は在留資格問わず提供（医師法の応召義務）; 出産育児一時金=50万円（NHI/健保加入者のみ）. needs_domain P1: 医療費長期未払いと在留審査への影響; 不法在留状態での出産と母親の在留資格の扱い. |
 | guardrail-kokusai-zeimu-gaikokujin | guardrail-kokusai-zeimu-gaikokujin.md | completed | 国税庁「居住者・非居住者の区分」; 国税庁「租税条約」; 国税庁「国外転出時課税」 | yes | atlas_draft P1. G115. 外国人居住者（1年以上居住）=全世界所得課税（在留資格種別不問）; 租税条約=二重課税防止（免除ではない）; 出国税=1億円以上の有価証券等（出国前に税理士必須）; 日本出国後も日本源泉所得への課税継続; 国外財産調書=5,000万円超の国外財産を有する居住者に提出義務. needs_domain P1: 税務申告不履行と在留審査の関係; 出国税と租税条約の二重課税問題. |
+| guardrail-hodo-visa-yoken | guardrail-hodo-visa-yoken.md | completed | 入管法別表第一の二「報道」; 上陸基準省令「報道」; ISA「在留資格『報道』」 | yes | atlas_draft P1. G116. 在留資格「報道」=外国報道機関との契約に基づく取材・報道活動; 日本の報道機関雇用=技人国が適用; 短期滞在での継続的業務取材=資格外活動リスク; フリーランスジャーナリストの取得可否=needs_domain. needs_domain P1: フリーランスジャーナリストの申請可否; 短期滞在取材の許容範囲の官式基準. |
+| guardrail-haigusha-nintei-han | guardrail-haigusha-nintei-han.md | completed | 入管法別表第二「日本人の配偶者等」; 法の適用に関する通則法第24条; 民法第739条; ISA「特定活動」 | yes | atlas_draft P1. G117. 「日本人の配偶者等」=法律婚のみ対象; 内縁・事実婚・同性パートナーシップは対象外; 外国での同性婚=日本の在留資格認定根拠にならない; 内縁パートナー=特定活動（内縁関係にある者）として個別申請. needs_domain P1: 特定活動（内縁関係）の告示番号・要件詳細; ISAの外国同性婚の取扱い方針. |
+| guardrail-shuro-daigakuin-kengaku | guardrail-shuro-daigakuin-kengaku.md | completed | 入管法第22条の4（取消事由）; ISA更新審査ガイドライン; ISA「在留資格『留学』」 | yes | atlas_draft P1. G118. 就労系在留資格保持者の大学院在籍は本業継続が前提; 本業を休職・退職して学業専念=「留学」への変更が必要; 「学習許可」制度（資格外活動許可の逆方向）は存在しない; 社会人MBA等の兼学は就労継続が前提で変更不要. needs_domain P1: 技人国保持者の大学院通学のISA公式ガイダンスの有無; 休職と活動不実施の関係. |
+| guardrail-eijuu-go-zairyu-henkou | guardrail-eijuu-go-zairyu-henkou.md | completed | 入管法別表第二「永住者」; ISA「永住許可申請」; G19/G53/G60/G74 cross-refs | yes | atlas_draft P1. G119. 永住者は活動制限なし→就労系在留資格への変更不要; 在留資格は1つのみ保有可能→変更すると永住地位喪失; 永住への復帰は改めて永住許可申請が必要; みなし再入国1年超過リスクは永住者にも適用. needs_domain P1: 永住→他資格変更後の永住再申請時の在留歴の扱い; 永住とHSP2の同時保有の可否. |
+| guardrail-gaikokujin-juutaku-sabetsu | guardrail-gaikokujin-juutaku-sabetsu.md | completed | 国土交通省「住まいサポートネット」; 法務省「外国人のための人権相談」; 宅地建物取引業法 | yes | atlas_draft P1. G120. 日本に外国人住宅入居差別を包括的に禁止する一般法なし; 住所未登録=届出義務違反・在留申請上の支障; 相談窓口=法務省人権相談（0570-090-911）・国土交通省「住まいサポートネット」. needs_domain P1: 住宅差別禁止法の有無・制定動向; 不法在留者の住所登録とISA情報共有方針. |
 
 ## In Progress
 
@@ -414,6 +420,16 @@ None. All WORKPACK_001 continuation candidates completed. See next batch candida
 | dom-iryo-shussan-002 | guardrail-gaikokujin-iryo-shussan | For a person in 不法在留 status who gives birth in Japan — what is ISA's official position on the mother's immigration status treatment? Is there a discretionary protection pathway or does birth not affect immigration proceedings? | P1 | ISA does not publish official policy on post-birth treatment of mothers in irregular status; this requires domain/practitioner confirmation before TEBIQ can advise on post-birth immigration options. |
 | dom-kokusai-zei-001 | guardrail-kokusai-zeimu-gaikokujin | Does ISA formally consider tax declaration non-compliance (確定申告未提出) and tax arrears as a 素行 factor in renewal/change applications beyond the 永住申請 context? Is there published guidance on thresholds? | P1 | ISA 永住ガイドライン explicitly covers tax compliance; whether the same 直近2年 standard applies to renewal/change applications beyond 永住 is not confirmed from official guidance. |
 | dom-kokusai-zei-002 | guardrail-kokusai-zeimu-gaikokujin | For persons subject to Japan's 国外転出時課税 (exit tax) who also face taxation in their home country under domestic law — does the applicable tax treaty definitively resolve the double taxation, or are there treaty gaps? | P1 | Tax treaty application to exit tax scenarios is complex; whether all applicable treaties cover the specific 国外転出時課税 asset-gain recognition event is not confirmed from accessed official sources. |
+| dom-hodo-001 | guardrail-hodo-visa-yoken | What is ISA's official position on the eligibility of freelance journalists (without a single foreign media employer but holding multiple per-article contracts) for 在留資格「報道」? Can a portfolio of contracts satisfy the "外国の報道機関との契約" requirement? | P1 | ISA「在留資格『報道』」page and 上陸基準省令「報道」 describe the requirement in singular contract terms; freelance/multi-contract eligibility is not confirmed. |
+| dom-hodo-002 | guardrail-hodo-visa-yoken | What is the exact operational boundary between short-stay reporting (permissible under 短期滞在) and ongoing reporting activity (requiring 報道 visa) in ISA's practice? Is there a published ISA standard on the distinction? | P1 | Required before TEBIQ can advise on whether a specific short-term assignment constitutes a 報道 visa trigger. |
+| dom-haigusha-001 | guardrail-haigusha-nintei-han | What is the specific 法務大臣告示 number and the exact statutory conditions for 特定活動（内縁関係にある者）? What documentary evidence does ISA require in practice to substantiate a de facto partnership claim? | P1 | Required before TEBIQ can route users to the correct 特定活動 pathway and inform them of the evidence standard. |
+| dom-haigusha-002 | guardrail-haigusha-nintei-han | Has ISA issued any official guidance or changed its practice regarding the treatment of foreign same-sex marriages (legally recognized under foreign law) for Japanese immigration visa purposes — either confirming non-recognition or indicating any evolving approach as of 2026? | P1 | The non-recognition position is derived from structural legal interpretation; official ISA statement or updated guidance needed before TEBIQ can definitively state the position. |
+| dom-daigakuin-001 | guardrail-shuro-daigakuin-kengaku | Is there ISA official guidance (通達・運用要領) specifying conditions under which a 技人国 holder may attend graduate school while remaining on their employment visa — particularly any minimum employment hours or salary threshold during the graduate study period? | P1 | TEBIQ currently advises "employment must continue" but cannot specify a minimum threshold; official guidance would allow more precise routing. |
+| dom-daigakuin-002 | guardrail-shuro-daigakuin-kengaku | Does having an employer-approved formal 休職 arrangement (company-recognized leave of absence with reinstatement rights) constitute a "正当な理由" for activity non-performance under 入管法第22条の4, such that the 3-month activity gap does not trigger cancellation grounds? | P1 | The "正当な理由" exception in Article 22-4 is not clearly defined in ISA public guidance; domain confirmation affects safety of routing persons on approved leave. |
+| dom-eijuu-h-001 | guardrail-eijuu-go-zairyu-henkou | After a 永住者 changes to another status (e.g., 技人国), can they qualify for a new 永住 application based on their original 在留歴 (without restarting the 10-year clock), or must they satisfy the standard residence-period requirement anew? | P1 | Affects whether persons who changed status inadvertently (e.g., employer-pressured) have a fast track back to 永住. |
+| dom-eijuu-h-002 | guardrail-eijuu-go-zairyu-henkou | Is there any formal mechanism by which a 永住者 can receive HSP2-equivalent recognition (for activity scope or spousal work permit purposes) without actually changing their status to 高度専門職2号 and losing 永住? | P1 | Affects advice for high-skilled 永住者 who want HSP2 benefits without giving up their permanent residence. |
+| dom-juutaku-001 | guardrail-gaikokujin-juutaku-sabetsu | Is there any enacted legislation (as of 2026) or confirmed judicial precedent that directly prohibits housing discrimination against foreign nationals in Japan and provides an effective legal remedy? | P1 | If enacted, this significantly changes the guidance on legal options available to victims of housing discrimination. |
+| dom-juutaku-002 | guardrail-gaikokujin-juutaku-sabetsu | For foreign nationals in irregular immigration status (不法在留) who have no registered address — if they attempt to register a residential address at a ward office, will this trigger an ISA referral or other adverse immigration consequence? | P1 | Affects the safety of routing irregular-status persons to register an address; current guidance treats the two issues as separate but this has not been confirmed from official sources. |
 
 ## Source Log
 
@@ -600,6 +616,18 @@ None. All WORKPACK_001 continuation candidates completed. See next batch candida
 | 日本の居住者・非居住者区分（所得税法） | 国税庁「所得税基本通達3-3（居住者の意義）」 | https://www.nta.go.jp/law/tsutatsu/kihon/shotoku/02/01.htm | 2026-05-15 | 国内に住所を有する者または1年以上居所を有する者=居住者（全世界所得課税）; 在留資格種別は区別しない. Used for G115. |
 | 国外転出時課税（出国税）制度 | 国税庁「国外転出時課税制度のあらまし」 | https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1477.htm | 2026-05-15 | 対象（有価証券等1億円以上保有; 出国前10年間のうち5年以上居住）; 出国前の申告・納税義務; 租税条約との関係. Used for G115. |
 | 国外財産調書提出義務 | 国税庁「国外財産調書制度」 | https://www.nta.go.jp/taxes/shiraberu/taxanswer/hotei/7456.htm | 2026-05-15 | 提出義務（居住者で12月31日時点の国外財産5,000万円超）; 提出期限（翌年3月15日）; 罰則. Used for G115. |
+| 在留資格「報道」の活動定義 | 出入国管理及び難民認定法別表第一の二（「報道」）| https://laws.e-gov.go.jp/law/326AC0000000319 | 2026-05-15 | 「外国の報道機関との契約に基づいて行う取材その他の報道上の活動」; 外国報道機関との契約が前提. Used for G116. |
+| 在留資格「報道」の上陸基準省令 | 上陸基準省令「報道」 | https://laws.e-gov.go.jp/law/326CO0000000016 | 2026-05-15 | 「報道」の上陸基準省令（外国報道機関との契約要件; 申請者の報道活動の実態）. Used for G116. |
+| 在留資格「報道」の申請手続き | 出入国在留管理庁「在留資格『報道』」 | https://www.moj.go.jp/isa/applications/status/press.html | 2026-05-15 | 申請書類; 在留期間（5年・3年・1年・3か月）; 日本の報道機関雇用外国人は技人国が適用. Used for G116. |
+| 「日本人の配偶者等」の活動定義 | 出入国管理及び難民認定法別表第二（「日本人の配偶者等」） | https://laws.e-gov.go.jp/law/326AC0000000319 | 2026-05-15 | 「日本人の配偶者若しくは特別養子又は日本人の子として出生した者の行う日常的な活動」; 法律婚配偶者のみが「配偶者」に該当. Used for G117. |
+| 婚姻の成立準拠法（国際私法） | 法の適用に関する通則法第24条 | https://laws.e-gov.go.jp/law/418AC0000000078 | 2026-05-15 | 婚姻の成立は各当事者の本国法によって判断; 外国での同性婚が日本法上の「婚姻」に該当するかの判断根拠. Used for G117. |
+| 特定活動（内縁関係にある者）の実務 | 出入国在留管理庁「特定活動」 | https://www.moj.go.jp/isa/applications/status/tokutei_katsudo.html | 2026-05-15 | 法律婚に準じた内縁関係のあるパートナーへの特定活動による在留許可の実務; 個別申請ルート. Used for G117. |
+| 就労系在留資格と活動実態不整合（取消事由） | 出入国管理及び難民認定法第22条の4 | https://laws.e-gov.go.jp/law/326AC0000000319 | 2026-05-15 | 第22条の4第1項第6号: 正当な理由なく在留資格に係る活動を3か月以上行わない場合=取消事由. Used for G118. |
+| 在留資格「留学」の活動定義 | 出入国在留管理庁「在留資格『留学』」 | https://www.moj.go.jp/isa/applications/status/student.html | 2026-05-15 | 留学=本邦の大学等において教育を受ける活動; 就労系在留資格保持者が本格的に学業専念する場合は「留学」への変更が必要. Used for G118. |
+| 永住者の活動定義（制限なし） | 出入国管理及び難民認定法別表第二（「永住者」） | https://laws.e-gov.go.jp/law/326AC0000000319 | 2026-05-15 | 「法務大臣が永住を許可した者の行う一切の活動」; 在留資格「永住者」=活動制限なし（就労・事業・勉学等すべて可）. Used for G119. |
+| 永住許可申請の手続き | 出入国在留管理庁「永住許可申請」 | https://www.moj.go.jp/isa/applications/procedures/16-4.html | 2026-05-15 | 永住許可の要件（素行・生計・国益）; 在留資格「永住者」の法的内容. Used for G119. |
+| 外国人住まいサポートネット | 国土交通省「住まいサポートネット（外国人の住まい相談）」 | https://www.mlit.go.jp/jutakukentiku/house/jutakukentiku_house_tk5_000025.html | 2026-05-15 | 外国人受入れ宣言事業者リスト; 多言語対応相談窓口; 法務省・国土交通省連携施策. Used for G120. |
+| 外国人のための人権相談（法務省） | 法務省「外国人のための人権相談」 | https://www.moj.go.jp/JINKEN/jinken21.html | 2026-05-15 | 相談電話（0570-090-911）; 入居差別・ハラスメント等の相談対応; 人権侵犯調査の入口. Used for G120. |
 
 ## Handoff Notes To Codex
 
@@ -774,3 +802,11 @@ None. All WORKPACK_001 continuation candidates completed. See next batch candida
   - G115 (kokusai-zeimu-gaikokujin): atlas_draft P1. 日本の居住者（1年以上の居所または住所）=全世界所得課税（在留資格種別不問）; 租税条約=二重課税防止（日本での課税を免除するものではなく課税権を配分するもの）; 出国税（国外転出時課税）=出国時に有価証券等1億円以上保有かつ過去10年間のうち5年以上居住の場合（出国前に税理士必須）; 日本出国後も日本源泉所得（不動産賃貸・株式配当等）への課税継続; 国外財産調書=5,000万円超の国外財産を有する居住者は毎年3月15日までに提出義務. needs_domain P1: 税務申告不履行と在留審査（公的義務・素行）の関係; 出国税と租税条約の二重課税問題.
   - New DOMAIN items: dom-kyoiku-001/002, dom-soko-001/002, dom-kumiai-001/002, dom-iryo-shussan-001/002, dom-kokusai-zei-001/002 (10 new items). Total DOMAIN: 272.
   - Next batch (Batch 022) candidates: 在留資格「報道」（外国メディア記者・取材活動の要件と制限）, 外国人の法律婚・内縁・同性パートナーシップと在留資格（「日本人の配偶者等」の認定範囲）, 就労系在留資格保持者の大学院進学（兼学と在留資格の関係）, 永住者が他の在留資格に変更できるか（永住後の在留資格変更の可否）, 外国人に対する住居・宿泊施設の入居差別と法的保護（外国人差別と在留資格の関係）.
+- 2026-05-15: Batch 022 completed (5 cards: G116-G120). Total completed: 119. DOMAIN items: 282. Summary:
+  - G116 (hodo-visa-yoken): atlas_draft P1. 在留資格「報道」=外国の報道機関との契約に基づく取材・報道活動（入管法別表第一の二）; 日本の報道機関が直接雇用する外国人記者=技人国（国際業務）が適用; 短期滞在での継続的・業務的取材=資格外活動（不法就労）リスク; フリーランスジャーナリストの申請可否はneeds_domain（複数のメディアとのper-article契約が「外国報道機関との契約」を充足するか未確認）. needs_domain P1: フリーランスジャーナリストの申請可否; 短期滞在取材の許容範囲の官式基準.
+  - G117 (haigusha-nintei-han): atlas_draft P1. 「日本人の配偶者等」=法律婚のみ対象（内縁・事実婚・同性パートナーシップは対象外）; 外国での同性婚=日本の在留資格認定根拠にならない（法の適用に関する通則法第24条の構造的解釈; 日本は同性婚未認定）; 地方自治体のパートナーシップ証明書=在留資格申請の根拠にならない; 内縁パートナー=特定活動（内縁関係にある者）として個別申請. needs_domain P1: 特定活動（内縁関係）の告示番号・要件詳細; ISAの外国同性婚の取扱い方針.
+  - G118 (shuro-daigakuin-kengaku): atlas_draft P1. 就労系在留資格保持者の大学院在籍は本業継続が前提（兼学は可; 学業専念は要変更）; 本業を休職・退職して学業専念=在留資格「留学」への変更が必要（変更なしは取消リスク: 入管法第22条の4）; 就労系在留資格に「学習許可」（資格外活動許可の逆方向）という制度は存在しない; 社会人MBA等の夜間・週末コース兼学は就労継続が前提で変更不要. needs_domain P1: 技人国保持者の大学院通学についてのISA公式ガイダンスの有無; 休職（会社承認）と活動不実施の「正当な理由」の官式見解.
+  - G119 (eijuu-go-zairyu-henkou): atlas_draft P1. 永住者（在留資格「永住者」）は活動制限なし（「一切の活動」）→就労系在留資格への変更は一切不要; 在留資格は1つのみ保有可能→別の在留資格に変更すると永住地位を失う; 永住への「復帰」は改めての永住許可申請が必要（自動復帰なし）; みなし再入国1年超過・正規再入国許可失効による永住失効リスクは永住者にも適用. needs_domain P1: 永住→他資格変更後の永住再申請時の在留歴の扱い; 永住とHSP2の同時保有の可否.
+  - G120 (gaikokujin-juutaku-sabetsu): atlas_draft P1. 日本には外国人の住宅入居差別を包括的に禁止する一般法は存在しない（2026年5月現在）; 住所未登録状態が長期化すると届出義務違反・住民票取得困難・在留申請上の支障が生じる; 相談窓口=法務省人権相談（0570-090-911）・国土交通省「住まいサポートネット」; 公営住宅は永住者・定住者等は申込み資格がある場合多い. needs_domain P1: 住宅差別禁止法の有無・制定動向（2026年）; 不法在留者の住所登録とISA情報共有方針.
+  - New DOMAIN items: dom-hodo-001/002, dom-haigusha-001/002, dom-daigakuin-001/002, dom-eijuu-h-001/002, dom-juutaku-001/002 (10 new items). Total DOMAIN: 282.
+  - Next batch (Batch 023) candidates: 外国人の刑事手続きと在留資格（逮捕・拘留・刑事訴追と在留への影響）, 在留資格「介護」の具体的な業務範囲と技能実習・特定技能との実務的違い（G85補完）, 外国人の確定申告義務と年末調整（所得税の実務）, 在留資格の「みなし許可」（審査遅延・緊急人道的配慮等の特別取扱い）, 特定技能2号の対象分野と要件（工業製品製造業・建設・造船等の現状）.
