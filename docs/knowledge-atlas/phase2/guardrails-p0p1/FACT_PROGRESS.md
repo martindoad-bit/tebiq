@@ -1,14 +1,14 @@
 # FACT Progress — Phase 2 P0/P1 Guardrails
 
-Last updated: 2026-05-15 CST (Batch 009 complete)
+Last updated: 2026-05-15 CST (Batch 010 complete)
 
 ## Current Status
 
 - total planned in Workpack 001 core batch: 10
-- completed: 54
+- completed: 59
 - in progress: 0
 - blocked: 0
-- needs DOMAIN: 149
+- needs DOMAIN: 162
 - Batch 001 core: completed 10/10
 - Batch 002 continuation: completed 5
 - Batch 003 continuation: completed 9 (G23 skipped — insufficient official source)
@@ -18,6 +18,7 @@ Last updated: 2026-05-15 CST (Batch 009 complete)
 - Batch 007 continuation: completed 5 (G41-G45)
 - Batch 008 continuation: completed 5 (G46-G50)
 - Batch 009 continuation: completed 5 (G51-G55)
+- Batch 010 continuation: completed 5 (G56-G60)
 
 ## Completed Cards
 
@@ -77,6 +78,11 @@ Last updated: 2026-05-15 CST (Batch 009 complete)
 | guardrail-eijusha-card-kosin-soko | guardrail-eijusha-card-kosin-soko.md | completed | ISA 在留カード有効期間の更新申請 page (G22 source) | yes | atlas_draft P1. G22 complement for 永住者. Card = 7-year validity (16+); separate from status permanence. 2-month application window. Expired card ≠ status revocation. |
 | guardrail-gijinkoku-nihongo-youken | guardrail-gijinkoku-nihongo-youken.md | completed (needs_domain) | ISA 技人国 status page + 上陸基準省令 framework (structural) | yes | needs_domain P1. No statutory JLPT requirement for 技人国. Job-duties-based evaluation. ISA operational practice on language weighting not confirmed. |
 | guardrail-fukugyo-kengyo-zairyu-seigen | guardrail-fukugyo-kengyo-zairyu-seigen.md | completed | G16/G35/G38/G33 cross-refs + ISA 永住者 status page | yes | atlas_draft P1. 就労ビザ副業 = must be within activity scope. 永住者 = unrestricted. 技人国 side job = must be within same subcategory. 特定技能 side job = sector-confined. HSP2 = broad scope. |
+| guardrail-gino-visa-gaikoku-ryorinin | guardrail-gino-visa-gaikoku-ryorinin.md | completed | official ISA skilled.html + 上陸基準省令「技能」 | yes | atlas_draft P1. G56. 活動定義確認: 「産業上の特殊な分野に属する熟練した技能を要する業務」. 外国料理の調理師/スポーツ指導者/航空機の操縦者/貴金属加工職人が代表例. 外国料理限定（日本料理は対象外）. 10年実務経験要件（上陸基準省令）. 技人国との区別（手作業・職人系 vs 知識専門職）. |
+| guardrail-keieikanri-joken-shorei | guardrail-keieikanri-joken-shorei.md | completed | 上陸基準省令「経営・管理」+ ISA management.html | yes | atlas_draft P0. G57. CRITICAL: 500万円は上陸基準省令テキストに根拠なし。省令上の要件: 3,000万円以上（財産プロング）または常勤職員2名以上（人員プロング）。固定事務所要件。日本人同等以上の報酬要件。形式的会社設立不可。needs_domain P0: 500万円の出所が未確認。 |
+| guardrail-shakai-hoken-gaikokujin-gimu | guardrail-shakai-hoken-gaikokujin-gimu.md | completed | 健康保険法・厚生年金保険法（L1）+ 厚生労働省 | yes | atlas_draft P1. G58. 国籍・在留資格は社会保険加入義務の判断軸ではない。雇用形態（適用事業所でのフルタイム相当）が判断軸。外国人も強制適用。社保未加入=公的義務不履行→PR審査リスク（G4/G32 cross-ref）。社会保障協定国の例外あり。 |
+| guardrail-tanki-taizai-shuro-kinshi | guardrail-tanki-taizai-shuro-kinshi.md | completed | official ISA shortterm.html + ISA 不法就労ページ | yes | atlas_draft P0. G59. 活動範囲:「観光，保養，スポーツ，親族の訪問，見学，講習又は会合への参加，業務連絡その他これらに類似する活動」. 報酬を受ける就労 = 不法就労. 資格外活動許可取得不可（包括許可は留学/家族滞在のみ）. 雇用主にも入管法第73条の2刑事罰. |
+| guardrail-eijuu-shinsei-kihon-yoken | guardrail-eijuu-shinsei-kihon-yoken.md | completed | ISA 永住許可申請 16-4.html + 永住許可ガイドライン（令和6年改定版） | yes | atlas_draft P1. G60. 原則10年居住（内就労・居住系5年以上）. 最長在留期間（3年or5年）要件. 直近2年の公的義務適正履行（令和6年改定）. 配偶者特例（婚姻3年+在留1年）. 高度専門職ショートカット（80pt→1年, 70pt→3年）. 不許可後の対応=G52 cross-ref. |
 
 ## In Progress
 
@@ -226,6 +232,18 @@ None. All WORKPACK_001 continuation candidates completed. See next batch candida
 | dom-fukugyo-001 | guardrail-fukugyo-kengyo-zairyu-seigen | For a 技人国 holder who does freelance programming (same field as primary job) — is this within existing 技人国 scope or does it require a new status? | P1 | Freelance-in-same-field gray area needs professional determination. |
 | dom-fukugyo-002 | guardrail-fukugyo-kengyo-zairyu-seigen | What is the notification obligation for a 技人国 holder who takes on a legitimate second employer within the same subcategory scope? | P1 | Secondary employer within scope: notification requirements not confirmed. |
 | dom-fuhyoka-p0-001 | guardrail-fuhyoka-go-taiou | For a user who received 不許可 after original period already expired (now in unlawful stay) — what is the TEBIQ answer route? (P0: must route to lawyer immediately; no TEBIQ routing can solve unlawful stay.) | P0 | Unlawful stay after 不許可 with expired period = P0 risk; lawyer routing mandatory. |
+| dom-gino-001 | guardrail-gino-visa-gaikoku-ryorinin | What cuisines has ISA formally approved as "外国料理" qualifying categories, and are there any cuisines that have been contested or denied? | P1 | ISA practice on non-standard cuisine categories (South American, African, fusion) is not confirmed from official sources. |
+| dom-gino-002 | guardrail-gino-visa-gaikoku-ryorinin | Can formal culinary school training fully substitute for the 10-year practical experience requirement, and what is ISA's documented practice? | P1 | The partial substitution provision exists in 上陸基準省令 but ISA operational standards for school-time counting are not confirmed. |
+| dom-gino-003 | guardrail-gino-visa-gaikoku-ryorinin | For fusion cuisine (e.g., Japanese-French) prepared by a foreign chef — is this classified as "外国料理" for 技能 purposes or does the Japanese element disqualify it? | P1 | Fusion cuisine category is a gray area not addressed in official ISA guidance. |
+| dom-keiei-p0-001 | guardrail-keieikanri-joken-shorei | CRITICAL: What is the actual source of the widely-circulated "500万円" minimum capital figure for 経営管理 visa? Does ISA have any formal or informal position accepting 500万円 in any circumstances despite the 上陸基準省令 stating 3,000万円? | P0 | If ISA accepts 500万円 in any circumstances, TEBIQ must know this before issuing any guidance. If not, TEBIQ must block all "500万円 is sufficient" answers. |
+| dom-keiei-002 | guardrail-keieikanri-joken-shorei | What is ISA's operational standard for evaluating co-working spaces and shared offices as the required "事務所"? Is a dedicated private room required, or is a reserved desk sufficient? | P1 | Common practical situation; official standard for minimum acceptable office arrangement not confirmed. |
+| dom-keiei-003 | guardrail-keieikanri-joken-shorei | For the "2 full-time employees" prong — do the employees need to already be hired when the 経営管理 application is filed, or can they be hired after permission? | P1 | Timing of employee hire relative to application filing affects practical guidance. |
+| dom-hoken-gaikoku-001 | guardrail-shakai-hoken-gaikokujin-gimu | What is the exact list of countries with Japan bilateral social security agreements covering 厚生年金, and which specific obligations are waived under each agreement? | P1 | Country-specific agreement details not confirmed from accessed sources; needed for routing workers from agreement countries. |
+| dom-hoken-gaikoku-002 | guardrail-shakai-hoken-gaikokujin-gimu | When a foreign worker's employer fails to enroll them in social insurance — and the worker had no knowledge or control — how does ISA specifically assess this in PR 素行 evaluation? Does the worker bear immigration consequences for the employer's violation? | P1 | Dual-liability scenario; employee vs. employer responsibility for non-enrollment at PR assessment is not confirmed from official sources. |
+| dom-tanki-p0-001 | guardrail-tanki-taizai-shuro-kinshi | For an overseas freelancer who is physically in Japan on 短期滞在 performing online work for non-Japanese clients with non-Japan-source income — is this classified as 不法就労 under ISA rules? | P0 | Critical gray area: technically outside 入管法 "work for a Japanese entity" but potentially an issue at entry for repeated visits. TEBIQ cannot advise on this without domain confirmation. |
+| dom-tanki-p0-002 | guardrail-tanki-taizai-shuro-kinshi | For a person who has already been working in Japan on 短期滞在 for 2 months — what is the realistic remediation route? (departure + entry ban risk; employer also liable; is voluntary departure the only option?) | P0 | Person already in unlawful employment situation; P0 risk for both worker and employer. Professional/lawyer routing mandatory; specific remediation options not confirmed. |
+| dom-eijuu-001 | guardrail-eijuu-shinsei-kihon-yoken | What is ISA's operational standard for "継続居住" — specifically, what length or frequency of overseas absences is treated as breaking the continuity of the 10-year residence requirement? | P1 | ISA has not published precise rules on absence thresholds; individual assessment may vary. |
+| dom-eijuu-002 | guardrail-eijuu-shinsei-kihon-yoken | For PR applicants with tax/pension delinquency resolved more than 2 years ago — is past delinquency treated as an absolute bar or a weighting factor in the 素行 evaluation, and what evidence of remediation is expected? | P1 | G4 notes past violations are negative factors; but the distinction between absolute bar and weighting factor is not confirmed from official sources. |
 
 ## Source Log
 
@@ -313,6 +331,13 @@ None. All WORKPACK_001 continuation candidates completed. See next batch candida
 | 在留期間更新 申請受付開始日 | 出入国在留管理庁「在留期間更新許可申請」 | https://www.moj.go.jp/isa/applications/procedures/16-3.html | 2026-05-15 | 在留期間満了の3か月前から申請可（原則）. COVID期間特例等なし（現在は通常ルール）. Used for G50. |
 | 特定技能 転職条件 Q13・Q36 | 出入国在留管理庁「特定技能制度に関するQ&A」 | https://www.moj.go.jp/isa/policies/ssw/faq.html | 2026-05-15 | Q13: 「同一の業務区分内又は試験等によりその技能水準の共通性が確認されている業務区分間」のみ転職可. 受入機関・分野変更→変更許可申請. Q36: 同一分野業務変更→届出; 異分野→変更申請. Used for G51. |
 | 在留申請 不服申立方法：なし | 出入国在留管理庁（各申請手続きページ）| 16-1/16-2/16-3/16-4/16-10.html | 2026-05-15 | 不服申立方法：なし（16-3, 16-4, 16-1, 16-10で確認）. 異議申出は退去強制手続内のみ（通常申請不許可への異議申立ではない）. Used for G52. |
+| 在留資格「技能」活動定義・例示 | 出入国在留管理庁「在留資格『技能』」 | https://www.moj.go.jp/isa/applications/status/skilled.html | 2026-05-15 | 活動定義:「本邦の公私の機関との契約に基づいて行う産業上の特殊な分野に属する熟練した技能を要する業務に従事する活動」. 代表例: 外国料理の調理師, スポーツ指導者, 航空機の操縦者, 貴金属等の加工職人. Used for G56. |
+| 上陸基準省令「技能」10年要件 | 上陸基準省令「技能」 | (法令 PDF) | 2026-05-15 | 外国料理の調理師: 当該外国料理の調理に係る実務経験10年以上が原則要件. Used for G56. |
+| 上陸基準省令「経営・管理」財産・人員・事務所・報酬要件 | 上陸基準省令「経営・管理」 | (法令 PDF) | 2026-05-15 | 財産プロング: 資本金・出資総額3,000万円以上. 人員プロング: 日本在住・就労可能な常勤職員2名以上（役員除く）. 報酬: 日本人同種業務従事者の通常報酬同等以上. 500万円は条文テキストに根拠なし（needs_domain P0）. Used for G57. |
+| 経営管理 活動定義（ISAページ） | 出入国在留管理庁「在留資格『経営・管理』」 | https://www.moj.go.jp/isa/applications/status/management.html | 2026-05-15 | 活動定義:「本邦において貿易その他の事業の経営を行い又は当該事業の管理に従事する活動」. Used for G57. |
+| 社会保険加入義務（外国人） | 健康保険法 第3条・第36条・第39条; 厚生年金保険法 第6条・第9条 | (法令) | 2026-05-15 | 国籍・在留資格は加入義務の判断軸ではない. 適用事業所でのフルタイム相当勤務が要件. 強制適用（mandatory enrollment). Used for G58. |
+| 短期滞在 活動範囲・不法就労定義 | 出入国在留管理庁「在留資格『短期滞在』」・「不法就労について」 | shortterm.html + nyuukokukanri07_00011.html | 2026-05-15 | 活動範囲:「観光，保養，スポーツ，親族の訪問，見学，講習又は会合への参加，業務連絡その他これらに類似する活動」. 不法就労定義: 就労が認められない在留資格での就労. 雇用主罰則: 入管法第73条の2（3年以下懲役または300万円以下罰金）. 資格外活動許可: 短期滞在は対象外. Used for G59. |
+| 永住許可申請ガイドライン（令和6年改定版） | 出入国在留管理庁「永住許可に関するガイドライン」 | https://www.moj.go.jp/isa/publications/materials/nyuukokukanri07_00115.html | 2026-05-15 | 10年居住要件（内就労・居住系5年以上）; 最長在留期間要件（3年or5年の資格保有）; 公的義務適正履行（直近2年納税・年金・社保）; 配偶者特例（婚姻3年+在留1年）; 高度専門職ショートカット（80pt→1年, 70pt→3年）. Used for G60. |
 
 ## Handoff Notes To Codex
 
@@ -391,3 +416,11 @@ None. All WORKPACK_001 continuation candidates completed. See next batch candida
   - G55 (fukugyo-kengyo-zairyu-seigen): atlas_draft P1. Side jobs must be within activity scope for employment-based visa holders. 永住者 = unrestricted. 技人国 = same subcategory only. 特定技能 = same sector/category. HSP2 = broad scope.
   - New P0 DOMAIN item: dom-fuhyoka-p0-001 (post-不許可 with expired period = unlawful stay; lawyer routing mandatory).
   - Next batch (Batch 010) candidates: 技能ビザ（技能：料理人等）の要件, 経営管理の年収・事業規模要件詳細, 就労系ビザ保持者の社会保険加入義務詳細, 在留資格ごとの更新書類差異（技人国 vs 技能 vs 特定技能）, 短期滞在ビザの上陸拒否事由と90日ルール.
+- 2026-05-15: Batch 010 completed (5 cards: G56-G60). Total completed: 59. DOMAIN items: 162. Summary:
+  - G56 (gino-visa-gaikoku-ryorinin): atlas_draft P1. 技能ビザ = 外国料理の調理師・スポーツ指導者・航空機操縦者・貴金属加工職人等. 外国料理限定（日本料理は対象外）. 10年実務経験要件（上陸基準省令）. 技人国（知識専門職）との区別が重要. Sources: ISA skilled.html + 上陸基準省令「技能」.
+  - G57 (keieikanri-joken-shorei): atlas_draft P0. CRITICAL: 500万円は上陸基準省令の条文に根拠なし。省令上の財産要件 = 3,000万円以上（または常勤職員2名以上）。固定事務所（バーチャルオフィス不可）。日本人同等以上の報酬。dom-keiei-p0-001 = 500万円の出所が最重要DOMAIN確認事項。Sources: 上陸基準省令「経営・管理」+ ISA management.html.
+  - G58 (shakai-hoken-gaikokujin-gimu): atlas_draft P1. 国籍・在留資格 = 社会保険加入義務の判断軸ではない。雇用形態（適用事業所でのフルタイム相当）が判断軸。外国人も強制適用。社会保障協定国の例外あり（needs_domain）。Sources: 健康保険法・厚生年金保険法（L1）.
+  - G59 (tanki-taizai-shuro-kinshi): atlas_draft P0. 短期滞在での報酬を受ける就労 = 不法就労（ISA公式ページで活動範囲確認）。資格外活動許可は短期滞在には適用不可（包括許可は留学/家族滞在のみ）。雇用主への刑事罰（入管法第73条の2）。dom-tanki-p0-001 = 海外フリーランスの国外案件グレーゾーン（P0 DOMAIN）。Sources: ISA shortterm.html + 不法就労ページ.
+  - G60 (eijuu-shinsei-kihon-yoken): atlas_draft P1. 永住申請の基本三要件（素行・生計・国益）+ 具体要件（10年居住内就労系5年、最長在留期間、直近2年公的義務、配偶者特例、高度専門職ショートカット）。令和6年改定で公的義務要件が強化。Sources: ISA 16-4.html + 永住許可ガイドライン（令和6年改定版）.
+  - New P0 DOMAIN items: dom-keiei-p0-001 (500万円の法的根拠未確認 = 最重要), dom-tanki-p0-001 (海外フリーランス国外案件のグレーゾーン), dom-tanki-p0-002 (すでに短期滞在で2か月就労中のケース).
+  - Next batch (Batch 011) candidates: 在留カード常時携帯義務と提示義務の区別（条文ベース）, 高度専門職ポイント詳細（各カテゴリの点数確認）, 特定技能1号の分野別試験要件一覧, 帰化申請の実務要件（居住期間短縮条件含む）, 就労系在留資格と帰国後の再入国手続き.
