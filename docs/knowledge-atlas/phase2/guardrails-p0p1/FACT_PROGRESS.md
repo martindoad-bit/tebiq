@@ -1,14 +1,14 @@
 # FACT Progress — Phase 2 P0/P1 Guardrails
 
-Last updated: 2026-05-15 CST (Batch 010 complete)
+Last updated: 2026-05-15 CST (Batch 011 complete)
 
 ## Current Status
 
 - total planned in Workpack 001 core batch: 10
-- completed: 59
+- completed: 64
 - in progress: 0
 - blocked: 0
-- needs DOMAIN: 162
+- needs DOMAIN: 173
 - Batch 001 core: completed 10/10
 - Batch 002 continuation: completed 5
 - Batch 003 continuation: completed 9 (G23 skipped — insufficient official source)
@@ -19,6 +19,7 @@ Last updated: 2026-05-15 CST (Batch 010 complete)
 - Batch 008 continuation: completed 5 (G46-G50)
 - Batch 009 continuation: completed 5 (G51-G55)
 - Batch 010 continuation: completed 5 (G56-G60)
+- Batch 011 continuation: completed 5 (G61-G65)
 
 ## Completed Cards
 
@@ -83,6 +84,11 @@ Last updated: 2026-05-15 CST (Batch 010 complete)
 | guardrail-shakai-hoken-gaikokujin-gimu | guardrail-shakai-hoken-gaikokujin-gimu.md | completed | 健康保険法・厚生年金保険法（L1）+ 厚生労働省 | yes | atlas_draft P1. G58. 国籍・在留資格は社会保険加入義務の判断軸ではない。雇用形態（適用事業所でのフルタイム相当）が判断軸。外国人も強制適用。社保未加入=公的義務不履行→PR審査リスク（G4/G32 cross-ref）。社会保障協定国の例外あり。 |
 | guardrail-tanki-taizai-shuro-kinshi | guardrail-tanki-taizai-shuro-kinshi.md | completed | official ISA shortterm.html + ISA 不法就労ページ | yes | atlas_draft P0. G59. 活動範囲:「観光，保養，スポーツ，親族の訪問，見学，講習又は会合への参加，業務連絡その他これらに類似する活動」. 報酬を受ける就労 = 不法就労. 資格外活動許可取得不可（包括許可は留学/家族滞在のみ）. 雇用主にも入管法第73条の2刑事罰. |
 | guardrail-eijuu-shinsei-kihon-yoken | guardrail-eijuu-shinsei-kihon-yoken.md | completed | ISA 永住許可申請 16-4.html + 永住許可ガイドライン（令和6年改定版） | yes | atlas_draft P1. G60. 原則10年居住（内就労・居住系5年以上）. 最長在留期間（3年or5年）要件. 直近2年の公的義務適正履行（令和6年改定）. 配偶者特例（婚姻3年+在留1年）. 高度専門職ショートカット（80pt→1年, 70pt→3年）. 不許可後の対応=G52 cross-ref. |
+| guardrail-zairyu-card-keitai-gimu | guardrail-zairyu-card-keitai-gimu.md | completed | 入管法第23条・第76条（e-Gov法令） | yes | atlas_draft P1. G61. 16歳以上中長期在留者=常時携帯義務（第23条第1項）. 警察官・入国審査官等への提示義務（第23条第2項）. 不携帯=20万円以下罰金（第76条）. 16歳未満=免除. 特別永住者は別制度（入管特例法）. |
+| guardrail-hsp-point-detail-table | guardrail-hsp-point-detail-table.md | completed | ISA 官式ポイント計算表PDF (930001657.pdf) + 法務省令第37号PDF (930001658.pdf) | yes | atlas_draft P1. G62. イ・ロ・ハ別点数表確認済み。学歴（博士=30/修士=20）, 職歴（10年=20-25）, 年収（年齢依存ブラケット最高40点/ハは最高50点）, 年齢（29歳以下=15点）, JLPT N1=15/N2=10, イノベーション中小企業=合計20点. 官式PDF直接引用. |
+| guardrail-tokutei-gino-bunya-shiken | guardrail-tokutei-gino-bunya-shiken.md | completed | ISA 特定技能FAQ + G46/G33 cross-refs | yes | atlas_draft P1. G63. 特定技能=分野別技能試験+日本語試験（両方必要）. 分野ごとに別々の試験. 技能実習2号修了: 日本語=全分野免除; 技能=関連分野のみ免除. 介護は3試験（技能+介護日本語+一般日本語）. |
+| guardrail-kika-joken-kyojuukikan | guardrail-kika-joken-kyojuukikan.md | completed | 国籍法第5条・第7条・第11条（e-Gov法令）+ G25 cross-ref | yes | atlas_draft P1. G64. 帰化原則=5年継続居住（適法在留）+ 素行・生計・重国籍防止. 日本人配偶者特例=婚姻3年+日本在住（国籍法第7条）. 重国籍防止=原則元の国籍喪失. 申請先=法務局（ISAではない）. Cross-ref G25. |
+| guardrail-shutsukoku-sainyukoku-zairyu | guardrail-shutsukoku-sainyukoku-zairyu.md | completed | 入管法第26条・第26条の2 + G19 cross-ref | yes | atlas_draft P1. G65. 在留期間は出国中も進行（停止しない）. みなし再入国=出国日から1年以内（G19 cross-ref）. 正規再入国許可=最長5年（在留期間内）. 再入国許可≠在留期間延長. 特例期間中の出国=needs_domain. |
 
 ## In Progress
 
@@ -244,6 +250,17 @@ None. All WORKPACK_001 continuation candidates completed. See next batch candida
 | dom-tanki-p0-002 | guardrail-tanki-taizai-shuro-kinshi | For a person who has already been working in Japan on 短期滞在 for 2 months — what is the realistic remediation route? (departure + entry ban risk; employer also liable; is voluntary departure the only option?) | P0 | Person already in unlawful employment situation; P0 risk for both worker and employer. Professional/lawyer routing mandatory; specific remediation options not confirmed. |
 | dom-eijuu-001 | guardrail-eijuu-shinsei-kihon-yoken | What is ISA's operational standard for "継続居住" — specifically, what length or frequency of overseas absences is treated as breaking the continuity of the 10-year residence requirement? | P1 | ISA has not published precise rules on absence thresholds; individual assessment may vary. |
 | dom-eijuu-002 | guardrail-eijuu-shinsei-kihon-yoken | For PR applicants with tax/pension delinquency resolved more than 2 years ago — is past delinquency treated as an absolute bar or a weighting factor in the 素行 evaluation, and what evidence of remediation is expected? | P1 | G4 notes past violations are negative factors; but the distinction between absolute bar and weighting factor is not confirmed from official sources. |
+| dom-card-keitai-001 | guardrail-zairyu-card-keitai-gimu | What are the practical consequences of refusing to show a 在留カード to a police officer during a 職務質問? Does refusal constitute the violation (not possession), or only non-possession? | P1 | The 提示義務 is clear but the enforcement mechanism for refusal to present (vs. non-possession) is not confirmed. |
+| dom-card-keitai-002 | guardrail-zairyu-card-keitai-gimu | Are there ISA or government guidelines for acceptable alternatives if the card is lost or stolen and a replacement is in process? | P1 | Practical gap: what does a person do in the interim between loss and replacement during police identity check? |
+| dom-hsp-d-001 | guardrail-hsp-point-detail-table | What is the current official list of universities designated under 法務大臣告示 for ボーナス⑪ (10pts)? | P1 | The list changes; TEBIQ cannot advise "your university qualifies" without the current official list. |
+| dom-hsp-d-002 | guardrail-hsp-point-detail-table | For applicants eligible under both category イ and ロ — is there an official mechanism for self-selecting the higher-scoring category? | P1 | Self-selection may or may not be permitted; professional confirmation needed. |
+| dom-hsp-d-003 | guardrail-hsp-point-detail-table | What is the current official list of "成長分野における先端的事業" designated for ボーナス⑩ (10pts)? | P1 | The designated list updates; TEBIQ cannot confirm eligibility without the current official list. |
+| dom-shiken-001 | guardrail-tokutei-gino-bunya-shiken | What is the official complete mapping of 技能実習 occupations → 特定技能 sectors for 関連性あり (技能試験免除)? Cross-ref G46 dom-jisshu-001. | P1 | Without the official mapping, TEBIQ cannot confirm exemption eligibility for specific occupation/sector combinations. |
+| dom-shiken-002 | guardrail-tokutei-gino-bunya-shiken | For the 4 newly-added 特定技能 sectors (林業・木材産業・鉄道・自動車運送業, 2024) — are their skill evaluation exams fully operational as of 2026? | P1 | New sector exams may still be in establishment phase; interim routes may exist. |
+| dom-kika-001 | guardrail-kika-joken-kyojuukikan | G25 cross-ref: confirmed exceptions to the 5-year residence requirement beyond 国籍法第6条-9条 (e.g., persons of Japanese descent, refugees, stateless persons). | P1 | Cross-ref to G25 dom-kika-001. |
+| dom-kika-002 | guardrail-kika-joken-kyojuukikan | G25 cross-ref: for persons from countries that prohibit voluntary renunciation of citizenship — does Japan's 帰化 process proceed regardless, leaving dual-nationality question to individual/home country? | P1 | Cross-ref to G25 dom-kika-002. |
+| dom-shutsukoku-001 | guardrail-shutsukoku-sainyukoku-zairyu | Does the 特例期間 (during a pending renewal application) continue if the applicant makes a brief overseas trip? If the 特例期間 terminates upon departure, the applicant would be returning without valid status. | P1 | Critical gray area — wrong advice could result in unlawful stay upon return. |
+| dom-shutsukoku-002 | guardrail-shutsukoku-sainyukoku-zairyu | For a 永住者 who has been overseas 1+ years (みなし期限超過) — what is the actual re-entry process? Is there a consular procedure to restore 永住 status, or is the status lost permanently? | P1 | Cross-ref G19 dom-minashi-002. Major practical gap for long-term overseas 永住 holders. |
 
 ## Source Log
 
@@ -338,6 +355,11 @@ None. All WORKPACK_001 continuation candidates completed. See next batch candida
 | 社会保険加入義務（外国人） | 健康保険法 第3条・第36条・第39条; 厚生年金保険法 第6条・第9条 | (法令) | 2026-05-15 | 国籍・在留資格は加入義務の判断軸ではない. 適用事業所でのフルタイム相当勤務が要件. 強制適用（mandatory enrollment). Used for G58. |
 | 短期滞在 活動範囲・不法就労定義 | 出入国在留管理庁「在留資格『短期滞在』」・「不法就労について」 | shortterm.html + nyuukokukanri07_00011.html | 2026-05-15 | 活動範囲:「観光，保養，スポーツ，親族の訪問，見学，講習又は会合への参加，業務連絡その他これらに類似する活動」. 不法就労定義: 就労が認められない在留資格での就労. 雇用主罰則: 入管法第73条の2（3年以下懲役または300万円以下罰金）. 資格外活動許可: 短期滞在は対象外. Used for G59. |
 | 永住許可申請ガイドライン（令和6年改定版） | 出入国在留管理庁「永住許可に関するガイドライン」 | https://www.moj.go.jp/isa/publications/materials/nyuukokukanri07_00115.html | 2026-05-15 | 10年居住要件（内就労・居住系5年以上）; 最長在留期間要件（3年or5年の資格保有）; 公的義務適正履行（直近2年納税・年金・社保）; 配偶者特例（婚姻3年+在留1年）; 高度専門職ショートカット（80pt→1年, 70pt→3年）. Used for G60. |
+| 在留カード常時携帯義務・提示義務・罰則 | 出入国管理及び難民認定法 第23条・第76条 | https://laws.e-gov.go.jp/law/326CO0000000319 | 2026-05-15 | 第23条第1項: 16歳以上の中長期在留者=常時携帯義務. 第23条第2項: 警察官・入国審査官等への提示義務. 第76条: 不携帯=20万円以下罰金. Used for G61. |
+| 高度専門職ポイント計算表（官式PDF） | 出入国在留管理庁「ポイント計算表（参考書式）」 | https://www.moj.go.jp/isa/content/930001657.pdf | 2026-05-15 | 全点数値確認: 学歴（博士30/修士20/MBA25/学士10）, 職歴（最高25点）, 年収（年齢依存最高40点/ハは最高50点）, 年齢（29歳以下15点）, JLPT N1=15/N2=10, イノベーション中小企業=合計20点. Used for G62. |
+| 高度専門職省令（平成26年法務省令第37号） | 法務省令第37号 | https://www.moj.go.jp/isa/content/930001658.pdf | 2026-05-15 | 法的根拠となる省令全文PDF; 点数ブラケットの詳細規定. Used for G62. |
+| 帰化許可申請 一般要件 | 国籍法 第4条〜第9条・第11条 | https://laws.e-gov.go.jp/law/324AC0000000147 | 2026-05-15 | 第5条: 帰化一般要件（5年居住・18歳・素行善良・生計能力・重国籍防止）. 第7条: 簡易帰化（日本人配偶者: 婚姻3年+日本在住）. 第11条: 重国籍防止. Used for G64. |
+| 再入国許可・みなし再入国許可 | 出入国管理及び難民認定法 第26条・第26条の2 | https://laws.e-gov.go.jp/law/326CO0000000319 | 2026-05-15 | 第26条: 正規再入国許可（最長5年・在留期間内）. 第26条の2: みなし再入国許可（1年以内に帰国）. 在留期間延長効果なし. Used for G65. |
 
 ## Handoff Notes To Codex
 
@@ -424,3 +446,11 @@ None. All WORKPACK_001 continuation candidates completed. See next batch candida
   - G60 (eijuu-shinsei-kihon-yoken): atlas_draft P1. 永住申請の基本三要件（素行・生計・国益）+ 具体要件（10年居住内就労系5年、最長在留期間、直近2年公的義務、配偶者特例、高度専門職ショートカット）。令和6年改定で公的義務要件が強化。Sources: ISA 16-4.html + 永住許可ガイドライン（令和6年改定版）.
   - New P0 DOMAIN items: dom-keiei-p0-001 (500万円の法的根拠未確認 = 最重要), dom-tanki-p0-001 (海外フリーランス国外案件のグレーゾーン), dom-tanki-p0-002 (すでに短期滞在で2か月就労中のケース).
   - Next batch (Batch 011) candidates: 在留カード常時携帯義務と提示義務の区別（条文ベース）, 高度専門職ポイント詳細（各カテゴリの点数確認）, 特定技能1号の分野別試験要件一覧, 帰化申請の実務要件（居住期間短縮条件含む）, 就労系在留資格と帰国後の再入国手続き.
+- 2026-05-15: Batch 011 completed (5 cards: G61-G65). Total completed: 64. DOMAIN items: 173. Summary:
+  - G61 (zairyu-card-keitai-gimu): atlas_draft P1. 在留カード常時携帯義務: 入管法第23条（16歳以上=常時携帯必須；警察官等への提示義務）; 不携帯=20万円以下罰金（第76条）; 16歳未満免除; 特別永住者は別制度. Sources: 入管法第23条・第76条条文.
+  - G62 (hsp-point-detail-table): atlas_draft P1. 高度専門職ポイント計算表（イ・ロ・ハ別）全点数値確認: ISA 官式PDF（930001657.pdf + 法務省令第37号PDF）から直接引用. 学歴/職歴/年収/年齢/研究実績/ボーナス/イノベーション機関の各値確認済み. 重要: N2ボーナス=N1取得者には加算不可; イノベーション中小企業=合計20点（10+10）.
+  - G63 (tokutei-gino-bunya-shiken): atlas_draft P1. 特定技能1号試験要件: 分野別技能試験+日本語試験の2本立て. 16分野各々に別々の試験. 技能実習2号修了: 日本語=全分野免除; 技能=関連分野のみ（G46 cross-ref）. 介護=3試験. 試験合格≠在留資格（手続き別途必要）.
+  - G64 (kika-joken-kyojuukikan): atlas_draft P1. 帰化実務要件: 国籍法第5条（5年居住+素行+生計+重国籍防止）; 簡易帰化（第7条）=日本人配偶者で婚姻3年+日本在住; 重国籍防止（第11条）; 法務局申請（ISAではない）. Cross-ref G25.
+  - G65 (shutsukoku-sainyukoku-zairyu): atlas_draft P1. 在留期間は出国中も進行（停止しない）; みなし再入国=1年（G19）; 正規再入国許可=最長5年（在留期間内）; 再入国許可≠在留期間延長; 特例期間中の出国=needs_domain P1.
+  - New DOMAIN items: dom-card-keitai-001/002, dom-hsp-d-001/002/003, dom-shiken-001/002, dom-kika-001/002, dom-shutsukoku-001/002 (11 new items).
+  - Next batch (Batch 012) candidates: 在留資格別の更新書類典型パターン（技人国・特定技能・経営管理）, 雇用保険・労働保険の外国人加入義務, 就労系在留資格の申請人資格（在日申請 vs 海外申請）, 高度専門職2号 と 永住の比較・移行ルート, 特定技能の支援計画義務（登録支援機関委託なし雇用主）.
