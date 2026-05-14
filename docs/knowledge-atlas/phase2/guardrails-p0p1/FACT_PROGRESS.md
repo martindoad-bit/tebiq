@@ -1,14 +1,14 @@
 # FACT Progress — Phase 2 P0/P1 Guardrails
 
-Last updated: 2026-05-15 CST (Batch 008 complete)
+Last updated: 2026-05-15 CST (Batch 009 complete)
 
 ## Current Status
 
 - total planned in Workpack 001 core batch: 10
-- completed: 49
+- completed: 54
 - in progress: 0
 - blocked: 0
-- needs DOMAIN: 136
+- needs DOMAIN: 149
 - Batch 001 core: completed 10/10
 - Batch 002 continuation: completed 5
 - Batch 003 continuation: completed 9 (G23 skipped — insufficient official source)
@@ -17,6 +17,7 @@ Last updated: 2026-05-15 CST (Batch 008 complete)
 - Batch 006 continuation: completed 5 (G36-G40)
 - Batch 007 continuation: completed 5 (G41-G45)
 - Batch 008 continuation: completed 5 (G46-G50)
+- Batch 009 continuation: completed 5 (G51-G55)
 
 ## Completed Cards
 
@@ -71,6 +72,11 @@ Last updated: 2026-05-15 CST (Batch 008 complete)
 | guardrail-kazoku-taizai-shuro-seigen | guardrail-kazoku-taizai-shuro-seigen.md | completed | G16/G24 sources (ISA nyuukokukanri07_00003.html + 16-8.html) | yes | atlas_draft P1. 家族滞在 = no automatic work permission; 資格外活動許可 must be separately applied for; 28h/week after 包括許可 granted; pending ≠ permission (G17). |
 | guardrail-eijusha-haigusha-rikon-route | guardrail-eijusha-haigusha-rikon-route.md | completed (needs_domain) | G8/G45 cross-ref + ISA 永住者の配偶者等 status page (indirect) | yes | needs_domain P1. 永住者の配偶者等 ≠ 日本人の配偶者等; PR shortcut inapplicable; 帰化 shortcut inapplicable; 定住者 discretionary. Official page text for post-divorce procedure not accessed — needs_domain. |
 | guardrail-koshin-shinsei-timing | guardrail-koshin-shinsei-timing.md | completed | ISA 16-3.html + G1 (特例期間) cross-ref | yes | atlas_draft P1. 3-month-before window confirmed (ISA 16-3.html). 特例期間 only for pre-expiry filings (G1). Late filing = unlawful stay. "6か月前" = incorrect. Recommend 2-3 months before for safety. |
+| guardrail-tokutei-gino-tenshoku-joken | guardrail-tokutei-gino-tenshoku-joken.md | completed | official ISA 特定技能 FAQ Q13 + Q36 (faq.html) | yes | atlas_draft P1. 転職 = 同一業務区分内 or 技能水準共通性確認済み区分間のみ。同一分野業務変更→届出; 異なる分野→在留資格変更許可申請。Official text confirmed. |
+| guardrail-fuhyoka-go-taiou | guardrail-fuhyoka-go-taiou.md | completed | official ISA 16-1/16-2/16-3/16-4.html (不服申立方法：なし) | yes | atlas_draft P1. 不服申立方法：なし (confirmed across all major application types). No formal appeal route. Re-application only. No mandatory waiting period. Post-denial stay depends on original period status. |
+| guardrail-eijusha-card-kosin-soko | guardrail-eijusha-card-kosin-soko.md | completed | ISA 在留カード有効期間の更新申請 page (G22 source) | yes | atlas_draft P1. G22 complement for 永住者. Card = 7-year validity (16+); separate from status permanence. 2-month application window. Expired card ≠ status revocation. |
+| guardrail-gijinkoku-nihongo-youken | guardrail-gijinkoku-nihongo-youken.md | completed (needs_domain) | ISA 技人国 status page + 上陸基準省令 framework (structural) | yes | needs_domain P1. No statutory JLPT requirement for 技人国. Job-duties-based evaluation. ISA operational practice on language weighting not confirmed. |
+| guardrail-fukugyo-kengyo-zairyu-seigen | guardrail-fukugyo-kengyo-zairyu-seigen.md | completed | G16/G35/G38/G33 cross-refs + ISA 永住者 status page | yes | atlas_draft P1. 就労ビザ副業 = must be within activity scope. 永住者 = unrestricted. 技人国 side job = must be within same subcategory. 特定技能 side job = sector-confined. HSP2 = broad scope. |
 
 ## In Progress
 
@@ -209,6 +215,17 @@ None. All WORKPACK_001 continuation candidates completed. See next batch candida
 | dom-eijusha-002 | guardrail-eijusha-haigusha-rikon-route | Is there an explicitly-stated ISA guideline confirming the PR shortcut inapplicability for 永住者の配偶者等 (vs. 日本人の配偶者等)? | P1 | Derived from legal framework; explicit ISA confirmation needed. |
 | dom-timing-001 | guardrail-koshin-shinsei-timing | If an application is accepted at ISA (特例期間 starts) but ISA later returns it due to document incompleteness — does the 2-month special-period cap pause or continue during 返却中? | P1 | Cross-ref dom-incomplete-002 (G12); critical for users managing incomplete submissions near expiry. |
 | dom-timing-002 | guardrail-koshin-shinsei-timing | For users who file on the expiry date (same day) — what is ISA's actual practice regarding accepting vs. rejecting same-day applications? | P1 | Affects safety advice for users who delay until the last day. |
+| dom-tenshoku-001 | guardrail-tokutei-gino-tenshoku-joken | What is the official deadline (e.g., 14 days) for notifying ISA when a 特定技能 employer changes? Not confirmed from FAQ text — likely in 特定技能省令 or 施行規則. | P1 | Required before runtime use of G51 timing advice. |
+| dom-tenshoku-002 | guardrail-tokutei-gino-tenshoku-joken | For a 特定技能 worker whose employer closes — what is the maximum permissible gap between employment arrangements before status is considered inactive (= possible cancellation under G26)? | P1 | Employer closure is a common emergency scenario. |
+| dom-tenshoku-003 | guardrail-tokutei-gino-tenshoku-joken | What are the confirmed 業務区分 combinations for 特定技能 that have official 技能水準共通性 certification (allowing cross-category transfer without new exam)? | P1 | Without this mapping, safe routing for cross-category transfer is incomplete. |
+| dom-fuhyoka-001 | guardrail-fuhyoka-go-taiou | What is the process for obtaining the formal 不許可 reason from ISA — is a written explanation always provided or must it be requested separately? | P1 | Affects practical re-application preparation routing. |
+| dom-fuhyoka-002 | guardrail-fuhyoka-go-taiou | For a user denied renewal while original period has 1-2 months remaining — what is ISA processing time expectation for a re-application? Risk of original period expiring before new decision? | P1 | Critical timing scenario for users re-applying after denial. |
+| dom-eijusha-card-001 | guardrail-eijusha-card-kosin-soko | What is the practical consequence at the airport if a 永住者 attempts re-entry with an expired 在留カード obtained via みなし再入国? | P1 | Expired card + re-entry = serious practical complication; professional routing needed. |
+| dom-nihongo-001 | guardrail-gijinkoku-nihongo-youken | In practice, does ISA factor in an applicant's JLPT score in evaluating 技人国 applications, even if it is not a statutory criterion? | P1 | Cannot confirm or deny without ISA operational guidance. |
+| dom-nihongo-002 | guardrail-gijinkoku-nihongo-youken | For 国際業務 roles requiring Japanese (e.g., 通訳), what evidence of language ability is expected in the application — is JLPT the expected evidence or are there alternatives? | P1 | Language-evidence requirements for interpretation roles are not confirmed from official text. |
+| dom-fukugyo-001 | guardrail-fukugyo-kengyo-zairyu-seigen | For a 技人国 holder who does freelance programming (same field as primary job) — is this within existing 技人国 scope or does it require a new status? | P1 | Freelance-in-same-field gray area needs professional determination. |
+| dom-fukugyo-002 | guardrail-fukugyo-kengyo-zairyu-seigen | What is the notification obligation for a 技人国 holder who takes on a legitimate second employer within the same subcategory scope? | P1 | Secondary employer within scope: notification requirements not confirmed. |
+| dom-fuhyoka-p0-001 | guardrail-fuhyoka-go-taiou | For a user who received 不許可 after original period already expired (now in unlawful stay) — what is the TEBIQ answer route? (P0: must route to lawyer immediately; no TEBIQ routing can solve unlawful stay.) | P0 | Unlawful stay after 不許可 with expired period = P0 risk; lawyer routing mandatory. |
 
 ## Source Log
 
@@ -294,6 +311,8 @@ None. All WORKPACK_001 continuation candidates completed. See next batch candida
 | 技能実習2号→特定技能1号 試験免除 | 出入国在留管理庁「特定技能制度に関するQ&A」 | https://www.moj.go.jp/isa/policies/ssw/faq.html | 2026-05-15 | 日本語試験免除: 「技能実習の職種・作業にかかわらず」— all sectors. 技能試験免除: 「従事しようとする業務と技能実習2号の職種・作業に関連性が認められる場合」— related field only. 「良好修了」=「計画に従って２年１０月以上修了」. Used for G46. |
 | 経営管理 活動定義・実質参画要件 | 出入国在留管理庁「在留資格『経営・管理』」+「外国人経営者の在留資格基準明確化」 | businessmanager.html + nyukan43.html | 2026-05-15 | 活動定義: 「事業の経営を行い又は当該事業の管理に従事する活動」. 実質参画: 「事業の運営に関する重要事項の決定，事業の執行又は監査」. 役員就任のみ不十分. 継続的事務所必要. 法令遵守（租税・労働・社会保険）義務. Used for G47. |
 | 在留期間更新 申請受付開始日 | 出入国在留管理庁「在留期間更新許可申請」 | https://www.moj.go.jp/isa/applications/procedures/16-3.html | 2026-05-15 | 在留期間満了の3か月前から申請可（原則）. COVID期間特例等なし（現在は通常ルール）. Used for G50. |
+| 特定技能 転職条件 Q13・Q36 | 出入国在留管理庁「特定技能制度に関するQ&A」 | https://www.moj.go.jp/isa/policies/ssw/faq.html | 2026-05-15 | Q13: 「同一の業務区分内又は試験等によりその技能水準の共通性が確認されている業務区分間」のみ転職可. 受入機関・分野変更→変更許可申請. Q36: 同一分野業務変更→届出; 異分野→変更申請. Used for G51. |
+| 在留申請 不服申立方法：なし | 出入国在留管理庁（各申請手続きページ）| 16-1/16-2/16-3/16-4/16-10.html | 2026-05-15 | 不服申立方法：なし（16-3, 16-4, 16-1, 16-10で確認）. 異議申出は退去強制手続内のみ（通常申請不許可への異議申立ではない）. Used for G52. |
 
 ## Handoff Notes To Codex
 
@@ -364,3 +383,11 @@ None. All WORKPACK_001 continuation candidates completed. See next batch candida
   - G50 (koshin-shinsei-timing): atlas_draft P1. 3-month-before window confirmed (ISA 16-3.html). 特例期間 only for pre-expiry filings — post-expiry filing = unlawful stay. "6か月前" = incorrect. "直前でいい" = risky.
   - New P0 DOMAIN item: dom-keiei-002 (技人国 holder already serving as representative director 6+ months = potential P0 unauthorized activity).
   - Next batch (Batch 009) candidates: 特定技能の転職・雇用主変更（同一業種条件）, 永住者の在留カード更新と素行要件, 留学生のアルバイト先業種制限（風俗業等）, 在留申請の「不許可後」の対応（異議申出・再申請）, 日本語能力と在留資格（業務要件との関係）.
+- 2026-05-15: Batch 009 completed (5 cards: G51-G55). Total completed: 54. DOMAIN items: 149. Summary:
+  - G51 (tokutei-gino-tenshoku-joken): atlas_draft P1. 転職OK = 同一業務区分内 or 技能水準共通性確認済み区分間のみ。同一分野業務変更→届出; 異なる分野→在留資格変更許可申請。ISA FAQ Q13+Q36 official text confirmed.
+  - G52 (fuhyoka-go-taiou): atlas_draft P1. 不服申立方法：なし (confirmed all major application types: 16-1/16-3/16-4/16-10). No formal appeal. Re-application only. No mandatory waiting period. Post-denial stay = depends on whether original period still valid. Post-denial unlawful stay = P0 (dom-fuhyoka-p0-001).
+  - G53 (eijusha-card-kosin-soko): atlas_draft P1. G22 complement. 永住者カード = 7-year validity (16+). 2-month renewal window. Expired card ≠ status revocation. Status is permanent; card is not.
+  - G54 (gijinkoku-nihongo-youken): needs_domain P1. No statutory JLPT requirement for 技人国 (structural from 上陸基準省令). ISA operational practice on language weighting not confirmed. Job-duties-based evaluation.
+  - G55 (fukugyo-kengyo-zairyu-seigen): atlas_draft P1. Side jobs must be within activity scope for employment-based visa holders. 永住者 = unrestricted. 技人国 = same subcategory only. 特定技能 = same sector/category. HSP2 = broad scope.
+  - New P0 DOMAIN item: dom-fuhyoka-p0-001 (post-不許可 with expired period = unlawful stay; lawyer routing mandatory).
+  - Next batch (Batch 010) candidates: 技能ビザ（技能：料理人等）の要件, 経営管理の年収・事業規模要件詳細, 就労系ビザ保持者の社会保険加入義務詳細, 在留資格ごとの更新書類差異（技人国 vs 技能 vs 特定技能）, 短期滞在ビザの上陸拒否事由と90日ルール.
