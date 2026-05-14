@@ -1,14 +1,14 @@
 # FACT Progress — Phase 2 P0/P1 Guardrails
 
-Last updated: 2026-05-15 CST (Batch 014 complete)
+Last updated: 2026-05-15 CST (Batch 015 complete)
 
 ## Current Status
 
 - total planned in Workpack 001 core batch: 10
-- completed: 79
+- completed: 84
 - in progress: 0
 - blocked: 0
-- needs DOMAIN: 203
+- needs DOMAIN: 213
 - Batch 001 core: completed 10/10
 - Batch 002 continuation: completed 5
 - Batch 003 continuation: completed 9 (G23 skipped — insufficient official source)
@@ -23,6 +23,7 @@ Last updated: 2026-05-15 CST (Batch 014 complete)
 - Batch 012 continuation: completed 5 (G66-G70)
 - Batch 013 continuation: completed 5 (G71-G75)
 - Batch 014 continuation: completed 5 (G76-G80)
+- Batch 015 continuation: completed 5 (G81-G85)
 
 ## Completed Cards
 
@@ -107,6 +108,11 @@ Last updated: 2026-05-15 CST (Batch 014 complete)
 | guardrail-hsp-nenshu-hyoka-kozo | guardrail-hsp-nenshu-hyoka-kozo.md | completed | ISA Q&A newimmiact_3_qa.html (G34 cross-ref); G62 cross-ref | yes | atlas_draft P1. G78. HSPポイント年収: 基本給・賞与含む; 通勤手当・住宅手当・残業代・株式運用益は除外（ISA Q&A明示）. 海外給与は日本での高度専門職活動対応分のみ含む. RSU/ストックオプションは一般的に除外（needs_domain）. |
 | guardrail-ikusei-shuro-keikameasure | guardrail-ikusei-shuro-keikameasure.md | completed | ISA ikusei/index.html + ikusei/qa.html; G37/G46 cross-refs | yes | atlas_draft P1. G79. 技能実習法廃止2027年4月1日; 既存技能実習生は経過措置継続. 育成就労の最大の違い=転籍が1-2年後に可能. 育成就労→特定技能1号は在留資格変更申請必要（自動ではない）. needs_domain P1: 育成就労修了者の試験免除条件. |
 | guardrail-teijusha-yoken-shinsa | guardrail-teijusha-yoken-shinsa.md | completed | ISA teijusha.html; 法務省令（告示定住カテゴリー）; G31/G45/G25 cross-refs | yes | atlas_draft P1. G80. 定住者=告示定住（日系人等・要件告示明確）と告示外定住（大臣裁量・個別事情）に分かれる. 離婚後の元配偶者=告示外定住（法的権利ではない）. 定住者は就労制限なし・在留期間有限（永住との根本的違い）. |
+| guardrail-eltrc-online-shinsei | guardrail-eltrc-online-shinsei.md | completed | ISA eLTRC index.html + online-QA.html; G39/G50 cross-refs | yes | atlas_draft P1. G81. 在留申請オンラインシステム（eLTRC）: 永住・短期滞在・特別永住はオンライン非対応; オンライン申請は本人（マイナンバーカード）または登録申請取次者のみ; カード受取は窓口/郵送必要; 審査完了メール≠許可決定. needs_domain P1: 特例期間発生タイミング（送信完了 vs 申請番号発行）. |
+| guardrail-choki-shukoku-zairyu-card | guardrail-choki-shukoku-zairyu-card.md | completed | ISA 16-5.html; 総務省（海外転出届）; G19/G65/G74 cross-refs | yes | atlas_draft P1. G82. 長期出国時: みなし再入国=1年; 正規再入国=最長5年（在留期間内）; 永住者も失効リスクあり; 1年以上出国=海外転出届必要. needs_domain P1: 海外での再入国許可延長; 海外転出届未提出の在留審査影響. |
+| guardrail-eijuu-route-hikaku | guardrail-eijuu-route-hikaku.md | completed | ISA永住ガイドライン令和6年版; G60/G34/G33/G25 cross-refs | yes | atlas_draft P1. G83. 永住への各ルート比較: 技人国=10年基本; 特定技能1号単独では10年不可; HSP1ショートカット（80pt→1年, 70pt→3年; 申請時ポイント維持必要; HSP1資格保有が条件）. needs_domain P1: 特定技能1号期間の永住カウント; 短期出国の継続性影響. |
+| guardrail-iryo-hoken-gaikokujin | guardrail-iryo-hoken-gaikokujin.md | completed | 国民健康保険法第5条・第6条; 健康保険法第3条; 厚生労働省PDF; G58/G60/G71 cross-refs | yes | atlas_draft P1. G84. 外国人も中長期在留者はNHIまたは社保に強制加入義務; 短期滞在・外交・公用は除外; NHIは任意でない; 雇用形態が保険選択の主な判断軸. needs_domain P1: NHI未加入の在留審査への影響; 社会保障協定の適用条件. |
+| guardrail-kaigo-visa-yoken | guardrail-kaigo-visa-yoken.md | completed | ISA nursing.html; ISA 特定技能「介護」ページ; G46/G63/G33 cross-refs | yes | atlas_draft P1. G85. 介護分野は4枠組み（EPA・技能実習・特定技能・在留資格「介護」）; 在留資格「介護」は介護福祉士国家資格が前提; 技能実習2号修了→特定技能1号（試験一部免除; G46参照）; 特定技能「介護」は2号も設定（上限なし）. needs_domain P1: 介護日本語評価試験の免除範囲; 特定技能「介護」2号の試験条件. |
 
 ## In Progress
 
@@ -309,6 +315,15 @@ None. All WORKPACK_001 continuation candidates completed. See next batch candida
 | dom-ikusei-002 | guardrail-ikusei-shuro-keikameasure | What are the confirmed conditions for early 転籍 exception (before the 1-2 year mark) in cases of abusive working conditions under 育成就労? | P1 | Emergency 転籍 exception conditions have not been confirmed from ISA official guidance accessed to date. |
 | dom-teijusha-001 | guardrail-teijusha-yoken-shinsa | What are the historically accepted criteria patterns for 告示外定住 for divorced former spouses of Japanese nationals — child age, custody, residence length, income? | P1 |告示外定住 for post-divorce scenarios has no official written standard; routing must acknowledge the high discretion. |
 | dom-teijusha-002 | guardrail-teijusha-yoken-shinsa | Can a 定住者 holder sponsor a non-Japanese spouse for 家族滞在? Is 定住者 a recognized 扶養者 在留資格 for 家族滞在 applications? | P1 | Whether 定住者 qualifies as a recognized 扶養者 in 家族滞在 applications is not confirmed from accessed official sources. |
+| dom-eltrc-001 | guardrail-eltrc-online-shinsei | For online applications filed near 在留期間 expiry, does 特例期間 begin at eLTRC "送信完了" or at "申請番号発行"? | P1 | ISA Q&A suggests receipt (申請番号), but exact operational definition of receipt for online filings is not confirmed from official text. |
+| dom-choki-001 | guardrail-choki-shukoku-zairyu-card | Is there any procedure at an overseas Japanese embassy to extend or restore a みなし再入国 permit that has expired or is about to expire? | P1 | Official ISA text does not confirm any overseas extension mechanism; needs confirmation. |
+| dom-choki-002 | guardrail-choki-shukoku-zairyu-card | What is the impact on immigration renewal/change evaluation of failure to file 海外転出届 during a multi-year absence? | P1 | ISA guideline does not explicitly address this; needs domain confirmation. |
+| dom-eijuu-r-001 | guardrail-eijuu-route-hikaku | Does ISA treat the 特定技能1号 period as qualifying for the "就労資格での5年" component of the 10-year PR requirement? | P1 | Structural answer is yes, but explicit ISA confirmation for this specific combination has not been accessed. |
+| dom-eijuu-r-002 | guardrail-eijuu-route-hikaku | What length and frequency of overseas travel during the 10-year qualifying period is considered to "break" the continuity of residence for PR purposes? | P1 | ISA guideline uses 継続して10年以上在留 but does not define what constitutes a break in continuity. |
+| dom-iryo-001 | guardrail-iryo-hoken-gaikokujin | Does failure to enroll in NHI (when obligated) appear as a specific negative factor in ISA renewal/change/PR applications beyond the general 公的義務 requirement? | P1 | ISA official text does not separately specify NHI vs pension/tax in the public obligation evaluation. |
+| dom-iryo-002 | guardrail-iryo-hoken-gaikokujin | Complete list of Japan's social security agreement countries and specific conditions under which Japanese social insurance enrollment is exempted. | P1 | Structural answer: agreements exist with multiple countries; complete operational list and conditions not confirmed from accessed official text. |
+| dom-kaigo-001 | guardrail-kaigo-visa-yoken | For 技能実習2号「介護」良好修了者transitioning to 特定技能「介護」1号 — is the 介護日本語評価試験 also waived, or still required? | P1 | Care-sector specific Japanese evaluation test waiver status is not confirmed from accessed official text. |
+| dom-kaigo-002 | guardrail-kaigo-visa-yoken | What are the confirmed conditions and exam requirements for 特定技能「介護」2号 (unlimited stay option)? | P1 | ISA sources confirm 介護 was added to 2号 eligible sectors but exam details are not fully accessible as of 2026-05-15. |
 
 ## Source Log
 
@@ -428,6 +443,15 @@ None. All WORKPACK_001 continuation candidates completed. See next batch candida
 | 育成就労制度 Q&A（転籍・移行要件） | 出入国在留管理庁「育成就労制度に関するQ&A」 | https://www.moj.go.jp/isa/policies/ikusei/qa.html | 2026-05-15 | 転籍可能条件（1-2年後）; 育成就労→特定技能1号の移行は在留資格変更申請が必要（自動ではない）. Used for G79. |
 | 定住者 告示定住・告示外定住 | 出入国在留管理庁「在留資格『定住者』」 | https://www.moj.go.jp/isa/applications/status/teijusha.html | 2026-05-15 | 告示定住のカテゴリー（日系人等）; 告示外定住（大臣裁量）の存在確認. 定住者は就労制限なし・在留期間有限. Used for G80. |
 | 定住者 告示定住の具体的要件 | 法務省「定住者の在留資格を決定する基準を定める省令」（告示） | https://laws.e-gov.go.jp/law/362M50000010135 | 2026-05-15 | 告示定住の対象カテゴリー（日系2世・3世等）と在留期間. Used for G80. |
+| 在留申請オンラインシステム（eLTRC） | 出入国在留管理庁「在留申請オンラインシステム」 | https://www.moj.go.jp/isa/applications/online/index.html | 2026-05-15 | オンライン申請の対象手続き（更新・変更・CoE等）; 対象外（永住・短期滞在・特別永住）; 利用者要件（本人または登録申請取次者）. Used for G81. |
+| eLTRC Q&A（追加書類・カード受取・ステータス） | 出入国在留管理庁「オンラインでの申請手続に関するQ&A」 | https://www.moj.go.jp/isa/applications/online/online-QA.html | 2026-05-15 | 追加書類提出方法; 在留カード受取（窓口/郵送）; 審査完了メール≠許可決定; 返却中ステータスの意味. Used for G81. |
+| 再入国許可（正規・みなし）の種別と有効期間 | 出入国在留管理庁「再入国許可申請」 | https://www.moj.go.jp/isa/applications/procedures/16-5.html | 2026-05-15 | 正規再入国許可: 最長5年・在留期間内が上限. みなし再入国: 1年（G19 cross-ref）. 長期出国への適用. Used for G82. |
+| 海外転出届の義務と手続き | 総務省「住民基本台帳制度における海外転出者の取り扱い」 | https://www.soumu.go.jp/main_sosiki/jichi_zeisei/czaisei/czaisei_seido/080116_4.html | 2026-05-15 | 1年以上出国時の海外転出届義務; 未提出のリスク（住民税課税継続等）. Used for G82. |
+| 永住許可ガイドライン（令和6年改定版）— ルート比較用 | 出入国在留管理庁「永住許可に関するガイドライン」 | https://www.moj.go.jp/isa/publications/materials/nyuukokukanri07_00115.html | 2026-05-15 | 各在留資格から永住への要件（10年居住・5年就労系・最長在留期間・公的義務）; HSPショートカット（80pt→1年, 70pt→3年）. Used for G83 (cross-ref G60). |
+| 国民健康保険法 第5条・第6条 | 国民健康保険法 | https://laws.e-gov.go.jp/law/333AC0000000192 | 2026-05-15 | 第5条: 市区町村住民のうち健保適用者等以外=NHI強制加入. 第6条: 除外規定（短期滞在・外交・公用等）. Used for G84. |
+| 健康保険法 第3条（外国人への適用） | 健康保険法 | https://laws.e-gov.go.jp/law/211AC0000000070 | 2026-05-15 | 被保険者の定義（適用事業所の常時使用される労働者; 国籍不問）. 外国人も強制適用. Used for G84. |
+| 在留資格「介護」の活動定義・取得要件 | 出入国在留管理庁「在留資格『介護』」 | https://www.moj.go.jp/isa/applications/status/nursing.html | 2026-05-15 | 介護福祉士の国家資格が取得要件; 在留期間（5年・3年・1年・3か月）; 活動定義（介護福祉士業務全般）. Used for G85. |
+| 特定技能「介護」の試験要件・2号設定 | 出入国在留管理庁「特定技能（介護分野）」 | https://www.moj.go.jp/isa/policies/ssw/nyuukokukanri07_00147.html | 2026-05-15 | 介護技能評価試験・介護日本語評価試験・日本語試験の3試験要件; 特定技能2号が介護にも設定されていること. Used for G85. |
 
 ## Handoff Notes To Codex
 
@@ -546,3 +570,11 @@ None. All WORKPACK_001 continuation candidates completed. See next batch candida
   - G80 (teijusha-yoken-shinsa): atlas_draft P1. 定住者=告示定住（日系人等; 要件が告示で明確）と告示外定住（大臣裁量; 個別事情）に分かれる。日本人との離婚後の元配偶者への定住者付与は告示外定住（法的権利ではなく裁量的許可）。定住者は就労制限なし・在留期間有限（永住との根本的違い）。
   - New DOMAIN items: dom-kazoku-003/004, dom-tsusanzairyu-001/002, dom-hsp-nenshu-001/002, dom-ikusei-001/002, dom-teijusha-001/002 (10 new items). Total DOMAIN: 203.
   - Next batch (Batch 015) candidates: 在留申請オンラインシステムの機能と制限（eLTRC対象資格・非対象資格・手続き種別）, 海外居住者の在留カードと長期出国時の手続き（みなし再入国超過対応）, 就労系在留資格から永住への戦略的ルート比較（技人国/特定技能/HSP別の最短ルート）, 在留資格と医療保険制度の全体像（国民健康保険vs健康保険の外国人適用ルール）, 在留資格「介護」の要件と技能実習/特定技能との違い.
+- 2026-05-15: Batch 015 completed (5 cards: G81-G85). Total completed: 84. DOMAIN items: 213. Summary:
+  - G81 (eltrc-online-shinsei): atlas_draft P1. 在留申請オンラインシステム（eLTRC）: 永住・短期滞在・特別永住はオンライン非対応（窓口申請のみ）。オンライン申請は申請人本人（マイナンバーカード）または登録申請取次者のみ。家族による代理オンライン申請は不可。審査完了メール≠許可決定; カード受取は窓口/郵送必要。
+  - G82 (choki-shukoku-zairyu-card): atlas_draft P1. 長期出国時: みなし再入国=1年（超過で在留資格失効）; 正規再入国許可=最長5年（在留期間内が上限）; 永住者も失効リスクあり（G19・G74参照）。1年以上の出国=海外転出届を市区町村役場に提出義務; 未提出=住民税課税継続等のリスク。
+  - G83 (eijuu-route-hikaku): atlas_draft P1. 永住への各ルート比較: 技人国=10年居住が基本; 特定技能1号の5年在留単独では10年不可; HSP1ショートカット（80pt→1年, 70pt→3年）は申請時点でのポイント維持とHSP1在留資格保有が必要（G34・G60参照）。
+  - G84 (iryo-hoken-gaikokujin): atlas_draft P1. 外国人も中長期在留者（3か月超）は健康保険（社保）またはNHIに強制加入義務; NHIは任意でない。短期滞在・外交・公用は両制度の対象外。雇用形態（適用事業所でのフルタイム相当）が加入先の主な判断軸（在留資格の種別は直接の基準でない）。
+  - G85 (kaigo-visa-yoken): atlas_draft P1. 介護分野は4枠組み（EPA・技能実習「介護」・特定技能「介護」・在留資格「介護」）; 各々要件・活動範囲・在留期間が異なる。在留資格「介護」は介護福祉士国家資格が前提（実務経験・技能実習修了だけでは不可）。特定技能「介護」は2号も設定（上限なし）。
+  - New DOMAIN items: dom-eltrc-001, dom-choki-001/002, dom-eijuu-r-001/002, dom-iryo-001/002, dom-kaigo-001/002 (10 new items). Total DOMAIN: 213.
+  - Next batch (Batch 016) candidates: 在留資格「研究」「教授」「芸術」「宗教」の実務的な区別（技人国との境界）, 外国人雇用の雇用主責任（不法就労助長罪・外国人雇用状況届出の詳細）, 住民票と在留カードの番号・住所不一致問題（市区町村での証明書発行への影響）, 在留資格「特定活動」の指定書（46号）に基づく就労範囲, 国際送金と在留資格（外国送金と在留申請への影響）.
