@@ -1,20 +1,21 @@
 # FACT Progress — Phase 2 P0/P1 Guardrails
 
-Last updated: 2026-05-15 CST (Batch 006 complete)
+Last updated: 2026-05-15 CST (Batch 007 complete)
 
 ## Current Status
 
 - total planned in Workpack 001 core batch: 10
-- completed: 39
+- completed: 44
 - in progress: 0
 - blocked: 0
-- needs DOMAIN: 113
+- needs DOMAIN: 126
 - Batch 001 core: completed 10/10
 - Batch 002 continuation: completed 5
 - Batch 003 continuation: completed 9 (G23 skipped — insufficient official source)
 - Batch 004 continuation: completed 5 (G26-G30)
 - Batch 005 continuation: completed 5 (G31-G35)
 - Batch 006 continuation: completed 5 (G36-G40)
+- Batch 007 continuation: completed 5 (G41-G45)
 
 ## Completed Cards
 
@@ -59,6 +60,11 @@ Last updated: 2026-05-15 CST (Batch 006 complete)
 | guardrail-hsp2-henkou-youken | guardrail-hsp2-henkou-youken.md | completed | official ISA HSP status page + Q&A | yes | atlas_draft P1. HSP1→HSP2 NOT automatic; 在留資格変更許可申請 required; 3yr+70pt+素行+国益. HSP2 = unlimited 在留期間. Nearly all employment activities permitted alongside HSP. ≠ 永住. |
 | guardrail-honin-vs-torikijisha-shinsei | guardrail-honin-vs-torikijisha-shinsei.md | completed | official ISA 申請取次制度 page | yes | atlas_draft P1. 申請取次 = procedural convenience only; applicant retains full legal responsibility for content. Only formally registered 取次者 can file. False info via representative = applicant's liability. |
 | guardrail-shuroshikaku-shomeisho-jitsumuyo | guardrail-shuroshikaku-shomeisho-jitsumuyo.md | completed | G7 cross-ref (ISA 就労資格証明書 pages) | yes | atlas_draft P1. Certificate = evidence of current scope, NOT new permission. Certificate ≠ status change or transfer authorization. Voluntary — not mandatory. Does not guarantee renewal. |
+| guardrail-ryugakusei-shusseki-shinchoku | guardrail-ryugakusei-shusseki-shinchoku.md | completed (needs_domain) | ISA renewal criteria (G31 cross-ref); no direct ISA attendance-rate text found | yes | needs_domain P1. Attendance and progress are renewal factors for 留学. Specific % threshold not confirmed from official ISA text. 中退 without status change = 活動不適合 risk (G26 cross-ref). |
+| guardrail-kokumin-nenkin-menjo-zairyu | guardrail-kokumin-nenkin-menjo-zairyu.md | completed | official ISA PR guideline (G4 cross-ref) + 国民年金法 L1 | yes | atlas_draft P1. 免除申請（正規手続き）= 公的義務の適正履行 = compliant. 滞納（無申請放置）= 義務不履行 → PR criterion violation. Retroactive payment impact: needs_domain. |
+| guardrail-zairyu-nintei-shomeisho-coe | guardrail-zairyu-nintei-shomeisho-coe.md | completed | official ISA 16-1.html + FAQ (kanri_qa.html) + COVID notice | yes | atlas_draft P1. CoE validity = 3 months (Q6 confirmed official text). Not an entry guarantee. Overseas users cannot apply directly — sponsor in Japan files. COVID extensions ended. |
+| guardrail-tokutei-gino-toroku-shien-kikan | guardrail-tokutei-gino-toroku-shien-kikan.md | completed | official ISA supportssw.html + 届出 page + 運用要領 | yes | atlas_draft P1. RSO ≠ employer. Full-delegation-only rule (partial ≠ compliant). RSO use is NOT mandatory. Cannot sub-delegate. 14-day reporting obligation confirmed. |
+| guardrail-haigusha-rikon-go-zairyu-jitsumu-route | guardrail-haigusha-rikon-go-zairyu-jitsumuRoute.md | completed | G8 cross-ref + ISA 定住者/変更申請/G4 (PR) sources | yes | atlas_draft P1. G8 complement. Post-divorce practical routing: 14-day notification; route options (就労/定住者/PR); 就労ビザ NOT automatic from past work; 定住者 is discretionary (needs_domain). |
 
 ## In Progress
 
@@ -175,6 +181,18 @@ None. All WORKPACK_001 continuation candidates completed. See next batch candida
 | dom-hsp2-001 | guardrail-hsp2-henkou-youken | What is the correct framing for HSP2 vs. PR comparison — what factors should be highlighted without recommending? | P1 | TEBIQ must not recommend; comparative framing needs professional validation. |
 | dom-torikiji-001 | guardrail-honin-vs-torikijisha-shinsei | What is the safe answer when a user's representative submitted false information that the user claims they did not know about? | P1 | Joint liability split is legal territory requiring lawyer routing. |
 | dom-shuroshikaku-001 | guardrail-shuroshikaku-shomeisho-jitsumuyo | What is the correct route for a worker who changed jobs to an out-of-scope role and realizes they need 在留資格変更 — can they continue the new job during pending application? | P1 | Cross-ref G17 (pending change + activity scope); professional routing required. |
+| dom-ryugaku-001 | guardrail-ryugakusei-shusseki-shinchoku | What is the official ISA-confirmed attendance threshold (if any fixed %) for 留学 renewal risk? The 70% figure is widely cited but not found in official ISA text in this session. | P1 | Required before any runtime answer pattern using an attendance percentage. |
+| dom-ryugaku-002 | guardrail-ryugakusei-shusseki-shinchoku | Does 休学 (school-approved leave) interrupt the 在留 basis for 留学 — or is it treated as continued valid status? | P1 | Affects safe routing for students who have formally taken leave. |
+| dom-ryugaku-003 | guardrail-ryugakusei-shusseki-shinchoku | How should a student who has already violated attendance requirements disclose this without prejudicing their renewal application? | P1 | Pre-renewal remediation framing is professional territory. |
+| dom-nenkin-001 | guardrail-kokumin-nenkin-menjo-zairyu | For a user with 2+ years of 滞納 who is now paying retroactively — what is the realistic PR impact, and how should TEBIQ frame this without making guarantees? | P1 | TEBIQ cannot quantify ISA discretion outcome; calibrated framing needed. |
+| dom-nenkin-002 | guardrail-kokumin-nenkin-menjo-zairyu | Are there 在留資格 categories where the 国民年金 enrollment obligation does not apply (e.g., 特定活動 for short-term activities, 外交, etc.)? | P1 | Avoid over-applying enrollment obligation to categories where it may not apply. |
+| dom-coe-001 | guardrail-zairyu-nintei-shomeisho-coe | For a user whose sponsor (CoE applicant) withdrew the job offer after CoE issuance — what is the correct procedure and what are the risks if the person enters Japan anyway? | P1 | Entry on a CoE that no longer reflects actual intended activity is a potential false-declaration risk. |
+| dom-coe-002 | guardrail-zairyu-nintei-shomeisho-coe | Does the electronic/digital CoE system (if active) have different validity rules or overseas-use procedures from the paper CoE? | P1 | Digital CoE procedures not confirmed in this session. |
+| dom-shien-001 | guardrail-tokutei-gino-toroku-shien-kikan | If an RSO's registration is cancelled mid-contract, what is the employer's immediate obligation — must they find a new RSO immediately or can they implement support directly? | P1 | RSO registration loss = employer's compliance status at risk. |
+| dom-shien-002 | guardrail-tokutei-gino-toroku-shien-kikan | In a labor dispute involving a 1号特定技能外国人, how is responsibility allocated between employer and RSO when RSO provided deficient support? | P1 | Dual-entity liability in labor context requires professional/legal routing. |
+| dom-rikon-001 | guardrail-haigusha-rikon-go-zairyu-jitsumu-route | For a person divorced after only 1 year of marriage, with no children and no employment — what is the realistic 定住者 assessment? TEBIQ must not promise this route. | P1 | 定住者 (告示外) is entirely discretionary; no statutory guarantee exists. |
+| dom-rikon-002 | guardrail-haigusha-rikon-go-zairyu-jitsumu-route | Does a pending divorce (調停中) trigger the 14-day notification obligation, or only a final divorce (確定判決/協議離婚成立)? | P1 | Timing of notification obligation needs official confirmation. |
+| dom-rikon-003 | guardrail-haigusha-rikon-go-zairyu-jitsumu-route | For 永住者の配偶者等 after divorce — is the transition window and route structure the same as for 日本人の配偶者等? | P1 | Different base status may have different rules; must not conflate. |
 
 ## Source Log
 
@@ -250,6 +268,13 @@ None. All WORKPACK_001 continuation candidates completed. See next batch candida
 | 特定活動（内定者・求職者）各ページ | 出入国在留管理庁 designatedactivities14/15 + 案内 | multiple | 2026-05-15 | 内定者: 就職先での就労不可（在留資格変更が先）; 28h/week アルバイト可. 求職者: 6か月+1回更新=最大1年; 推薦状必要; 28h/week アルバイト可. Used for G36. |
 | 育成就労制度（メイン + Q&A） | 出入国在留管理庁「育成就労制度」「育成就労制度Q&A」 | multiple | 2026-05-15 | 廃止日: 2027年4月1日. 経過措置: 既存技能実習生は継続可. 転籍: 1-2年後に条件付きで可能. 目的: 人材育成+特定技能1号移行. Used for G37. |
 | 申請取次制度 | 出入国在留管理庁「申請取次制度について」 | https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00003.html | 2026-05-15 | 取次者は弁護士・行政書士等に限定. 申請内容の責任は申請人本人. 取次 = 手続上の便宜のみ. Used for G39. |
+| 在留資格認定証明書（CoE）| 出入国在留管理庁「在留資格認定証明書交付申請」 | https://www.moj.go.jp/isa/applications/procedures/16-1.html | 2026-05-15 | CoE = pre-entry certification; 3 sponsor categories confirmed. Return obligation if entry cancelled. Used for G43. |
+| CoE 有効期間 FAQ | 出入国在留管理庁「出入国審査・在留審査Q&A」(Q6) | https://www.moj.go.jp/isa/immigration/faq/kanri_qa.html | 2026-05-15 | Direct quote: 「有効期間は３か月とされています。したがって，在留資格認定証明書が交付された日から３か月以内に上陸申請をしないとその効力を失います。」. Entry non-guarantee confirmed. Used for G43. |
+| CoE COVID延長終了 | 出入国在留管理庁「新型コロナウイルス感染症に関する対応」 | https://www.moj.go.jp/isa/nyuukokukanri01_00155_1.html | 2026-05-15 | 「この取扱いは終了しました。現在の在留資格認定証明書の有効期間は，原則どおり『３か月』です。」— COVID extensions ended. Used for G43. |
+| 登録支援機関（定義・役割・全部委託）| 出入国在留管理庁「１号特定技能外国人支援・登録支援機関について」 | https://www.moj.go.jp/isa/policies/ssw/supportssw.html | 2026-05-15 | RSO definition; 10 mandatory support items; full-delegation-only rule; use not mandatory; cannot sub-delegate. Used for G44. |
+| 登録支援機関 届出義務 | 出入国在留管理庁「特定技能所属機関・登録支援機関による届出」 | https://www.moj.go.jp/isa/applications/ssw/nyuukokukanri10_00002.html | 2026-05-15 | 14-day reporting obligation confirmed; failure = cancellation of RSO registration risk. Used for G44. |
+| 国民年金 免除制度 | 日本年金機構「国民年金保険料の免除・猶予」 | https://www.nenkin.go.jp/service/kokunen/menjo/20150428.html | 2026-05-15 | 免除は国民年金法第89条〜90条の3に基づく法定手続き. 免除期間も受給資格期間に一部算入される. Used for G42. |
+| 配偶者ビザ離婚後の実務ルート | ISA 定住者ページ + 在留資格変更申請 | multiple | 2026-05-15 | G8 cross-ref sources used. 定住者 (告示外) = ISA discretionary grant for former spouse with children/long residence. No statutory checklist. Used for G45. |
 
 ## Handoff Notes To Codex
 
@@ -304,3 +329,11 @@ None. All WORKPACK_001 continuation candidates completed. See next batch candida
   - G40 (shuroshikaku-shomeisho-jitsumuyo): atlas_draft P1. G7 complement. Certificate = evidence only, not new permission. Voluntary. Does not authorize out-of-scope work. Does not guarantee renewal.
   - New P0 DOMAIN item: dom-naitei-001 (内定者 already working at 内定先 before 在留資格変更 = P0 unauthorized work).
   - Next batch (Batch 007) candidates: 配偶者ビザと離婚後の実務ルート詳細, 留学生の在留管理（出席率・進学）, 国民年金免除申請と在留審査の具体的影響, 海外からの在留申請（在外公館ルート）, 特定技能の登録支援機関とは何か.
+- 2026-05-15: Batch 007 completed (5 cards: G41-G45). Total completed: 44. DOMAIN items: 126. Summary:
+  - G41 (ryugakusei-shusseki-shinchoku): needs_domain P1. Attendance is a renewal factor for 留学 but specific % threshold not found in official ISA text. 中退 without status change = 活動不適合/取消 risk (G26 cross-ref). Agent could not locate official ISA attendance-rate text — agent searched student.html, 16-3.html, nyuukokukanri07_00003.html; all were procedure pages, not monitoring-requirement pages. Must confirm from 通達/運用要領 before runtime use.
+  - G42 (kokumin-nenkin-menjo-zairyu): atlas_draft P1. 免除申請（法定手続き）= 公的義務の適正な履行 = compliant for PR criterion. 滞納（無申請）= 義務不履行 → PR risk. Cross-ref G4 (PR guideline 公的義務要件). External nationals aged 20-59 in Japan = enrollment obligation applies (general rule).
+  - G43 (zairyu-nintei-shomeisho-coe): atlas_draft P1. CoE validity = 3 months confirmed from ISA FAQ Q6 (official Japanese text). Not an entry guarantee (official text). COVID extensions ended (official notice). Overseas users: sponsor in Japan files CoE → applicant gets visa at embassy → entry.
+  - G44 (tokutei-gino-toroku-shien-kikan): atlas_draft P1. RSO definition confirmed. Full-delegation-only rule confirmed. RSO use NOT mandatory. Cannot sub-delegate. 14-day reporting obligation confirmed; failure = registration cancellation risk.
+  - G45 (haigusha-rikon-go-zairyu-jitsumu-route): atlas_draft P1. G8 complement. Post-divorce routing: notification (14 days, G29); 6-month window for status change; route options (就労/定住者/PR); 就労 is NOT automatic; 定住者 is discretionary (needs_domain). DV cases → G9 first. Cross-ref G1 (特例期間), G4 (PR), G9 (DV), G26 (取消), G31 (discretion).
+  - New DOMAIN items: 13 new items (dom-ryugaku-001/002/003, dom-nenkin-001/002, dom-coe-001/002, dom-shien-001/002, dom-rikon-001/002/003). Total DOMAIN: 126.
+  - Next batch (Batch 008) candidates: 技能実習から特定技能への移行（試験免除条件）, 技人国から経営管理への変更（転職から独立）, 家族滞在の就労制限と28時間ルール（G16補完）, 永住者の配偶者等の離婚後ルート（G8/G45補完）, 在留期間別の更新書類要件と証明書取得パターン.
