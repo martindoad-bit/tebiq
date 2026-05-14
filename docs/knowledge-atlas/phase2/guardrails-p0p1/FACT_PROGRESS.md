@@ -1,14 +1,14 @@
 # FACT Progress — Phase 2 P0/P1 Guardrails
 
-Last updated: 2026-05-15 CST (Batch 022 complete)
+Last updated: 2026-05-15 CST (Batch 023 complete)
 
 ## Current Status
 
 - total planned in Workpack 001 core batch: 10
-- completed: 119
+- completed: 124
 - in progress: 0
 - blocked: 0
-- needs DOMAIN: 282
+- needs DOMAIN: 292
 - Batch 001 core: completed 10/10
 - Batch 002 continuation: completed 5
 - Batch 003 continuation: completed 9 (G23 skipped — insufficient official source)
@@ -31,6 +31,7 @@ Last updated: 2026-05-15 CST (Batch 022 complete)
 - Batch 020 continuation: completed 5 (G106-G110)
 - Batch 021 continuation: completed 5 (G111-G115)
 - Batch 022 continuation: completed 5 (G116-G120)
+- Batch 023 continuation: completed 5 (G121-G125)
 
 ## Completed Cards
 
@@ -155,6 +156,11 @@ Last updated: 2026-05-15 CST (Batch 022 complete)
 | guardrail-shuro-daigakuin-kengaku | guardrail-shuro-daigakuin-kengaku.md | completed | 入管法第22条の4（取消事由）; ISA更新審査ガイドライン; ISA「在留資格『留学』」 | yes | atlas_draft P1. G118. 就労系在留資格保持者の大学院在籍は本業継続が前提; 本業を休職・退職して学業専念=「留学」への変更が必要; 「学習許可」制度（資格外活動許可の逆方向）は存在しない; 社会人MBA等の兼学は就労継続が前提で変更不要. needs_domain P1: 技人国保持者の大学院通学のISA公式ガイダンスの有無; 休職と活動不実施の関係. |
 | guardrail-eijuu-go-zairyu-henkou | guardrail-eijuu-go-zairyu-henkou.md | completed | 入管法別表第二「永住者」; ISA「永住許可申請」; G19/G53/G60/G74 cross-refs | yes | atlas_draft P1. G119. 永住者は活動制限なし→就労系在留資格への変更不要; 在留資格は1つのみ保有可能→変更すると永住地位喪失; 永住への復帰は改めて永住許可申請が必要; みなし再入国1年超過リスクは永住者にも適用. needs_domain P1: 永住→他資格変更後の永住再申請時の在留歴の扱い; 永住とHSP2の同時保有の可否. |
 | guardrail-gaikokujin-juutaku-sabetsu | guardrail-gaikokujin-juutaku-sabetsu.md | completed | 国土交通省「住まいサポートネット」; 法務省「外国人のための人権相談」; 宅地建物取引業法 | yes | atlas_draft P1. G120. 日本に外国人住宅入居差別を包括的に禁止する一般法なし; 住所未登録=届出義務違反・在留申請上の支障; 相談窓口=法務省人権相談（0570-090-911）・国土交通省「住まいサポートネット」. needs_domain P1: 住宅差別禁止法の有無・制定動向; 不法在留者の住所登録とISA情報共有方針. |
+| guardrail-gaikokujin-keiji-zairyu | guardrail-gaikokujin-keiji-zairyu.md | completed | 入管法第24条（退去強制事由）; 刑事訴訟法; ウィーン領事条約第36条 | yes | atlas_draft P0. G121. 在留期間は逮捕・勾留中も進行（停止しない）; 退去強制事由=禁錮以上の実刑・麻薬・売春等（執行猶予付きでも特定犯罪は対象）; 逮捕歴は素行評価に残る（不起訴でも）; 領事通知権・通訳権・弁護人選任権. needs_domain P1: 逮捕中の特例期間の扱い; 軽微犯罪の素行評価への影響の官式基準. |
+| guardrail-kaigo-visa-gyomu-han | guardrail-kaigo-visa-gyomu-han.md | completed | ISA「在留資格『介護』」; ISA「特定技能1号・2号（介護）」PDF; 厚生労働省「EPA介護候補者」 | yes | atlas_draft P1. G122. 在留資格「介護」=介護福祉士国家資格が前提（技能実習修了は自動移行根拠にならない）; 特定技能1号（介護）=通算5年上限・家族帯同不可; 特定技能2号（介護）=2023年追加・上限なし・家族帯同可; EPA候補者=試験不合格→帰国義務. needs_domain P1: EPA候補者の試験失敗後の延長条件; 介護福祉士国家試験の外国人合格率・支援. |
+| guardrail-gaikokujin-kakutei-shinkoku | guardrail-gaikokujin-kakutei-shinkoku.md | completed | 所得税法; 国税庁「確定申告が必要な方」; 国税庁「年末調整」; 国税庁「準確定申告」 | yes | atlas_draft P1. G123. 在留資格問わず日本居住者=全世界所得確定申告義務; 年末調整=給与所得精算のみ（副業・海外収入は別途申告必要）; 帰国時=準確定申告が必要; 住民税=前年所得・翌年課税（G90）. needs_domain P1: 過去の未申告の自発的修正手続き; 特定口座と海外収入の確定申告義務の相互作用. |
+| guardrail-tokutei-gino-2go-yoken | guardrail-tokutei-gino-2go-yoken.md | completed | ISA「特定技能2号の対象分野」PDF; 特定技能基準省令 | yes | atlas_draft P1. G124. 特定技能2号=自動昇格なし（別途試験・変更申請必要）; 2023年に対象分野が大幅拡大（全分野ではない）; 在留期間上限なし・家族帯同可（1号との最大の違い）; 永住とは活動制限の点で異なる; 1号の5年後=2号変更・他資格・帰国の3択. needs_domain P1: 試験未実施分野での2号移行経路; 特定技能の在留歴と永住申請10年要件. |
+| guardrail-zairyu-ninteisho-kakucho | guardrail-zairyu-ninteisho-kakucho.md | completed | 入管法第7条の2; ISA「在留資格認定証明書交付申請」（16-1.html）; ISA FAQ Q6 | yes | atlas_draft P1. G125. COE有効期限=3か月（失効後は再申請）; COE=入国保証ではない（上陸審査は別）; 査証免除国籍者でも就労・長期滞在はCOE+ビザが原則必要. needs_domain P1: COEの緊急優先処理の官式条件; 査証免除国籍者の国内での就労系変更の例外. |
 
 ## In Progress
 
@@ -430,6 +436,16 @@ None. All WORKPACK_001 continuation candidates completed. See next batch candida
 | dom-eijuu-h-002 | guardrail-eijuu-go-zairyu-henkou | Is there any formal mechanism by which a 永住者 can receive HSP2-equivalent recognition (for activity scope or spousal work permit purposes) without actually changing their status to 高度専門職2号 and losing 永住? | P1 | Affects advice for high-skilled 永住者 who want HSP2 benefits without giving up their permanent residence. |
 | dom-juutaku-001 | guardrail-gaikokujin-juutaku-sabetsu | Is there any enacted legislation (as of 2026) or confirmed judicial precedent that directly prohibits housing discrimination against foreign nationals in Japan and provides an effective legal remedy? | P1 | If enacted, this significantly changes the guidance on legal options available to victims of housing discrimination. |
 | dom-juutaku-002 | guardrail-gaikokujin-juutaku-sabetsu | For foreign nationals in irregular immigration status (不法在留) who have no registered address — if they attempt to register a residential address at a ward office, will this trigger an ISA referral or other adverse immigration consequence? | P1 | Affects the safety of routing irregular-status persons to register an address; current guidance treats the two issues as separate but this has not been confirmed from official sources. |
+| dom-keiji-001 | guardrail-gaikokujin-keiji-zairyu | If a foreign national has a valid 在留期間更新申請 pending at the time of arrest — does the 特例期間 continue to apply during criminal detention, or does the incapacity to appear at ISA affect the application status and potentially end the special period? | P1 | The interaction between 特例期間 rules and criminal detention status is not confirmed from official ISA sources; this is a high-stakes gap affecting persons held beyond their 在留期間. |
+| dom-keiji-002 | guardrail-gaikokujin-keiji-zairyu | For minor criminal offenses (軽微な刑事事件: 万引き・軽微な暴行等) resulting in 不起訴 or 略式起訴 (summary fine only) — is there a published ISA standard on how much weight these carry in 素行 evaluation for renewal vs. PR applications? | P1 | The current guidance says "逮捕歴は素行評価に残る" but cannot specify the weight given to non-prosecuted minor arrests; domain confirmation would allow more precise routing. |
+| dom-kaigo-han-001 | guardrail-kaigo-visa-gyomu-han | What are the specific conditions under which EPA care candidate 特定活動 period may be extended beyond the standard exam preparation period for candidates who have failed the national exam? Is there an official 厚生労働省 standard for repeated failures? | P1 | EPA candidate exam failure routing currently says "帰国義務" but if extensions are possible, TEBIQ needs to route to the correct channel rather than prematurely advising return. |
+| dom-kaigo-han-002 | guardrail-kaigo-visa-gyomu-han | What is the current pass rate for foreign nationals (especially EPA candidates and former 技能実習 participants) in the 介護福祉士 national exam, and what official support systems are available to support exam preparation? | P1 | Required to advise on realistic exam success rates and support resources before TEBIQ recommends this pathway to users. |
+| dom-kakutei-001 | guardrail-gaikokujin-kakutei-shinkoku | For foreign nationals who have not filed 確定申告 for past years due to lack of awareness — is there an officially recommended procedure (修正申告 vs. voluntary disclosure) that minimizes penalties and resets the 在留審査 素行 record? | P1 | Many foreign residents are unaware of filing obligations; knowing the correct remediation path is essential before TEBIQ advises on non-compliance remediation. |
+| dom-kakutei-002 | guardrail-gaikokujin-kakutei-shinkoku | For foreign nationals with 特定口座（源泉徴収あり）for Japanese securities — is there a confirmed official position that such persons are fully exempt from 確定申告 even when they have overseas income, or does overseas income always trigger a mandatory filing regardless? | P1 | This combination (特定口座 + overseas income) is common for long-term foreign residents; the interaction between the two obligations needs official confirmation. |
+| dom-2go-001 | guardrail-tokutei-gino-2go-yoken | For sectors where 特定技能2号 is officially listed as an eligible sector but where the actual exam has not yet been implemented — what is the practical route for persons who have completed 特定技能1号's 5-year period and wish to remain in Japan in those sectors? | P1 | Required to advise on the realistic path for persons in sectors with 2号 eligibility but no operational exam as of 2026. |
+| dom-2go-002 | guardrail-tokutei-gino-2go-yoken | Does the 10-year residence period requirement for 永住 include the years spent in 特定技能1号 and 特定技能2号, and is there an ISA official confirmation of this counting method for PR applications based on 特定技能 tenure? | P1 | Affects the PR planning strategy for persons building their 在留歴 primarily through 特定技能. |
+| dom-coe-001 | guardrail-zairyu-ninteisho-kakucho | Does ISA have an official expedited (緊急処理) COE processing pathway, and if so, what are the formal conditions for eligibility? | P1 | Required before TEBIQ can advise on urgent COE timelines; current guidance acknowledges the practice but cannot confirm formal eligibility criteria. |
+| dom-coe-002 | guardrail-zairyu-ninteisho-kakucho | For visa-waiver nationals who enter Japan on short-stay and later want to apply for an employment visa — what is the complete current list of in-Japan status change options available to them without having to leave and re-enter Japan? | P1 | G68 notes short-stay to employment status change is generally not allowed; confirmed exceptions (if any) would affect routing for this large population. |
 
 ## Source Log
 
@@ -628,6 +644,19 @@ None. All WORKPACK_001 continuation candidates completed. See next batch candida
 | 永住許可申請の手続き | 出入国在留管理庁「永住許可申請」 | https://www.moj.go.jp/isa/applications/procedures/16-4.html | 2026-05-15 | 永住許可の要件（素行・生計・国益）; 在留資格「永住者」の法的内容. Used for G119. |
 | 外国人住まいサポートネット | 国土交通省「住まいサポートネット（外国人の住まい相談）」 | https://www.mlit.go.jp/jutakukentiku/house/jutakukentiku_house_tk5_000025.html | 2026-05-15 | 外国人受入れ宣言事業者リスト; 多言語対応相談窓口; 法務省・国土交通省連携施策. Used for G120. |
 | 外国人のための人権相談（法務省） | 法務省「外国人のための人権相談」 | https://www.moj.go.jp/JINKEN/jinken21.html | 2026-05-15 | 相談電話（0570-090-911）; 入居差別・ハラスメント等の相談対応; 人権侵犯調査の入口. Used for G120. |
+| 退去強制事由（入管法第24条） | 出入国管理及び難民認定法第24条 | https://laws.e-gov.go.jp/law/326AC0000000319 | 2026-05-15 | 退去強制事由の全項目（禁錮以上の実刑・麻薬・売春・人身売買等の特定犯罪）; 執行猶予付きでも特定犯罪は対象. Used for G121. |
+| 逮捕・勾留の手続き（刑事訴訟法） | 刑事訴訟法（逮捕・勾留・起訴等の規定） | https://laws.e-gov.go.jp/law/323AC0000000131 | 2026-05-15 | 逮捕後72時間以内の勾留請求; 勾留最大23日間; 不起訴処分（起訴猶予等）の定義; 黙秘権・通訳権・弁護人選任権. Used for G121. |
+| 領事通知権（ウィーン条約） | ウィーン領事条約第36条 | https://www.mofa.go.jp/mofaj/toko/tonan/index.html | 2026-05-15 | 逮捕時の自国領事館への通知権利; 警察官の告知義務; 領事援助の内容. Used for G121. |
+| 在留資格「介護」の活動定義 | 出入国在留管理庁「在留資格『介護』」 | https://www.moj.go.jp/isa/applications/status/nursing.html | 2026-05-15 | 活動定義（介護福祉士の資格を有する者が介護福祉士として行う活動）; 在留期間上限なし; 家族帯同可. Used for G122. |
+| 特定技能1号・2号（介護）の要件 | 出入国在留管理庁「特定技能1号・2号（介護）」 | https://www.moj.go.jp/isa/content/001335118.pdf | 2026-05-15 | 技能試験・日本語試験・介護日本語評価試験の要件; 技能実習2号修了による試験免除; 通算5年上限（1号）; 2023年に2号追加. Used for G122. |
+| EPA介護福祉士候補者の受入れ | 厚生労働省「EPA（経済連携協定）に基づく外国人看護師・介護福祉士候補者の受入れ」 | https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/koyou/gaikokujin/other22/index.html | 2026-05-15 | 受入れ国（インドネシア・フィリピン・ベトナム）; 国家試験受験義務; 試験不合格の場合の帰国義務. Used for G122. |
+| 確定申告が必要な場合 | 国税庁「確定申告が必要な方」 | https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/2020.htm | 2026-05-15 | 確定申告が必要な場合（給与2,000万円超・副業20万円超・複数給与・追加控除等）; 在留資格問わず居住者に適用. Used for G123. |
+| 年末調整の対象と限界 | 国税庁「年末調整」 | https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2662.htm | 2026-05-15 | 年末調整=1社の給与所得のみの精算（会社が行う）; 副業収入・海外収入・追加控除は確定申告で別途申告が必要. Used for G123. |
+| 出国時の準確定申告 | 国税庁「出国する場合の所得税の申告（準確定申告）」 | https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1942.htm | 2026-05-15 | 帰国（出国）前の準確定申告義務; 納税管理人の選任; 申告期限（出国前または出国後60日以内）. Used for G123. |
+| 特定技能2号の対象分野（2023年拡大後） | 出入国在留管理庁「特定技能2号の対象分野」 | https://www.moj.go.jp/isa/content/001395002.pdf | 2026-05-15 | 特定技能2号対象分野（2023年6月閣議決定で大幅拡大）; 2号の要件（技能試験・日本語試験不要）; 在留期間上限なし・家族帯同可. Used for G124. |
+| 特定技能基準省令（分野別省令） | 特定技能基準省令・分野別省令 | https://www.moj.go.jp/isa/policies/ssw/nyuukokukanri07_00002.html | 2026-05-15 | 特定技能1号・2号の分野区分; 各分野での業務区分・要件; 1号から2号への変更手続き. Used for G124. |
+| COEの法的根拠・有効期限 | 出入国管理及び難民認定法第7条の2 | https://laws.e-gov.go.jp/law/326AC0000000319 | 2026-05-15 | COEの法的根拠（第7条の2）; 有効期限3か月（発行日から）; 入国保証ではない（上陸審査は別）. Used for G125. |
+| COEの申請手続き・FAQ | 出入国在留管理庁「在留資格認定証明書交付申請」 | https://www.moj.go.jp/isa/applications/procedures/16-1.html | 2026-05-15 | COEの申請手続き; スポンサーによる申請; ISA FAQ Q6（有効期限3か月; COVID延長制度終了; 入国保証でない旨）. Used for G125. |
 
 ## Handoff Notes To Codex
 
@@ -810,3 +839,11 @@ None. All WORKPACK_001 continuation candidates completed. See next batch candida
   - G120 (gaikokujin-juutaku-sabetsu): atlas_draft P1. 日本には外国人の住宅入居差別を包括的に禁止する一般法は存在しない（2026年5月現在）; 住所未登録状態が長期化すると届出義務違反・住民票取得困難・在留申請上の支障が生じる; 相談窓口=法務省人権相談（0570-090-911）・国土交通省「住まいサポートネット」; 公営住宅は永住者・定住者等は申込み資格がある場合多い. needs_domain P1: 住宅差別禁止法の有無・制定動向（2026年）; 不法在留者の住所登録とISA情報共有方針.
   - New DOMAIN items: dom-hodo-001/002, dom-haigusha-001/002, dom-daigakuin-001/002, dom-eijuu-h-001/002, dom-juutaku-001/002 (10 new items). Total DOMAIN: 282.
   - Next batch (Batch 023) candidates: 外国人の刑事手続きと在留資格（逮捕・拘留・刑事訴追と在留への影響）, 在留資格「介護」の具体的な業務範囲と技能実習・特定技能との実務的違い（G85補完）, 外国人の確定申告義務と年末調整（所得税の実務）, 在留資格の「みなし許可」（審査遅延・緊急人道的配慮等の特別取扱い）, 特定技能2号の対象分野と要件（工業製品製造業・建設・造船等の現状）.
+- 2026-05-15: Batch 023 completed (5 cards: G121-G125). Total completed: 124. DOMAIN items: 292. Summary:
+  - G121 (gaikokujin-keiji-zairyu): atlas_draft P0. 在留期間は逮捕・勾留中も暦日通りに進行（停止しない）; 退去強制事由=禁錮以上の実刑・麻薬・売春等の特定犯罪（入管法第24条; 執行猶予付きでも特定犯罪は対象）; 不起訴でも逮捕歴は素行評価に残る; 外国人の権利=領事通知権（ウィーン条約第36条）・通訳権・弁護人選任権・黙秘権. needs_domain P1: 逮捕中の特例期間の扱い; 軽微犯罪の素行評価への官式基準. ※P0に昇格（刑事手続きは即座かつ不可逆的な在留影響）.
+  - G122 (kaigo-visa-gyomu-han): atlas_draft P1. G85補完。在留資格「介護」=介護福祉士国家資格必須（技能実習修了は自動移行根拠にならない）; 特定技能1号（介護）=試験合格または実習修了免除・通算5年上限・家族帯同不可; 特定技能2号（介護）=2023年追加・上限なし・家族帯同可; EPA候補者=試験不合格→帰国義務（例外規定はneeds_domain）. needs_domain P1: EPA候補者の試験失敗後の延長条件; 介護福祉士国家試験の外国人合格率・支援体制.
+  - G123 (gaikokujin-kakutei-shinkoku): atlas_draft P1. 在留資格問わず日本居住者=全世界所得確定申告義務（所得税法）; 年末調整=1社の給与所得の精算のみ（副業・海外収入は別途申告必要）; 副業20万円超・複数給与所得・追加控除=確定申告が必要; 帰国年=準確定申告が必要（または出国後60日以内に納税管理人経由）. needs_domain P1: 過去の未申告の自発的修正手続き; 特定口座と海外収入の確定申告義務の相互作用.
+  - G124 (tokutei-gino-2go-yoken): atlas_draft P1. 特定技能2号=自動昇格なし（別途試験・変更申請必要）; 2023年6月閣議決定で対象分野が大幅拡大（全分野ではない）; 在留期間上限なし・家族帯同可（1号との最大の違い）; 活動制限あり（永住者の「一切の活動」とは異なる）; 1号の5年後=2号変更・他資格変更・帰国の3択. needs_domain P1: 試験未実施分野での実質的な2号移行経路; 特定技能在留歴と永住申請10年要件.
+  - G125 (zairyu-ninteisho-kakucho): atlas_draft P1. G43補完。COE有効期限=3か月（失効後はスポンサーが再申請必要）; COE=入国保証ではない（入国時の上陸審査は別途）; 査証免除（ビザなし）国籍者でも就労・長期滞在はCOE+ビザが原則必要; COE有効期限とビザ有効期限は独立. needs_domain P1: COEの緊急優先処理の官式条件; 査証免除国籍者の国内での就労系変更の確認済み例外.
+  - New DOMAIN items: dom-keiji-001/002, dom-kaigo-han-001/002, dom-kakutei-001/002, dom-2go-001/002, dom-coe-001/002 (10 new items). Total DOMAIN: 292.
+  - Next batch (Batch 024) candidates: 外国人の離婚・親権・養育費と在留資格（日本人配偶者との離婚後の子の親権と在留ルート）, 在留資格「特定活動」の指定書の種類と各指定書の就労範囲（告示番号別まとめ）, 外国人技能実習生の失踪後の在留資格回復・保護ルート（G107補完）, 高度専門職ポイント申請の誤信パターン（学歴・職歴の二重カウント等）, 永住者の再入国許可（正規再入国許可vs.みなし再入国許可）の実務上の違いと選択基準.
