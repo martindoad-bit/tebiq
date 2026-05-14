@@ -1,0 +1,165 @@
+# FACT Progress — Phase 2 P0/P1 Guardrails
+
+Last updated: 2026-05-15 CST
+
+## Current Status
+
+- total planned in Workpack 001 core batch: 10
+- completed: 15
+- in progress: 0
+- blocked: 0
+- needs DOMAIN: 52
+- Batch 001 core: completed 10/10
+- Batch 002 continuation: completed 5
+
+## Completed Cards
+
+| card_id | file | status | source quality | needs_domain | notes |
+|---|---|---|---|---|---|
+| guardrail-special-period-two-month-boundary | guardrail-special-period-two-month-boundary.md | completed | official ISA procedure pages | yes | Two-month special-period endpoint captured; consequences after endpoint and activity boundaries queued for DOMAIN. |
+| guardrail-national-tax-certificate-sono3 | guardrail-national-tax-certificate-sono3.md | completed | official NTA/e-Tax pages | yes | Confirms 国税/税務署/e-Tax routing and separates from municipal resident-tax documents. |
+| guardrail-resident-tax-fiscal-year-address | guardrail-resident-tax-fiscal-year-address.md | completed | official municipal examples + national/legal references | yes | Captures fiscal-year vs prior-income-year mapping and January 1 issuing-municipality boundary. |
+| guardrail-late-payment-not-erased | guardrail-late-payment-not-erased.md | completed | official ISA + JPS + NTA pages | yes | Set to needs_domain; official sources support timing-history boundary but not individual approval/risk prediction. |
+| guardrail-j-skip-eligibility-gate | guardrail-j-skip-eligibility-gate.md | completed | official ISA J-Skip/HSP pages | yes | Hard gate blocks 1200万/1600万 false positives and separates J-Skip from ordinary HSP points. |
+| guardrail-hsp1-institution-change | guardrail-hsp1-institution-change.md | completed | official ISA HSP + 所属機関 Q&A pages | yes | Separates HSP1 status-change permission, 14-day notification, and points evidence; blocks "points + notification" shortcut. |
+| guardrail-work-qualification-certificate-boundary | guardrail-work-qualification-certificate-boundary.md | completed | official ISA procedure + e-Gov law | yes | Defines 就労資格証明書 as certificate/evidence, not new work permission or substitute for change permission. |
+| guardrail-spouse-divorce-death-remarriage | guardrail-spouse-divorce-death-remarriage.md | completed | official ISA spouse notification + cancellation pages | yes | Set to needs_domain; separates 14-day notification, cancellation/review boundary, current period, and remarriage route uncertainty. |
+| guardrail-dv-separation-address-safety | guardrail-dv-separation-address-safety.md | completed | official Cabinet Office + ISA + municipal source | yes | Set to needs_domain; safety/address exposure first, no contact-abuser or confidentiality guarantee. |
+| guardrail-business-manager-disposition-before-change | guardrail-business-manager-disposition-before-change.md | completed | official ISA business-manager + change/renewal pages | yes | Set to needs_domain; blocks company closure/suspension/liquidation as automatic status-change success tactic. |
+| guardrail-immigration-notice-taxonomy | guardrail-immigration-notice-taxonomy.md | completed | official ISA paper/online notice pages | yes | Batch 002 started; prevents overclassifying receipt/email/postcard/additional-material/cancellation-like notices before exact title/deadline/action extraction. |
+| guardrail-incomplete-material-filing-expiry | guardrail-incomplete-material-filing-expiry.md | completed | official ISA PR application page + online Q&A + special-period page | yes | atlas_draft. Key source: "審査を進めることが困難" (review stalls on incomplete docs); 返却中 state in online system; 2-month cap is absolute. Blocks "file incomplete = safe bridge" pattern. |
+| guardrail-result-postcard-pickup-boundary | guardrail-result-postcard-pickup-boundary.md | completed | official ISA notice page + online Q&A + pending proof page | yes | atlas_draft. Separates 審査完了 email, postcard/letter arrival, card pickup, and final permission moment. Blocks 審査完了 = 許可 and ハガキ = 許可確定 patterns. |
+| guardrail-third-party-cannot-replace-immigration-duty | guardrail-third-party-cannot-replace-immigration-duty.md | completed | official ISA individual notification page + institutional Q&A | yes | atlas_draft. Confirms "届出者＝中長期在留者本人"; employer/school/Hello Work/city office duties are parallel, not substitutes. Blocks employer-did-it / school-handled-it patterns. |
+| guardrail-pr-pending-vs-current-status-renewal | guardrail-pr-pending-vs-current-status-renewal.md | completed (needs_domain) | official ISA special-period page + PR procedure + notice page | yes | needs_domain. Critical gap: official special-period page names renewal/change only, not PR. ISA notice page warns PR applicants to proactively contact ISA near expiry — indirect evidence current-status expiry is live risk. Statutory PR-pending protection not confirmed from sources. |
+
+## In Progress
+
+None. All WORKPACK_001 continuation candidates completed. See next batch candidates below.
+
+## DOMAIN Review Queue
+
+| issue_id | card_id | question | priority | why it matters |
+|---|---|---|---|---|
+| dom-sp-001 | guardrail-special-period-two-month-boundary | What answer route should be used when original expiry + two months has already passed or is today? | P0 | Potential overstay/unlawful-stay consequences require professional handling, not FACT conclusion. |
+| dom-sp-002 | guardrail-special-period-two-month-boundary | During a pending change application, which activities remain allowed under the previous status and which require permission before starting? | P0 | Wrong advice may cause unauthorized work/activity. |
+| dom-nt3-001 | guardrail-national-tax-certificate-sono3 | If a補件 notice demands 国税その3 but the user has late/amended national tax facts, what explanation/submission route is acceptable? | P1 | FACT can identify document family but not decide practical acceptability. |
+| dom-nt3-002 | guardrail-national-tax-certificate-sono3 | Are substitute documents ever acceptable for a specific 国税その3 request before deadline? | P1 | Avoid unsafe substitution advice. |
+| dom-nt3-003 | guardrail-national-tax-certificate-sono3 | How should TEBIQ classify cases where the notice mixes 国税その3 and 住民税 documents in one補件 request? | P1 | Prevent conflating separate issuing authorities. |
+| dom-rt-001 | guardrail-resident-tax-fiscal-year-address | How should TEBIQ handle required resident-tax certificates when the user had no Japan address on the relevant January 1? | P1 | Official mapping may produce no certificate; substitution/route must be reviewed. |
+| dom-rt-002 | guardrail-resident-tax-fiscal-year-address | What evidence is acceptable if a municipality cannot issue a certificate before補件 deadline due to late filing or missing tax data? | P1 | Prevent unsafe "just submit something else" answers. |
+| dom-rt-003 | guardrail-resident-tax-fiscal-year-address | How to treat cases where actual residence and住民登録 differed on January 1? | P1 | Taxing authority may require local/professional confirmation. |
+| dom-late-001 | guardrail-late-payment-not-erased | How should answer routing describe individual immigration significance of late payment after remediation? | P1 | FACT can cite negative-evaluation guideline but must not predict approval/denial. |
+| dom-late-002 | guardrail-late-payment-not-erased | What is safe framing for missing receipts where official pages say receipts prove no late payment? | P1 | Missing timing proof is not the same as confirmed late payment. |
+| dom-late-003 | guardrail-late-payment-not-erased | How should追納, exemption, deferment, and late payment be distinguished in PR/HSP-shortcut contexts? | P1 | Pension terms have different legal/admin meanings. |
+| dom-late-004 | guardrail-late-payment-not-erased | Business-owner cases: how to treat company-side withholding/social-insurance late payment or filings? | P1 | Employer-side obligations may affect high-risk routes. |
+| dom-jskip-001 | guardrail-j-skip-eligibility-gate | How to classify ambiguous activity category across 高度専門職1号イ/ロ/ハ? | P1 | J-Skip threshold depends on category. |
+| dom-jskip-002 | guardrail-j-skip-eligibility-gate | Which remuneration components count toward J-Skip年収 when pay includes overseas salary, bonus, stock/options, or group-company compensation? | P1 | Official page defines intended-activity remuneration, but components need review. |
+| dom-jskip-003 | guardrail-j-skip-eligibility-gate | How should route comparison be made among J-Skip, ordinary HSP points, J-Find transition, and PR shortcut? | P1 | Prevent route false positives and premature shortcut claims. |
+| dom-hsp1-001 | guardrail-hsp1-institution-change | What is the route map for HSP1 employer/institution change where the user wants to start before permission? | P0 | Wrong answer may authorize unauthorized work/activity. |
+| dom-hsp1-002 | guardrail-hsp1-institution-change | How should same-group transfers, same job title, subtype changes, and combined renewal/change filings be classified? | P1 | HSP1 institution designation and activity category may change differently from ordinary work statuses. |
+| dom-hsp1-003 | guardrail-hsp1-institution-change | What remedial framing is safe if the user already started at the new HSP1 institution? | P0 | Consequences and remediation are professional/legal judgment. |
+| dom-workcert-001 | guardrail-work-qualification-certificate-boundary | How should job-duty classification be handled for certificate requests under 技人国, 研究, 教育, 経営管理, or HSP? | P1 | FACT can define the certificate but cannot decide every activity fit. |
+| dom-workcert-002 | guardrail-work-qualification-certificate-boundary | What route should be used if a certificate is denied or not issued but the user/employer wants work to continue? | P1 | Non-issuance may affect work and future applications but needs professional classification. |
+| dom-workcert-003 | guardrail-work-qualification-certificate-boundary | How should certificate applications interact with pending renewal/change applications? | P1 | Prevent certificate-as-workaround advice. |
+| dom-spouse-001 | guardrail-spouse-divorce-death-remarriage | What route map should be used after divorce/death/remarriage for 日本人の配偶者等, 永住者の配偶者等, and spouse-type 家族滞在? | P1 | Current period, notification, change/renewal, and cancellation review must be separated. |
+| dom-spouse-002 | guardrail-spouse-divorce-death-remarriage | How should "正当な理由" be classified for not conducting spouse-status activity, including DV and separation? | P1 | Official examples exist, but individual classification is legal/practice judgment. |
+| dom-spouse-003 | guardrail-spouse-divorce-death-remarriage | What safe answer route should be used for late spouse notification beyond 14 days? | P1 | Avoid false safety or punitive overstatement. |
+| dom-spouse-004 | guardrail-spouse-divorce-death-remarriage | How should remarriage timing affect change/renewal/status route and form choice? | P1 | Official sources do not provide a simple automatic-transfer rule. |
+| dom-dv-001 | guardrail-dv-separation-address-safety | What is the safe route map for spouse-status renewal/change after DV separation? | P0 | Wrong routing may expose the user to abuser contact or address leakage. |
+| dom-dv-002 | guardrail-dv-separation-address-safety | What evidence can be used when spouse documents are unsafe or impossible to obtain? | P1 | FACT cannot decide substitute-document acceptability. |
+| dom-dv-003 | guardrail-dv-separation-address-safety | How should resident-record support measures, immigration address duties, and shelter confidentiality interact? | P0 | Address disclosure risk is safety-critical and locality-dependent. |
+| dom-dv-004 | guardrail-dv-separation-address-safety | How should late notification, overstay, or special-period issues be routed in DV context? | P0 | Immigration consequences plus safety context require professional handling. |
+| dom-dv-005 | guardrail-dv-separation-address-safety | Which family-law/custody/protection-order facts require lawyer routing before immigration advice? | P1 | Prevent immigration answer from trampling family safety/law process. |
+| dom-bm-001 | guardrail-business-manager-disposition-before-change | Should company closure/suspension/liquidation/transfer occur before or after status-change permission in common route maps? | P1 | Official sources do not support a generic sequencing tactic. |
+| dom-bm-002 | guardrail-business-manager-disposition-before-change | Is residual director/shareholder/representative activity compatible with the intended new status? | P1 | Role classification affects activity boundary and may need legal/company review. |
+| dom-bm-003 | guardrail-business-manager-disposition-before-change | What old-company evidence pack is safe for explaining a transition to employment status? | P1 | Avoid hiding facts or inventing substitute materials. |
+| dom-bm-004 | guardrail-business-manager-disposition-before-change | How should unpaid tax/social insurance/employees/debt affect risk framing? | P1 | Crosses immigration, tax, labor, and company obligations. |
+| dom-bm-005 | guardrail-business-manager-disposition-before-change | How should 2025/2026 経営管理 reform effective-date/version issues be handled for HSP1ハ/HSP2/PR shortcut cases? | P1 | Versioned rules can change route gates and validators. |
+| dom-notice-001 | guardrail-immigration-notice-taxonomy | What is the canonical route map for receipt, pending notation, online receipt, additional-material request, result postcard, pickup, non-permission, hearing/appearance, and cancellation? | P1 | Validators need exact notice-state taxonomy before runtime use. |
+| dom-notice-002 | guardrail-immigration-notice-taxonomy | What safe answer sequence should be used when deadline is imminent and materials are incomplete? | P1 | Prevent unsafe partial-submission or missed-deadline advice. |
+| dom-notice-003 | guardrail-immigration-notice-taxonomy | How should ambiguous "不許可みたいな通知" be classified before post-result options are discussed? | P1 | Avoid overclassification of uncertain notice as final disposition. |
+| dom-notice-004 | guardrail-immigration-notice-taxonomy | Which online-system email events are equivalent to paper notices, and which are only process-status messages? | P1 | Candidate answers may confuse 審査完了/受付 with permission. |
+| dom-notice-005 | guardrail-immigration-notice-taxonomy | How should notices be routed in DV/address-safety, illness, overseas, or delivery-failure contexts? | P1 | Notice handling can intersect with safety and deadline preservation. |
+| dom-incomplete-001 | guardrail-incomplete-material-filing-expiry | What is the minimum document set that ISA will formally accept (受付) for renewal/change applications — i.e., what constitutes a "filed" application triggering the special period? | P1 | Affects whether incomplete-material filing actually triggers special-period protection or is refused at counter. |
+| dom-incomplete-002 | guardrail-incomplete-material-filing-expiry | Does 返却中 (returned) status in the online system stop the special-period clock, or does the 2-month cap continue running during the returned period? | P1 | If cap continues, 返却中 with slow material gathering may exhaust special period silently. |
+| dom-incomplete-003 | guardrail-incomplete-material-filing-expiry | When is a 補件 request (additional material request) issued vs. when is an application outright denied without a 補件 opportunity? | P1 | Determines how safe it is to file a known-incomplete application before expiry. |
+| dom-incomplete-004 | guardrail-incomplete-material-filing-expiry | What is the safe answer route when expiry is imminent (today/tomorrow) and key materials are missing — file immediately with what is available, or wait until complete? | P0 | Wrong advice may trigger non-permission or special-period non-coverage. |
+| dom-pickup-001 | guardrail-result-postcard-pickup-boundary | For paper applications, at what exact moment is permission confirmed — when the decision is made, when the postcard is sent, when the new card is issued, or when the card is in hand? | P1 | Affects whether interim work/activity is permissible during the gap. |
+| dom-pickup-002 | guardrail-result-postcard-pickup-boundary | What is the safe action sequence if 審査完了 email arrived (online) but the applicant started a new job before receiving the card? | P1 | May involve unauthorized activity in the gap period. |
+| dom-pickup-003 | guardrail-result-postcard-pickup-boundary | What should a PR applicant do if expiry approaches and no result notification (postcard/letter) has arrived despite the ISA recommendation to contact proactively? | P1 | Current status expiry during long PR review is a live risk. |
+| dom-thirdparty-001 | guardrail-third-party-cannot-replace-immigration-duty | What is the safe route when a user's 14-day notification window has already passed because they believed the employer had filed? | P1 | Late notification consequences and remediation require professional classification. |
+| dom-thirdparty-002 | guardrail-third-party-cannot-replace-immigration-duty | Which professionals qualify as 申請取次者 for renewal/change applications and what formal authorization is required? | P1 | Prevents conflating employer HR action with authorized professional delegation. |
+| dom-pr-001 | guardrail-pr-pending-vs-current-status-renewal | What is the legal basis and time limit (if any) for current-status continuation during a pending PR application under 入管法? | P0 | Core gap: ISA special-period page does not confirm PR-application coverage. |
+| dom-pr-002 | guardrail-pr-pending-vs-current-status-renewal | After PR denial, what is the exact time window and required action before the user must renew current status or depart? | P0 | Wrong answer may cause unlawful-stay consequences. |
+| dom-pr-003 | guardrail-pr-pending-vs-current-status-renewal | Should TEBIQ recommend filing a concurrent current-status renewal application as a hedge when the PR applicant's status is within a short window of expiry? | P1 | Practical strategy needs professional/legal validation. |
+
+## Source Log
+
+| topic | official source | URL | checked_at | note |
+|---|---|---|---|---|
+| special period | 出入国在留管理庁「特例期間とは？」 | https://www.moj.go.jp/isa/applications/procedures/tokureikikan_00001.html | 2026-05-14 | Defines endpoint as disposition or original expiry + two months, whichever earlier. |
+| special period | 出入国在留管理庁「在留申請時のお知らせ及び注意」 | https://www.moj.go.jp/isa/11_00037.html | 2026-05-14 | Plain-language two-month maximum continuation warning. |
+| national tax certificate その3 | 国税庁「No.9208 納税証明書の請求」 | https://www.nta.go.jp/taxes/shiraberu/taxanswer/osirase/9208.htm | 2026-05-14 | Lists tax-office issued certificate types and その3 meaning. |
+| national tax certificate その3 | e-Tax「納税証明書の交付請求について」 | https://www.e-tax.nta.go.jp/tetsuzuki/shomei_index.htm | 2026-05-14 | Confirms e-Tax request route and certificate-type list. |
+| national tax certificate その3 | 国税庁「税務署に行かずに申請できます！永住許可申請のための納税証明書」 | https://www.nta.go.jp/about/organization/nagoya/topics/eijhu_nozeishomei/index.htm | 2026-05-14 | Connects 永住許可申請 with 納税証明書（その3） and online/tax-office route. |
+| resident tax fiscal-year/address | 総務省「地方税制度 個人住民税」 | https://www.soumu.go.jp/main_sosiki/jichi_zeisei/czaisei/czaisei_seido/149767_03.html | 2026-05-14 | General national explanation for personal resident tax. |
+| resident tax fiscal-year/address | e-Gov法令検索「地方税法」 | https://laws.e-gov.go.jp/law/325AC0000000226 | 2026-05-14 | Legal reference for resident-tax taxpayer and assessment-date provisions. |
+| resident tax fiscal-year/address | 長野市「市民税・県民税課税内容証明書」 | https://www.city.nagano.nagano.jp/n062000/contents/p000471.html | 2026-05-14 | Municipal example for fiscal year, January 1 taxing municipality, and prior-year income. |
+| resident tax fiscal-year/address | 多摩市「住民税（市民税・都民税）・森林環境税の課税・非課税証明と所得証明について」 | https://www.city.tama.lg.jp/kurashi/zei/shomei/1001854.html | 2026-05-14 | Municipal example for prior-year income and January 1 address/name fields. |
+| resident tax fiscal-year/address | 三鷹市「個人住民税の課税（非課税）証明書の申請方法」 | https://www.city.mitaka.lg.jp/c_service/004/004534.html | 2026-05-14 | Municipal example for issuing municipality when living there on January 1. |
+| late payment not erased | 出入国在留管理庁「永住許可に関するガイドライン」 | https://www.moj.go.jp/isa/applications/resources/nyukan_nyukan50.html | 2026-05-14 | Public obligations must be properly fulfilled; paid later but late is generally negative. |
+| late payment not erased | 出入国在留管理庁「永住許可申請３」 | https://www.moj.go.jp/isa/applications/procedures/zairyu_eijyu03.html | 2026-05-14 | Pension payment-status materials and receipts for no late payment. |
+| late payment not erased | 出入国在留管理庁「永住許可申請４－（２）－ア」 | https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri07_00133.html | 2026-05-14 | Medical-insurance payment-status materials and late-payment receipt purpose. |
+| late payment not erased | 日本年金機構「ねんきんネットによるご自身の年金記録の確認」 | https://www.nenkin.go.jp/n_net/introduction/confirmation.html | 2026-05-14 | Pension records can show monthly payment/contribution status. |
+| late payment not erased | 日本年金機構「国民年金保険料の追納制度」 | https://www.nenkin.go.jp/service/kokunen/menjo/20150331.html | 2026-05-14 | Defines追納 as later payment of specified exempted/deferred periods. |
+| J-Skip eligibility | 出入国在留管理庁「特別高度人材制度（J-Skip）」 | https://www.moj.go.jp/isa/applications/resources/nyuukokukanri01_00009.html | 2026-05-14 | Official J-Skip categories, thresholds, and separation from point system. |
+| J-Skip eligibility | 出入国在留管理庁「高度人材ポイント制とは？」 | https://www.moj.go.jp/isa/applications/resources/newimmiact_3_system_index.html | 2026-05-14 | Ordinary HSP point system uses point threshold; not J-Skip. |
+| J-Skip eligibility | 出入国在留管理庁「高度外国人材の受入れに係る新たな制度の創設について」 | https://www.moj.go.jp/isa/content/001395002.pdf | 2026-05-14 | Official overview of J-Skip no-point route and thresholds. |
+| HSP1 institution change | 出入国在留管理庁「在留資格『高度専門職』（高度人材ポイント制）」 | https://www.moj.go.jp/isa/applications/status/designatedactivities02_00004.html?hl=ja | 2026-05-14 | States HSP1 activity change including institution change requires status-change permission. |
+| HSP1 institution change | 出入国在留管理庁「所属機関等に関する届出・所属機関による届出Q&A」 | https://www.moj.go.jp/isa/applications/procedures/shozokunikansuru_00001.html?hl=ja | 2026-05-14 | Separates notification duties and HSP1 designated-institution change permission. |
+| HSP1 institution change | 出入国在留管理庁「参考：届出書参考様式での記載方法」 | https://www.moj.go.jp/isa/content/001361043.pdf | 2026-05-14 | Notification timing and note that notification itself does not approve activity. |
+| work qualification certificate | 出入国在留管理庁「就労資格証明書（入管法第19条の2）」 | https://www.moj.go.jp/isa/applications/procedures/syuurou_00001.html | 2026-05-14 | Defines certificate as proof of permitted work activities, not a status-change permission. |
+| work qualification certificate | 出入国在留管理庁「就労資格証明書交付申請」 | https://www.moj.go.jp/isa/applications/procedures/16-9.html | 2026-05-14 | Official application route for certificate issuance. |
+| status change procedure | 出入国在留管理庁「在留資格変更許可申請」 | https://www.moj.go.jp/isa/applications/procedures/16-2.html?hl=ja | 2026-05-14 | Defines status-change permission and filing period. |
+| work qualification certificate | e-Gov法令検索「出入国管理及び難民認定法」 | https://laws.e-gov.go.jp/law/326CO0000000319 | 2026-05-14 | Legal reference for residence status and Article 19-2 certificate framework. |
+| spouse divorce/death | 出入国在留管理庁「配偶者に関する届出」 | https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00016.html | 2026-05-14 | 14-day notification duty after divorce or death for specified spouse-related statuses. |
+| spouse divorce/death | 出入国在留管理庁「在留資格の取消し（入管法第22条の4）」 | https://www.moj.go.jp/isa/applications/procedures/torikeshi_00002.html | 2026-05-14 | Cancellation boundary where spouse activity is not conducted for six months or more without justifiable reason. |
+| spouse divorce/death | 出入国在留管理庁「配偶者の身分を有する者としての活動を行わないことに正当な理由がある場合等在留資格の取消しを行わない具体例について」 | https://www.moj.go.jp/isa/applications/procedures/newimmiact_1_info_120703_01.html | 2026-05-14 | Official examples for no-cancellation despite not conducting spouse activity. |
+| spouse status | 出入国在留管理庁「在留資格『日本人の配偶者等』」 | https://www.moj.go.jp/isa/applications/status/spouseorchildofjapanese.html | 2026-05-14 | Status category and procedure context for spouse of Japanese national. |
+| DV separation/address safety | 内閣府男女共同参画局「被害者が外国人の場合」 | https://www.gender.go.jp/policy/no_violence/e-vaw/siensya/08.html | 2026-05-14 | Foreign victims are covered by DV prevention/protection law; residence procedures may be needed after divorce. |
+| DV separation/address safety | 内閣府男女共同参画局「DV相談＋（プラス）」案内 | https://www.gender.go.jp/policy/no_violence/dv_navi/pdf/dv_soudan_plus.pdf | 2026-05-14 | Official DV consultation route including foreign-language consultation. |
+| DV separation/address safety | 出入国在留管理庁「外国人在留総合インフォメーションセンター等」 | https://www.moj.go.jp/isa/consultation/center/index.html | 2026-05-14 | Immigration/residence procedure consultation route with multilingual handling. |
+| DV address support | 内閣府男女共同参画局「関連通知一覧」 | https://www.gender.go.jp/policy/no_violence/e-vaw/kanrentsuchi/index.html | 2026-05-14 | Official list of MIC notices on resident-record support measures for DV/stalking/abuse victims. |
+| DV address support | 糸島市「DVなどの被害者向け住民基本台帳支援措置のご案内」 | https://www.city.itoshima.lg.jp/s008/020/010/040/20230518140651.html | 2026-05-14 | Local official example of restricting address-bearing resident-record certificate issuance/viewing. |
+| business manager transition | 出入国在留管理庁「在留資格『経営・管理』」 | https://www.moj.go.jp/isa/applications/status/businessmanager.html?hl=ja | 2026-05-14 | Defines business-manager activity and official materials around company/activity facts. |
+| business manager transition | 出入国在留管理庁「在留資格の変更、在留期間の更新許可のガイドライン」 | https://www.moj.go.jp/isa/applications/resources/nyuukokukanri07_00058.html?hl=ja | 2026-05-14 | Change/renewal assessed by intended activity, residence situation, need, and overall circumstances. |
+| business manager transition | 出入国在留管理庁「外国人経営者の在留資格基準の明確化について」 | https://www.moj.go.jp/isa/applications/resources/nyukan_nyukan43.html?hl=ja | 2026-05-14 | Explains substantive participation in business management/administration. |
+| business manager transition | 出入国在留管理庁「在留資格『経営・管理』に係る上陸基準省令等の改正について」 | https://www.moj.go.jp/isa/applications/resources/10_00237.html?hl=ja | 2026-05-14 | Current version/effective-date source for business-manager criteria and activity-reality handling. |
+| immigration notice taxonomy | 出入国在留管理庁「在留申請時のお知らせ及び注意」 | https://www.moj.go.jp/isa/11_00037.html | 2026-05-14 | Results are notified by postcard/letter; changed contact/application facts should be reported. |
+| immigration notice taxonomy | 出入国在留管理庁「オンラインでの申請手続に関するQ&A」 | https://www.moj.go.jp/isa/applications/online/online-QA.html | 2026-05-14 | Lists online email/event types including receipt, additional-material request, examination completion, and card issuance. |
+| immigration notice taxonomy | 出入国在留管理庁「オンライン申請を行った場合に申請中（特例期間を含む）であることを証明することについて」 | https://www.moj.go.jp/isa/applications/online/11_00035.html | 2026-05-14 | Online receipt-completion email with application number is pending proof, not final permission. |
+| immigration notice taxonomy | 出入国在留管理庁「特例期間とは？」 | https://www.moj.go.jp/isa/applications/procedures/tokureikikan_00001.html | 2026-05-14 | Pending special-period boundary for renewal/change; separates pending from permission. |
+| incomplete material filing | 出入国在留管理庁「永住許可申請（申請手続）」 | https://www.moj.go.jp/isa/applications/procedures/zairyu_eijyu01.html | 2026-05-15 | "提出書類が不足していた場合は、追加資料を求めることとなり、資料が揃うまで審査を進めることが困難となります。" — Review cannot proceed on incomplete materials. |
+| incomplete material filing / online 返却中 | 出入国在留管理庁「オンラインでの申請手続に関するQ&A」 | https://www.moj.go.jp/isa/applications/online/online-QA.html | 2026-05-15 | "返却中：追加資料の提出が可能な状態" — Online application returned state when deficiency detected. |
+| result postcard / pickup | 出入国在留管理庁「在留申請時のお知らせ及び注意」 | https://www.moj.go.jp/isa/11_00037.html | 2026-05-15 | "申請の結果が出たときは、はがきや手紙でお知らせします。" — Results by postcard/letter. PR applicants should proactively contact ISA if no notice arrives near expiry. |
+| result / online pickup sequence | 出入国在留管理庁「オンラインでの申請手続に関するQ&A」 | https://www.moj.go.jp/isa/applications/online/online-QA.html | 2026-05-15 | 審査完了 email triggers document-sending instruction → card dispatched → arrives ~2 weeks. 審査完了 ≠ 許可決定. |
+| individual notification duty | 出入国在留管理庁「所属機関等に関する届出（中長期在留者本人からの届出）」 | https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00015.html | 2026-05-15 | "届出者：中長期在留者本人" — Individual must file within 14 days of employment/affiliation change. No third party mentioned as substitute. |
+| parallel institutional duty | 出入国在留管理庁「所属機関等に関する届出・所属機関による届出Q&A」 | https://www.moj.go.jp/isa/applications/procedures/shozokunikansuru_00001.html | 2026-05-15 | Institutional and individual notification duties are parallel, not substitutable. Schools notify for their own obligation; individuals notify separately for their own. |
+| PR special period scope | 出入国在留管理庁「特例期間とは？」 | https://www.moj.go.jp/isa/applications/procedures/tokureikikan_00001.html | 2026-05-15 | Official special-period page names only 在留期間更新許可申請又は在留資格変更許可申請 as trigger. 永住許可申請 not mentioned. Critical gap for G15. |
+
+## Handoff Notes To Codex
+
+- 2026-05-14 22:10 CST: G1 and G2 completed as atlas_draft guardrail cards. Continue G3-G5 in the same directory only.
+- Codex should scan needs_domain rows before turning these into validators; especially do not convert special-period endpoint card into individualized overstay remedy logic.
+- 2026-05-14 22:38 CST: Workpack 001 production complete: 5/5 cards created. One card (`guardrail-late-payment-not-erased.md`) is intentionally `needs_domain`; the others are `atlas_draft` with DOMAIN flags.
+- Next Codex scan should check that validators use these as guardrails only: no approval probability, no user-facing legal conclusion, no substitute-document acceptance without DOMAIN.
+- 2026-05-14: Workpack 001 expanded from the first 5-card starter group to a 10-card core batch. CC/FACT should continue from G6 rather than restarting G1-G5.
+- 2026-05-14 23:18 CST: G6-G8 completed. `guardrail-spouse-divorce-death-remarriage.md` is intentionally `needs_domain`; do not convert it into automatic cancellation or automatic safe-until-expiry logic. Continue G9-G10.
+- 2026-05-14 23:36 CST: Core Batch 001 G1-G10 completed. G9 and G10 are intentionally `needs_domain`; do not convert DV safety/address handling into ordinary spouse checklist logic, and do not convert company disposition into a generic success tactic. Next continuation candidate is Batch 002 immigration notice taxonomy.
+- 2026-05-14 23:48 CST: Batch 002 started with `guardrail-immigration-notice-taxonomy.md`. Next Batch 002 candidate is incomplete-material filing before expiry boundary. Notice taxonomy is intentionally `needs_domain`; do not convert approximate notice descriptions into final legal-state labels.
+- 2026-05-15: Batch 002 completed (5 cards total: G11-G15). All WORKPACK_001 continuation candidates delivered. Summary:
+  - G12 (incomplete-material-filing-expiry): atlas_draft. Blocks "file incomplete = safe bridge." Key official quote: "資料が揃うまで審査を進めることが困難." 2-month cap is absolute.
+  - G13 (result-postcard-pickup-boundary): atlas_draft. Blocks 審査完了 = 許可 and ハガキ = 許可確定 patterns. Online pickup sequence: 審査完了 email → send docs → ~2 weeks for card.
+  - G14 (third-party-cannot-replace-immigration-duty): atlas_draft. Official source: "届出者＝中長期在留者本人." Employer/school/Hello Work/city office obligations are parallel, not substitutes.
+  - G15 (pr-pending-vs-current-status-renewal): intentionally needs_domain. CRITICAL: official special-period page does not cover PR applications. ISA PR notice page implicitly confirms current-status expiry is a live risk by advising proactive contact. Do NOT apply 2-month renewal/change special period to PR pending without DOMAIN confirmation.
+  - P0 items flagged for DOMAIN: dom-incomplete-004, dom-pr-001, dom-pr-002. These must be resolved before any runtime use of G12/G15 answer patterns.
