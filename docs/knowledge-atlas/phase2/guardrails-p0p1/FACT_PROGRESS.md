@@ -1,14 +1,14 @@
 # FACT Progress — Phase 2 P0/P1 Guardrails
 
-Last updated: 2026-05-15 CST (Batch 017 complete)
+Last updated: 2026-05-15 CST (Batch 018 complete)
 
 ## Current Status
 
 - total planned in Workpack 001 core batch: 10
-- completed: 94
+- completed: 99
 - in progress: 0
 - blocked: 0
-- needs DOMAIN: 232
+- needs DOMAIN: 242
 - Batch 001 core: completed 10/10
 - Batch 002 continuation: completed 5
 - Batch 003 continuation: completed 9 (G23 skipped — insufficient official source)
@@ -26,6 +26,7 @@ Last updated: 2026-05-15 CST (Batch 017 complete)
 - Batch 015 continuation: completed 5 (G81-G85)
 - Batch 016 continuation: completed 5 (G86-G90)
 - Batch 017 continuation: completed 5 (G91-G95)
+- Batch 018 continuation: completed 5 (G96-G100)
 
 ## Completed Cards
 
@@ -339,6 +340,16 @@ None. All WORKPACK_001 continuation candidates completed. See next batch candida
 | dom-nanmin-002 | guardrail-nanmin-shinsei-zairyu | How is 補完的保護 (established in 2023) being applied in practice? What types of situations (non-refugee-convention but life/physical safety risk) have been granted 補完的保護認定? | P1 | Cannot confirm eligibility patterns without domain knowledge of actual 2023-2026 case practice. |
 | dom-fudosan-001 | guardrail-gaikokujin-fudosan-shutoku | Under what specific conditions does the 外為法 post-acquisition reporting obligation apply to foreign nationals who are already residing in Japan (中長期在留者 vs 非居住者)? | P1 | The financial ministry page was accessed but the exact residency-based threshold for reporting was not fully confirmed. |
 | dom-fudosan-002 | guardrail-gaikokujin-fudosan-shutoku | Can rental income from Japanese real estate, owned by a foreign national on a non-business visa (e.g., 技人国), constitute a violation of 在留資格's activity restrictions? The boundary between passive investment income and "business activity" requiring 経営管理 is not clearly confirmed from accessed official sources. | P1 | If rental income is classified as 経営管理 activity, TEBIQ must alert 技人国 holders about the status mismatch risk. |
+| dom-ginko-001 | guardrail-gaikokujin-ginko-koza | Does the 3-month residence threshold for bank account opening apply uniformly under 犯罪収益移転防止法, or is it a banking industry guideline that individual banks may waive? | P1 | The legal basis for the 3-month threshold as a hard rule vs. a soft practice needs confirmation before TEBIQ can reliably advise on eligibility. |
+| dom-ginko-002 | guardrail-gaikokujin-ginko-koza | For 技能実習 and 育成就労 workers — is there a regulatory framework controlling how receiving organizations manage workers' bank accounts (e.g., organizations retaining passbooks/bank cards)? | P1 | Reports of exploitative account management raise a labor rights concern that TEBIQ should route to professional if confirmed as illegal. |
+| dom-tokubetsu-001 | guardrail-tokubetsu-eijusha-seido | What is the practical procedure when the 60-day birth application deadline has been missed for a 特別永住者の子? Is there an administrative remedy or does the child need to apply for standard 在留資格? | P1 | Affects routing for parents who missed the deadline — a relatively common practical scenario. |
+| dom-tokubetsu-002 | guardrail-tokubetsu-eijusha-seido | Are there any circumstances where a 特別永住者 who has continuously lived in Japan could lose their status without explicit deportation proceedings (e.g., through long-term overseas absence)? | P1 | 特別永住者 status maintenance during extended overseas absence is an important practical concern for this population. |
+| dom-bunka-001 | guardrail-bunka-katsudo-zairyu | Does receiving a small honorarium (e.g., nominal 謝礼) from the training host violate the "収入を伴わない" requirement for 文化活動? The threshold between expense reimbursement and prohibited income is not clear from ISA official text. | P1 | Required before TEBIQ can advise on edge cases involving small payments in 文化活動 training contexts. |
+| dom-bunka-002 | guardrail-bunka-katsudo-zairyu | Can a 文化活動 holder obtain 個別 資格外活動許可 for any form of employment? The structural interpretation suggests generally no, but this has not been confirmed from official ISA guidance. | P1 | Affects whether TEBIQ should say "impossible" or "rarely permitted" for 文化活動 + 個別許可 scenarios. |
+| dom-rodoho-001 | guardrail-rodoho-gaikokujin-tekiyo | What is the current 厚生労働省 / 労働基準監督署 policy on information sharing with ISA when an undocumented worker contacts the 労基署 with a labor complaint? | P1 | Affects the safety of routing undocumented workers directly to 労基署 without first consulting a lawyer. |
+| dom-rodoho-002 | guardrail-rodoho-gaikokujin-tekiyo | For 技能実習生 with criminal-level exploitation (trafficking-like conditions) — is there a clear legal pathway to emergency status change or protection under Japan's anti-trafficking laws? | P1 | Anti-trafficking protection route needs professional/domain confirmation before TEBIQ references it. |
+| dom-henkou-001 | guardrail-zairyu-shikaku-toriatsukai-hennko | What is the official ISA procedure for a foreign national child born in Japan when the birth exceeds the 60-day deadline for 在留資格 application? | P1 | A common emergency scenario; the remedy procedure is not confirmed from official ISA text. |
+| dom-henkou-002 | guardrail-zairyu-shikaku-toriatsukai-hennko | For a person in Japan on "日本人の配偶者等" whose Japanese spouse passed away — is there an official ISA guideline on the transition period and how to manage the status before moving to 定住者 or another route? | P1 | Death-of-spouse scenarios are specific and high-stakes; official transition guidance not confirmed. |
 | dom-kenkyu-001 | guardrail-kenkyu-kyoju-geijutsu-shukyo | Can a foreign religious worker be sponsored by a Japanese 宗教法人 with no overseas parent organization, or is the "外国の宗教団体からの派遣" strictly required? | P1 | ISA religious.html describes the 外国派遣 requirement but does not explicitly address purely Japanese institution sponsorship. |
 | dom-kenkyu-002 | guardrail-kenkyu-kyoju-geijutsu-shukyo | For researchers employed by a private company but stationed at a national university or public research institute — is the appropriate status 研究 or 技人国? | P1 | The determining criterion for seconded corporate researchers at public institutions is not confirmed from accessed official text. |
 | dom-jocho-001 | guardrail-fuhoshurou-jocho-sekinin | What is the legal standard for employer good-faith defense when a fraudulent residence card was presented — intent required or strict liability? | P1 | ISA enforcement practice on this specific defense has not been confirmed from official text. |
@@ -491,6 +502,14 @@ None. All WORKPACK_001 continuation candidates completed. See next batch candida
 | 2023年入管法改正（送還停止効制限・補完的保護新設） | 出入国在留管理庁「入管法改正（令和5年）」 | https://www.moj.go.jp/isa/nyuukokukanri01_00207.html | 2026-05-15 | 3回目以降の難民申請=送還停止効が制限; 補完的保護制度新設（難民条約上の難民でないが生命等のリスクがある者）. Used for G94. |
 | 外国人による不動産取得の自由 | 財務省「外為法に基づく不動産取得の届出」 | https://www.mof.go.jp/policy/international_policy/gaitame_kawase/gaitame/fudosan.htm | 2026-05-15 | 非居住者による不動産取得には外為法上の事後届出義務（取得後2週間以内）が生じる場合がある; 居住外国人（中長期在留者）は条件次第. Used for G95. |
 | 永住申請と不動産所有の関係 | ISA「永住許可に関するガイドライン」 | https://www.moj.go.jp/isa/applications/procedures/16-4_00001.html | 2026-05-15 | 不動産所有は永住申請の明示的要件ではない; 永住審査の主要件=独立生計・公的義務・素行・在留期間. Used for G95. |
+| 外国人の口座開設要件 | 全国銀行協会「外国人の方の口座開設について」 | https://www.zenginkyo.or.jp/article/tag-i/15302/ | 2026-05-15 | 中長期在留者（在留期間3か月超）が口座開設の主要件; 在留カードが本人確認書類; 各銀行の審査基準による対応差異. Used for G96. |
+| 口座開設時の本人確認義務（外為法・犯収法） | 金融庁「犯罪収益移転防止法」 | https://www.fsa.go.jp/policy/aml/index.html | 2026-05-15 | 口座開設時の本人確認義務（在留カードによる確認）; 短期滞在者の取扱い. Used for G96. |
+| 特別永住者の定義・申請手続き | ISA「特別永住者」 | https://www.moj.go.jp/isa/applications/procedures/tokubetsu_eijusha_index.html | 2026-05-15 | 旧植民地出身者・子孫が対象; 子の出生後60日以内申請義務; 市区町村役場で手続き. Used for G97. |
+| 特別永住者証明書の有効期限 | ISA「特別永住者証明書」 | https://www.moj.go.jp/isa/applications/procedures/tokubetsu_eijusha_card.html | 2026-05-15 | 有効期限: 16歳以上=7年; 16歳未満=16歳誕生日; 更新手続きは市区町村役場. Used for G97. |
+| 在留資格「文化活動」活動定義 | ISA「在留資格『文化活動』」 | https://www.moj.go.jp/isa/applications/status/culture.html | 2026-05-15 | 「収入を伴わない学術上若しくは芸術上の活動又は我が国特有の文化若しくは技芸について専門的な研究を行い若しくは専門家の指導を受けてこれを修得する活動」（条文引用）. Used for G98. |
+| 外国人労働者への労働法適用 | 厚生労働省「外国人労働者に関する労働基準法等の適用について」 | https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/roudoukijun/gaikokujin.html | 2026-05-15 | 労働基準法・最低賃金法・安全衛生法が在留資格問わず全労働者に適用; 不法就労者も対象. Used for G99. |
+| 在留資格変更許可申請（自動変更なし原則） | ISA「在留資格変更許可申請」 | https://www.moj.go.jp/isa/applications/procedures/16-2.html | 2026-05-15 | 在留資格変更は許可申請が必要（婚姻・出生等で自動変更なし）; 変更前の活動継続可能. Used for G100. |
+| 外国籍の子の60日以内申請義務 | ISA「在留資格認定証明書交付申請」 | https://www.moj.go.jp/isa/applications/procedures/16-1.html | 2026-05-15 | 出生後60日以内の在留資格取得申請義務（外国籍の子）; CoE申請手順. Used for G100. |
 
 ## Handoff Notes To Codex
 
@@ -633,3 +652,11 @@ None. All WORKPACK_001 continuation candidates completed. See next batch candida
   - G95 (gaikokujin-fudosan-shutoku): atlas_draft P1. 外国人も原則として日本の不動産を自由に取得可（在留資格・国籍問わず）; 外為法上の届出義務は一定条件下で生じる（非居住者等）。不動産取得は在留資格更新・永住申請の直接的加点要素ではない。永住者も長期出国（1年以上）で在留資格消滅リスク（不動産所有では防げない; G82参照）。固定資産税・不動産取得税・賃貸収入の確定申告義務（G90参照）。needs_domain P1: 居住外国人の外為法届出条件; 賃貸収入と在留資格（経営・管理）の境界.
   - New DOMAIN items: dom-kogyou-001/002, dom-nenkin-dattai-001, dom-tokure-shutsukoku-001, dom-nanmin-001/002, dom-fudosan-001/002 (8 new items). Total DOMAIN: 232.
   - Next batch (Batch 018) candidates: 外国人の銀行口座開設と在留資格（在留資格別の口座開設条件）, 特別永住者制度（特別永住者と一般永住者の違い）, 外国人の自動車免許と国際運転免許（在留資格との関係）, 在留資格「文化活動」の活動範囲と収入制限, 在留資格の「みなし」規定（入管法上の間なし処理の全体像）.
+- 2026-05-15: Batch 018 completed (5 cards: G96-G100). Total completed: 99 (G100 is card #99 due to G23 skip; numbering continues). DOMAIN items: 242. Summary:
+  - G96 (gaikokujin-ginko-koza): atlas_draft P1. 中長期在留者（在留期間3か月超）は在留カードで口座開設可; 短期滞在（3か月以下）は原則困難（犯罪収益移転防止法上の要件）; 口座保有は在留資格と独立; マイナンバー告知義務は口座開設自体の必須要件ではない. needs_domain P1: 3か月閾値の法的根拠（法定 vs 業界慣行）; 技能実習・育成就労の口座管理問題.
+  - G97 (tokubetsu-eijusha-seido): atlas_draft P1. 特別永住者=入管特例法に基づく制度; 旧植民地出身者（韓国・朝鮮・台湾等）とその子孫が対象; 一般永住者とは法的根拠・退去強制要件が異なる; 子の出生後60日以内申請義務; 特別永住者証明書有効期限=7年（更新必要）. needs_domain P1: 60日期限超過後の代替手続き; 長期出国と特別永住者の地位維持.
+  - G98 (bunka-katsudo-zairyu): atlas_draft P1. 在留資格「文化活動」=収入を伴わない学術・芸術研究・日本特有の文化技芸修行; 収入を伴う就労は不法就労; 包括的資格外活動許可の対象外（留学・家族滞在のみ）; 「芸術」（収入あり）・「興行」（商業公演）との区別が重要. needs_domain P1: 小額謝礼が「収入」に該当するか; 文化活動保有者の個別許可の可否.
+  - G99 (rodoho-gaikokujin-tekiyo): atlas_draft P1. 労働基準法・最低賃金法・安全衛生法は在留資格問わず全労働者に適用; 最低賃金は国籍・在留資格問わず同一; 不法就労者も労災保険の対象（労働者災害補償保険法第3条）; 出入国規制（入管法）と労働法保護は独立した制度; 労基署相談は在留状況問わず可能. needs_domain P1: 労基署と入管当局の情報共有方針; 技能実習生の人身売買対応ルート.
+  - G100 (zairyu-shikaku-toriatsukai-hennko): atlas_draft P1. 婚姻・離婚・子の出生等の身分変化で在留資格は自動変更されない; 常に許可申請が必要; 外国籍の子が日本で出生した場合=出生後60日以内に在留資格取得申請が必要; 離婚後=14日以内届出義務+次回更新時に在留資格変更が必要（G8/G29/G45 cross-refs）. needs_domain P1: 60日期限超過後の子の申請方法; 配偶者死亡後の移行期間ガイドライン.
+  - New DOMAIN items: dom-ginko-001/002, dom-tokubetsu-001/002, dom-bunka-001/002, dom-rodoho-001/002, dom-henkou-001/002 (10 new items). Total DOMAIN: 242.
+  - Next batch (Batch 019) candidates: 外国人の運転免許（国際運転免許・日本免許への切り替え・在留資格との関係）, 在留申請における身元保証人制度（身元保証人の役割・責任・必要書類）, 外国人起業家の会社設立と在留資格（会社設立前後の手続き・経営管理ビザとの関係）, 在留資格「介護」と「技能実習（介護）」と「特定技能（介護）」の3制度の徹底比較（G85補完）, 外国人住民の行政サービス利用と在留資格（市区町村の福祉・教育・医療サービスへのアクセス）.
