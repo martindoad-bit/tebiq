@@ -1,14 +1,14 @@
 # FACT Progress — Phase 2 P0/P1 Guardrails
 
-Last updated: 2026-05-15 CST (Batch 020 complete)
+Last updated: 2026-05-15 CST (Batch 021 complete)
 
 ## Current Status
 
 - total planned in Workpack 001 core batch: 10
-- completed: 109
+- completed: 114
 - in progress: 0
 - blocked: 0
-- needs DOMAIN: 262
+- needs DOMAIN: 272
 - Batch 001 core: completed 10/10
 - Batch 002 continuation: completed 5
 - Batch 003 continuation: completed 9 (G23 skipped — insufficient official source)
@@ -29,6 +29,7 @@ Last updated: 2026-05-15 CST (Batch 020 complete)
 - Batch 018 continuation: completed 5 (G96-G100)
 - Batch 019 continuation: completed 5 (G101-G105)
 - Batch 020 continuation: completed 5 (G106-G110)
+- Batch 021 continuation: completed 5 (G111-G115)
 
 ## Completed Cards
 
@@ -143,6 +144,11 @@ Last updated: 2026-05-15 CST (Batch 020 complete)
 | guardrail-ryugaku-shushoku-katsudo | guardrail-ryugaku-shushoku-katsudo.md | completed | ISA「特定活動（就職活動）」; ISA「特定活動告示46号」 | yes | atlas_draft P1. G108. 大学卒業後は「留学」の活動目的が終了→「特定活動（就職活動）」への変更が必要; 特定活動（就職活動）=180日（最大1年程度; 週28h資格外活動許可取得可）; 特定活動46号=日本の大学・大学院卒+日本語能力ビジネスレベル+日本語使用業務（技人国より幅広い業種）. needs_domain P1: 特定活動46号の日本語能力の正式要件; 専門学校卒業者の対象可否. |
 | guardrail-kigyonai-tenkin-yoken | guardrail-kigyonai-tenkin-yoken.md | completed | ISA「在留資格『企業内転勤』」; 入管法別表第一の二 | yes | atlas_draft P1. G109. 企業内転勤=同一企業グループの外国事業所から日本事業所への転勤（転職は対象外）; 転勤直前に1年以上の継続勤務が必須; 学歴・実務経験不要（技人国との大きな違い）; グループ外転籍=在留資格変更（技人国等）が必要（変更前就労=資格外活動リスク）. needs_domain P1: 1年の継続勤務要件の計算方法; 間接子会社間の「転勤」の該当性. |
 | guardrail-gaikokujin-sozoku-zairyu | guardrail-gaikokujin-sozoku-zairyu.md | completed | 法の適用に関する通則法第36条; 法務省「不動産登記」; 国税庁「相続税」 | yes | atlas_draft P1. G110. 相続の準拠法=被相続人の本国法（通則法第36条）; 日本国内の不動産でも外国籍の被相続人なら外国法が原則; 外国人（外国在住相続人含む）も日本の相続手続きに参加可; 外国書類はアポスティーユ+翻訳が必要; 90日超の滞在は相応の在留資格が必要. needs_domain P1: 相続のための特定活動在留の手続き; 中長期在留者の常居所地法例外適用. |
+| guardrail-kyoiku-visa-yoken | guardrail-kyoiku-visa-yoken.md | completed | ISA「在留資格『教育』」; ISA「在留資格『教授』」; G86/G10 cross-refs | yes | atlas_draft P1. G111. 「教育」=小中高・専修学校・各種学校での語学・教科指導; 「教授」=大学・大学院・高等専門学校での研究・教育; 「教育」の上陸基準省令=教員免許または大卒+5年経験; 各種学校認定外の民間語学学校=技人国（国際業務）が適用される場合あり. needs_domain P1: 母語話者特例の公式テキスト確認; ALT（私立派遣）の在留資格の官式判断. |
+| guardrail-soko-hyoka-kijun | guardrail-soko-hyoka-kijun.md | completed | ISA「更新・変更ガイドライン」; ISA「永住許可ガイドライン」（令和6年改定版）; 入管法第24条 | yes | atlas_draft P1. G112. 素行評価=刑事前科・逮捕歴・交通違反（刑事）・公的義務履行状況の総合評価; 不起訴でも逮捕歴は審査要素となりうる; 禁錮以上の実刑後は永住申請に一定の経過年数が必要（基準非公表）; 公的義務（税・年金・保険）不履行は素行評価に影響. needs_domain P1: 懲役後の永住申請の最短経過年数; ISAの逮捕歴照会範囲と不起訴案件の評価方針. |
+| guardrail-gaikokujin-rodo-kumiai | guardrail-gaikokujin-rodo-kumiai.md | completed | 労働組合法第3条・第7条; 労働関係調整法; G99/G107 cross-refs | yes | atlas_draft P1. G113. 外国人も在留資格問わず労働組合に加入可（労働組合法第3条）; 組合活動理由の不利益取扱い=不当労働行為（第7条; 外国人にも適用）; 適法ストライキ=在留資格取消し事由にならない; 不法就労者も労働組合法上の「労働者」とされうる（判例・労働委員会実務）. needs_domain P1: 不法就労者の組合加入権に関する最高裁判例の特定; 長期ストライキと在留更新審査へのISA官式見解. |
+| guardrail-gaikokujin-iryo-shussan | guardrail-gaikokujin-iryo-shussan.md | completed | ISA「出産に関する在留資格の手続き」; 国籍法第2条; 厚生労働省「出産育児一時金」 | yes | atlas_draft P1. G114. 外国人の子が日本で生まれても日本国籍を取得しない（血統主義）; 出生後60日以内に在留資格取得申請が必要（G100）; 在留期間は入院・出産中でも停止しない; 緊急医療は在留資格問わず提供（医師法の応召義務）; 出産育児一時金=50万円（NHI/健保加入者のみ）. needs_domain P1: 医療費長期未払いと在留審査への影響; 不法在留状態での出産と母親の在留資格の扱い. |
+| guardrail-kokusai-zeimu-gaikokujin | guardrail-kokusai-zeimu-gaikokujin.md | completed | 国税庁「居住者・非居住者の区分」; 国税庁「租税条約」; 国税庁「国外転出時課税」 | yes | atlas_draft P1. G115. 外国人居住者（1年以上居住）=全世界所得課税（在留資格種別不問）; 租税条約=二重課税防止（免除ではない）; 出国税=1億円以上の有価証券等（出国前に税理士必須）; 日本出国後も日本源泉所得への課税継続; 国外財産調書=5,000万円超の国外財産を有する居住者に提出義務. needs_domain P1: 税務申告不履行と在留審査の関係; 出国税と租税条約の二重課税問題. |
 
 ## In Progress
 
@@ -398,6 +404,16 @@ None. All WORKPACK_001 continuation candidates completed. See next batch candida
 | dom-tk46-001 | guardrail-tokutei-katsudo-46-shiteisho | For 特定活動46号 holders, does a job change to a different industry require a new 46号 application, 在留資格変更 with new 指定書, or only employer notification? | P1 | Practical procedure for mid-status employer/job change under 特定活動46号 is not fully confirmed from official text. |
 | dom-shorui-001 | guardrail-shinsei-genbon-honyaku-yoken | For specifically listed document types in ISA checklists (登記事項証明書・住民税証明書等), are there officially confirmed cases where a copy is accepted? | P1 | ISA checklists vary by application type; general copy-vs-original rule confirmation not yet extracted. |
 | dom-zei-001 | guardrail-gaikokujin-zeimukokuchi | Does a completed 修正申告 for a past undeclared year, filed before a 永住許可 application, fully satisfy the 直近2年の公的義務適正履行 requirement? | P1 | ISA permanent residence guideline does not explicitly address whether late filing via 修正申告 fully remedies the deficiency. |
+| dom-kyoiku-001 | guardrail-kyoiku-visa-yoken | Is the "native speaker exception" (母語話者特例) for the educational background requirement in 在留資格「教育」 formally recognized in ISA official guidance, or only in administrative practice? What is the official text basis? | P1 | ISA education.html and 上陸基準省令「教育」 imply flexibility for native speakers of the target foreign language, but the exact condition (and whether it formally overrides the 大学卒業+5年実務経験 requirement) is not confirmed from accessed official text. |
+| dom-kyoiku-002 | guardrail-kyoiku-visa-yoken | For ALTs (Assistant Language Teachers) dispatched by a private staffing agency to a public school — is the appropriate visa 「教育」 or 「技人国（国際業務）」? What is ISA's official determination? | P1 | ISA has issued guidance on ALT visa classification but the determination for privately dispatched ALTs (as opposed to JET Programme participants) has not been confirmed from directly accessed official text. |
+| dom-soko-001 | guardrail-soko-hyoka-kijun | What is the minimum elapsed time after completion of a prison sentence (懲役実刑) before ISA will accept a 永住許可 application? Is there any published ISA standard, or is it purely discretionary? | P1 | The ISA 永住ガイドライン (令和6年改定版) states 素行が善良 as a requirement but does not publish a specific waiting period after criminal conviction/sentence. Needed before advising on post-sentence timelines. |
+| dom-soko-002 | guardrail-soko-hyoka-kijun | Does ISA's 素行 evaluation check arrest records (逮捕歴) that did not lead to prosecution or resulted in 不起訴？ What is ISA's access mechanism for pre-prosecution records? | P1 | ISA can request 犯歴照会 from police, but whether non-prosecuted arrest records are formally considered in 素行 evaluation is not confirmed from publicly accessible official guidance. |
+| dom-kumiai-001 | guardrail-gaikokujin-rodo-kumiai | Is there a specific 最高裁判所 ruling that formally confirms undocumented foreign workers (不法就労者) are 「労働者」 under 労働組合法 and therefore entitled to union protection? If so, what is the case reference? | P1 | This protection is widely cited in labor law practice and 労働委員会 decisions, but the specific 最高裁 case reference needs domain confirmation before TEBIQ cites it as settled law. |
+| dom-kumiai-002 | guardrail-gaikokujin-rodo-kumiai | What is ISA's official position (if any) on the impact of extended strike participation on visa renewal evaluation — specifically, does a multi-month absence from active work affect the 在留中の活動の状況 criterion? | P1 | ISA has no publicly accessible official statement on this question; needs domain/legal practitioner confirmation before TEBIQ can advise strike participants on renewal risk. |
+| dom-iryo-shussan-001 | guardrail-gaikokujin-iryo-shussan | Does long-term non-payment of medical bills (医療費未払い) at a Japanese hospital constitute a 素行 negative factor in ISA renewal/change/PR applications? Is there ISA guidance or case practice on this? | P1 | Medical bill arrears are not listed as a specific 素行 criterion in ISA public guidelines; whether they are considered in discretionary 素行 evaluation is not confirmed from official sources. |
+| dom-iryo-shussan-002 | guardrail-gaikokujin-iryo-shussan | For a person in 不法在留 status who gives birth in Japan — what is ISA's official position on the mother's immigration status treatment? Is there a discretionary protection pathway or does birth not affect immigration proceedings? | P1 | ISA does not publish official policy on post-birth treatment of mothers in irregular status; this requires domain/practitioner confirmation before TEBIQ can advise on post-birth immigration options. |
+| dom-kokusai-zei-001 | guardrail-kokusai-zeimu-gaikokujin | Does ISA formally consider tax declaration non-compliance (確定申告未提出) and tax arrears as a 素行 factor in renewal/change applications beyond the 永住申請 context? Is there published guidance on thresholds? | P1 | ISA 永住ガイドライン explicitly covers tax compliance; whether the same 直近2年 standard applies to renewal/change applications beyond 永住 is not confirmed from official guidance. |
+| dom-kokusai-zei-002 | guardrail-kokusai-zeimu-gaikokujin | For persons subject to Japan's 国外転出時課税 (exit tax) who also face taxation in their home country under domestic law — does the applicable tax treaty definitively resolve the double taxation, or are there treaty gaps? | P1 | Tax treaty application to exit tax scenarios is complex; whether all applicable treaties cover the specific 国外転出時課税 asset-gain recognition event is not confirmed from accessed official sources. |
 
 ## Source Log
 
@@ -571,6 +587,19 @@ None. All WORKPACK_001 continuation candidates completed. See next batch candida
 | 相続税の外国人相続人 | 国税庁「相続税」 | https://www.nta.go.jp/taxes/shiraberu/taxanswer/sozoku/souzoku.htm | 2026-05-15 | 日本国内財産の相続に係る相続税; 相続開始を知った日から10か月以内の申告義務; 外国人相続人の取り扱い. Used for G110. |
 | 外国人住民の行政サービスアクセス | 総務省「外国人住民の行政サービスへのアクセス」 | https://www.soumu.go.jp/main_sosiki/jichi_zeisei/c-zeisei/gaikokujin.html | 2026-05-15 | 中長期在留者の住民登録・行政サービス利用権; 在留資格種別問わずアクセス可. Used for G104. |
 | 外国人の子どもの就学権 | 文部科学省「外国人の子どもの就学」 | https://www.mext.go.jp/a_menu/shotou/clarinet/003.htm | 2026-05-15 | 義務教育年齢（6〜15歳）の外国人の就学権; 市区町村教育委員会の受入義務. Used for G104. |
+| 在留資格「教育」の活動定義 | 出入国在留管理庁「在留資格『教育』」 | https://www.moj.go.jp/isa/applications/status/education.html | 2026-05-15 | 活動定義（小学校・中学校・高校・専修学校・各種学校での語学・教科指導）; 「教授」との区別. Used for G111. |
+| 在留資格「教育」の上陸基準省令 | 上陸基準省令「教育」 | https://laws.e-gov.go.jp/law/326CO0000000016 | 2026-05-15 | 「教育」の上陸基準省令：教員免許または大学卒業+当該科目5年以上の実務経験; 外国語の場合の緩和規定. Used for G111. |
+| 在留資格「教授」の活動定義 | 出入国在留管理庁「在留資格『教授』」 | https://www.moj.go.jp/isa/applications/status/professor.html | 2026-05-15 | 大学・大学院・高等専門学校での研究・教育活動; 「教育」との機関種別による区分. Used for G111. |
+| 永住許可の素行要件 | 出入国在留管理庁「永住許可に関するガイドライン（令和6年改定）」 | https://www.moj.go.jp/isa/applications/resources/nyukan_nyukan50.html | 2026-05-15 | 素行が善良であること; 公的義務の適正履行（税・年金・保険）; 刑事処分・交通違反等の評価. Used for G112. |
+| 素行評価の対象行為（在留資格審査） | 出入国在留管理庁「在留資格変更・更新の審査基準」 | https://www.moj.go.jp/isa/applications/resources/nyuukokukanri07_00117.html | 2026-05-15 | 素行評価の対象（刑事前科・逮捕歴・交通違反・公的義務不履行等）; 審査要素の総合判断. Used for G112. |
+| 労働組合法（労働者の定義・不当労働行為禁止） | e-Gov法令検索「労働組合法」 | https://laws.e-gov.go.jp/law/324AC0000000174 | 2026-05-15 | 第3条「労働者」の定義（国籍・在留資格を区別しない）; 第7条不当労働行為の禁止（組合活動理由の不利益取扱い禁止）. Used for G113. |
+| 労働関係調整法（争議行為の保護） | e-Gov法令検索「労働関係調整法」 | https://laws.e-gov.go.jp/law/321AC0000000025 | 2026-05-15 | 争議行為（ストライキ等）の手続き・制限; 適法な争議行為の保護. Used for G113. |
+| 日本の国籍法（血統主義） | e-Gov法令検索「国籍法」 | https://laws.e-gov.go.jp/law/325AC0000000147 | 2026-05-15 | 国籍法第2条（出生による国籍取得）=父または母が日本国民であること（血統主義）; 出生地主義を採用しない. Used for G114. |
+| 出産育児一時金の支給要件・金額 | 全国健康保険協会「出産育児一時金」 | https://www.kyoukaikenpo.or.jp/g3/cat315/sb3090/r139/ | 2026-05-15 | 支給要件（健康保険・NHI加入者）; 支給額50万円（2023年4月以降）; 外国人加入者への適用. Used for G114. |
+| 緊急医療の応召義務 | 医師法第19条 | https://laws.e-gov.go.jp/law/323AC0000000201 | 2026-05-15 | 「診療に従事する医師は、診察治療の求があった場合には、正当な事由がなければ、これを拒んではならない」; 在留資格問わず適用. Used for G114. |
+| 日本の居住者・非居住者区分（所得税法） | 国税庁「所得税基本通達3-3（居住者の意義）」 | https://www.nta.go.jp/law/tsutatsu/kihon/shotoku/02/01.htm | 2026-05-15 | 国内に住所を有する者または1年以上居所を有する者=居住者（全世界所得課税）; 在留資格種別は区別しない. Used for G115. |
+| 国外転出時課税（出国税）制度 | 国税庁「国外転出時課税制度のあらまし」 | https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1477.htm | 2026-05-15 | 対象（有価証券等1億円以上保有; 出国前10年間のうち5年以上居住）; 出国前の申告・納税義務; 租税条約との関係. Used for G115. |
+| 国外財産調書提出義務 | 国税庁「国外財産調書制度」 | https://www.nta.go.jp/taxes/shiraberu/taxanswer/hotei/7456.htm | 2026-05-15 | 提出義務（居住者で12月31日時点の国外財産5,000万円超）; 提出期限（翌年3月15日）; 罰則. Used for G115. |
 
 ## Handoff Notes To Codex
 
@@ -737,3 +766,11 @@ None. All WORKPACK_001 continuation candidates completed. See next batch candida
   - G110 (gaikokujin-sozoku-zairyu): atlas_draft P1. 相続の準拠法=被相続人の本国法（法の適用に関する通則法第36条）; 日本国内の不動産でも外国籍の被相続人なら外国法が原則; 外国人（外国在住の相続人含む）も日本の相続手続きに参加可（遺産分割・相続登記・預金解約・相続税申告）; 外国書類はアポスティーユ付きの日本語翻訳が必要; 相続手続きのために90日超の日本滞在が必要な場合は相応の在留資格が必要. needs_domain P1: 相続のための特定活動在留（ISAの認める具体的な手続きルート）; 中長期在留者として日本で死亡した外国人の場合の常居所地法例外（通則法第38条）の適用.
   - New DOMAIN items: dom-shikaku-gai-001/002, dom-gino-hogo-001/002, dom-ryugaku-shushoku-001/002, dom-tenkin-001/002, dom-sozoku-001/002 (10 new items). Total DOMAIN: 262.
   - Next batch (Batch 021) candidates: 在留資格「教育」（小中高教師）の要件と「教授」との区別, 外国人の日本国内での労働組合加入権と集団的労使紛争, 在留資格変更・更新における「素行」の具体的評価基準（交通違反・軽微な刑事罰の影響）, 外国人の医療・出産と在留資格（在留期間満了前後の医療保険・妊娠・出産に関する手続き）, 日本に長期滞在する外国人の国際税務（租税条約・海外所得の課税・出国税）.
+- 2026-05-15: Batch 021 completed (5 cards: G111-G115). Total completed: 114. DOMAIN items: 272. Summary:
+  - G111 (kyoiku-visa-yoken): atlas_draft P1. 在留資格「教育」=小中高・専修・各種学校での語学・教科指導（大学は「教授」）; 上陸基準省令の要件=教員免許または大学卒業+5年以上の実務経験; 外国語の母語話者の場合は要件緩和の実務あり（公式テキスト要確認）; 学校教育法上の「各種学校」未認定の民間語学スクール=技人国（国際業務）ルートの場合あり; ALTは形態（JET/公立vs私立派遣）によって在留資格が異なる. needs_domain P1: 母語話者特例の公式テキスト確認; ALT（私立派遣）の在留資格の官式判断.
+  - G112 (soko-hyoka-kijun): atlas_draft P1. 素行評価=刑事前科・逮捕歴・交通違反（刑事）・公的義務（税・年金・保険）の履行状況の総合評価; 不起訴でも逮捕歴は永住申請等の審査要素となりうる（不起訴≠問題なし）; 禁錮以上の実刑・執行猶予後は永住申請に一定の経過年数が必要（具体的な公式基準は非公表）; 交通違反の反則金処理は一般的に大きな影響なし（ただし重大な交通違反・複数回は影響しうる）. needs_domain P1: 懲役後の永住申請の最短経過年数; ISAの逮捕歴照会範囲と不起訴案件の評価方針.
+  - G113 (gaikokujin-rodo-kumiai): atlas_draft P1. 外国人も在留資格問わず労働組合に加入可（労働組合法第3条は国籍・在留資格を区別しない）; 組合活動理由の不利益取扱い=不当労働行為（労働組合法第7条; 外国人にも適用）; 適法ストライキ=在留資格取消し事由にならない; 不法就労者も実質的な雇用関係がある場合、労働組合法上の「労働者」とされうる（判例・労働委員会実務）. needs_domain P1: 不法就労者の組合加入権に関する最高裁判例の特定; 長期ストライキと在留更新審査へのISA官式見解.
+  - G114 (gaikokujin-iryo-shussan): atlas_draft P1. 日本の国籍法は血統主義→外国人夫婦の子が日本で生まれても日本国籍を取得しない; 出生後60日以内に在留資格取得申請が必要; 在留期間は入院・出産中でも停止しない（暦日通り進行）; 緊急医療（救急搬送含む）は在留資格問わず医師法の応召義務に基づいて提供; 出産育児一時金=50万円（NHI/健康保険加入者のみ; 2023年4月以降）. needs_domain P1: 医療費長期未払いと在留審査（素行）への影響; 不法在留状態での出産と母親の在留資格の扱い.
+  - G115 (kokusai-zeimu-gaikokujin): atlas_draft P1. 日本の居住者（1年以上の居所または住所）=全世界所得課税（在留資格種別不問）; 租税条約=二重課税防止（日本での課税を免除するものではなく課税権を配分するもの）; 出国税（国外転出時課税）=出国時に有価証券等1億円以上保有かつ過去10年間のうち5年以上居住の場合（出国前に税理士必須）; 日本出国後も日本源泉所得（不動産賃貸・株式配当等）への課税継続; 国外財産調書=5,000万円超の国外財産を有する居住者は毎年3月15日までに提出義務. needs_domain P1: 税務申告不履行と在留審査（公的義務・素行）の関係; 出国税と租税条約の二重課税問題.
+  - New DOMAIN items: dom-kyoiku-001/002, dom-soko-001/002, dom-kumiai-001/002, dom-iryo-shussan-001/002, dom-kokusai-zei-001/002 (10 new items). Total DOMAIN: 272.
+  - Next batch (Batch 022) candidates: 在留資格「報道」（外国メディア記者・取材活動の要件と制限）, 外国人の法律婚・内縁・同性パートナーシップと在留資格（「日本人の配偶者等」の認定範囲）, 就労系在留資格保持者の大学院進学（兼学と在留資格の関係）, 永住者が他の在留資格に変更できるか（永住後の在留資格変更の可否）, 外国人に対する住居・宿泊施設の入居差別と法的保護（外国人差別と在留資格の関係）.
