@@ -1,16 +1,17 @@
 # FACT Progress — Phase 2 P0/P1 Guardrails
 
-Last updated: 2026-05-15 CST
+Last updated: 2026-05-15 CST (Batch 003 complete)
 
 ## Current Status
 
 - total planned in Workpack 001 core batch: 10
-- completed: 15
+- completed: 24
 - in progress: 0
 - blocked: 0
-- needs DOMAIN: 52
+- needs DOMAIN: 73
 - Batch 001 core: completed 10/10
 - Batch 002 continuation: completed 5
+- Batch 003 continuation: completed 9 (G23 skipped — insufficient official source)
 
 ## Completed Cards
 
@@ -31,6 +32,15 @@ Last updated: 2026-05-15 CST
 | guardrail-result-postcard-pickup-boundary | guardrail-result-postcard-pickup-boundary.md | completed | official ISA notice page + online Q&A + pending proof page | yes | atlas_draft. Separates 審査完了 email, postcard/letter arrival, card pickup, and final permission moment. Blocks 審査完了 = 許可 and ハガキ = 許可確定 patterns. |
 | guardrail-third-party-cannot-replace-immigration-duty | guardrail-third-party-cannot-replace-immigration-duty.md | completed | official ISA individual notification page + institutional Q&A | yes | atlas_draft. Confirms "届出者＝中長期在留者本人"; employer/school/Hello Work/city office duties are parallel, not substitutes. Blocks employer-did-it / school-handled-it patterns. |
 | guardrail-pr-pending-vs-current-status-renewal | guardrail-pr-pending-vs-current-status-renewal.md | completed (needs_domain) | official ISA special-period page + PR procedure + notice page | yes | needs_domain. Critical gap: official special-period page names renewal/change only, not PR. ISA notice page warns PR applicants to proactively contact ISA near expiry — indirect evidence current-status expiry is live risk. Statutory PR-pending protection not confirmed from sources. |
+| guardrail-shikaku-gai-katsudo-28h-limit | guardrail-shikaku-gai-katsudo-28h-limit.md | completed | official ISA 資格外活動許可 pages | yes | atlas_draft. Blocks "28h/week applies always" and "long vacation = unlimited hours" patterns. Key quote: "１週について２８時間以内（教育機関の長期休業期間にあっては、１日について８時間以内）". 風俗業 prohibited unconditionally. |
+| guardrail-shikakugai-during-status-change-pending | guardrail-shikakugai-during-status-change-pending.md | completed (needs_domain) | official ISA 特例期間 page | yes | needs_domain P0. Pending change does NOT expand permitted work activities. Special period allows continuation of "従前の活動" only. High danger: users may assume approval-route activities are pre-permitted. |
+| guardrail-address-change-dual-obligation | guardrail-address-change-dual-obligation.md | completed | official ISA 住所変更届出 page | yes | atlas_draft. Card at city hall window = satisfies BOTH 住民票 AND immigration duties simultaneously. Online/mail/proxy without card = immigration duty may not be satisfied. 14-day deadline from move date. |
+| guardrail-minashi-sainyukoku-one-year-limit | guardrail-minashi-sainyukoku-one-year-limit.md | completed | official ISA 再入国許可申請 page | yes | atlas_draft. 1-year limit from departure confirmed with direct quote. Excludes 短期滞在 and 3-month-or-less status holders. 永住 status does not exempt from 1-year limit. |
+| guardrail-fuhyo-go-zairyu-kikan | guardrail-fuhyo-go-zairyu-kikan.md | completed | official ISA 特例期間 page | yes | atlas_draft. Non-permission = disposition → special period ends immediately. Two scenarios: (A) original period still valid → remaining time continues; (B) original period already expired → no remaining authorized basis. |
+| guardrail-tokubetsu-kyoka-not-normal-route | guardrail-tokubetsu-kyoka-not-normal-route.md | completed (needs_domain) | official ISA deportation procedures pages | yes | needs_domain P0. 在留特別許可 arises only within 退去強制手続. NOT a proactive application route. Legal basis: 入管法 第50条. Must not be presented as fallback for non-permission. |
+| guardrail-zairyu-card-expiry-vs-status-period | guardrail-zairyu-card-expiry-vs-status-period.md | completed | official ISA card-validity-renewal page | yes | atlas_draft. Card validity ≠ 在留期間. 永住 holders: status permanent but card has own validity (must renew separately). Expired card ≠ status expired; expired card ≠ must leave Japan. |
+| guardrail-shikakugai-hokatsu-vs-kobetsu | guardrail-shikakugai-hokatsu-vs-kobetsu.md | completed | official ISA 資格外活動許可 pages | yes | atlas_draft. 包括許可: standard limits, typically auto-granted with 留学. 個別許可: non-standard activities, separate formal application required. Activities within 包括 scope do not need separate 個別 application. |
+| guardrail-kika-vs-eijuu-different-routes | guardrail-kika-vs-eijuu-different-routes.md | completed | official MoJ 帰化 page + ISA 永住 page | yes | atlas_draft. 帰化: 法務局 filing → Japanese nationality; original nationality relinquished. 永住: ISA filing → 在留資格 only; foreign national status unchanged. Fundamental different authorities, different outcomes. |
 
 ## In Progress
 
@@ -92,6 +102,26 @@ None. All WORKPACK_001 continuation candidates completed. See next batch candida
 | dom-pr-001 | guardrail-pr-pending-vs-current-status-renewal | What is the legal basis and time limit (if any) for current-status continuation during a pending PR application under 入管法? | P0 | Core gap: ISA special-period page does not confirm PR-application coverage. |
 | dom-pr-002 | guardrail-pr-pending-vs-current-status-renewal | After PR denial, what is the exact time window and required action before the user must renew current status or depart? | P0 | Wrong answer may cause unlawful-stay consequences. |
 | dom-pr-003 | guardrail-pr-pending-vs-current-status-renewal | Should TEBIQ recommend filing a concurrent current-status renewal application as a hedge when the PR applicant's status is within a short window of expiry? | P1 | Practical strategy needs professional/legal validation. |
+| dom-28h-001 | guardrail-shikaku-gai-katsudo-28h-limit | How is "教育機関の長期休業期間" officially defined, and what counts as a qualifying long vacation for the 8h/day (instead of 28h/week) rule? | P1 | Wrong answer may under- or over-permit activity hours during school vacation. |
+| dom-28h-002 | guardrail-shikaku-gai-katsudo-28h-limit | Does the 28h/week 包括許可 limit apply regardless of whether the permitted activity differs from the student's study field? | P1 | Field-of-study matching is a common misconception; official boundary needed. |
+| dom-28h-003 | guardrail-shikaku-gai-katsudo-28h-limit | For holders of 家族滞在 or other non-留学 statuses with 包括許可, is the 28h/week limit identical or different? | P1 | 包括許可 conditions may vary by status; must not overgeneralize 留学 rule. |
+| dom-pending-001 | guardrail-shikakugai-during-status-change-pending | What are the exact legal consequences of performing activities that would be permitted under the applied-for status but not the current status, while a status-change application is pending? | P0 | Wrong advice may result in unauthorized work/activity, which is a criminal/administrative violation. |
+| dom-pending-002 | guardrail-shikakugai-during-status-change-pending | Is there any safe framing for advising a student (留学) whose 技人国 change application is pending but employer wants them to start working? | P0 | Cannot advise "wait for approval" without a clear boundary; cannot advise "start work" without confirming authority. |
+| dom-pending-003 | guardrail-shikakugai-during-status-change-pending | What is the correct remediation route if a user has already started unauthorized activities during a pending change application? | P0 | Consequences include potential status cancellation; professional/legal routing required. |
+| dom-addr-001 | guardrail-address-change-dual-obligation | What is the exact legal consequence (administrative or criminal) of failing the immigration portion of the 住所変更 duty — i.e., completing the 住民票 change but not satisfying the ISA duty? | P1 | The dual-obligation boundary requires official confirmation of separate enforcement. |
+| dom-addr-002 | guardrail-address-change-dual-obligation | When a resident cannot physically attend a city hall window (illness, disability, overseas), what is the official route to satisfy both the 住民票 and ISA address duties? | P1 | Proxy/mail routes may not satisfy ISA obligation; safe alternatives need official confirmation. |
+| dom-minashi-001 | guardrail-minashi-sainyukoku-one-year-limit | If みなし re-entry permission expires while the holder is abroad, does the underlying residence status automatically lapse, or does it continue but re-entry require separate procedures? | P1 | Determines severity of advice needed when user has been abroad beyond 1 year. |
+| dom-minashi-002 | guardrail-minashi-sainyukoku-one-year-limit | What is the correct official route for a 永住 holder who has been abroad over 1 year without a standard 再入国許可 and wants to return to Japan? | P1 | Must route to professional/consulate — TEBIQ cannot confirm re-entry availability. |
+| dom-fuhyo-001 | guardrail-fuhyo-go-zairyu-kikan | What is the exact required action and time window after non-permission where the original period has already expired at the time of non-permission? | P0 | No confirmed official grace period for departure in this scenario; wrong advice may cause unlawful stay. |
+| dom-fuhyo-002 | guardrail-fuhyo-go-zairyu-kikan | Is there an official grace period after non-permission (even when original period expired) for voluntary departure or re-application preparation? | P0 | If no grace period, any continued stay after non-permission with expired original period may constitute unlawful stay. |
+| dom-fuhyo-003 | guardrail-fuhyo-go-zairyu-kikan | Does non-permission on a status-change application (within original period) automatically revert the person to full original-status entitlement until original expiry? | P1 | The revert scenario affects what activities remain permitted after non-permission within original period. |
+| dom-tokubetsu-001 | guardrail-tokubetsu-kyoka-not-normal-route | What is the correct TEBIQ answer route when a user appears to be in actual overstay and proactively asks what options are available? | P0 | Must not advise 在留特別許可 as a plan; must route to lawyer without foreclosing safe voluntary options. |
+| dom-tokubetsu-002 | guardrail-tokubetsu-kyoka-not-normal-route | Is there any safe general statement about practical factors (e.g., Japanese spouse/child) that influence 在留特別許可 without predicting outcomes? | P1 | TEBIQ cannot assess Minister's discretion; safe framing for general education vs. individual prognosis needed. |
+| dom-card-001 | guardrail-zairyu-card-expiry-vs-status-period | What is the exact legal consequence of carrying an expired 在留カード while in-period status is still valid — is it an administrative violation, a criminal offense, or merely a practical inconvenience? | P1 | Affects how urgently TEBIQ must push card renewal and whether "technically valid to stay" framing is safe. |
+| dom-card-002 | guardrail-zairyu-card-expiry-vs-status-period | What is the standard employer obligation when a worker presents an expired-card but claims status is still valid — must the employer accept the worker, and what verification is required? | P1 | Employers may refuse based on card appearance; employment law vs. immigration law intersection. |
+| dom-hokatsu-001 | guardrail-shikakugai-hokatsu-vs-kobetsu | For non-留学 statuses (e.g., 家族滞在, 文化活動), what is the official process for obtaining 個別許可, and what kinds of activities typically qualify vs. are refused? | P1 | 個別許可 scope is not fully defined on ISA pages; prevents over-promising access to non-standard activities. |
+| dom-kika-001 | guardrail-kika-vs-eijuu-different-routes | Are there confirmed exceptions to the 5-year continuous residence requirement for 帰化 — specifically for spouses of Japanese nationals, persons of Japanese descent, or former Japanese nationals? | P1 | Common claim circulates online; must not confirm unless official source explicitly states exception conditions. |
+| dom-kika-002 | guardrail-kika-vs-eijuu-different-routes | Is Japan's 重国籍防止 condition for 帰化 absolutely enforced in all cases, or are there documented exceptions where dual nationality is effectively retained? | P1 | Some countries do not allow voluntary renunciation; what happens in those cases is DOMAIN territory. |
 
 ## Source Log
 
@@ -146,6 +176,15 @@ None. All WORKPACK_001 continuation candidates completed. See next batch candida
 | individual notification duty | 出入国在留管理庁「所属機関等に関する届出（中長期在留者本人からの届出）」 | https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00015.html | 2026-05-15 | "届出者：中長期在留者本人" — Individual must file within 14 days of employment/affiliation change. No third party mentioned as substitute. |
 | parallel institutional duty | 出入国在留管理庁「所属機関等に関する届出・所属機関による届出Q&A」 | https://www.moj.go.jp/isa/applications/procedures/shozokunikansuru_00001.html | 2026-05-15 | Institutional and individual notification duties are parallel, not substitutable. Schools notify for their own obligation; individuals notify separately for their own. |
 | PR special period scope | 出入国在留管理庁「特例期間とは？」 | https://www.moj.go.jp/isa/applications/procedures/tokureikikan_00001.html | 2026-05-15 | Official special-period page names only 在留期間更新許可申請又は在留資格変更許可申請 as trigger. 永住許可申請 not mentioned. Critical gap for G15. |
+| 資格外活動許可（包括・個別） | 出入国在留管理庁「在留資格「留学」及び「家族滞在」を有する者等の「資格外活動許可」」 | https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri07_00003.html | 2026-05-15 | Defines 包括許可 (28h/week; 8h/day during long vacation; 風俗禁止) and 個別許可 (separate application). Used for G16 and G24. |
+| 資格外活動許可申請 | 出入国在留管理庁「資格外活動許可申請」 | https://www.moj.go.jp/isa/applications/procedures/16-8.html | 2026-05-15 | Application procedure for 資格外活動許可; confirms separate application required for 個別許可 activities. Used for G16 and G24. |
+| 住所変更届出 / 在留カード同時手続 | 出入国在留管理庁「住居地の届出（住居地変更の届出）」 | https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00023.html | 2026-05-15 | "在留カードを市区町村の窓口に持参して転入・転居の届出を行った場合には...みなされます" — bringing card to city hall satisfies both 住民票 and ISA duties. Online/mail/proxy without card may not satisfy ISA duty. Used for G18. |
+| みなし再入国許可 / 再入国許可申請 | 出入国在留管理庁「再入国許可申請」 | https://www.moj.go.jp/isa/applications/procedures/16-5.html | 2026-05-15 | Direct quote confirming 1-year limit and exclusion of 短期滞在 and 3-month-or-less holders from みなし. Used for G19. |
+| 在留特別許可（退去強制手続内） | 出入国在留管理庁「在留特別許可申請」 | https://www.moj.go.jp/isa/deportation/procedures/08_00044.html | 2026-05-15 | Legal basis: 入管法第50条. Eligibility: 退去強制事由（第24条）該当外国人. Arises within deportation proceedings only. Used for G21. |
+| 退去強制手続 index | 出入国在留管理庁「退去強制手続」 | https://www.moj.go.jp/isa/deportation/index.html | 2026-05-15 | 在留特別許可申請 listed under deportation proceedings section, not ordinary 在留申請 section. Used for G21. |
+| 在留カード有効期間の更新申請 | 出入国在留管理庁「在留カードの有効期間の更新申請」 | https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00011.html | 2026-05-15 | Confirms card validity renewal is a separate procedure from status renewal. Application window: 2 months before card expiry until card expiry. Under 16: expires on 16th birthday, 6-month advance window. Used for G22. |
+| 帰化許可申請 | 法務省「帰化許可申請」 | https://www.moj.go.jp/MINJI/minji78.html | 2026-05-15 | Filing office: 法務局・地方法務局 (NOT ISA). Residence: 5 years continuous. Age: 18. Outcome: 日本国籍取得. Original nationality: 喪失（重国籍防止条件）. Used for G25. |
+| 永住許可申請 | 出入国在留管理庁「永住許可申請」 | https://www.moj.go.jp/isa/applications/procedures/16-4.html | 2026-05-15 | Filing office: ISA. Outcome: 在留資格「永住者」変更. Nationality: unchanged, remains foreign national. Used for G25. |
 
 ## Handoff Notes To Codex
 
@@ -163,3 +202,16 @@ None. All WORKPACK_001 continuation candidates completed. See next batch candida
   - G14 (third-party-cannot-replace-immigration-duty): atlas_draft. Official source: "届出者＝中長期在留者本人." Employer/school/Hello Work/city office obligations are parallel, not substitutes.
   - G15 (pr-pending-vs-current-status-renewal): intentionally needs_domain. CRITICAL: official special-period page does not cover PR applications. ISA PR notice page implicitly confirms current-status expiry is a live risk by advising proactive contact. Do NOT apply 2-month renewal/change special period to PR pending without DOMAIN confirmation.
   - P0 items flagged for DOMAIN: dom-incomplete-004, dom-pr-001, dom-pr-002. These must be resolved before any runtime use of G12/G15 answer patterns.
+- 2026-05-15: Batch 003 completed (9 cards: G16-G22, G24-G25; G23 skipped). Total completed: 24. Summary:
+  - G16 (shikaku-gai-katsudo-28h-limit): atlas_draft. 28h/week cap confirmed; long vacation = 8h/DAY (not unlimited). 風俗業 prohibited unconditionally. P0 risk pattern: advising "vacation = no limits."
+  - G17 (shikakugai-during-status-change-pending): needs_domain P0. Pending change does NOT expand permitted work scope. "従前の活動" only. Most dangerous answer failure: "you can start working since the application is submitted."
+  - G18 (address-change-dual-obligation): atlas_draft. Card at city hall window = both 住民票 and ISA duties satisfied. Online/mail/proxy without card = ISA duty may NOT be satisfied. 14-day deadline.
+  - G19 (minashi-sainyukoku-one-year-limit): atlas_draft. 1-year limit from departure (direct official quote). 永住 does not exempt. 短期滞在 excluded entirely.
+  - G20 (fuhyo-go-zairyu-kikan): atlas_draft. Non-permission = disposition → special period ends immediately. Two-scenario split: original period remaining vs. expired at time of non-permission. Post-non-permission grace period: needs_domain P0.
+  - G21 (tokubetsu-kyoka-not-normal-route): needs_domain P0. 在留特別許可 = 入管法第50条 discretionary grant within deportation proceedings ONLY. Not a proactive fallback application. Must route to lawyer immediately for overstay/proceedings situations.
+  - G22 (zairyu-card-expiry-vs-status-period): atlas_draft. Card validity ≠ status period. Two separate renewal procedures. 永住 holders: status permanent but card must still be renewed. Expired card ≠ must leave Japan.
+  - G23: SKIPPED — insufficient official source for false-statement penalties. Candidate for Batch 004.
+  - G24 (shikakugai-hokatsu-vs-kobetsu): atlas_draft. 包括許可 vs 個別許可 correctly separated. Activities within 包括 scope do not need separate application. Non-standard activities require 個別許可 formal application.
+  - G25 (kika-vs-eijuu-different-routes): atlas_draft. 帰化 (法務局, nationality acquisition) vs 永住 (ISA, status only) are fundamentally different — different authority, different outcome, different nationality effect.
+  - New P0 DOMAIN items: dom-pending-001/002/003 (G17), dom-fuhyo-001/002 (G20), dom-tokubetsu-001 (G21). Must be resolved before any runtime use of G17/G20/G21.
+  - Next batch (Batch 004) candidates: G23 (申請書記載正確性 — pending better source), 在留資格取消事由（第22条の4）詳細, 特定活動ビザ範囲, 届出義務違反の法的結果, 住民票と在留カード住所不一致リスク.
