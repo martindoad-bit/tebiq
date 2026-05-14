@@ -1,14 +1,14 @@
 # FACT Progress — Phase 2 P0/P1 Guardrails
 
-Last updated: 2026-05-15 CST (Batch 015 complete)
+Last updated: 2026-05-15 CST (Batch 016 complete)
 
 ## Current Status
 
 - total planned in Workpack 001 core batch: 10
-- completed: 84
+- completed: 89
 - in progress: 0
 - blocked: 0
-- needs DOMAIN: 213
+- needs DOMAIN: 224
 - Batch 001 core: completed 10/10
 - Batch 002 continuation: completed 5
 - Batch 003 continuation: completed 9 (G23 skipped — insufficient official source)
@@ -24,6 +24,7 @@ Last updated: 2026-05-15 CST (Batch 015 complete)
 - Batch 013 continuation: completed 5 (G71-G75)
 - Batch 014 continuation: completed 5 (G76-G80)
 - Batch 015 continuation: completed 5 (G81-G85)
+- Batch 016 continuation: completed 5 (G86-G90)
 
 ## Completed Cards
 
@@ -113,6 +114,11 @@ Last updated: 2026-05-15 CST (Batch 015 complete)
 | guardrail-eijuu-route-hikaku | guardrail-eijuu-route-hikaku.md | completed | ISA永住ガイドライン令和6年版; G60/G34/G33/G25 cross-refs | yes | atlas_draft P1. G83. 永住への各ルート比較: 技人国=10年基本; 特定技能1号単独では10年不可; HSP1ショートカット（80pt→1年, 70pt→3年; 申請時ポイント維持必要; HSP1資格保有が条件）. needs_domain P1: 特定技能1号期間の永住カウント; 短期出国の継続性影響. |
 | guardrail-iryo-hoken-gaikokujin | guardrail-iryo-hoken-gaikokujin.md | completed | 国民健康保険法第5条・第6条; 健康保険法第3条; 厚生労働省PDF; G58/G60/G71 cross-refs | yes | atlas_draft P1. G84. 外国人も中長期在留者はNHIまたは社保に強制加入義務; 短期滞在・外交・公用は除外; NHIは任意でない; 雇用形態が保険選択の主な判断軸. needs_domain P1: NHI未加入の在留審査への影響; 社会保障協定の適用条件. |
 | guardrail-kaigo-visa-yoken | guardrail-kaigo-visa-yoken.md | completed | ISA nursing.html; ISA 特定技能「介護」ページ; G46/G63/G33 cross-refs | yes | atlas_draft P1. G85. 介護分野は4枠組み（EPA・技能実習・特定技能・在留資格「介護」）; 在留資格「介護」は介護福祉士国家資格が前提; 技能実習2号修了→特定技能1号（試験一部免除; G46参照）; 特定技能「介護」は2号も設定（上限なし）. needs_domain P1: 介護日本語評価試験の免除範囲; 特定技能「介護」2号の試験条件. |
+| guardrail-kenkyu-kyoju-geijutsu-shukyo | guardrail-kenkyu-kyoju-geijutsu-shukyo.md | completed | ISA research.html, professor.html, art.html, religious.html, gijinkoku.html; G35/G47 cross-refs | yes | atlas_draft P1. G86. 大学教員=「教授」; 公的研究機関=「研究」; 芸術活動=「芸術」; 宗教活動=「宗教」; 技人国は民間企業での専門業務が主対象; 各資格の活動定義から境界を確認. needs_domain P1: 宗教（日本国内法人スポンサー可否）; 民間→公的機関出向研究者の適用資格. |
+| guardrail-fuhoshurou-jocho-sekinin | guardrail-fuhoshurou-jocho-sekinin.md | completed | 入管法第73条の2; ISA不法就労ページ; 厚生労働省外国人雇用ガイダンス; G59/G67 cross-refs | yes | atlas_draft P0. G87. 不法就労助長罪=3年以下懲役または300万円以下罰金; 雇用主の在留カード確認義務; 確認懈怠は「知らなかった」免責にならない; 雇用形態を問わず適用; 外国人雇用状況届出は別制度. needs_domain P1: 偽造カード提示時の善意の抗弁の法的地位. |
+| guardrail-tokutei-katsudo-46-shiteisho | guardrail-tokutei-katsudo-46-shiteisho.md | completed | ISA designatedactivities17.html; G28/G36/G35 cross-refs | yes | atlas_draft P1. G88. 特定活動46号: 対象=4年制大学卒+JLPT N1またはBJT480点以上; 就労範囲=指定書に限定; 技人国では対象外の業務（接客・製造監督等）も可能; 在留期間=1年（更新可）. needs_domain P1: 転職時の手続き（指定書変更 vs 在留資格変更の区別）. |
+| guardrail-shinsei-genbon-honyaku-yoken | guardrail-shinsei-genbon-honyaku-yoken.md | completed | ISA申請書類ページ; ISA外国語書類取り扱いページ; G66/G60/G81 cross-refs | yes | atlas_draft P1. G89. 外国語書類=日本語訳文必要; 翻訳者資格不要・本人可; 原本/写しは書類種別・申請種類によって異なる; 行政書類は一般的に原本（3か月以内）; 申請は住所地管轄ISA. needs_domain P1: 申請種別ごとの原本/コピーの確認済みルール. |
+| guardrail-gaikokujin-zeimukokuchi | guardrail-gaikokujin-zeimukokuchi.md | completed | 国税庁（居住者区分・確定申告必要ケース）; 総務省（個人住民税）; G60/G71/G66 cross-refs | yes | atlas_draft P1. G90. 外国人居住者は全世界所得が課税対象; 確定申告不要ケースは年末調整完了給与のみ; 住民税=前年所得・翌年6月課税・1月1日ルール; 税務申告不履行=在留申請の公的義務評価に影響. needs_domain P1: 修正申告後の永住申請評価への影響. |
 
 ## In Progress
 
@@ -324,6 +330,12 @@ None. All WORKPACK_001 continuation candidates completed. See next batch candida
 | dom-iryo-002 | guardrail-iryo-hoken-gaikokujin | Complete list of Japan's social security agreement countries and specific conditions under which Japanese social insurance enrollment is exempted. | P1 | Structural answer: agreements exist with multiple countries; complete operational list and conditions not confirmed from accessed official text. |
 | dom-kaigo-001 | guardrail-kaigo-visa-yoken | For 技能実習2号「介護」良好修了者transitioning to 特定技能「介護」1号 — is the 介護日本語評価試験 also waived, or still required? | P1 | Care-sector specific Japanese evaluation test waiver status is not confirmed from accessed official text. |
 | dom-kaigo-002 | guardrail-kaigo-visa-yoken | What are the confirmed conditions and exam requirements for 特定技能「介護」2号 (unlimited stay option)? | P1 | ISA sources confirm 介護 was added to 2号 eligible sectors but exam details are not fully accessible as of 2026-05-15. |
+| dom-kenkyu-001 | guardrail-kenkyu-kyoju-geijutsu-shukyo | Can a foreign religious worker be sponsored by a Japanese 宗教法人 with no overseas parent organization, or is the "外国の宗教団体からの派遣" strictly required? | P1 | ISA religious.html describes the 外国派遣 requirement but does not explicitly address purely Japanese institution sponsorship. |
+| dom-kenkyu-002 | guardrail-kenkyu-kyoju-geijutsu-shukyo | For researchers employed by a private company but stationed at a national university or public research institute — is the appropriate status 研究 or 技人国? | P1 | The determining criterion for seconded corporate researchers at public institutions is not confirmed from accessed official text. |
+| dom-jocho-001 | guardrail-fuhoshurou-jocho-sekinin | What is the legal standard for employer good-faith defense when a fraudulent residence card was presented — intent required or strict liability? | P1 | ISA enforcement practice on this specific defense has not been confirmed from official text. |
+| dom-tk46-001 | guardrail-tokutei-katsudo-46-shiteisho | For 特定活動46号 holders, does a job change to a different industry require a new 46号 application, 在留資格変更 with new 指定書, or only employer notification? | P1 | Practical procedure for mid-status employer/job change under 特定活動46号 is not fully confirmed from official text. |
+| dom-shorui-001 | guardrail-shinsei-genbon-honyaku-yoken | For specifically listed document types in ISA checklists (登記事項証明書・住民税証明書等), are there officially confirmed cases where a copy is accepted? | P1 | ISA checklists vary by application type; general copy-vs-original rule confirmation not yet extracted. |
+| dom-zei-001 | guardrail-gaikokujin-zeimukokuchi | Does a completed 修正申告 for a past undeclared year, filed before a 永住許可 application, fully satisfy the 直近2年の公的義務適正履行 requirement? | P1 | ISA permanent residence guideline does not explicitly address whether late filing via 修正申告 fully remedies the deficiency. |
 
 ## Source Log
 
@@ -452,6 +464,13 @@ None. All WORKPACK_001 continuation candidates completed. See next batch candida
 | 健康保険法 第3条（外国人への適用） | 健康保険法 | https://laws.e-gov.go.jp/law/211AC0000000070 | 2026-05-15 | 被保険者の定義（適用事業所の常時使用される労働者; 国籍不問）. 外国人も強制適用. Used for G84. |
 | 在留資格「介護」の活動定義・取得要件 | 出入国在留管理庁「在留資格『介護』」 | https://www.moj.go.jp/isa/applications/status/nursing.html | 2026-05-15 | 介護福祉士の国家資格が取得要件; 在留期間（5年・3年・1年・3か月）; 活動定義（介護福祉士業務全般）. Used for G85. |
 | 特定技能「介護」の試験要件・2号設定 | 出入国在留管理庁「特定技能（介護分野）」 | https://www.moj.go.jp/isa/policies/ssw/nyuukokukanri07_00147.html | 2026-05-15 | 介護技能評価試験・介護日本語評価試験・日本語試験の3試験要件; 特定技能2号が介護にも設定されていること. Used for G85. |
+| 在留資格「研究」・「教授」・「芸術」・「宗教」活動定義 | 出入国在留管理庁 各在留資格ページ | research.html / professor.html / art.html / religious.html | 2026-05-15 | 研究=公私機関での研究・研究指導・教育; 教授=大学・高専での研究・指導・教育; 芸術=収入を伴う芸術活動; 宗教=外国宗教団体から派遣された宗教家の活動. 技人国との境界を各活動定義から確認. Used for G86. |
+| 不法就労助長罪 入管法第73条の2 | 出入国管理及び難民認定法 第73条の2 | https://laws.e-gov.go.jp/law/326CO0000000319 | 2026-05-15 | 「事業活動に関し，外国人に不法就労活動をさせた者」=3年以下懲役または300万円以下罰金. Used for G87. |
+| 外国人雇用のルールと在留カード確認義務 | 出入国在留管理庁「不法就労について」 | https://www.moj.go.jp/isa/policies/ssw/nyuukokukanri07_00011.html | 2026-05-15 | 雇用主の在留カード確認義務; 在留資格の就労可能範囲確認. Used for G87. |
+| 特定活動46号（日本の大学を卒業した者等） | 出入国在留管理庁「特定活動（日本の大学を卒業した者等）」 | https://www.moj.go.jp/isa/applications/status/designatedactivities17.html | 2026-05-15 | 対象者（大学4年制卒業+JLPT N1/BJT480点以上）; 就労範囲（指定書による）; 在留期間=1年; 技人国では対象外の業務も可能. Used for G88. |
+| 在留申請書類・外国語書類の翻訳文要件 | 出入国在留管理庁「申請書類について」 | https://www.moj.go.jp/isa/applications/procedures/index.html | 2026-05-15 | 外国語書類=日本語訳文必要; 翻訳者資格不要・本人可; 翻訳者氏名記載必要. Used for G89. |
+| 居住者・非居住者の区分と全世界所得課税 | 国税庁「居住者と非居住者の区分」 | https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1910.htm | 2026-05-15 | 日本国内に住所または1年以上の居所を持つ者=居住者; 国内外すべての所得が課税対象. Used for G90. |
+| 住民税の仕組み（前年所得・翌年課税・1月1日ルール） | 総務省「個人住民税」 | https://www.soumu.go.jp/main_sosiki/jichi_zeisei/czaisei/czaisei_seido/149767_03.html | 2026-05-15 | 住民税=前年所得×税率; 翌年1月1日時点の住所地市区町村が課税; 翌年6月から課税開始. Used for G90. |
 
 ## Handoff Notes To Codex
 
@@ -578,3 +597,11 @@ None. All WORKPACK_001 continuation candidates completed. See next batch candida
   - G85 (kaigo-visa-yoken): atlas_draft P1. 介護分野は4枠組み（EPA・技能実習「介護」・特定技能「介護」・在留資格「介護」）; 各々要件・活動範囲・在留期間が異なる。在留資格「介護」は介護福祉士国家資格が前提（実務経験・技能実習修了だけでは不可）。特定技能「介護」は2号も設定（上限なし）。
   - New DOMAIN items: dom-eltrc-001, dom-choki-001/002, dom-eijuu-r-001/002, dom-iryo-001/002, dom-kaigo-001/002 (10 new items). Total DOMAIN: 213.
   - Next batch (Batch 016) candidates: 在留資格「研究」「教授」「芸術」「宗教」の実務的な区別（技人国との境界）, 外国人雇用の雇用主責任（不法就労助長罪・外国人雇用状況届出の詳細）, 住民票と在留カードの番号・住所不一致問題（市区町村での証明書発行への影響）, 在留資格「特定活動」の指定書（46号）に基づく就労範囲, 国際送金と在留資格（外国送金と在留申請への影響）.
+- 2026-05-15: Batch 016 completed (5 cards: G86-G90). Total completed: 89. DOMAIN items: 224. Summary:
+  - G86 (kenkyu-kyoju-geijutsu-shukyo): atlas_draft P1. 大学教員=「教授」; 公的・大学付属研究機関=「研究」; 収入を伴う芸術活動=「芸術」; 外国宗教団体から派遣の宗教家=「宗教」; 技人国は民間企業での専門的業務が主対象。各在留資格の活動定義から境界を確認。
+  - G87 (fuhoshurou-jocho-sekinin): atlas_draft P0. 不法就労助長罪（入管法第73条の2）=3年以下懲役または300万円以下罰金。雇用主は在留カードを直接確認する義務がある。確認懈怠は「知らなかった」免責にならない。雇用形態（正社員・アルバイト・業務委託）を問わず適用。外国人雇用状況届出（ハローワーク）は別制度。
+  - G88 (tokutei-katsudo-46-shiteisho): atlas_draft P1. 特定活動46号: 対象=日本の4年制大学等卒業+JLPT N1またはBJT480点以上。就労範囲は指定書に限定されるが，技人国では対象外の業務（接客・製造監督等）も可能。在留期間=1年（更新可）。日本語学校卒業者は要件を満たさない。
+  - G89 (shinsei-genbon-honyaku-yoken): atlas_draft P1. 外国語書類=日本語訳文の添付が必要。翻訳者の資格は不要（本人翻訳可; 翻訳者氏名記載必要）。原本/写しは書類種別・申請種類によって異なる; 行政書類（住民票・課税証明書等）は一般的に原本（3か月以内発行）。申請は住所地管轄ISAへ。
+  - G90 (gaikokujin-zeimukokuchi): atlas_draft P1. 日本居住の外国人は全世界所得が課税対象（在留資格不問）。住民税=前年所得・翌年6月課税・1月1日ルール（来日年は通常課税なし）。税務申告不履行・滞納は在留申請の公的義務評価（素行）に影響; 永住申請では直近2年の適正納付が審査要件（G60・G71参照）。
+  - New DOMAIN items: dom-kenkyu-001/002, dom-jocho-001, dom-tk46-001, dom-shorui-001, dom-zei-001 (6 new items, 5追加のため) + 1スキップ. Total DOMAIN: 224.
+  - Next batch (Batch 017) candidates: 在留資格「興行」の要件と芸能活動の規制（人身売買防止の視点）, 外国人の年金受給権（脱退一時金・老齢年金・社会保障協定）, 在留資格変更中の出国（特例期間中の出国リスク）, 難民認定申請中の在留資格（申請中の就労・在留保護の範囲）, 外国人の不動産取得と在留資格の関係.
