@@ -1,14 +1,14 @@
 # FACT Progress — Phase 2 P0/P1 Guardrails
 
-Last updated: 2026-05-15 CST (Batch 007 complete)
+Last updated: 2026-05-15 CST (Batch 008 complete)
 
 ## Current Status
 
 - total planned in Workpack 001 core batch: 10
-- completed: 44
+- completed: 49
 - in progress: 0
 - blocked: 0
-- needs DOMAIN: 126
+- needs DOMAIN: 136
 - Batch 001 core: completed 10/10
 - Batch 002 continuation: completed 5
 - Batch 003 continuation: completed 9 (G23 skipped — insufficient official source)
@@ -16,6 +16,7 @@ Last updated: 2026-05-15 CST (Batch 007 complete)
 - Batch 005 continuation: completed 5 (G31-G35)
 - Batch 006 continuation: completed 5 (G36-G40)
 - Batch 007 continuation: completed 5 (G41-G45)
+- Batch 008 continuation: completed 5 (G46-G50)
 
 ## Completed Cards
 
@@ -65,6 +66,11 @@ Last updated: 2026-05-15 CST (Batch 007 complete)
 | guardrail-zairyu-nintei-shomeisho-coe | guardrail-zairyu-nintei-shomeisho-coe.md | completed | official ISA 16-1.html + FAQ (kanri_qa.html) + COVID notice | yes | atlas_draft P1. CoE validity = 3 months (Q6 confirmed official text). Not an entry guarantee. Overseas users cannot apply directly — sponsor in Japan files. COVID extensions ended. |
 | guardrail-tokutei-gino-toroku-shien-kikan | guardrail-tokutei-gino-toroku-shien-kikan.md | completed | official ISA supportssw.html + 届出 page + 運用要領 | yes | atlas_draft P1. RSO ≠ employer. Full-delegation-only rule (partial ≠ compliant). RSO use is NOT mandatory. Cannot sub-delegate. 14-day reporting obligation confirmed. |
 | guardrail-haigusha-rikon-go-zairyu-jitsumu-route | guardrail-haigusha-rikon-go-zairyu-jitsumuRoute.md | completed | G8 cross-ref + ISA 定住者/変更申請/G4 (PR) sources | yes | atlas_draft P1. G8 complement. Post-divorce practical routing: 14-day notification; route options (就労/定住者/PR); 就労ビザ NOT automatic from past work; 定住者 is discretionary (needs_domain). |
+| guardrail-ginou-jisshu-tokutei-gino-iten | guardrail-ginou-jisshu-tokutei-gino-iten.md | completed | official ISA 特定技能 FAQ (faq.html) | yes | atlas_draft P1. 日本語試験 = unconditionally exempt (all sectors) for 技能実習2号 良好修了. 技能試験 = exempt only if related occupation. 「良好修了」 = 2yr10mo+. |
+| guardrail-gijinkoku-dokuritsu-keieikanri | guardrail-gijinkoku-dokuritsu-keieikanri.md | completed | official ISA businessmanager.html + nyukan43.html | yes | atlas_draft P1. 経営管理 required before starting management activities; 役員就任のみ不十分; substantive participation required; business continuity/office requirement confirmed. |
+| guardrail-kazoku-taizai-shuro-seigen | guardrail-kazoku-taizai-shuro-seigen.md | completed | G16/G24 sources (ISA nyuukokukanri07_00003.html + 16-8.html) | yes | atlas_draft P1. 家族滞在 = no automatic work permission; 資格外活動許可 must be separately applied for; 28h/week after 包括許可 granted; pending ≠ permission (G17). |
+| guardrail-eijusha-haigusha-rikon-route | guardrail-eijusha-haigusha-rikon-route.md | completed (needs_domain) | G8/G45 cross-ref + ISA 永住者の配偶者等 status page (indirect) | yes | needs_domain P1. 永住者の配偶者等 ≠ 日本人の配偶者等; PR shortcut inapplicable; 帰化 shortcut inapplicable; 定住者 discretionary. Official page text for post-divorce procedure not accessed — needs_domain. |
+| guardrail-koshin-shinsei-timing | guardrail-koshin-shinsei-timing.md | completed | ISA 16-3.html + G1 (特例期間) cross-ref | yes | atlas_draft P1. 3-month-before window confirmed (ISA 16-3.html). 特例期間 only for pre-expiry filings (G1). Late filing = unlawful stay. "6か月前" = incorrect. Recommend 2-3 months before for safety. |
 
 ## In Progress
 
@@ -193,6 +199,16 @@ None. All WORKPACK_001 continuation candidates completed. See next batch candida
 | dom-rikon-001 | guardrail-haigusha-rikon-go-zairyu-jitsumu-route | For a person divorced after only 1 year of marriage, with no children and no employment — what is the realistic 定住者 assessment? TEBIQ must not promise this route. | P1 | 定住者 (告示外) is entirely discretionary; no statutory guarantee exists. |
 | dom-rikon-002 | guardrail-haigusha-rikon-go-zairyu-jitsumu-route | Does a pending divorce (調停中) trigger the 14-day notification obligation, or only a final divorce (確定判決/協議離婚成立)? | P1 | Timing of notification obligation needs official confirmation. |
 | dom-rikon-003 | guardrail-haigusha-rikon-go-zairyu-jitsumu-route | For 永住者の配偶者等 after divorce — is the transition window and route structure the same as for 日本人の配偶者等? | P1 | Different base status may have different rules; must not conflate. |
+| dom-jisshu-001 | guardrail-ginou-jisshu-tokutei-gino-iten | For a specific 技能実習2号 occupation → 特定技能 sector combination, how is 関連性 assessed? Is there an official mapping list? | P1 | 関連性 assessment is critical for 技能試験 exemption but criteria not fully documented on accessed pages. |
+| dom-jisshu-002 | guardrail-ginou-jisshu-tokutei-gino-iten | If a worker's 技能実習2号 良好修了 certificate was issued but the worker then had their 技能実習 status revoked — does the exemption still apply to 特定技能 transition? | P1 | Unusual scenario affecting exemption eligibility. |
+| dom-keiei-001 | guardrail-gijinkoku-dokuritsu-keieikanri | Where is the official bright line for a 技人国 holder who has started their own business but performs "minimal" management activities — does this always trigger 経営管理 classification? | P1 | Must not over-alarm nominal involvement, but must not miss substantive management. |
+| dom-keiei-002 | guardrail-gijinkoku-dokuritsu-keieikanri | What is the correct remediation route for a 技人国 holder who has already been serving as a representative director for 6+ months without changing status? | P0 | Extended unauthorized activity = P0 risk; professional/legal routing urgently required. |
+| dom-kazoku-001 | guardrail-kazoku-taizai-shuro-seigen | If the principal 在留資格 holder's status changes or is revoked, does the 家族滞在 dependent's 資格外活動許可 automatically lapse? | P1 | Status dependency chain affects advice when principal situation changes. |
+| dom-kazoku-002 | guardrail-kazoku-taizai-shuro-seigen | Can a 家族滞在 holder apply for 個別許可 for a specific employment situation that would exceed 28h/week? | P1 | Individual-permit route for 家族滞在 not confirmed from accessed sources. |
+| dom-eijusha-001 | guardrail-eijusha-haigusha-rikon-route | Confirm the exact ISA-stated post-divorce procedure for 永住者の配偶者等 — specifically whether the 6-month window and transition rules are identical to 日本人の配偶者等 or have differences. | P1 | Official page text for 永住者の配偶者等 post-divorce not accessed in this session. |
+| dom-eijusha-002 | guardrail-eijusha-haigusha-rikon-route | Is there an explicitly-stated ISA guideline confirming the PR shortcut inapplicability for 永住者の配偶者等 (vs. 日本人の配偶者等)? | P1 | Derived from legal framework; explicit ISA confirmation needed. |
+| dom-timing-001 | guardrail-koshin-shinsei-timing | If an application is accepted at ISA (特例期間 starts) but ISA later returns it due to document incompleteness — does the 2-month special-period cap pause or continue during 返却中? | P1 | Cross-ref dom-incomplete-002 (G12); critical for users managing incomplete submissions near expiry. |
+| dom-timing-002 | guardrail-koshin-shinsei-timing | For users who file on the expiry date (same day) — what is ISA's actual practice regarding accepting vs. rejecting same-day applications? | P1 | Affects safety advice for users who delay until the last day. |
 
 ## Source Log
 
@@ -275,6 +291,9 @@ None. All WORKPACK_001 continuation candidates completed. See next batch candida
 | 登録支援機関 届出義務 | 出入国在留管理庁「特定技能所属機関・登録支援機関による届出」 | https://www.moj.go.jp/isa/applications/ssw/nyuukokukanri10_00002.html | 2026-05-15 | 14-day reporting obligation confirmed; failure = cancellation of RSO registration risk. Used for G44. |
 | 国民年金 免除制度 | 日本年金機構「国民年金保険料の免除・猶予」 | https://www.nenkin.go.jp/service/kokunen/menjo/20150428.html | 2026-05-15 | 免除は国民年金法第89条〜90条の3に基づく法定手続き. 免除期間も受給資格期間に一部算入される. Used for G42. |
 | 配偶者ビザ離婚後の実務ルート | ISA 定住者ページ + 在留資格変更申請 | multiple | 2026-05-15 | G8 cross-ref sources used. 定住者 (告示外) = ISA discretionary grant for former spouse with children/long residence. No statutory checklist. Used for G45. |
+| 技能実習2号→特定技能1号 試験免除 | 出入国在留管理庁「特定技能制度に関するQ&A」 | https://www.moj.go.jp/isa/policies/ssw/faq.html | 2026-05-15 | 日本語試験免除: 「技能実習の職種・作業にかかわらず」— all sectors. 技能試験免除: 「従事しようとする業務と技能実習2号の職種・作業に関連性が認められる場合」— related field only. 「良好修了」=「計画に従って２年１０月以上修了」. Used for G46. |
+| 経営管理 活動定義・実質参画要件 | 出入国在留管理庁「在留資格『経営・管理』」+「外国人経営者の在留資格基準明確化」 | businessmanager.html + nyukan43.html | 2026-05-15 | 活動定義: 「事業の経営を行い又は当該事業の管理に従事する活動」. 実質参画: 「事業の運営に関する重要事項の決定，事業の執行又は監査」. 役員就任のみ不十分. 継続的事務所必要. 法令遵守（租税・労働・社会保険）義務. Used for G47. |
+| 在留期間更新 申請受付開始日 | 出入国在留管理庁「在留期間更新許可申請」 | https://www.moj.go.jp/isa/applications/procedures/16-3.html | 2026-05-15 | 在留期間満了の3か月前から申請可（原則）. COVID期間特例等なし（現在は通常ルール）. Used for G50. |
 
 ## Handoff Notes To Codex
 
@@ -337,3 +356,11 @@ None. All WORKPACK_001 continuation candidates completed. See next batch candida
   - G45 (haigusha-rikon-go-zairyu-jitsumu-route): atlas_draft P1. G8 complement. Post-divorce routing: notification (14 days, G29); 6-month window for status change; route options (就労/定住者/PR); 就労 is NOT automatic; 定住者 is discretionary (needs_domain). DV cases → G9 first. Cross-ref G1 (特例期間), G4 (PR), G9 (DV), G26 (取消), G31 (discretion).
   - New DOMAIN items: 13 new items (dom-ryugaku-001/002/003, dom-nenkin-001/002, dom-coe-001/002, dom-shien-001/002, dom-rikon-001/002/003). Total DOMAIN: 126.
   - Next batch (Batch 008) candidates: 技能実習から特定技能への移行（試験免除条件）, 技人国から経営管理への変更（転職から独立）, 家族滞在の就労制限と28時間ルール（G16補完）, 永住者の配偶者等の離婚後ルート（G8/G45補完）, 在留期間別の更新書類要件と証明書取得パターン.
+- 2026-05-15: Batch 008 completed (5 cards: G46-G50). Total completed: 49. DOMAIN items: 136. Summary:
+  - G46 (ginou-jisshu-tokutei-gino-iten): atlas_draft P1. 日本語試験 = unconditionally exempt across all 特定技能 sectors for 技能実習2号 良好修了者. 技能試験 = exempt ONLY if target occupation is 関連性あり to 技能実習2号 職種. 「良好修了」 = 2yr10mo+ (ISA FAQ official text confirmed).
+  - G47 (gijinkoku-dokuritsu-keieikanri): atlas_draft P1. 経営管理 status required BEFORE starting management activities at self-owned company. 役員就任のみ不十分 — substantive management participation required. Business continuity/office requirement confirmed. Tax/labor/social insurance compliance required. Official text from ISA businessmanager.html + nyukan43.html.
+  - G48 (kazoku-taizai-shuro-seigen): atlas_draft P1. 家族滞在 = no work permitted without separate 資格外活動許可. NOT auto-granted at status issuance. After 包括許可 granted: 28h/week limit. G16 complement.
+  - G49 (eijusha-haigusha-rikon-route): needs_domain P1. 永住者の配偶者等 ≠ 日本人の配偶者等. PR shortcut (入管法第22条第2項) inapplicable. 帰化 3yr+1yr shortcut inapplicable. 定住者 similarly discretionary. Official page text not accessed — needs_domain.
+  - G50 (koshin-shinsei-timing): atlas_draft P1. 3-month-before window confirmed (ISA 16-3.html). 特例期間 only for pre-expiry filings — post-expiry filing = unlawful stay. "6か月前" = incorrect. "直前でいい" = risky.
+  - New P0 DOMAIN item: dom-keiei-002 (技人国 holder already serving as representative director 6+ months = potential P0 unauthorized activity).
+  - Next batch (Batch 009) candidates: 特定技能の転職・雇用主変更（同一業種条件）, 永住者の在留カード更新と素行要件, 留学生のアルバイト先業種制限（風俗業等）, 在留申請の「不許可後」の対応（異議申出・再申請）, 日本語能力と在留資格（業務要件との関係）.
