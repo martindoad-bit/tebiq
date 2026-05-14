@@ -1,14 +1,14 @@
 # FACT Progress — Phase 2 P0/P1 Guardrails
 
-Last updated: 2026-05-15 CST (Batch 018 complete)
+Last updated: 2026-05-15 CST (Batch 019 complete)
 
 ## Current Status
 
 - total planned in Workpack 001 core batch: 10
-- completed: 99
+- completed: 104
 - in progress: 0
 - blocked: 0
-- needs DOMAIN: 242
+- needs DOMAIN: 252
 - Batch 001 core: completed 10/10
 - Batch 002 continuation: completed 5
 - Batch 003 continuation: completed 9 (G23 skipped — insufficient official source)
@@ -27,6 +27,7 @@ Last updated: 2026-05-15 CST (Batch 018 complete)
 - Batch 016 continuation: completed 5 (G86-G90)
 - Batch 017 continuation: completed 5 (G91-G95)
 - Batch 018 continuation: completed 5 (G96-G100)
+- Batch 019 continuation: completed 5 (G101-G105)
 
 ## Completed Cards
 
@@ -350,6 +351,16 @@ None. All WORKPACK_001 continuation candidates completed. See next batch candida
 | dom-rodoho-002 | guardrail-rodoho-gaikokujin-tekiyo | For 技能実習生 with criminal-level exploitation (trafficking-like conditions) — is there a clear legal pathway to emergency status change or protection under Japan's anti-trafficking laws? | P1 | Anti-trafficking protection route needs professional/domain confirmation before TEBIQ references it. |
 | dom-henkou-001 | guardrail-zairyu-shikaku-toriatsukai-hennko | What is the official ISA procedure for a foreign national child born in Japan when the birth exceeds the 60-day deadline for 在留資格 application? | P1 | A common emergency scenario; the remedy procedure is not confirmed from official ISA text. |
 | dom-henkou-002 | guardrail-zairyu-shikaku-toriatsukai-hennko | For a person in Japan on "日本人の配偶者等" whose Japanese spouse passed away — is there an official ISA guideline on the transition period and how to manage the status before moving to 定住者 or another route? | P1 | Death-of-spouse scenarios are specific and high-stakes; official transition guidance not confirmed. |
+| dom-menkyo-001 | guardrail-gaikokujin-unten-menkyo | Does the 1-year foreign license validity period reset with each entry into Japan, or apply from the most recent entry date only? Affects advice for long-term residents with multiple entries. | P1 | Required before advising multi-entry residents on whether their foreign license clock has reset. |
+| dom-menkyo-002 | guardrail-gaikokujin-unten-menkyo | For persons from countries not party to the Geneva Convention on Road Traffic (e.g., China, Philippines) — is there any alternative to full test-based license acquisition, or is the full 技能試験 always required? | P1 | Affects routing for persons from major non-convention countries who need to drive in Japan. |
+| dom-hoshonin-001 | guardrail-miboto-hoshonin-seido | What are the ISA-required qualifications (income, residency status, relationship type) for serving as a 身元保証人 in a 永住許可申請? Specific income thresholds are not confirmed. | P1 | Required before advising on 永住 guarantor suitability. |
+| dom-hoshonin-002 | guardrail-miboto-hoshonin-seido | Is there any case where ISA has formally demanded enforcement of the 旅費負担 obligation against a 身元保証人? Determines whether TEBIQ should describe the obligation as "legally meaningful" or "practically unenforced." | P1 | Affects framing of legal risk when persons consider becoming a guarantor. |
+| dom-keiei-s-001 | guardrail-kaisha-setsuritsu-keieikanri | What is ISA's operational standard for the "2 full-time employees" alternative to the 3,000万円 capital requirement — can committed future employees (not yet hired) satisfy this at application time? | P1 | Required before advising on alternatives to the 3,000万円 capital prong in 経営管理 applications. |
+| dom-keiei-s-002 | guardrail-kaisha-setsuritsu-keieikanri | What is ISA's operational standard for a committed office space (signed lease, unoccupied) at time of 経営管理 application — is the signed lease sufficient? | P1 | Affects practical guidance on office requirements for early-stage applicants. |
+| dom-service-001 | guardrail-gaikokujin-gyosei-service | What is the current legal basis for 生活保護準用 for eligible foreign nationals — is the 1954 厚生省通達 still operative, or has this been updated? The conditions and scope of 準用 are not confirmed from recent official text. | P1 | Required before TEBIQ advises on 生活保護 access for any foreign resident category. |
+| dom-service-002 | guardrail-gaikokujin-gyosei-service | For foreign children in irregular immigration situations (親が不法在留) — what is the official 文部科学省 or 市区町村教育委員会 position on school enrollment? | P1 | Affects TEBIQ's routing for families in irregular status who ask about their children's education. |
+| dom-kakunin-001 | guardrail-zairyu-shikaku-naiyo-kakunin | Does the ISA's online 在留カード verification system confirm active validity, or only report known lost/stolen/revoked cards? The scope affects how much confidence employers can have after checking. | P1 | Affects employer guidance on using the online verification system as a compliance tool. |
+| dom-kakunin-002 | guardrail-zairyu-shikaku-naiyo-kakunin | For employers using foreign nationals on 業務委託 (service contracts, not direct employment) — is the 在留カード confirmation obligation under the 不法就労助長罪 provision equally applicable? | P1 | Widespread practical scenario; clarifying this is critical for employers using freelancers/contractors. |
 | dom-kenkyu-001 | guardrail-kenkyu-kyoju-geijutsu-shukyo | Can a foreign religious worker be sponsored by a Japanese 宗教法人 with no overseas parent organization, or is the "外国の宗教団体からの派遣" strictly required? | P1 | ISA religious.html describes the 外国派遣 requirement but does not explicitly address purely Japanese institution sponsorship. |
 | dom-kenkyu-002 | guardrail-kenkyu-kyoju-geijutsu-shukyo | For researchers employed by a private company but stationed at a national university or public research institute — is the appropriate status 研究 or 技人国? | P1 | The determining criterion for seconded corporate researchers at public institutions is not confirmed from accessed official text. |
 | dom-jocho-001 | guardrail-fuhoshurou-jocho-sekinin | What is the legal standard for employer good-faith defense when a fraudulent residence card was presented — intent required or strict liability? | P1 | ISA enforcement practice on this specific defense has not been confirmed from official text. |
@@ -510,6 +521,14 @@ None. All WORKPACK_001 continuation candidates completed. See next batch candida
 | 外国人労働者への労働法適用 | 厚生労働省「外国人労働者に関する労働基準法等の適用について」 | https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/roudoukijun/gaikokujin.html | 2026-05-15 | 労働基準法・最低賃金法・安全衛生法が在留資格問わず全労働者に適用; 不法就労者も対象. Used for G99. |
 | 在留資格変更許可申請（自動変更なし原則） | ISA「在留資格変更許可申請」 | https://www.moj.go.jp/isa/applications/procedures/16-2.html | 2026-05-15 | 在留資格変更は許可申請が必要（婚姻・出生等で自動変更なし）; 変更前の活動継続可能. Used for G100. |
 | 外国籍の子の60日以内申請義務 | ISA「在留資格認定証明書交付申請」 | https://www.moj.go.jp/isa/applications/procedures/16-1.html | 2026-05-15 | 出生後60日以内の在留資格取得申請義務（外国籍の子）; CoE申請手順. Used for G100. |
+| 外国免許の日本での有効期間・切り替え | 警察庁「外国免許の切り替え」 | https://www.npa.go.jp/policies/application/license_renewal/gaimen.html | 2026-05-15 | 入国後1年のみ有効（外国免許・国際運転免許証）; 切り替え手続き; 国別試験免除. Used for G101. |
+| 国際運転免許証の日本での有効期間 | 警察庁「国際運転免許証について」 | https://www.npa.go.jp/policies/application/license_renewal/kokusaimenkyo.html | 2026-05-15 | ジュネーブ条約に基づく国際運転免許証は入国後1年のみ有効. Used for G101. |
+| 身元保証書の内容・法的性格 | ISA「身元保証書」 | https://www.moj.go.jp/isa/applications/procedures/16-4_00006.html | 2026-05-15 | 「旅費の支弁・帰国の確保・法令遵守の助力」を誓約; 民法上の連帯保証ではない. Used for G102. |
+| 招へい理由書（招聘状）の目的・使用場面 | ISA「招へい理由書」 | https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00011.html | 2026-05-15 | 短期滞在の招へい申請で使用; 招聘の理由・目的・期間等を記載. Used for G102. |
+| 在留カードの「就労制限の有無」欄の読み方 | ISA「在留カードの見方」 | https://www.moj.go.jp/isa/applications/procedures/zairyu_card_mitsuru.html | 2026-05-15 | 就労制限欄の記載内容（就労制限なし・就労不可・在留資格に基づく就労のみ可）と意味. Used for G105. |
+| 雇用主の在留カード確認義務 | ISA「在留資格の確認（雇用主向け）」 | https://www.moj.go.jp/isa/policies/ssw/nyuukokukanri07_00011.html | 2026-05-15 | 雇用主の確認義務; 不法就労助長罪との関係; 確認方法. Used for G105. |
+| 外国人住民の行政サービスアクセス | 総務省「外国人住民の行政サービスへのアクセス」 | https://www.soumu.go.jp/main_sosiki/jichi_zeisei/c-zeisei/gaikokujin.html | 2026-05-15 | 中長期在留者の住民登録・行政サービス利用権; 在留資格種別問わずアクセス可. Used for G104. |
+| 外国人の子どもの就学権 | 文部科学省「外国人の子どもの就学」 | https://www.mext.go.jp/a_menu/shotou/clarinet/003.htm | 2026-05-15 | 義務教育年齢（6〜15歳）の外国人の就学権; 市区町村教育委員会の受入義務. Used for G104. |
 
 ## Handoff Notes To Codex
 
@@ -660,3 +679,11 @@ None. All WORKPACK_001 continuation candidates completed. See next batch candida
   - G100 (zairyu-shikaku-toriatsukai-hennko): atlas_draft P1. 婚姻・離婚・子の出生等の身分変化で在留資格は自動変更されない; 常に許可申請が必要; 外国籍の子が日本で出生した場合=出生後60日以内に在留資格取得申請が必要; 離婚後=14日以内届出義務+次回更新時に在留資格変更が必要（G8/G29/G45 cross-refs）. needs_domain P1: 60日期限超過後の子の申請方法; 配偶者死亡後の移行期間ガイドライン.
   - New DOMAIN items: dom-ginko-001/002, dom-tokubetsu-001/002, dom-bunka-001/002, dom-rodoho-001/002, dom-henkou-001/002 (10 new items). Total DOMAIN: 242.
   - Next batch (Batch 019) candidates: 外国人の運転免許（国際運転免許・日本免許への切り替え・在留資格との関係）, 在留申請における身元保証人制度（身元保証人の役割・責任・必要書類）, 外国人起業家の会社設立と在留資格（会社設立前後の手続き・経営管理ビザとの関係）, 在留資格「介護」と「技能実習（介護）」と「特定技能（介護）」の3制度の徹底比較（G85補完）, 外国人住民の行政サービス利用と在留資格（市区町村の福祉・教育・医療サービスへのアクセス）.
+- 2026-05-15: Batch 019 completed (5 cards: G101-G105). Total completed: 104. DOMAIN items: 252. Summary:
+  - G101 (gaikokujin-unten-menkyo): atlas_draft P1. 外国の運転免許証・国際運転免許証は入国後1年のみ有効（外国免許の有効期限に関わらず）; 1年超の在留には日本免許への切り替え（外国免許の審査）が必要; 試験免除は国・地域によって異なる; 日本免許は在留資格と独立した制度. needs_domain P1: 1年の起算点（入国ごとにリセットされるか）; ジュネーブ条約非加盟国（中国等）の代替ルート.
+  - G102 (miboto-hoshonin-seido): atlas_draft P1. 身元保証書=「旅費支弁・帰国確保・法令遵守助力」の行政上の誓約（民法上の連帯保証ではない）; 申請種別によって要否が異なる（就労系では一般不要; 永住申請では必要）; 招聘状（招へい理由書）とは別の書類（目的・内容・使用場面が異なる）. needs_domain P1: 永住申請保証人の収入要件; 旅費負担義務の実際の執行実績.
+  - G103 (kaisha-setsuritsu-keieikanri): atlas_draft P1. 会社設立と経営管理ビザ取得は別手続き（ISAへの申請・審査が別途必要）; 上陸基準省令の財産要件=資本金3,000万円以上（または常勤職員2名以上）; 500万円要件は条文テキストに根拠なし（G57 P0参照）; 技人国保有者は経営管理活動前に在留資格変更が必要（G47参照）. needs_domain P0 (cross-ref dom-keiei-p0-001): 500万円の出所; needs_domain P1: 2名常勤職員要件の充足方法.
+  - G104 (gaikokujin-gyosei-service): atlas_draft P1. 中長期在留者は在留資格種別問わず住民登録・NHI・公立学校就学等の行政サービスにアクセス可; 外国人の義務教育年齢の子どもに就学権あり（教育委員会受入義務）; 生活保護法は日本国民対象（外国人への準用は永住者・定住者・日本人配偶者等のみ; 就労系資格は一般対象外）; 特定技能1号は雇用主の10項目支援義務あり（G70参照）. needs_domain P1: 生活保護準用の現在の法的根拠; 不法在留の子どもの就学権.
+  - G105 (zairyu-shikaku-naiyo-kakunin): atlas_draft P0. 就労可否確認は在留カードの「就労制限の有無」欄; 在留資格名だけでは判断できない（特定活動は指定書確認が必要）; 「就労不可」でも資格外活動許可（カード裏面スタンプ）があれば制限内就労可（留学・家族滞在=28h/week）; 雇用主の確認義務（G87: 不法就労助長罪）; ISAオンライン確認システムの利用推奨. needs_domain P1: オンライン確認システムの確認範囲; 業務委託での確認義務.
+  - New DOMAIN items: dom-menkyo-001/002, dom-hoshonin-001/002, dom-keiei-s-001/002, dom-service-001/002, dom-kakunin-001/002 (10 new items). Total DOMAIN: 252.
+  - Next batch (Batch 020) candidates: 在留資格の活動範囲と「みなし就労」（在留期間中に活動を行っていない期間の取り扱い）, 技能実習生・育成就労者の人権保護（外国人技能実習機構・相談窓口）, 日本留学後の就職活動と「就活ビザ」（特定活動「求職活動」）, 在留資格「企業内転勤」の要件と技人国との違い, 外国人の相続・遺言と在留資格（相続手続きと在留資格の関係）.
