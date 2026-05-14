@@ -1,14 +1,14 @@
 # FACT Progress — Phase 2 P0/P1 Guardrails
 
-Last updated: 2026-05-15 CST (Batch 019 complete)
+Last updated: 2026-05-15 CST (Batch 020 complete)
 
 ## Current Status
 
 - total planned in Workpack 001 core batch: 10
-- completed: 104
+- completed: 109
 - in progress: 0
 - blocked: 0
-- needs DOMAIN: 252
+- needs DOMAIN: 262
 - Batch 001 core: completed 10/10
 - Batch 002 continuation: completed 5
 - Batch 003 continuation: completed 9 (G23 skipped — insufficient official source)
@@ -28,6 +28,7 @@ Last updated: 2026-05-15 CST (Batch 019 complete)
 - Batch 017 continuation: completed 5 (G91-G95)
 - Batch 018 continuation: completed 5 (G96-G100)
 - Batch 019 continuation: completed 5 (G101-G105)
+- Batch 020 continuation: completed 5 (G106-G110)
 
 ## Completed Cards
 
@@ -122,6 +123,26 @@ Last updated: 2026-05-15 CST (Batch 019 complete)
 | guardrail-tokutei-katsudo-46-shiteisho | guardrail-tokutei-katsudo-46-shiteisho.md | completed | ISA designatedactivities17.html; G28/G36/G35 cross-refs | yes | atlas_draft P1. G88. 特定活動46号: 対象=4年制大学卒+JLPT N1またはBJT480点以上; 就労範囲=指定書に限定; 技人国では対象外の業務（接客・製造監督等）も可能; 在留期間=1年（更新可）. needs_domain P1: 転職時の手続き（指定書変更 vs 在留資格変更の区別）. |
 | guardrail-shinsei-genbon-honyaku-yoken | guardrail-shinsei-genbon-honyaku-yoken.md | completed | ISA申請書類ページ; ISA外国語書類取り扱いページ; G66/G60/G81 cross-refs | yes | atlas_draft P1. G89. 外国語書類=日本語訳文必要; 翻訳者資格不要・本人可; 原本/写しは書類種別・申請種類によって異なる; 行政書類は一般的に原本（3か月以内）; 申請は住所地管轄ISA. needs_domain P1: 申請種別ごとの原本/コピーの確認済みルール. |
 | guardrail-gaikokujin-zeimukokuchi | guardrail-gaikokujin-zeimukokuchi.md | completed | 国税庁（居住者区分・確定申告必要ケース）; 総務省（個人住民税）; G60/G71/G66 cross-refs | yes | atlas_draft P1. G90. 外国人居住者は全世界所得が課税対象; 確定申告不要ケースは年末調整完了給与のみ; 住民税=前年所得・翌年6月課税・1月1日ルール; 税務申告不履行=在留申請の公的義務評価に影響. needs_domain P1: 修正申告後の永住申請評価への影響. |
+| guardrail-kogyou-visa-yoken | guardrail-kogyou-visa-yoken.md | completed | ISA「在留資格『興行』」; G86/G106 cross-refs | yes | atlas_draft P1. G91. 有償公演には「興行」または「芸術」が必要; 短期滞在での有償公演=不法就労; 2ルート（受入機関規模 or 本人実績）; 2006年以降審査厳格化. needs_domain P1: ルート①会場規模基準; ルート②「相当程度の実績」定義. |
+| guardrail-nenkin-dattai-ichijikin | guardrail-nenkin-dattai-ichijikin.md | completed | 日本年金機構「脱退一時金」; 外務省「社会保障協定」 | yes | atlas_draft P1. G92. 6か月以上加入の外国人は帰国後2年以内に脱退一時金申請可（出国後のみ）; 10年以上=老齢年金受給資格; 社会保障協定は手続き必要（自動適用なし）. needs_domain P1: 脱退一時金受領後の再加入・期間復活の可否. |
+| guardrail-tokureikikan-chushutsu-risk | guardrail-tokureikikan-chushutsu-risk.md | completed | 入管法第20条の2; ISA「特例期間」; G15/G65 cross-refs | yes | atlas_draft P0. G93. 特例期間中の出国=特例期間終了リスク; 帰国後の再入国困難リスク; 出国前（在留期間満了前）に再入国許可取得が最も安全. needs_domain P0: 特例期間中の出国で即時終了の公式テキスト確認. |
+| guardrail-nanmin-shinsei-zairyu | guardrail-nanmin-shinsei-zairyu.md | completed | ISA「難民認定申請」; 難民条約第33条; 2023年入管法改正 | yes | atlas_draft P1. G94. 難民認定申請は在留を自動保証しない; 6か月後に就労可能な特定活動が付与される場合あり; 2023年改正（3回目以降の送還停止効制限; 補完的保護制度新設）. needs_domain P1: 6か月就労許可の具体的条件; 補完的保護の実務的認定状況. |
+| guardrail-gaikokujin-fudosan-shutoku | guardrail-gaikokujin-fudosan-shutoku.md | completed | 外為法; G82/G90/G95 cross-refs | yes | atlas_draft P1. G95. 外国人も原則自由に不動産取得可（在留資格・国籍問わず）; 不動産取得は在留審査の直接的加点要素ではない; 永住者も長期出国（1年以上）で在留資格消滅リスク（不動産では防げない）. needs_domain P1: 居住外国人の外為法届出条件; 賃貸収入と経営管理の境界. |
+| guardrail-gaikokujin-ginko-koza | guardrail-gaikokujin-ginko-koza.md | completed | 犯罪収益移転防止法; 金融庁指針 | yes | atlas_draft P1. G96. 中長期在留者（3か月超）は在留カードで口座開設可; 短期滞在（3か月以下）は原則困難（犯収法）; 口座保有は在留資格と独立; マイナンバー告知は口座開設必須要件ではない. needs_domain P1: 3か月閾値の法定根拠; 技能実習・育成就労の口座管理問題. |
+| guardrail-tokubetsu-eijusha-seido | guardrail-tokubetsu-eijusha-seido.md | completed | 入管特例法; G25/G74 cross-refs | yes | atlas_draft P1. G97. 特別永住者=入管特例法に基づく制度（旧植民地出身者・子孫対象）; 一般永住者とは法的根拠・退去強制要件が異なる; 子の出生後60日以内申請義務; 特別永住者証明書有効期限=7年（更新必要）. needs_domain P1: 60日超過後の代替手続き; 長期出国と特別永住者地位維持. |
+| guardrail-bunka-katsudo-zairyu | guardrail-bunka-katsudo-zairyu.md | completed | ISA「在留資格『文化活動』」; G86/G91/G98/G106 cross-refs | yes | atlas_draft P1. G98. 在留資格「文化活動」=収入を伴わない学術・芸術研究・文化技芸修行; 収入を伴う就労は不法就労; 包括的資格外活動許可の対象外; 「芸術」「興行」との区別が重要. needs_domain P1: 小額謝礼が「収入」に該当するか; 文化活動保有者の個別許可の可否. |
+| guardrail-rodoho-gaikokujin-tekiyo | guardrail-rodoho-gaikokujin-tekiyo.md | completed | 労働基準法; 最低賃金法; 労働者災害補償保険法第3条; G99/G107 cross-refs | yes | atlas_draft P1. G99. 労働基準法・最低賃金法・安全衛生法は在留資格問わず全外国人労働者に適用; 不法就労者も労災保険の対象; 労基署相談は在留状況問わず可能. needs_domain P1: 労基署と入管の情報共有方針; 技能実習生の人身売買対応ルート. |
+| guardrail-zairyu-shikaku-toriatsukai-hennko | guardrail-zairyu-shikaku-toriatsukai-hennko.md | completed | ISA「在留資格」各種手続きページ; G8/G29/G45 cross-refs | yes | atlas_draft P1. G100. 婚姻・離婚・子の出生等の身分変化で在留資格は自動変更されない; 外国籍の子が日本で出生した場合=出生後60日以内に在留資格取得申請が必要; 離婚後=14日以内届出+次回更新時に変更申請が必要. needs_domain P1: 60日期限超過後の子の申請方法; 配偶者死亡後の移行期間ガイドライン. |
+| guardrail-gaikokujin-unten-menkyo | guardrail-gaikokujin-unten-menkyo.md | completed | 道路交通法; 警察庁「外国免許の切り替え」 | yes | atlas_draft P1. G101. 外国免許・国際運転免許証は入国後1年のみ有効（在留期間に関わらず）; 1年超の在留には日本免許への切り替えが必要; 試験免除は国・地域によって異なる; 日本免許は在留資格と独立した制度. needs_domain P1: 1年の起算点（入国ごとにリセットされるか）; ジュネーブ条約非加盟国の代替ルート. |
+| guardrail-miboto-hoshonin-seido | guardrail-miboto-hoshonin-seido.md | completed | ISA「身元保証書」; ISA「招へい理由書」 | yes | atlas_draft P1. G102. 身元保証書=旅費支弁・帰国確保・法令遵守助力の行政上の誓約（民法上の連帯保証ではない）; 申請種別によって要否が異なる（就労系では一般不要; 永住申請では必要）; 招聘状（招へい理由書）とは別の書類. needs_domain P1: 永住申請保証人の収入要件; 旅費負担義務の実際の執行実績. |
+| guardrail-kaisha-setsuritsu-keieikanri | guardrail-kaisha-setsuritsu-keieikanri.md | completed | ISA「在留資格『経営・管理』」; G47/G57 cross-refs | yes | atlas_draft P1. G103. 会社設立と経営管理ビザ取得は別手続き; 上陸基準省令の財産要件=3,000万円以上（または常勤職員2名以上）; 500万円要件は条文テキストに根拠なし（G57 P0参照）; 技人国保有者は経営管理活動前に在留資格変更が必要. needs_domain P0 (dom-keiei-p0-001): 500万円の出所. |
+| guardrail-gaikokujin-gyosei-service | guardrail-gaikokujin-gyosei-service.md | completed | 総務省「外国人住民の行政サービスへのアクセス」; 文部科学省「外国人の子どもの就学」 | yes | atlas_draft P1. G104. 中長期在留者は在留資格種別問わず住民登録・NHI・公立学校就学等の行政サービスにアクセス可; 外国人の義務教育年齢の子どもに就学権あり; 生活保護法は日本国民対象（外国人への準用は永住者・定住者等のみ）. needs_domain P1: 生活保護準用の現在の法的根拠; 不法在留の子どもの就学権. |
+| guardrail-zairyu-shikaku-naiyo-kakunin | guardrail-zairyu-shikaku-naiyo-kakunin.md | completed | ISA「在留カードの見方」; ISA「雇用主の確認義務」; G87 cross-ref | yes | atlas_draft P0. G105. 就労可否確認は在留カードの「就労制限の有無」欄; 在留資格名だけでは判断不十分; 特定活動は指定書確認が必要; 「就労不可」でも資格外活動許可（カード裏面スタンプ）があれば週28h制限内就労可; 雇用主の確認義務（不法就労助長罪; G87）. needs_domain P1: オンライン確認システムの確認範囲; 業務委託での確認義務. |
+| guardrail-shikaku-gai-katsudo-sakai | guardrail-shikaku-gai-katsudo-sakai.md | completed | 入管法第19条; ISA「資格外活動許可」 | yes | atlas_draft P1. G106. 在留資格の活動範囲外の就労・活動は資格外活動（不法就労）; 報酬の有無・契約形態（雇用/業務委託）に関わらず活動の実態で判断される; 技人国の副業は業務内容が許可範囲内か否かで判断（単純労働は対象外）; 包括的資格外活動許可は留学・家族滞在のみ（週28h）. needs_domain P1: ボランティアと資格外活動の境界基準; 技人国の国際業務系副業での許可不要ケース. |
+| guardrail-gino-jisshu-jinken-hogo | guardrail-gino-jisshu-jinken-hogo.md | completed | OTIT公式サイト; ISA「技能実習制度」; 厚生労働省「育成就労法」 | yes | atlas_draft P1. G107. 技能実習生=労働基準法適用の労働者（在留資格問わず）; OTIT（外国人技能実習機構）=監査+相談窓口（0120-250-168; 15言語以上）; 失踪=即時在留資格失効ではない; 育成就労=技能実習とは別の新制度（目的・転籍自由化; 2024年成立）. needs_domain P1: 育成就労の転籍条件詳細; 失踪後の在留資格保護の公式ルート. |
+| guardrail-ryugaku-shushoku-katsudo | guardrail-ryugaku-shushoku-katsudo.md | completed | ISA「特定活動（就職活動）」; ISA「特定活動告示46号」 | yes | atlas_draft P1. G108. 大学卒業後は「留学」の活動目的が終了→「特定活動（就職活動）」への変更が必要; 特定活動（就職活動）=180日（最大1年程度; 週28h資格外活動許可取得可）; 特定活動46号=日本の大学・大学院卒+日本語能力ビジネスレベル+日本語使用業務（技人国より幅広い業種）. needs_domain P1: 特定活動46号の日本語能力の正式要件; 専門学校卒業者の対象可否. |
+| guardrail-kigyonai-tenkin-yoken | guardrail-kigyonai-tenkin-yoken.md | completed | ISA「在留資格『企業内転勤』」; 入管法別表第一の二 | yes | atlas_draft P1. G109. 企業内転勤=同一企業グループの外国事業所から日本事業所への転勤（転職は対象外）; 転勤直前に1年以上の継続勤務が必須; 学歴・実務経験不要（技人国との大きな違い）; グループ外転籍=在留資格変更（技人国等）が必要（変更前就労=資格外活動リスク）. needs_domain P1: 1年の継続勤務要件の計算方法; 間接子会社間の「転勤」の該当性. |
+| guardrail-gaikokujin-sozoku-zairyu | guardrail-gaikokujin-sozoku-zairyu.md | completed | 法の適用に関する通則法第36条; 法務省「不動産登記」; 国税庁「相続税」 | yes | atlas_draft P1. G110. 相続の準拠法=被相続人の本国法（通則法第36条）; 日本国内の不動産でも外国籍の被相続人なら外国法が原則; 外国人（外国在住相続人含む）も日本の相続手続きに参加可; 外国書類はアポスティーユ+翻訳が必要; 90日超の滞在は相応の在留資格が必要. needs_domain P1: 相続のための特定活動在留の手続き; 中長期在留者の常居所地法例外適用. |
 
 ## In Progress
 
@@ -361,6 +382,16 @@ None. All WORKPACK_001 continuation candidates completed. See next batch candida
 | dom-service-002 | guardrail-gaikokujin-gyosei-service | For foreign children in irregular immigration situations (親が不法在留) — what is the official 文部科学省 or 市区町村教育委員会 position on school enrollment? | P1 | Affects TEBIQ's routing for families in irregular status who ask about their children's education. |
 | dom-kakunin-001 | guardrail-zairyu-shikaku-naiyo-kakunin | Does the ISA's online 在留カード verification system confirm active validity, or only report known lost/stolen/revoked cards? The scope affects how much confidence employers can have after checking. | P1 | Affects employer guidance on using the online verification system as a compliance tool. |
 | dom-kakunin-002 | guardrail-zairyu-shikaku-naiyo-kakunin | For employers using foreign nationals on 業務委託 (service contracts, not direct employment) — is the 在留カード confirmation obligation under the 不法就労助長罪 provision equally applicable? | P1 | Widespread practical scenario; clarifying this is critical for employers using freelancers/contractors. |
+| dom-shikaku-gai-001 | guardrail-shikaku-gai-katsudo-sakai | What is ISA's operational standard for determining when unpaid "volunteer" work constitutes 資格外活動? Is there published guidance on the continuity/regularity/business-contribution threshold? | P1 | Required before TEBIQ can advise on volunteer/unpaid activity edge cases. |
+| dom-shikaku-gai-002 | guardrail-shikaku-gai-katsudo-sakai | For 技人国 holders who receive freelance income from activities arguably within "国際業務" or "理学・工学" categories — what documentation or prior permission (if any) is required to confirm compliance? | P1 | Required before advising 技人国 holders on side consulting/freelance activities. |
+| dom-gino-hogo-001 | guardrail-gino-jisshu-jinken-hogo | What are the specific conditions for 転籍（job change）under 育成就労 after 1 year? Is there a uniform standard across all industries, or sector-specific rules? | P1 | Required before TEBIQ advises on job change rights under 育成就労. |
+| dom-gino-hogo-002 | guardrail-gino-jisshu-jinken-hogo | After fleeing an abusive 技能実習 employer, what is the official ISA position on the foreign national's status and the available pathways (status change, special stay permit, etc.)? Is there a formal protection pathway equivalent to trafficking victim support? | P1 | Affects safety of routing instructions for persons in abusive 技能実習 situations. |
+| dom-ryugaku-shushoku-001 | guardrail-ryugaku-shushoku-katsudo | What is the official ISA requirement for Japanese language proficiency in 特定活動46号? Is JLPT N1 a formal requirement, or evaluated holistically? What happens for native Japanese-speaking applicants without JLPT certification? | P1 | Required before TEBIQ can definitively advise on 特定活動46号 eligibility. |
+| dom-ryugaku-shushoku-002 | guardrail-ryugaku-shushoku-katsudo | Do 専門学校 graduates (who obtain 専門士 or 高度専門士) qualify for the same 特定活動（就職活動）pathway, and are they eligible for 特定活動46号 applications? | P1 | A large proportion of foreign students in Japan attend vocational schools; this affects common routing patterns. |
+| dom-tenkin-001 | guardrail-kigyonai-tenkin-yoken | What is ISA's operational standard for the "1年以上の継続勤務" requirement? Does it apply to the immediately preceding year, or can it include any 1-year period at the foreign entity? | P1 | Required before advising on eligibility for persons with fragmented foreign employment histories. |
+| dom-tenkin-002 | guardrail-kigyonai-tenkin-yoken | When a foreign entity and its Japanese subsidiary are in the same corporate group but have separate legal personalities (e.g., indirect subsidiaries) — is a "転勤" between them sufficient for 企業内転勤 purposes, or is a more direct corporate relationship required? | P1 | Common scenario in multinational corporate structures; affects eligibility determination. |
+| dom-sozoku-001 | guardrail-gaikokujin-sozoku-zairyu | What is the specific ISA-accepted route for foreign nationals who need to stay in Japan longer than 90 days solely to complete inheritance proceedings? Is there an established 特定活動 category for this, or does it require case-by-case application? | P1 | Required before TEBIQ can advise on long-stay options for inheritance-related visitors. |
+| dom-sozoku-002 | guardrail-gaikokujin-sozoku-zairyu | For a foreign national who was a 中長期在留者 in Japan at the time of death, does the 常居所地法 exception in 通則法第38条 override the 本国法 rule, making Japanese inheritance law applicable? | P1 | Affects which law actually governs the estate of long-term foreign residents who die in Japan — a common scenario. |
 | dom-kenkyu-001 | guardrail-kenkyu-kyoju-geijutsu-shukyo | Can a foreign religious worker be sponsored by a Japanese 宗教法人 with no overseas parent organization, or is the "外国の宗教団体からの派遣" strictly required? | P1 | ISA religious.html describes the 外国派遣 requirement but does not explicitly address purely Japanese institution sponsorship. |
 | dom-kenkyu-002 | guardrail-kenkyu-kyoju-geijutsu-shukyo | For researchers employed by a private company but stationed at a national university or public research institute — is the appropriate status 研究 or 技人国? | P1 | The determining criterion for seconded corporate researchers at public institutions is not confirmed from accessed official text. |
 | dom-jocho-001 | guardrail-fuhoshurou-jocho-sekinin | What is the legal standard for employer good-faith defense when a fraudulent residence card was presented — intent required or strict liability? | P1 | ISA enforcement practice on this specific defense has not been confirmed from official text. |
@@ -527,6 +558,17 @@ None. All WORKPACK_001 continuation candidates completed. See next batch candida
 | 招へい理由書（招聘状）の目的・使用場面 | ISA「招へい理由書」 | https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00011.html | 2026-05-15 | 短期滞在の招へい申請で使用; 招聘の理由・目的・期間等を記載. Used for G102. |
 | 在留カードの「就労制限の有無」欄の読み方 | ISA「在留カードの見方」 | https://www.moj.go.jp/isa/applications/procedures/zairyu_card_mitsuru.html | 2026-05-15 | 就労制限欄の記載内容（就労制限なし・就労不可・在留資格に基づく就労のみ可）と意味. Used for G105. |
 | 雇用主の在留カード確認義務 | ISA「在留資格の確認（雇用主向け）」 | https://www.moj.go.jp/isa/policies/ssw/nyuukokukanri07_00011.html | 2026-05-15 | 雇用主の確認義務; 不法就労助長罪との関係; 確認方法. Used for G105. |
+| 資格外活動禁止（入管法第19条） | e-Gov法令検索「出入国管理及び難民認定法第19条」 | https://laws.e-gov.go.jp/law/326AC0000000319 | 2026-05-15 | 在留資格に応ずる活動以外の就労活動の禁止; 資格外活動許可の根拠規定. Used for G106. |
+| 資格外活動許可申請 | 出入国在留管理庁「資格外活動許可」 | https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00012.html | 2026-05-15 | 包括許可（留学・家族滞在・週28時間以内）と個別許可の対象・手続き. Used for G106. |
+| 外国人技能実習機構（OTIT） | 外国人技能実習機構「相談窓口・申告窓口」 | https://www.otit.go.jp/ | 2026-05-15 | OTITの役割（監査・相談窓口・多言語対応）; フリーダイヤル 0120-250-168; 15言語以上の相談対応. Used for G107. |
+| 技能実習制度 | 出入国在留管理庁「技能実習制度」 | https://www.moj.go.jp/isa/policies/policies/nyuukokukanri06_00071.html | 2026-05-15 | 技能実習の在留資格・制度概要; 監理団体・実習実施者の義務. Used for G107. |
+| 育成就労法（2024年成立） | 厚生労働省「育成就労制度の創設」 | https://www.mhlw.go.jp/stf/newpage_40715.html | 2026-05-15 | 育成就労制度の概要（目的・転籍・監理団体改革）; 技能実習法廃止・移行スケジュール. Used for G107. |
+| 特定活動（就職活動） | 出入国在留管理庁「特定活動（就職活動）」 | https://www.moj.go.jp/isa/applications/status/tokutei_katsudo.html | 2026-05-15 | 特定活動（就職活動）の在留期間・更新; 資格外活動許可; 申請時期. Used for G108. |
+| 特定活動告示46号 | 出入国在留管理庁「特定活動告示第46号（本邦大学卒業者）」 | https://www.moj.go.jp/isa/applications/status/46.html | 2026-05-15 | 特定活動46号の要件（学歴・日本語能力・職種）; 対象活動; 更新. Used for G108. |
+| 企業内転勤の活動定義 | 入管法別表第一の二（企業内転勤） | https://laws.e-gov.go.jp/law/326AC0000000319 | 2026-05-15 | 「本邦に本店，支店その他の事業所のある公私の機関の外国にある事業所に勤務していた者が転勤して行う業務」の定義. Used for G109. |
+| 企業内転勤の上陸基準省令要件 | 出入国在留管理庁「在留資格『企業内転勤』」 | https://www.moj.go.jp/isa/applications/status/intratransfer.html | 2026-05-15 | 企業内転勤の要件（1年以上の継続勤務・同一企業グループ・業務内容・報酬）; 技人国との比較. Used for G109. |
+| 相続の準拠法 | 法の適用に関する通則法第36条 | https://laws.e-gov.go.jp/law/418AC0000000078 | 2026-05-15 | 相続の準拠法=被相続人の本国法（第36条）; 遺言の準拠法（第37条）; 常居所地法の例外（第38条）. Used for G110. |
+| 相続税の外国人相続人 | 国税庁「相続税」 | https://www.nta.go.jp/taxes/shiraberu/taxanswer/sozoku/souzoku.htm | 2026-05-15 | 日本国内財産の相続に係る相続税; 相続開始を知った日から10か月以内の申告義務; 外国人相続人の取り扱い. Used for G110. |
 | 外国人住民の行政サービスアクセス | 総務省「外国人住民の行政サービスへのアクセス」 | https://www.soumu.go.jp/main_sosiki/jichi_zeisei/c-zeisei/gaikokujin.html | 2026-05-15 | 中長期在留者の住民登録・行政サービス利用権; 在留資格種別問わずアクセス可. Used for G104. |
 | 外国人の子どもの就学権 | 文部科学省「外国人の子どもの就学」 | https://www.mext.go.jp/a_menu/shotou/clarinet/003.htm | 2026-05-15 | 義務教育年齢（6〜15歳）の外国人の就学権; 市区町村教育委員会の受入義務. Used for G104. |
 
@@ -687,3 +729,11 @@ None. All WORKPACK_001 continuation candidates completed. See next batch candida
   - G105 (zairyu-shikaku-naiyo-kakunin): atlas_draft P0. 就労可否確認は在留カードの「就労制限の有無」欄; 在留資格名だけでは判断できない（特定活動は指定書確認が必要）; 「就労不可」でも資格外活動許可（カード裏面スタンプ）があれば制限内就労可（留学・家族滞在=28h/week）; 雇用主の確認義務（G87: 不法就労助長罪）; ISAオンライン確認システムの利用推奨. needs_domain P1: オンライン確認システムの確認範囲; 業務委託での確認義務.
   - New DOMAIN items: dom-menkyo-001/002, dom-hoshonin-001/002, dom-keiei-s-001/002, dom-service-001/002, dom-kakunin-001/002 (10 new items). Total DOMAIN: 252.
   - Next batch (Batch 020) candidates: 在留資格の活動範囲と「みなし就労」（在留期間中に活動を行っていない期間の取り扱い）, 技能実習生・育成就労者の人権保護（外国人技能実習機構・相談窓口）, 日本留学後の就職活動と「就活ビザ」（特定活動「求職活動」）, 在留資格「企業内転勤」の要件と技人国との違い, 外国人の相続・遺言と在留資格（相続手続きと在留資格の関係）.
+- 2026-05-15: Batch 020 completed (5 cards: G106-G110). Total completed: 109. DOMAIN items: 262. Summary:
+  - G106 (shikaku-gai-katsudo-sakai): atlas_draft P1. 在留資格の活動制限は，雇用契約・業務委託契約の形式や報酬の有無に関わらず，活動の実態（性質・継続性・事業への貢献度）で判断される; 「ボランティア」「業務委託」でも実質就労と評価されれば資格外活動; 技人国の副業は業務内容が許可範囲内か否かで判断（飲食・配達等の単純作業は対象外）; 包括的資格外活動許可は留学・家族滞在のみ（週28h）. needs_domain P1: ボランティアと資格外活動の境界基準（継続性・業務性の閾値）; 技人国の国際業務系副業での個別許可の要否.
+  - G107 (gino-jisshu-jinken-hogo): atlas_draft P1. 技能実習生=労働基準法・最低賃金法・安全衛生法が適用される労働者（在留資格問わず）; 外国人技能実習機構（OTIT）=監査+相談窓口（フリーダイヤル 0120-250-168; 15言語以上）; 実習先からの失踪=即時在留資格失効ではない（OTIT・弁護士・法テラス・支援NGOに相談可）; 育成就労=2024年成立の新制度（技能実習法廃止・転籍自由化・目的変更）. needs_domain P1: 育成就労の転籍条件詳細（1-2年後・同一業種等の具体的内容）; 失踪後の在留資格保護の公式ルート（特定活動等の個別許可の実務).
+  - G108 (ryugaku-shushoku-katsudo): atlas_draft P1. 日本の大学卒業後は「留学」の活動目的が終了→「特定活動（就職活動）」への在留資格変更が必要（在留期間が残っていても）; 特定活動（就職活動）=在留期間180日（最大1年程度; 資格外活動許可取得で週28hアルバイト可）; 特定活動46号（本邦大学卒業者の特例）=日本の大学・大学院卒+日本語ビジネスコミュニケーション能力+日本語使用業務（技人国より幅広い業種）. needs_domain P1: 特定活動46号の日本語能力の正式要件（JLPT N1の根拠の公式テキスト確認）; 専門学校（専門士・高度専門士）卒業者の就活ビザ・46号の対象可否.
+  - G109 (kigyonai-tenkin-yoken): atlas_draft P1. 企業内転勤=同一企業グループの外国事業所から日本事業所への転勤が前提（外国の別会社からの「転職」には使えない）; 転勤直前に当該外国事業所に継続して1年以上勤務していることが必須要件; 学歴・実務経験要件は不要（技人国との最大の違い）; グループ外への転籍・転職は在留資格変更（技人国等）が必要（変更前の就労=資格外活動リスク）. needs_domain P1: 1年継続勤務要件の計算基準（断続勤務・育児休業期間等の取り扱い）; 間接子会社間の「転勤」の企業内転勤要件への該当性.
+  - G110 (gaikokujin-sozoku-zairyu): atlas_draft P1. 相続の準拠法=被相続人の本国法（法の適用に関する通則法第36条）; 日本国内の不動産でも外国籍の被相続人なら外国法が原則; 外国人（外国在住の相続人含む）も日本の相続手続きに参加可（遺産分割・相続登記・預金解約・相続税申告）; 外国書類はアポスティーユ付きの日本語翻訳が必要; 相続手続きのために90日超の日本滞在が必要な場合は相応の在留資格が必要. needs_domain P1: 相続のための特定活動在留（ISAの認める具体的な手続きルート）; 中長期在留者として日本で死亡した外国人の場合の常居所地法例外（通則法第38条）の適用.
+  - New DOMAIN items: dom-shikaku-gai-001/002, dom-gino-hogo-001/002, dom-ryugaku-shushoku-001/002, dom-tenkin-001/002, dom-sozoku-001/002 (10 new items). Total DOMAIN: 262.
+  - Next batch (Batch 021) candidates: 在留資格「教育」（小中高教師）の要件と「教授」との区別, 外国人の日本国内での労働組合加入権と集団的労使紛争, 在留資格変更・更新における「素行」の具体的評価基準（交通違反・軽微な刑事罰の影響）, 外国人の医療・出産と在留資格（在留期間満了前後の医療保険・妊娠・出産に関する手続き）, 日本に長期滞在する外国人の国際税務（租税条約・海外所得の課税・出国税）.
