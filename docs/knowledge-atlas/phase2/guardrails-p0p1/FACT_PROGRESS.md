@@ -1,19 +1,20 @@
 # FACT Progress — Phase 2 P0/P1 Guardrails
 
-Last updated: 2026-05-15 CST (Batch 005 complete)
+Last updated: 2026-05-15 CST (Batch 006 complete)
 
 ## Current Status
 
 - total planned in Workpack 001 core batch: 10
-- completed: 34
+- completed: 39
 - in progress: 0
 - blocked: 0
-- needs DOMAIN: 100
+- needs DOMAIN: 113
 - Batch 001 core: completed 10/10
 - Batch 002 continuation: completed 5
 - Batch 003 continuation: completed 9 (G23 skipped — insufficient official source)
 - Batch 004 continuation: completed 5 (G26-G30)
 - Batch 005 continuation: completed 5 (G31-G35)
+- Batch 006 continuation: completed 5 (G36-G40)
 
 ## Completed Cards
 
@@ -53,6 +54,11 @@ Last updated: 2026-05-15 CST (Batch 005 complete)
 | guardrail-tokutei-gino-1go-2go-boundary | guardrail-tokutei-gino-1go-2go-boundary.md | completed | official ISA 特定技能 job content + FAQ + 通算在留 + 閣議決定 | yes | atlas_draft P1. 1号→2号 NOT automatic — 「自動的に2号に移行されません」. 1号 family ban confirmed. 2号 = 11 sectors only. Multiple employer prohibited. 2024-03-29 four new sectors added. |
 | guardrail-hsp-points-miscalculation | guardrail-hsp-points-miscalculation.md | completed | official ISA HSP Q&A + evaluation page | yes | atlas_draft P1. Overtime/housing/commuting excluded from income. Bonuses included. 70pt = HSP; 70pt+3yr or 80pt+1yr = PR shortcut. Points must be maintained at renewal. Specific point bracket values: needs_domain. |
 | guardrail-gijinkoku-gyomu-youken-boundary | guardrail-gijinkoku-gyomu-youken-boundary.md | completed (needs_domain) | official ISA 技人国 status page + renewal guideline | yes | needs_domain P1. Three subcategories (技術/人文知識/国際業務) confirmed. Manual/production work exclusion widely held but not directly quoted from official source. Employer assignment ≠ visa scope expansion. |
+| guardrail-tokutei-katsudo-naitei-kyushoku | guardrail-tokutei-katsudo-naitei-kyushoku.md | completed | official ISA 内定者/求職者 特定活動 pages | yes | atlas_draft P1. 内定者: work at 内定先 = NOT permitted during waiting period; 28h/week アルバイト allowed. 求職者: max 1 year (6mo + 1 renewal); 推薦状 required; 28h/week アルバイト allowed. |
+| guardrail-ikusei-shuro-ginou-jisshu-haishi | guardrail-ikusei-shuro-ginou-jisshu-haishi.md | completed | official ISA 育成就労 main page + Q&A | yes | atlas_draft P1. 技能実習 abolished April 1, 2027. 育成就労 begins April 1, 2027. Existing holders continue under transition rules (NOT auto-switched). Key difference: 転籍 allowed after 1-2 years. End goal: 特定技能1号. |
+| guardrail-hsp2-henkou-youken | guardrail-hsp2-henkou-youken.md | completed | official ISA HSP status page + Q&A | yes | atlas_draft P1. HSP1→HSP2 NOT automatic; 在留資格変更許可申請 required; 3yr+70pt+素行+国益. HSP2 = unlimited 在留期間. Nearly all employment activities permitted alongside HSP. ≠ 永住. |
+| guardrail-honin-vs-torikijisha-shinsei | guardrail-honin-vs-torikijisha-shinsei.md | completed | official ISA 申請取次制度 page | yes | atlas_draft P1. 申請取次 = procedural convenience only; applicant retains full legal responsibility for content. Only formally registered 取次者 can file. False info via representative = applicant's liability. |
+| guardrail-shuroshikaku-shomeisho-jitsumuyo | guardrail-shuroshikaku-shomeisho-jitsumuyo.md | completed | G7 cross-ref (ISA 就労資格証明書 pages) | yes | atlas_draft P1. Certificate = evidence of current scope, NOT new permission. Certificate ≠ status change or transfer authorization. Voluntary — not mandatory. Does not guarantee renewal. |
 
 ## In Progress
 
@@ -161,6 +167,14 @@ None. All WORKPACK_001 continuation candidates completed. See next batch candida
 | dom-gijin-001 | guardrail-gijinkoku-gyomu-youken-boundary | What is the official language defining excluded activities for 技人国 — specifically which types are named as 単純作業 or excluded? | P1 | Required before runtime use of G35 boundary answers. |
 | dom-gijin-002 | guardrail-gijinkoku-gyomu-youken-boundary | What is the safe answer for a user who has already been performing partially out-of-scope work — remediation options? | P0 | Unauthorized work consequences require professional routing; remediation advice is legal territory. |
 | dom-gijin-003 | guardrail-gijinkoku-gyomu-youken-boundary | How does ISA assess "primarily" qualifying work — percentage guideline or qualitative? | P1 | Majority-of-duties assessment affects borderline role classification. |
+| dom-naitei-001 | guardrail-tokutei-katsudo-naitei-kyushoku | What is the correct TEBIQ answer route when an 内定者 has already started working at the 内定先 before 在留資格変更? | P0 | Unauthorized work during 内定者 特定活動 = P0 risk; requires immediate professional routing. |
+| dom-naitei-002 | guardrail-tokutei-katsudo-naitei-kyushoku | Can a 求職者 who reaches the 1-year limit without employment apply for another status to extend their stay? | P1 | Options after 求職者 period expires must be confirmed professionally. |
+| dom-ikusei-001 | guardrail-ikusei-shuro-ginou-jisshu-haishi | What is the exact 育成就労 → 特定技能1号 transition pathway — is a separate exam still required? | P1 | Key pathway for users in 育成就労 planning; exam exemption status needs official confirmation. |
+| dom-ikusei-002 | guardrail-ikusei-shuro-ginou-jisshu-haishi | For current 技能実習 holders in poor working conditions (below human-rights threshold), what realistic options exist before April 2027? | P1 | Cannot advise under current rules without confirmed pre-2027 routing options. |
+| dom-ikusei-003 | guardrail-ikusei-shuro-ginou-jisshu-haishi | Are there early voluntary transition provisions for 技能実習 holders to move to 育成就労 before April 2027? | P1 | Early transition would change routing for users wanting new rights sooner. |
+| dom-hsp2-001 | guardrail-hsp2-henkou-youken | What is the correct framing for HSP2 vs. PR comparison — what factors should be highlighted without recommending? | P1 | TEBIQ must not recommend; comparative framing needs professional validation. |
+| dom-torikiji-001 | guardrail-honin-vs-torikijisha-shinsei | What is the safe answer when a user's representative submitted false information that the user claims they did not know about? | P1 | Joint liability split is legal territory requiring lawyer routing. |
+| dom-shuroshikaku-001 | guardrail-shuroshikaku-shomeisho-jitsumuyo | What is the correct route for a worker who changed jobs to an out-of-scope role and realizes they need 在留資格変更 — can they continue the new job during pending application? | P1 | Cross-ref G17 (pending change + activity scope); professional routing required. |
 
 ## Source Log
 
@@ -232,7 +246,10 @@ None. All WORKPACK_001 continuation candidates completed. See next batch candida
 | 届出義務・住居地・配偶者・所属機関 | 出入国在留管理庁（各届出ページ） | multiple | 2026-05-15 | All three notification duty pages confirm 14-day deadline. None include penalty text. Penalty text sourced from 入管法 第71条/71条の3. Used for G29. |
 | 在留資格変更・更新許可ガイドライン | 出入国在留管理庁「在留資格の変更、在留期間の更新許可のガイドライン」 | https://www.moj.go.jp/isa/applications/resources/nyuukokukanri07_00058.html | 2026-05-15 | Key quotes: (1) 「専ら法務大臣の自由な裁量に委ねられ」; (2) 「すべて該当する場合であっても…許可しないこともあります。」; (3) Four evaluation factors: 素行, 生計, 活動, 在留必要性. Used for G31 and G35 (cross-ref). |
 | 特定技能1号・2号 業種・家族・移行 | 出入国在留管理庁（特定技能 FAQ/業種/通算在留/閣議決定） | multiple | 2026-05-15 | 1号 = 16 sectors; 2号 = 11 sectors; 家族帯同: 1号不可/2号可; 非自動移行「自動的に2号に移行されません」; 2024-03-29閣議決定 4分野追加. Used for G33. |
-| 高度人材ポイント制 Q&A | 出入国在留管理庁「高度人材ポイント制Ｑ＆Ａ」 | https://www.moj.go.jp/isa/applications/resources/newimmiact_3_qa.html | 2026-05-15 | Income inclusion (基本給, 勤勉手当, 賞与) and exclusion (通勤手当, 住宅手当, 残業代, 株式運用利益). Thresholds: 70pt=HSP; 70pt+3yr / 80pt+1yr = PR shortcut. Points must be maintained at renewal. Used for G34. |
+| 高度人材ポイント制 Q&A | 出入国在留管理庁「高度人材ポイント制Ｑ＆Ａ」 | https://www.moj.go.jp/isa/applications/resources/newimmiact_3_qa.html | 2026-05-15 | Income inclusion (基本給, 勤勉手当, 賞与) and exclusion (通勤手当, 住宅手当, 残業代, 株式運用利益). Thresholds: 70pt=HSP; 70pt+3yr / 80pt+1yr = PR shortcut. Points must be maintained at renewal. Used for G34. Also: HSP1→HSP2 requirements (3yr+70pt+素行+国益), HSP2=unlimited 在留期間. Used for G38. |
+| 特定活動（内定者・求職者）各ページ | 出入国在留管理庁 designatedactivities14/15 + 案内 | multiple | 2026-05-15 | 内定者: 就職先での就労不可（在留資格変更が先）; 28h/week アルバイト可. 求職者: 6か月+1回更新=最大1年; 推薦状必要; 28h/week アルバイト可. Used for G36. |
+| 育成就労制度（メイン + Q&A） | 出入国在留管理庁「育成就労制度」「育成就労制度Q&A」 | multiple | 2026-05-15 | 廃止日: 2027年4月1日. 経過措置: 既存技能実習生は継続可. 転籍: 1-2年後に条件付きで可能. 目的: 人材育成+特定技能1号移行. Used for G37. |
+| 申請取次制度 | 出入国在留管理庁「申請取次制度について」 | https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00003.html | 2026-05-15 | 取次者は弁護士・行政書士等に限定. 申請内容の責任は申請人本人. 取次 = 手続上の便宜のみ. Used for G39. |
 
 ## Handoff Notes To Codex
 
@@ -279,3 +296,11 @@ None. All WORKPACK_001 continuation candidates completed. See next batch candida
   - G35 (gijinkoku-gyomu-youken-boundary): needs_domain P1. Three-category framework confirmed. Manual/production work exclusion = widely held but official text not extracted. Employer assignment ≠ visa scope expansion.
   - New P0 DOMAIN item: dom-gijin-002 (already performing out-of-scope work — remediation is legal territory).
   - Next batch (Batch 006) candidates: 在留資格「特定活動」告示カテゴリ詳細（内定者・求職者の正確な指定書内容）, 技能実習法改正（2024年）と特定技能移行の実務変更, 高度専門職2号への変更要件, 在留期間別の更新申請書類の違い, 就労資格証明書の実務上の使用場面.
+- 2026-05-15: Batch 006 completed (5 cards: G36-G40). Total completed: 39. Summary:
+  - G36 (tokutei-katsudo-naitei-kyushoku): atlas_draft P1. 内定者: 内定先での就労 = NOT permitted before 在留資格変更; 28h/week アルバイト allowed. 求職者: max 1 year; 推薦状 required.
+  - G37 (ikusei-shuro-ginou-jisshu-haishi): atlas_draft P1. 技能実習 abolished April 1, 2027. 育成就労 replaces it. Existing holders continue under transition rules. Key new right: 転籍 after 1-2 years. Goal: 特定技能1号.
+  - G38 (hsp2-henkou-youken): atlas_draft P1. HSP1→HSP2 = NOT automatic; formal 在留資格変更 required; 3yr+70pt. HSP2 = unlimited 在留期間 + broader activity scope. ≠ 永住.
+  - G39 (honin-vs-torikijisha-shinsei): atlas_draft P1. 申請取次 = procedural convenience; applicant retains full legal responsibility. Only registered 取次者 can file. False info via representative = applicant's liability.
+  - G40 (shuroshikaku-shomeisho-jitsumuyo): atlas_draft P1. G7 complement. Certificate = evidence only, not new permission. Voluntary. Does not authorize out-of-scope work. Does not guarantee renewal.
+  - New P0 DOMAIN item: dom-naitei-001 (内定者 already working at 内定先 before 在留資格変更 = P0 unauthorized work).
+  - Next batch (Batch 007) candidates: 配偶者ビザと離婚後の実務ルート詳細, 留学生の在留管理（出席率・進学）, 国民年金免除申請と在留審査の具体的影響, 海外からの在留申請（在外公館ルート）, 特定技能の登録支援機関とは何か.
