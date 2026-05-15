@@ -104,10 +104,11 @@ Reason: these are research/knowledge-thickness artifacts. The 0.8 product should
 
 ## Local Verification Completed
 
-Last completed verification in this workspace:
+Last completed verification on the clean release worktree
+`/Users/martin/Documents/tebiq-0-8-release`:
 
 ```text
-npm test # 178/178
+npm test # 175/175 on the minimal 0.8 release slice
 npx tsc --noEmit --pretty false
 npm run lint
 npx tsx scripts/eval/check-guardrail-real-user-coverage.ts
@@ -121,8 +122,15 @@ npx tsx scripts/eval/check-guardrail-real-user-coverage.ts --input=docs/eval/TEB
 npx tsx scripts/eval/check-guardrail-real-user-coverage.ts --input=docs/eval/TEBIQ_0_8_GUARDRAIL_REAL_USER_QUESTIONS_LOOP2M.json
 npx tsx scripts/eval/check-guardrail-real-user-coverage.ts --input=docs/eval/TEBIQ_0_8_GUARDRAIL_REAL_USER_QUESTIONS_LOOP2N.json
 npm run build
-npm run qa:release-slice
+npm run qa:release-slice -- --all-changed
+npm run qa:release-slice # after staging the release slice
+git diff --cached --check
 ```
+
+The broader mixed research branch also passed the legal-source
+`scripts/test/test-p0-cycle*.ts` gates before cutover, but those scripts are not
+part of the minimal 0.8 release slice because they require the full
+legal-source card set.
 
 Provider-backed Loop2B should now be launched through the preflighted wrapper:
 

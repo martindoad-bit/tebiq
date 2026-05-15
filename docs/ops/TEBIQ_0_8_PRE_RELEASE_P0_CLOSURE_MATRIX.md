@@ -34,15 +34,17 @@ These areas should remain route-gated / professional-confirmation only for 0.8:
 
 ## Verification Snapshot
 
-Latest relevant checks:
+Latest relevant checks on the clean minimal 0.8 release slice:
 
-- `npm test`: 178/178;
+- `npm test`: 175/175;
 - `npx tsc --noEmit --pretty false`: passed;
 - `npm run lint`: passed;
-- all `scripts/test/test-p0-cycle*.ts`: passed;
 - all guardrail real-user packs through Loop2N: passed;
 - `npm run build`: passed;
 - local production smoke after Loop2N: passed.
+
+The broader research branch passed the legal-source `scripts/test/test-p0-cycle*.ts`
+gates, but those are not a minimal 0.8 runtime release gate.
 
 ## Remaining Blocker For Public Release
 

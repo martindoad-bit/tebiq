@@ -360,6 +360,15 @@ Latest verification after Loop2N, refreshed on 2026-05-15:
 - local production smoke on `127.0.0.1:3010` after Loop2N corrections: `/quick-reference` 200, `/quick-reference/gijinkoku-koushin-materials` 200, `/quick-reference/materials/juminhyo` 200, `/internal/eval-lab` 200, `/admin` no-key/wrong-key 404, `/admin/scrivener-leads` no-key/wrong-key 404, admin correct-key 200, admin API no-key/wrong-key 404, admin API correct-key 200, `/api/build-info` 200.
 - in-app browser smoke for `/internal/eval-lab`: rendered `TEBIQ 答案质量标注台`, stats, filters, and question list; no browser console errors observed.
 
+Clean release cutover status:
+
+- clean worktree: `/Users/martin/Documents/tebiq-0-8-release`;
+- branch: `codex/tebiq-0-8-release`;
+- draft PR: `https://github.com/martindoad-bit/tebiq/pull/131`;
+- release slice contains 74 files and excludes bulk Knowledge Atlas research, generated answer result dumps, `.claude/`, and legal-source P0 cycle scripts;
+- clean release slice verification: `npm test` 175/175, `npx tsc --noEmit --pretty false`, `npm run lint`, all guardrail real-user packs through Loop2N, `npm run build`, `npm run qa:release-slice -- --all-changed`, staged `npm run qa:release-slice`, and `git diff --cached --check`;
+- local production smoke on `127.0.0.1:3011`: quick-reference / Eval Lab / build-info 200; admin pages and admin APIs fail closed without the correct `ADMIN_KEY`; correct `ADMIN_KEY` returns 200.
+
 Current blocker:
 
 - provider-backed Loop2B has not produced usable answer evidence.
