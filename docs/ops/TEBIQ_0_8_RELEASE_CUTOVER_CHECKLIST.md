@@ -74,6 +74,7 @@ scripts/eval/run-loop2b-targeted.sh
 scripts/eval/import-knowledge-atlas-answer-ab-to-eval-lab.ts
 scripts/qa/validate-knowledge-atlas-batch.ts
 scripts/qa/check-0-8-release-slice.ts
+scripts/test/smoke-production-answer.ts
 ```
 
 Do not include `scripts/test/test-p0-cycle*.ts` in the minimal 0.8 release

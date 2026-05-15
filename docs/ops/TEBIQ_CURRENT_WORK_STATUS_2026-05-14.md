@@ -368,6 +368,7 @@ Clean release cutover status:
 - release slice contains 74 files and excludes bulk Knowledge Atlas research, generated answer result dumps, `.claude/`, and legal-source P0 cycle scripts;
 - clean release slice verification: `npm test` 175/175, `npx tsc --noEmit --pretty false`, `npm run lint`, all guardrail real-user packs through Loop2N, `npm run build`, `npm run qa:release-slice -- --all-changed`, staged `npm run qa:release-slice`, and `git diff --cached --check`;
 - local production smoke on `127.0.0.1:3011`: quick-reference / Eval Lab / build-info 200; admin pages and admin APIs fail closed without the correct `ADMIN_KEY`; correct `ADMIN_KEY` returns 200.
+- production smoke on `https://tebiq.jp` after updating `scripts/test/smoke-production-answer.ts` to use `/api/consultation/stream`: admin no-key/wrong-key still fail closed, `/api/build-info` 200, and 5/5 redline answer probes completed successfully.
 
 Current blocker:
 
