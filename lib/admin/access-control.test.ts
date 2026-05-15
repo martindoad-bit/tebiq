@@ -7,6 +7,9 @@ test('identifies admin page and API paths', () => {
   assert.equal(isProtectedAdminPath('/admin'), true)
   assert.equal(isProtectedAdminPath('/admin/scrivener-leads'), true)
   assert.equal(isProtectedAdminPath('/api/admin/consultations'), true)
+  assert.equal(isProtectedAdminPath('/internal/eval-lab'), true)
+  assert.equal(isProtectedAdminPath('/internal/learning-console/abc'), true)
+  assert.equal(isProtectedAdminPath('/api/internal/eval-lab/state'), true)
   assert.equal(isProtectedAdminPath('/ai-consultation'), false)
   assert.equal(isProtectedAdminPath('/api/consultation/stream'), false)
 })
@@ -39,6 +42,15 @@ test('admin paths reject missing or wrong key when configured', () => {
     }),
     false,
   )
+  assert.equal(
+    isAdminKeyAccepted({
+      pathname: '/api/internal/eval-lab/state',
+      providedKey: null,
+      providedCookieKey: 'wrong',
+      configuredKey: 'secret',
+    }),
+    false,
+  )
 })
 
 test('admin paths accept the configured key', () => {
@@ -46,6 +58,15 @@ test('admin paths accept the configured key', () => {
     isAdminKeyAccepted({
       pathname: '/admin',
       providedKey: 'secret',
+      configuredKey: 'secret',
+    }),
+    true,
+  )
+  assert.equal(
+    isAdminKeyAccepted({
+      pathname: '/api/internal/eval-lab/state',
+      providedKey: null,
+      providedCookieKey: 'secret',
       configuredKey: 'secret',
     }),
     true,
