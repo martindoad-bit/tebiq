@@ -1,0 +1,116 @@
+[
+  {
+    "id": "TEBIQ-0.8-GR9-RUS-001",
+    "profile": "准备新申请经营管理的中国创业者，只听说过旧的500万说法。",
+    "scenario": "经营管理2025改正和旧500万说法",
+    "risk_hint": ["business_manager_2025_reform", "old_500man_myth"],
+    "question": "我准备开公司办经营管理签证，网上很多人说资本金500万就够了。现在还是这样吗？",
+    "expected_route_gate_ids": ["business-manager-2025-reform-hard-fact-boundary"]
+  },
+  {
+    "id": "TEBIQ-0.8-GR9-RUS-002",
+    "profile": "正在比较资金和雇员要求的创业者，容易混淆旧规则和新规则。",
+    "scenario": "经营管理3000万和常勤职员人数",
+    "risk_hint": ["business_manager_2025_reform", "employee_count_mixing"],
+    "question": "经营管理新规到底是3000万，还是雇2个常勤员工就行？如果我只有一个员工可以吗？",
+    "expected_route_gate_ids": ["business-manager-2025-reform-hard-fact-boundary"]
+  },
+  {
+    "id": "TEBIQ-0.8-GR9-RUS-003",
+    "profile": "既存经营管理持有人，担心马上续签无法满足新规。",
+    "scenario": "既存经管持有人更新过渡期",
+    "risk_hint": ["business_manager_existing_holder_transition", "2028_transition"],
+    "question": "我已经是经营管理签证了，明年续签，但现在还没有3000万资本金。2028年前是不是还可以按旧标准续？",
+    "expected_route_gate_ids": ["business-manager-2025-reform-hard-fact-boundary"]
+  },
+  {
+    "id": "TEBIQ-0.8-GR9-RUS-004",
+    "profile": "创业特定活动持有人，不确定自己是44号还是51号。",
+    "scenario": "创业特定活动转经营管理",
+    "risk_hint": ["startup_designated_activity_transition", "business_manager_2025_reform"],
+    "question": "我现在是创业特定活动，准备转经营管理。听说有的人还能按旧基准，我这种是看500万还是3000万？",
+    "expected_route_gate_ids": ["business-manager-2025-reform-hard-fact-boundary"]
+  },
+  {
+    "id": "TEBIQ-0.8-GR9-RUS-005",
+    "profile": "经管持有人准备放弃公司，想转技人国或高才。",
+    "scenario": "经管公司处置和在留资格变更",
+    "risk_hint": ["business_manager_company_disposition", "status_change_shortcut"],
+    "question": "我是经管签，公司不想做了。是不是先把公司休眠或注销，再转技人国/高才会更容易？",
+    "expected_route_gate_ids": [
+      "business-manager-disposition-no-auto-success"
+    ]
+  },
+  {
+    "id": "TEBIQ-0.8-GR9-RUS-006",
+    "profile": "法人经营者，想用外国人常勤员工满足经管新规。",
+    "scenario": "经管新规常勤职员范围",
+    "risk_hint": ["business_manager_full_time_employee_scope", "table_i_table_ii_confusion"],
+    "question": "经营管理新规说要常勤职员，我公司有一个技人国员工和一个留学生兼职，能算满足常勤职员要求吗？",
+    "expected_route_gate_ids": ["business-manager-2025-reform-hard-fact-boundary"]
+  },
+  {
+    "id": "TEBIQ-0.8-GR9-RUS-007",
+    "profile": "去年按旧说法准备经管方案的创业者，现在看到新规很慌。",
+    "scenario": "500万旧方案和新规切换",
+    "risk_hint": ["business_manager_old_plan", "old_500man_context"],
+    "question": "我去年找人咨询过，说经营管理准备500万资本金就可以。现在突然看到改成3000万了，那我之前准备的方案是不是全废了？",
+    "expected_route_gate_ids": ["business-manager-2025-reform-hard-fact-boundary"]
+  },
+  {
+    "id": "TEBIQ-0.8-GR9-RUS-008",
+    "profile": "资金充足但误以为经管只看资本金的创业者。",
+    "scenario": "3000万是否保证许可",
+    "risk_hint": ["business_manager_3000man_not_guarantee"],
+    "question": "如果我账户里能准备3000万日元，公司也已经设立了，经营管理是不是基本就稳了？还会因为别的理由被拒吗？",
+    "expected_route_gate_ids": ["business-manager-2025-reform-hard-fact-boundary"]
+  },
+  {
+    "id": "TEBIQ-0.8-GR9-RUS-009",
+    "profile": "准备申请经营管理但还没招人的小公司创始人。",
+    "scenario": "新规常勤员工何时到位",
+    "risk_hint": ["business_manager_full_time_employee_timing"],
+    "question": "经营管理新规说要常勤员工，那是申请前就必须已经雇好并加入社保，还是拿到签证以后再招聘也可以？",
+    "expected_route_gate_ids": ["business-manager-2025-reform-hard-fact-boundary"]
+  },
+  {
+    "id": "TEBIQ-0.8-GR9-RUS-010",
+    "profile": "有不同身份员工的经营管理申请人，混淆全职和身份范围。",
+    "scenario": "常勤员工身份范围",
+    "risk_hint": ["business_manager_employee_status_scope"],
+    "question": "我公司现在有一个技人国正社员，还有一个永住者兼职。如果我要满足经营管理的新规，员工到底看签证身份还是看是不是全职？",
+    "expected_route_gate_ids": ["business-manager-2025-reform-hard-fact-boundary"]
+  },
+  {
+    "id": "TEBIQ-0.8-GR9-RUS-011",
+    "profile": "已有经营管理签证，公司规模小，听说有过渡期。",
+    "scenario": "已有经管续签过渡期不是安全保证",
+    "risk_hint": ["business_manager_existing_holder_transition"],
+    "question": "我现在已经拿着经营管理签证，公司规模还很小，下一次更新在2027年。是不是因为有过渡期，所以这次不用管3000万和员工？",
+    "expected_route_gate_ids": ["business-manager-2025-reform-hard-fact-boundary"]
+  },
+  {
+    "id": "TEBIQ-0.8-GR9-RUS-012",
+    "profile": "创业特活持有人，不知道指定书号数。",
+    "scenario": "创业特活44/51不确定",
+    "risk_hint": ["startup_designated_activity_unknown_number"],
+    "question": "我现在是创业签证，卡上只写特定活动，我也不清楚是44号还是51号。转经营管理的时候会按旧的500万看，还是按新的3000万看？",
+    "expected_route_gate_ids": ["business-manager-2025-reform-hard-fact-boundary"]
+  },
+  {
+    "id": "TEBIQ-0.8-GR9-RUS-013",
+    "profile": "通过自治体创业特定活动来日，临近转经营管理。",
+    "scenario": "创业特活期限和转经管",
+    "risk_hint": ["startup_designated_activity_timing"],
+    "question": "我是从自治体的创业特定活动来的，快到期了才准备转经营管理。听说有些创业签还能按旧标准，这个是不是看我什么时候拿到特活？",
+    "expected_route_gate_ids": ["business-manager-2025-reform-hard-fact-boundary"]
+  },
+  {
+    "id": "TEBIQ-0.8-GR9-RUS-014",
+    "profile": "经管公司业务停滞，想省成本并转工作签。",
+    "scenario": "公司休眠后转签",
+    "risk_hint": ["business_manager_company_disposition", "activity_nonperformance"],
+    "question": "经营管理的公司最近没什么业务，我想先休眠省成本，然后找工作转技人国。这样操作会不会影响转签，入管会不会觉得我没有经营活动？",
+    "expected_route_gate_ids": ["business-manager-disposition-no-auto-success"]
+  }
+]

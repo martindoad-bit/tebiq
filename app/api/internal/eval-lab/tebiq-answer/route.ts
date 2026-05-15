@@ -10,6 +10,8 @@ import {
   type ConsultationEvent,
   type ConsultationFactCardAuditEntry,
 } from '@/lib/consultation/stream-protocol'
+import { validateAnswer } from '@/lib/consultation/guardrail-validator'
+import { getRouteGateIds, matchRouteGates } from '@/lib/consultation/route-gates'
 
 // POST /api/internal/eval-lab/tebiq-answer
 //
@@ -93,11 +95,28 @@ export async function POST(req: Request) {
         { status: 400 },
       )
     }
+    if (exists.source === 'knowledge_debug') {
+      return NextResponse.json(
+        {
+          error: 'knowledge_snapshot_locked',
+          detail: 'Knowledge Atlas A/B imports are snapshot-only. Create a new run instead of regenerating this answer in place.',
+          question_id: questionId,
+        },
+        { status: 409 },
+      )
+    }
   }
 
   const startedAt = Date.now()
   try {
+    const routeGateMatches = matchRouteGates(question)
+    const routeGateIds = getRouteGateIds(routeGateMatches)
     const streamResult = await generateViaProductionStream(req, question)
+    const guardrailFindings = validateAnswer({
+      question,
+      answer: streamResult.answerText,
+      routeGateMatches,
+    })
     const latencyMs = Date.now() - startedAt
     const answerId = streamResult.consultationId
     const answerLink = answerId ? `/c/${answerId}` : null
@@ -115,6 +134,8 @@ export async function POST(req: Request) {
       engine_version: engineVersion,
       fallback_reason: fallbackReason,
       fact_card_ids: streamResult.factCardAudit.map(item => item.fact_id),
+      route_gate_ids: routeGateIds,
+      guardrail_findings: guardrailFindings,
       fact_card_audit: streamResult.factCardAudit,
       visible_text: streamResult.answerText,
       latency_ms: latencyMs,
@@ -143,6 +164,8 @@ export async function POST(req: Request) {
             completion_status: streamResult.completionStatus,
             terminal_event: streamResult.terminalEvent,
             fact_card_audit: streamResult.factCardAudit,
+            route_gate_ids: routeGateIds,
+            guardrail_findings: guardrailFindings,
             event_counts: streamResult.eventCounts,
             min_answer_chars: MIN_TEBIQ_ANSWER_CHARS,
           },

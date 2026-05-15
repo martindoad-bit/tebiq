@@ -1,0 +1,66 @@
+[
+  {
+    "id": "TEBIQ-0.8-GR6-RUS-001",
+    "profile": "准备申请永住，过去有住民税迟交记录，最近已一次性补缴。",
+    "scenario": "guardrail_late_payment_remediation_not_erased",
+    "risk_hint": ["late_payment_history", "remediation_not_erasure"],
+    "question": "我之前住民税有一段时间没交，最近去市役所一次性补缴完了。这样申请永住的时候是不是就算没问题了？还是他们还会看我以前迟交过？",
+    "expected_route_gate_ids": ["late-payment-remediation-not-erased"]
+  },
+  {
+    "id": "TEBIQ-0.8-GR6-RUS-002",
+    "profile": "在留更新前发现副业收入申报遗漏，已做修正申告并补税。",
+    "scenario": "guardrail_late_payment_remediation_not_erased",
+    "risk_hint": ["corrected_tax_filing", "remediation_not_erasure"],
+    "question": "去年副业收入忘了报，税务署让我做修正申告，我也补税了。下次更新在留的时候，这件事是不是已经处理完就不会影响了？",
+    "expected_route_gate_ids": ["late-payment-remediation-not-erased"]
+  },
+  {
+    "id": "TEBIQ-0.8-GR6-RUS-003",
+    "profile": "过去留学期间办理过学生納付特例，现在准备工作签更新。",
+    "scenario": "guardrail_pension_exemption_not_arrears",
+    "risk_hint": ["student_special_payment_system", "not_same_as_arrears"],
+    "question": "我留学生的时候办过学生納付特例，所以那几年国民年金没交。现在准备工作签更新，这个会被当成未纳吗？",
+    "expected_route_gate_ids": ["pension-exemption-not-arrears-not-free-pass"]
+  },
+  {
+    "id": "TEBIQ-0.8-GR6-RUS-004",
+    "profile": "长期在日外国人，过去几年没有缴国民年金，现在准备申请永住。",
+    "scenario": "guardrail_pension_exemption_foreigner_free_pass",
+    "risk_hint": ["foreigner_pension_myth", "arrears_remediation"],
+    "question": "我一直听说外国人以后不一定在日本养老，所以国民年金可以不管。我现在有几年没交，想申请永住才发现可能要看，这种还能补吗？",
+    "expected_route_gate_ids": ["pension-exemption-not-arrears-not-free-pass"]
+  },
+  {
+    "id": "TEBIQ-0.8-GR6-RUS-005",
+    "profile": "家族滞在持有人，尚未办理资格外活动许可，想临时打工。",
+    "scenario": "guardrail_dependent_work_permission_required",
+    "risk_hint": ["no_shikakugai_permission", "cash_work"],
+    "question": "我是家族滞在，还没办資格外活動許可。朋友店里周末缺人，让我先去帮几天忙，给现金也不报税，这样应该没关系吧？",
+    "expected_route_gate_ids": ["dependent-work-permission-required"]
+  },
+  {
+    "id": "TEBIQ-0.8-GR6-RUS-006",
+    "profile": "家族滞在持有人，配偶经营公司，自己长期帮忙但不确定是否算工作。",
+    "scenario": "guardrail_dependent_work_permission_required",
+    "risk_hint": ["family_business_work", "unpaid_work", "full_time_limit"],
+    "question": "我老公开会社，我是家族滞在。公司忙的时候我每天去帮忙接电话、发货，不拿工资的话也算工作吗？如果之后想拿工资能不能全职？",
+    "expected_route_gate_ids": ["dependent-work-permission-required"]
+  },
+  {
+    "id": "TEBIQ-0.8-GR6-RUS-007",
+    "profile": "在留资格变更申请中，收到入管结果通知明信片，新公司催促入职。",
+    "scenario": "guardrail_result_postcard_not_permission",
+    "risk_hint": ["postcard_not_permission", "new_work_start"],
+    "question": "入管寄来明信片让我去窗口领取结果，是不是代表已经批了？我换工作的新公司催我下周入职，可以先开始上班吗？",
+    "expected_route_gate_ids": ["result-postcard-not-permission"]
+  },
+  {
+    "id": "TEBIQ-0.8-GR6-RUS-008",
+    "profile": "在留资格变更审查显示结束，但尚未领取新卡，想先出境。",
+    "scenario": "guardrail_result_postcard_not_permission",
+    "risk_hint": ["exam_complete_not_permission", "travel_before_receiving_card"],
+    "question": "我在留資格変更申请显示审查结束了，还没去拿新卡。现在家里有急事想先出国一趟，回来再领结果可以吗？",
+    "expected_route_gate_ids": ["result-postcard-not-permission"]
+  }
+]

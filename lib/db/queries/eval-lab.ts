@@ -385,7 +385,7 @@ export interface ImportItem {
   questionText: string
   scenario?: string | null
   starterTag?: string | null
-  source?: 'starter' | 'imported' | 'manual'
+  source?: 'starter' | 'imported' | 'manual' | string
   metadataJson?: Record<string, unknown>
 }
 
@@ -432,6 +432,104 @@ export async function importQuestions(items: ImportItem[]): Promise<number> {
     inserted += result.length
   }
   return inserted
+}
+
+export interface ImportEvalRunAnswerInput {
+  answerType: EvalAnswerType
+  model?: string | null
+  promptVersion?: string | null
+  answerText?: string | null
+  tebiqAnswerId?: string | null
+  tebiqAnswerLink?: string | null
+  engineVersion?: string | null
+  status?: string | null
+  domain?: string | null
+  fallbackReason?: string | null
+  latencyMs?: number | null
+  error?: string | null
+  rawPayloadJson?: Record<string, unknown> | null
+}
+
+export interface ImportEvalRunItem {
+  questionText: string
+  scenario?: string | null
+  starterTag: string
+  source?: string
+  metadataJson?: Record<string, unknown>
+  answers?: ImportEvalRunAnswerInput[]
+}
+
+export interface ImportEvalRunResult {
+  received: number
+  questionsUpserted: number
+  answersUpserted: number
+}
+
+/**
+ * Import a generated evaluation run into Eval Lab.
+ *
+ * This is intentionally schema-light: runs are represented through
+ * `source`, stable `starter_tag`, and `metadata_json` instead of a new
+ * eval_runs table. It keeps the existing annotation surface usable while
+ * allowing large knowledge-layer debug batches to be re-imported safely.
+ */
+export async function importEvalRunItems(
+  items: ImportEvalRunItem[],
+): Promise<ImportEvalRunResult> {
+  const safeItems = items.filter(item => item.questionText.trim() && item.starterTag.trim())
+  if (safeItems.length === 0) {
+    return { received: items.length, questionsUpserted: 0, answersUpserted: 0 }
+  }
+
+  const questionRows = await db
+    .insert(evalQuestions)
+    .values(
+      safeItems.map(item => ({
+        questionText: item.questionText.trim(),
+        scenario: item.scenario ?? null,
+        starterTag: item.starterTag.trim(),
+        source: (item.source ?? 'knowledge_debug').slice(0, 32),
+        active: true,
+        metadataJson: item.metadataJson ?? {},
+      })),
+    )
+    .onConflictDoUpdate({
+      target: evalQuestions.starterTag,
+      set: {
+        questionText: sql`excluded.question_text`,
+        scenario: sql`excluded.scenario`,
+        source: sql`excluded.source`,
+        active: sql`true`,
+        metadataJson: sql`excluded.metadata_json`,
+        updatedAt: sql`now()`,
+      },
+    })
+    .returning({ id: evalQuestions.id, starterTag: evalQuestions.starterTag })
+
+  const idByTag = new Map(questionRows.map(row => [row.starterTag, row.id]))
+  let answersUpserted = 0
+  for (const item of safeItems) {
+    const questionId = idByTag.get(item.starterTag.trim())
+    if (!questionId) continue
+    for (const answer of item.answers ?? []) {
+      await upsertEvalAnswer({
+        ...answer,
+        questionId,
+        rawPayloadJson: {
+          ...(answer.rawPayloadJson ?? {}),
+          import_starter_tag: item.starterTag,
+          import_source: item.source ?? 'knowledge_debug',
+        },
+      })
+      answersUpserted += 1
+    }
+  }
+
+  return {
+    received: items.length,
+    questionsUpserted: questionRows.length,
+    answersUpserted,
+  }
 }
 
 export interface ImportLiveConsultationsResult {

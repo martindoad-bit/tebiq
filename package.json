@@ -33,6 +33,9 @@
     "eval:calibration-report": "tsx scripts/eval/write-calibration-report.ts",
     "qa:followup-flywheel": "tsx scripts/qa/run-followup-flywheel.ts",
     "smoke:production-answer": "tsx scripts/test/smoke-production-answer.ts",
+    "eval:provider-preflight": "tsx scripts/eval/preflight-provider-env.ts",
+    "eval:loop2b-targeted": "bash scripts/eval/run-loop2b-targeted.sh",
+    "qa:release-slice": "tsx scripts/qa/check-0-8-release-slice.ts",
     "test": "tsx --test lib/**/*.test.ts"
   },
   "dependencies": {

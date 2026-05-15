@@ -1,0 +1,770 @@
+[
+  {
+    "id": "TEBIQ-0.8-RUR-001",
+    "profile": "中国籍会社员，技人国更新已受付，原在留期限刚过",
+    "question": "我更新是在到期前交的，现在原来的在留期限已经过了10天，公司问我能不能继续出勤。我手上只有受付票，这段时间算合法的吗？",
+    "followup": "如果入管两个月内还没结果，我是不是还能照常上班等通知？",
+    "scenario": "特例期间",
+    "risk_hint": ["special_period", "deadline", "work_start"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-002",
+    "profile": "越南籍留学生，毕业后提交技人国变更申请",
+    "question": "我从留学变更技人国已经交了，学校说毕业后学生资格就不太稳定。特例期間里我还能继续便利店打工吗？",
+    "followup": "新公司入社日写的是下个月，如果结果没出来可以先去培训吗？",
+    "scenario": "特例期间",
+    "risk_hint": ["special_period", "part_time", "work_start"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-003",
+    "profile": "尼泊尔籍介护职，更新申请后收到补件",
+    "question": "我在留到期前更新了，后来入管寄来补件通知。是不是只要补件通知还没处理完，特例期间就会自动延长到结果出来？",
+    "followup": "通知期限比原在留期限加两个月还晚一点，我应该看哪个日期？",
+    "scenario": "特例期间",
+    "risk_hint": ["special_period", "additional_documents", "deadline"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-004",
+    "profile": "菲律宾籍会社员，在线更新申请中",
+    "question": "オンライン申请更新已经受理，系统里显示審査中。我的在留卡背面没有盖章，这样也有特例期間吗？",
+    "followup": "公司人事只认在留卡背面，我能拿什么给他们解释？",
+    "scenario": "特例期间",
+    "risk_hint": ["special_period", "online_notice", "employer"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-005",
+    "profile": "台湾籍工程师，更新结果迟迟未出",
+    "question": "我原签证4月30日到期，4月20日交了更新。今天已经6月25日，还没有结果，是不是已经超过特例期間了？",
+    "followup": "如果明天收到ハガキ，是不是今天之前都没问题？",
+    "scenario": "特例期间",
+    "risk_hint": ["special_period", "deadline", "notice"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-006",
+    "profile": "印度籍IT员工，技人国变更到HSP申请中",
+    "question": "我申请从技人国变更高才，旧技人国还有一周到期。变更申请受付后，我现在的工作能不能继续做？",
+    "followup": "如果高才不许可，原来的技人国是不是还能回去用？",
+    "scenario": "特例期间",
+    "risk_hint": ["special_period", "hsp", "status_boundary"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-007",
+    "profile": "韩国籍研究员，更新申请后计划短期出国",
+    "question": "我在特例期间里，想回韩国一周。再入国的时候在留卡日期已经过了，但有受付票，可以正常回来吗？",
+    "followup": "我需要先去入管确认，还是机场会看得懂？",
+    "scenario": "特例期间",
+    "risk_hint": ["special_period", "travel", "deadline"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-008",
+    "profile": "巴西籍派遣员工，更新被要求追加雇用资料",
+    "question": "派遣契约换了，更新申请还在審査中。特例期間里如果派遣先换了，但雇主还是同一个派遣会社，要不要重新申请？",
+    "followup": "我怕等结果期间动工作内容会被认为不一样。",
+    "scenario": "特例期间",
+    "risk_hint": ["special_period", "job_change", "deepwater"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-009",
+    "profile": "中国籍会社员，永住申请8个月未出结果",
+    "question": "我永住还在审查，现在技人国还有45天到期。公司说永住pending会保护现在身份，我还需要提交更新吗？",
+    "followup": "如果我同时交更新，会不会让永住审查变慢？",
+    "scenario": "永住pending",
+    "risk_hint": ["pr_pending", "renewal_deadline", "misconception"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-010",
+    "profile": "越南籍日配持有人，永住审查中且婚姻关系变差",
+    "question": "永住申请后和日本人配偶分居了。日配在留快到期，我是不是还要按日配更新？",
+    "followup": "如果更新时写分居，永住是不是会直接不许可？",
+    "scenario": "永住pending",
+    "risk_hint": ["pr_pending", "spouse", "deepwater"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-011",
+    "profile": "菲律宾籍介护职，永住补件后等待中",
+    "question": "永住补件已经交完一个月了，现在现有签证还有两周到期。补件受付是不是等于永住马上有结果，可以不用更新？",
+    "followup": "我请假去更新会影响工作，想知道最晚什么时候必须动。",
+    "scenario": "永住pending",
+    "risk_hint": ["pr_pending", "additional_documents", "deadline"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-012",
+    "profile": "印度籍高度人才，永住和高才更新时间重叠",
+    "question": "我用高才申请永住已经一年，HSP1号在留卡7月到期。永住如果还没下来，是更新高才还是转HSP2号一起办？",
+    "followup": "两个手续都要公司资料，HR说只给一套可以吗？",
+    "scenario": "永住pending",
+    "risk_hint": ["pr_pending", "hsp", "materials"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-013",
+    "profile": "中国籍工程师，永住pending期间换工作",
+    "question": "永住申请中我准备跳槽，现有技人国还有半年。换工作会不会让永住自动失效？",
+    "followup": "新工作内容还是软件开发，但公司规模小很多，我要先通知入管吗？",
+    "scenario": "永住pending",
+    "risk_hint": ["pr_pending", "job_change", "notification"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-014",
+    "profile": "台湾籍会社员，永住审查中收到结果ハガキ",
+    "question": "永住ハガキ来了，但上面只写带护照、在留卡、收入印纸。我可以理解为已经许可，然后不用管下个月到期的更新了吗？",
+    "followup": "预约来厅日是在到期后两天，这样危险吗？",
+    "scenario": "永住pending",
+    "risk_hint": ["pr_pending", "postcard", "deadline"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-015",
+    "profile": "孟加拉籍自营业者，永住申请后税务补申告",
+    "question": "永住交完以后发现前年確定申告漏了，已经补申告和补税。审查中要不要主动追加说明？",
+    "followup": "我怕主动说反而被看成问题，不说会不会更糟？",
+    "scenario": "永住pending",
+    "risk_hint": ["pr_pending", "tax", "late_payment"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-016",
+    "profile": "韩国籍会社员，永住pending期间家属回国",
+    "question": "我永住申请里填了和配偶同居，但配偶最近回韩国照顾家人三个月。这样要不要通知入管？",
+    "followup": "住民票还在一起，实际暂时不在日本，会影响审查吗？",
+    "scenario": "永住pending",
+    "risk_hint": ["pr_pending", "family_change", "deepwater"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-017",
+    "profile": "尼泊尔籍会社员，永住追加資料提出通知刚收到",
+    "question": "补件通知要求两周内提交住民税、年金、健康保险资料。我平日上班很难跑三个地方，能不能先交拿到的部分？",
+    "followup": "如果来不及，打电话给入管担当有用吗？",
+    "scenario": "补件",
+    "risk_hint": ["additional_documents", "deadline", "public_obligations"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-018",
+    "profile": "中国籍个体户，收到納税証明書その3补件",
+    "question": "入管写要納税証明書その3，我去区役所他们说只能开住民税。这个到底去哪开？",
+    "followup": "我有住民税納税証明書，可以先交这个说明吗？",
+    "scenario": "补件",
+    "risk_hint": ["additional_documents", "national_tax", "resident_tax"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-019",
+    "profile": "菲律宾籍派遣员工，补件要求过去几年社保记录",
+    "question": "补件通知没有写清楚要哪种年金记录，只写公的義務の履行状況。ねんきんネット截图、年金定期便、还是年金事务所的记录更合适？",
+    "followup": "健康保险那边也要同样期间吗？",
+    "scenario": "补件",
+    "risk_hint": ["additional_documents", "pension", "insurance"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-020",
+    "profile": "斯里兰卡籍留学生转就职，变更申请补件",
+    "question": "入管要我补公司的登記事項証明書和決算書，但公司HR说要总部审批，期限只有10天。材料不到能不能先交理由书？",
+    "followup": "我现在已经毕业，在留期限也过了，特例期間快到两个月。",
+    "scenario": "补件",
+    "risk_hint": ["additional_documents", "deadline", "special_period"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-021",
+    "profile": "印度籍HSP申请者，点数证明被要求追加",
+    "question": "高才变更补件要求学历和职历的原本确认，但海外大学寄送证明要很久。扫描件加说明先交可以吗？",
+    "followup": "如果点数证明不齐，是不是会被转成普通技人国？",
+    "scenario": "补件",
+    "risk_hint": ["additional_documents", "hsp", "deadline"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-022",
+    "profile": "泰国籍日配持有人，分居后收到说明要求",
+    "question": "入管让我追加婚姻关系和生活状况资料。我和配偶分居，但不是完全断联。应该交LINE记录、汇款记录，还是写理由书？",
+    "followup": "我不想让配偶知道我交了哪些材料。",
+    "scenario": "补件",
+    "risk_hint": ["additional_documents", "spouse", "privacy"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-023",
+    "profile": "巴西籍经管持有人，转技人国补件",
+    "question": "经管转技人国，入管要旧公司现在状态的说明。我公司没有注销，只是暂停营业，这个要怎么准备材料？",
+    "followup": "如果我先办休業届再交，会不会看起来更清楚？",
+    "scenario": "补件",
+    "risk_hint": ["additional_documents", "business_manager", "company_disposition"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-024",
+    "profile": "美国籍J-Find持有人，拿到offer后变更补件",
+    "question": "我从J-Find转技人国，补件要求雇用契約書原本。公司还在走稟議，只给offer letter，这样能不能先回应？",
+    "followup": "我的J-Find还有4个月，但公司希望越快越好。",
+    "scenario": "补件",
+    "risk_hint": ["additional_documents", "jfind", "work_start"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-025",
+    "profile": "中国籍会社员，准备永住税证明",
+    "question": "永住材料里住民税課税証明書和納税証明書都要，我去年1月2日搬家。2025年度应该去旧区役所还是新区役所开？",
+    "followup": "现在住民票在新区，旧区说电话里不能确认，我怕白跑。",
+    "scenario": "税/年金/健保",
+    "risk_hint": ["resident_tax", "january_1_rule", "materials"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-026",
+    "profile": "台湾籍远程员工，多次搬家",
+    "question": "我2023年在大阪、2024年在东京、今年在横滨。入管要最近三年的住民税证明，是不是每年都去不同市区町村开？",
+    "followup": "如果某一年公司没有住民税特别征收，会不会开不到？",
+    "scenario": "税/年金/健保",
+    "risk_hint": ["resident_tax", "address_history", "materials"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-027",
+    "profile": "孟加拉籍自营业者，税务署补税后准备永住",
+    "question": "我能开到国税の納税証明書その3，显示没有未纳。可是以前有延滞税，这会不会还被入管看到？",
+    "followup": "补申告的控え要不要主动放进去？",
+    "scenario": "税/年金/健保",
+    "risk_hint": ["national_tax", "late_payment", "misconception"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-028",
+    "profile": "越南籍派遣员工，健保切换有空白",
+    "question": "离开前派遣公司后，我一个月没有加入国保，后来新公司进了社保。区役所说现在补不了那一个月，这对永住很危险吗？",
+    "followup": "我应该先去年金事务所查同一个月有没有空白吗？",
+    "scenario": "税/年金/健保",
+    "risk_hint": ["insurance", "pension", "gap"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-029",
+    "profile": "尼泊尔籍元留学生，现在会社员",
+    "question": "学生时代国民年金有学生納付特例，后来工作后厚生年金一直正常。永住材料里这算未纳还是免除？",
+    "followup": "需要追纳吗，还是把承认通知书找出来就好？",
+    "scenario": "税/年金/健保",
+    "risk_hint": ["pension", "student_exception", "materials"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-030",
+    "profile": "菲律宾籍介护职，住民税迟纳后已补齐",
+    "question": "我住民税以前因为换地址没收到纳付书，晚交了两期。现在納税証明書显示未纳なし，这样永住风险是不是消失了？",
+    "followup": "如果要说明，是写没收到信，还是只交领收书？",
+    "scenario": "税/年金/健保",
+    "risk_hint": ["resident_tax", "late_payment", "misconception"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-031",
+    "profile": "韩国籍会社员，副业确申漏报",
+    "question": "我会社有源泉徴収，但副业收入去年忘了確定申告。现在补申告后，国税その3能开出来吗？",
+    "followup": "入管要的是没有未纳，还是也会看申告迟不迟？",
+    "scenario": "税/年金/健保",
+    "risk_hint": ["national_tax", "late_filing", "pr"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-032",
+    "profile": "印尼籍会社员，扶养配偶社保不清楚",
+    "question": "我太太是家族滞在，去年有一点アルバイト收入。她的年金和健康保险在我扶养里，这会影响我永住材料吗？",
+    "followup": "入管会查家属的税和社保吗？",
+    "scenario": "税/年金/健保",
+    "risk_hint": ["insurance", "pension", "family", "tax"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-033",
+    "profile": "法国籍博士，计划申请日本高才",
+    "question": "我博士毕业，予定年収1200万，公司说可以试J-Skip。我看网上有人说博士加1200万就够，这是真的吗？",
+    "followup": "如果不够J-Skip，是不是普通高才点数制还能走？",
+    "scenario": "J-Skip/HSP/J-Find",
+    "risk_hint": ["jskip", "hsp", "threshold"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-034",
+    "profile": "德国籍工程师，予定年収1600万",
+    "question": "我年収1600万、硕士、工作8年。公司问我走J-Skip还是普通HSP，我可以两个都写上让入管帮我判断吗？",
+    "followup": "如果J-Skip不行，会不会影响普通高才审查？",
+    "scenario": "J-Skip/HSP/J-Find",
+    "risk_hint": ["jskip", "hsp", "route_gate"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-035",
+    "profile": "印度籍数据科学家，HSP1号ロ准备换公司",
+    "question": "我是HSP1号ロ，换公司但工作内容还是机器学习。新公司说只要14天内届出，不用变更许可。这个说法靠谱吗？",
+    "followup": "如果我先入社再补变更，会不会只是轻微迟交？",
+    "scenario": "J-Skip/HSP/J-Find",
+    "risk_hint": ["hsp", "institution_change", "work_start"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-036",
+    "profile": "新加坡籍海外名校毕业生，无日本offer",
+    "question": "我符合J-Find学校名单，想先去东京找工作。J-Find期间能不能全职给朋友公司帮忙，等之后再转工签？",
+    "followup": "朋友会给工资，但不是正式雇用契约。",
+    "scenario": "J-Skip/HSP/J-Find",
+    "risk_hint": ["jfind", "work_scope", "misconception"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-037",
+    "profile": "美国籍J-Find持有人，拿到创业相关offer",
+    "question": "我现在J-Find，拿到一家创业公司的offer，职位是business development。能直接转HSP吗，还是必须先技人国？",
+    "followup": "我点数大概75，但公司还很小，成立不到一年。",
+    "scenario": "J-Skip/HSP/J-Find",
+    "risk_hint": ["jfind", "hsp", "route_gate"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-038",
+    "profile": "英国籍金融从业者，自算HSP 72分",
+    "question": "我高才点数算72分，但有些奖金不是固定年収。申请时入管会按offer上的总额算吗？",
+    "followup": "如果最后只认基本工资，点数不够会怎样？",
+    "scenario": "J-Skip/HSP/J-Find",
+    "risk_hint": ["hsp", "points_evidence", "income"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-039",
+    "profile": "台湾籍HSP1号，转职后年収下降",
+    "question": "我高才换工作后年収从950万降到760万，点数可能刚好70。是不是点数够就一定能变更？",
+    "followup": "新公司希望我先签入社承诺，正式开始等许可后。",
+    "scenario": "J-Skip/HSP/J-Find",
+    "risk_hint": ["hsp", "institution_change", "points_evidence"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-040",
+    "profile": "马来西亚籍高收入工程师，学历证明缺失",
+    "question": "我年収超过2000万，但以前几家海外公司的在职证明拿不到。J-Skip是不是主要看年収，所以证明不完整也没关系？",
+    "followup": "普通HSP点数也可能够，但资料更麻烦。",
+    "scenario": "J-Skip/HSP/J-Find",
+    "risk_hint": ["jskip", "evidence", "misconception"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-041",
+    "profile": "中国籍技人国持有人，拿到新内定",
+    "question": "我技人国换工作，新工作也是系统工程师。一定要申请变更吗，还是做所属機関届出就可以？",
+    "followup": "公司让我先申请就労資格証明書，这个期间能正常入社吗？",
+    "scenario": "换工作",
+    "risk_hint": ["job_change", "notification", "employment_certificate"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-042",
+    "profile": "越南籍会社员，离职后两个月未找到工作",
+    "question": "我技人国离职已经两个月，还没找到下一家公司。14天届出忘了，现在补交会不会被取消在留？",
+    "followup": "如果我这周拿到offer，还能正常转职吗？",
+    "scenario": "换工作",
+    "risk_hint": ["job_change", "notification_late", "deepwater"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-043",
+    "profile": "韩国籍设计师，技人国转自由职业",
+    "question": "我准备离开公司接外包设计项目，还是同一个专业领域。技人国可以没有雇主、只靠业务委托合同继续吗？",
+    "followup": "如果客户合同够多，是做更新还是变更？",
+    "scenario": "换工作",
+    "risk_hint": ["job_change", "freelance", "deepwater"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-044",
+    "profile": "印度籍工程师，转职申请就労資格証明書",
+    "question": "新公司不放心我的技人国范围，让我先拿就労資格証明書。拿到这个是不是等于以后更新一定没问题？",
+    "followup": "如果证明还没下来，我可以按内定日先入社吗？",
+    "scenario": "换工作",
+    "risk_hint": ["employment_certificate", "job_change", "misconception"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-045",
+    "profile": "菲律宾籍介护职，换到不同设施",
+    "question": "我介护签证换到另一家设施，工作内容一样。是不是只要公司帮我报社保，入管不用管？",
+    "followup": "前公司离职证明还没给，会影响届出吗？",
+    "scenario": "换工作",
+    "risk_hint": ["job_change", "notification", "materials"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-046",
+    "profile": "巴西籍派遣员工，派遣元和派遣先同时变化",
+    "question": "我以前是A派遣会社派到工厂，现在要换成B派遣会社派到办公室工作。我的签证类别不变，但这算不算活动内容大变？",
+    "followup": "B公司说先上班，之后再看入管要不要申请。",
+    "scenario": "换工作",
+    "risk_hint": ["job_change", "work_scope", "work_start"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-047",
+    "profile": "台湾籍技人国，裁员后正在找工作",
+    "question": "我被裁员后已经做了离职届出，现在还有8个月在留。找工作期间可以接短期有偿项目维持收入吗？",
+    "followup": "项目内容和原工作一样，但没有雇用契约。",
+    "scenario": "换工作",
+    "risk_hint": ["job_change", "side_work", "deepwater"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-048",
+    "profile": "孟加拉籍会社员，换工作中永住也在审查",
+    "question": "我永住pending时换工作，新公司年収比旧公司低一点。除了所属機関届出，要不要主动给永住担当补新合同？",
+    "followup": "如果不说，更新源泉徴収票时才发现会不会不好？",
+    "scenario": "换工作",
+    "risk_hint": ["job_change", "pr_pending", "notification"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-049",
+    "profile": "中国籍日配持有人，离婚刚成立",
+    "question": "我和日本人配偶昨天离婚了，日配在留还有一年。是不是14天内做届出就可以继续到期限结束？",
+    "followup": "我现在有工作，之后想转技人国，什么时候开始准备比较好？",
+    "scenario": "日配/永配离婚再婚死别",
+    "risk_hint": ["spouse", "divorce", "notification"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-050",
+    "profile": "菲律宾籍永配持有人，离婚后忘记届出",
+    "question": "我和永住者配偶离婚已经一个月，才知道要做配偶者届出。现在补交会不会马上被取消？",
+    "followup": "我在同一家公司工作三年，可以直接换工签吗？",
+    "scenario": "日配/永配离婚再婚死别",
+    "risk_hint": ["spouse", "late_notification", "deepwater"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-051",
+    "profile": "印尼籍永配持有人，准备再婚日本人",
+    "question": "我现在是永住者配偶者，已经离婚，准备和日本人再婚。再婚后是继续永配更新，还是要变更成日配？",
+    "followup": "在留期限还有两个月，婚姻届可能赶得上。",
+    "scenario": "日配/永配离婚再婚死别",
+    "risk_hint": ["spouse", "remarriage", "deadline"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-052",
+    "profile": "韩国籍日配持有人，日本人配偶去世",
+    "question": "日本人丈夫上个月去世了，我日配签证还有两年。死别也要做14天届出吗？",
+    "followup": "我还在处理遗产和孩子学校，入管手续能晚一点吗？",
+    "scenario": "日配/永配离婚再婚死别",
+    "risk_hint": ["spouse", "death", "deadline"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-053",
+    "profile": "泰国籍日配持有人，长期分居但未离婚",
+    "question": "我和日本人配偶分居一年，但还没离婚，偶尔联系。朋友说分居超过6个月签证会自动失效，是真的吗？",
+    "followup": "下次更新要不要提交分居理由？",
+    "scenario": "日配/永配离婚再婚死别",
+    "risk_hint": ["spouse", "separation", "misconception"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-054",
+    "profile": "越南籍家族滞在配偶，主申请人准备离婚",
+    "question": "我丈夫是技人国，我是家族滞在。他说要离婚，我和孩子还在日本。正式离婚前我需要先通知入管吗？",
+    "followup": "如果他不给我材料，我能自己申请别的在留吗？",
+    "scenario": "日配/永配离婚再婚死别",
+    "risk_hint": ["dependent", "divorce", "child"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-055",
+    "profile": "巴西籍日配持有人，再婚后同一在留名",
+    "question": "我以前靠前夫拿日配，现在离婚后和另一位日本人结婚了。因为资格名字还是日本人配偶者等，是不是只要更新就好？",
+    "followup": "前夫的离婚届和现丈夫的户籍都要交吗？",
+    "scenario": "日配/永配离婚再婚死别",
+    "risk_hint": ["spouse", "remarriage", "materials"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-056",
+    "profile": "尼泊尔籍永配持有人，配偶去世后想工作",
+    "question": "永住者配偶去世后，我想开始全职工作。永配身份下现在工作有没有限制？",
+    "followup": "下次更新前要先变更成定住者或技人国吗？",
+    "scenario": "日配/永配离婚再婚死别",
+    "risk_hint": ["spouse", "death", "work_scope"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-057",
+    "profile": "斯里兰卡籍日配持有人，因DV已避难",
+    "question": "我从日本人丈夫家逃出来，现在住在支援机构介绍的地方。更新日配需要他的身元保証書吗？我不想联系他。",
+    "followup": "如果入管要住民票，会不会暴露我的地址？",
+    "scenario": "DV",
+    "risk_hint": ["dv", "spouse", "address_safety"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-058",
+    "profile": "俄罗斯籍日配持有人，护照被配偶扣住",
+    "question": "我的护照还在丈夫那里，在留卡在我手上。没有护照能不能先去入管咨询更新或变更？",
+    "followup": "我怕回去拿证件会有危险。",
+    "scenario": "DV",
+    "risk_hint": ["dv", "documents", "safety"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-059",
+    "profile": "菲律宾籍永配持有人，DV后收到入管说明要求",
+    "question": "入管寄信要我说明婚姻和居住情况。我现在避难中，不想写详细地址。可以只写通过支援机构联系吗？",
+    "followup": "我有警察相談记录，但没有离婚手续。",
+    "scenario": "DV",
+    "risk_hint": ["dv", "notice", "address_safety"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-060",
+    "profile": "越南籍家族滞在，受到配偶暴力",
+    "question": "我丈夫是主签，我是家族滞在。他威胁说离婚就让我签证没了。我带孩子搬出来后，应该先找入管还是先找区役所？",
+    "followup": "孩子在上小学，我最怕住址被他查到。",
+    "scenario": "DV",
+    "risk_hint": ["dv", "dependent", "child", "address_safety"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-061",
+    "profile": "中国籍日配持有人，DV调停中",
+    "question": "我有保护命令申请记录，但还没离婚。日配更新快到了，配偶不配合材料，我是不是只能等离婚后换别的资格？",
+    "followup": "我有工作收入，但不是正社员。",
+    "scenario": "DV",
+    "risk_hint": ["dv", "spouse", "deadline"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-062",
+    "profile": "泰国籍日配持有人，被要求交同居证明",
+    "question": "入管要同居证明，可是我因为DV分居。直接说DV会不会让他们认为婚姻已经破裂，然后不给更新？",
+    "followup": "支援中心可以出证明，这种材料能用吗？",
+    "scenario": "DV",
+    "risk_hint": ["dv", "additional_documents", "deepwater"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-063",
+    "profile": "韩国籍永配持有人，避难后住民票未迁",
+    "question": "我为了不让前配偶找到，没有把住民票迁到现在住处。入管材料要住民票时，这样会不会被认为住所不真实？",
+    "followup": "区役所有DV支援措施，我应该先办那个再交材料吗？",
+    "scenario": "DV",
+    "risk_hint": ["dv", "address_safety", "materials"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-064",
+    "profile": "印尼籍日配持有人，DV后想转工作签",
+    "question": "我不想再靠配偶身份，想转技人国。现在有内定，但在留期限只剩一个月，配偶还在骚扰我。先更新日配还是直接变更工签？",
+    "followup": "新公司不知道我的家暴情况，我要不要告诉HR准备材料？",
+    "scenario": "DV",
+    "risk_hint": ["dv", "status_change", "deadline"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-065",
+    "profile": "中国籍経営・管理持有人，拿到IT公司内定",
+    "question": "我经管公司基本停业了，拿到IT公司技人国内定。是不是先注销公司，入管才会相信我真的转职？",
+    "followup": "公司还有未收款和办公室合同，注销要花时间。",
+    "scenario": "经管转技人国/HSP",
+    "risk_hint": ["business_manager", "company_disposition", "misconception"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-066",
+    "profile": "韩国籍经管持有人，技人国变更已受付",
+    "question": "经管转技人国申请已经交了，新公司希望我先上班。旧公司没有新业务，我现在去新公司工作会不会没问题？",
+    "followup": "我可以申请資格外活動来过渡吗？",
+    "scenario": "经管转技人国/HSP",
+    "risk_hint": ["business_manager", "work_start", "unsafe_workaround"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-067",
+    "profile": "印度籍经管持有人，自算HSP 85分",
+    "question": "我想从经管转HSP1号ロ，新公司年収高、点数够。旧公司亏损和税务整理还没完，会不会影响高才变更？",
+    "followup": "点数够是不是主要看新公司，旧公司可以之后处理？",
+    "scenario": "经管转技人国/HSP",
+    "risk_hint": ["business_manager", "hsp", "company_disposition"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-068",
+    "profile": "台湾籍小公司代表，经管在留还有3个月",
+    "question": "我想把公司股份转给朋友，自己辞任代表，然后转去外企做技人国。股份转让登记完成后，旧公司状态还需要说明吗？",
+    "followup": "公司还有银行贷款，我不想让新公司知道太多。",
+    "scenario": "经管转技人国/HSP",
+    "risk_hint": ["business_manager", "company_disposition", "deepwater"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-069",
+    "profile": "越南籍经管持有人，公司休眠但新合同未签",
+    "question": "我已经办了休業届，但新公司还只是口头内定。经管两个月后到期，我现在递技人国变更会被受理吗？",
+    "followup": "如果材料不齐，先递申请能不能保住特例期間？",
+    "scenario": "经管转技人国/HSP",
+    "risk_hint": ["business_manager", "incomplete_materials", "special_period"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-070",
+    "profile": "孟加拉籍餐饮公司经营者，想转贸易公司雇员",
+    "question": "我的餐饮公司有员工和社保还没完全处理，想转朋友公司的技人国。如果先解雇员工和注销会社，会不会反而被看成没有经营实态？",
+    "followup": "在留期限只剩4个月，税理士说清算可能赶不上。",
+    "scenario": "经管转技人国/HSP",
+    "risk_hint": ["business_manager", "company_disposition", "deadline"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-071",
+    "profile": "加拿大籍经管持有人，关注经管新政",
+    "question": "我资本金500万，没有常勤员工。听说经管新标准更严格，我现在转技人国是不是比继续更新经管安全？",
+    "followup": "旧公司还想保留商标和银行账户，不想马上关。",
+    "scenario": "经管转技人国/HSP",
+    "risk_hint": ["business_manager", "reform", "route_choice"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-072",
+    "profile": "菲律宾籍经管持有人，入管要求说明旧公司状态",
+    "question": "我经管转技人国补件，入管问旧公司现在怎样。我公司有债务但还在还，可以不写债务，只写不再经营吗？",
+    "followup": "我怕写债务会让他们觉得我不稳定。",
+    "scenario": "经管转技人国/HSP",
+    "risk_hint": ["business_manager", "additional_documents", "deepwater"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-073",
+    "profile": "中国籍会社员，收到入管オンライン通知",
+    "question": "入管在线系统显示処理状況が更新されました，但没写许可。我是不是可以理解为快通过了？",
+    "followup": "公司让我截图证明，我怕截图内容被误解。",
+    "scenario": "通知状态机",
+    "risk_hint": ["notice_state", "online_notice", "misconception"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-074",
+    "profile": "印度籍HSP申请者，收到ハガキ",
+    "question": "我收到ハガキ，让我带收入印纸、护照、在留卡去入管。这个是不是等于高才变更已经许可？",
+    "followup": "在拿新卡前，我能不能先按高才岗位开始工作？",
+    "scenario": "通知状态机",
+    "risk_hint": ["notice_state", "postcard", "work_start"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-075",
+    "profile": "斯里兰卡籍留学生，变更申请后收到出頭通知",
+    "question": "我收到出頭通知，日文写得很严肃，不知道是补说明还是不许可前的面谈。现在原留学期限已经过了，我该怎么判断状态？",
+    "followup": "我能不能先不告诉新公司，等去了入管再说？",
+    "scenario": "通知状态机",
+    "risk_hint": ["notice_state", "summons", "deepwater"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-076",
+    "profile": "尼泊尔籍会社员，收到追加資料提出通知",
+    "question": "补件通知上有提出期限和担当番号。我是不是只要期限前邮寄出去就算按时，还是必须入管收到？",
+    "followup": "如果用レターパック，有追踪记录够吗？",
+    "scenario": "通知状态机",
+    "risk_hint": ["notice_state", "additional_documents", "deadline"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-077",
+    "profile": "韩国籍日配持有人，收到意見聴取通知",
+    "question": "入管通知写意見聴取，和在留資格取消有关。这个是不是已经取消了？",
+    "followup": "指定日我正好工作，改期会不会更危险？",
+    "scenario": "通知状态机",
+    "risk_hint": ["notice_state", "cancellation_hearing", "deadline"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-078",
+    "profile": "菲律宾籍永住申请者，收到不交付らしい通知",
+    "question": "我收到一张像是不许可的通知，但朋友说可能只是让我去说明。我不会日文，怎么先判断是不是最终结果？",
+    "followup": "通知上有来庁日期，没有写理由书提交期限。",
+    "scenario": "通知状态机",
+    "risk_hint": ["notice_state", "ambiguous_notice", "deepwater"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-079",
+    "profile": "巴西籍派遣员工，收到结果通知但人在外地",
+    "question": "入管ハガキ要求下周来厅，我人在北海道出差，申请是在东京入管交的。晚去几天会不会视为放弃？",
+    "followup": "可以让行政书士或公司代领吗？",
+    "scenario": "通知状态机",
+    "risk_hint": ["notice_state", "postcard", "deadline"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-080",
+    "profile": "越南籍技术者，更新不许可后收到说明",
+    "question": "我更新不许可，入管让去窗口。原在留期限已经过了，我现在是不是马上不能工作，也不能再申请？",
+    "followup": "公司说明天排班已经定了，我该怎么跟他们说？",
+    "scenario": "通知状态机",
+    "risk_hint": ["notice_state", "non_permission", "work_stop"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-081",
+    "profile": "中国籍会社员，第一次使用材料清单",
+    "question": "材料清单里写住民税課税証明書和納税証明書。我在便利店能开到所得課税証明書，这是不是同一个？",
+    "followup": "清单没写年度，我应该按申请日往前算几年？",
+    "scenario": "材料清单使用",
+    "risk_hint": ["materials_checklist", "resident_tax", "year_range"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-082",
+    "profile": "台湾籍工程师，准备永住材料",
+    "question": "清单上每个材料都有有效期限吗？我三个月前开的住民票和课税证明还能用吗？",
+    "followup": "如果补件时又要最新的，是不是全部重开？",
+    "scenario": "材料清单使用",
+    "risk_hint": ["materials_checklist", "validity", "additional_documents"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-083",
+    "profile": "尼泊尔籍会社员，材料由公司和本人分开准备",
+    "question": "材料清单里哪些是我自己拿，哪些必须公司出？HR只愿意给雇用契約書，不愿意给決算書。",
+    "followup": "如果公司材料不全，我本人材料齐了能不能先申请？",
+    "scenario": "材料清单使用",
+    "risk_hint": ["materials_checklist", "employer_documents", "incomplete_materials"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-084",
+    "profile": "菲律宾籍介护职，纸质和在线材料混用",
+    "question": "清单上写要复印在留卡和护照，在线申请时是上传照片就可以吗？",
+    "followup": "原本还需要带去窗口确认吗？",
+    "scenario": "材料清单使用",
+    "risk_hint": ["materials_checklist", "online_application", "originals"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-085",
+    "profile": "印度籍HSP申请者，按清单准备点数证明",
+    "question": "高才材料清单里ポイント計算表和证明材料很多。是不是表上自己填够70分就可以，证明只交主要几项？",
+    "followup": "有些论文和职历证明在海外，拿不到原件。",
+    "scenario": "材料清单使用",
+    "risk_hint": ["materials_checklist", "hsp", "points_evidence"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-086",
+    "profile": "越南籍日配持有人，配偶不配合材料",
+    "question": "日配更新清单里有配偶的课税证明、住民票、身元保証書。配偶不愿意给，我是不是清单没齐就不能交？",
+    "followup": "我们还没离婚，只是分居。",
+    "scenario": "材料清单使用",
+    "risk_hint": ["materials_checklist", "spouse", "incomplete_materials"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-087",
+    "profile": "孟加拉籍自营业者，材料清单区分国税和住民税困难",
+    "question": "清单里同时有国税その3和住民税納税証明書，我去税务署和区役所分别开吗？",
+    "followup": "如果我是个体户，还要额外交確定申告書控え吗？",
+    "scenario": "材料清单使用",
+    "risk_hint": ["materials_checklist", "national_tax", "resident_tax"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-088",
+    "profile": "美国籍J-Find持有人，准备转技人国",
+    "question": "材料清单看起来像普通技人国，但我是J-Find转过去。除了雇用契约和公司资料，还要交J-Find当初的学校证明吗？",
+    "followup": "我担心清单是通用版，漏掉我这种路线的材料。",
+    "scenario": "材料清单使用",
+    "risk_hint": ["materials_checklist", "jfind", "route_specific"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-089",
+    "profile": "蒙古籍会社员，永住pending且收到补件",
+    "question": "我永住pending，补件要年金和税，但我的现有技人国一个月后到期。补件和更新材料能不能同一天准备、同一天交？",
+    "followup": "如果其中一个窗口收了，另一个还缺材料，会影响特例期間吗？",
+    "scenario": "永住pending",
+    "risk_hint": ["pr_pending", "additional_documents", "renewal_deadline"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-090",
+    "profile": "中国籍HSP1号ロ，换公司同时永住pending",
+    "question": "我高才1号换公司，新公司年収更高，永住也在审查中。是不是只做14天届出，再把新合同补给永住担当就可以？",
+    "followup": "新公司希望我下月1日入社，变更许可来不及怎么办？",
+    "scenario": "J-Skip/HSP/J-Find",
+    "risk_hint": ["hsp", "pr_pending", "institution_change", "work_start"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-091",
+    "profile": "印尼籍会社员，收到补件但通知标题看不懂",
+    "question": "信封里有一张追加資料提出通知和一张説明書みたいな纸，我不知道哪个是期限。可以拍照给AI看，让AI判断我还剩几天吗？",
+    "followup": "如果AI看错，我应该以哪一行日文为准？",
+    "scenario": "通知状态机",
+    "risk_hint": ["notice_state", "additional_documents", "deadline"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-092",
+    "profile": "泰国籍DV避难者，日配更新材料不齐",
+    "question": "我因为DV没有配偶材料，材料清单看起来缺很多。是不是应该先等支援机构帮我凑齐，再去入管？",
+    "followup": "在留期限只剩三周，我怕空着交会被退。",
+    "scenario": "DV",
+    "risk_hint": ["dv", "materials_checklist", "deadline"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-093",
+    "profile": "加拿大籍经管持有人，准备材料清单时发现旧公司复杂",
+    "question": "经管转技人国清单没写旧公司的债务、租约、休业届这些。我是不是不用准备，除非入管补件？",
+    "followup": "我想先交新公司的材料，旧公司部分等问到再说。",
+    "scenario": "经管转技人国/HSP",
+    "risk_hint": ["business_manager", "materials_checklist", "company_disposition"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-094",
+    "profile": "巴西籍派遣员工，税和健保补件期限撞上出勤",
+    "question": "入管补件期限下周一，但区役所只能下周二预约。我可以先交一封说明和其他材料，还是必须全部齐了再交？",
+    "followup": "公司不太愿意让我请假，我想邮寄处理。",
+    "scenario": "补件",
+    "risk_hint": ["additional_documents", "deadline", "materials"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-095",
+    "profile": "韩国籍永住申请者，年金追纳后收到补件",
+    "question": "我年金有几个月未纳，上周追纳了。补件通知要年金记录，我交追纳领収書是不是就能说明已经没问题？",
+    "followup": "ねんきんネット上的反映还没更新，期限快到了。",
+    "scenario": "税/年金/健保",
+    "risk_hint": ["pension", "late_payment", "additional_documents"]
+  },
+  {
+    "id": "TEBIQ-0.8-RUR-096",
+    "profile": "中国籍日配持有人，离婚后马上收到更新ハガキ",
+    "question": "我日配更新申请时还没离婚，现在结果ハガキ来了，但离婚已经成立。去领新卡前要不要先告诉入管？",
+    "followup": "如果不说，拿到新卡以后再做14天届出可以吗？",
+    "scenario": "日配/永配离婚再婚死别",
+    "risk_hint": ["spouse", "divorce", "postcard", "deepwater"]
+  }
+]

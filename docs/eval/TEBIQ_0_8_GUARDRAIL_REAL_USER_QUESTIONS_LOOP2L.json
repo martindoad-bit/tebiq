@@ -1,0 +1,66 @@
+[
+  {
+    "id": "TEBIQ-0.8-GR8-RUS-001",
+    "profile": "留学后转工作签，接近在日10年的普通会社员。",
+    "scenario": "永住申请条件",
+    "risk_hint": ["pr_years_only_myth", "study_years_vs_work_years"],
+    "question": "我在日本已经快10年了，中间前4年是留学，后面工作签6年。这样是不是到10年就可以申请永住？还是工作年数也有要求？",
+    "expected_route_gate_ids": ["pr-basic-requirements-not-years-only"]
+  },
+  {
+    "id": "TEBIQ-0.8-GR8-RUS-002",
+    "profile": "准备永住，但过去有税金年金迟交和补缴记录。",
+    "scenario": "永住申请和公的义务",
+    "risk_hint": ["late_payment_not_erased", "public_obligations"],
+    "question": "想申请永住，但是之前有几次住民税和年金交晚了，不是没交，是后来补上的。这种会不会影响永住？",
+    "expected_route_gate_ids": ["pr-basic-requirements-not-years-only"]
+  },
+  {
+    "id": "TEBIQ-0.8-GR8-RUS-003",
+    "profile": "技人国持有人，目前只有1年在留期间，想判断永住申请时点。",
+    "scenario": "永住申请最长期限",
+    "risk_hint": ["pr_current_period_requirement", "longest_period"],
+    "question": "我现在是技人国签证，但是在留期间只有1年。朋友说要拿到3年或5年才比较能申请永住，这是真的吗？",
+    "expected_route_gate_ids": ["pr-basic-requirements-not-years-only"]
+  },
+  {
+    "id": "TEBIQ-0.8-GR8-RUS-004",
+    "profile": "永住者本人，在留卡有效期限临近，误以为永久资格不需要管卡片。",
+    "scenario": "永住者在留卡更新",
+    "risk_hint": ["pr_card_validity", "card_expiry_not_status_expiry"],
+    "question": "我是永住者，在留卡上写的有效期限快到了。永住不是永久的吗？这个卡过期了是不是永住资格也没了？",
+    "expected_route_gate_ids": ["pr-card-renewal-still-required"]
+  },
+  {
+    "id": "TEBIQ-0.8-GR8-RUS-005",
+    "profile": "永住者不理解为什么卡片仍有7年有效期。",
+    "scenario": "永住者在留卡7年有效期",
+    "risk_hint": ["pr_card_seven_year_validity", "card_renewal_required"],
+    "question": "永住者的在留卡为什么还有7年有效期？我是不是每7年都要去入管更新一次，不更新会怎样？",
+    "expected_route_gate_ids": ["pr-card-renewal-still-required"]
+  },
+  {
+    "id": "TEBIQ-0.8-GR8-RUS-006",
+    "profile": "海外客户对应岗位，主要用中文和英文，担心没有JLPT影响技人国申请。",
+    "scenario": "技人国签证和日语能力",
+    "risk_hint": ["gijinkoku_jlpt_myth", "job_language_relevance"],
+    "question": "我想换成技人国签证，公司岗位是海外客户对应，主要用中文和英文。没有JLPT N2可以申请吗？",
+    "expected_route_gate_ids": ["gijinkoku-jlpt-not-formal-not-irrelevant"]
+  },
+  {
+    "id": "TEBIQ-0.8-GR8-RUS-007",
+    "profile": "贸易事务和翻译岗位申请人，只有日常会话日语，误以为人文签必须N1。",
+    "scenario": "人文签和JLPT要求",
+    "risk_hint": ["gijinkoku_jlpt_fixed_threshold", "international_services_language"],
+    "question": "人文知识国际业务签证是不是必须要N1？我日语只有日常会话水平，但工作内容是翻译、贸易事务和客户邮件。",
+    "expected_route_gate_ids": ["gijinkoku-jlpt-not-formal-not-irrelevant"]
+  },
+  {
+    "id": "TEBIQ-0.8-GR8-RUS-008",
+    "profile": "在日本工作的外国人，雇主用多给工资作为不加入社保的理由。",
+    "scenario": "外国人会社员社保年金",
+    "risk_hint": ["foreign_worker_social_insurance", "employer_non_enrollment"],
+    "question": "我是在日本上班的外国人，公司说外国人可以不加入厚生年金和健康保险，工资多给一点。工作签或特定技能这样可以吗？如果公司不给加怎么办？",
+    "expected_route_gate_ids": ["foreign-worker-social-insurance-not-optional"]
+  }
+]
