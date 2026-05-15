@@ -113,6 +113,33 @@ test('does not flag explicit warning against J-Find shikakugai bridge', () => {
   assert.ok(!findings.some(f => f.id === 'answer-jfind-shikakugai-employment-bridge'))
 })
 
+test('does not flag J-Find warning that says not to start employment through shikakugai', () => {
+  const findings = validatePermissionStateContradictions(
+    '我是J-Find，现在有offer，想转技人国。公司希望我先入社。',
+    '先提醒一点：在没有拿到正式雇用契約書原本前，不要用 J-Find 的资格外活动许可去开始实质入职工作。',
+  )
+
+  assert.ok(!findings.some(f => f.id === 'answer-jfind-shikakugai-employment-bridge'))
+})
+
+test('does not flag J-Find answer that forbids work before HSP or gijinkoku permission', () => {
+  const findings = validatePermissionStateContradictions(
+    '我现在J-Find，拿到创业公司的business development offer。能直接转HSP吗？',
+    '暂缓事项：在没有取得HSP或技人国许可前，不要以J-Find身份开始给这家公司做实质的business development工作，即使公司催入职也不行。',
+  )
+
+  assert.ok(!findings.some(f => f.id === 'answer-jfind-shikakugai-employment-bridge'))
+})
+
+test('does not flag J-Find answer saying pre-permission work would be shikakugai', () => {
+  const findings = validatePermissionStateContradictions(
+    '我现在J-Find，拿到创业公司的business development offer。能直接转HSP吗？',
+    '如果公司希望尽快开始工作，千万不要在变更许可下来前先干活，这属于资格外活动，可能影响审批。',
+  )
+
+  assert.ok(!findings.some(f => f.id === 'answer-jfind-shikakugai-employment-bridge'))
+})
+
 test('detects J-Find shikakugai bridge in short follow-up context', () => {
   const findings = validateAnswer({
     question: [
@@ -162,6 +189,42 @@ test('detects HSP1 notification equals permission answer language', () => {
   assert.ok(findings.some(f => f.id === 'answer-hsp1-notification-equals-permission'))
 })
 
+test('does not flag HSP1 answer saying 14-day notification is not enough', () => {
+  const findings = validatePermissionStateContradictions(
+    '我是HSP1，换公司后14日届出就可以入社吗？',
+    '当前判断：HSP1换机构，不是只完成14天届出就可以先进新公司工作；必须先取得许可。',
+  )
+
+  assert.ok(!findings.some(f => f.id === 'answer-hsp1-notification-equals-permission'))
+})
+
+test('does not flag HSP1 answer that labels 14-day notification-only route as misconception', () => {
+  const findings = validatePermissionStateContradictions(
+    '我是HSP1，换公司后14日届出就可以入社吗？',
+    '你听说“14天内届出即可”是很常见的误解，14天届出不能替代机构变更许可。',
+  )
+
+  assert.ok(!findings.some(f => f.id === 'answer-hsp1-notification-equals-permission'))
+})
+
+test('does not flag HSP1 answer rejecting notification-only route with company wording', () => {
+  const findings = validatePermissionStateContradictions(
+    '我是HSP1，换公司后14日届出就可以入社吗？',
+    '新公司说的“只要14天内届出就行”不靠谱。普通就劳资格中的届出规则和高度専門職1号的许可型机构变更要分开。',
+  )
+
+  assert.ok(!findings.some(f => f.id === 'answer-hsp1-notification-equals-permission'))
+})
+
+test('does not flag HSP1 answer with quoted notification-only misconception', () => {
+  const findings = validatePermissionStateContradictions(
+    '我是HSP1，换公司后14日届出就可以入社吗？',
+    '“14天内届出即可”这个说法不准确，HSP1换机构需要先取得许可。',
+  )
+
+  assert.ok(!findings.some(f => f.id === 'answer-hsp1-notification-equals-permission'))
+})
+
 test('detects HSP1 work-certificate alternate-route language', () => {
   const findings = validatePermissionStateContradictions(
     '我是HSP1号ロ，换公司但工作内容一样，14日届出就可以吗？',
@@ -191,6 +254,42 @@ test('does not flag explicit HSP1 warning that certificate is not a substitute',
   assert.ok(!findings.some(f => f.id === 'answer-hsp1-certificate-as-alternate-route'))
 })
 
+test('does not flag HSP1 warning not to use work certificate as permission evidence', () => {
+  const findings = validatePermissionStateContradictions(
+    '我是HSP1号ロ，换公司但工作内容一样，14日届出就可以吗？',
+    '不要用就劳资格证明书或届出受理票当做已许可的证据去开始工作。',
+  )
+
+  assert.ok(!findings.some(f => f.id === 'answer-hsp1-certificate-as-alternate-route'))
+})
+
+test('detects HSP1 alternate workarounds before institution-change permission', () => {
+  const findings = validatePermissionStateContradictions(
+    '我高才1号换公司，变更许可来不及，下月能不能先入社？',
+    '建议动作：可以先用业务委托或研修形式开始，雇佣合同等许可后再处理。',
+  )
+
+  assert.ok(findings.some(f => f.id === 'answer-hsp1-alternate-workaround-before-permission'))
+})
+
+test('does not flag HSP1 warning against alternate workarounds before permission', () => {
+  const findings = validatePermissionStateContradictions(
+    '我高才1号换公司，变更许可来不及，下月能不能先入社？',
+    '许可前不能用业务委托、研修、准备工作或内部会议替代入社；只能延后入社日或签以许可生效为条件的合同。',
+  )
+
+  assert.ok(!findings.some(f => f.id === 'answer-hsp1-alternate-workaround-before-permission'))
+})
+
+test('does not flag HSP1 permission-conditional employment contract with no actual activity', () => {
+  const findings = validatePermissionStateContradictions(
+    '我是HSP1号ロ，换公司但工作内容还是机器学习。新公司说只要14天内届出，不用变更许可。',
+    '建议动作：今天先不要开始新工作或任何为新机构的活动。以“许可生效后入职”为前提调整入职日，并签署以许可为条件的雇用契约。',
+  )
+
+  assert.ok(!findings.some(f => f.id === 'answer-hsp1-alternate-workaround-before-permission'))
+})
+
 test('detects work qualification certificate as permission language', () => {
   const findings = validatePermissionStateContradictions(
     '就労資格証明書可以代替变更许可吗？',
@@ -218,6 +317,33 @@ test('does not flag work-certificate warning when negation appears before the ma
   assert.ok(!findings.some(f => f.id === 'answer-work-certificate-as-permission'))
 })
 
+test('does not flag answer saying work certificate is only proof, not permission', () => {
+  const findings = validatePermissionStateContradictions(
+    '技人国换工作，公司让我先申请就労資格証明書，这个期间能正常入社吗？',
+    '就労資格証明書不是新的在留资格变更许可，它只是对“你现在这个资格能否做这份工作”的证明。',
+  )
+
+  assert.ok(!findings.some(f => f.id === 'answer-work-certificate-as-permission'))
+})
+
+test('does not flag answer saying not to treat work certificate as permission', () => {
+  const findings = validatePermissionStateContradictions(
+    '技人国换工作，公司让我先申请就労資格証明書，这个期间能正常入社吗？',
+    '不要把就労資格証明書当成就业许可；它只是确认材料。',
+  )
+
+  assert.ok(!findings.some(f => f.id === 'answer-work-certificate-as-permission'))
+})
+
+test('does not flag answer saying do not think work certificate equals permission', () => {
+  const findings = validatePermissionStateContradictions(
+    '技人国换工作，公司让我先申请就労資格証明書，这个期间能正常入社吗？',
+    '暂缓事项：不要认为拿到就労資格証明書就等同许可；它不是新的在留资格变更许可。',
+  )
+
+  assert.ok(!findings.some(f => f.id === 'answer-work-certificate-as-permission'))
+})
+
 test('detects wrong income-proof label for national tax sono3', () => {
   const findings = validatePermissionStateContradictions(
     '清单里写国税その3，这个是什么？',
@@ -226,6 +352,24 @@ test('detects wrong income-proof label for national tax sono3', () => {
 
   assert.ok(findings.some(f => f.id === 'answer-sono3-income-proof-label'))
   assert.equal(findings.find(f => f.id === 'answer-sono3-income-proof-label')?.severity, 'P2')
+})
+
+test('does not flag answer saying municipality cannot issue national tax sono3', () => {
+  const findings = validatePermissionStateContradictions(
+    '入管补件要納税証明書その3，区役所只能开住民税，这个去哪开？',
+    '区役所确实办不了。住民税是市区町村管的，而納税証明書その3要去税务署或 e-Tax 申请。',
+  )
+
+  assert.ok(!findings.some(f => f.id === 'answer-routes-sono3-to-municipality'))
+})
+
+test('does not flag answer saying ward office only issues resident tax, not national tax sono3', () => {
+  const findings = validatePermissionStateContradictions(
+    '入管补件要納税証明書その3，区役所只能开住民税，这个去哪开？',
+    '区役所只能开住民税（课税/纳税证明），而納税証明書その3是税务署或 e-Tax 出具的。',
+  )
+
+  assert.ok(!findings.some(f => f.id === 'answer-routes-sono3-to-municipality'))
 })
 
 test('detects student shikakugai long vacation unlimited work language', () => {
@@ -410,6 +554,15 @@ test('detects HSP income and PR shortcut overreach', () => {
   assert.ok(findings.some(f => f.id === 'answer-hsp-income-or-pr-shortcut-overreach'))
 })
 
+test('does not flag HSP income answer that warns against counting allowances casually', () => {
+  const findings = validatePermissionStateContradictions(
+    '高才点数算年收时，残業代和住宅手当可以算吗？',
+    '你必须确认年収中是否混杂通勤手当、住宅手当、残业代等；这些不能随意计入，需要看哪些收入能被认可。',
+  )
+
+  assert.ok(!findings.some(f => f.id === 'answer-hsp-income-or-pr-shortcut-overreach'))
+})
+
 test('detects naitei and kyushoku tokutei katsudo work overreach', () => {
   const findings = validatePermissionStateContradictions(
     '我是内定者特定活動，公司让我下周先入社上班，可以吗？',
@@ -444,6 +597,15 @@ test('detects torikiji applicant-responsibility removal language', () => {
   )
 
   assert.ok(findings.some(f => f.id === 'answer-torikiji-removes-applicant-responsibility'))
+})
+
+test('does not flag ordinary company cleanup running alongside a status-change application', () => {
+  const findings = validatePermissionStateContradictions(
+    '我经管公司基本停业，拿到IT公司技人国内定。注销公司和变更申请怎么排顺序？',
+    '至于公司要处理的事情（未收款、办公室解约等），可以和你准备变更申请同步进行，但次序不能颠倒。',
+  )
+
+  assert.ok(!findings.some(f => f.id === 'answer-torikiji-removes-applicant-responsibility'))
 })
 
 test('detects PR pending replacing current-status renewal language', () => {
@@ -828,6 +990,12 @@ test('does not terminal-gate non-critical missing punctuation alone', () => {
 
   assert.ok(findings.some(f => f.id === 'answer-no-terminal-punctuation'))
   assert.ok(!terminal.some(f => f.id === 'answer-no-terminal-punctuation'))
+})
+
+test('does not flag terminal punctuation wrapped in markdown emphasis', () => {
+  const findings = validateAnswerCompleteness('这份说明书建议先请行政书士看一下是否符合在留逻辑再提交，不要自己即兴发挥。**')
+
+  assert.ok(!findings.some(f => f.id === 'answer-no-terminal-punctuation'))
 })
 
 test('safe complete answer passes focused validator checks', () => {

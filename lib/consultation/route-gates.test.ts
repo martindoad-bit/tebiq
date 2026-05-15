@@ -402,6 +402,15 @@ test('matches short follow-up when root context carries the route family', () =>
   assert.ok(getRouteGateIds(matches).includes('hsp1-institution-change-permission-first'))
 })
 
+test('HSP1 institution-change prompt forbids contractor or training workaround before permission', () => {
+  const matches = matchRouteGates('我是HSP1号ロ换公司，许可来不及，可以先业务委托或研修开始吗？')
+  const prompt = routeGatesToPromptContext(matches)
+
+  assert.ok(prompt)
+  assert.match(prompt, /业务委托、外包、研修、准备工作/)
+  assert.match(prompt, /不开始任何实际活动/)
+})
+
 test('matches short J-Find follow-up when root context carries employment transition', () => {
   const composedFollowUpInput = [
     '那我可以先用资格外活动入职吗？',

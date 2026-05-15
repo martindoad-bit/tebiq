@@ -19,9 +19,14 @@
 // prompt revisions are auditable. The constant is the single source of
 // truth for both the prompt body and the version tag — bump together.
 
-export const CONSULTATION_ALPHA_PROMPT_VERSION = 'consultation_alpha_v17' as const
+export const CONSULTATION_ALPHA_PROMPT_VERSION = 'consultation_alpha_v18' as const
 
-export const CONSULTATION_FINAL_OUTPUT_GUARD = '最终输出语言检查：请只用简体中文回答用户。不要因为事实卡、摘要或资料是日文，就改用日文回答。' as const
+export const CONSULTATION_FINAL_OUTPUT_GUARD = [
+  '最终输出检查：请只用简体中文回答用户。',
+  '总长度必须控制在约700个中文字符以内；高风险问题最多约900个中文字符。',
+  '不要展开百科背景，不要列超过3个步骤；优先保留结论、关键条件、下一步和暂缓事项。',
+  '回答必须自然结束，最后一个字符必须是句号、问号或感叹号。',
+].join('\n')
 
 // Quality test 2026-05-07 (PL): switched to 'deepseek-v4-pro' with thinking
 // enabled (DS V4 Pro defaults to thinking on; no explicit thinking field

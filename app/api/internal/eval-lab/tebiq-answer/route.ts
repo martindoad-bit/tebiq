@@ -206,7 +206,7 @@ export async function POST(req: Request) {
 interface StreamEvalResult {
   answerText: string
   consultationId: string | null
-  completionStatus: 'completed'
+  completionStatus: 'completed' | 'partial'
   terminalEvent: ConsultationEvent['event']
   factCardAudit: ConsultationFactCardAuditEntry[]
   eventCounts: Partial<Record<ConsultationEvent['event'], number>>
@@ -277,7 +277,20 @@ async function generateViaProductionStream(req: Request, question: string): Prom
     throw new Error(`production_stream_failed: ${terminalEvent.detail}`)
   }
   if (terminalEvent?.event === 'timeout') {
-    throw new Error(`production_stream_timeout: ${terminalEvent.completion_status}`)
+    if (terminalEvent.completion_status !== 'partial') {
+      throw new Error(`production_stream_timeout: ${terminalEvent.completion_status}`)
+    }
+    if (trimmed.length < MIN_TEBIQ_ANSWER_CHARS) {
+      throw new Error(`production_stream_partial_too_short:${trimmed.length}`)
+    }
+    return {
+      answerText: trimmed,
+      consultationId,
+      completionStatus: 'partial',
+      terminalEvent: terminalEvent.event,
+      factCardAudit,
+      eventCounts,
+    }
   }
   if (terminalEvent?.event !== 'completed') {
     throw new Error(`production_stream_no_completed_event`)
