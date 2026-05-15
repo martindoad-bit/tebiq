@@ -186,6 +186,9 @@ interface QuestionGenStatus {
   deepseek: GenState
   deepseekError: string | null
   deepseekAttempts: number | null
+  knowledge: GenState
+  knowledgeError: string | null
+  knowledgeAttempts: number | null
   tebiq: GenState
   tebiqError: string | null
   tebiqAttempts: number | null
@@ -195,6 +198,9 @@ const EMPTY_GEN_STATUS: QuestionGenStatus = {
   deepseek: 'pending',
   deepseekError: null,
   deepseekAttempts: null,
+  knowledge: 'pending',
+  knowledgeError: null,
+  knowledgeAttempts: null,
   tebiq: 'pending',
   tebiqError: null,
   tebiqAttempts: null,
@@ -221,6 +227,9 @@ function hydrateGenStatus(
       deepseek: classify(slot?.deepseek_raw),
       deepseekError: slot?.deepseek_raw?.error ?? null,
       deepseekAttempts: getAttempts(slot?.deepseek_raw),
+      knowledge: classify(slot?.deepseek_web),
+      knowledgeError: slot?.deepseek_web?.error ?? null,
+      knowledgeAttempts: getAttempts(slot?.deepseek_web),
       tebiq: classifyTebiq(slot?.tebiq_current),
       tebiqError: slot?.tebiq_current?.error ?? null,
       tebiqAttempts: getAttempts(slot?.tebiq_current),
@@ -265,11 +274,16 @@ function isLiveConsultationQuestion(q: QuestionRow | null | undefined): boolean 
   return q?.source === 'live_consultation'
 }
 
+function isKnowledgeDebugQuestion(q: QuestionRow | null | undefined): boolean {
+  return q?.source === 'knowledge_debug'
+}
+
 function isReviewableCase(
-  slot: { deepseek_raw?: AnswerRow; tebiq_current?: AnswerRow } | undefined,
+  slot: { deepseek_raw?: AnswerRow; deepseek_web?: AnswerRow; tebiq_current?: AnswerRow } | undefined,
   q?: QuestionRow | null,
 ): boolean {
   const tebiqReady = isRealTebiqAnswer(slot?.tebiq_current)
+  if (isKnowledgeDebugQuestion(q)) return tebiqReady && isCompleteDeepseekAnswer(slot?.deepseek_web)
   if (isLiveConsultationQuestion(q)) return tebiqReady
   return isCompleteDeepseekAnswer(slot?.deepseek_raw) && tebiqReady
 }
@@ -315,7 +329,7 @@ type FilterMode =
   | 'failed'
   | 'golden'
 
-type SourceFilter = 'all' | 'live_consultation' | 'starter' | 'other'
+type SourceFilter = 'all' | 'knowledge_debug' | 'live_consultation' | 'starter' | 'other'
 
 const DRAFT_KEY = 'tebiq_eval_lab_v1_drafts'
 
@@ -336,14 +350,23 @@ const VS_DEEPSEEK_LABELS: Record<Exclude<VsDeepseekJudgment, ''>, string> = {
   regression: '倒退',
 }
 
-const SOURCE_FILTERS: SourceFilter[] = ['all', 'live_consultation', 'starter', 'other']
+const KNOWLEDGE_COMPARISON_LABELS: Record<Exclude<VsDeepseekJudgment, ''>, string> = {
+  strict_added: 'B 更好',
+  tied: '持平',
+  regression: 'B 更差',
+}
+
+const SOURCE_FILTERS: SourceFilter[] = ['all', 'knowledge_debug', 'live_consultation', 'starter', 'other']
 
 const SOURCE_FILTER_LABELS: Record<SourceFilter, string> = {
   all: '全部',
+  knowledge_debug: '知识层',
   live_consultation: '真实咨询',
   starter: 'golden',
   other: '其他',
 }
+
+const MAX_SCENARIO_SELECT_OPTIONS = 80
 
 const DEFECT_FLAG_LABELS: Record<string, string> = {
   shallow_answer: '答案偏浅',
@@ -931,6 +954,9 @@ export default function EvalLabClient() {
             deepseek: old?.deepseek === 'running' ? 'running' : next.deepseek,
             deepseekError: next.deepseekError,
             deepseekAttempts: next.deepseekAttempts,
+            knowledge: old?.knowledge === 'running' ? 'running' : next.knowledge,
+            knowledgeError: next.knowledgeError,
+            knowledgeAttempts: next.knowledgeAttempts,
             tebiq: old?.tebiq === 'running' ? 'running' : next.tebiq,
             tebiqError: next.tebiqError,
             tebiqAttempts: next.tebiqAttempts,
@@ -962,9 +988,13 @@ export default function EvalLabClient() {
   // ---- derived ----
   const scenarios = useMemo(() => {
     const set = new Set<string>()
-    for (const q of questions) if (q.scenario) set.add(q.scenario)
+    for (const q of questions) {
+      if (!matchesSourceFilter(q, sourceFilter)) continue
+      if (q.scenario) set.add(q.scenario)
+    }
     return Array.from(set).sort()
-  }, [questions])
+  }, [questions, sourceFilter])
+  const showScenarioSelect = scenarios.length > 0 && scenarios.length <= MAX_SCENARIO_SELECT_OPTIONS
 
   const proposalByQuestion = useMemo(() => {
     const out: Record<string, AnswerQualityProposal> = {}
@@ -984,19 +1014,52 @@ export default function EvalLabClient() {
         genStatus,
         proposalByQuestion,
         filter,
-        scenarioFilter,
+        showScenarioSelect ? scenarioFilter : 'all',
         sourceFilter,
       ),
-    [questions, answersByQuestion, annotationByQuestion, genStatus, proposalByQuestion, filter, scenarioFilter, sourceFilter],
+    [questions, answersByQuestion, annotationByQuestion, genStatus, proposalByQuestion, filter, scenarioFilter, sourceFilter, showScenarioSelect],
   )
   const selected = questions.find(q => q.id === selectedId) ?? null
   const selectedAnswers = selectedId ? answersByQuestion[selectedId] : undefined
+  const selectedIsKnowledgeDebug = isKnowledgeDebugQuestion(selected)
+  const isKnowledgeReviewMode = sourceFilter === 'knowledge_debug'
   const selectedHasBaseline = !!selectedAnswers?.deepseek_raw?.answer_text
   const selectedBaselineMissing = !!selected && isLiveConsultationQuestion(selected) && !selectedHasBaseline
-  const selectedRequiresVsDeepseek = !selected || !isLiveConsultationQuestion(selected) || selectedHasBaseline
+  const selectedRequiresVsDeepseek = selectedIsKnowledgeDebug
+    ? true
+    : (!selected || !isLiveConsultationQuestion(selected) || selectedHasBaseline)
+  const selectedComparisonLabel = selectedIsKnowledgeDebug ? 'B 知识层候选相对 A 当前答案' : 'vs DeepSeek 加分判断'
+  const selectedComparisonMode = selectedIsKnowledgeDebug ? 'knowledge' : 'deepseek'
   const selectedEdit = selectedId ? edits[selectedId] ?? EMPTY_EDIT : EMPTY_EDIT
   const selectedStatus = selectedId ? genStatus[selectedId] ?? EMPTY_GEN_STATUS : EMPTY_GEN_STATUS
   const selectedProposal = selectedId ? proposalByQuestion[selectedId] ?? null : null
+
+  const selectSourceFilter = useCallback(
+    (nextSource: SourceFilter) => {
+      setSourceFilter(nextSource)
+      setScenarioFilter('all')
+
+      const nextFiltered = filterQuestions(
+        questions,
+        answersByQuestion,
+        annotationByQuestion,
+        genStatus,
+        proposalByQuestion,
+        filter,
+        'all',
+        nextSource,
+      )
+      const sourceFallback = questions.filter(q => matchesSourceFilter(q, nextSource))
+      const candidates = nextFiltered.length > 0 ? nextFiltered : sourceFallback
+      const firstReady = candidates.find(q => {
+        const answer = answersByQuestion[q.id]
+        const ann = annotationByQuestion[q.id]
+        return isReviewableCase(answer, q) && !isAnnotationComplete(ann)
+      })
+      setSelectedId(firstReady?.id ?? candidates[0]?.id ?? null)
+    },
+    [questions, answersByQuestion, annotationByQuestion, genStatus, proposalByQuestion, filter],
+  )
 
   const counts = useMemo(() => {
     const total = questions.length
@@ -1017,8 +1080,8 @@ export default function EvalLabClient() {
       if (a?.severity === 'P1') p1 += 1
       if (a?.action === 'golden_case') golden += 1
       const s = genStatus[q.id]
-      if (s?.deepseek === 'failed' || s?.tebiq === 'failed') failed += 1
-      if (s?.deepseek === 'running' || s?.tebiq === 'running') running += 1
+      if (s?.deepseek === 'failed' || s?.knowledge === 'failed' || s?.tebiq === 'failed') failed += 1
+      if (s?.deepseek === 'running' || s?.knowledge === 'running' || s?.tebiq === 'running') running += 1
       const ans = answersByQuestion[q.id]
       const reviewable = isReviewableCase(ans, q)
       if (reviewable) complete += 1
@@ -1254,6 +1317,8 @@ export default function EvalLabClient() {
    */
   const shouldGenerate = useCallback(
     (qid: string, kind: 'deepseek' | 'tebiq', scope: BatchScope, skipAnnotated: boolean): boolean => {
+      const q = questions.find(item => item.id === qid)
+      if (isKnowledgeDebugQuestion(q)) return false
       if (skipAnnotated) {
         const ann = annotationByQuestion[qid]
         if (isAnnotationComplete(ann)) return false
@@ -1265,7 +1330,7 @@ export default function EvalLabClient() {
       // missing scope: generate unless already success
       return slot !== 'success'
     },
-    [annotationByQuestion, genStatus],
+    [annotationByQuestion, genStatus, questions],
   )
 
   const runBatch = useCallback(
@@ -1280,7 +1345,10 @@ export default function EvalLabClient() {
       type Task = { q: QuestionRow; kind: 'deepseek' | 'tebiq' }
       const tasks: Task[] = []
       const skipAnn = skipAnnotatedOnBatch
-      for (const q of questions) {
+      const sourceScopedQuestions = sourceFilter === 'all'
+        ? questions.filter(q => !isKnowledgeDebugQuestion(q))
+        : questions.filter(q => matchesSourceFilter(q, sourceFilter) && !isKnowledgeDebugQuestion(q))
+      for (const q of sourceScopedQuestions) {
         if (shouldGenerate(q.id, 'deepseek', scope, skipAnn)) tasks.push({ q, kind: 'deepseek' })
         if (shouldGenerate(q.id, 'tebiq', scope, skipAnn)) tasks.push({ q, kind: 'tebiq' })
       }
@@ -1326,7 +1394,7 @@ export default function EvalLabClient() {
         await refreshAnswers()
       }
     },
-    [batchBusy, questions, shouldGenerate, skipAnnotatedOnBatch, generateDeepseek, generateTebiq, refreshAnswers],
+    [batchBusy, questions, sourceFilter, shouldGenerate, skipAnnotatedOnBatch, generateDeepseek, generateTebiq, refreshAnswers],
   )
 
   const cancelBatch = useCallback(() => {
@@ -1336,6 +1404,7 @@ export default function EvalLabClient() {
   // ---- single-question rerun for the failed-only flow ----
   const rerunFailed = useCallback(
     async (q: QuestionRow) => {
+      if (isKnowledgeDebugQuestion(q)) return
       const s = genStatus[q.id] ?? EMPTY_GEN_STATUS
       const tasks: Promise<unknown>[] = []
       if (s.deepseek === 'failed') tasks.push(generateDeepseek(q))
@@ -1477,61 +1546,69 @@ export default function EvalLabClient() {
           </span>
         )}
         <div className="ml-auto flex flex-wrap items-center gap-2">
-          <label className="text-[11px] text-slate-600 flex items-center gap-1 select-none">
-            <input
-              type="checkbox"
-              checked={skipAnnotatedOnBatch}
-              onChange={e => setSkipAnnotatedOnBatch(e.target.checked)}
-              className="accent-blue-600"
-            />
-            批量时跳过已标注题
-          </label>
-          <button
-            onClick={onImportLive}
-            disabled={liveImportBusy}
-            className="text-xs px-3 py-1.5 border border-emerald-400 rounded bg-emerald-50 text-emerald-800 hover:bg-emerald-100 disabled:opacity-50"
-          >
-            {liveImportBusy ? '导入中…' : '导入最近真实咨询'}
-          </button>
-          {counts.total === 0 && (
-            <button
-              onClick={onSeed}
-              disabled={seedBusy}
-              className="text-xs px-3 py-1.5 border border-blue-400 rounded bg-blue-50 hover:bg-blue-100 disabled:opacity-50"
-            >
-              {seedBusy ? 'Seed 中…' : 'Seed 100 题'}
-            </button>
-          )}
-          {counts.total > 0 && (
-            <button
-              onClick={onSeed}
-              disabled={seedBusy}
-              className="text-xs px-3 py-1.5 border border-slate-300 rounded bg-white hover:bg-slate-100 disabled:opacity-50"
-            >
-              {seedBusy ? 'Seed 中…' : 'Seed (idempotent)'}
-            </button>
-          )}
-          <button
-            onClick={() => runBatch('missing')}
-            disabled={batchBusy}
-            className="text-xs px-3 py-1.5 border border-slate-400 rounded bg-white hover:bg-slate-100 disabled:opacity-50"
-          >
-            {batchBusy ? '批量生成中…' : `补齐 / 重跑待标数据 (≤ ${BATCH_CONCURRENCY} 并发)`}
-          </button>
-          <button
-            onClick={() => runBatch('failed-only')}
-            disabled={batchBusy || counts.failed === 0}
-            className="text-xs px-3 py-1.5 border border-orange-300 rounded bg-orange-50 text-orange-700 hover:bg-orange-100 disabled:opacity-50"
-          >
-            重跑失败 ({counts.failed})
-          </button>
-          {batchBusy && (
-            <button
-              onClick={cancelBatch}
-              className="text-xs px-3 py-1.5 border border-red-300 rounded bg-white text-red-600 hover:bg-red-50"
-            >
-              取消
-            </button>
+          {isKnowledgeReviewMode ? (
+            <span className="text-xs px-3 py-1.5 border border-violet-200 rounded bg-violet-50 text-violet-700">
+              知识层评审模式：导入快照 · 不重跑 · 不回写生产
+            </span>
+          ) : (
+            <>
+              <label className="text-[11px] text-slate-600 flex items-center gap-1 select-none">
+                <input
+                  type="checkbox"
+                  checked={skipAnnotatedOnBatch}
+                  onChange={e => setSkipAnnotatedOnBatch(e.target.checked)}
+                  className="accent-blue-600"
+                />
+                批量时跳过已标注题
+              </label>
+              <button
+                onClick={onImportLive}
+                disabled={liveImportBusy}
+                className="text-xs px-3 py-1.5 border border-emerald-400 rounded bg-emerald-50 text-emerald-800 hover:bg-emerald-100 disabled:opacity-50"
+              >
+                {liveImportBusy ? '导入中…' : '导入最近真实咨询'}
+              </button>
+              {counts.total === 0 && (
+                <button
+                  onClick={onSeed}
+                  disabled={seedBusy}
+                  className="text-xs px-3 py-1.5 border border-blue-400 rounded bg-blue-50 hover:bg-blue-100 disabled:opacity-50"
+                >
+                  {seedBusy ? 'Seed 中…' : 'Seed 100 题'}
+                </button>
+              )}
+              {counts.total > 0 && (
+                <button
+                  onClick={onSeed}
+                  disabled={seedBusy}
+                  className="text-xs px-3 py-1.5 border border-slate-300 rounded bg-white hover:bg-slate-100 disabled:opacity-50"
+                >
+                  {seedBusy ? 'Seed 中…' : 'Seed (idempotent)'}
+                </button>
+              )}
+              <button
+                onClick={() => runBatch('missing')}
+                disabled={batchBusy}
+                className="text-xs px-3 py-1.5 border border-slate-400 rounded bg-white hover:bg-slate-100 disabled:opacity-50"
+              >
+                {batchBusy ? '批量生成中…' : `补齐 / 重跑待标数据 (≤ ${BATCH_CONCURRENCY} 并发)`}
+              </button>
+              <button
+                onClick={() => runBatch('failed-only')}
+                disabled={batchBusy || counts.failed === 0}
+                className="text-xs px-3 py-1.5 border border-orange-300 rounded bg-orange-50 text-orange-700 hover:bg-orange-100 disabled:opacity-50"
+              >
+                重跑失败 ({counts.failed})
+              </button>
+              {batchBusy && (
+                <button
+                  onClick={cancelBatch}
+                  className="text-xs px-3 py-1.5 border border-red-300 rounded bg-white text-red-600 hover:bg-red-50"
+                >
+                  取消
+                </button>
+              )}
+            </>
           )}
           <a
             href="/api/internal/eval-lab/export?type=full"
@@ -1539,12 +1616,22 @@ export default function EvalLabClient() {
           >
             导出完整 JSON
           </a>
-          <a
-            href="/api/internal/eval-lab/export?type=golden"
-            className="text-xs px-3 py-1.5 border border-slate-400 rounded bg-white hover:bg-slate-100"
-          >
-            导出 golden JSON
-          </a>
+          {isKnowledgeReviewMode && (
+            <a
+              href="/api/internal/eval-lab/export?type=knowledge_ab"
+              className="text-xs px-3 py-1.5 border border-violet-300 rounded bg-violet-50 text-violet-700 hover:bg-violet-100"
+            >
+              导出知识层 A/B
+            </a>
+          )}
+          {!isKnowledgeReviewMode && (
+            <a
+              href="/api/internal/eval-lab/export?type=golden"
+              className="text-xs px-3 py-1.5 border border-slate-400 rounded bg-white hover:bg-slate-100"
+            >
+              导出 golden JSON
+            </a>
+          )}
         </div>
       </header>
 
@@ -1573,7 +1660,7 @@ export default function EvalLabClient() {
               <option value="launchable_no">不可上线</option>
               <option value="golden">golden_case</option>
             </select>
-            {scenarios.length > 0 && (
+            {showScenarioSelect && (
               <select
                 value={scenarioFilter}
                 onChange={e => setScenarioFilter(e.target.value)}
@@ -1587,12 +1674,17 @@ export default function EvalLabClient() {
                 ))}
               </select>
             )}
+            {!showScenarioSelect && scenarios.length > MAX_SCENARIO_SELECT_OPTIONS && (
+              <span className="rounded border border-slate-200 bg-slate-50 px-1.5 py-0.5 text-[10px] text-slate-500">
+                场景 {scenarios.length}，先用来源筛选
+              </span>
+            )}
             <div className="flex flex-wrap gap-1">
               {SOURCE_FILTERS.map(source => (
                 <button
                   key={source}
                   type="button"
-                  onClick={() => setSourceFilter(source)}
+                  onClick={() => selectSourceFilter(source)}
                   className={`rounded px-1.5 py-0.5 text-[10px] ${
                     sourceFilter === source
                       ? 'bg-slate-900 text-white'
@@ -1634,7 +1726,9 @@ export default function EvalLabClient() {
                         {sev || (ann?.score != null ? '·' : ' ')}
                       </span>
                       <SourceChip source={q.source} />
-                      <StatusDot kind="D" state={s.deepseek} />
+                      {isKnowledgeDebugQuestion(q)
+                        ? <StatusDot kind="K" state={s.knowledge} />
+                        : <StatusDot kind="D" state={s.deepseek} />}
                       <StatusDot kind="T" state={s.tebiq} />
                       <span className="truncate flex-1" title={q.question_text}>
                         {q.question_text}
@@ -1658,21 +1752,23 @@ export default function EvalLabClient() {
               )
             })}
           </ul>
-          <div className="mt-3 pt-3 border-t border-slate-200">
-            <textarea
-              value={importText}
-              onChange={e => setImportText(e.target.value)}
-              placeholder="粘贴新问题（每行一个），或粘贴完整 JSON ({items:[...]})"
-              className="w-full h-24 p-2 text-xs border border-slate-300 rounded font-mono"
-            />
-            <button
-              onClick={onImport}
-              disabled={!importText.trim()}
-              className="mt-1 w-full text-xs px-2 py-1 border border-slate-400 rounded bg-white hover:bg-slate-100 disabled:opacity-50"
-            >
-              导入 / 追加
-            </button>
-          </div>
+          {!isKnowledgeReviewMode && (
+            <div className="mt-3 pt-3 border-t border-slate-200">
+              <textarea
+                value={importText}
+                onChange={e => setImportText(e.target.value)}
+                placeholder="粘贴新问题（每行一个），或粘贴完整 JSON ({items:[...]})"
+                className="w-full h-24 p-2 text-xs border border-slate-300 rounded font-mono"
+              />
+              <button
+                onClick={onImport}
+                disabled={!importText.trim()}
+                className="mt-1 w-full text-xs px-2 py-1 border border-slate-400 rounded bg-white hover:bg-slate-100 disabled:opacity-50"
+              >
+                导入 / 追加
+              </button>
+            </div>
+          )}
         </aside>
 
         {/* Center — comparison */}
@@ -1695,28 +1791,53 @@ export default function EvalLabClient() {
               </header>
 
               <div className="grid grid-cols-2 gap-3">
-                <AnswerColumn
-                  label="DeepSeek 裸答"
-                  state={selectedStatus.deepseek}
-                  liveError={selectedStatus.deepseekError}
-                  attempts={selectedStatus.deepseekAttempts}
-                  onGenerate={() => generateDeepseek(selected)}
-                  row={selectedAnswers?.deepseek_raw}
-                  baselineMissing={selectedBaselineMissing}
-                />
-                <AnswerColumn
-                  label="TEBIQ 当前输出"
-                  state={selectedStatus.tebiq}
-                  liveError={selectedStatus.tebiqError}
-                  attempts={selectedStatus.tebiqAttempts}
-                  onGenerate={() => generateTebiq(selected)}
-                  row={selectedAnswers?.tebiq_current}
-                  showMeta
-                />
+                {selectedIsKnowledgeDebug ? (
+                  <>
+                    <AnswerColumn
+                      label="当前 TEBIQ 答案"
+                      state={selectedStatus.tebiq}
+                      liveError={selectedStatus.tebiqError}
+                      attempts={selectedStatus.tebiqAttempts}
+                      row={selectedAnswers?.tebiq_current}
+                      showMeta
+                      snapshotOnly
+                    />
+                    <AnswerColumn
+                      label="知识层候选答案"
+                      state={selectedStatus.knowledge}
+                      liveError={selectedStatus.knowledgeError}
+                      attempts={selectedStatus.knowledgeAttempts}
+                      row={selectedAnswers?.deepseek_web}
+                      showMeta
+                      snapshotOnly
+                    />
+                  </>
+                ) : (
+                  <>
+                    <AnswerColumn
+                      label="DeepSeek 裸答"
+                      state={selectedStatus.deepseek}
+                      liveError={selectedStatus.deepseekError}
+                      attempts={selectedStatus.deepseekAttempts}
+                      onGenerate={() => generateDeepseek(selected)}
+                      row={selectedAnswers?.deepseek_raw}
+                      baselineMissing={selectedBaselineMissing}
+                    />
+                    <AnswerColumn
+                      label="TEBIQ 当前输出"
+                      state={selectedStatus.tebiq}
+                      liveError={selectedStatus.tebiqError}
+                      attempts={selectedStatus.tebiqAttempts}
+                      onGenerate={() => generateTebiq(selected)}
+                      row={selectedAnswers?.tebiq_current}
+                      showMeta
+                    />
+                  </>
+                )}
               </div>
 
               <div className="flex gap-2 text-[11px]">
-                {(selectedStatus.deepseek === 'failed' || selectedStatus.tebiq === 'failed') && (
+                {!selectedIsKnowledgeDebug && (selectedStatus.deepseek === 'failed' || selectedStatus.tebiq === 'failed') && (
                   <button
                     onClick={() => rerunFailed(selected)}
                     className="px-2 py-1 border border-orange-300 rounded bg-orange-50 text-orange-700 hover:bg-orange-100"
@@ -1749,6 +1870,8 @@ export default function EvalLabClient() {
               saveStatus={saveState[selected.id] ?? 'idle'}
               annotation={annotationByQuestion[selected.id] ?? null}
               requiresVsDeepseek={selectedRequiresVsDeepseek}
+              comparisonLabel={selectedComparisonLabel}
+              comparisonMode={selectedComparisonMode}
               onApplyProposal={selectedProposal ? () => applyProposal(selected.id, selectedProposal) : undefined}
               onChange={patch => onAnnotate(selected.id, patch)}
             />
@@ -1761,7 +1884,7 @@ export default function EvalLabClient() {
 
 // ---------- subcomponents ----------
 
-function StatusDot({ kind, state }: { kind: 'D' | 'T'; state: GenState }) {
+function StatusDot({ kind, state }: { kind: 'D' | 'K' | 'T'; state: GenState }) {
   const cls =
     state === 'success' ? 'text-emerald-600' :
     state === 'running' ? 'text-blue-600 animate-pulse' :
@@ -1782,10 +1905,13 @@ function StatusDot({ kind, state }: { kind: 'D' | 'T'; state: GenState }) {
 function SourceChip({ source }: { source: string }) {
   const label =
     source === 'live_consultation' ? 'real' :
+    source === 'knowledge_debug' ? 'know' :
     source === 'starter' ? 'golden' :
     source || 'src'
   const cls =
-    source === 'live_consultation'
+    source === 'knowledge_debug'
+      ? 'bg-violet-50 text-violet-700'
+      : source === 'live_consultation'
       ? 'bg-emerald-50 text-emerald-700'
       : source === 'starter'
         ? 'bg-slate-100 text-slate-500'
@@ -1806,15 +1932,17 @@ function AnswerColumn({
   row,
   showMeta,
   baselineMissing,
+  snapshotOnly,
 }: {
   label: string
   state: GenState
   liveError: string | null
   attempts: number | null
-  onGenerate: () => void
+  onGenerate?: () => void
   row?: AnswerRow
   showMeta?: boolean
   baselineMissing?: boolean
+  snapshotOnly?: boolean
 }) {
   const has = !!row?.answer_text
   const busy = state === 'running'
@@ -1829,13 +1957,20 @@ function AnswerColumn({
       <div className="flex items-center justify-between mb-2 gap-2">
         <span className="text-[10px] uppercase tracking-wider text-slate-500">{label}</span>
         {stateBadge}
-        <button
-          onClick={onGenerate}
-          disabled={busy}
-          className="text-[11px] px-2 py-0.5 border border-slate-300 rounded bg-white hover:bg-slate-100 disabled:opacity-50 ml-auto"
-        >
-          {busy ? '生成中…' : has ? '重新生成' : '生成'}
-        </button>
+        {snapshotOnly && (
+          <span className="ml-auto text-[10px] rounded border border-violet-200 bg-violet-50 px-1.5 py-0.5 text-violet-700">
+            导入快照
+          </span>
+        )}
+        {onGenerate && (
+          <button
+            onClick={onGenerate}
+            disabled={busy}
+            className="text-[11px] px-2 py-0.5 border border-slate-300 rounded bg-white hover:bg-slate-100 disabled:opacity-50 ml-auto"
+          >
+            {busy ? '生成中…' : has ? '重新生成' : '生成'}
+          </button>
+        )}
       </div>
       {liveError && state === 'failed' && (
         <p className="text-[11px] text-red-600">生成错误：{liveError}</p>
@@ -1891,6 +2026,8 @@ function AnnotationForm({
   saveStatus,
   annotation,
   requiresVsDeepseek,
+  comparisonLabel,
+  comparisonMode,
   onApplyProposal,
   onChange,
 }: {
@@ -1899,6 +2036,8 @@ function AnnotationForm({
   saveStatus: 'idle' | 'saving' | 'saved' | 'error'
   annotation: AnnotationRow | null
   requiresVsDeepseek: boolean
+  comparisonLabel: string
+  comparisonMode: 'deepseek' | 'knowledge'
   onApplyProposal?: () => void
   onChange: (patch: Partial<EditableAnnotation>) => void
 }) {
@@ -1955,7 +2094,7 @@ function AnnotationForm({
         </select>
       </Field>
 
-      <Field label={`3. vs DeepSeek 加分判断${requiresVsDeepseek ? '（必填）' : '（可先跳过）'}`}>
+      <Field label={`3. ${comparisonLabel}${requiresVsDeepseek ? '（必填）' : '（可先跳过）'}`}>
         <select
           value={edit.vs_deepseek_judgment}
           onChange={e => onChange({ vs_deepseek_judgment: e.target.value as VsDeepseekJudgment })}
@@ -1966,7 +2105,7 @@ function AnnotationForm({
           <option value="">{requiresVsDeepseek ? '— 必填 —' : '— 可先跳过 —'}</option>
           {VS_DEEPSEEK_OPTIONS.map(v => (
             <option key={v} value={v}>
-              {VS_DEEPSEEK_LABELS[v]}
+              {comparisonMode === 'knowledge' ? KNOWLEDGE_COMPARISON_LABELS[v] : VS_DEEPSEEK_LABELS[v]}
             </option>
           ))}
         </select>
@@ -2175,7 +2314,7 @@ function filterQuestions(
     case 'failed':
       return bySource.filter(q => {
         const s = status[q.id]
-        return s?.deepseek === 'failed' || s?.tebiq === 'failed'
+        return s?.deepseek === 'failed' || s?.knowledge === 'failed' || s?.tebiq === 'failed'
       })
     case 'golden':
       return bySource.filter(q => annotations[q.id]?.action === 'golden_case')
@@ -2187,7 +2326,10 @@ function filterQuestions(
 
 function matchesSourceFilter(q: QuestionRow, source: SourceFilter): boolean {
   if (source === 'all') return true
-  if (source === 'other') return q.source !== 'live_consultation' && q.source !== 'starter'
+  if (source === 'knowledge_debug') return q.source === 'knowledge_debug'
+  if (source === 'other') {
+    return q.source !== 'knowledge_debug' && q.source !== 'live_consultation' && q.source !== 'starter'
+  }
   return q.source === source
 }
 

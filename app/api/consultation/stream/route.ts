@@ -9,7 +9,9 @@ import {
 } from '@/lib/answer/prompt/consultation-alpha-v1'
 import { anchorsToPromptContext, matchAnchors } from '@/lib/consultation/fact-anchors'
 import { createForbiddenFilter } from '@/lib/consultation/forbidden-phrases'
+import { selectTerminalGuardrailFindings, validateAnswer } from '@/lib/consultation/guardrail-validator'
 import { detectRiskKeywords } from '@/lib/consultation/risk-keywords'
+import { matchRouteGates, routeGatesToPromptContext } from '@/lib/consultation/route-gates'
 import {
   CONSULTATION_TIMEOUT_FALLBACK_TEXT,
   CONSULTATION_TIMING,
@@ -143,6 +145,11 @@ export async function POST(req: Request) {
   const trimmedImageSummary = (body.image_summary ?? '').trim()
   const matchedAnchors = matchAnchors(question, trimmedImageSummary || null)
   const anchorIds = matchedAnchors.map(a => a.anchorId)
+  const routeGateMatches = matchRouteGates({
+    question,
+    imageSummary: trimmedImageSummary || null,
+  })
+  const routeGatePrompt = routeGatesToPromptContext(routeGateMatches)
 
   // 0.6 Sprint Workstream B (ENGINE Pack 1): keyword-bucket routing.
   // Run synchronously alongside risk + anchor scans so the UI can show
@@ -413,10 +420,15 @@ export async function POST(req: Request) {
       // alpha v1 prompt body itself, but appending an additional system
       // message is explicitly the sanctioned injection mechanism per
       // Pack §2 / design doc §"Injection point".
-      const messages = factSystemMessage
+      const injectedSystemMessages = [
+        factSystemMessage,
+        routeGatePrompt,
+      ].filter((message): message is string => Boolean(message))
+
+      const messages = injectedSystemMessages.length > 0
         ? [
             ...baseMessages.slice(0, -1), // everything except the trailing user message
-            { role: 'system' as const, content: factSystemMessage },
+            ...injectedSystemMessages.map(content => ({ role: 'system' as const, content })),
             { role: 'system' as const, content: CONSULTATION_FINAL_OUTPUT_GUARD },
             baseMessages[baseMessages.length - 1], // re-append user message LAST
           ]
@@ -470,6 +482,7 @@ export async function POST(req: Request) {
         // 6. Read DS SSE stream + relay
         const reader = dsRes.body.pipeThrough(new TextDecoderStream()).getReader()
         let dsBuf = ''
+        let finishReason: string | null = null
 
         try {
           while (!closed && !hardTimedOut) {
@@ -486,9 +499,16 @@ export async function POST(req: Request) {
               if (payload === '[DONE]') break
               try {
                 const obj = JSON.parse(payload) as {
-                  choices?: Array<{ delta?: { content?: string } }>
+                  choices?: Array<{
+                    delta?: { content?: string }
+                    finish_reason?: string | null
+                  }>
                 }
-                const delta = obj.choices?.[0]?.delta?.content
+                const choice = obj.choices?.[0]
+                if (typeof choice?.finish_reason === 'string') {
+                  finishReason = choice.finish_reason
+                }
+                const delta = choice?.delta?.content
                 if (typeof delta === 'string' && delta.length > 0) {
                   // First-token telemetry
                   if (!firstTokenSeen) {
@@ -544,6 +564,61 @@ export async function POST(req: Request) {
             emit({ event: 'answer_chunk', ts: Date.now(), chunk: tail })
             // No DB write here either — completeAiConsultation below writes
             // finalAnswerText with the full totalText (incl. tail).
+          }
+          if (finishReason === 'length') {
+            const hasPartial = totalText.trim().length > 0
+            emit({
+              event: 'timeout',
+              ts: Date.now(),
+              partial_answer_saved: hasPartial,
+              fallback_text: CONSULTATION_TIMEOUT_FALLBACK_TEXT,
+              completion_status: hasPartial ? 'partial' : 'timeout',
+            })
+            try {
+              await failAiConsultation({
+                id: consultation.id,
+                status: hasPartial ? 'partial' : 'timeout',
+                reason: hasPartial ? 'deepseek_length_with_partial' : 'deepseek_length_no_partial',
+                partialText: hasPartial ? totalText : null,
+                factCardIds,
+                factCardAudit,
+              })
+            } catch (err) {
+              console.warn('[consultation/stream] persist on length finish failed', err)
+            }
+            close()
+            return
+          }
+          const guardrailFindings = validateAnswer({
+            question,
+            answer: totalText,
+            routeGateMatches,
+          })
+          const terminalGuardrailFindings = selectTerminalGuardrailFindings(guardrailFindings, {
+            routeGateMatches,
+          })
+          if (terminalGuardrailFindings.length > 0) {
+            emit({
+              event: 'timeout',
+              ts: Date.now(),
+              partial_answer_saved: true,
+              fallback_text: CONSULTATION_TIMEOUT_FALLBACK_TEXT,
+              completion_status: 'partial',
+            })
+            try {
+              await failAiConsultation({
+                id: consultation.id,
+                status: 'partial',
+                reason: `guardrail_incomplete_answer:${terminalGuardrailFindings.map(f => f.id).join(',').slice(0, 180)}`,
+                partialText: totalText,
+                factCardIds,
+                factCardAudit,
+              })
+            } catch (err) {
+              console.warn('[consultation/stream] persist on incomplete answer failed', err)
+            }
+            close()
+            return
           }
           if (totalText.trim().length === 0) {
             emit({

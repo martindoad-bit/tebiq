@@ -1,0 +1,66 @@
+[
+  {
+    "id": "TEBIQ-0.8-GR5-RUS-001",
+    "profile": "技人国持有者，被公司临时安排到工厂现场包装出货。",
+    "scenario": "guardrail_gijinkoku_work_scope",
+    "risk_hint": ["company_assignment_does_not_expand_status", "manual_work_scope"],
+    "question": "我是技人国签证，公司最近让我去工厂现场帮忙包装和出货，说只是临时支援不会有事。这个算不算跟我的签证内容不一样？",
+    "expected_route_gate_ids": ["gijinkoku-work-scope-not-any-job"]
+  },
+  {
+    "id": "TEBIQ-0.8-GR5-RUS-002",
+    "profile": "人文签贸易公司员工，被老板安排周末到便利店收银。",
+    "scenario": "guardrail_gijinkoku_work_scope",
+    "risk_hint": ["retail_cashier_scope", "same_employer_not_enough"],
+    "question": "我拿的是人文签，在贸易公司上班。老板说店里缺人，让我周末去便利店收银，工资还是公司发，这样可以吗？",
+    "expected_route_gate_ids": ["gijinkoku-work-scope-not-any-job"]
+  },
+  {
+    "id": "TEBIQ-0.8-GR5-RUS-003",
+    "profile": "技人国持有者准备和朋友开小公司，想先当代表取締役。",
+    "scenario": "guardrail_gijinkoku_startup_management",
+    "risk_hint": ["representative_director_boundary", "business_manager_change_first"],
+    "question": "我现在是技人国，想和朋友一起开个小会社。我可以先当代表取締役吗？还是一定要先换经营管理签？",
+    "expected_route_gate_ids": ["gijinkoku-startup-management-change-first"]
+  },
+  {
+    "id": "TEBIQ-0.8-GR5-RUS-004",
+    "profile": "人文签仍有效，想一边继续就业一边设立法人接单。",
+    "scenario": "guardrail_gijinkoku_startup_management",
+    "risk_hint": ["simultaneous_employment_and_own_business", "management_activity_boundary"],
+    "question": "人文签还剩一年，我准备自己创业，但前期公司还没有收入。能不能一边继续在原公司上班，一边设立法人接单？",
+    "expected_route_gate_ids": ["gijinkoku-startup-management-change-first"]
+  },
+  {
+    "id": "TEBIQ-0.8-GR5-RUS-005",
+    "profile": "海外申请人，CoE 已下但签证预约可能超过三个月。",
+    "scenario": "guardrail_coe_validity",
+    "risk_hint": ["coe_three_month_validity", "expired_coe_not_usable"],
+    "question": "我的 COE 下来了，但是国内签证预约排得很晚，可能超过3个月。这个在留資格認定証明書过期了还能用吗？",
+    "expected_route_gate_ids": ["coe-not-entry-guarantee-three-month"]
+  },
+  {
+    "id": "TEBIQ-0.8-GR5-RUS-006",
+    "profile": "海外就业入境，已取得 CoE，误以为入国已保证。",
+    "scenario": "guardrail_coe_entry_not_guaranteed",
+    "risk_hint": ["coe_not_landing_guarantee"],
+    "question": "公司帮我拿到 COE 了，是不是代表日本那边已经批准入境了？我去大使馆贴签和到机场入国还会被拒吗？",
+    "expected_route_gate_ids": ["coe-not-entry-guarantee-three-month"]
+  },
+  {
+    "id": "TEBIQ-0.8-GR5-RUS-007",
+    "profile": "在留期限还有四个月，但因公司出差担心来不及更新。",
+    "scenario": "guardrail_renewal_filing_window",
+    "risk_hint": ["three_month_window", "too_early_question"],
+    "question": "我的在留期限还有4个月，能不能现在就去更新？还是一定要等到3个月内？公司出差很多，我怕后面来不及。",
+    "expected_route_gate_ids": ["renewal-filing-window-not-after-expiry"]
+  },
+  {
+    "id": "TEBIQ-0.8-GR5-RUS-008",
+    "profile": "在留期限明天到期，材料未准备，误以为过期后提交也有特例期间。",
+    "scenario": "guardrail_renewal_after_expiry_special_period_myth",
+    "risk_hint": ["special_period_requires_pre_expiry_filing"],
+    "question": "在留卡明天到期，我今天才发现还没准备材料。如果过期后马上去入管申请，是不是也会有特例期間？",
+    "expected_route_gate_ids": ["renewal-filing-window-not-after-expiry"]
+  }
+]

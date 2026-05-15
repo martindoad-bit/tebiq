@@ -54,7 +54,9 @@ import {
 } from '@/lib/answer/prompt/consultation-alpha-v1'
 import { anchorsToPromptContext, matchAnchors } from '@/lib/consultation/fact-anchors'
 import { createForbiddenFilter } from '@/lib/consultation/forbidden-phrases'
+import { selectTerminalGuardrailFindings, validateAnswer } from '@/lib/consultation/guardrail-validator'
 import { detectRiskKeywords } from '@/lib/consultation/risk-keywords'
+import { matchRouteGates, routeGatesToPromptContext } from '@/lib/consultation/route-gates'
 import {
   CONSULTATION_TIMEOUT_FALLBACK_TEXT,
   CONSULTATION_TIMING,
@@ -185,6 +187,8 @@ export async function POST(req: Request): Promise<Response> {
   // still inherit the parent's keyword surface.
   const priorSummary = await resolvePriorSummary(parent, root)
   const matcherInput = composeMatcherInput(priorSummary, userAddition, root.userQuestionText)
+  const routeGateMatches = matchRouteGates(matcherInput)
+  const routeGatePrompt = routeGatesToPromptContext(routeGateMatches)
   const factLayerEnabled = process.env.FACT_LAYER_ENABLED === 'true'
   const factMatchesPromise: Promise<FactCardMatch[]> = factLayerEnabled
     ? matchFactCards(matcherInput).catch(err => {
@@ -374,6 +378,9 @@ export async function POST(req: Request): Promise<Response> {
       if (factSystemMessage) {
         messages.push({ role: 'system', content: factSystemMessage })
       }
+      if (routeGatePrompt) {
+        messages.push({ role: 'system', content: routeGatePrompt })
+      }
       if (summaryMsg) {
         messages.push(summaryMsg)
       }
@@ -429,6 +436,7 @@ export async function POST(req: Request): Promise<Response> {
         // 6. Read DS SSE stream + relay
         const reader = dsRes.body.pipeThrough(new TextDecoderStream()).getReader()
         let dsBuf = ''
+        let finishReason: string | null = null
         try {
           while (!closed && !hardTimedOut) {
             const { value, done } = await reader.read()
@@ -443,9 +451,18 @@ export async function POST(req: Request): Promise<Response> {
               if (payload === '[DONE]') {
                 continue
               }
-              let obj: { choices?: Array<{ delta?: { content?: unknown } }> }
+              let obj: {
+                choices?: Array<{
+                  delta?: { content?: unknown }
+                  finish_reason?: string | null
+                }>
+              }
               try { obj = JSON.parse(payload) } catch { continue }
-              const delta = obj.choices?.[0]?.delta?.content
+              const choice = obj.choices?.[0]
+              if (typeof choice?.finish_reason === 'string') {
+                finishReason = choice.finish_reason
+              }
+              const delta = choice?.delta?.content
               if (typeof delta === 'string' && delta.length > 0) {
                 if (!firstTokenSeen) {
                   firstTokenSeen = true
@@ -481,6 +498,61 @@ export async function POST(req: Request): Promise<Response> {
           if (trailing.length > 0) {
             totalText += trailing
             emit({ event: 'answer_chunk', ts: Date.now(), chunk: trailing })
+          }
+          if (finishReason === 'length') {
+            const hasPartial = totalText.trim().length > 0
+            emit({
+              event: 'timeout',
+              ts: Date.now(),
+              partial_answer_saved: hasPartial,
+              fallback_text: CONSULTATION_TIMEOUT_FALLBACK_TEXT,
+              completion_status: hasPartial ? 'partial' : 'timeout',
+            })
+            try {
+              await failAiConsultation({
+                id: consultation.id,
+                status: hasPartial ? 'partial' : 'timeout',
+                reason: hasPartial ? 'deepseek_length_with_partial' : 'deepseek_length_no_partial',
+                partialText: hasPartial ? totalText : null,
+                factCardIds,
+                factCardAudit,
+              })
+            } catch (err) {
+              console.warn('[consultation/follow-up] persist on length finish failed', err)
+            }
+            close()
+            return
+          }
+          const guardrailFindings = validateAnswer({
+            question: matcherInput,
+            answer: totalText,
+            routeGateMatches,
+          })
+          const terminalGuardrailFindings = selectTerminalGuardrailFindings(guardrailFindings, {
+            routeGateMatches,
+          })
+          if (terminalGuardrailFindings.length > 0) {
+            emit({
+              event: 'timeout',
+              ts: Date.now(),
+              partial_answer_saved: true,
+              fallback_text: CONSULTATION_TIMEOUT_FALLBACK_TEXT,
+              completion_status: 'partial',
+            })
+            try {
+              await failAiConsultation({
+                id: consultation.id,
+                status: 'partial',
+                reason: `guardrail_incomplete_answer:${terminalGuardrailFindings.map(f => f.id).join(',').slice(0, 180)}`,
+                partialText: totalText,
+                factCardIds,
+                factCardAudit,
+              })
+            } catch (err) {
+              console.warn('[consultation/follow-up] persist on guardrail findings failed', err)
+            }
+            close()
+            return
           }
           if (totalText.trim().length === 0) {
             emit({

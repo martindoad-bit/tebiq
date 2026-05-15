@@ -1,0 +1,88 @@
+[
+  {
+    "id": "TEBIQ-0.8-GR-RUS-001",
+    "profile": "中国籍留学生，语言学校在读，便利店和居酒屋两个アルバイト",
+    "question": "我留学签有資格外活動許可，现在便利店一周18小时，居酒屋一周14小时。店长说分开算没关系，这样真的可以吗？",
+    "followup": "如果有一周临时替班超过了28小时，但是下周少上，可以平均吗？",
+    "scenario": "留学資格外活動 28小时 / 多个兼职合算",
+    "risk_hint": ["留学", "資格外活動許可", "28小时", "多个兼职", "不法就労"],
+    "expected_route_gate_ids": ["student-shikakugai-28h-long-vacation-limit"]
+  },
+  {
+    "id": "TEBIQ-0.8-GR-RUS-002",
+    "profile": "中国籍大学生，春假期间想多打工",
+    "question": "学校春休み的时候，留学生是不是每天可以打8小时？我现在有两个兼职，加起来一天8小时以内就行，还是每个店都能8小时？",
+    "scenario": "留学長期休假 8小时 / 多个兼职",
+    "risk_hint": ["留学", "長期休業期間", "1日8小时", "资格外活动", "兼职合算"],
+    "expected_route_gate_ids": ["student-shikakugai-28h-long-vacation-limit"]
+  },
+  {
+    "id": "TEBIQ-0.8-GR-RUS-003",
+    "profile": "越南籍专门学校学生，朋友介绍夜店工作",
+    "question": "我是留学签，朋友介绍我去ガールズバー做ホール，说不是陪酒只是端酒收杯子，可以用資格外活動去做吗？",
+    "followup": "工资是现金手渡し，会不会查不到？我主要担心下次更新。",
+    "scenario": "留学資格外活動 / 风俗行业边界",
+    "risk_hint": ["留学", "資格外活動", "風俗営業", "ガールズバー", "更新风险"],
+    "expected_route_gate_ids": ["student-shikakugai-28h-long-vacation-limit"]
+  },
+  {
+    "id": "TEBIQ-0.8-GR-RUS-004",
+    "profile": "中国籍会社員，技人国签，刚搬家到同一区不同地址",
+    "question": "我搬家了，住民票已经在区役所改了。在留カード背面的地址是不是也要改？还是住民票改完就自动同步给入管了？",
+    "scenario": "搬家后住民票 / 在留卡地址",
+    "risk_hint": ["搬家", "住民票", "在留カード", "市役所", "住所変更"],
+    "expected_route_gate_ids": ["address-change-card-window-dual-duty"]
+  },
+  {
+    "id": "TEBIQ-0.8-GR-RUS-005",
+    "profile": "中国籍经营管理签，个人住所和公司地址都变了",
+    "question": "我最近搬家，个人住址变了，公司办公室也搬了。个人的在留カード地址、住民票、还有入管的会社地址届出，是不是同一个手续？我有点分不清。",
+    "followup": "如果先改了住民票，但公司那边还没登記，会不会影响经管续签？",
+    "scenario": "个人搬家 vs 公司地址变更 / 入管届出混淆",
+    "risk_hint": ["経営管理", "住民票", "在留カード", "入管届出", "法人住所"],
+    "expected_route_gate_ids": ["address-change-card-window-dual-duty"]
+  },
+  {
+    "id": "TEBIQ-0.8-GR-RUS-006",
+    "profile": "中国籍永住者，计划回国照顾父母一年半",
+    "question": "我是永住者，想回中国照顾家里人大概一年半。机场填みなし再入国就可以吗？还是永住者长期回国也有1年的限制？",
+    "scenario": "みなし再入国 1年上限 / 永住者长期回国",
+    "risk_hint": ["永住者", "みなし再入国", "1年", "再入国許可", "长期回国"],
+    "expected_route_gate_ids": ["minashi-reentry-one-year-limit"]
+  },
+  {
+    "id": "TEBIQ-0.8-GR-RUS-007",
+    "profile": "中国籍父母短期滞在来日，想中途回国再回来",
+    "question": "我爸妈拿短期滞在来日本探亲90天，中间想回国两周再回来。机场那个みなし再入国他们也能用吗？还是短期滞在不适用？",
+    "scenario": "短期滞在不适用みなし再入国",
+    "risk_hint": ["短期滞在", "みなし再入国", "探亲", "再入国", "90天"],
+    "expected_route_gate_ids": ["minashi-reentry-one-year-limit"]
+  },
+  {
+    "id": "TEBIQ-0.8-GR-RUS-008",
+    "profile": "中国籍永住者，在留卡快到期",
+    "question": "我是永住，手机提醒我在留カード还有两个月到期。永住不是没有期限吗？这个到期是签证到期，还是只是卡要更新？",
+    "followup": "如果卡过期了，是不是永住资格也没了？",
+    "scenario": "在留卡有效期 vs 在留资格无期限",
+    "risk_hint": ["永住者", "在留カード有效期", "在留資格", "無期限", "更新"],
+    "expected_route_gate_ids": ["residence-card-expiry-vs-status-period"]
+  },
+  {
+    "id": "TEBIQ-0.8-GR-RUS-009",
+    "profile": "中国籍前留学生，已经超期滞在，网上看到在留特別許可",
+    "question": "我签证过期几个月了，看到有人说可以申请在留特別許可留下来。这个是像更新签证一样去入管递申请吗？需要准备哪些材料？",
+    "followup": "我现在还在打工，如果去入管会不会当场被抓？",
+    "scenario": "在留特別許可不是普通申请路线",
+    "risk_hint": ["不法滞在", "在留特別許可", "退去強制", "普通申请误解", "高风险"],
+    "expected_route_gate_ids": ["tokubetsu-kyoka-not-normal-route"]
+  },
+  {
+    "id": "TEBIQ-0.8-GR-RUS-010",
+    "profile": "中国籍特定活動持有人，指定書内容不清楚，想换工作",
+    "question": "我的在留资格是特定活動，朋友说特定活動很自由，什么工作都能做。我想从现在的会社换到餐饮店正社员，可以直接换吗？",
+    "followup": "在留カード上只写特定活動，没有写工作限制，是不是看指定書才知道？",
+    "scenario": "特定活動由指定書限定 / 不是万能工作资格",
+    "risk_hint": ["特定活動", "指定書", "就労制限", "换工作", "在留カード"],
+    "expected_route_gate_ids": ["tokutei-katsudo-designation-scope-boundary"]
+  }
+]

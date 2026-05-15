@@ -1,0 +1,98 @@
+[
+  {
+    "id": "TEBIQ-0.8-GR2-RUS-001",
+    "profile": "特定技能1号持有者，听公司说做满几年自然能升2号。",
+    "scenario": "guardrail_ssw1_ssw2_boundary",
+    "risk_hint": ["ssw_auto_transition"],
+    "question": "我现在是特定技能1号，会社说做满几年自然就能变2号，这个是真的自动升级吗？我需要自己准备什么吗？",
+    "expected_route_gate_ids": ["ssw1-ssw2-boundary"]
+  },
+  {
+    "id": "TEBIQ-0.8-GR2-RUS-002",
+    "profile": "配偶在日本持特定技能1号介护，用户想办家族滞在。",
+    "scenario": "guardrail_ssw1_ssw2_boundary",
+    "risk_hint": ["ssw1_family_accompaniment"],
+    "question": "我老公是特定技能1号在介护，我想办家族滞在过去陪他。网上有人说特定技能也可以带家属，到底是不是看行业？",
+    "expected_route_gate_ids": ["ssw1-ssw2-boundary"]
+  },
+  {
+    "id": "TEBIQ-0.8-GR2-RUS-003",
+    "profile": "特定技能用户考虑2号后跨行业换工作。",
+    "scenario": "guardrail_ssw1_ssw2_boundary",
+    "risk_hint": ["ssw2_sector_scope"],
+    "question": "特定技能2号是不是拿到了以后，什么行业都能换？比如我现在食品工厂，之后想去酒店或建筑可以吗？",
+    "expected_route_gate_ids": ["ssw1-ssw2-boundary"]
+  },
+  {
+    "id": "TEBIQ-0.8-GR2-RUS-004",
+    "profile": "高度人才自算70分，想知道是否能马上永住。",
+    "scenario": "guardrail_hsp_points_pr_shortcut",
+    "risk_hint": ["hsp_70_pr_immediate"],
+    "question": "我用高度人才算分大概70分，是不是到70分就可以马上申请永住？还是要先拿高度専門職签证一段时间？",
+    "expected_route_gate_ids": ["hsp-points-income-and-pr-shortcut-boundary"]
+  },
+  {
+    "id": "TEBIQ-0.8-GR2-RUS-005",
+    "profile": "高度人才申请人，工资单里有住宅手当、交通费、残业代。",
+    "scenario": "guardrail_hsp_points_income_components",
+    "risk_hint": ["hsp_excluded_income_components"],
+    "question": "算高度人才年收的时候，公司给我的住宅手当、交通费、残業代都能算进去吗？源泉徴収票上看起来都在收入里面。",
+    "expected_route_gate_ids": ["hsp-points-income-and-pr-shortcut-boundary"]
+  },
+  {
+    "id": "TEBIQ-0.8-GR2-RUS-006",
+    "profile": "高度専門職持有者，第一次申请时80分，今年收入下降。",
+    "scenario": "guardrail_hsp_points_renewal",
+    "risk_hint": ["hsp_points_maintenance"],
+    "question": "我第一次申请高度専門職时有80分，但今年收入降了，更新的时候还要维持80分吗？如果不够会不会更新不了？",
+    "expected_route_gate_ids": ["hsp-points-income-and-pr-shortcut-boundary"]
+  },
+  {
+    "id": "TEBIQ-0.8-GR2-RUS-007",
+    "profile": "大学毕业后持内定者特定活动，公司催提前入社。",
+    "scenario": "guardrail_tokutei_katsudo_naitei",
+    "risk_hint": ["naitei_work_before_change"],
+    "question": "我拿到日本公司的内定了，公司说希望我下个月先来上班，签证还在办。内定者的特定活動可以先工作吗？",
+    "expected_route_gate_ids": ["tokutei-katsudo-naitei-kyushoku-work-boundary"]
+  },
+  {
+    "id": "TEBIQ-0.8-GR2-RUS-008",
+    "profile": "毕业后求职者特定活动已续过一次，仍未找到工作。",
+    "scenario": "guardrail_tokutei_katsudo_kyushoku",
+    "risk_hint": ["kyushoku_indefinite_extension"],
+    "question": "我毕业后现在是就職活動的特定活動，已经续过一次了。如果还没找到工作，是不是可以一直续到找到为止？",
+    "expected_route_gate_ids": ["tokutei-katsudo-naitei-kyushoku-work-boundary"]
+  },
+  {
+    "id": "TEBIQ-0.8-GR2-RUS-009",
+    "profile": "现役技能实习生，看到2027制度改革新闻。",
+    "scenario": "guardrail_titp_ikusei_transition",
+    "risk_hint": ["titp_auto_switch_myth"],
+    "question": "我是技能実習生，看到新闻说2027以后会变成育成就労。那我现在的签证到时候会自动切换吗？会社没有解释清楚。",
+    "expected_route_gate_ids": ["titp-ikusei-shuro-transition-boundary"]
+  },
+  {
+    "id": "TEBIQ-0.8-GR2-RUS-010",
+    "profile": "准备来日或换路径，想跳过技能实习直接走新制度。",
+    "scenario": "guardrail_titp_ikusei_transition",
+    "risk_hint": ["ikusei_current_availability"],
+    "question": "现在还能不能直接申请育成就労？我不想走技能実習，听说新制度比较好，2027前可以先转过去吗？",
+    "expected_route_gate_ids": ["titp-ikusei-shuro-transition-boundary"]
+  },
+  {
+    "id": "TEBIQ-0.8-GR2-RUS-011",
+    "profile": "高度専門職1号将满3年，混淆HSP2和永住。",
+    "scenario": "guardrail_hsp2_boundary",
+    "risk_hint": ["hsp2_auto_or_pr_equivalent"],
+    "question": "我现在是高度専門職1号，已经快3年了。是不是时间到了会自动变高度専門職2号？2号是不是就跟永住差不多不用管了？",
+    "expected_route_gate_ids": ["hsp2-not-automatic-not-pr"]
+  },
+  {
+    "id": "TEBIQ-0.8-GR2-RUS-012",
+    "profile": "委托行政书士做申請取次，担心材料真实性责任。",
+    "scenario": "guardrail_torikiji_responsibility",
+    "risk_hint": ["torikiji_responsibility_transfer"],
+    "question": "我找行政書士做申請取次，如果他帮我写错了，或者材料里有不真实的地方，之后入管发现了是不是算代办的责任，不算我的？",
+    "expected_route_gate_ids": ["torikiji-applicant-responsibility-boundary"]
+  }
+]

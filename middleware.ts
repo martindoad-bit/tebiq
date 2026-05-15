@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server'
-
 import { isAdminKeyAccepted } from '@/lib/admin/access-control'
 
 export function middleware(req: NextRequest) {

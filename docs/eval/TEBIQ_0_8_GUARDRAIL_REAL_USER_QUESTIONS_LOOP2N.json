@@ -1,0 +1,82 @@
+[
+  {
+    "id": "TEBIQ-0.8-GR10-RUS-001",
+    "profile": "更新申请已提交，旧在留期限快到，用户计划短期回国。",
+    "scenario": "特例期间计划临时回国",
+    "risk_hint": ["special_period_departure", "reentry_misunderstanding"],
+    "question": "我已经递交了在留期间更新申请，现在旧在留卡快到期了，卡背面有申请中的章。这个特例期间里我想回国两周，可以正常出日本再回来吗？",
+    "expected_route_gate_ids": ["special-period-departure-deepwater"]
+  },
+  {
+    "id": "TEBIQ-0.8-GR10-RUS-002",
+    "profile": "更新审查中，用户在结果通知前有私人行程。",
+    "scenario": "结果通知前出境",
+    "risk_hint": ["special_period_departure", "pending_result"],
+    "question": "我更新签证还在审查中，入管还没通知结果，但我下个月必须回国参加婚礼。如果我在结果出来前离开日本，会不会影响这次更新申请？",
+    "expected_route_gate_ids": ["special-period-departure-deepwater"]
+  },
+  {
+    "id": "TEBIQ-0.8-GR10-RUS-003",
+    "profile": "用户已经离开日本，才意识到原在留期限已过。",
+    "scenario": "已经出国后担心再入国",
+    "risk_hint": ["special_period_departure", "already_departed"],
+    "question": "我人在国内了，出来的时候在留卡已经过了原来的期限，但是之前在日本已经提交了更新申请。现在突然担心还能不能按原计划回日本，这种情况怎么办？",
+    "expected_route_gate_ids": ["special-period-departure-deepwater"]
+  },
+  {
+    "id": "TEBIQ-0.8-GR10-RUS-004",
+    "profile": "用户把在留卡、みなし再入国和特例期间混在一起理解。",
+    "scenario": "みなし再入国误解",
+    "risk_hint": ["special_period_departure", "minashi_reentry_myth"],
+    "question": "我以为只要有在留卡就可以走みなし再入国，所以更新申请中也直接回国了。可是我的在留期限已经过了，只剩特例期间，这样还能用みなし再入国回来吗？",
+    "expected_route_gate_ids": ["special-period-departure-deepwater"]
+  },
+  {
+    "id": "TEBIQ-0.8-GR10-RUS-005",
+    "profile": "变更申请审查中，用户因家庭紧急情况想先回国。",
+    "scenario": "家庭紧急回国",
+    "risk_hint": ["special_period_departure", "urgent_family"],
+    "question": "我妈妈突然生病，我现在正在等变更签证结果，原来的在留期限下周就到。家里情况很急，我能不能先回国几天再回来拿结果？",
+    "expected_route_gate_ids": ["special-period-departure-deepwater"]
+  },
+  {
+    "id": "TEBIQ-0.8-GR10-RUS-006",
+    "profile": "工作签更新已提交，公司安排中国短期出差。",
+    "scenario": "公司催回国出差",
+    "risk_hint": ["special_period_departure", "business_trip_pressure"],
+    "question": "我工作签更新已经提交了，公司突然安排我回中国出差，说只是几天没关系。但我现在是在特例期间，这种短期出差回来会不会卡在机场？",
+    "expected_route_gate_ids": ["special-period-departure-deepwater"]
+  },
+  {
+    "id": "TEBIQ-0.8-GR10-RUS-007",
+    "profile": "变更申请中，用户被学校要求回国办理毕业相关材料。",
+    "scenario": "学校催回国办理手续",
+    "risk_hint": ["special_period_departure", "school_pressure"],
+    "question": "我在日本申请变更在留资格中，学校那边催我回国办毕业材料，说必须本人去。可是我还没拿到新的在留卡，旧卡期限也快过了，我可以先回去吗？",
+    "expected_route_gate_ids": ["special-period-departure-deepwater"]
+  },
+  {
+    "id": "TEBIQ-0.8-GR10-RUS-008",
+    "profile": "用户更新申请中已回国，后来日本住处收到入管结果通知。",
+    "scenario": "通知到了但人在国外",
+    "risk_hint": ["special_period_departure", "result_notice_while_abroad"],
+    "question": "我更新申请中先回国了，后来朋友帮我看信箱，说入管结果通知到了。可是我现在还在中国，必须本人回日本去取新卡吗？如果回不去会不会过期？",
+    "expected_route_gate_ids": ["special-period-departure-deepwater", "result-postcard-not-permission"]
+  },
+  {
+    "id": "TEBIQ-0.8-GR10-RUS-009",
+    "profile": "用户用非常口语的方式描述续签中和旧签证到期后的短期离境。",
+    "scenario": "续签中旧签证到期后回老家",
+    "risk_hint": ["special_period_departure", "colloquial_wording"],
+    "question": "我续签中，旧签证到期后想回老家几天，回来入境日本会不会被机场拦？",
+    "expected_route_gate_ids": ["special-period-departure-deepwater"]
+  },
+  {
+    "id": "TEBIQ-0.8-GR10-RUS-010",
+    "profile": "用户把卡背面的申请中章理解成再入国安全凭据。",
+    "scenario": "申请中章和再入国误解",
+    "risk_hint": ["special_period_departure", "application_stamp_myth"],
+    "question": "我申请更新中，卡背面有申请中章，能不能先出日本再回来？",
+    "expected_route_gate_ids": ["special-period-departure-deepwater"]
+  }
+]

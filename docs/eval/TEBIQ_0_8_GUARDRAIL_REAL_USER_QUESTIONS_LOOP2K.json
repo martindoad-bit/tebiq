@@ -1,0 +1,66 @@
+[
+  {
+    "id": "TEBIQ-0.8-GR7-RUS-001",
+    "profile": "短期滞在で来日中に日本公司面试，企业提出先试工。",
+    "scenario": "guardrail_short_stay_no_work_no_shikakugai",
+    "risk_hint": ["trial_work", "short_stay_no_work"],
+    "question": "我现在拿短期滞在来日本面试，公司说可以先试工三天，合适的话再办工作签。试工不签合同、只给交通费的话可以吗？",
+    "expected_route_gate_ids": ["short-stay-no-work-no-shikakugai"]
+  },
+  {
+    "id": "TEBIQ-0.8-GR7-RUS-002",
+    "profile": "旅游签在日本期间，想给日本客户远程做网页项目，报酬打到中国账户。",
+    "scenario": "guardrail_short_stay_paid_project",
+    "risk_hint": ["short_stay_paid_project", "japan_client"],
+    "question": "我人在日本旅游签期间，国内公司介绍了一个日本客户的网页项目，钱打到我国内账户。人在日本做这个有偿项目，会不会算在日本工作？",
+    "expected_route_gate_ids": ["short-stay-no-work-no-shikakugai"]
+  },
+  {
+    "id": "TEBIQ-0.8-GR7-RUS-003",
+    "profile": "技人国 IT 公司员工，想下班后接小额自由职业单。",
+    "scenario": "guardrail_work_status_side_job_scope",
+    "risk_hint": ["gijinkoku_freelance", "small_income_myth"],
+    "question": "我是技人国，平时在IT公司上班。晚上想接一点フリーランス翻译或开发小单子，金额不大，也需要跟入管说吗？",
+    "expected_route_gate_ids": ["work-status-side-job-scope-boundary"]
+  },
+  {
+    "id": "TEBIQ-0.8-GR7-RUS-004",
+    "profile": "高度専門職持有人，想做 YouTube 和线上咨询获得广告收入/打赏。",
+    "scenario": "guardrail_work_status_side_job_scope",
+    "risk_hint": ["hsp_side_job", "online_income"],
+    "question": "我拿高度専門職，在本职以外想做YouTube和线上咨询，有广告收入和打赏。高才是不是比较自由，可以直接做副业？",
+    "expected_route_gate_ids": ["work-status-side-job-scope-boundary"]
+  },
+  {
+    "id": "TEBIQ-0.8-GR7-RUS-005",
+    "profile": "特定技能1号食品工厂员工，想转去同领域另一家公司。",
+    "scenario": "guardrail_ssw_job_change_not_free",
+    "risk_hint": ["ssw_same_field_employer_change", "procedure_needed"],
+    "question": "我是特定技能1号，在食品工厂。想换到另一家食品公司，只要出入管に届出就可以了吗？还是要等什么许可下来？",
+    "expected_route_gate_ids": ["ssw-job-change-not-free"]
+  },
+  {
+    "id": "TEBIQ-0.8-GR7-RUS-006",
+    "profile": "特定技能外食领域，朋友介绍介护岗位，目标公司建议先入职。",
+    "scenario": "guardrail_ssw_cross_sector_change",
+    "risk_hint": ["ssw_cross_sector", "start_before_procedure"],
+    "question": "我现在特定技能是外食，朋友介绍我去介护。都是特定技能的话，能不能直接换领域上班？公司说先入职再补手续。",
+    "expected_route_gate_ids": ["ssw-job-change-not-free"]
+  },
+  {
+    "id": "TEBIQ-0.8-GR7-RUS-007",
+    "profile": "在留更新不许可，用户误以为可行政不服申立并继续停留。",
+    "scenario": "guardrail_nonpermission_no_ordinary_appeal",
+    "risk_hint": ["appeal_myth", "post_denial_stay"],
+    "question": "在留更新不许可了，我能不能像别的行政手续一样申请審査請求或异议申立？提交之后是不是就还能继续合法待在日本？",
+    "expected_route_gate_ids": ["nonpermission-no-ordinary-appeal-no-grace"]
+  },
+  {
+    "id": "TEBIQ-0.8-GR7-RUS-008",
+    "profile": "永住不许可后，用户误以为可立即再申请并延续之前特例期间。",
+    "scenario": "guardrail_nonpermission_no_grace_period",
+    "risk_hint": ["post_denial_reapply", "special_period_myth"],
+    "question": "永住不许可通知收到了。是不是有一个宽限期可以马上再申请？如果马上重新递，之前的特例期間会继续算吗？",
+    "expected_route_gate_ids": ["nonpermission-no-ordinary-appeal-no-grace"]
+  }
+]
