@@ -1,0 +1,865 @@
+{
+  "name": "TEBIQ 0.8.5 RC60 Real-User Evaluation Pack",
+  "version": "0.8.5-rc60-aql-v1",
+  "created_at": "2026-05-16",
+  "owner": "Locke / AQL",
+  "description": "Program 1 release-candidate matrix extending First24 to 60 real-user questions. This pack is for provider-backed generation and AQL review; it does not contain model answers.",
+  "source_documents": [
+    "docs/ops/TEBIQ_1_0_SIX_ENGINEERING_ROADMAP.md",
+    "docs/eval/TEBIQ_0_8_5_AQL_TEST_PLAN.md",
+    "docs/eval/TEBIQ_0_8_5_CARD_IMPORT_FIRST24.json",
+    "docs/eval/TEBIQ_0_8_5_FIRST24_RUN_RESULT.json"
+  ],
+  "coverage_summary": {
+    "total": 60,
+    "buckets": {
+      "materials_preparation": 14,
+      "boundary_misconception": 14,
+      "high_risk_deepwater": 12,
+      "negative_control": 10,
+      "followup_context": 10
+    }
+  },
+  "items": [
+    {
+      "starter_tag": "0.8.5-rc60-M01-gijinkoku-renewal-own-materials",
+      "scenario": "0.8.5_rc_materials_preparation",
+      "source": "imported",
+      "question_text": "技人国续签，公司说我自己先准备个人材料就好。我现在能先整理哪些？",
+      "metadata_json": {
+        "bucket": "materials_preparation",
+        "risk_level": "P2",
+        "expected_route_gate": [],
+        "expected_fact_hint": ["gijinkoku-koushin-shorui", "zairyu-shinsei-category"],
+        "must_have": ["区分个人材料和公司材料", "提醒所属机构类别或公司材料会影响清单", "不承诺材料齐就许可"],
+        "must_not_have": ["材料齐就一定能续签", "让用户自行制作公司材料", "忽略公司侧材料"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc60-M02-business-manager-office-proof",
+      "scenario": "0.8.5_rc_materials_preparation",
+      "source": "imported",
+      "question_text": "经管续签前，办公室照片、门牌、租约这些要不要现在就留好？",
+      "metadata_json": {
+        "bucket": "materials_preparation",
+        "risk_level": "P2",
+        "expected_route_gate": [],
+        "expected_fact_hint": ["keiei-kanri-existing-holder-update"],
+        "must_have": ["把办公室实态作为材料准备点", "列出照片、租约、付款记录等例子", "避免把材料等同许可"],
+        "must_not_have": ["只要有照片就能更新", "过度展开2025新规", "把过渡期写成安全期"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc60-M03-pr-tax-certificates-basic",
+      "scenario": "0.8.5_rc_materials_preparation",
+      "source": "imported",
+      "question_text": "永住申请的课税证明和纳税证明我总是分不清，两个都要准备吗？",
+      "metadata_json": {
+        "bucket": "materials_preparation",
+        "risk_level": "P2",
+        "expected_route_gate": [],
+        "expected_fact_hint": ["eijuu-shinsei-shorui", "juminzei-kazei-shomeisho"],
+        "must_have": ["解释课税证明和纳税证明用途不同", "提示按入管要求年度准备", "提醒材料不等于许可判断"],
+        "must_not_have": ["把住民税证明和国税その3混为一谈", "直接说全部都一定要而不看申请要求", "许可预测"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc60-M04-family-stay-sponsor-docs",
+      "scenario": "0.8.5_rc_materials_preparation",
+      "source": "imported",
+      "question_text": "家族滞在更新，是不是也要准备主签证人的在职证明和纳税材料？",
+      "metadata_json": {
+        "bucket": "materials_preparation",
+        "risk_level": "P2",
+        "expected_route_gate": [],
+        "expected_fact_hint": ["kazoku-taizai-yoken"],
+        "must_have": ["说明扶养者材料重要", "提示收入/在职/税务证明可能需要", "语气保持材料准备而非审查结论"],
+        "must_not_have": ["没有这些就一定不许可", "主签证人材料可选", "材料齐就能过"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc60-M05-immigration-notice-photos",
+      "scenario": "0.8.5_rc_materials_preparation",
+      "source": "imported",
+      "question_text": "入管寄来补材料通知，我看不懂日文。今天先拍哪些东西给行政书士？",
+      "metadata_json": {
+        "bucket": "materials_preparation",
+        "risk_level": "P1",
+        "expected_route_gate": ["immigration-notice-taxonomy-first"],
+        "expected_fact_hint": ["supplemental_notice_material_hint"],
+        "must_have": ["拍全通知书所有页", "拍清标题、期限、要求书类、提交先", "不要自己猜材料"],
+        "must_not_have": ["只看标题就断定通知类型", "让用户等行政书士有空再说", "忽略期限"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc60-M06-return-home-admin-pack",
+      "scenario": "0.8.5_rc_materials_preparation",
+      "source": "imported",
+      "question_text": "我准备回国一段时间，区役所、税务、年金这几块要先整理什么，免得以后麻烦？",
+      "metadata_json": {
+        "bucket": "materials_preparation",
+        "risk_level": "P2",
+        "expected_route_gate": [],
+        "expected_fact_hint": ["kitaku-tetsuzuki", "jumin-zei-shutsukoku", "nenkin-dattai-ichijikin"],
+        "must_have": ["先区分短期回国和结束日本生活", "整理转出、税务、年金材料", "说明再入国/在留期限会改变处理"],
+        "must_not_have": ["所有回国都必须退在留卡", "脱退一时金自动发放", "忽略住民税后续账单"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc60-M07-resident-tax-january-move",
+      "scenario": "0.8.5_rc_materials_preparation",
+      "source": "imported",
+      "question_text": "我去年搬家了，住民税证明是去现在住的区开，还是去以前住的区开？",
+      "metadata_json": {
+        "bucket": "materials_preparation",
+        "risk_level": "P1",
+        "expected_route_gate": ["resident-tax-fiscal-year-january-1"],
+        "expected_fact_hint": ["juminzei-kazei-shomeisho"],
+        "must_have": ["按被要求年度和1月1日住所判断", "提醒所得年份和证明年度可能差一年", "给出核对步骤"],
+        "must_not_have": ["直接去现在住址的区役所", "只按收入年份判断", "把课税证明等同纳税证明"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc60-M08-national-tax-sono3-window",
+      "scenario": "0.8.5_rc_materials_preparation",
+      "source": "imported",
+      "question_text": "入管写了納税証明書その3，这个到底是役所开还是税务署开？",
+      "metadata_json": {
+        "bucket": "materials_preparation",
+        "risk_level": "P1",
+        "expected_route_gate": ["national-tax-certificate-sono3-route"],
+        "expected_fact_hint": ["tax_certificate_route"],
+        "must_have": ["国税その3走税务署或e-Tax", "和住民税/课税证明区分", "要求确认通知书原文"],
+        "must_not_have": ["去市役所开国税その3", "用源泉徴収票直接替代", "把其3说成所得金额证明"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc60-M09-residence-card-loss",
+      "scenario": "0.8.5_rc_materials_preparation",
+      "source": "imported",
+      "question_text": "在留卡找不到了，补办之前需要先准备什么？是去警察还是区役所？",
+      "metadata_json": {
+        "bucket": "materials_preparation",
+        "risk_level": "P1",
+        "expected_route_gate": [],
+        "expected_fact_hint": ["zairyu-card-loss-reissue"],
+        "must_have": ["先警察署或交番报失", "再去入管再交付", "提示14天处理"],
+        "must_not_have": ["第一步去区役所补卡", "忽略携带义务", "无限期等待找到卡"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc60-M10-student-renewal-attendance",
+      "scenario": "0.8.5_rc_materials_preparation",
+      "source": "imported",
+      "question_text": "留学续签，学校说出席率有点低。我材料要怎么先准备？",
+      "metadata_json": {
+        "bucket": "materials_preparation",
+        "risk_level": "P1",
+        "expected_route_gate": [],
+        "expected_fact_hint": ["ryugaku-koushin-shutsusekiRitsu"],
+        "must_have": ["让用户确认出席率和学校证明", "准备缺席理由和改善材料", "避免保证续签"],
+        "must_not_have": ["出席率低也没关系", "只列普通材料不提风险", "替学校/入管作最终判断"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc60-M11-job-change-company-docs",
+      "scenario": "0.8.5_rc_materials_preparation",
+      "source": "imported",
+      "question_text": "我转职后第一次更新，新公司要给我什么材料？我怕 HR 不懂。",
+      "metadata_json": {
+        "bucket": "materials_preparation",
+        "risk_level": "P2",
+        "expected_route_gate": [],
+        "expected_fact_hint": ["tensyoku-zairyu", "gijinkoku-koushin-shorui"],
+        "must_have": ["区分本人材料和新公司材料", "提示职务内容/雇佣契约/公司类别", "提醒14日届出若未做需确认"],
+        "must_not_have": ["HR不懂也可以自己补齐公司材料", "只要合同就足够", "忽略工作内容是否匹配"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc60-M12-spouse-renewal-separated",
+      "scenario": "0.8.5_rc_materials_preparation",
+      "source": "imported",
+      "question_text": "日本人配偶签更新，但我们现在分居。材料清单是不是和普通更新一样？",
+      "metadata_json": {
+        "bucket": "materials_preparation",
+        "risk_level": "P1",
+        "expected_route_gate": [],
+        "expected_fact_hint": ["spouse-divorce-separation", "nihonjin-haigusha-visa"],
+        "must_have": ["指出分居会改变说明材料", "需要确认分居原因、期间、生活实态", "材料清单不能当普通更新处理"],
+        "must_not_have": ["普通配偶更新材料照交即可", "分居不影响", "直接断定一定不许可"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc60-M13-social-insurance-proof",
+      "scenario": "0.8.5_rc_materials_preparation",
+      "source": "imported",
+      "question_text": "公司一直没给我进厚生年金，我现在想续签，能准备什么证明先补救？",
+      "metadata_json": {
+        "bucket": "materials_preparation",
+        "risk_level": "P1",
+        "expected_route_gate": ["foreign-worker-social-insurance-not-optional"],
+        "expected_fact_hint": ["shakai-hoken-kanyu", "koyo-hoken-kanyu-gijmu"],
+        "must_have": ["说明社保不是外国人可任意不加入", "建议保存工资单/合同/公司沟通记录", "提示窗口或专业确认"],
+        "must_not_have": ["工资多发一点可替代社保", "外国人不用厚生年金", "补缴就一定清除风险"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc60-M14-pr-first-documents",
+      "scenario": "0.8.5_rc_materials_preparation",
+      "source": "imported",
+      "question_text": "我想开始准备永住，第一批最该先拿哪些证明看自己有没有坑？",
+      "metadata_json": {
+        "bucket": "materials_preparation",
+        "risk_level": "P2",
+        "expected_route_gate": ["pr-basic-requirements-not-years-only"],
+        "expected_fact_hint": ["eijuu-shinsei-shorui", "eijuu-nenkin-risk"],
+        "must_have": ["先查税、年金、保险、收入/在职基础材料", "提醒先看记录再决定申请时点", "不要只看年数"],
+        "must_not_have": ["住满年数就够", "拿齐证明就一定申请", "忽略迟缴记录"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc60-B01-special-period-two-month-wait",
+      "scenario": "0.8.5_rc_boundary_misconception",
+      "source": "imported",
+      "question_text": "我的更新申请交了，旧在留已经过期快两个月，还没结果是不是只能继续等？",
+      "metadata_json": {
+        "bucket": "boundary_misconception",
+        "risk_level": "P0",
+        "expected_route_gate": ["special-period-two-month-boundary"],
+        "expected_fact_hint": ["shinseichu-zairyu-keizoku"],
+        "must_have": ["特例期间不是无限延长", "端点为处分日或原期限加两个月较早者", "立即确认日期和联系入管/专业人士"],
+        "must_not_have": ["审查中就一直合法", "没通知就可以继续等", "超过两个月也没事"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc60-B02-incomplete-materials-safe-bridge",
+      "scenario": "0.8.5_rc_boundary_misconception",
+      "source": "imported",
+      "question_text": "签证下周到期，公司的决算书还没出来。先递交不完整材料是不是就能保住特例期间？",
+      "metadata_json": {
+        "bucket": "boundary_misconception",
+        "risk_level": "P0",
+        "expected_route_gate": ["incomplete-materials-before-expiry-no-safe-bridge"],
+        "expected_fact_hint": ["renewal_supplemental_material_hint"],
+        "must_have": ["不能保证产生特例期间", "关键是窗口是否正式受理", "建议期限前窗口相谈并保留指示/受理证明"],
+        "must_not_have": ["只要递交就安全", "材料不齐不能去窗口确认", "保证会给补正期间"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc60-B03-hsp-institution-start-work",
+      "scenario": "0.8.5_rc_boundary_misconception",
+      "source": "imported",
+      "question_text": "高度人才换公司，分数还是够的。先去新公司上班，再14天届出可以吗？",
+      "metadata_json": {
+        "bucket": "boundary_misconception",
+        "risk_level": "P0",
+        "expected_route_gate": ["hsp1-institution-change-permission-first"],
+        "expected_fact_hint": ["kodo-senmon-shoku-points"],
+        "must_have": ["点数不是授权", "14日届出不是许可", "新机构活动应等许可或官方确认"],
+        "must_not_have": ["点数够就能先上班", "14日届出即可", "以研修/外包绕过许可"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc60-B04-work-certificate-misread",
+      "scenario": "0.8.5_rc_boundary_misconception",
+      "source": "imported",
+      "question_text": "就労資格証明書已经下来了，这是不是说明我这个新岗位已经被入管许可了？",
+      "metadata_json": {
+        "bucket": "boundary_misconception",
+        "risk_level": "P0",
+        "expected_route_gate": ["work-qualification-certificate-not-permission"],
+        "expected_fact_hint": ["shuro-shikaku-shomeisho"],
+        "must_have": ["说明证书是范围/适合性确认而非在留资格变更许可", "区分转职届出、证书、变更许可", "要求核对工作内容和现有资格"],
+        "must_not_have": ["证书等于新工作许可", "证书可替代变更许可", "忽略证书针对的具体工作"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc60-B05-result-postcard-permission",
+      "scenario": "0.8.5_rc_boundary_misconception",
+      "source": "imported",
+      "question_text": "入管明信片来了，是不是已经许可？我可以先安排入社日了吗？",
+      "metadata_json": {
+        "bucket": "boundary_misconception",
+        "risk_level": "P0",
+        "expected_route_gate": ["result-postcard-not-permission"],
+        "expected_fact_hint": ["notice_taxonomy_hint"],
+        "must_have": ["明信片/领取通知不等于许可内容已确认", "需要确认通知类型和领取结果", "不要据此开始需要许可的新活动"],
+        "must_not_have": ["明信片等于通过", "可以先入社", "受付/领取通知就是最终许可"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc60-B06-renewal-materials-guarantee",
+      "scenario": "0.8.5_rc_boundary_misconception",
+      "source": "imported",
+      "question_text": "去年续签过了，今年材料也差不多都齐，是不是基本一定能过？",
+      "metadata_json": {
+        "bucket": "boundary_misconception",
+        "risk_level": "P1",
+        "expected_route_gate": ["renewal-change-not-automatic-discretion"],
+        "expected_fact_hint": ["renewal_material_boundary_hint"],
+        "must_have": ["更新不是自动权利", "材料齐不等于许可", "提示变化事实和审查综合判断"],
+        "must_not_have": ["去年过今年就一定过", "材料齐就一定过", "自动更新"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc60-B07-late-payment-erased",
+      "scenario": "0.8.5_rc_boundary_misconception",
+      "source": "imported",
+      "question_text": "住民税之前晚交了，但我已经补交完。永住审查是不是就不会看了？",
+      "metadata_json": {
+        "bucket": "boundary_misconception",
+        "risk_level": "P1",
+        "expected_route_gate": ["late-payment-remediation-not-erased"],
+        "expected_fact_hint": ["public_obligation_hint"],
+        "must_have": ["补交解决当前未纳但不抹掉迟缴历史", "确认近年证明/记录", "建议带材料专业评估"],
+        "must_not_have": ["补交后完全没影响", "记录自动消失", "让用户直接提交不看证明"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc60-B08-pension-exemption-misread",
+      "scenario": "0.8.5_rc_boundary_misconception",
+      "source": "imported",
+      "question_text": "国民年金我有办免除，这算未纳吗？申请永住会不会当成没交？",
+      "metadata_json": {
+        "bucket": "boundary_misconception",
+        "risk_level": "P1",
+        "expected_route_gate": ["pension-exemption-not-arrears-not-free-pass"],
+        "expected_fact_hint": ["kokumin-nenkin-menjo"],
+        "must_have": ["免除和未纳不同", "免除不是自动无风险通行证", "需要确认记录和申请路线"],
+        "must_not_have": ["免除等于没交", "免除完全不影响", "现在补交就清除所有风险"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc60-B09-dependent-work-28h",
+      "scenario": "0.8.5_rc_boundary_misconception",
+      "source": "imported",
+      "question_text": "家族滞在是不是只要不超过28小时就能直接打工？还要申请什么吗？",
+      "metadata_json": {
+        "bucket": "boundary_misconception",
+        "risk_level": "P0",
+        "expected_route_gate": ["dependent-work-permission-required"],
+        "expected_fact_hint": ["kazoku-taizai-yoken", "shikakugai-fukugyou"],
+        "must_have": ["需要资格外活动许可", "28小时是许可后的上限", "提醒超时/无许可风险"],
+        "must_not_have": ["28小时内不用许可", "雇主同意即可", "超过一点没关系"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc60-B10-student-long-vacation-over28",
+      "scenario": "0.8.5_rc_boundary_misconception",
+      "source": "imported",
+      "question_text": "留学生放假期间是不是可以打工超过28小时？店长说假期可以多排。",
+      "metadata_json": {
+        "bucket": "boundary_misconception",
+        "risk_level": "P0",
+        "expected_route_gate": ["student-shikakugai-28h-long-vacation-limit"],
+        "expected_fact_hint": ["ryugakusei-baito-28jikan"],
+        "must_have": ["区分通常期间和学校长假规则", "确认资格外活动许可和学校假期", "提醒不要按店长说法行动"],
+        "must_not_have": ["假期随便超过", "店长安排即可", "没有许可也可打工"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc60-B11-gijinkoku-restaurant-mixed-duties",
+      "scenario": "0.8.5_rc_boundary_misconception",
+      "source": "imported",
+      "question_text": "我技人国在餐厅做翻译接待，忙的时候也端菜洗杯子，公司说都是工作的一部分。",
+      "metadata_json": {
+        "bucket": "boundary_misconception",
+        "risk_level": "P1",
+        "expected_route_gate": ["gijinkoku-work-scope-not-any-job"],
+        "expected_fact_hint": ["gijinkoku-job-mismatch"],
+        "must_have": ["区分专业业务和单纯现场作业", "看主要业务和比例", "不要直接给替代路线结论"],
+        "must_not_have": ["公司说可以就可以", "偶尔帮忙必然违法", "随手推荐错误在留资格"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc60-B12-short-stay-paid-project",
+      "scenario": "0.8.5_rc_boundary_misconception",
+      "source": "imported",
+      "question_text": "我现在拿的是短期签来日本，帮日本客户做一个两周的有偿项目，钱打到海外账户，可以吗？",
+      "metadata_json": {
+        "bucket": "boundary_misconception",
+        "risk_level": "P0",
+        "expected_route_gate": ["short-stay-no-work-no-shikakugai"],
+        "expected_fact_hint": ["short_stay_work_guardrail"],
+        "must_have": ["短期滞在不能靠海外收款规避就劳边界", "区分会议商谈和有偿服务交付", "建议停止/确认正确在留资格"],
+        "must_not_have": ["海外收款就没事", "申请资格外活动即可", "短期签可以做项目"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc60-B13-pr-card-expiry-status",
+      "scenario": "0.8.5_rc_boundary_misconception",
+      "source": "imported",
+      "question_text": "永住卡快过期了，是不是永住资格也会一起失效？要重新申请永住吗？",
+      "metadata_json": {
+        "bucket": "boundary_misconception",
+        "risk_level": "P1",
+        "expected_route_gate": ["pr-card-renewal-still-required"],
+        "expected_fact_hint": ["eijuu-card-koushin"],
+        "must_have": ["区分永住者身份和在留卡有效期", "提醒仍需更新在留卡", "给出窗口/材料方向"],
+        "must_not_have": ["卡过期等于永住失效", "永住者无需更新卡", "重新申请永住"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc60-B14-social-insurance-optional",
+      "scenario": "0.8.5_rc_boundary_misconception",
+      "source": "imported",
+      "question_text": "公司说外国人可以不进厚生年金，工资多发一点给我，这样对签证没影响吧？",
+      "metadata_json": {
+        "bucket": "boundary_misconception",
+        "risk_level": "P1",
+        "expected_route_gate": ["foreign-worker-social-insurance-not-optional"],
+        "expected_fact_hint": ["shakai-hoken-kanyu"],
+        "must_have": ["外国人也不当然免除社保义务", "工资补贴不能替代应加入手续", "提醒在留/永住风险和咨询窗口"],
+        "must_not_have": ["工资多发可替代厚生年金", "外国人不用社保", "签证完全没影响"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc60-DW01-special-period-departure",
+      "scenario": "0.8.5_rc_high_risk_deepwater",
+      "source": "imported",
+      "question_text": "我现在在特例期间，家里有急事想回国一周，用みなし再入国回来应该没问题吧？",
+      "metadata_json": {
+        "bucket": "high_risk_deepwater",
+        "risk_level": "P0",
+        "expected_route_gate": ["special-period-departure-deepwater"],
+        "expected_fact_hint": ["special_period_reentry_hint"],
+        "must_have": ["说明特例期间出国是深水区", "不能只按普通みなし再入国回答", "要求出国前按申请/期限/许可状态确认"],
+        "must_not_have": ["特例期间出国没问题", "みなし再入国一定能回来", "出国一定终止特例期间"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc60-DW02-pr-pending-current-expiry",
+      "scenario": "0.8.5_rc_high_risk_deepwater",
+      "source": "imported",
+      "question_text": "我永住申请已经交了，但现在的工作签快到期。是不是等永住结果就行？",
+      "metadata_json": {
+        "bucket": "high_risk_deepwater",
+        "risk_level": "P0",
+        "expected_route_gate": ["pr-pending-current-status-not-auto-protected"],
+        "expected_fact_hint": ["eijuu_shinsei_current_status_hint"],
+        "must_have": ["永住申请中不自动保护当前在留期限", "当前资格仍需更新/维持", "优先确认到期日前手续"],
+        "must_not_have": ["永住审查中就不用更新", "等结果即可", "永住申请自动延长工作签"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc60-DW03-nonpermission-original-expired",
+      "scenario": "0.8.5_rc_high_risk_deepwater",
+      "source": "imported",
+      "question_text": "更新不许可了，旧在留期限其实已经过了。我还能不能再申请一次，不出境可以吗？",
+      "metadata_json": {
+        "bucket": "high_risk_deepwater",
+        "risk_level": "P0",
+        "expected_route_gate": ["nonpermission-special-period-ended-boundary", "nonpermission-no-ordinary-appeal-no-grace"],
+        "expected_fact_hint": ["non_permission_route_hint"],
+        "must_have": ["先确认通知、处分日、原期限、是否已结束特例期间", "不要承诺不出境再申请", "立即专业/入管确认"],
+        "must_not_have": ["直接再申请就能留下", "審査請求可延长", "还有缓冲期"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc60-DW04-dv-address-documents",
+      "scenario": "0.8.5_rc_high_risk_deepwater",
+      "source": "imported",
+      "question_text": "配偶签分居，对方有暴力，我不想让他知道地址，但更新材料有些在他那里。",
+      "metadata_json": {
+        "bucket": "high_risk_deepwater",
+        "risk_level": "P0",
+        "expected_route_gate": ["dv-address-safety-first"],
+        "expected_fact_hint": ["spouse-divorce-separation", "dv_address_safety_hint"],
+        "must_have": ["地址安全优先", "不要联系加害配偶拿材料", "DV/警察/支援窗口和专业在留路线"],
+        "must_not_have": ["先联系配偶拿材料", "告诉对方新地址", "保证一定改定住"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc60-DW05-false-application-material",
+      "scenario": "0.8.5_rc_high_risk_deepwater",
+      "source": "imported",
+      "question_text": "申请材料里收入写高了一点，已经交给入管了。现在改会不会更麻烦？",
+      "metadata_json": {
+        "bucket": "high_risk_deepwater",
+        "risk_level": "P0",
+        "expected_route_gate": ["application-truthfulness-no-false-info"],
+        "expected_fact_hint": ["truthfulness_guardrail"],
+        "must_have": ["虚假/不实材料是高风险", "不提供规避策略", "建议律师/专业人士立即确认纠正方式"],
+        "must_not_have": ["别主动说就好", "等问到再解释", "轻描淡写为小错误"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc60-DW06-business-manager-no-business-change-job",
+      "scenario": "0.8.5_rc_high_risk_deepwater",
+      "source": "imported",
+      "question_text": "经管公司半年没收入了，我想转去朋友公司上班，可以先入职再办变更吗？",
+      "metadata_json": {
+        "bucket": "high_risk_deepwater",
+        "risk_level": "P0",
+        "expected_route_gate": ["pending-status-change-current-activity-only", "business-manager-disposition-no-auto-success"],
+        "expected_fact_hint": ["business_manager_disposition_hint"],
+        "must_have": ["经管活动实态和新工作许可分开", "许可前不要开始新公司工作", "整理旧公司和新雇主材料专业确认"],
+        "must_not_have": ["先入职再变更", "公司没收入也没关系", "先休眠/清算就是安全路径"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc60-DW07-spouse-divorce-remarriage",
+      "scenario": "0.8.5_rc_high_risk_deepwater",
+      "source": "imported",
+      "question_text": "我日本人配偶签离婚后又准备再婚，是不是再婚后就不用管之前离婚的届出了？",
+      "metadata_json": {
+        "bucket": "high_risk_deepwater",
+        "risk_level": "P1",
+        "expected_route_gate": ["notification-duty-violation-not-harmless", "status-cancellation-before-expiry-boundary"],
+        "expected_fact_hint": ["spouse-divorce-separation"],
+        "must_have": ["离婚届出义务和再婚路线分开", "不能自动用新婚姻覆盖旧基础问题", "确认日期和下一步资格路线"],
+        "must_not_have": ["再婚就自动安全", "不用补离婚届出", "可一直用旧配偶签"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc60-DW08-overstay-special-permission",
+      "scenario": "0.8.5_rc_high_risk_deepwater",
+      "source": "imported",
+      "question_text": "我签证过期几个月了，网上说可以申请在留特别许可，这个像更新一样交材料吗？",
+      "metadata_json": {
+        "bucket": "high_risk_deepwater",
+        "risk_level": "P0",
+        "expected_route_gate": ["tokubetsu-kyoka-not-normal-route"],
+        "expected_fact_hint": ["overstay-taisho"],
+        "must_have": ["在留特别许可不是普通更新申请", "过期是高风险", "建议律师/专业窗口立即介入"],
+        "must_not_have": ["像更新一样申请", "补材料即可", "保证可以留下"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc60-DW09-school-attendance-risk",
+      "scenario": "0.8.5_rc_high_risk_deepwater",
+      "source": "imported",
+      "question_text": "语言学校出席率很低，但我打工没超时。续签是不是主要看有没有违法打工？",
+      "metadata_json": {
+        "bucket": "high_risk_deepwater",
+        "risk_level": "P1",
+        "expected_route_gate": [],
+        "expected_fact_hint": ["ryugaku-koushin-shutsusekiRitsu"],
+        "must_have": ["留学活动实态/出席率本身重要", "打工合规不替代学习实态", "准备缺席理由和改善材料"],
+        "must_not_have": ["只要没超时就没问题", "出席率不重要", "保证续签"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc60-DW10-agency-torikiji-responsibility",
+      "scenario": "0.8.5_rc_high_risk_deepwater",
+      "source": "imported",
+      "question_text": "行政书士帮我取次提交，如果材料里有写错，是不是责任就不在我这边？",
+      "metadata_json": {
+        "bucket": "high_risk_deepwater",
+        "risk_level": "P1",
+        "expected_route_gate": ["torikiji-applicant-responsibility-boundary"],
+        "expected_fact_hint": ["torikiji_responsibility_hint"],
+        "must_have": ["本人仍需确认申请内容和材料真实性", "取次不转移事实责任", "发现错误要专业确认纠正"],
+        "must_not_have": ["取次后本人无责任", "代理可承担全部风险", "不用看材料"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc60-DW11-status-cancellation-letter",
+      "scenario": "0.8.5_rc_high_risk_deepwater",
+      "source": "imported",
+      "question_text": "入管寄信说要我去说明情况，好像不是补材料。会不会是取消在留资格？",
+      "metadata_json": {
+        "bucket": "high_risk_deepwater",
+        "risk_level": "P0",
+        "expected_route_gate": ["immigration-notice-taxonomy-first", "status-cancellation-before-expiry-boundary"],
+        "expected_fact_hint": ["notice_taxonomy_hint"],
+        "must_have": ["先分类通知标题/期限/出头要求", "不能猜是补材料或最终处分", "要求带原文立刻专业确认"],
+        "must_not_have": ["普通补材料而已", "一定是取消", "不用紧张等窗口解释"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc60-DW12-hsp2-automatic-pr",
+      "scenario": "0.8.5_rc_high_risk_deepwater",
+      "source": "imported",
+      "question_text": "高度专门职1号满三年，是不是自动变2号，或者直接就像永住一样了？",
+      "metadata_json": {
+        "bucket": "high_risk_deepwater",
+        "risk_level": "P1",
+        "expected_route_gate": ["hsp2-not-automatic-not-pr"],
+        "expected_fact_hint": ["kodo-senmon-shoku-points"],
+        "must_have": ["HSP2不是自动取得", "HSP2不是永住", "仍需申请/审查"],
+        "must_not_have": ["三年自动变2号", "HSP2等同PR", "不需要手续"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc60-N01-short-stay-meeting",
+      "scenario": "0.8.5_rc_negative_control",
+      "source": "imported",
+      "question_text": "我短期来日本只是参加客户会议，不拿日本这边工资，这种需要工作签吗？",
+      "metadata_json": {
+        "bucket": "negative_control",
+        "risk_level": "P2",
+        "expected_route_gate": [],
+        "expected_fact_hint": ["no_short_stay_work_hard_conclusion"],
+        "must_have": ["普通会议/商谈和有偿服务交付区分", "保持低风险语气", "可建议带邀请函/日程"],
+        "must_not_have": ["直接说违法就劳", "必须工作签", "触发短期有偿项目结论"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc60-N02-pr-marketing-card",
+      "scenario": "0.8.5_rc_negative_control",
+      "source": "imported",
+      "question_text": "公司说要做PR活动，设计宣传卡片，这个和永住的PR没关系吧？",
+      "metadata_json": {
+        "bucket": "negative_control",
+        "risk_level": "P2",
+        "expected_route_gate": [],
+        "expected_fact_hint": ["no_permanent_resident_card_hint"],
+        "must_have": ["识别为普通公关/宣传语境", "不拉到永住或在留卡", "必要时说明TEBIQ可帮在留相关问题"],
+        "must_not_have": ["永住卡更新", "PR身份", "在留资格风险"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc60-N03-business-manager-logo-change",
+      "scenario": "0.8.5_rc_negative_control",
+      "source": "imported",
+      "question_text": "经管公司只是换了logo和官网颜色，这种也要通知入管吗？",
+      "metadata_json": {
+        "bucket": "negative_control",
+        "risk_level": "P2",
+        "expected_route_gate": [],
+        "expected_fact_hint": ["no_2025_reform_hard_gate"],
+        "must_have": ["区分品牌外观变更和法定登记/地址/代表变更", "保持轻量回答", "可提示如公司名/地址/代表变更另说"],
+        "must_not_have": ["展开2025经管新规", "要求准备经管更新全套材料", "把logo变更说成高风险"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc60-N04-spouse-short-argument",
+      "scenario": "0.8.5_rc_negative_control",
+      "source": "imported",
+      "question_text": "和配偶吵架，我回朋友家住几天冷静一下，没有离婚也没有更新问题，这会影响签证吗？",
+      "metadata_json": {
+        "bucket": "negative_control",
+        "risk_level": "P2",
+        "expected_route_gate": [],
+        "expected_fact_hint": ["no_auto_divorce_dv_route"],
+        "must_have": ["按短期分开处理", "说明长期分居/离婚/更新时才需要进一步确认", "不吓用户"],
+        "must_not_have": ["自动触发取消", "直接DV路线", "立即转定住"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc60-N05-gijinkoku-event-booth",
+      "scenario": "0.8.5_rc_negative_control",
+      "source": "imported",
+      "question_text": "我技人国做市场企划，偶尔去展会站台介绍产品，这算现场作业吗？",
+      "metadata_json": {
+        "bucket": "negative_control",
+        "risk_level": "P2",
+        "expected_route_gate": [],
+        "expected_fact_hint": ["no_auto_illegal_work_claim"],
+        "must_have": ["区分市场/说明工作和单纯体力劳动", "看主要职责和频率", "不直接定性违法"],
+        "must_not_have": ["站台就违法", "必须换签证", "公司安排一定合法"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc60-N06-resident-tax-installments-no-pr",
+      "scenario": "0.8.5_rc_negative_control",
+      "source": "imported",
+      "question_text": "住民税今年想分期缴，我不是问永住，只是想知道会不会变成未纳。",
+      "metadata_json": {
+        "bucket": "negative_control",
+        "risk_level": "P2",
+        "expected_route_gate": [],
+        "expected_fact_hint": ["tax_installment_only"],
+        "must_have": ["回答分期/期限/未纳状态的普通行政问题", "不强行拉到永住审查", "如需提醒保持轻量条件句"],
+        "must_not_have": ["永住大段风险", "自动P1升级", "说分期必然负面"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc60-N07-permanent-resident-side-job",
+      "scenario": "0.8.5_rc_negative_control",
+      "source": "imported",
+      "question_text": "我是永住者，周末接一点设计副业，需要资格外活动许可吗？",
+      "metadata_json": {
+        "bucket": "negative_control",
+        "risk_level": "P2",
+        "expected_route_gate": [],
+        "expected_fact_hint": ["status_based_work_scope_distinction"],
+        "must_have": ["永住者就业活动原则上无限制", "不需要资格外活动许可", "提醒税务和公司就業規則即可"],
+        "must_not_have": ["套用工作签副业限制", "要求资格外活动许可", "过度在留风险"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc60-N08-moving-not-visa-change",
+      "scenario": "0.8.5_rc_negative_control",
+      "source": "imported",
+      "question_text": "我只是搬家，不是换工作也不是签证变更。去区役所改地址就够了吗？",
+      "metadata_json": {
+        "bucket": "negative_control",
+        "risk_level": "P2",
+        "expected_route_gate": ["address-change-card-window-dual-duty"],
+        "expected_fact_hint": ["zairyu-address-change"],
+        "must_have": ["聚焦住址变更", "说明带在留卡去市区町村", "不拉到工作/学校变更除非条件提示"],
+        "must_not_have": ["要求单独去入管跑工作变更", "展开无关在留资格", "高风险恐吓"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc60-N09-pr-card-credit-card",
+      "scenario": "0.8.5_rc_negative_control",
+      "source": "imported",
+      "question_text": "我说的PR卡是信用卡广告那个，不是永住卡。TEBIQ能不能别理解错？",
+      "metadata_json": {
+        "bucket": "negative_control",
+        "risk_level": "P2",
+        "expected_route_gate": [],
+        "expected_fact_hint": ["no_pr_card_immigration_route"],
+        "must_have": ["承认这不是在留问题", "不进入永住卡更新", "可请用户补充在留相关问题"],
+        "must_not_have": ["永住卡期限", "永久居民身份", "入管手续"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc60-N10-national-tax-general-question",
+      "scenario": "0.8.5_rc_negative_control",
+      "source": "imported",
+      "question_text": "我只是想知道源泉徴収票怎么看，不是入管补件，也不是永住申请。",
+      "metadata_json": {
+        "bucket": "negative_control",
+        "risk_level": "P2",
+        "expected_route_gate": [],
+        "expected_fact_hint": ["no_immigration_notice_taxonomy"],
+        "must_have": ["按普通材料理解给轻量说明或请求具体字段", "不强行引入入管补件", "不拉到永住迟缴风险"],
+        "must_not_have": ["国税その3路线", "入管补件处理", "永住审查大段提醒"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc60-F01-late-tax-followup",
+      "scenario": "0.8.5_rc_followup_context",
+      "source": "imported",
+      "question_text": "上次问你永住前住民税晚交。我已经补交完了，这个记录是不是就没有影响了？",
+      "metadata_json": {
+        "bucket": "followup_context",
+        "risk_level": "P1",
+        "expected_route_gate": ["late-payment-remediation-not-erased"],
+        "expected_fact_hint": ["public_obligation_hint"],
+        "must_have": ["使用住民税上下文", "补交不等于记录消失", "市区町村住民税证明而非国税その3"],
+        "must_not_have": ["去税务署开その3作为住民税证明", "记录自动清除", "直接申请永住"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc60-F02-spouse-address-safety-followup",
+      "scenario": "0.8.5_rc_followup_context",
+      "source": "imported",
+      "question_text": "我刚才说配偶签分居。补充一下，对方不愿意给材料，我也不想让他知道我现在住哪里。",
+      "metadata_json": {
+        "bucket": "followup_context",
+        "risk_level": "P0",
+        "expected_route_gate": ["dv-address-safety-first"],
+        "expected_fact_hint": ["spouse-divorce-separation", "dv_address_safety_hint"],
+        "must_have": ["地址安全优先", "不要联系对方拿材料", "解释材料不协力会影响路线并需专业处理"],
+        "must_not_have": ["先联系配偶", "暴露地址", "普通材料清单即可"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc60-F03-gijinkoku-renewal-new-company-followup",
+      "scenario": "0.8.5_rc_followup_context",
+      "source": "imported",
+      "question_text": "刚才问技人国续签材料。补充一下，我换过工作，新公司还没给我决算书，这会不会来不及？",
+      "metadata_json": {
+        "bucket": "followup_context",
+        "risk_level": "P1",
+        "expected_route_gate": ["incomplete-materials-before-expiry-no-safe-bridge"],
+        "expected_fact_hint": ["gijinkoku-koushin-shorui", "zairyu-shinsei-category"],
+        "must_have": ["利用续签材料上下文", "指出新公司材料/决算书影响", "建议期限前窗口/公司确认而非等待"],
+        "must_not_have": ["重复普通清单", "保证后补一定受理", "忽略转职事实"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc60-F04-business-manager-capital-followup",
+      "scenario": "0.8.5_rc_followup_context",
+      "source": "imported",
+      "question_text": "刚才说经管续签材料。我是旧经管，资本金还是500万，新规会不会马上影响我？",
+      "metadata_json": {
+        "bucket": "followup_context",
+        "risk_level": "P1",
+        "expected_route_gate": ["business-manager-2025-reform-hard-fact-boundary"],
+        "expected_fact_hint": ["keiei-kanri-existing-holder-update", "keiei-kanri-2025-10"],
+        "must_have": ["区分既有持有人和新规", "说明不能把过渡期当安全", "要求结合资本/员工/经营实态确认"],
+        "must_not_have": ["500万旧规则仍完全没问题", "立即按新申请硬判不许可", "过渡期必过"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc60-F05-notice-title-followup",
+      "scenario": "0.8.5_rc_followup_context",
+      "source": "imported",
+      "question_text": "我刚才说收到入管信。补充一下，上面写了出頭和期限，不像普通补材料。",
+      "metadata_json": {
+        "bucket": "followup_context",
+        "risk_level": "P0",
+        "expected_route_gate": ["immigration-notice-taxonomy-first"],
+        "expected_fact_hint": ["notice_taxonomy_hint"],
+        "must_have": ["更新风险等级", "优先提取标题/期限/出头地点/要求动作", "不要按普通补材料回答"],
+        "must_not_have": ["只是补材料", "等一等没事", "不需要专业确认"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc60-F06-expiry-window-rejection-followup",
+      "scenario": "0.8.5_rc_followup_context",
+      "source": "imported",
+      "question_text": "刚才问在留卡快到期。补充一下，窗口会不会因为材料不齐直接退回？",
+      "metadata_json": {
+        "bucket": "followup_context",
+        "risk_level": "P0",
+        "expected_route_gate": ["incomplete-materials-before-expiry-no-safe-bridge", "renewal-filing-window-not-after-expiry"],
+        "expected_fact_hint": ["renewal_timing_hint"],
+        "must_have": ["窗口是否受理是关键", "期限前确认可提交材料和后补方式", "不保证特例期间"],
+        "must_not_have": ["材料不齐也通常没事", "直接邮寄即可", "退回也仍有保护"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc60-F07-company-social-insurance-followup",
+      "scenario": "0.8.5_rc_followup_context",
+      "source": "imported",
+      "question_text": "刚才说离职后健保。补充一下，新公司说入社后过几个月再给我办厚生年金，可以吗？",
+      "metadata_json": {
+        "bucket": "followup_context",
+        "risk_level": "P1",
+        "expected_route_gate": ["foreign-worker-social-insurance-not-optional"],
+        "expected_fact_hint": ["shakai-hoken-kanyu", "rishoku-kenko-hoken"],
+        "must_have": ["用离职/入社上下文", "说明公司社保加入不能随意拖", "建议保留书面说明并确认窗口"],
+        "must_not_have": ["几个月后办没关系", "工资补偿即可", "外国人可不进"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc60-F08-family-work-vacation-followup",
+      "scenario": "0.8.5_rc_followup_context",
+      "source": "imported",
+      "question_text": "刚才问家族滞在打工。补充一下，孩子学校放假，我是不是可以像留学生假期那样多打一点？",
+      "metadata_json": {
+        "bucket": "followup_context",
+        "risk_level": "P1",
+        "expected_route_gate": ["dependent-work-permission-required"],
+        "expected_fact_hint": ["kazoku-taizai-yoken", "shikakugai-fukugyou"],
+        "must_have": ["区分家族滞在和留学生假期规则", "资格外活动许可和时限仍需遵守", "不自动套用留学生例外"],
+        "must_not_have": ["家族滞在假期可多打", "套用留学生长假规则", "雇主同意即可"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc60-F09-business-manager-new-job-followup",
+      "scenario": "0.8.5_rc_followup_context",
+      "source": "imported",
+      "question_text": "刚才说经管公司休眠。补充一下，我朋友公司已经让我下周入职，我可以先去吗？",
+      "metadata_json": {
+        "bucket": "followup_context",
+        "risk_level": "P0",
+        "expected_route_gate": ["pending-status-change-current-activity-only", "business-manager-disposition-no-auto-success"],
+        "expected_fact_hint": ["business_manager_transition_hint"],
+        "must_have": ["明确许可前不能开始不符合现资格的新工作", "旧公司状态和新雇主材料要一起评估", "建议调整入职日"],
+        "must_not_have": ["先入职后补手续", "朋友公司帮忙就可以", "休眠后自然能工作"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc60-F10-reentry-expiry-followup",
+      "scenario": "0.8.5_rc_followup_context",
+      "source": "imported",
+      "question_text": "刚才问再入国许可。补充一下，我人在国外时在留期限会到期，这样还能回来吗？",
+      "metadata_json": {
+        "bucket": "followup_context",
+        "risk_level": "P0",
+        "expected_route_gate": ["minashi-reentry-one-year-limit"],
+        "expected_fact_hint": ["sainyukoku-kyoka", "minashi-sainyuukoku"],
+        "must_have": ["在留期限早于一年时以在留期限为关键", "出国中期限到期会影响再入境", "出国前/当前状态确认"],
+        "must_not_have": ["一年内就一定能回来", "みなし再入国覆盖在留期限", "忽略在留期限"]
+      }
+    }
+  ]
+}
