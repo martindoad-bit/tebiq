@@ -123,7 +123,7 @@ git log origin/main --oneline -5
 | **GM（工程总经理）** | AI 协作流程、上下文一致性、Issue/PR/QA 协调、文档制度（见 `docs/ops/TEBIQ_GM_OPERATING_PRINCIPLES.md`）| Track F 主导；Track A/B/C/E 工作包分配与阻塞管理 | 不做产品战略裁决、不判断签证专业结论、不决定上线 |
 | **ENGINE** | 实现代码 | Track B（Issue #19 Internal Console）→ Track C（Issue #18 Routing）→ Track D | 不做产品定位裁决、不发明政策事实、不擅自扩冻结范围 |
 | **QA** | Technical / Semantic / Domain / UX-Trust 四层审计 | Track A 回归测试；Track C routing regression gate | 不做产品定位裁决 |
-| **AQL** | 独立答案质量归因 / 修复路由建议 / 复测设计（占位文档见 `docs/roles/TEBIQ_AQL_ROLE.md`） | 当前 A→B：核心咨询体验质量飞轮 | 不写代码、不改 repo、不做在留法律最终判断、不让执行者自评修复 |
+| **AQL** | 独立答案质量归因 / 修复路由建议 / 复测设计（见 `docs/roles/TEBIQ_AQL_ROLE.md`） | 当前 A→B：核心咨询体验质量飞轮 | 不写代码、不改 repo、不做在留法律最终判断、不让执行者自评修复 |
 | **DOMAIN-CC** | 在留语义复核 / 行政书士助理型审查；golden cases / must_have / must_not_have / handoff_trigger / fact_card_candidates | Track E：100Q 风险图谱 + 在留 pattern 梳理（不等 FULL_COMPARABLE）| 不做最终法律判断；所有输出默认 `draft / needs human review` |
 | **VOICE** | 暂不常驻；仅在给出完整 Task Card 时被调用 | Track D 用户端文案（M4 后）| 不能一次写完整 6 屏；没有 Task Card 时停止 |
 

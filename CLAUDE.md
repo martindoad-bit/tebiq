@@ -76,7 +76,7 @@ gh pr list
 | ENGINE | 具体代码实现 |
 | QA | 测试与审计 |
 | DOMAIN-CC | 在留语义复核 |
-| AQL | 独立答案质量归因与复核设计（见 `docs/roles/TEBIQ_AQL_ROLE.md` 占位文档） |
+| AQL | 独立答案质量归因与复核设计（见 `docs/roles/TEBIQ_AQL_ROLE.md`） |
 
 当前三角分工见 `docs/ops/TEBIQ_ROLES_V2.md`。角色细节见
 `docs/roles/TEBIQ_*_ROLE.md`。

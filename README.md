@@ -1,9 +1,16 @@
 # TEBIQ
 
-> 你的在日生活好帮手 / 在日生活のお守り
-> Next.js 14 + Drizzle + Postgres + Stripe + AWS Bedrock
+> Residence-risk consultation system for foreigners in Japan.
+> Next.js 14 + Drizzle + Postgres + Stripe + AI provider integrations.
 
-Read [`PROJECT_MEMORY.md`](./PROJECT_MEMORY.md) before working in this repo.
+Before working in this repo, read:
+
+1. [`CLAUDE.md`](./CLAUDE.md)
+2. [`AGENTS.md`](./AGENTS.md)
+3. [`PROJECT_MEMORY.md`](./PROJECT_MEMORY.md)
+4. [`docs/product/TEBIQ_CURRENT_STATE.md`](./docs/product/TEBIQ_CURRENT_STATE.md)
+5. [`docs/product/TEBIQ_CONTEXT_PACK.md`](./docs/product/TEBIQ_CONTEXT_PACK.md)
+
 Architecture overview: [`docs/architecture.md`](./docs/architecture.md).
 
 ## Quick start

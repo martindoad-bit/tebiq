@@ -1,248 +1,219 @@
-# TEBIQ 项目记忆 v2.0
+# TEBIQ Project Memory
 
-> 每次开始工作前先读这个文件。
-> 上一版归档为 PROJECT_MEMORY_v1.md，重大决策变更已在本版反映。
+**Status:** current memory router / not a standalone product spec
+**Last updated:** 2026-05-16
+**Owner:** Codex Production Lead / AI Engineering Lead
 
-## 产品定位
+> Start here only to understand where current truth lives.
+> Do not treat this file as the full product brief.
+>
+> Previous memory snapshots and early product assumptions are archived under
+> `docs/archive/memory/`.
 
-**TEBIQ = 你的在日生活好帮手 / 在日生活のお守り**
+---
 
-不是续签工具、不是信息站、不是社区、不是档案中心。是面向在日中文母语者的「日常麻烦事工具集」。
+## 0. Current Product Truth
 
-## 核心用户（已收窄）
+TEBIQ is currently:
 
-**第一版明确：在日中文母语者**（中国大陆 + 港澳台 + 部分东南亚华裔）。
+> **A residence-risk management and consultation system for foreigners in Japan.**
 
-不是「全外国人」。特定技能签证人群中的越南/菲律宾/印尼大头不是中文用户，第一版不是目标。
+Its job is not to be a generic AI Q&A app, immigration encyclopedia, or
+administrative scrivener website. Its job is to help users see the real
+residence-friction risk, separate known facts from uncertain judgement, and move
+to the next safe action.
 
-战略上未来覆盖所有外国人，但 1.0 不做多语言（详见多语言策略）。
+The current shipped phase is:
 
-## 1.0 产品形态（已锁定）
+> **TEBIQ 0.8: safety-gated consultation release.**
 
-**主页 = 工具入口 + 历史记录**，不是 dashboard。
+0.8 has shipped. It is not a full legal-source advisory product and does not
+replace administrative scriveners.
 
-理由：1.0 阶段档案数据稀薄（用户只填了几个字段、做了几次自查），dashboard 形态会暴露产品的空。等 2.0 数据沉淀后再升级为 dashboard。
+The current active buildout path is:
 
-**两个核心功能**：
-1. 续签自查（免费引流，自媒体主入口）
-2. 拍照即懂（订阅核心，任何日文文件拍照识别）
+> **0.8.5 -> 1.0 through six ordered engineering programs.**
 
-**主导航 4 个 tab**：首页 / 我的档案 / 知识 / 我的
+Read this roadmap before resuming long-running product work:
 
-档案信息藏在「我的档案」tab，不是首页。
+```text
+docs/ops/TEBIQ_1_0_SIX_ENGINEERING_ROADMAP.md
+```
 
-## 收费策略
+The six programs are:
 
-| 层级 | 价格 | 状态 |
-|---|---|---|
-| 免费 | 自查 + 拍照 3 次/月 | 启用 |
-| 月度会员 | ¥980/月 | 推荐方案 |
-| 年度会员 | ¥9,800/年（节省 16%） | 备选 |
-| 高级会员 | ¥19,800/年（含 1 次专家咨询） | 备选 |
-| 続更新材料パッケージ | ¥980 一次性 | 独立付费 |
-| 専門家相談 | ¥9,800/30 分钟 | 独立付费 |
+1. 0.8.5 Release Candidate;
+2. Knowledge Asset Import;
+3. Materials Tab Tooling;
+4. Deep-Water Routing And Professional Boundary;
+5. Eval Lab Quality Flywheel;
+6. 1.0 Release.
 
-订阅触发点：**拍照配额（免费 3 次/月）用完时弹窗推订阅**，不在首页主动 push。
+Do not treat "more cards" or "more pages" as the 1.0 goal. The goal is a
+stable residence-friction reduction system with safe answers, useful materials,
+deep-water routing, and a durable quality loop.
 
-## 增长机制
+Current runtime truth lives in:
 
-**邀请朋友送会员**：分享给 3 个朋友，双方各得 7 天会员体验。
+1. `docs/product/TEBIQ_CURRENT_STATE.md`
+2. `docs/ops/TEBIQ_0_8_RELEASE_CANDIDATE_MANIFEST.md`
+3. `docs/ops/TEBIQ_0_8_RELEASE_CUTOVER_CHECKLIST.md`
+4. `docs/ops/TEBIQ_0_8_PRE_RELEASE_P0_CLOSURE_MATRIX.md`
+5. `docs/ops/TEBIQ_0_8_POST_RELEASE_CONVERGENCE_REPORT.md`
+6. `docs/ops/TEBIQ_1_0_SIX_ENGINEERING_ROADMAP.md`
 
-触发时机：用户做完续签自查看到结果时 + 拍照配额用完时。不是付费后才送。
+Long-term product truth lives in:
 
-## 不做的事（明确）
+1. `docs/product/TEBIQ_CONTEXT_PACK.md`
+2. `docs/product/TEBIQ_DECISION_LOG.md`
+3. `docs/ops/TEBIQ_ROLES_V2.md`
+4. `docs/ops/TEBIQ_DELEGATION_PRINCIPLES.md`
 
-- 抽成（任何形式）
-- 电商
-- 社区
-- 申请书代写（行政書士法风险）
-- 书士会员费
-- 价格 A/B 测试（创始人决定）
-- 第一版不做家庭功能 UI（schema 预留 family + members 结构）
-- 第一版不做多语言
-- 第一版不做 AI 对话（后置）
-- 第一版主页不做 dashboard / 风险雷达 / 倒计时器（数据不够）
-- 第一版不做案例库 / 高级议题专区 / 升学规划工具（2.0+）
+If this file conflicts with those documents, those documents win.
 
-## 多语言策略
+---
 
-1.0 不做多语言。所有精力投入中文版。
+## 1. Current Product Surfaces
 
-第二语言不是英文，而是日文 B 端版（日本企业 HR 管理外国员工签证）。
+### 提问 Tab
 
-越南语/印尼语/菲律宾版不自己做，将来用合伙人模式输出技术底座。
+The consultation surface must keep the answer summary labels:
 
-理由：多语言瓶颈不是技术，是「懂日本签证 + 该语言母语」的稀缺人才。每加一种语言需要长期审核员（不是一次性翻译），每年 ¥100-300 万人力成本。1.0 阶段不能承担。
+```text
+先看这里
+当前判断
+建议动作
+暂缓事项
+```
 
-## 文案规范
+These labels are frozen for the current answer experience. Historical docs that
+use `最紧的两件`, `步骤`, `要带什么`, `复制给客户`, or similar answer-section systems
+are superseded unless a future Decision Log explicitly restores them.
 
-- 中性、克制、信息密度高
-- 不写戏剧化问句（"看不懂，怕出事？" 这种是网页营销，不是 App 文案）
-- 不写 AI 戏剧腔（"我帮你盯着 3 件事" 这种）
-- 按钮直接叫功能名（"拍照识别"、"续签自查"），不要 emoji + 戏剧动词
+### 材料 Tab
 
-## 中日混合规则（重要）
+User-facing naming is **材料** / **材料清单**.
 
-TEBIQ 用中文为主，但所有日本生活的专有名词保留日文原文。这不是翻译策略，是产品定位 — 用户身份是「在日华人」，他们用中文聊天但用日文办手续。
+`Quick Reference` may remain as an internal route or historical file name, but
+it must not be treated as the product label. The old user-facing name `速查` is
+not the current product direction.
 
-**保留日文原文的类别**：
-- 签证类型：技術・人文知識・国際業務、経営・管理、家族滞在、特定技能、定住者、永住者
-- 政府机构：入国管理局（入管）、市役所、税務署、年金事務所、ハローワーク
-- 政府文件：在留カード、住民票、住民票記載事項証明書、確定申告書、源泉徴収票、納税証明書、課税証明書
-- 专业概念：住民税、所得税、住民基本台帳、マイナンバー、年金、健康保険
-- 生活场景：敷金、礼金、保証人、引っ越し、確定申告、年末調整、契約書
+The Materials surface is a scenario-first official-material checklist system:
 
-**翻译成中文的类别**：
-- 普通动词：提交、准备、更新、保存、查看
-- UI 操作：取消、确认、返回、分享
-- 解释性内容：风险等级、判断逻辑、行动建议
-- 应用层概念：会员、订阅、邀请
+- common procedure pages;
+- reusable common-document cards;
+- collapsed-by-default mobile reading;
+- cross-links between scenarios and common materials;
+- a bridge back to 提问 for case-specific uncertainty.
 
-**判断标准**：用户去日本现实场景（市役所窗口、政府文件、官网）会看到这个词的日文原文吗？会 → 保留日文。不会（是产品自己的概念）→ 翻译。
+It must not imply that complete materials guarantee permission.
 
-**例子**：
+### Eval Lab / 中台
 
-错误：「你的居留期限延长还有 60 天」
-正确：「你的**在留期間更新**还有 60 天」
+Eval Lab is the quality flywheel surface. It is for answer comparison,
+annotation, retries, provenance, and AQL / QA / DOMAIN loops. It is not a user
+feature and must remain protected.
 
-错误：「市政府发的居民税通知」
-正确：「**市役所**发的**住民税**通知」
+### 找书士 / Admin
 
-错误：「提醒你做年度报税」
-正确：「提醒你做**確定申告**」
+Admin and internal surfaces must fail closed without valid admin access.
+Scrivener leads are a human-review / professional-confirmation path, not a
+claim that TEBIQ itself is an administrative scrivener.
 
-## 视觉规范
+---
 
-### 产品哲学 v1（视觉决策最高优先级）
+## 2. Current Copy Rules
 
-TEBIQ 的存在，是为了减少在日生活的「日常摩擦」。让外国人在日本的融入度和麻烦程度，从 7 降到 6。这是产品的功德，也是全部。
+Current canonical copy documents:
 
-**Voice 铁律**：保持工具感。不撒娇、不温情、不戏剧化、不 emoji、不「陪伴你的旅程」叙事。像东京电车一样：精确、冷静、不解释，用户可以骂它，但离不开它。
+1. `docs/product/TEBIQ_COPY_SOURCE.md`
+2. `docs/product/TEBIQ_COPY_CANON.md`
+3. `docs/product/TEBIQ_PRODUCT_UI_GUARDRAILS.md`
 
-正确 voice 示例：
-- 已归档 / 已识别 / 期限冲突 / 第 N 件 X 类文书
+Old product-copy files under `docs/product-copy/` are historical reference unless
+their content is explicitly copied into the current canon.
 
-错误 voice 示例：
-- 我帮你看到了 / 把这件事交给我 / 陪你度过这一年
+Rules:
 
-正确视觉方向：
-- 数字化、克制、像日本邮便局对账单
+- user-facing copy should feel like an app, not an engineering report;
+- do not expose model names or internal pipeline terms;
+- do not use `AI 智能分析`, `问 AI`, `DeepSeek`, `ChatGPT`, `Claude`, or sidecar
+  fields on user surfaces;
+- do not invent legal facts for nicer wording;
+- copy involving professional facts must be supported by fact cards, DOMAIN
+  review, or the model answer being displayed.
 
-错误视觉方向：
-- 温暖色调、插画、emoji、「贴心」标签
+---
 
-**底层逻辑**：TEBIQ 不是「工具集合」，是「档案中心化的工具系统」。每次工具调用（拍照 / 自查 / 文字即懂）都应自动归档到统一时间线；时间线是产品的永久记忆，工具只是时间线的输入入口。跨档案比对、历史关联、政策匹配推送才是真正差异化。ChatGPT 没有时间线，所以 ChatGPT 永远不能成为 TEBIQ。
+## 3. Knowledge And Fact Layer Rules
 
-**不做**：温情文案 / 撒娇 voice / 陪伴旅程叙事；矫情视觉 / 暖色调 / 插画感；情感订阅定价；「你不孤单」类客服话术；虚假个性化；通用 AI 扩展。
+The knowledge layer is valuable, but not every card is runtime-connected.
 
-后续视觉任务若与本段冲突，以本段为准并暂停报告「§产品哲学冲突」。本段优先于本文件中较早的 1.0 工具集 / 非档案中心表述。
+Promotion path:
 
-### Visual Polish 12 基础视觉系统
+```text
+official source -> FACT card -> QA/source audit -> DOMAIN review if risky -> runtime route/retrieval
+```
 
-Visual Polish 12 之后，TEBIQ 视觉以「东京电车」为准：精确、冷静、克制、可长期使用。页面不再追求温暖陪伴、插画记忆点或营销转化感；所有界面应像日本电车运行情报、iOS 设置页和银行交易列表的结合。
+Known caution:
 
-- 调性：工具感优先。数字、日期、状态和列表行是主要视觉语言。不要彩色卡片、庆祝感、emoji、人物插画、AI 助手式图标堆叠。
-- 主色：深墨蓝 #0F2544。用于标题、正文重点、线性图标、主按钮、选中态。
-- 背景：#FAFAF7；灰底模块：#F2F4F7；卡片白：#FFFFFF；边线：#E5E7EB（0.5px / 1px hairline）。
-- 文本：主文字 #0F2544；次文字 #6B7280；辅助文字 #9AA0AC。
-- Warning：#F3A32B 只用于真实期限警示（剩余天数 < 7 天 / 已过期），不用于普通 CTA、装饰或推荐标签。
-- 禁用：高饱和绿/红/蓝、渐变、glow、阴影、彩色 tag 汤、红色感叹号、任何「立即 / 马上 / 快速」营销文案。
-- 字体：-apple-system, BlinkMacSystemFont, "Noto Sans CJK SC", "Noto Sans SC", "Hiragino Sans", "Yu Gothic", "YuGothic", "PingFang SC", sans-serif。
-- 字重：只用 300 / 400 / 500。主数字 300，大字号 44-64px；标题 500，18-20px；正文 400，14-15px；辅助 400，11-12px。不用 600/700。
-- 数字：全部启用 `font-variant-numeric: tabular-nums`；日期、金额、剩余天数优先使用 tabular 数字，不使用 mono 字体造成程序员感。
-- 行高 / 字距：中文 letter-spacing 0；日文术语可 0.015em；正文 line-height 1.58-1.7，列表行文本紧凑。
-- 圆角：卡片 12-16px，当前基准 14px；按钮 8-12px，当前基准 10px；tag 8px。不要超过 20px。
-- 间距：4pt 基准；模块间距 24px；卡片内 padding 16-20px；列表行最小高度 56px。
-- 阴影：默认无阴影。只有 focus ring 可使用 `0 0 0 3px rgba(15,37,68,.14)`。
-- 图标：lucide 线性图标，18-20px，stroke-width 1.5；不使用填色 icon，不使用 emoji。
-- 首页结构：档案概览用分隔线，不做三张指标卡；常用工具用 iOS 设置页列表行，不做彩色工具卡；底部 tab 四项等权，不允许中间凸起拍照按钮。
-- 插画：产品界面默认不使用插画。Image 2.0 可用于概念探索和文档视觉板；若未来进入 UI，必须是克制静物或页面级真实截图，不使用人物、礼物盒、吉祥物、拟物文件角色。
+- `経営・管理` 2025 reform material is high-risk. Keep confirmed official
+  requirements separate from older startup shorthand, especially old `500万円`
+  language.
+- Legal-source cards and materials cards can coexist, but they must remain
+  traceable and reviewable.
+- Unknown stays unknown. Never convert unresolved DOMAIN or FACT conflict into
+  user-facing certainty.
 
-## 5 维度产品决策标尺（每次大方向变化用这个 review）
+---
 
-每次重要产品决策变化时，对新方案打分（每项 2 分，共 10 分）：
+## 4. Current Role Model
 
-1. **用户视角真实性** — 描述了真实场景还是空想
-2. **AI 时代独特性** — 在 AI 时代有不可替代位置吗
-3. **1.0 可执行性** — 2-4 周能上线吗
-4. **商业模型健康度** — 单位经济成立吗
-5. **创始人能力匹配** — 和创始人的具体能力 match 吗
+Current roles are governed by:
 
-低于 7 分的方案不要进入 production。
+- `docs/ops/TEBIQ_ROLES_V2.md`
+- `docs/ops/TEBIQ_DELEGATION_PRINCIPLES.md`
 
-## 技术栈（已建好）
+Short form:
 
-- Next.js 14 App Router + TypeScript strict + Tailwind
-- 数据库：Supabase Postgres（Tokyo region），数据必须在日本境内
-- ORM：Drizzle ORM
-- 认证：手机号 + SMS OTP
-- 支付：Stripe（卡 / PayPay / Konbini）
-- AI：AWS Bedrock Claude（Tokyo region）
-- 邮件：Resend（待域名验证）
-- 仓库：GitHub martindoad-bit/tebiq
+- Founder / CEO: final business and domain judgement;
+- Codex Production Lead: engineering execution, docs hygiene, orchestration;
+- Claude.ai / strategy window: product strategy and mirror, not engineering
+  executor;
+- FACT: official-source fact production;
+- DOMAIN: residence-semantics review, not final legal judgement;
+- AQL: answer quality diagnosis and quality-loop design;
+- QA: technical, semantic, mobile, release regression;
+- CODEXUI / Product Copy: UI and copy specialists under explicit task cards.
 
-## Block 完成情况
+Do not recreate roles from memory. Read the current role docs.
 
-- ✅ Block 1：数据层 + 架构重构（11 张表 + 12 enum + 11 个 DAL）
-- ✅ Block 2：Supabase 真实接入 + Stripe 代码 + 邮件基础（待 Resend 域名验证）
-- ⏸️ Block 3：UI 重做（按 v5 原型实现）— 当前优先
-- ⏸️ Block 4+：基于真实用户数据决定（不预设）
+---
 
-## 当前阶段：阶段 0（定型期，2-4 周）
+## 5. Historical Assumptions That Are No Longer Current
 
-**目标**：基于 v5 原型把 UI 重做出来 + 跑通端到端「自查 → 付费 → 收提醒」闭环 + 卖出第一单。
+The following ideas existed in earlier TEBIQ memory and reports, but are not the
+current product truth:
 
-**成功标准**：
-- 至少 3 个真实付费用户（不含朋友捧场）
-- 完整链路无 bug
-- 创始人产生「哇」感觉
+- TEBIQ as a generic "在日生活好帮手 / 日常麻烦事工具集";
+- first version without AI conversation;
+- homepage as tool entrance around `续签自查 / 拍照即懂`;
+- bottom nav `首页 / 我的档案 / 知识 / 我的`;
+- answer sections `最紧的两件 / 步骤 / 要带什么 / 期限 / 不做会怎样`;
+- user-facing tab name `速查`;
+- old 500万円 shorthand as a current generic business-manager condition.
 
-**失败信号**：
-- 4 周后还没第一付费用户
-- 真实用户「价值感」评分 < 6/10
+These may be useful as historical context only. Do not implement from them.
 
-## 7 月底（3 个月后）判定线
+---
 
-- **生存线**（达不到则砍）：100 付费用户 + 月营收 ¥100,000 + 留存 30%
-- **健康线**（说明走对了）：月营收 ¥500,000 + 月新增 50 付费 + 10 个主动推荐
-- **起飞线**：月营收 ¥1,000,000
+## 6. Freshness Rule
 
-## 关键决策记录（按时间倒序）
+Before non-trivial work:
 
-### 2026-04-26 中日混合文案规则
-- 中文为主，日文术语原文保留
-- 反映在日华人真实身份（中文聊天 + 日文办事）
-
-### 2026-04-26 多语言策略锁定
-- 1.0 不做多语言
-- 第二语言定为日文 B 端，不是英文 C 端
-- 越南/印尼版用合伙人模式输出技术
-
-### 2026-04-26 锁定 v5 原型（工具集形态）
-- 推翻 v3 的 dashboard 形态
-- 主页改为「两个 action card + 待办事项列表」
-- 档案藏在 tab 内，不在首页
-- 共 15 屏覆盖：首页 / 拍照流（4 屏）/ 续签流（4 屏）/ 邀请 / 订阅 / 档案 / 提醒 / 知识 / 账户 / 配额提示
-
-### 2026-04-26 5 维度决策标尺确立
-- 用户视角真实性 + AI 独特性 + 1.0 可执行性 + 商业模型健康度 + 创始人能力匹配
-- 每次大方向变化都用这个标尺打分
-
-### 2026-04-26 1.0 不做 dashboard
-- 数据稀薄撑不起 dashboard 形态
-- 1.0 = 工具集，2.0+ 才升级为 dashboard
-
-### 2026-04-26 用户群收窄
-- 「全外国人」改为「在日中文母语者」
-- 多语言扩展延后到 2.0
-
-### 2026-04-25 拍照即懂不限于政府文书
-- 用户连「是不是政府文书」都判断不了
-
-### 2026-04-25 不做书士会员费
-### 2026-04-25 不做价格 A/B 测试
-
-## 文档版本
-
-- v1.0 2026-04-25 初版
-- v2.0 2026-04-26 锁定 v5 原型 + 5 维度标尺 + 用户群收窄 + 中日混合规则 + 多语言策略
+1. read `CLAUDE.md` and `AGENTS.md`;
+2. read `docs/product/TEBIQ_CURRENT_STATE.md`;
+3. check `origin/main`, open PRs, and production state when the task depends on
+   current deployment;
+4. if current docs conflict with runtime or the user's latest instruction,
+   report the conflict instead of guessing.

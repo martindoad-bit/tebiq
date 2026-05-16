@@ -1,5 +1,11 @@
 # TEBIQ 首页最终文案 v2（HOMEPAGE_APP_COPY_V2）
 
+> **历史文档 / 非当前冻结首页文案。**
+>
+> 本文件保留为 2026-04-30 的 App copy 参考。当前用户端 copy 以
+> `docs/product/TEBIQ_COPY_CANON.md`、`docs/product/TEBIQ_COPY_SOURCE.md` 和
+> 当前代码 / Eval 结果为准。
+
 **版本**：v2 final
 **生成**：2026-04-30
 
