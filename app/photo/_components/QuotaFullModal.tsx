@@ -103,7 +103,7 @@ export default function QuotaFullModal({ open, onClose, daysUntilReset }: Props)
             href="/me/consultations"
             className="flex min-h-[44px] items-center justify-center rounded-btn border border-hairline bg-surface px-3 py-3 text-center text-[13px] font-medium text-ink transition-colors hover:bg-canvas"
           >
-            查看我的咨询
+            查看咨询记录
           </Link>
           <Link
             href="/pricing"

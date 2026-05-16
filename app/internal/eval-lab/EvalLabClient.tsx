@@ -2009,15 +2009,74 @@ function AnswerColumn({
         </div>
       )}
       {showMeta && row?.raw_payload_json && typeof row.raw_payload_json === 'object' && (
-        <p className="text-[11px] font-semibold mb-1">
-          {(row.raw_payload_json as { title?: string }).title ?? ''}
-        </p>
+        <EvalKnowledgeTrace payload={row.raw_payload_json} />
       )}
       <pre className="text-[12px] whitespace-pre-wrap leading-[1.6] text-slate-800">
         {row?.answer_text ? cleanDisplayText(row.answer_text) : '（未生成）'}
       </pre>
     </div>
   )
+}
+
+function EvalKnowledgeTrace({ payload }: { payload: Record<string, unknown> }) {
+  const title = typeof payload.title === 'string' ? payload.title : ''
+  const factCardIds = stringArray(payload.fact_card_ids)
+  const routeGateIds = stringArray(payload.route_gate_ids)
+  const guardrailFindings = Array.isArray(payload.guardrail_findings)
+    ? payload.guardrail_findings
+    : []
+  const auditIds = Array.isArray(payload.fact_card_audit)
+    ? payload.fact_card_audit.flatMap(item => {
+      if (!item || typeof item !== 'object') return []
+      const factId = (item as Record<string, unknown>).fact_id
+      return typeof factId === 'string' ? [factId] : []
+    })
+    : []
+  const visibleFactIds = factCardIds.length > 0 ? factCardIds : auditIds
+
+  if (!title && visibleFactIds.length === 0 && routeGateIds.length === 0 && guardrailFindings.length === 0) {
+    return null
+  }
+
+  return (
+    <div className="mb-2 rounded border border-slate-200 bg-slate-50 px-2 py-2 text-[11px] text-slate-600">
+      {title && <p className="font-semibold text-slate-700">{title}</p>}
+      <TraceRow label="卡片" items={visibleFactIds} empty="未命中" />
+      <TraceRow label="风险门" items={routeGateIds} empty="未触发" />
+      {guardrailFindings.length > 0 && (
+        <p className="mt-1 text-red-700">validator findings: {guardrailFindings.length}</p>
+      )}
+    </div>
+  )
+}
+
+function TraceRow({
+  label,
+  items,
+  empty,
+}: {
+  label: string
+  items: string[]
+  empty: string
+}) {
+  return (
+    <div className="mt-1 flex min-w-0 flex-wrap items-center gap-1">
+      <span className="shrink-0 text-slate-400">{label}</span>
+      {items.length === 0 ? (
+        <span className="rounded bg-white px-1.5 py-0.5 text-slate-400">{empty}</span>
+      ) : items.slice(0, 6).map(item => (
+        <span key={`${label}-${item}`} className="max-w-full truncate rounded bg-white px-1.5 py-0.5 text-slate-700">
+          {item}
+        </span>
+      ))}
+      {items.length > 6 && <span className="text-slate-400">+{items.length - 6}</span>}
+    </div>
+  )
+}
+
+function stringArray(value: unknown): string[] {
+  if (!Array.isArray(value)) return []
+  return value.filter((item): item is string => typeof item === 'string' && item.trim().length > 0)
 }
 
 function AnnotationForm({

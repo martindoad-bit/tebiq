@@ -991,7 +991,7 @@ function ActiveConsultationView({
                     </button>
                   </div>
                   <p className="text-[12px] leading-[1.6] text-[var(--tebiq-cool-gray)]">
-                    原问题已自动记录。如果回答稍后完成，可以从“我的咨询”打开。
+                    原问题已自动记录。如果回答稍后完成，可以从“咨询记录”打开。
                   </p>
                 </div>
               )}
@@ -1039,7 +1039,7 @@ function ActiveConsultationView({
               </div>
             </div>
 
-            <div className="grid gap-2 sm:grid-cols-2">
+            <div className="grid gap-2 sm:grid-cols-3">
               {!followUpLocked ? (
                 <button
                   type="button"
@@ -1072,7 +1072,15 @@ function ActiveConsultationView({
                   ? '分享已打开'
                   : copyState === 'copied'
                     ? '已复制'
-                    : '分享'}
+                  : '分享'}
+              </button>
+              <button
+                type="button"
+                onClick={onReset}
+                className="inline-flex min-h-12 items-center justify-center gap-2 whitespace-nowrap rounded-btn border border-[var(--tebiq-soft-gray)] px-3 py-2.5 text-[16px] font-medium text-[var(--tebiq-ink-blue)]"
+              >
+                <MessageSquarePlus className="h-4 w-4" strokeWidth={1.6} />
+                新问题
               </button>
             </div>
             <p className="text-[12.5px] leading-[1.6] text-[var(--tebiq-cool-gray)]">

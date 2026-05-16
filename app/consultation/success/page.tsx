@@ -42,7 +42,7 @@ export default function ConsultationSuccessPage() {
               className="inline-flex min-h-[42px] items-center justify-center gap-1.5 text-[13px] font-medium text-ink"
             >
               <Library size={15} strokeWidth={1.55} />
-              查看速查
+              查看材料
             </Link>
           </div>
         </div>

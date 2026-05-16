@@ -17,7 +17,7 @@ const TABS: { href: string; label: string; Icon: LucideIcon; match: (p: string) 
   },
   {
     href: '/me/consultations',
-    label: '我的咨询',
+    label: '咨询记录',
     Icon: Archive,
     match: p => p.startsWith('/me/consultations') || p.startsWith('/c/'),
   },
@@ -29,7 +29,7 @@ const TABS: { href: string; label: string; Icon: LucideIcon; match: (p: string) 
   },
   {
     href: '/quick-reference',
-    label: '速查',
+    label: '材料',
     Icon: SearchCheck,
     match: p => p.startsWith('/quick-reference'),
   },
@@ -59,7 +59,7 @@ export default function TabBar() {
                   type="button"
                   disabled
                   aria-disabled="true"
-                  title="速查正在整理中"
+                  title="材料正在整理中"
                   className={className}
                 >
                   <Icon size={21} strokeWidth={1.5} color="#9AA0AC" />
