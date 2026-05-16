@@ -513,11 +513,22 @@ function normalize(filePath: string, raw: string): NormalizedCard {
 
   // Body sections
   const sections = extractSections(parsed.content)
-  const triggerKeywords = deriveTriggerKeywords(sections.commonUserPhraseBullets)
+  let triggerKeywords = deriveTriggerKeywords(sections.commonUserPhraseBullets)
+  // Fallback: bulk-imported cards (fact-window-bulk-* sprints) may use
+  // frontmatter `applies_when` array instead of the `## common_user_phrases`
+  // body section. Use it as the trigger source when the body section is
+  // empty so the new cards still wire into the matcher.
+  if (triggerKeywords.length === 0) {
+    const appliesWhen = (fm as { applies_when?: unknown }).applies_when
+    if (Array.isArray(appliesWhen) && appliesWhen.length > 0) {
+      const bullets = appliesWhen.filter((v): v is string => typeof v === 'string' && v.trim().length > 0)
+      triggerKeywords = deriveTriggerKeywords(bullets)
+    }
+  }
   if (triggerKeywords.length === 0) {
     throw new SyncError(
       factId,
-      'no trigger_keywords could be derived from `## common_user_phrases` section (matcher would never fire)',
+      'no trigger_keywords could be derived from `## common_user_phrases` section nor frontmatter `applies_when` (matcher would never fire)',
     )
   }
 
