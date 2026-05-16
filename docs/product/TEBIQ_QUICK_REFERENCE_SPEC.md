@@ -1,15 +1,20 @@
-# TEBIQ Quick Reference Spec
+# TEBIQ Materials Tab / Quick Reference Spec
 
-**Status:** active / product-engineering spec  
-**Owner:** Codex GM-OPS + Project Lead  
-**Consumers:** ENGINE, CODEXUI, FACT, DOMAIN, QA  
-**Last updated:** 2026-05-12
+**Status:** active / product-engineering spec
+**Owner:** Codex GM-OPS + Project Lead
+**Consumers:** ENGINE, CODEXUI, FACT, DOMAIN, QA
+**Last updated:** 2026-05-16
+
+> Naming note: `Quick Reference` is the historical/internal route name. The
+> user-facing surface should be called `材料` or `材料清单`, not `速查`.
 
 ---
 
 ## 1. Product Job
 
-Quick Reference is for the "small-known" user: someone who already knows the rough event and wants to quickly check common requirements.
+The Materials Tab is for the "small-known" user: someone who already knows the
+rough event and wants to check common requirements and official-material
+checklists.
 
 Examples:
 
@@ -24,14 +29,14 @@ It is not the main path for complex individual judgement. Complex cases should m
 
 ## 2. Positioning
 
-Quick Reference is:
+The Materials Tab is:
 
 - a fast checklist and source-backed reference surface;
 - a way to reduce noise for users who do not want a long AI answer;
 - a trust asset because official sources are visible and checkable;
 - a bridge into Ask when the user's facts are not covered by the simple checklist.
 
-Quick Reference is not:
+The Materials Tab is not:
 
 - a general knowledge encyclopedia;
 - a replacement for consultation;
@@ -56,7 +61,8 @@ Each user-facing card must contain:
 | sources | Official or high-quality sources |
 | askPrompt | Pre-filled Ask prompt for this topic |
 
-If a card cannot satisfy this shape, it should not be promoted as a full Quick Reference card yet.
+If a card cannot satisfy this shape, it should not be promoted as a full
+Materials card yet.
 
 ---
 
@@ -89,14 +95,15 @@ Every card should have a bridge back to Ask:
 
 > 带着这件事提问
 
-The prefilled question should include the event and the most likely uncertainty. This keeps Quick Reference and Ask as two entry modes of one product:
+The prefilled question should include the event and the most likely uncertainty.
+This keeps Materials and Ask as two entry modes of one product:
 
-- Quick Reference -> Ask when the checklist is not enough.
-- Ask -> Quick Reference when the answer has a matching checklist.
+- Materials -> Ask when the checklist is not enough.
+- Ask -> Materials when the answer has a matching checklist.
 
-The Ask -> Quick Reference bridge uses explicit fact-card mapping, not free-form string matching:
+The Ask -> Materials bridge uses explicit fact-card mapping, not free-form string matching:
 
-- Quick Reference topics declare `factCardIds`.
+- Materials topics declare `factCardIds`.
 - Answer pages read injected fact-card audit rows.
 - If a topic maps to an injected or hint-only fact card, the answer can show a compact "可快速核对" bridge.
 - The bridge should stay secondary. It must not compete with reading the answer, reference sources, or follow-up.
@@ -120,8 +127,8 @@ If the source is merely related, label it as "相关" and do not overstate it.
 
 ## 7. Maintenance
 
-Fact cards may provide raw evidence and official URLs, but Quick Reference cards need a user-readable layer.
+Fact cards may provide raw evidence and official URLs, but Materials cards need a user-readable layer.
 
-Do not expose raw prompt-injection text as user-facing Quick Reference content.
+Do not expose raw prompt-injection text as user-facing Materials content.
 
 FACT may propose candidate cards. ENGINE owns the product-facing data shape. DOMAIN reviews high-risk or practice-sensitive claims.

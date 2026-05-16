@@ -202,7 +202,7 @@ Each focused case should be reviewed for:
 
 ## 5. Materials Tab Mobile QA Checklist
 
-Materials / 速查 is a structured Chinese official-material checklist system. It is not an emergency channel, task-tracking system, generic article list, OCR archive, Matter, or Pro backend.
+Materials Tab is a structured Chinese official-material checklist system. It is not an emergency channel, task-tracking system, generic article list, OCR archive, Matter, or Pro backend. User-facing copy should say `材料` / `材料清单`; `速查` is deprecated as the tab label.
 
 ### Mobile Viewports
 
@@ -226,7 +226,7 @@ Minimum manual coverage:
 | No overlap | Text, badges, controls, and sticky elements do not overlap or hide content | P1 |
 | Loading/empty/error | States are readable and do not imply missing materials mean no requirement | P1 |
 | Long Chinese/Japanese terms | Long document names wrap cleanly and do not overflow | P2/P1 if blocking |
-| Tab persistence | Switching between 提问 and 材料/速查 does not lose user context unexpectedly | P2 |
+| Tab persistence | Switching between 提问 and 材料 does not lose user context unexpectedly | P2 |
 | Not emergency channel | UI does not suggest urgent legal crisis handling belongs in Materials tab | P1 |
 | Not task tracker | UI does not imply formal deadlines, assignment, case owner, or Matter workflow | P1 |
 

@@ -1,5 +1,11 @@
 # TEBIQ App 文案准则（APP_COPY_FINAL_V2）
 
+> **历史文档 / 已被当前 copy canon 降级。**
+>
+> 本文件保留为 2026-04-30 版本的文案参考，不再是当前用户端最终文案。
+> 当前冻结文案与 tab 命名以 `docs/product/TEBIQ_COPY_CANON.md` 和
+> `docs/product/TEBIQ_COPY_SOURCE.md` 为准。
+
 **版本**：v2 final
 **生成**：2026-04-30
 

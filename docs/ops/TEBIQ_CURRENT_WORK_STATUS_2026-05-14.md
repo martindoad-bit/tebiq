@@ -19,6 +19,154 @@ Current production:
 
 This file is retained as a workstream map. For current deployment truth, read `docs/product/TEBIQ_CURRENT_STATE.md` first.
 
+## 2026-05-16 Path To 1.0 Update
+
+The current long-running execution plan is now:
+
+```text
+docs/ops/TEBIQ_1_0_SIX_ENGINEERING_ROADMAP.md
+```
+
+TEBIQ 1.0 is defined as a stable residence-friction reduction system, not as a
+generic AI Q&A site and not as a replacement for administrative scriveners.
+
+The six ordered engineering programs are:
+
+1. **0.8.5 Release Candidate**: expand First24 to a 50-60 question real-user
+   provider-backed matrix, with AQL / DOMAIN / QA review and no unresolved P0/P1.
+2. **Knowledge Asset Import**: classify and govern fact cards, legal-source
+   cards, guardrails, materials cards, deep-water candidates, and source-only
+   evidence before runtime use.
+3. **Materials Tab Tooling**: turn Materials into practical mobile checklist
+   pages with where-to-get / who-prepares / timing / related links / ask bridge.
+4. **Deep-Water Routing And Professional Boundary**: detect high-risk cases and
+   route them safely without pretending to decide immigration practice.
+5. **Eval Lab Quality Flywheel**: make bad-answer diagnosis, AQL scoring,
+   DOMAIN review, and repair loops durable.
+6. **1.0 Release**: complete production sync, QA, smoke, docs, rollback, and
+   deploy to `tebiq.jp` only after gates pass.
+
+If a future window forgets the latest chat context, resume from the roadmap file
+and the live execution log in that file.
+
+## 2026-05-16 Card Import Governance Update
+
+Large card collections must now be imported through the active governance plan:
+
+```text
+docs/ops/TEBIQ_CARD_IMPORT_TO_PRODUCT_PLAN.md
+```
+
+Current rule:
+
+- `docs/fact-cards/*.md` can become positive answer facts only through
+  `fact_cards` sync, matcher gate, audit, and regression;
+- P0/P1 guardrail findings should become route gates / validators, not
+  positive claims;
+- Materials cards should enter the Materials Tab as scenario/common-material
+  checklists, not as approval predictions;
+- deep-water candidates are for extraction and professional routing, not for
+  deterministic answers.
+
+2026-05-16 check:
+
+- filesystem fact cards: 101 sync-scannable cards;
+- DB fact cards: 101 rows in the current `.env.local` target after
+  `npm run fact-layer:sync`;
+- DB drift: none reported by `npm run qa:card-import-audit`;
+- `npm run fact-layer:sync:dry` passes for all 101 filesystem cards;
+- `scripts/qa/fact-layer-qa-runner.ts` now listens to `fact_cards_injected`
+  instead of the old `fact_cards` event;
+- `zairyu-address-change` now has a narrow matcher exception so ordinary
+  moving/address questions can cite the source-backed low-risk card without
+  globally lowering matcher thresholds.
+- `npm run qa:card-import-audit` now reports filesystem/DB drift, Materials
+  fact-card references, and route-gate source asset coverage.
+- Materials `job-change` no longer references the non-existent
+  `gijinkoku-job-change-notification` card.
+
+## 2026-05-16 TEBIQ 0.8.5 Batch A Update
+
+0.8.5 target:
+
+```text
+知识接入稳定化 + 材料产品化 + Eval Lab 可观察性。
+```
+
+Batch A completed locally:
+
+- FACT / DOMAIN / AQL / ENGINE agents were re-engaged for 0.8.5:
+  - DOMAIN review: `docs/domain/TEBIQ_0_8_5_IMPORT_DOMAIN_REVIEW.md`;
+  - AQL plan: `docs/eval/TEBIQ_0_8_5_AQL_TEST_PLAN.md`;
+  - ENGINE review: `docs/engineering/TEBIQ_0_8_5_CARD_IMPORT_ENGINEERING_REVIEW.md`;
+  - FACT returned a first import list: 20 positive candidates, 10 Materials
+    mount points, 15 guardrail/deep-water cards.
+- Materials now has stable single-topic pages at `/quick-reference/[id]`;
+  answer-to-material bridges now open the topic page instead of a long-list
+  hash anchor.
+- Materials topics now support `relatedTopicIds`, so one scenario can point to
+  adjacent checklists without forcing the user to scan the full page.
+- Live consultation completion actions now include a clear `新问题` action next
+  to `补充` and `分享`.
+- Eval Lab answer columns now show a compact knowledge trace from
+  `raw_payload_json`: fact-card ids, route-gate ids, and validator finding
+  count.
+- `fact_cards_injected` audit rows now carry optional matcher diagnostics:
+  `matched_keywords`, `score`, and `decision_reason`.
+- AQL first-run pack was written to
+  `docs/eval/TEBIQ_0_8_5_CARD_IMPORT_FIRST24.json` and imported into the
+  local Eval Lab DB (`received=24`, `inserted=24` on first import).
+- `npm run eval:0.8.5:first24-routes` checks the 0.8.5 first-24 route-gate
+  expectations; current result is `15/15`.
+- Matcher aliases/context guards were expanded so ordinary user phrasing
+  retrieves more useful procedural/material cards while reducing broad
+  high-risk overmatch on 永住/技人国/更新.
+- First24 provider-backed TEBIQ run completed on local production start with
+  `EVAL_LAB_ENABLED=1` and `FACT_LAYER_ENABLED=true`:
+  - result file: `docs/eval/TEBIQ_0_8_5_FIRST24_RUN_RESULT.json`;
+  - `24/24 completed`;
+  - `0` guardrail validator findings after rerunning corrected samples;
+  - `21/24` answers carried fact-card audit rows;
+  - the 3 answers without fact-card rows are expected route-gate/negative-control
+    cases: immigration notice taxonomy, nonpermission appeal, short-stay meeting.
+- Two validator false positives were fixed with regression tests:
+  - negative/contrast wording for national tax `納税証明書その3` vs municipal
+    resident-tax certificates;
+  - short-stay business meeting wording that explicitly stays inside meeting /
+    business-contact scope.
+- One renewal/materials validator false positive was fixed:
+  - `材料齐备不代表许可` is now safe evidence, while guaranteed-permission
+    language remains blocked.
+- Local smoke:
+  - `/quick-reference`, `/quick-reference/address-change`,
+    `/quick-reference/job-change`, and `/internal/eval-lab?key=...` returned 200;
+  - fact-layer dry-run for a moving/address question returned only
+    `zairyu-address-change` after adding a context guard for `tensyoku-zairyu`.
+- AQL focused re-check after targeted fixes:
+  - First24 status improved from `yellow` to `green-ish internal pass`;
+  - P1s closed for `E01-late-tax-followup`, `C02-incomplete-material-before-expiry`,
+    and `C08-gijinkoku-restaurant-help`;
+  - remaining issues are P2 copy/prompt precision: avoid overfitting incomplete
+    material answers to a specific visa, and avoid implying that qualification-
+    outside-activity permission is a simple fix for 技人国 mixed duties.
+- The two P2 prompt precision issues above were also tightened in route gates and
+  targeted rerun:
+  - `C02` now says the visa type is unknown and frames the issue around formal
+    acceptance by the window, not an assumed 経営管理 update;
+  - `C08` now avoids both the wrong 特定技能 food-manufacturing example and the
+    “just get shikakugai” shortcut.
+
+Known remaining 0.8.5 work:
+
+- The first-24 exact fact-card expectation is much better, but not fully
+  perfect under the current `MAX_INJECTED=2` cap: one return-home materials
+  prompt expects three related facts, while the runtime can inject only two.
+- Route-gate `sourceAssetIds` still include code/ledger ids that the audit
+  cannot resolve to concrete files. This remains a registry cleanup task, not
+  a runtime blocker.
+- Production visibility still depends on target runtime having
+  `FACT_LAYER_ENABLED=true` and a synced `fact_cards` table.
+
 ## North Star
 
 TEBIQ is not trying to make AI "beat immigration practice" or replace scriveners.
@@ -58,7 +206,7 @@ Answer summary labels must remain:
 暂缓事项
 ```
 
-### 材料 / 速查 Tab
+### 材料 Tab
 
 Current direction:
 
@@ -66,6 +214,7 @@ Current direction:
 - not a heavy task-tracking companion;
 - not a generic article list;
 - a structured Chinese official-material checklist system for "小明用户" who roughly know what they are preparing.
+- user-facing name should be `材料` / `材料清单`; `速查` is an old shorthand and should not be reintroduced as the tab label.
 
 The next improvement is not random UI copy. It is materials thickness:
 

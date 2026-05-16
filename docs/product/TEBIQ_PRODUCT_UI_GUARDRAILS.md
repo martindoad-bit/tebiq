@@ -48,7 +48,7 @@ Every screen must answer one user question:
 | Answer | "What should I understand and do next?" |
 | My Consultations | "Can I find what I asked before?" |
 | Scrivener | "How do I talk to a person if I need to?" |
-| Quick Reference | "Can I quickly check a common rule?" |
+| Materials | "Can I prepare or verify a common materials checklist?" |
 
 If a screen introduces copy or buttons that serve a second job, demote or remove them.
 
@@ -93,7 +93,7 @@ Desktop passing does not count as mobile passing.
 Primary mobile pages must use one consistent content rail:
 
 - no page should appear to drift left or right compared with other tabs;
-- outer padding must be stable across Ask / Answer / My Consultations / Scrivener / Quick Reference;
+- outer padding must be stable across Ask / Answer / My Consultations / Scrivener / Materials;
 - cards should align to the same left edge as page text unless there is an intentional nested block.
 
 Nested cards are allowed only when they add meaning. Nested cards must not create a "thin column" effect.
@@ -270,9 +270,12 @@ If claim-level evidence is not available, show a weaker label and avoid overstat
 
 ---
 
-## 6. Quick Reference Rules
+## 6. Materials Tab Rules
 
-Quick Reference is only useful if it behaves like a small handbook.
+The Materials Tab is only useful if it behaves like a small official-material
+handbook and checklist system. `Quick Reference` may remain as an internal route
+or legacy spec name, but user-facing copy should say `材料` or `材料清单`, not
+`速查`.
 
 Minimum bar before full tab exposure:
 
@@ -297,7 +300,7 @@ Block release / production push if any appears:
 - page title alignment changes without rule or exception;
 - answer failure state hides retry / recovery below supporting content;
 - evidence card becomes cramped, vertical, clipped, or unreadable on mobile;
-- Quick Reference is exposed as finished while core search / card expansion is clearly broken;
+- Materials Tab is exposed as finished while core search / card expansion is clearly broken;
 - bottom navigation blocks primary content or primary action;
 - user-visible internal fields, model names, enum strings, or debug terms appear.
 
@@ -335,8 +338,8 @@ Any PR touching user-facing UI, copy, evidence, answer rendering, app shell, or 
 6. Evidence block collapsed and expanded;
 7. My Consultations empty;
 8. My Consultations with records;
-9. Quick Reference initial view, if exposed;
-10. Quick Reference card expanded, if exposed;
+9. Materials Tab initial view, if exposed;
+10. Materials Tab card expanded, if exposed;
 11. Bottom navigation switching across all visible tabs.
 
 At minimum, provide iPhone 13 Pro screenshots or an explicit note that the path is temporarily disabled.
@@ -355,7 +358,7 @@ Before merge / production push, answer:
 - [ ] Does bottom navigation avoid covering content?
 - [ ] Does copy avoid repeating visible UI?
 - [ ] Is every exposed tab good enough to be treated as usable?
-- [ ] Were Ask / Answer / My Consultations / Quick Reference checked if touched?
+- [ ] Were Ask / Answer / My Consultations / Materials checked if touched?
 - [ ] If a rule is broken intentionally, is the exception written in the PR?
 
 If any answer is "no," do not ship until the issue is fixed or explicitly accepted by Project Lead.

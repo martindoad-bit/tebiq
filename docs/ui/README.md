@@ -8,7 +8,7 @@ downstream_consumers: GM / ENGINE / QA / VOICE / DOMAIN
 # docs/ui/
 
 > TEBIQ UI 资产目录。CODEXUI 窗口的输出统一进入此目录。
-> 区别于 `docs/product/`（产品宪章 / 状态 / 决策）和 `docs/voice/`（user-visible copy canonical）。
+> 区别于 `docs/product/`（产品宪章 / 状态 / 决策 / 当前 copy canon）和 `docs/voice/`（历史与 draft copy assets）。
 > 所有内容均为 internal / preview-only / not production。
 
 ---
@@ -26,7 +26,7 @@ downstream_consumers: GM / ENGINE / QA / VOICE / DOMAIN
 
 ## 不放什么
 
-- ❌ user-visible copy（→ `docs/voice/`）
+- ❌ user-visible copy（→ current canon in `docs/product/TEBIQ_COPY_CANON.md` + workflow in `docs/product/TEBIQ_COPY_SOURCE.md`; historical drafts may live in `docs/voice/`）
 - ❌ DOMAIN 风险分级（→ `docs/domain/`）
 - ❌ 产品宪章（→ `docs/product/`）
 - ❌ 工程 Work Packet（→ `docs/ops/`）
@@ -44,7 +44,7 @@ downstream_consumers: GM / ENGINE / QA / VOICE / DOMAIN
 
 ## 引用 VOICE / DOMAIN
 
-UI 规格中需要 user-visible copy 时，**不直接写 copy**，而是引用 VOICE canonical：
+UI 规格中需要 user-visible copy 时，**不直接写 copy**。优先引用 current copy canon；仅对 preview-only 旧资产引用 `docs/voice/`：
 
 ```
 [Alpha 顶部提示] → docs/voice/TEBIQ_PREVIEW_STATE_COPY_MAP.md (alpha_top_banner)
