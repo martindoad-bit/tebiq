@@ -21,100 +21,7 @@
   "duplicate_starter_tags": [],
   "missing_question_text": [],
   "unknown_expected_route_gate_ids": [],
-  "route_gate_pattern_misses": [
-    {
-      "starter_tag": "0.8.5-rc60-M14-pr-first-documents",
-      "missing": [
-        "pr-basic-requirements-not-years-only"
-      ],
-      "actual": []
-    },
-    {
-      "starter_tag": "0.8.5-rc60-B02-incomplete-materials-safe-bridge",
-      "missing": [
-        "incomplete-materials-before-expiry-no-safe-bridge"
-      ],
-      "actual": []
-    },
-    {
-      "starter_tag": "0.8.5-rc60-B12-short-stay-paid-project",
-      "missing": [
-        "short-stay-no-work-no-shikakugai"
-      ],
-      "actual": []
-    },
-    {
-      "starter_tag": "0.8.5-rc60-DW05-false-application-material",
-      "missing": [
-        "application-truthfulness-no-false-info"
-      ],
-      "actual": []
-    },
-    {
-      "starter_tag": "0.8.5-rc60-DW06-business-manager-no-business-change-job",
-      "missing": [
-        "pending-status-change-current-activity-only",
-        "business-manager-disposition-no-auto-success"
-      ],
-      "actual": [
-        "individual-duty-not-replaced-by-third-party"
-      ]
-    },
-    {
-      "starter_tag": "0.8.5-rc60-DW07-spouse-divorce-remarriage",
-      "missing": [
-        "notification-duty-violation-not-harmless",
-        "status-cancellation-before-expiry-boundary"
-      ],
-      "actual": []
-    },
-    {
-      "starter_tag": "0.8.5-rc60-DW11-status-cancellation-letter",
-      "missing": [
-        "immigration-notice-taxonomy-first",
-        "status-cancellation-before-expiry-boundary"
-      ],
-      "actual": []
-    },
-    {
-      "starter_tag": "0.8.5-rc60-DW12-hsp2-automatic-pr",
-      "missing": [
-        "hsp2-not-automatic-not-pr"
-      ],
-      "actual": [
-        "ssw1-ssw2-boundary",
-        "pr-basic-requirements-not-years-only"
-      ]
-    },
-    {
-      "starter_tag": "0.8.5-rc60-F03-gijinkoku-renewal-new-company-followup",
-      "missing": [
-        "incomplete-materials-before-expiry-no-safe-bridge"
-      ],
-      "actual": [
-        "renewal-change-not-automatic-discretion"
-      ]
-    },
-    {
-      "starter_tag": "0.8.5-rc60-F06-expiry-window-rejection-followup",
-      "missing": [
-        "incomplete-materials-before-expiry-no-safe-bridge",
-        "renewal-filing-window-not-after-expiry"
-      ],
-      "actual": [
-        "residence-card-expiry-vs-status-period"
-      ]
-    },
-    {
-      "starter_tag": "0.8.5-rc60-F09-business-manager-new-job-followup",
-      "missing": [
-        "pending-status-change-current-activity-only"
-      ],
-      "actual": [
-        "business-manager-disposition-no-auto-success"
-      ]
-    }
-  ],
+  "route_gate_pattern_misses": [],
   "unknown_expected_fact_hint_ids": [
     {
       "starter_tag": "0.8.5-rc60-M05-immigration-notice-photos",
@@ -307,8 +214,8 @@
   ],
   "totals": {
     "expected_route_cases": 41,
-    "route_passes": 30,
-    "route_failures": 11,
+    "route_passes": 41,
+    "route_failures": 0,
     "negative_controls": 10,
     "negative_overmatch": 2
   },
