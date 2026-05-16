@@ -1,7 +1,7 @@
 # TEBIQ Project Memory
 
 **Status:** current memory router / not a standalone product spec
-**Last updated:** 2026-05-16
+**Last updated:** 2026-05-17
 **Owner:** Codex Production Lead / AI Engineering Lead
 
 > Start here only to understand where current truth lives.
@@ -9,6 +9,16 @@
 >
 > Previous memory snapshots and early product assumptions are archived under
 > `docs/archive/memory/`.
+
+---
+
+## 0a. AI Agent 协作工作模式（**所有 AI 接手者第一时间必读**）
+
+> **强制约定**：在 TEBIQ 上工作的 AI agent（Claude Code / Codex / 任何其他 agent）**先读** `docs/ops/TEBIQ_AI_AGENT_WORK_MODE.md` **再开工**。
+>
+> 核心：**Agent 自决工程，user 只决业务。**中间不汇报，结束才交付可视化产品改动。Work Block 模式（4-12 小时一个完整可见改动），不是 PR-by-PR 模式。
+>
+> 如果这份 work mode 跟其他 ops 文档冲突（ROLES_V2 / DELEGATION_PRINCIPLES / Work Packet 模板），以 work mode 为准。前者是按人类工程组织写的，对 agent 不适用。
 
 ---
 

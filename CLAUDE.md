@@ -4,6 +4,14 @@
 > 所有 AI 窗口开始任何任务前必须先读此文件，然后读 `AGENTS.md`。
 > 如无法读取此文件，必须停止，不得凭记忆执行任务。
 
+## ⚠️ 必读 0 号：AI Agent 工作模式
+
+**任何 AI agent 开工前第一件事**：读 [docs/ops/TEBIQ_AI_AGENT_WORK_MODE.md](docs/ops/TEBIQ_AI_AGENT_WORK_MODE.md)。
+
+核心：**Agent 自决工程，user 只决业务。** Work Block 模式（4-12 小时一个完整可见改动 + 中间不汇报 + 结束才给可视化交付物）。**不要**按人类工程师 SOP 工作（小 PR、频繁 ask、问 user "做 A 还是 B"）—— 那对 AI agent 是 80% 的浪费。
+
+如果 work mode 跟其他 ops 文档冲突，**以 work mode 为准**。
+
 ## TEBIQ 是什么
 
 **面向在日外国人的在留风险管理服务系统。**
@@ -15,9 +23,10 @@ TEBIQ 不是 AI 签证问答 App、不是签证知识库、不是行政书士官
 
 | 步骤 | 文件 | 场景 |
 |------|------|------|
+| **0** | **`docs/ops/TEBIQ_AI_AGENT_WORK_MODE.md`** | **所有 AI agent 第一时间必读** |
 | 1 | 本文件（CLAUDE.md） | 所有窗口 |
-| 2 | `docs/ops/TEBIQ_DELEGATION_PRINCIPLES.md` | **所有窗口（多窗口协作通用原则；任何 Work Packet 底层规则）** |
-| 3 | `docs/ops/TEBIQ_ROLES_V2.md` | 所有窗口（当前 Founder / Codex / Claude.ai 分工）|
+| 2 | `docs/ops/TEBIQ_DELEGATION_PRINCIPLES.md` | 多窗口协作通用原则；**对 AI agent 而言仅作为参考，以 work mode 为准** |
+| 3 | `docs/ops/TEBIQ_ROLES_V2.md` | 当前 Founder / Codex / Claude.ai 分工；**对 AI agent 而言仅作为参考，以 work mode 为准** |
 | 4 | `docs/product/TEBIQ_CURRENT_STATE.md` | 所有窗口（当前工程快照）|
 | 5 | `docs/product/TEBIQ_CONTEXT_PACK.md` | 所有窗口（长期产品原则）|
 | 6 | `docs/product/TEBIQ_QA_GATES.md` | QA / PR 审计 |
