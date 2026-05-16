@@ -2,6 +2,8 @@
 
 import { useState } from 'react'
 import type { AnswerViewModel, PublicAnswer } from '@/lib/answer/core/types'
+import type { HandoffEntry } from '@/lib/consultation/deep-water-handoff'
+import DeepWaterHandoff from '@/components/answer/DeepWaterHandoff'
 
 // Answer Core V1 renderer.
 //
@@ -23,9 +25,14 @@ const FEEDBACK_OPTIONS = [
 export default function AnswerResultView({
   viewModel,
   answerId,
+  handoff,
 }: {
   viewModel: AnswerViewModel
   answerId?: string | null
+  /** Deep-water professional handoff. Server-computed in page.tsx from
+   *  the question's route-gate matches. Null when no deep-water family
+   *  fired. See lib/consultation/deep-water-handoff.ts. */
+  handoff?: HandoffEntry | null
 }) {
   const [feedback, setFeedback] = useState<string | null>(null)
   const [busyFeedback, setBusyFeedback] = useState<string | null>(null)
@@ -161,6 +168,10 @@ export default function AnswerResultView({
             )}
           </div>
         </section>
+      )}
+
+      {showActionTemplate && handoff && (
+        <DeepWaterHandoff handoff={handoff} />
       )}
 
       {(status === 'clarification_needed' || status === 'out_of_scope') && p.clarification_questions.length > 0 && (

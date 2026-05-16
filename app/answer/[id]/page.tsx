@@ -13,6 +13,8 @@ import { getAiConsultationById } from '@/lib/db/queries/aiConsultations'
 import { extractAnswerRun, reconstructLegacyRun } from '@/lib/answer/core/persistence'
 import { toViewModel } from '@/lib/answer/core/view-model'
 import type { AnswerSection } from '@/lib/answer/types'
+import { matchRouteGates } from '@/lib/consultation/route-gates'
+import { getHandoffForMatches } from '@/lib/consultation/deep-water-handoff'
 import AnswerResultView from './AnswerResultView'
 
 // Answer Core V1 page.
@@ -102,9 +104,18 @@ export default async function AnswerPage({
 
   const viewModel = toViewModel(finalRun, { id: draft.id })
 
+  // Deep-water professional handoff (Program 4 / 0.8.5).
+  // Computed server-side from the persisted question text so the answer
+  // page can render the "找谁确认" block whenever the underlying
+  // question hit a deep-water route gate. Pure, no DB write — same
+  // matcher the streaming endpoint uses to build prompt context.
+  const handoff = getHandoffForMatches(
+    matchRouteGates({ question: draft.questionText ?? '' }),
+  )
+
   return (
     <AppShell appBar={<AppBar title="下一步" back="/" />} tabBar={<TabBar />}>
-      <AnswerResultView viewModel={viewModel} answerId={draft.id} />
+      <AnswerResultView viewModel={viewModel} answerId={draft.id} handoff={handoff} />
     </AppShell>
   )
 }
