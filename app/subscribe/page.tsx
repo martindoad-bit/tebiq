@@ -103,7 +103,7 @@ export default function SubscribePage() {
       <ConsumerProtectionNotice />
 
       <p className="mt-4 text-center text-[12px] text-ash">
-        <Link href="/me/consultations" className="underline-offset-4 hover:text-ink">查看我的咨询</Link>
+        <Link href="/me/consultations" className="underline-offset-4 hover:text-ink">查看咨询记录</Link>
       </p>
     </AppShell>
   )

@@ -4,9 +4,9 @@ import { usePathname } from 'next/navigation'
 
 const ITEMS = [
   { href: '/ai-consultation', label: '提问', match: (p: string) => p === '/' || p.startsWith('/ai-consultation') },
-  { href: '/me/consultations', label: '我的咨询', match: (p: string) => p.startsWith('/me/consultations') || p.startsWith('/c/') },
+  { href: '/me/consultations', label: '咨询记录', match: (p: string) => p.startsWith('/me/consultations') || p.startsWith('/c/') },
   { href: '/scrivener', label: '找书士', match: (p: string) => p.startsWith('/scrivener') || p.startsWith('/consultation') },
-  { href: '/quick-reference', label: '速查', match: (p: string) => p.startsWith('/quick-reference') },
+  { href: '/quick-reference', label: '材料', match: (p: string) => p.startsWith('/quick-reference') },
 ] as const
 
 export default function MobileNav() {

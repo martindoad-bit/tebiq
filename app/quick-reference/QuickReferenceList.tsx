@@ -5,11 +5,13 @@ import { useEffect, useState } from 'react'
 import type { ReactNode } from 'react'
 import { BookOpenText, ChevronDown, ExternalLink, MessageSquarePlus, Search } from 'lucide-react'
 import { StatusBadge } from '@/components/ui/tebiq'
-import type {
-  QuickReferenceFact,
-  QuickReferenceSource,
-  QuickReferenceTopic,
-  QuickReferenceVerification,
+import {
+  getQuickReferenceTopicHref,
+  getRelatedQuickReferenceTopics,
+  type QuickReferenceFact,
+  type QuickReferenceSource,
+  type QuickReferenceTopic,
+  type QuickReferenceVerification,
 } from '@/lib/quick-reference/topics'
 
 const verificationLabel: Record<QuickReferenceVerification, string> = {
@@ -160,6 +162,7 @@ function TopicCard({
 }) {
   const askHref = `/ai-consultation?q=${encodeURIComponent(topic.askPrompt ?? `${topic.title}，我想确认自己该怎么处理。`)}`
   const needsCheck = topic.facts.some(fact => fact.verification === 'needs-check')
+  const relatedTopics = getRelatedQuickReferenceTopics(topic)
 
   return (
     <details
@@ -223,6 +226,33 @@ function TopicCard({
             ) : null}
           </div>
         )}
+
+        <div className="grid gap-2.5">
+          <Link
+            href={getQuickReferenceTopicHref(topic.id)}
+            className="focus-ring inline-flex min-h-10 w-fit max-w-full items-center gap-2 rounded-btn border border-hairline bg-paper px-3 text-[14px] font-medium text-ink"
+          >
+            打开这份清单
+            <span aria-hidden="true">→</span>
+          </Link>
+
+          {relatedTopics.length > 0 && (
+            <div className="rounded-[10px] border border-hairline px-3.5 py-3">
+              <p className="text-[14px] font-medium text-ink">相关清单</p>
+              <div className="mt-2 flex flex-wrap gap-2">
+                {relatedTopics.slice(0, 4).map(item => (
+                  <Link
+                    key={item.id}
+                    href={getQuickReferenceTopicHref(item.id)}
+                    className="focus-ring inline-flex min-h-9 max-w-full items-center rounded-btn bg-paper px-3 text-[13px] font-medium text-slate"
+                  >
+                    <span className="min-w-0 truncate">{item.title}</span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
 
         <div className="rounded-[10px] border border-hairline bg-paper px-3.5 py-3">
           <p className="text-[14px] leading-[1.7] text-ash">

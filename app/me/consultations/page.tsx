@@ -21,7 +21,7 @@ import {
 export const dynamic = 'force-dynamic'
 
 export const metadata = {
-  title: 'TEBIQ — 我的咨询',
+  title: 'TEBIQ — 咨询记录',
   robots: { index: false, follow: false },
 }
 
@@ -45,7 +45,7 @@ export default async function MyConsultationsPage() {
       <div className="space-y-5">
         <BrandHeader
           eyebrow="自动记录"
-          title="我的咨询"
+          title="咨询记录"
           description="同一浏览器会自动记录你问过的在留问题。可以回看、删除，也可以自己决定是否分享。"
           action={
             <Link
