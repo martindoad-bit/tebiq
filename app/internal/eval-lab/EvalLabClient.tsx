@@ -1616,6 +1616,12 @@ export default function EvalLabClient() {
           >
             导出完整 JSON
           </a>
+          <a
+            href={`/api/internal/eval-lab/export?type=annotations&reviewer=${encodeURIComponent(reviewer)}`}
+            className="text-xs px-3 py-1.5 border border-emerald-300 rounded bg-emerald-50 text-emerald-700 hover:bg-emerald-100"
+          >
+            导出批注 JSON
+          </a>
           {isKnowledgeReviewMode && (
             <a
               href="/api/internal/eval-lab/export?type=knowledge_ab"
@@ -1835,6 +1841,17 @@ export default function EvalLabClient() {
                   </>
                 )}
               </div>
+
+              <QuickVerdictBar
+                edit={selectedEdit}
+                annotation={annotationByQuestion[selected.id] ?? null}
+                reviewer={reviewer}
+                questionId={selected.id}
+                onAnnotate={patch => onAnnotate(selected.id, patch)}
+                onAnnotationSaved={ann =>
+                  setAnnotationByQuestion(prev => ({ ...prev, [selected.id]: ann }))
+                }
+              />
 
               <div className="flex gap-2 text-[11px]">
                 {!selectedIsKnowledgeDebug && (selectedStatus.deepseek === 'failed' || selectedStatus.tebiq === 'failed') && (
@@ -2077,6 +2094,161 @@ function TraceRow({
 function stringArray(value: unknown): string[] {
   if (!Array.isArray(value)) return []
   return value.filter((item): item is string => typeof item === 'string' && item.trim().length > 0)
+}
+
+// Quick-verdict bar — 4 one-click buttons that write a verdict into the
+// annotation row plus an inline notes textarea. Lives inside the center
+// comparison column so reviewers don't have to round-trip to the right
+// side form just to mark obvious cases.
+//
+// Mapping rationale (default verdict = 'unsure' so accidental clicks do
+// not silently flip a row to PASS or P0):
+//   ✓ 对    → score=5, severity='OK', json.quick_verdict='correct'
+//   ✗ 错    → score=1, severity='P0', json.quick_verdict='incorrect'
+//   △ 部分  → score=3, severity='P2', json.quick_verdict='partial'
+//   ? 不确定 → score=null, severity=null, json.quick_verdict='unsure'
+//
+// score+severity stay in sync with the existing form fields so the
+// existing filters / exports / AQL gates keep working. The verdict
+// string is the new piece — it survives in annotation_json and shows up
+// in the dedicated annotation export.
+//
+// We POST verdict + score + severity in a single request so the existing
+// onAnnotate debounce path can't race-overwrite the verdict. The
+// notes textarea is wired to the existing onAnnotate handler (which
+// debounces at 500ms) since it has no overlap with the verdict POST.
+type QuickVerdict = 'correct' | 'incorrect' | 'partial' | 'unsure'
+
+const QUICK_VERDICT_PRESETS: Record<
+  QuickVerdict,
+  { score: number | null; severity: Severity | ''; label: string; cls: string }
+> = {
+  correct: {
+    score: 5,
+    severity: 'OK',
+    label: '✓ 对',
+    cls: 'border-emerald-300 bg-emerald-50 text-emerald-700 hover:bg-emerald-100',
+  },
+  incorrect: {
+    score: 1,
+    severity: 'P0',
+    label: '✗ 错',
+    cls: 'border-red-300 bg-red-50 text-red-700 hover:bg-red-100',
+  },
+  partial: {
+    score: 3,
+    severity: 'P2',
+    label: '△ 部分',
+    cls: 'border-amber-300 bg-amber-50 text-amber-700 hover:bg-amber-100',
+  },
+  unsure: {
+    score: null,
+    severity: '',
+    label: '? 不确定',
+    cls: 'border-slate-300 bg-white text-slate-700 hover:bg-slate-100',
+  },
+}
+
+function readQuickVerdict(json: Record<string, unknown> | null | undefined): QuickVerdict | null {
+  const v = json?.quick_verdict
+  if (v === 'correct' || v === 'incorrect' || v === 'partial' || v === 'unsure') return v
+  return null
+}
+
+function QuickVerdictBar({
+  edit,
+  annotation,
+  reviewer,
+  questionId,
+  onAnnotate,
+  onAnnotationSaved,
+}: {
+  edit: EditableAnnotation
+  annotation: AnnotationRow | null
+  reviewer: string
+  questionId: string
+  onAnnotate: (patch: Partial<EditableAnnotation>) => void
+  onAnnotationSaved: (row: AnnotationRow) => void
+}) {
+  const currentVerdict = readQuickVerdict(annotation?.annotation_json)
+
+  const applyVerdict = async (v: QuickVerdict) => {
+    const saved = await writeQuickVerdict(
+      questionId,
+      reviewer,
+      v,
+      annotation?.annotation_json ?? {},
+    )
+    if (saved) onAnnotationSaved(saved)
+  }
+
+  return (
+    <div className="border border-slate-200 bg-slate-50 rounded p-2 space-y-2">
+      <div className="flex items-center gap-2">
+        <span className="text-[10px] uppercase tracking-wider text-slate-500">快速判定</span>
+        {currentVerdict && (
+          <span className="text-[10px] text-slate-500">
+            当前：{QUICK_VERDICT_PRESETS[currentVerdict].label}
+          </span>
+        )}
+        <div className="ml-auto flex gap-1">
+          {(Object.keys(QUICK_VERDICT_PRESETS) as QuickVerdict[]).map(v => {
+            const p = QUICK_VERDICT_PRESETS[v]
+            const isActive = currentVerdict === v
+            return (
+              <button
+                key={v}
+                type="button"
+                onClick={() => { void applyVerdict(v) }}
+                className={`text-[11px] px-2 py-1 border rounded ${p.cls} ${isActive ? 'ring-2 ring-offset-1 ring-slate-400' : ''}`}
+              >
+                {p.label}
+              </button>
+            )
+          })}
+        </div>
+      </div>
+      <textarea
+        value={edit.reviewer_note}
+        onChange={e => onAnnotate({ reviewer_note: e.target.value })}
+        rows={2}
+        placeholder="批注（可选，会同步右侧 reviewer_note）"
+        className="w-full border border-slate-300 rounded px-2 py-1 text-xs"
+      />
+    </div>
+  )
+}
+
+// One-shot write that carries the quick_verdict + score + severity in a
+// single POST so the existing onAnnotate debounce path can't race-overwrite
+// the verdict. Returns the persisted row so the caller can refresh local
+// state; null on failure.
+async function writeQuickVerdict(
+  questionId: string,
+  reviewer: string,
+  verdict: QuickVerdict,
+  existingJson: Record<string, unknown>,
+): Promise<AnnotationRow | null> {
+  if (!questionId) return null
+  try {
+    const r = await fetch('/api/internal/eval-lab/annotation', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        question_id: questionId,
+        reviewer,
+        score: QUICK_VERDICT_PRESETS[verdict].score,
+        severity: QUICK_VERDICT_PRESETS[verdict].severity || null,
+        annotation_json: { ...existingJson, quick_verdict: verdict },
+      }),
+    })
+    const j = (await r.json()) as { ok?: boolean; annotation?: AnnotationRow }
+    if (j.ok && j.annotation) return j.annotation
+    return null
+  } catch (err) {
+    console.warn('[eval-lab] quick verdict write failed', err)
+    return null
+  }
 }
 
 function AnnotationForm({
