@@ -1,0 +1,1300 @@
+{
+  "summary": {
+    "generated_at": "2026-05-16T15:07:06.724Z",
+    "prefix": "0.8.5-rc60-",
+    "total": 60,
+    "ok": 59,
+    "failed": 1,
+    "with_findings": 4,
+    "with_routes": 53,
+    "with_facts": 46,
+    "failed_samples": [
+      {
+        "starter_tag": "0.8.5-rc60-DW01-special-period-departure",
+        "status": "partial",
+        "error": null,
+        "fallback": "stream_partial",
+        "chars": 0
+      }
+    ],
+    "with_findings_samples": [
+      {
+        "starter_tag": "0.8.5-rc60-B06-renewal-materials-guarantee",
+        "findings": [
+          "answer-renewal-change-guaranteed-by-docs"
+        ]
+      },
+      {
+        "starter_tag": "0.8.5-rc60-DW01-special-period-departure",
+        "findings": [
+          "answer-special-period-departure-overconfidence"
+        ]
+      },
+      {
+        "starter_tag": "0.8.5-rc60-M04-family-stay-sponsor-docs",
+        "findings": [
+          "answer-renewal-change-guaranteed-by-docs"
+        ]
+      },
+      {
+        "starter_tag": "0.8.5-rc60-M11-job-change-company-docs",
+        "findings": [
+          "answer-renewal-change-guaranteed-by-docs"
+        ]
+      }
+    ]
+  },
+  "results": [
+    {
+      "starter_tag": "0.8.5-rc60-B03-hsp-institution-start-work",
+      "question_id": "x1mmce9pb67a3jeoo1y77za0",
+      "ok": true,
+      "http": 200,
+      "status": "completed",
+      "engine_version": "consultation_alpha_v18:deepseek-v4-pro",
+      "prompt_version": null,
+      "fallback_reason": null,
+      "error": null,
+      "answer_chars": 0,
+      "fact_card_ids": [
+        "kodo-senmon-shoku-points",
+        "tensyoku-zairyu"
+      ],
+      "route_gate_ids": [
+        "pending-status-change-current-activity-only",
+        "hsp1-institution-change-permission-first",
+        "individual-duty-not-replaced-by-third-party",
+        "status-cancellation-before-expiry-boundary",
+        "notification-duty-violation-not-harmless"
+      ],
+      "guardrail_findings": [],
+      "latency_ms": 77697
+    },
+    {
+      "starter_tag": "0.8.5-rc60-B02-incomplete-materials-safe-bridge",
+      "question_id": "mk8qgydeb0fgs7geo2o3xidf",
+      "ok": true,
+      "http": 200,
+      "status": "completed",
+      "engine_version": "consultation_alpha_v18:deepseek-v4-pro",
+      "prompt_version": null,
+      "fallback_reason": null,
+      "error": null,
+      "answer_chars": 0,
+      "fact_card_ids": [
+        "zairyu-expiry-renewal-change"
+      ],
+      "route_gate_ids": [
+        "incomplete-materials-before-expiry-no-safe-bridge",
+        "renewal-filing-window-not-after-expiry"
+      ],
+      "guardrail_findings": [],
+      "latency_ms": 83941
+    },
+    {
+      "starter_tag": "0.8.5-rc60-B01-special-period-two-month-wait",
+      "question_id": "tzqdyc9bmx3nqq2t9totl447",
+      "ok": true,
+      "http": 200,
+      "status": "completed",
+      "engine_version": "consultation_alpha_v18:deepseek-v4-pro",
+      "prompt_version": null,
+      "fallback_reason": null,
+      "error": null,
+      "answer_chars": 0,
+      "fact_card_ids": [
+        "shinseichu-zairyu-keizoku",
+        "zairyu-expiry-renewal-change"
+      ],
+      "route_gate_ids": [
+        "special-period-two-month-boundary",
+        "nonpermission-special-period-ended-boundary"
+      ],
+      "guardrail_findings": [],
+      "latency_ms": 88567
+    },
+    {
+      "starter_tag": "0.8.5-rc60-B04-work-certificate-misread",
+      "question_id": "tvijg2rw5ui1faqg5opzpirc",
+      "ok": true,
+      "http": 200,
+      "status": "completed",
+      "engine_version": "consultation_alpha_v18:deepseek-v4-pro",
+      "prompt_version": null,
+      "fallback_reason": null,
+      "error": null,
+      "answer_chars": 0,
+      "fact_card_ids": [
+        "shuro-shikaku-shomeisho"
+      ],
+      "route_gate_ids": [
+        "work-qualification-certificate-not-permission"
+      ],
+      "guardrail_findings": [],
+      "latency_ms": 21611
+    },
+    {
+      "starter_tag": "0.8.5-rc60-B05-result-postcard-permission",
+      "question_id": "kt2diyp9wjluio72m3if5zrz",
+      "ok": true,
+      "http": 200,
+      "status": "completed",
+      "engine_version": "consultation_alpha_v18:deepseek-v4-pro",
+      "prompt_version": null,
+      "fallback_reason": null,
+      "error": null,
+      "answer_chars": 0,
+      "fact_card_ids": [],
+      "route_gate_ids": [
+        "pending-status-change-current-activity-only",
+        "result-postcard-not-permission"
+      ],
+      "guardrail_findings": [],
+      "latency_ms": 26894
+    },
+    {
+      "starter_tag": "0.8.5-rc60-B06-renewal-materials-guarantee",
+      "question_id": "hur2k3smbofkori4qsi7iqgk",
+      "ok": true,
+      "http": 200,
+      "status": "completed",
+      "engine_version": "consultation_alpha_v18:deepseek-v4-pro",
+      "prompt_version": null,
+      "fallback_reason": null,
+      "error": null,
+      "answer_chars": 0,
+      "fact_card_ids": [],
+      "route_gate_ids": [
+        "renewal-change-not-automatic-discretion"
+      ],
+      "guardrail_findings": [
+        {
+          "id": "answer-renewal-change-guaranteed-by-docs",
+          "severity": "P1",
+          "message": "更新/变更回答疑似把材料齐、前回许可或条件满足写成自动/保证许可。",
+          "evidence": "去年更新许可不这次一定"
+        }
+      ],
+      "latency_ms": 26033
+    },
+    {
+      "starter_tag": "0.8.5-rc60-B07-late-payment-erased",
+      "question_id": "p5pqfwtt15zi84vklzipk7l0",
+      "ok": true,
+      "http": 200,
+      "status": "completed",
+      "engine_version": "consultation_alpha_v18:deepseek-v4-pro",
+      "prompt_version": null,
+      "fallback_reason": null,
+      "error": null,
+      "answer_chars": 0,
+      "fact_card_ids": [
+        "eijuu-nenkin-risk"
+      ],
+      "route_gate_ids": [
+        "late-payment-remediation-not-erased"
+      ],
+      "guardrail_findings": [],
+      "latency_ms": 26949
+    },
+    {
+      "starter_tag": "0.8.5-rc60-B09-dependent-work-28h",
+      "question_id": "mb00ex6guoidxkpv7mvbv1oz",
+      "ok": true,
+      "http": 200,
+      "status": "completed",
+      "engine_version": "consultation_alpha_v18:deepseek-v4-pro",
+      "prompt_version": null,
+      "fallback_reason": null,
+      "error": null,
+      "answer_chars": 0,
+      "fact_card_ids": [
+        "kazoku-taizai-yoken",
+        "shikakugai-fukugyou"
+      ],
+      "route_gate_ids": [
+        "shikakugai-hokatsu-kobetsu-boundary",
+        "dependent-work-permission-required"
+      ],
+      "guardrail_findings": [],
+      "latency_ms": 25196
+    },
+    {
+      "starter_tag": "0.8.5-rc60-B08-pension-exemption-misread",
+      "question_id": "psl3bclfxgcrwepwc0buh4s3",
+      "ok": true,
+      "http": 200,
+      "status": "completed",
+      "engine_version": "consultation_alpha_v18:deepseek-v4-pro",
+      "prompt_version": null,
+      "fallback_reason": null,
+      "error": null,
+      "answer_chars": 0,
+      "fact_card_ids": [
+        "eijuu-nenkin-risk"
+      ],
+      "route_gate_ids": [
+        "social-insurance-pension-not-irrelevant",
+        "pension-exemption-not-arrears-not-free-pass",
+        "pr-basic-requirements-not-years-only"
+      ],
+      "guardrail_findings": [],
+      "latency_ms": 33946
+    },
+    {
+      "starter_tag": "0.8.5-rc60-B10-student-long-vacation-over28",
+      "question_id": "vm8s1mfs99m89ris86tdsp5k",
+      "ok": true,
+      "http": 200,
+      "status": "completed",
+      "engine_version": "consultation_alpha_v18:deepseek-v4-pro",
+      "prompt_version": null,
+      "fallback_reason": null,
+      "error": null,
+      "answer_chars": 0,
+      "fact_card_ids": [
+        "shikakugai-fukugyou"
+      ],
+      "route_gate_ids": [
+        "student-shikakugai-28h-long-vacation-limit"
+      ],
+      "guardrail_findings": [],
+      "latency_ms": 36234
+    },
+    {
+      "starter_tag": "0.8.5-rc60-B12-short-stay-paid-project",
+      "question_id": "ytn4zfkx5aeghcc2yrna0ii7",
+      "ok": true,
+      "http": 200,
+      "status": "completed",
+      "engine_version": "consultation_alpha_v18:deepseek-v4-pro",
+      "prompt_version": null,
+      "fallback_reason": null,
+      "error": null,
+      "answer_chars": 0,
+      "fact_card_ids": [],
+      "route_gate_ids": [
+        "short-stay-no-work-no-shikakugai"
+      ],
+      "guardrail_findings": [],
+      "latency_ms": 18718
+    },
+    {
+      "starter_tag": "0.8.5-rc60-B11-gijinkoku-restaurant-mixed-duties",
+      "question_id": "ndtntgnvl7ylru0zo7aww0l8",
+      "ok": true,
+      "http": 200,
+      "status": "completed",
+      "engine_version": "consultation_alpha_v18:deepseek-v4-pro",
+      "prompt_version": null,
+      "fallback_reason": null,
+      "error": null,
+      "answer_chars": 0,
+      "fact_card_ids": [
+        "gijinkoku-job-mismatch"
+      ],
+      "route_gate_ids": [
+        "gijinkoku-work-scope-not-any-job"
+      ],
+      "guardrail_findings": [],
+      "latency_ms": 29063
+    },
+    {
+      "starter_tag": "0.8.5-rc60-B13-pr-card-expiry-status",
+      "question_id": "bvrv7tfgw4scfjcn4dy9ii4g",
+      "ok": true,
+      "http": 200,
+      "status": "completed",
+      "engine_version": "consultation_alpha_v18:deepseek-v4-pro",
+      "prompt_version": null,
+      "fallback_reason": null,
+      "error": null,
+      "answer_chars": 0,
+      "fact_card_ids": [
+        "zairyu-expiry-renewal-change"
+      ],
+      "route_gate_ids": [
+        "residence-card-expiry-vs-status-period",
+        "pr-card-renewal-still-required"
+      ],
+      "guardrail_findings": [],
+      "latency_ms": 25885
+    },
+    {
+      "starter_tag": "0.8.5-rc60-B14-social-insurance-optional",
+      "question_id": "z71b5smdy3wa0q9yyajzzx4b",
+      "ok": true,
+      "http": 200,
+      "status": "completed",
+      "engine_version": "consultation_alpha_v18:deepseek-v4-pro",
+      "prompt_version": null,
+      "fallback_reason": null,
+      "error": null,
+      "answer_chars": 0,
+      "fact_card_ids": [
+        "eijuu-nenkin-risk"
+      ],
+      "route_gate_ids": [
+        "pension-exemption-not-arrears-not-free-pass",
+        "foreign-worker-social-insurance-not-optional"
+      ],
+      "guardrail_findings": [],
+      "latency_ms": 32980
+    },
+    {
+      "starter_tag": "0.8.5-rc60-DW01-special-period-departure",
+      "question_id": "tstp2kja2kn73rizz6p7acdl",
+      "ok": false,
+      "http": 200,
+      "status": "partial",
+      "engine_version": "consultation_alpha_v18:deepseek-v4-pro",
+      "prompt_version": null,
+      "fallback_reason": "stream_partial",
+      "error": null,
+      "answer_chars": 0,
+      "fact_card_ids": [
+        "minashi-sainyuukoku",
+        "sainyukoku-kyoka",
+        "zairyu-expiry-renewal-change"
+      ],
+      "route_gate_ids": [
+        "special-period-departure-deepwater"
+      ],
+      "guardrail_findings": [
+        {
+          "id": "answer-special-period-departure-overconfidence",
+          "severity": "P0",
+          "message": "特例期间中出国回答疑似给了安全/终止的确定结论，或只按普通再入国规则处理。",
+          "evidence": "出境，根据个案不同，可能出现“视为放弃申请”或“再入国时无法入境”的风险，无法只凭みなし再入国确保你能回来"
+        }
+      ],
+      "latency_ms": 32381
+    },
+    {
+      "starter_tag": "0.8.5-rc60-DW03-nonpermission-original-expired",
+      "question_id": "dvjt0ty6rchlzpf8gtv4t629",
+      "ok": true,
+      "http": 200,
+      "status": "completed",
+      "engine_version": "consultation_alpha_v18:deepseek-v4-pro",
+      "prompt_version": null,
+      "fallback_reason": null,
+      "error": null,
+      "answer_chars": 0,
+      "fact_card_ids": [
+        "zairyu-expiry-renewal-change"
+      ],
+      "route_gate_ids": [
+        "immigration-notice-taxonomy-first",
+        "nonpermission-special-period-ended-boundary",
+        "nonpermission-no-ordinary-appeal-no-grace"
+      ],
+      "guardrail_findings": [],
+      "latency_ms": 16865
+    },
+    {
+      "starter_tag": "0.8.5-rc60-DW02-pr-pending-current-expiry",
+      "question_id": "k0gvtltj30ntbw8sue93sbht",
+      "ok": true,
+      "http": 200,
+      "status": "completed",
+      "engine_version": "consultation_alpha_v18:deepseek-v4-pro",
+      "prompt_version": null,
+      "fallback_reason": null,
+      "error": null,
+      "answer_chars": 0,
+      "fact_card_ids": [
+        "eijuu-shinsei-shorui"
+      ],
+      "route_gate_ids": [
+        "pr-pending-current-status-not-auto-protected"
+      ],
+      "guardrail_findings": [],
+      "latency_ms": 25737
+    },
+    {
+      "starter_tag": "0.8.5-rc60-DW04-dv-address-documents",
+      "question_id": "f8tr7gnlu26ify112rfyxzqf",
+      "ok": true,
+      "http": 200,
+      "status": "completed",
+      "engine_version": "consultation_alpha_v18:deepseek-v4-pro",
+      "prompt_version": null,
+      "fallback_reason": null,
+      "error": null,
+      "answer_chars": 0,
+      "fact_card_ids": [
+        "spouse-divorce-separation",
+        "zairyu-address-change"
+      ],
+      "route_gate_ids": [
+        "status-cancellation-before-expiry-boundary",
+        "dv-address-safety-first",
+        "renewal-change-not-automatic-discretion"
+      ],
+      "guardrail_findings": [],
+      "latency_ms": 34446
+    },
+    {
+      "starter_tag": "0.8.5-rc60-DW05-false-application-material",
+      "question_id": "mehnsouw8flbcgu6kl3ojbmm",
+      "ok": true,
+      "http": 200,
+      "status": "completed",
+      "engine_version": "consultation_alpha_v18:deepseek-v4-pro",
+      "prompt_version": null,
+      "fallback_reason": null,
+      "error": null,
+      "answer_chars": 0,
+      "fact_card_ids": [],
+      "route_gate_ids": [
+        "application-truthfulness-no-false-info"
+      ],
+      "guardrail_findings": [],
+      "latency_ms": 28802
+    },
+    {
+      "starter_tag": "0.8.5-rc60-DW06-business-manager-no-business-change-job",
+      "question_id": "prfdmgbqyzy07r1y4y0dce9u",
+      "ok": true,
+      "http": 200,
+      "status": "completed",
+      "engine_version": "consultation_alpha_v18:deepseek-v4-pro",
+      "prompt_version": null,
+      "fallback_reason": null,
+      "error": null,
+      "answer_chars": 0,
+      "fact_card_ids": [
+        "keiei-kanri-2025-10",
+        "keiei-kanri-existing-holder-update"
+      ],
+      "route_gate_ids": [
+        "pending-status-change-current-activity-only",
+        "individual-duty-not-replaced-by-third-party",
+        "business-manager-disposition-no-auto-success"
+      ],
+      "guardrail_findings": [],
+      "latency_ms": 42877
+    },
+    {
+      "starter_tag": "0.8.5-rc60-DW07-spouse-divorce-remarriage",
+      "question_id": "xuzx30pc0zpmfvpy25i32eh4",
+      "ok": true,
+      "http": 200,
+      "status": "completed",
+      "engine_version": "consultation_alpha_v18:deepseek-v4-pro",
+      "prompt_version": null,
+      "fallback_reason": null,
+      "error": null,
+      "answer_chars": 0,
+      "fact_card_ids": [
+        "spouse-divorce-separation"
+      ],
+      "route_gate_ids": [
+        "status-cancellation-before-expiry-boundary",
+        "notification-duty-violation-not-harmless"
+      ],
+      "guardrail_findings": [],
+      "latency_ms": 29071
+    },
+    {
+      "starter_tag": "0.8.5-rc60-DW08-overstay-special-permission",
+      "question_id": "pbbuuswesnu2yacjftcw77tf",
+      "ok": true,
+      "http": 200,
+      "status": "completed",
+      "engine_version": "consultation_alpha_v18:deepseek-v4-pro",
+      "prompt_version": null,
+      "fallback_reason": null,
+      "error": null,
+      "answer_chars": 0,
+      "fact_card_ids": [
+        "zairyu-expiry-renewal-change"
+      ],
+      "route_gate_ids": [
+        "tokubetsu-kyoka-not-normal-route",
+        "renewal-change-not-automatic-discretion",
+        "renewal-filing-window-not-after-expiry"
+      ],
+      "guardrail_findings": [],
+      "latency_ms": 30674
+    },
+    {
+      "starter_tag": "0.8.5-rc60-DW09-school-attendance-risk",
+      "question_id": "tc468kn4zicmmuipjtxdd9c6",
+      "ok": true,
+      "http": 200,
+      "status": "completed",
+      "engine_version": "consultation_alpha_v18:deepseek-v4-pro",
+      "prompt_version": null,
+      "fallback_reason": null,
+      "error": null,
+      "answer_chars": 0,
+      "fact_card_ids": [
+        "shikakugai-fukugyou"
+      ],
+      "route_gate_ids": [],
+      "guardrail_findings": [],
+      "latency_ms": 24836
+    },
+    {
+      "starter_tag": "0.8.5-rc60-DW10-agency-torikiji-responsibility",
+      "question_id": "hcedoztjlzaj8ie9rjkruihq",
+      "ok": true,
+      "http": 200,
+      "status": "completed",
+      "engine_version": "consultation_alpha_v18:deepseek-v4-pro",
+      "prompt_version": null,
+      "fallback_reason": null,
+      "error": null,
+      "answer_chars": 0,
+      "fact_card_ids": [],
+      "route_gate_ids": [
+        "torikiji-applicant-responsibility-boundary"
+      ],
+      "guardrail_findings": [],
+      "latency_ms": 26036
+    },
+    {
+      "starter_tag": "0.8.5-rc60-DW11-status-cancellation-letter",
+      "question_id": "fxz6sg3o0kv080xpz2lntm79",
+      "ok": true,
+      "http": 200,
+      "status": "completed",
+      "engine_version": "consultation_alpha_v18:deepseek-v4-pro",
+      "prompt_version": null,
+      "fallback_reason": null,
+      "error": null,
+      "answer_chars": 0,
+      "fact_card_ids": [],
+      "route_gate_ids": [
+        "immigration-notice-taxonomy-first",
+        "status-cancellation-before-expiry-boundary"
+      ],
+      "guardrail_findings": [],
+      "latency_ms": 33724
+    },
+    {
+      "starter_tag": "0.8.5-rc60-DW12-hsp2-automatic-pr",
+      "question_id": "nrpydc21h4n7608y6b98jhwj",
+      "ok": true,
+      "http": 200,
+      "status": "completed",
+      "engine_version": "consultation_alpha_v18:deepseek-v4-pro",
+      "prompt_version": null,
+      "fallback_reason": null,
+      "error": null,
+      "answer_chars": 0,
+      "fact_card_ids": [
+        "eijuu-zairyu-kikan"
+      ],
+      "route_gate_ids": [
+        "ssw1-ssw2-boundary",
+        "hsp2-not-automatic-not-pr",
+        "pr-basic-requirements-not-years-only"
+      ],
+      "guardrail_findings": [],
+      "latency_ms": 26893
+    },
+    {
+      "starter_tag": "0.8.5-rc60-F01-late-tax-followup",
+      "question_id": "ypp9r482ti9g7wlw174s720c",
+      "ok": true,
+      "http": 200,
+      "status": "completed",
+      "engine_version": "consultation_alpha_v18:deepseek-v4-pro",
+      "prompt_version": null,
+      "fallback_reason": null,
+      "error": null,
+      "answer_chars": 0,
+      "fact_card_ids": [
+        "eijuu-nenkin-risk"
+      ],
+      "route_gate_ids": [
+        "late-payment-remediation-not-erased"
+      ],
+      "guardrail_findings": [],
+      "latency_ms": 19541
+    },
+    {
+      "starter_tag": "0.8.5-rc60-F04-business-manager-capital-followup",
+      "question_id": "qaerb03g8iyp7qg5sagnchs4",
+      "ok": true,
+      "http": 200,
+      "status": "completed",
+      "engine_version": "consultation_alpha_v18:deepseek-v4-pro",
+      "prompt_version": null,
+      "fallback_reason": null,
+      "error": null,
+      "answer_chars": 0,
+      "fact_card_ids": [
+        "keiei-kanri-existing-holder-update"
+      ],
+      "route_gate_ids": [
+        "business-manager-2025-reform-hard-fact-boundary",
+        "renewal-change-not-automatic-discretion"
+      ],
+      "guardrail_findings": [],
+      "latency_ms": 19406
+    },
+    {
+      "starter_tag": "0.8.5-rc60-F02-spouse-address-safety-followup",
+      "question_id": "pip4g4kakuhwvs2a0w0vqmnf",
+      "ok": true,
+      "http": 200,
+      "status": "completed",
+      "engine_version": "consultation_alpha_v18:deepseek-v4-pro",
+      "prompt_version": null,
+      "fallback_reason": null,
+      "error": null,
+      "answer_chars": 0,
+      "fact_card_ids": [
+        "spouse-divorce-separation"
+      ],
+      "route_gate_ids": [
+        "dv-address-safety-first"
+      ],
+      "guardrail_findings": [],
+      "latency_ms": 30284
+    },
+    {
+      "starter_tag": "0.8.5-rc60-F03-gijinkoku-renewal-new-company-followup",
+      "question_id": "pq51hssnno57hr52on7b68e0",
+      "ok": true,
+      "http": 200,
+      "status": "completed",
+      "engine_version": "consultation_alpha_v18:deepseek-v4-pro",
+      "prompt_version": null,
+      "fallback_reason": null,
+      "error": null,
+      "answer_chars": 0,
+      "fact_card_ids": [
+        "gijinkoku-koushin-shorui"
+      ],
+      "route_gate_ids": [
+        "pending-status-change-current-activity-only",
+        "incomplete-materials-before-expiry-no-safe-bridge",
+        "renewal-change-not-automatic-discretion"
+      ],
+      "guardrail_findings": [],
+      "latency_ms": 31386
+    },
+    {
+      "starter_tag": "0.8.5-rc60-F06-expiry-window-rejection-followup",
+      "question_id": "dvejpkoh2z6839xdp2siqzjl",
+      "ok": true,
+      "http": 200,
+      "status": "completed",
+      "engine_version": "consultation_alpha_v18:deepseek-v4-pro",
+      "prompt_version": null,
+      "fallback_reason": null,
+      "error": null,
+      "answer_chars": 0,
+      "fact_card_ids": [],
+      "route_gate_ids": [
+        "incomplete-materials-before-expiry-no-safe-bridge",
+        "residence-card-expiry-vs-status-period",
+        "renewal-filing-window-not-after-expiry"
+      ],
+      "guardrail_findings": [],
+      "latency_ms": 28174
+    },
+    {
+      "starter_tag": "0.8.5-rc60-F05-notice-title-followup",
+      "question_id": "kyyzwcfbyjrhlyw5bva2gcbt",
+      "ok": true,
+      "http": 200,
+      "status": "completed",
+      "engine_version": "consultation_alpha_v18:deepseek-v4-pro",
+      "prompt_version": null,
+      "fallback_reason": null,
+      "error": null,
+      "answer_chars": 0,
+      "fact_card_ids": [
+        "overstay-taisho",
+        "zairyu-expiry-renewal-change"
+      ],
+      "route_gate_ids": [
+        "immigration-notice-taxonomy-first"
+      ],
+      "guardrail_findings": [],
+      "latency_ms": 40969
+    },
+    {
+      "starter_tag": "0.8.5-rc60-F07-company-social-insurance-followup",
+      "question_id": "p0f817jb9qoih4ludvyr9yy7",
+      "ok": true,
+      "http": 200,
+      "status": "completed",
+      "engine_version": "consultation_alpha_v18:deepseek-v4-pro",
+      "prompt_version": null,
+      "fallback_reason": null,
+      "error": null,
+      "answer_chars": 0,
+      "fact_card_ids": [
+        "eijuu-nenkin-risk",
+        "rishoku-kenko-hoken",
+        "rishoku-kokumin-nenkin-kirikae"
+      ],
+      "route_gate_ids": [
+        "pending-status-change-current-activity-only",
+        "foreign-worker-social-insurance-not-optional"
+      ],
+      "guardrail_findings": [],
+      "latency_ms": 31003
+    },
+    {
+      "starter_tag": "0.8.5-rc60-F08-family-work-vacation-followup",
+      "question_id": "et76ci1z4j23sey6rvqduiey",
+      "ok": true,
+      "http": 200,
+      "status": "completed",
+      "engine_version": "consultation_alpha_v18:deepseek-v4-pro",
+      "prompt_version": null,
+      "fallback_reason": null,
+      "error": null,
+      "answer_chars": 0,
+      "fact_card_ids": [
+        "kazoku-taizai-yoken",
+        "shikakugai-fukugyou"
+      ],
+      "route_gate_ids": [
+        "student-shikakugai-28h-long-vacation-limit",
+        "dependent-work-permission-required"
+      ],
+      "guardrail_findings": [],
+      "latency_ms": 33533
+    },
+    {
+      "starter_tag": "0.8.5-rc60-F09-business-manager-new-job-followup",
+      "question_id": "m4uobds78znwh90q9iauljvz",
+      "ok": true,
+      "http": 200,
+      "status": "completed",
+      "engine_version": "consultation_alpha_v18:deepseek-v4-pro",
+      "prompt_version": null,
+      "fallback_reason": null,
+      "error": null,
+      "answer_chars": 0,
+      "fact_card_ids": [
+        "keiei-kanri-2025-10",
+        "keiei-kanri-existing-holder-update"
+      ],
+      "route_gate_ids": [
+        "pending-status-change-current-activity-only",
+        "business-manager-disposition-no-auto-success"
+      ],
+      "guardrail_findings": [],
+      "latency_ms": 28208
+    },
+    {
+      "starter_tag": "0.8.5-rc60-F10-reentry-expiry-followup",
+      "question_id": "nzsfv0bnu9vn1t22240pe536",
+      "ok": true,
+      "http": 200,
+      "status": "completed",
+      "engine_version": "consultation_alpha_v18:deepseek-v4-pro",
+      "prompt_version": null,
+      "fallback_reason": null,
+      "error": null,
+      "answer_chars": 0,
+      "fact_card_ids": [
+        "minashi-sainyuukoku",
+        "zairyu-expiry-renewal-change"
+      ],
+      "route_gate_ids": [
+        "minashi-reentry-one-year-limit"
+      ],
+      "guardrail_findings": [],
+      "latency_ms": 36400
+    },
+    {
+      "starter_tag": "0.8.5-rc60-M02-business-manager-office-proof",
+      "question_id": "i2x8m00m2eax08t2z6vbspmd",
+      "ok": true,
+      "http": 200,
+      "status": "completed",
+      "engine_version": "consultation_alpha_v18:deepseek-v4-pro",
+      "prompt_version": null,
+      "fallback_reason": null,
+      "error": null,
+      "answer_chars": 0,
+      "fact_card_ids": [
+        "keiei-kanri-existing-holder-update"
+      ],
+      "route_gate_ids": [],
+      "guardrail_findings": [],
+      "latency_ms": 13165
+    },
+    {
+      "starter_tag": "0.8.5-rc60-M01-gijinkoku-renewal-own-materials",
+      "question_id": "ywpl17zwnnhd9e1dqe9antl5",
+      "ok": true,
+      "http": 200,
+      "status": "completed",
+      "engine_version": "consultation_alpha_v18:deepseek-v4-pro",
+      "prompt_version": null,
+      "fallback_reason": null,
+      "error": null,
+      "answer_chars": 0,
+      "fact_card_ids": [
+        "gijinkoku-koushin-shorui"
+      ],
+      "route_gate_ids": [
+        "renewal-change-not-automatic-discretion"
+      ],
+      "guardrail_findings": [],
+      "latency_ms": 20948
+    },
+    {
+      "starter_tag": "0.8.5-rc60-M03-pr-tax-certificates-basic",
+      "question_id": "hyqulf4es53b1wvmbgfz6p5q",
+      "ok": true,
+      "http": 200,
+      "status": "completed",
+      "engine_version": "consultation_alpha_v18:deepseek-v4-pro",
+      "prompt_version": null,
+      "fallback_reason": null,
+      "error": null,
+      "answer_chars": 0,
+      "fact_card_ids": [
+        "eijuu-nenkin-risk",
+        "eijuu-shinsei-shorui",
+        "juminzei-kazei-shomeisho"
+      ],
+      "route_gate_ids": [
+        "late-payment-remediation-not-erased",
+        "pr-basic-requirements-not-years-only"
+      ],
+      "guardrail_findings": [],
+      "latency_ms": 23759
+    },
+    {
+      "starter_tag": "0.8.5-rc60-M04-family-stay-sponsor-docs",
+      "question_id": "qu39dz1u8ohieszrr3ult9nk",
+      "ok": true,
+      "http": 200,
+      "status": "completed",
+      "engine_version": "consultation_alpha_v18:deepseek-v4-pro",
+      "prompt_version": null,
+      "fallback_reason": null,
+      "error": null,
+      "answer_chars": 0,
+      "fact_card_ids": [
+        "kazoku-taizai-yoken"
+      ],
+      "route_gate_ids": [
+        "renewal-change-not-automatic-discretion"
+      ],
+      "guardrail_findings": [
+        {
+          "id": "answer-renewal-change-guaranteed-by-docs",
+          "severity": "P1",
+          "message": "更新/变更回答疑似把材料齐、前回许可或条件满足写成自动/保证许可。",
+          "evidence": "更新不是交齐材料就自动许可"
+        }
+      ],
+      "latency_ms": 21379
+    },
+    {
+      "starter_tag": "0.8.5-rc60-M05-immigration-notice-photos",
+      "question_id": "um6lcv75dehsk7yhs7xnxaz2",
+      "ok": true,
+      "http": 200,
+      "status": "completed",
+      "engine_version": "consultation_alpha_v18:deepseek-v4-pro",
+      "prompt_version": null,
+      "fallback_reason": null,
+      "error": null,
+      "answer_chars": 0,
+      "fact_card_ids": [],
+      "route_gate_ids": [
+        "immigration-notice-taxonomy-first",
+        "torikiji-applicant-responsibility-boundary"
+      ],
+      "guardrail_findings": [],
+      "latency_ms": 27468
+    },
+    {
+      "starter_tag": "0.8.5-rc60-M06-return-home-admin-pack",
+      "question_id": "lopl9qhlha2awyxo09gee2vf",
+      "ok": true,
+      "http": 200,
+      "status": "completed",
+      "engine_version": "consultation_alpha_v18:deepseek-v4-pro",
+      "prompt_version": null,
+      "fallback_reason": null,
+      "error": null,
+      "answer_chars": 0,
+      "fact_card_ids": [
+        "eijuu-nenkin-risk",
+        "jumin-zei-shutsukoku"
+      ],
+      "route_gate_ids": [],
+      "guardrail_findings": [],
+      "latency_ms": 30988
+    },
+    {
+      "starter_tag": "0.8.5-rc60-M07-resident-tax-january-move",
+      "question_id": "ah15rprqx71ssd9pwsr623xc",
+      "ok": true,
+      "http": 200,
+      "status": "completed",
+      "engine_version": "consultation_alpha_v18:deepseek-v4-pro",
+      "prompt_version": null,
+      "fallback_reason": null,
+      "error": null,
+      "answer_chars": 0,
+      "fact_card_ids": [
+        "eijuu-nenkin-risk",
+        "juminzei-kazei-shomeisho",
+        "zairyu-address-change"
+      ],
+      "route_gate_ids": [
+        "resident-tax-fiscal-year-january-1"
+      ],
+      "guardrail_findings": [],
+      "latency_ms": 28872
+    },
+    {
+      "starter_tag": "0.8.5-rc60-M08-national-tax-sono3-window",
+      "question_id": "sytfvd1id13nf6cju385aqli",
+      "ok": true,
+      "http": 200,
+      "status": "completed",
+      "engine_version": "consultation_alpha_v18:deepseek-v4-pro",
+      "prompt_version": null,
+      "fallback_reason": null,
+      "error": null,
+      "answer_chars": 0,
+      "fact_card_ids": [
+        "eijuu-nenkin-risk",
+        "juminzei-kazei-shomeisho"
+      ],
+      "route_gate_ids": [
+        "national-tax-certificate-sono3-route",
+        "late-payment-remediation-not-erased"
+      ],
+      "guardrail_findings": [],
+      "latency_ms": 28544
+    },
+    {
+      "starter_tag": "0.8.5-rc60-M09-residence-card-loss",
+      "question_id": "i53d5jmw186nd21uxx0v5yb2",
+      "ok": true,
+      "http": 200,
+      "status": "completed",
+      "engine_version": "consultation_alpha_v18:deepseek-v4-pro",
+      "prompt_version": null,
+      "fallback_reason": null,
+      "error": null,
+      "answer_chars": 0,
+      "fact_card_ids": [
+        "zairyu-card-loss-reissue"
+      ],
+      "route_gate_ids": [],
+      "guardrail_findings": [],
+      "latency_ms": 15956
+    },
+    {
+      "starter_tag": "0.8.5-rc60-M10-student-renewal-attendance",
+      "question_id": "h0hpyuc7txihe62mfm7igbk9",
+      "ok": true,
+      "http": 200,
+      "status": "completed",
+      "engine_version": "consultation_alpha_v18:deepseek-v4-pro",
+      "prompt_version": null,
+      "fallback_reason": null,
+      "error": null,
+      "answer_chars": 0,
+      "fact_card_ids": [],
+      "route_gate_ids": [
+        "renewal-change-not-automatic-discretion"
+      ],
+      "guardrail_findings": [],
+      "latency_ms": 28616
+    },
+    {
+      "starter_tag": "0.8.5-rc60-M11-job-change-company-docs",
+      "question_id": "w2eeh4um18dx6go3d5xaofyw",
+      "ok": true,
+      "http": 200,
+      "status": "completed",
+      "engine_version": "consultation_alpha_v18:deepseek-v4-pro",
+      "prompt_version": null,
+      "fallback_reason": null,
+      "error": null,
+      "answer_chars": 0,
+      "fact_card_ids": [
+        "tensyoku-zairyu"
+      ],
+      "route_gate_ids": [
+        "individual-duty-not-replaced-by-third-party",
+        "torikiji-applicant-responsibility-boundary",
+        "renewal-change-not-automatic-discretion"
+      ],
+      "guardrail_findings": [
+        {
+          "id": "answer-renewal-change-guaranteed-by-docs",
+          "severity": "P1",
+          "message": "更新/变更回答疑似把材料齐、前回许可或条件满足写成自动/保证许可。",
+          "evidence": "材料齐了就一定"
+        }
+      ],
+      "latency_ms": 30104
+    },
+    {
+      "starter_tag": "0.8.5-rc60-M12-spouse-renewal-separated",
+      "question_id": "v48scj2wxde3wq5q10yn1mf9",
+      "ok": true,
+      "http": 200,
+      "status": "completed",
+      "engine_version": "consultation_alpha_v18:deepseek-v4-pro",
+      "prompt_version": null,
+      "fallback_reason": null,
+      "error": null,
+      "answer_chars": 0,
+      "fact_card_ids": [
+        "spouse-divorce-separation"
+      ],
+      "route_gate_ids": [
+        "status-cancellation-before-expiry-boundary",
+        "renewal-change-not-automatic-discretion"
+      ],
+      "guardrail_findings": [],
+      "latency_ms": 29732
+    },
+    {
+      "starter_tag": "0.8.5-rc60-M13-social-insurance-proof",
+      "question_id": "l81ebb4peet6f0mx22i62sjl",
+      "ok": true,
+      "http": 200,
+      "status": "completed",
+      "engine_version": "consultation_alpha_v18:deepseek-v4-pro",
+      "prompt_version": null,
+      "fallback_reason": null,
+      "error": null,
+      "answer_chars": 0,
+      "fact_card_ids": [
+        "eijuu-nenkin-risk"
+      ],
+      "route_gate_ids": [
+        "social-insurance-pension-not-irrelevant",
+        "pension-exemption-not-arrears-not-free-pass",
+        "foreign-worker-social-insurance-not-optional"
+      ],
+      "guardrail_findings": [],
+      "latency_ms": 29983
+    },
+    {
+      "starter_tag": "0.8.5-rc60-M14-pr-first-documents",
+      "question_id": "rp2lc5r5aliry87d5ujrsuyq",
+      "ok": true,
+      "http": 200,
+      "status": "completed",
+      "engine_version": "consultation_alpha_v18:deepseek-v4-pro",
+      "prompt_version": null,
+      "fallback_reason": null,
+      "error": null,
+      "answer_chars": 0,
+      "fact_card_ids": [],
+      "route_gate_ids": [
+        "pr-basic-requirements-not-years-only"
+      ],
+      "guardrail_findings": [],
+      "latency_ms": 25900
+    },
+    {
+      "starter_tag": "0.8.5-rc60-N01-short-stay-meeting",
+      "question_id": "b0eqfq2dbvod0emunk9nvtak",
+      "ok": true,
+      "http": 200,
+      "status": "completed",
+      "engine_version": "consultation_alpha_v18:deepseek-v4-pro",
+      "prompt_version": null,
+      "fallback_reason": null,
+      "error": null,
+      "answer_chars": 0,
+      "fact_card_ids": [],
+      "route_gate_ids": [],
+      "guardrail_findings": [],
+      "latency_ms": 26098
+    },
+    {
+      "starter_tag": "0.8.5-rc60-N02-pr-marketing-card",
+      "question_id": "z9hllszc05ry97o34b6smxhh",
+      "ok": true,
+      "http": 200,
+      "status": "completed",
+      "engine_version": "consultation_alpha_v18:deepseek-v4-pro",
+      "prompt_version": null,
+      "fallback_reason": null,
+      "error": null,
+      "answer_chars": 0,
+      "fact_card_ids": [],
+      "route_gate_ids": [
+        "residence-card-expiry-vs-status-period",
+        "pr-card-renewal-still-required"
+      ],
+      "guardrail_findings": [],
+      "latency_ms": 14849
+    },
+    {
+      "starter_tag": "0.8.5-rc60-N03-business-manager-logo-change",
+      "question_id": "dg0ox5qd42yuahc59cbb1t31",
+      "ok": true,
+      "http": 200,
+      "status": "completed",
+      "engine_version": "consultation_alpha_v18:deepseek-v4-pro",
+      "prompt_version": null,
+      "fallback_reason": null,
+      "error": null,
+      "answer_chars": 0,
+      "fact_card_ids": [
+        "keiei-kanri-2025-10",
+        "keiei-kanri-existing-holder-update"
+      ],
+      "route_gate_ids": [
+        "immigration-notice-taxonomy-first",
+        "individual-duty-not-replaced-by-third-party",
+        "notification-duty-violation-not-harmless"
+      ],
+      "guardrail_findings": [],
+      "latency_ms": 21576
+    },
+    {
+      "starter_tag": "0.8.5-rc60-N04-spouse-short-argument",
+      "question_id": "tdwzqokj9mkn5dl0joy6flx7",
+      "ok": true,
+      "http": 200,
+      "status": "completed",
+      "engine_version": "consultation_alpha_v18:deepseek-v4-pro",
+      "prompt_version": null,
+      "fallback_reason": null,
+      "error": null,
+      "answer_chars": 0,
+      "fact_card_ids": [
+        "spouse-divorce-separation"
+      ],
+      "route_gate_ids": [
+        "status-cancellation-before-expiry-boundary"
+      ],
+      "guardrail_findings": [],
+      "latency_ms": 23406
+    },
+    {
+      "starter_tag": "0.8.5-rc60-N05-gijinkoku-event-booth",
+      "question_id": "bf3aktdjpx3r54tf1wkr8sek",
+      "ok": true,
+      "http": 200,
+      "status": "completed",
+      "engine_version": "consultation_alpha_v18:deepseek-v4-pro",
+      "prompt_version": null,
+      "fallback_reason": null,
+      "error": null,
+      "answer_chars": 0,
+      "fact_card_ids": [
+        "gijinkoku-job-mismatch"
+      ],
+      "route_gate_ids": [
+        "gijinkoku-work-scope-not-any-job"
+      ],
+      "guardrail_findings": [],
+      "latency_ms": 25877
+    },
+    {
+      "starter_tag": "0.8.5-rc60-N07-permanent-resident-side-job",
+      "question_id": "i9552rx70mv53tvioiir9g5b",
+      "ok": true,
+      "http": 200,
+      "status": "completed",
+      "engine_version": "consultation_alpha_v18:deepseek-v4-pro",
+      "prompt_version": null,
+      "fallback_reason": null,
+      "error": null,
+      "answer_chars": 0,
+      "fact_card_ids": [
+        "shikakugai-fukugyou"
+      ],
+      "route_gate_ids": [],
+      "guardrail_findings": [],
+      "latency_ms": 18492
+    },
+    {
+      "starter_tag": "0.8.5-rc60-N06-resident-tax-installments-no-pr",
+      "question_id": "zzwmo41f88lb2nzmuz149e2e",
+      "ok": true,
+      "http": 200,
+      "status": "completed",
+      "engine_version": "consultation_alpha_v18:deepseek-v4-pro",
+      "prompt_version": null,
+      "fallback_reason": null,
+      "error": null,
+      "answer_chars": 0,
+      "fact_card_ids": [
+        "eijuu-nenkin-risk"
+      ],
+      "route_gate_ids": [],
+      "guardrail_findings": [],
+      "latency_ms": 25897
+    },
+    {
+      "starter_tag": "0.8.5-rc60-N08-moving-not-visa-change",
+      "question_id": "ad12orpdmytavdja55xsaieu",
+      "ok": true,
+      "http": 200,
+      "status": "completed",
+      "engine_version": "consultation_alpha_v18:deepseek-v4-pro",
+      "prompt_version": null,
+      "fallback_reason": null,
+      "error": null,
+      "answer_chars": 0,
+      "fact_card_ids": [
+        "zairyu-address-change"
+      ],
+      "route_gate_ids": [
+        "address-change-card-window-dual-duty",
+        "individual-duty-not-replaced-by-third-party"
+      ],
+      "guardrail_findings": [],
+      "latency_ms": 36823
+    },
+    {
+      "starter_tag": "0.8.5-rc60-N10-national-tax-general-question",
+      "question_id": "pfnqyrpgqajryrwspn2uim2m",
+      "ok": true,
+      "http": 200,
+      "status": "completed",
+      "engine_version": "consultation_alpha_v18:deepseek-v4-pro",
+      "prompt_version": null,
+      "fallback_reason": null,
+      "error": null,
+      "answer_chars": 0,
+      "fact_card_ids": [],
+      "route_gate_ids": [
+        "immigration-notice-taxonomy-first"
+      ],
+      "guardrail_findings": [],
+      "latency_ms": 28606
+    },
+    {
+      "starter_tag": "0.8.5-rc60-N09-pr-card-credit-card",
+      "question_id": "arrykbunh4d18hkpzdqd4lrv",
+      "ok": true,
+      "http": 200,
+      "status": "completed",
+      "engine_version": "consultation_alpha_v18:deepseek-v4-pro",
+      "prompt_version": null,
+      "fallback_reason": null,
+      "error": null,
+      "answer_chars": 0,
+      "fact_card_ids": [],
+      "route_gate_ids": [
+        "residence-card-expiry-vs-status-period",
+        "pr-card-renewal-still-required"
+      ],
+      "guardrail_findings": [],
+      "latency_ms": 49488
+    }
+  ]
+}
