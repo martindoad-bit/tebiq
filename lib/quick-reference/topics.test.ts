@@ -3,6 +3,9 @@ import test from 'node:test'
 
 import {
   QUICK_REFERENCE_TOPICS,
+  getQuickReferenceTopic,
+  getQuickReferenceTopicHref,
+  getRelatedQuickReferenceTopics,
   getQuickReferenceTopicsForFactCards,
 } from './topics'
 
@@ -40,4 +43,14 @@ test('quick reference can bridge from answer fact cards back to checklist topics
   assert.equal(addressTopics[0]?.id, 'address-change')
 
   assert.deepEqual(getQuickReferenceTopicsForFactCards(['unknown-card']), [])
+})
+
+test('quick reference topics expose stable single-page links and related topics', () => {
+  const jobChange = getQuickReferenceTopic('job-change')
+  assert.ok(jobChange)
+  assert.equal(getQuickReferenceTopicHref(jobChange.id), '/quick-reference/job-change')
+
+  const related = getRelatedQuickReferenceTopics(jobChange).map(topic => topic.id)
+  assert.ok(related.includes('retirement-risk'))
+  assert.ok(related.includes('health-insurance-after-leaving-job'))
 })

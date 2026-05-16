@@ -20,6 +20,7 @@ export interface QuickReferenceTopic {
   summary: string
   category: string
   factCardIds?: string[]
+  relatedTopicIds?: string[]
   aliases?: string[]
   deadline?: string
   whereToGo?: string
@@ -37,6 +38,7 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
     summary: '搬到新地址后，通常要先到市区町村办住所变更。',
     category: '在留卡',
     factCardIds: ['zairyu-address-change'],
+    relatedTopicIds: ['tax-certificate', 'renewal-review-factors'],
     aliases: ['搬家', '地址变更', '住址', '住所', '转入', '转居'],
     deadline: '搬到新住所后，原则上 14 日以内。',
     whereToGo: '新住所的市区町村窗口。',
@@ -68,6 +70,7 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
     summary: '先拿遗失或被盗的证明，再向入管申请补发。',
     category: '在留卡',
     factCardIds: ['zairyu-card-loss-reissue'],
+    relatedTopicIds: ['permanent-resident-card-renewal'],
     aliases: ['在留卡丢了', '钱包丢了', '被盗', '再交付', '补办'],
     deadline: '知道丢失、盗难、灭失等事实后，原则上 14 日以内。',
     whereToGo: '先按遗失/盗难情况取得说明资料，再向入管申请再交付。',
@@ -99,6 +102,7 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
     summary: '中长期在留者通常要随身带在留卡，被要求时要出示。',
     category: '在留卡',
     factCardIds: ['zairyu-card-keitai-gimu'],
+    relatedTopicIds: ['card-loss', 'permanent-resident-card-renewal'],
     aliases: ['随身', '忘带', '警察检查', '提示', '携带义务'],
     deadline: '不是期限问题，是日常携带和被要求时提示的问题。',
     whereToGo: '通常不需要主动去窗口；被要求提示时按要求出示。',
@@ -131,9 +135,14 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
     category: '工作',
     factCardIds: [
       'tensyoku-zairyu',
-      'gijinkoku-job-change-notification',
       'gijinkoku-job-mismatch',
       'shuro-shikaku-shomeisho',
+    ],
+    relatedTopicIds: [
+      'retirement-risk',
+      'health-insurance-after-leaving-job',
+      'pension-after-leaving-job',
+      'renewal-review-factors',
     ],
     aliases: ['转职', '换公司', '跳槽', '所属机关', '所属機関', '就劳资格证明'],
     deadline: '契约结束或新契约成立等事由发生后，通常 14 日以内届出。',
@@ -166,6 +175,12 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
     summary: '离职后不是马上失效，但通常有 14 日届出和活动空白风险。',
     category: '工作',
     factCardIds: ['shitsugyo-zairyu-risk', 'tensyoku-zairyu'],
+    relatedTopicIds: [
+      'job-change',
+      'health-insurance-after-leaving-job',
+      'pension-after-leaving-job',
+      'renewal-review-factors',
+    ],
     aliases: ['离职', '退职', '失业', '辞职', '被解雇', '找工作'],
     deadline: '退职等导致契约关系结束时，通常 14 日以内届出。',
     whereToGo: '入管办理所属机关届出；同时保留求职记录。',
@@ -201,6 +216,7 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
     summary: '短期回国或出境前，先确认能不能用みなし再入国。',
     category: '出入境',
     factCardIds: ['minashi-sainyuukoku', 'sainyukoku-kyoka'],
+    relatedTopicIds: ['renewal-review-factors', 'permanent-resident-card-renewal'],
     aliases: ['临时回国', '再入国', 'みなし', '出国', '回国', '离境'],
     deadline: '通常以出国后 1 年以内再入国为中心；在留期限更早到期时要以在留期限为准。',
     whereToGo: '出境机场/港口办理相关出国手续；长期出境前先确认再入国许可。',
@@ -232,6 +248,7 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
     summary: '离职后要确认继续原健保、加入国保，还是进入家属扶养。',
     category: '社保',
     factCardIds: ['rishoku-kenko-hoken', 'kokumin-kenko-hoken-kanyu'],
+    relatedTopicIds: ['retirement-risk', 'pension-after-leaving-job'],
     aliases: ['健保', '健康保险', '国保', '任意继续', '扶养', '社保'],
     deadline: '任意继续通常退职后 20 日以内；国保通常按市区町村规则尽快办理。',
     whereToGo: '任意继续找原健康保险；国民健康保险找住所地市区町村。',
@@ -267,6 +284,7 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
     summary: '厚生年金结束后，通常要确认国民年金切换。',
     category: '年金',
     factCardIds: ['rishoku-kokumin-nenkin-kirikae'],
+    relatedTopicIds: ['retirement-risk', 'health-insurance-after-leaving-job', 'tax-certificate'],
     aliases: ['年金', '厚生年金', '国民年金', '退职', '离职', '免除'],
     deadline: '退职日翌日起 14 日以内。',
     whereToGo: '住所地市区町村窗口。',
@@ -298,6 +316,7 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
     summary: '续签、永住、收入证明时，经常会用到课税证明和纳税证明。',
     category: '税金',
     factCardIds: ['juminzei-kazei-shomeisho'],
+    relatedTopicIds: ['renewal-review-factors', 'pension-after-leaving-job'],
     aliases: ['住民税', '课税证明', '纳税证明', '納税証明', '税证明', '永住材料'],
     deadline: '没有统一期限；取决于你的申请或提交窗口要求。',
     whereToGo: '住民税证明通常在市区町村；国税纳税证明在税务署或 e-Tax。',
@@ -333,6 +352,7 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
     summary: '打工前先确认有没有资格外活动许可，以及时间上限。',
     category: '工作',
     factCardIds: ['ryugakusei-baito-28jikan', 'shikakugai-fukugyou'],
+    relatedTopicIds: ['renewal-review-factors'],
     aliases: ['打工', '兼职', '资格外', '資格外活動', '留学生打工', '家族滞在打工'],
     deadline: '开始打工前先确认许可；不要先开始再补。',
     whereToGo: '入管申请资格外活动许可；已持许可时核对许可范围。',
@@ -368,6 +388,7 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
     summary: '公司雇用或雇用结束外国人时，通常有 Hello Work 届出义务。',
     category: '雇用',
     factCardIds: ['gaikokujin-koyo-todokede'],
+    relatedTopicIds: ['job-change', 'retirement-risk'],
     aliases: ['雇主', '公司', '外国人雇用', 'hello work', 'ハローワーク', '届出'],
     deadline: '雇用保险被保险者和非被保险者的届出期限不同。',
     whereToGo: '事业主向 Hello Work 届出。',
@@ -399,6 +420,7 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
     summary: '永住身份本身和在留卡有效期限是两件事。',
     category: '永住',
     factCardIds: ['eijuu-card-koushin'],
+    relatedTopicIds: ['deemed-reentry', 'renewal-review-factors'],
     aliases: ['永住卡', '在留卡期限', '永住者', '卡更新', '有效期限'],
     deadline: '16 岁以上永住者通常可从在留卡有效期限满了日的 2 个月前申请。',
     whereToGo: '入管窗口或可用的申请路径。',
@@ -434,6 +456,7 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
       'eijuu-zairyu-kikan',
       'gijinkoku-koushin-shorui',
     ],
+    relatedTopicIds: ['tax-certificate', 'job-change', 'pension-after-leaving-job'],
     aliases: ['续签', '更新', '变更', '审查', '不许可', '材料', '综合判断'],
     deadline: '具体期限看当前在留期限和申请类型。',
     whereToGo: '入管窗口或电子申请；材料不足时按通知补充。',
@@ -468,6 +491,16 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
 
 export function getQuickReferenceTopic(id: string) {
   return QUICK_REFERENCE_TOPICS.find(topic => topic.id === id)
+}
+
+export function getQuickReferenceTopicHref(id: string) {
+  return `/quick-reference/${encodeURIComponent(id)}`
+}
+
+export function getRelatedQuickReferenceTopics(topic: QuickReferenceTopic) {
+  const idSet = new Set(topic.relatedTopicIds ?? [])
+  if (idSet.size === 0) return []
+  return QUICK_REFERENCE_TOPICS.filter(item => idSet.has(item.id))
 }
 
 export function getQuickReferenceTopicsForFactCards(

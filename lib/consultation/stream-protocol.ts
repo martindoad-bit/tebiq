@@ -155,6 +155,11 @@ export interface ConsultationFactCardAuditEntry {
    *  honest about what was deliberately not asserted. */
   needs_review_flags: ReadonlyArray<string>
   decision: 'inject' | 'hint_only' | 'drop'
+  /** Internal matcher diagnostics. User-facing UI may ignore these, but
+   *  Eval Lab uses them to explain why a card fired. */
+  matched_keywords?: ReadonlyArray<string>
+  score?: number
+  decision_reason?: string
 }
 
 export type ConsultationEvent =
@@ -294,5 +299,5 @@ export const CONSULTATION_TIMING = {
  */
 export const CONSULTATION_TIMEOUT_FALLBACK_TEXT = [
   '这次没有整理完成，不是你的输入问题。',
-  '这次咨询会自动记录；你可以稍后从“我的咨询”查看，或重试。',
+  '这次咨询会自动记录；你可以稍后从“咨询记录”查看，或重试。',
 ].join(' ')

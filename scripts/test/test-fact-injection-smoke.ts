@@ -91,7 +91,11 @@ async function main() {
     for (const card of cards) {
       const seen = new Set<string>()
       const matched: string[] = []
-      for (const kw of card.triggerKeywords) {
+      const triggerKeywords = [
+        ...card.triggerKeywords,
+        ...(matcherMod._matcherInternals.FACT_ID_TRIGGER_ALIASES[card.factId] ?? []),
+      ]
+      for (const kw of triggerKeywords) {
         const kwLower = kw.toLowerCase()
         if (seen.has(kwLower)) continue
         if (haystack.includes(kwLower)) {
@@ -100,13 +104,23 @@ async function main() {
         }
       }
       if (matched.length === 0) continue
-      const uniqueTotal = new Set(card.triggerKeywords.map(k => k.toLowerCase())).size
+      const requiredContext = matcherMod._matcherInternals.FACT_ID_REQUIRED_CONTEXT[card.factId]
+      if (
+        requiredContext &&
+        !requiredContext.some((term: string) => haystack.includes(term.toLowerCase()))
+      ) {
+        continue
+      }
+      const uniqueTotal = new Set(triggerKeywords.map(k => k.toLowerCase())).size
       const score = Math.min(1, matched.length / Math.max(1, uniqueTotal))
       const isHigh = card.riskLevel === 'high' || card.riskLevel === 'critical'
+      const minAbsoluteMatches =
+        matcherMod._matcherInternals.FACT_ID_MIN_ABSOLUTE_MATCHES[card.factId] ??
+        matcherMod._matcherInternals.MIN_ABSOLUTE_MATCHES_LOW_MEDIUM
       if (
         !isHigh &&
         score < matcherMod._matcherInternals.SCORE_THRESHOLD_LOW_MEDIUM &&
-        matched.length < matcherMod._matcherInternals.MIN_ABSOLUTE_MATCHES_LOW_MEDIUM
+        matched.length < minAbsoluteMatches
       ) {
         continue
       }
@@ -262,6 +276,17 @@ async function main() {
       id: 'D5.rishoku-年金健保合并中文',
       question: '退职以后国民年金和健康保险要怎么处理？',
       expect_inject_includes: ['rishoku-kokumin-nenkin-kirikae', 'rishoku-kenko-hoken'],
+    },
+    {
+      id: 'D6.zairyu-address-change-plain-moving',
+      question: '我搬家了，在留卡地址要怎么办？',
+      expect_inject_includes: ['zairyu-address-change'],
+    },
+    {
+      id: 'D7.sono3-office-negative-control',
+      question: '永住申请中国税纳税证明书その3去区役所开吗？',
+      expect_inject_includes: [],
+      expect_no_inject: ['zairyu-address-change'],
     },
   ]
 

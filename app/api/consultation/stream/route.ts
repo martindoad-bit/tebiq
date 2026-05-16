@@ -378,6 +378,9 @@ export async function POST(req: Request) {
         injected_fields: [],
         needs_review_flags: m.needs_review_flags,
         decision: m.decision,
+        matched_keywords: m.matched_keywords,
+        score: m.score,
+        decision_reason: factCardDecisionReason(m),
       }))
       factCardIds = factMatches.map(m => m.fact_id)
       // Build the fact-block system message text from the inject-decision
@@ -770,4 +773,20 @@ function parseCookie(cookieHeader: string, name: string): string | null {
     if (k === name && v) return decodeURIComponent(v)
   }
   return null
+}
+
+function factCardDecisionReason(match: FactCardMatch): string {
+  if (match.decision === 'hint_only') {
+    if (match.state === 'needs_review') return 'state_needs_review'
+    if (match.risk_level === 'critical' && !match.controlled_alpha_eligible) {
+      return 'critical_not_controlled_alpha'
+    }
+    return 'guardrail_hint_only'
+  }
+  if (match.decision === 'inject') {
+    return match.needs_review_flags.length > 0
+      ? 'inject_with_withheld_fields'
+      : 'inject'
+  }
+  return 'dropped_by_gate'
 }
