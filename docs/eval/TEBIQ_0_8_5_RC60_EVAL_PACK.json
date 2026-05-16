@@ -375,7 +375,7 @@
       "starter_tag": "0.8.5-rc60-B12-short-stay-paid-project",
       "scenario": "0.8.5_rc_boundary_misconception",
       "source": "imported",
-      "question_text": "我现在拿的是短期签来日本，帮日本客户做一个两周的有偿项目，钱打到海外账户，可以吗？",
+      "question_text": "我短期来日本，帮日本客户做一个两周的有偿项目，钱打到海外账户，可以吗？",
       "metadata_json": {
         "bucket": "boundary_misconception",
         "risk_level": "P0",

@@ -1,12 +1,12 @@
 # TEBIQ 0.8 Release Candidate Manifest
 
-Updated: 2026-05-15 10:38 CST
+Updated: 2026-05-15 post-release convergence
 
-Purpose: define the smallest safe 0.8 release boundary from the current dirty local branch. This file exists because the current branch contains runtime fixes, Eval Lab work, legal-source research, generated answer artifacts, and large FACT workpacks at the same time. Do not deploy by blindly shipping every changed/untracked file.
+Purpose: define the smallest safe 0.8 release boundary and record what actually shipped. This file originally existed because the pre-release branch mixed runtime fixes, Eval Lab work, legal-source research, generated answer artifacts, and FACT workpacks. The release was later cut onto a clean branch and shipped through PR #131 and PR #132.
 
 ## Release Position
 
-TEBIQ 0.8 is a safety-gated consultation release candidate, not a full legal-source advisory product.
+TEBIQ 0.8 is a safety-gated consultation release, not a full legal-source advisory product.
 
 The 0.8 runtime value is:
 
@@ -15,7 +15,17 @@ The 0.8 runtime value is:
 - Eval Lab can import, compare, annotate, and export answer runs;
 - business-manager 2025 reform is treated as guardrail/professional-confirmation only, not positive eligibility advice.
 
-The 0.8 release blocker that remains is provider-backed answer evidence. Local `.env.local` currently has no model/provider key, so provider-backed regression cannot be completed in this workspace until the provider environment is fixed.
+The pre-release provider-backed blocker was cleared before shipping:
+
+- Loop2B final composite: 17/17 completed, terminal guardrail findings 0;
+- AQL/QA final review: PASS, no release-blocking P0/P1;
+- production answer smoke after deploy: 5/5 completed.
+
+Current production head:
+
+```text
+6676652e8a5be3058f389c73130397d563e6eb45 fix: protect internal admin surfaces (#132)
+```
 
 ## Runtime Release Set
 
@@ -162,9 +172,10 @@ In-app browser smoke:
 - `/internal/eval-lab` rendered `TEBIQ 答案质量标注台`, stats, filters, and question list;
 - no browser console errors were observed during the Eval Lab smoke.
 
-## Remaining Before External/Production Release
+## Post-Release Residuals
 
-1. Provider-backed Loop2B answer rerun with a valid provider environment.
-2. AQL review of provider-backed answers, not only deterministic route coverage.
-3. DOMAIN confirmation for any final positive wording in business-manager reform, HSP1 institution change, DV/address safety, special-period end, and pending-change work start.
-4. Release branch cleanup from `origin/main`; do not use the current ahead-81 dirty branch as the deploy surface without explicit review.
+1. Continue production observation for partial-answer rate, route-gate over-trigger, and answer wording rigidity.
+2. Keep DOMAIN confirmation required before turning deep-water guardrails into positive legal/practical advice.
+3. Keep legal-source / Knowledge Atlas batches out of runtime retrieval until FACT/DOMAIN/AQL promotion review.
+4. Maintain admin/internal fail-closed smoke in every release checklist.
+5. Continue post-release convergence cleanup from `origin/main`; do not revive old mixed research branches as deploy surfaces.

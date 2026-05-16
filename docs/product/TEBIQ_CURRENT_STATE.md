@@ -82,11 +82,9 @@ Important evidence docs:
 - High-risk or under-specified cases should route to deep-water / professional confirmation.
 - P0/P1 guardrails protect against dangerous shortcuts around status change, HSP1 institution change, special periods, taxes, pension, DV/address safety, and business-manager reform myths.
 
-### 材料 Tab
+### 材料 / 速查 Tab
 
 - Direction remains scenario-first official-material checklists.
-- User-facing name should be `材料` / `材料清单`; `Quick Reference` is internal or historical naming only.
-- Do not reintroduce `速查` as a user-facing product label without product-owner approval.
 - Do not patch random copy before product structure is clear.
 - Materials can explain official checklist items, but must not imply that complete materials guarantee permission.
 

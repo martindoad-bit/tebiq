@@ -8,4 +8,4 @@
 - 当前分支: codex/visual-polish-14
 - 状态: awaiting_merge
 - 最近一次 push: 待本次提交推送后以 origin/codex/visual-polish-14 为准
-- 给 CCA 的待办: CCA 修完 /login 后，将 login 修复 + origin/codex/visual-polish-14 集成为 launch/review-candidate-v2。报告见 VISUAL_POLISH_14_REPORT.md；本轮未触碰 /login、app/api、lib/db、Stripe/Resend/Bedrock、.env。
+- 给 CCA 的待办: CCA 修完 /login 后，将 login 修复 + origin/codex/visual-polish-14 集成为 launch/review-candidate-v2。报告见 docs/archive/root-reports-2026-05/VISUAL_POLISH_14_REPORT.md；本轮未触碰 /login、app/api、lib/db、Stripe/Resend/Bedrock、.env。

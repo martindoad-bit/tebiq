@@ -1,10 +1,14 @@
 # TEBIQ 0.8 Release Cutover Checklist
 
-Updated: 2026-05-15 10:46 CST
+Updated: 2026-05-15 post-release convergence
 
-Purpose: convert the current mixed research/engineering branch into a small,
-reviewable 0.8 release branch. This is an operator checklist, not a product
-spec.
+Purpose: record the clean-branch cutover procedure used for 0.8 and keep it
+available for future release operators. This is an operator checklist, not a
+product spec.
+
+Post-release note: the cutover was completed through PR #131 and PR #132.
+Production is currently on `6676652` with `/admin/*`, `/api/admin/*`,
+`/internal/*`, and `/api/internal/*` protected fail-closed.
 
 ## Release Principle
 
@@ -184,9 +188,13 @@ Acceptance:
 - private AQL packet exported to `/tmp` and reviewed;
 - AQL reports 0 P0 and no release-blocking P1.
 
-## Residual Release Risk
+## Residual Post-Release Risk
 
-Even after deterministic tests pass, 0.8 should not be described as
-provider-answer release-ready until the provider-backed Loop2B evidence exists.
-The deterministic guardrails prove that known dangerous answer shapes are
-blocked; they do not prove the live model always chooses the best safe wording.
+Provider-backed Loop2B evidence now exists and AQL/QA passed the 0.8 release
+gate. The remaining risk is operational, not a pre-release blocker:
+
+- live answers should continue to be sampled for over-rigid wording, partial
+  streams, and route-gate over-trigger;
+- follow-up generation should receive periodic provider-backed sampling;
+- legal-source / Knowledge Atlas cards should not be connected to runtime in
+  bulk without FACT/DOMAIN/AQL promotion review.
