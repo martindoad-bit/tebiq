@@ -283,7 +283,7 @@ export async function listSavedAiConsultationsForViewer(
     .limit(limit)
 }
 
-/** Recent root consultations for a viewer. Used by "我的咨询" after auto-record. */
+/** Recent root consultations for a viewer. Used by "咨询记录" after auto-record. */
 export async function listRecentAiConsultationsForViewer(
   viewerId: string,
   limit = 20,

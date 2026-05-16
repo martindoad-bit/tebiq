@@ -372,6 +372,33 @@ test('does not flag answer saying ward office only issues resident tax, not nati
   assert.ok(!findings.some(f => f.id === 'answer-routes-sono3-to-municipality'))
 })
 
+test('does not flag answer warning not to go to municipality for national tax sono3', () => {
+  const findings = validatePermissionStateContradictions(
+    '入管要我交納税証明書その3，这个是在市役所开吗？',
+    '暂缓事项：不要跑去市区町村役场办国税その3，会白跑并耽误期限。',
+  )
+
+  assert.ok(!findings.some(f => f.id === 'answer-routes-sono3-to-municipality'))
+})
+
+test('does not flag answer contrasting resident tax certificates with national tax sono3', () => {
+  const findings = validatePermissionStateContradictions(
+    '入管要我交納税証明書その3，这个是在市役所开吗？',
+    '市役所可以开住民税相关的课税/纳税证明，但国税的納税証明書その3要去税务署或 e-Tax。',
+  )
+
+  assert.ok(!findings.some(f => f.id === 'answer-routes-sono3-to-municipality'))
+})
+
+test('detects resident-tax late-payment answer misusing sono3 route', () => {
+  const findings = validatePermissionStateContradictions(
+    '永住前住民税晚交，已经补交完了，这个记录是不是就没有影响了？',
+    '先去市区町村税务课，开一份最常见的納税証明書その3。',
+  )
+
+  assert.ok(findings.some(f => f.id === 'answer-resident-tax-late-payment-misuses-sono3'))
+})
+
 test('detects student shikakugai long vacation unlimited work language', () => {
   const findings = validatePermissionStateContradictions(
     '我是留学生，夏休み可以周40小时全职打工吗？',
@@ -753,6 +780,15 @@ test('detects renewal/change guaranteed-by-docs language', () => {
   assert.ok(findings.some(f => f.id === 'answer-renewal-change-guaranteed-by-docs'))
 })
 
+test('does not flag renewal/change answer saying complete documents do not guarantee permission', () => {
+  const findings = validatePermissionStateContradictions(
+    '家族滞在更新时材料都齐了，是不是就能更新？',
+    '材料齐备不代表许可，更新仍由入管综合审查。',
+  )
+
+  assert.ok(!findings.some(f => f.id === 'answer-renewal-change-guaranteed-by-docs'))
+})
+
 test('detects social-insurance and pension irrelevant language', () => {
   const findings = validatePermissionStateContradictions(
     '我是自由职业，国民年金没加入过，永住或续签会不会有影响？',
@@ -859,6 +895,15 @@ test('detects short-stay work or shikakugai-safe language', () => {
   )
 
   assert.ok(findings.some(f => f.id === 'answer-short-stay-work-or-shikakugai-safe'))
+})
+
+test('does not flag short-stay answer that limits activity to business meetings', () => {
+  const findings = validatePermissionStateContradictions(
+    '我短期签来日本只是参加客户会议，不拿日本这边工资，这种也会被当成工作吗？',
+    '短期滞在的商用范围允许参加会议、业务联络和签约谈判，这些一般不视为有报酬的就劳活动；但不能提供具体劳动或服务。',
+  )
+
+  assert.ok(!findings.some(f => f.id === 'answer-short-stay-work-or-shikakugai-safe'))
 })
 
 test('detects work-status side-job unrestricted language', () => {

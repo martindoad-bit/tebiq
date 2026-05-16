@@ -94,7 +94,7 @@ export function buildProviderTimeoutFallback(input: {
   questionText: string
 }): PublicAnswer {
   const headline = '这次没有整理完成，不是你的输入问题。'
-  const subtext = '这次咨询会自动记录；你可以稍后从“我的咨询”查看，或重试。'
+  const subtext = '这次咨询会自动记录；你可以稍后从“咨询记录”查看，或重试。'
   return finalize({
     status: 'clarification_needed',
     domain: input.domain,
@@ -108,7 +108,7 @@ export function buildProviderTimeoutFallback(input: {
       { heading: '我理解你的问题是', body: input.detectedIntent.understood_question },
       { heading: '当前状态', body: headline + '\n' + subtext },
     ],
-    next_steps: ['稍后从“我的咨询”查看', '需要重新整理时重试'],
+    next_steps: ['稍后从“咨询记录”查看', '需要重新整理时重试'],
     risk_warnings: [],
     clarification_questions: [],
     documents_needed: [],

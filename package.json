@@ -35,7 +35,13 @@
     "smoke:production-answer": "tsx scripts/test/smoke-production-answer.ts",
     "eval:provider-preflight": "tsx scripts/eval/preflight-provider-env.ts",
     "eval:loop2b-targeted": "bash scripts/eval/run-loop2b-targeted.sh",
+    "eval:0.8.5:first24-routes": "tsx scripts/eval/check-card-import-first24-route-gates.ts",
+    "eval:0.8.5:routes": "tsx scripts/eval/check-card-import-first24-route-gates.ts",
+    "eval:pack:readiness": "tsx scripts/eval/check-eval-pack-readiness.ts",
+    "eval:pack:import": "tsx --env-file=.env.local scripts/eval/import-eval-pack.ts",
+    "eval:pack:export-aql": "tsx --env-file=.env.local scripts/eval/export-aql-pack.ts",
     "qa:release-slice": "tsx scripts/qa/check-0-8-release-slice.ts",
+    "qa:card-import-audit": "tsx --env-file=.env.local scripts/qa/card-import-audit.ts",
     "test": "tsx --test lib/**/*.test.ts"
   },
   "dependencies": {
