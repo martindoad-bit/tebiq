@@ -8,13 +8,18 @@ import {
   type EvalAnnotationRow,
 } from '@/lib/db/queries/eval-lab'
 
-// GET /api/internal/eval-lab/export?type=full|golden|knowledge_ab&reviewer=default
+// GET /api/internal/eval-lab/export?type=full|golden|knowledge_ab|annotations&reviewer=default
 //
-// `full`   — every question / answer / annotation row, schema_version-tagged.
+// `full`         — every question / answer / annotation row, schema_version-tagged.
 // `golden`       — slim per-question record per spec §6: question +
 //                  DeepSeek-raw + TEBIQ-current text + key annotation fields.
 // `knowledge_ab` — Knowledge Atlas review export: A=current TEBIQ snapshot,
 //                  B=knowledge candidate snapshot, plus annotation fields.
+// `annotations`  — Annotations-only export for the reviewer. One row per
+//                  annotated question with question text + verdict (quick
+//                  verdict + severity + score) + notes + repair owner.
+//                  Lightweight, useful for handing a batch of reviewer
+//                  decisions to the founder / 行政書士 outside the Eval Lab.
 //
 // Internal-only. 404 unless EVAL_LAB_ENABLED=1.
 
@@ -55,6 +60,17 @@ export async function GET(req: Request) {
         schema_version: 'eval-lab-knowledge-ab-v1',
         exported_at: exportedAt,
         reviewer,
+        items,
+      })
+    }
+
+    if (type === 'annotations') {
+      const items = buildAnnotationItems(questions, annotations)
+      return jsonDownload('eval-lab-annotations.json', {
+        schema_version: 'eval-lab-annotations-v1',
+        exported_at: exportedAt,
+        reviewer,
+        count: items.length,
         items,
       })
     }
@@ -205,5 +221,48 @@ function comparisonLabel(value: unknown): string | null {
   if (value === 'strict_added') return 'B 更好'
   if (value === 'tied') return '持平'
   if (value === 'regression') return 'B 更差'
+  return null
+}
+
+// Annotations-only export. Returns one item per annotated question (rows
+// with no annotation for this reviewer are skipped). Designed to be small
+// enough to paste into a handoff message but rich enough that the
+// downstream reader (founder / 行政書士) can act without re-opening the
+// Eval Lab. Verdict source = annotation_json.quick_verdict (set by the
+// QuickVerdictBar); when missing we fall back to severity → verdict.
+function buildAnnotationItems(
+  questions: QuestionRow[],
+  annotations: EvalAnnotationRow[],
+): Record<string, unknown>[] {
+  const questionById = new Map<string, QuestionRow>()
+  for (const q of questions) questionById.set(q.id, q)
+  return annotations.map(ann => {
+    const q = questionById.get(ann.questionId)
+    return {
+      question_id: ann.questionId,
+      question: q?.questionText ?? null,
+      scenario: q?.scenario ?? null,
+      starter_tag: q?.starterTag ?? null,
+      source: q?.source ?? null,
+      reviewer: ann.reviewer,
+      quick_verdict: readQuickVerdict(ann.annotationJson),
+      score: ann.score,
+      severity: ann.severity,
+      launchable: ann.launchable,
+      direction_correct: ann.directionCorrect,
+      should_handoff: ann.shouldHandoff,
+      missing_points: ann.missingPoints,
+      reviewer_note: ann.reviewerNote,
+      repair_owner: getStringValue(ann.annotationJson, 'repair_owner'),
+      vs_deepseek_judgment: getStringValue(ann.annotationJson, 'vs_deepseek_judgment'),
+      action: ann.action,
+      updated_at: ann.updatedAt,
+    }
+  })
+}
+
+function readQuickVerdict(json: Record<string, unknown> | null | undefined): string | null {
+  const v = json?.quick_verdict
+  if (v === 'correct' || v === 'incorrect' || v === 'partial' || v === 'unsure') return v
   return null
 }
