@@ -70,6 +70,42 @@ const SCORE_THRESHOLD_LOW_MEDIUM = 0.15
  *  procedural cards (年金/健保/税 etc.) even when the ratio is diluted. */
 const MIN_ABSOLUTE_MATCHES_LOW_MEDIUM = 3
 
+/** Some low-risk procedural cards have one or two very distinctive user
+ *  phrases. Requiring three matches made plain questions like "我搬家了，在留卡
+ *  地址要怎么办" miss the address-change card entirely, even though the
+ *  consequence of surfacing that card is procedural and source-backed.
+ *  Keep this opt-in per fact_id instead of lowering the global threshold. */
+const FACT_ID_MIN_ABSOLUTE_MATCHES: Record<string, number> = {
+  'zairyu-address-change': 1,
+  'zairyu-card-loss-reissue': 1,
+  'rishoku-kenko-hoken': 2,
+  'rishoku-kokumin-nenkin-kirikae': 2,
+  'juminzei-kazei-shomeisho': 1,
+  'gijinkoku-koushin-shorui': 2,
+  'eijuu-shinsei-shorui': 2,
+  'kitaku-tetsuzuki': 1,
+  'jumin-zei-shutsukoku': 2,
+  'nenkin-dattai-ichijikin': 2,
+  'shinseichu-zairyu-keizoku': 2,
+  'kodo-senmon-shoku-points': 2,
+  'shuro-shikaku-shomeisho': 1,
+}
+
+const FACT_ID_TRIGGER_ALIASES: Record<string, readonly string[]> = {
+  'zairyu-card-loss-reissue': ['在留卡找不到', '在留卡找不到了', '找不到了'],
+  'rishoku-kenko-hoken': ['退职以后健康保险', '退职以后健康保险和年金', '健康保险和年金'],
+  'rishoku-kokumin-nenkin-kirikae': ['退职以后年金', '退职以后健康保险和年金', '健康保险和年金', '年金要怎么切'],
+  'juminzei-kazei-shomeisho': ['住民税证明', '税证明', '课税证明', '纳税证明'],
+  'gijinkoku-koushin-shorui': ['技人国续签', '技人国续签材料', '技术人文知识国际业务续签'],
+  'eijuu-shinsei-shorui': ['永住申请', '永住申请材料', '永住用', '永住要课税证明', '永住要纳税证明'],
+  'kitaku-tetsuzuki': ['回国前', '回国前区役所', '回国前手续'],
+  'jumin-zei-shutsukoku': ['回国前税务', '回国前住民税', '回国后住民税', '税务', '税金', '住民税'],
+  'nenkin-dattai-ichijikin': ['回国前年金', '回国后年金', '年金退还', '年金'],
+  'shinseichu-zairyu-keizoku': ['旧在留过期', '结果还没下来', '还没结果'],
+  'kodo-senmon-shoku-points': ['高度人才', '点数', '点数够'],
+  'shuro-shikaku-shomeisho': ['就労資格証明書', '工作资格证明', '工作资格证明书'],
+}
+
 /** Maximum cards to surface to the prompt budget (Pack §4 / design
  *  §"Matcher" cap). Cards beyond this are dropped silently — they don't
  *  count toward audit. */
@@ -84,6 +120,10 @@ const RISK_RANK: Record<string, number> = {
 }
 
 const FACT_ID_REQUIRED_CONTEXT: Record<string, readonly string[]> = {
+  'zairyu-address-change': [
+    '搬家', '引越', '地址', '住址', '住居地', '住所', '転入', '転居',
+    '转入', '转居', '实际住址', '实际地址',
+  ],
   'spouse-divorce-separation': [
     '離婚', '离婚', '別居', '分居', '配偶', '配偶者', '老公', '老婆',
     '丈夫', '妻子', '夫婦', '家暴', 'dv',
@@ -104,9 +144,65 @@ const FACT_ID_REQUIRED_CONTEXT: Record<string, readonly string[]> = {
     '经营・管理', '经营签', '管理签', '开公司', '開業', '起業', '创业',
     '创办公司',
   ],
+  'eijuu-zairyu-kikan': [
+    '何年', '几年', '年数', '住满', '住滿', '就労', '就劳', '就业',
+    '高度', '70点', '80点', '期間', '期间', '在留期間', '在留期间',
+    '短縮', '短缩', '积算', '積算',
+  ],
+  'eijuu-nenkin-risk': [
+    '年金', '健康保険', '健康保险', '健保', '社保', '社会保险',
+    '住民税', '税金', '纳税', '納税', '未纳', '未納', '晚交',
+    '滞納', '迟交', '遅れ', '追纳', '追納', '免除', '猶予', '宽限',
+  ],
+  'gijinkoku-job-mismatch': [
+    '工作内容', '业务内容', '業務内容', '職務', '职务', '岗位',
+    '餐饮', '飲食', '现场', '現場', '端菜', '洗杯子', '接待',
+    '接客', '翻译', '通訳', '帮忙', '帮手', '単純作業', '简单作业',
+    '转岗', '调岗', '换工作', '转职', '転職',
+  ],
+  'tensyoku-zairyu': [
+    '転職', '转职', '换工作', '換工作', '退職', '离职', '離職',
+    '辞职', '辞職', '就職', '入社', '内定', '公司', '会社',
+    '勤務先', '雇用', '雇佣', '契約機関', '所属機関', '工作',
+    '職場', '职场', '新公司', '新工作',
+  ],
+  'zairyu-expiry-renewal-change': [
+    '到期', '过期', '期限', '在留期限', '特例', '什么时候', '何时',
+    '几个月', '几个月前', '3个月', '三个月', '処理期間', '处理时间',
+  ],
+  'kodo-senmon-shoku-eijuu': [
+    '永住', 'PR', 'pr', '1年', '一年', '3年', '三年', '短縮', '短缩',
+    '高度専門職で永住', '高度人才永住',
+  ],
+  'jumin-zei-shutsukoku': [
+    '帰国', '回国', '出国', '离日', '離日', '离开日本', '離れる',
+  ],
+  'nenkin-dattai-ichijikin': [
+    '帰国', '回国', '出国', '离日', '離日', '离开日本', '離れる',
+    '脱退一時金', '脱退一时金',
+  ],
   'ryugaku-gijinkoku-henko': [
     '留学', '留学生', '卒業', '毕业', '専門学校', '专门学校', '学校',
     '内定', '就職', '就活',
+  ],
+}
+
+const FACT_ID_BLOCK_CONTEXT: Record<string, readonly string[]> = {
+  'tensyoku-zairyu': [
+    '没有换工作', '没换工作', '不是问签证变更', '不是签证变更',
+  ],
+  'gijinkoku-job-mismatch': [
+    '没有换工作', '没换工作', '不是问签证变更', '不是签证变更',
+  ],
+  'eijuu-shinsei-shorui': [
+    '不是永住申请', '不是永住', '不是签证材料',
+  ],
+  'eijuu-nenkin-risk': [
+    '不是永住申请', '不是永住', '不是签证材料',
+  ],
+  'keiei-kanri-2025-10': [
+    '旧经管', '既存', '已有经营管理', '已经拿到经营管理', '已经有经营管理',
+    'すでに経営', '既に経営', '保有者', '续签', '更新', '500万', '500万円',
   ],
 }
 
@@ -171,7 +267,10 @@ interface RawMatch {
 }
 
 function scoreCardAgainst(card: FactCard, haystackLower: string): RawMatch | null {
-  const triggers = (card.triggerKeywords ?? []) as string[]
+  const triggers = [
+    ...((card.triggerKeywords ?? []) as string[]),
+    ...(FACT_ID_TRIGGER_ALIASES[card.factId] ?? []),
+  ]
   if (triggers.length === 0) return null
   const matched: string[] = []
   const seen = new Set<string>()
@@ -194,7 +293,7 @@ function scoreCardAgainst(card: FactCard, haystackLower: string): RawMatch | nul
   if (
     !isHighRisk &&
     score < SCORE_THRESHOLD_LOW_MEDIUM &&
-    matched.length < MIN_ABSOLUTE_MATCHES_LOW_MEDIUM
+    matched.length < (FACT_ID_MIN_ABSOLUTE_MATCHES[card.factId] ?? MIN_ABSOLUTE_MATCHES_LOW_MEDIUM)
   ) {
     return null
   }
@@ -203,19 +302,64 @@ function scoreCardAgainst(card: FactCard, haystackLower: string): RawMatch | nul
 }
 
 function passesFactIdContextGuard(factId: string, haystackLower: string): boolean {
+  const blockedContext = FACT_ID_BLOCK_CONTEXT[factId]
+  if (blockedContext?.some(term => haystackLower.includes(term.toLowerCase()))) return false
   const requiredContext = FACT_ID_REQUIRED_CONTEXT[factId]
   if (!requiredContext) return true
   return requiredContext.some(term => haystackLower.includes(term.toLowerCase()))
 }
 
 // ---------------------------------------------------------------------------
-// Loader (DB read)
+// Loader (DB read) — module-scoped cache so every consultation does not
+// hammer the Supabase pooler. fact_cards updates land through
+// `npm run fact-layer:sync`, which is a manual operator action; a 5-minute
+// TTL is well below any realistic sync cadence and removes the
+// CONNECTION_CLOSED / ECONNRESET errors seen during RC60 concurrent runs.
+// invalidateFactCardCache() lets the sync path purge immediately.
 // ---------------------------------------------------------------------------
+const FACT_CARD_CACHE_TTL_MS = 5 * 60_000
+interface FactCardCacheEntry {
+  rows: FactCard[]
+  cachedAt: number
+  inflight: Promise<FactCard[]> | null
+}
+const factCardCache: Record<'prod' | 'dryRun', FactCardCacheEntry> = {
+  prod: { rows: [], cachedAt: 0, inflight: null },
+  dryRun: { rows: [], cachedAt: 0, inflight: null },
+}
+
+export function invalidateFactCardCache(): void {
+  factCardCache.prod = { rows: [], cachedAt: 0, inflight: null }
+  factCardCache.dryRun = { rows: [], cachedAt: 0, inflight: null }
+}
+
 async function loadCandidateCards(includeDryRun: boolean): Promise<FactCard[]> {
+  const slot = includeDryRun ? 'dryRun' : 'prod'
+  const entry = factCardCache[slot]
+  const now = Date.now()
+  if (entry.cachedAt > 0 && now - entry.cachedAt < FACT_CARD_CACHE_TTL_MS) {
+    return entry.rows
+  }
+  if (entry.inflight) return entry.inflight
   const states = includeDryRun
     ? Array.from(DRY_RUN_CANDIDATE_STATES)
     : Array.from(PRODUCTION_CANDIDATE_STATES)
-  return db.select().from(factCards).where(inArray(factCards.state, states))
+  const inflight = db
+    .select()
+    .from(factCards)
+    .where(inArray(factCards.state, states))
+    .then(rows => {
+      factCardCache[slot] = { rows, cachedAt: Date.now(), inflight: null }
+      return rows
+    })
+    .catch(err => {
+      // Clear inflight so the next call can retry; do NOT cache an empty
+      // result on failure (we'd rather fail fast than serve stale-empty).
+      factCardCache[slot] = { rows: entry.rows, cachedAt: entry.cachedAt, inflight: null }
+      throw err
+    })
+  factCardCache[slot] = { ...entry, inflight }
+  return inflight
 }
 
 // ---------------------------------------------------------------------------
@@ -300,8 +444,11 @@ export const _matcherInternals = {
   scoreCardAgainst,
   RISK_RANK,
   FACT_ID_REQUIRED_CONTEXT,
+  FACT_ID_BLOCK_CONTEXT,
+  FACT_ID_TRIGGER_ALIASES,
   SCORE_THRESHOLD_LOW_MEDIUM,
   MIN_ABSOLUTE_MATCHES_LOW_MEDIUM,
+  FACT_ID_MIN_ABSOLUTE_MATCHES,
   MAX_INJECTED,
   PRODUCTION_CANDIDATE_STATES,
   DRY_RUN_CANDIDATE_STATES,
