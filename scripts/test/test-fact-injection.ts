@@ -314,7 +314,7 @@ async function main() {
       mePageSrc.includes('row.factCardIds'),
       '/me/consultations does not surface fact-card count',
     )
-    assert.ok(/参考资料\s*×/.test(mePageSrc), '/me/consultations missing 参考资料 ×N badge label')
+    assert.ok(/来源\s*×/.test(mePageSrc), '/me/consultations missing 来源 ×N badge label')
   })
 
   // -----------------------------------------------------------------------

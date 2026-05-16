@@ -15,7 +15,7 @@
  *   - Reads qa_cases for a given card_id from docs/fact-cards/<card_id>.md
  *     (or from a JSON fixture if present in scripts/qa/fixtures/<card_id>.json)
  *   - For each case: streams a consultation, checks that the SSE response
- *     includes the expected fact_card_id in the `fact_cards` event,
+ *     includes the expected fact_card_id in the `fact_cards_injected` event,
  *     checks must_not_have, checks voice constraints
  *   - Outputs a per-card verdict: PASS / PARTIAL / FAIL
  *   - Rate limit: ≤5 cases per card, ≤30 cases per week (Charter §B.3)
@@ -28,6 +28,7 @@
 
 import * as fs from 'fs'
 import * as path from 'path'
+import * as http from 'http'
 import * as https from 'https'
 import * as readline from 'readline'
 
@@ -38,7 +39,7 @@ import * as readline from 'readline'
 interface QaCase {
   id: string
   question: string
-  /** Fact card IDs expected to appear in the SSE `fact_cards` event. */
+  /** Fact card IDs expected to appear in the SSE `fact_cards_injected` event. */
   expected_card_ids: string[]
   /** Phrases that must appear in the answer (domain assertions). */
   must_include?: string[]
@@ -101,9 +102,10 @@ function streamConsultation(
     })
 
     const url = new URL('/api/consultation/stream', baseUrl)
-    const options: https.RequestOptions = {
+    const isHttps = url.protocol === 'https:'
+    const options: http.RequestOptions | https.RequestOptions = {
       hostname: url.hostname,
-      port: url.port || 443,
+      port: url.port || (isHttps ? 443 : 80),
       path: url.pathname,
       method: 'POST',
       headers: {
@@ -136,7 +138,8 @@ function streamConsultation(
       })
     }, STREAM_TIMEOUT_MS)
 
-    const req = https.request(options, (res) => {
+    const client = isHttps ? https : http
+    const req = client.request(options, (res) => {
       promptVersion = res.headers['x-tebiq-prompt-version'] as string ?? 'N/A'
       model = res.headers['x-tebiq-model'] as string ?? 'N/A'
 
@@ -156,11 +159,14 @@ function streamConsultation(
             case 'answer_chunk':
               chunks.push(ev.chunk ?? '')
               break
-            case 'fact_cards':
+            case 'fact_cards_injected':
               // Expected SSE event once FACT_LAYER_ENABLED=true.
-              // Format TBD by ENGINE (0.6-fact-layer-design.md §4).
-              // Current assumption: { event: 'fact_cards', card_ids: string[] }
-              factCardIds = ev.card_ids ?? []
+              // Current format: { event: 'fact_cards_injected', items: [{ fact_id, ...audit }] }.
+              factCardIds = Array.isArray(ev.items)
+                ? ev.items
+                    .map((item: { fact_id?: unknown }) => item.fact_id)
+                    .filter((id: unknown): id is string => typeof id === 'string')
+                : []
               break
             case 'completed':
             case 'timeout':
