@@ -101,5 +101,7 @@ Production smoke after PR #130 deployment:
 
 ## Remaining
 
-- Correct-key production smoke was not run because the production key is not present in the local environment and should not be printed into logs.
+- PR #132 later broadened protection to `/internal/*` and `/api/internal/*` and added an httpOnly admin cookie so internal pages can call internal APIs after a valid admin-key entry.
+- Production after #132: `/admin`, `/api/admin/stats`, `/internal/eval-lab`, and `/api/internal/eval-lab/state` return 404 with no key or wrong key.
+- Correct-key production smoke should still be done only by an operator who can use the production key without printing it into logs.
 - Keep this security check in future release smoke packs.

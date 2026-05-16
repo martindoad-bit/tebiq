@@ -1,0 +1,751 @@
+{
+  "generated_at": "2026-05-15T19:43:46.400Z",
+  "summary": {
+    "count": 24,
+    "completed": 24,
+    "withFindings": 0,
+    "withFacts": 21,
+    "emptyFacts": [
+      "0.8.5-card-import-B05-immigration-notice-materials",
+      "0.8.5-card-import-C05-nonpermission-appeal",
+      "0.8.5-card-import-D01-short-stay-meeting-negative-control"
+    ],
+    "failures": []
+  },
+  "rows": [
+    {
+      "tag": "0.8.5-card-import-A01-address-change",
+      "qid": "jzzbchzaz4xox3tplaej7yc2",
+      "question_text": "我搬家了，在留卡上的地址是不是去区役所改就可以？还要单独通知入管吗？",
+      "status": "completed",
+      "error": null,
+      "fallback": null,
+      "chars": 463,
+      "facts": [
+        {
+          "fact_id": "zairyu-address-change",
+          "decision": "inject",
+          "matched_keywords": [
+            "搬家",
+            "地址",
+            "区役所",
+            "役所",
+            "入管"
+          ],
+          "score": 0.17857142857142858,
+          "decision_reason": "inject"
+        }
+      ],
+      "routes": [
+        "immigration-notice-taxonomy-first",
+        "address-change-card-window-dual-duty",
+        "individual-duty-not-replaced-by-third-party"
+      ],
+      "findings": [],
+      "answer": "先看这里\n当前判断：如果你搬家后14天内带上在留卡去新住址的市区町村窗口办理转入/转居登记，通常入管法上的住居地变更届出会同时完成，不用再单独跑一趟入管局。\n建议动作：尽快带好在留卡去新住址的区役所或市役所窗口办理住民异动手续。\n暂缓事项：不要线上或邮寄办理转入而不交在留卡，那样不能入管侧的地址变更完成。\n\n你理解的大方向是对的。市区町村的窗口确实是你搬家后最优先要去的地方。在办理住民票的转入手续时，把在留卡交给窗口人员更新背面住址，系统就会把这次办理视同入管法上的住居地申报。\n\n不过有几点需要注意。第一，期限是搬进新家当天起算14天以内，不是工作日。如果已经快超过或已经超过，处理方式会不同。第二，这个“一次性办好”的前提是你本人带实体在留卡去窗口，线上申请或请人代办但没带卡的情况不能当然算完成。\n\n另外这个手续只解决纯搬家。如果你同时还换了工作单位或学校，那属于另一套所属机构变更手续，不能只靠住址变更来解决。\n\n今天就确认搬入日期和还剩几天，把在留卡找出来，然后直接去新住址管辖的市区町村窗口问“転入届け”即可。"
+    },
+    {
+      "tag": "0.8.5-card-import-A02-card-loss",
+      "qid": "v03nvw4lb5fnb0lg3vk2997u",
+      "question_text": "在留卡昨天找不到了，第一步是去区役所还是去入管？",
+      "status": "completed",
+      "error": null,
+      "fallback": null,
+      "chars": 420,
+      "facts": [
+        {
+          "fact_id": "zairyu-card-loss-reissue",
+          "decision": "inject",
+          "matched_keywords": [
+            "找不到了"
+          ],
+          "score": 0.03225806451612903,
+          "decision_reason": "inject"
+        }
+      ],
+      "routes": [
+        "individual-duty-not-replaced-by-third-party"
+      ],
+      "findings": [],
+      "answer": "先看这里\n当前判断：在留卡丢失之后，第一步不是去区役所，而是先到警察署报失，再到入管局申请再交付。\n建议动作：今天先去丢失地附近的警察署或交番做遗失/盗难届，拿到受理编号或遗失届出证明书；之后在 14 天内去入管局（地方出入国在留管理官署）办理在留卡再交付。\n暂缓事项：暂时没有需要暂停的动作，但不要以为去区役所就能补办在留卡。\n\n你问得很关键，很多人的第一反应确实是去区役所。但在在留卡丢失这件事上，区役所并不是再交付窗口。正确顺序是先警察，再入管。\n\n在留卡是必须随身携带的证明，丢失后需要尽快处理。法律规定，从你知道丢失那天起，14 天内要向入管局申请再交付。申请时需要填写申请书，提供照片，并可能被要求提交陈述书说明丢失经过。如果有警察的遗失届受理证明，会对办理有帮助。\n\n区役所在这个流程中，关联的是地址变更等住民票相关手续，并不能发放新在留卡。如果丢失期间遇到警察的携带义务检查，手边没有卡片会有解释上的麻烦，所以时间上不要拖。"
+    },
+    {
+      "tag": "0.8.5-card-import-A03-retirement-insurance-pension",
+      "qid": "plwft4dn3iat6otmwljajm1z",
+      "question_text": "退职以后健康保险和年金要怎么切？我下份工作还没定。",
+      "status": "completed",
+      "error": null,
+      "fallback": null,
+      "chars": 620,
+      "facts": [
+        {
+          "fact_id": "eijuu-nenkin-risk",
+          "decision": "hint_only",
+          "matched_keywords": [
+            "年金"
+          ],
+          "score": 0.02857142857142857,
+          "decision_reason": "critical_not_controlled_alpha"
+        },
+        {
+          "fact_id": "rishoku-kenko-hoken",
+          "decision": "inject",
+          "matched_keywords": [
+            "退职",
+            "健康保险",
+            "退职以后健康保险",
+            "退职以后健康保险和年金",
+            "健康保险和年金"
+          ],
+          "score": 0.14285714285714285,
+          "decision_reason": "inject_with_withheld_fields"
+        },
+        {
+          "fact_id": "rishoku-kokumin-nenkin-kirikae",
+          "decision": "inject",
+          "matched_keywords": [
+            "退职",
+            "退职以后健康保险和年金",
+            "健康保险和年金",
+            "年金要怎么切"
+          ],
+          "score": 0.1111111111111111,
+          "decision_reason": "inject_with_withheld_fields"
+        }
+      ],
+      "routes": [],
+      "findings": [],
+      "answer": "先看这里  \n当前判断：退职后健康保险和年金都必须各自办理切换，且各自的申请期限独立计算，工作未定更需要尽快启动。  \n建议动作：今天去公司确认健康保险资格丧失日和离职证明书的发放时间，同时确认居住地的市区町村役场受理时间。  \n暂缓事项：退职翌日起现在的保险证就不能用了，不要拖到身体不适时才去想保险。\n\n你现在没定下家，所以退职后默认不再是公司健保和厚生年金的被保险者，需要改为自己去加入。关键期限是两个：  \n1. **健康保险** 必须在退职翌日起14天内加入国民健康保险，或者20天内申请任意继续保险。两者只能选一个，20天不申请任意继续就自动失去该选项，只能去市区町村加国保。  \n2. **年金** 必须在退职翌日起14天内到住址的市区町村役场办理国民年金切换（国民年金被保険者関係届），没有厚生年金的延伸选择，除非被配偶者扶养并办理第3号被保险者手续。\n\n接下来需要先确认两件事，再决定方案：  \n- 公司什么时候能把“健康保险资格丧失证明书”或“离职票”给你（加国保要用）。  \n- 任意继续的保费大约是离职前的2倍，最高每月约6万日元左右；如果觉得负担重，就优先14天内去役场加国保，同时办好国民年金切换。\n\n建议顺序是：退职第二天立刻拿上离职证明书、在留卡、マイナンバー卡或基础年金番号，去役场一口气把国民健康保险加入和国民年金切换同时办掉。有经济困难可以在年金窗口问免除或犹予申请。这样不会超期，保险也可以无缝衔接。"
+    },
+    {
+      "tag": "0.8.5-card-import-A04-minashi-reentry",
+      "qid": "d2k375gb2uitfkfe6h7927ik",
+      "question_text": "みなし再入国是不是一年内回来就行？我的在留期限比一年短一点。",
+      "status": "completed",
+      "error": null,
+      "fallback": null,
+      "chars": 585,
+      "facts": [
+        {
+          "fact_id": "minashi-sainyuukoku",
+          "decision": "hint_only",
+          "matched_keywords": [
+            "再入国",
+            "みなし再入国"
+          ],
+          "score": 0.06896551724137931,
+          "decision_reason": "critical_not_controlled_alpha"
+        },
+        {
+          "fact_id": "sainyukoku-kyoka",
+          "decision": "inject",
+          "matched_keywords": [
+            "みなし再入国"
+          ],
+          "score": 0.07142857142857142,
+          "decision_reason": "inject_with_withheld_fields"
+        },
+        {
+          "fact_id": "zairyu-expiry-renewal-change",
+          "decision": "inject",
+          "matched_keywords": [
+            "在留期限",
+            "期限"
+          ],
+          "score": 0.04081632653061224,
+          "decision_reason": "inject_with_withheld_fields"
+        }
+      ],
+      "routes": [
+        "minashi-reentry-one-year-limit"
+      ],
+      "findings": [],
+      "answer": "先看这里  \n当前判断：みなし再入国确实要求“出国日起1年以内且在留期限内”回来，两个条件缺一不可。你的在留期限比一年短，很可能会比1年更早到期。  \n建议动作：今天先确认在留卡上的“在留期限”具体日期，再对比你回国日期，如果在留期限会在海外期间过期，就优先在出国前更新在留资格或申请通常的再入国许可。  \n暂缓事项：不要在未确认期限的情况下就直接用みなし再入国出境，也不要等出国后才发现在留期限已过。\n\n你提到“在留期限比一年短一点”，这正是みなし再入国容易踩坑的地方。规则是：必须同时满足①从出国日起1年内再入境，②再入境时在留期限尚未过期。不管哪个先到，就以那个为截止点。如果你的在留期限只剩10个月，而出国超过10个月，就算还在1年以内也无法再入境。\n\n而且，像“技术・人文知識・国際業務”或“留学”等资格，在留期限本身就不长的很常见。万一人在海外时在留期限到了，入境时会被拒绝，甚至资格失效。更安全的方式是：出国前就去入国管理局窗口，确认是否需要先更新在留资格（只要在期限3个月前就可以申请），或者如果想在海外待超过1年，就要申请通常的再入国许可（最长5年）。\n\n下一步很具体：把在留卡和护照放在一起，对照计划回国的日期。如果在留期限在你计划回国日期之前，就安排时间跑一趟入管或找行政书士，决定是更新资格还是申请通常再入国。不要只记住“一年内回来就行”就出发。"
+    },
+    {
+      "tag": "0.8.5-card-import-A05-national-tax-sono3",
+      "qid": "r6bjnilawjgol67vbnb8b8qv",
+      "question_text": "入管要我交納税証明書その3，这个是在市役所开吗？",
+      "status": "completed",
+      "error": null,
+      "fallback": null,
+      "chars": 403,
+      "facts": [
+        {
+          "fact_id": "eijuu-nenkin-risk",
+          "decision": "hint_only",
+          "matched_keywords": [
+            "納税"
+          ],
+          "score": 0.02857142857142857,
+          "decision_reason": "critical_not_controlled_alpha"
+        },
+        {
+          "fact_id": "juminzei-kazei-shomeisho",
+          "decision": "inject",
+          "matched_keywords": [
+            "納税証明書"
+          ],
+          "score": 0.034482758620689655,
+          "decision_reason": "inject_with_withheld_fields"
+        }
+      ],
+      "routes": [
+        "national-tax-certificate-sono3-route",
+        "individual-duty-not-replaced-by-third-party",
+        "late-payment-remediation-not-erased"
+      ],
+      "findings": [],
+      "answer": "先看这里\n当前判断：入管要求的是国税（所得税等）的納税証明書その3，不是住民税证明，不能在市役所取得。\n建议动作：确认通知书上的“その3”是否明确指向国税，再去税务署或 e-Tax 申领。\n暂缓事项：不要前往市役所办理国税その3，也不要用住民税证明代替。\n\n这份通知书要求的是“納税証明書その3”，它用来证明你指定的国税税目没有未纳金额，属于税務署管辖的证明，与住民票所在地的市区町村无关。\n\n如果你的通知书确实写了“国税の納税証明書その3”，正确的获取窗口是所辖税務署的窗口或 e-Tax 线上系统。拿着在留卡、印章和通知书去税務署，可以当天取得。\n\n需要留意的是，即使通过补缴后开出了“その3”，当初的迟缴记录在永住审查中仍可能被评估。这张证明只能说明当前没有未纳，不等于过去的滞纳历史自动消失。如果最终是申请永住，还需结合年金、保险等履历综合判断，这种情况不建议只靠 AI 判断，建议找专业人士确认。"
+    },
+    {
+      "tag": "0.8.5-card-import-A06-resident-tax-january1",
+      "qid": "rizkruldiy0sswfrche1kt93",
+      "question_text": "我去年搬过家，永住用的住民税证明到底去现在住的区开，还是以前那个区？",
+      "status": "completed",
+      "error": null,
+      "fallback": null,
+      "chars": 445,
+      "facts": [
+        {
+          "fact_id": "eijuu-nenkin-risk",
+          "decision": "hint_only",
+          "matched_keywords": [
+            "永住",
+            "住民税"
+          ],
+          "score": 0.05714285714285714,
+          "decision_reason": "critical_not_controlled_alpha"
+        },
+        {
+          "fact_id": "eijuu-shinsei-shorui",
+          "decision": "inject",
+          "matched_keywords": [
+            "永住用"
+          ],
+          "score": 0.043478260869565216,
+          "decision_reason": "inject_with_withheld_fields"
+        },
+        {
+          "fact_id": "juminzei-kazei-shomeisho",
+          "decision": "inject",
+          "matched_keywords": [
+            "住民税证明",
+            "税证明"
+          ],
+          "score": 0.06896551724137931,
+          "decision_reason": "inject_with_withheld_fields"
+        }
+      ],
+      "routes": [
+        "resident-tax-fiscal-year-january-1"
+      ],
+      "findings": [],
+      "answer": "先看这里  \n当前判断：住所变更后，住民税证明的开具窗口取决于每个年度1月1日的住民登录地，不能只去现在的区。  \n建议动作：先确认入管要求的是哪几个年度的住民税证明，再按每个年度的1月1日地址，分别去当时的市区町村役场开具。  \n暂缓事项：暂时没有需要暂停的动作，但不要把所有年份的证明都拿到现在的区役所去开。\n\n你去年搬过家，永住申请时通常需要直近5年的住民税课税/纳税证明。住民税的原则是：在某年1月1日你在哪个市区町村有住民登录，那一整年的住民税就由该自治体课税并保管记录，所以证明也要回到那里去开。搬家前的年度，1月1日你还在旧地址，证明就归旧区役所管，现在的新区役所开不出来。\n\n下一步你可以先列出入管永住申请指引里要求的具体年度（比如令和3年～令和7年），再核对每个年度的1月1日自己住民票上的住所。然后带着本人确认书类，分别去对应区役所的税務課申请就行。如果这五年间只在去年搬了一次家，通常只有最近一个年度在新地址开，其余几年前都在旧地址开。这样分头准备，材料才不会被退回。"
+    },
+    {
+      "tag": "0.8.5-card-import-B01-gijinkoku-renewal-materials",
+      "qid": "b2ne84kx9xofy4cvynpjh854",
+      "question_text": "技人国续签，公司说材料让我自己先整理，通常我自己能准备哪些？",
+      "status": "completed",
+      "error": null,
+      "fallback": null,
+      "chars": 625,
+      "facts": [
+        {
+          "fact_id": "gijinkoku-koushin-shorui",
+          "decision": "inject",
+          "matched_keywords": [
+            "技人国续签"
+          ],
+          "score": 0.05,
+          "decision_reason": "inject_with_withheld_fields"
+        }
+      ],
+      "routes": [
+        "renewal-change-not-automatic-discretion"
+      ],
+      "findings": [],
+      "answer": "先看这里  \n当前判断：技人国更新时，个人可预先准备的基础材料有7-8项，但最终是否能受理，取决于你所属机构的类别与是否转过职。  \n建议动作：先确认在留期限所剩时间，再按下面列出的个人侧材料进行整理。  \n暂缓事项：不要猜测公司该交什么材料就直接去入管提交，缺少机构侧材料可能导致受理后补件或审查不利。  \n如果公司让你自己先整，说明公司可能不熟悉流程，申请窗口属于你个人责任，务必与公司协调好法人材料。\n\n通常你自己能整理的材料  \n- 在留期间更新许可申请书（你本人填写栏）  \n- 照片（4cm×3cm，3个月内近照，16岁以上需要）  \n- 护照、在留卡（出示用，提交时要带上原件）  \n- 住民税课税/纳税证明书、住民票（市区町村可取得）  \n- 你的雇用契约或劳动条件通知书副本  \n- 之前公司的离职证明书（如果转过职）  \n- 个人银行存折或工资流水（证明生计稳定）\n\n公司必须提供的部分（你不能自行制作）  \n关键是公司是否属于カテゴリー1或2。如果公司是カテゴリー3或4，或在提交日前一年内新成立，还需要公司的登记事项证明书、直近年度决算书、事业内容资料等。这些法人文件不是你个人能开，必须公司公章与代表者记名。\n\n下一步  \n今天先跟在留卡确认期限。如果期限不足1个月，立即联系公司说明法人材料范围，否则可能来不及。如果在整理时遇到转职、收入变动或税金滞纳问题，这种更新不确定性较高，建议带现有材料先找行政书士评估一下再提交。"
+    },
+    {
+      "tag": "0.8.5-card-import-B02-business-manager-office-evidence",
+      "qid": "xgw0ou0g9kz1zkzhysbk0zdv",
+      "question_text": "经管续签前，办公室照片、门牌、租约这些是不是都要留好？",
+      "status": "completed",
+      "error": null,
+      "fallback": null,
+      "chars": 483,
+      "facts": [
+        {
+          "fact_id": "keiei-kanri-2025-10",
+          "decision": "inject",
+          "matched_keywords": [
+            "经管"
+          ],
+          "score": 0.02857142857142857,
+          "decision_reason": "inject_with_withheld_fields"
+        },
+        {
+          "fact_id": "keiei-kanri-existing-holder-update",
+          "decision": "inject",
+          "matched_keywords": [
+            "经管",
+            "续签"
+          ],
+          "score": 0.07692307692307693,
+          "decision_reason": "inject_with_withheld_fields"
+        }
+      ],
+      "routes": [],
+      "findings": [],
+      "answer": "先看这里\n当前判断：办公室照片、门牌、租约等属于证明事业所实态的核心材料，续签前应当系统保留。\n建议动作：立即整理现有办公室相关记录，并与更新申请清单核对缺失项。\n暂缓事项：暂时没有需要暂停的动作。\n\n您提到的照片、门牌和租约确实对经管签证续签很重要。根据当前过渡期（至2028年10月15日）的考量，即使您尚未完全符合新基准，入管也会重点看“经营实体是否仍在真实运作”。所以您手里的办公室实态证据——比如带日期的门牌照片、办公区域内部照片、租金支付记录、租赁契约——是证明事业持续的关键。\n\n需要注意，租赁契约必须是公司名义且与申报的事业所地址一致，照片应能反映常勤职员工作的痕迹，门牌则要清晰显示公司名称。如果这些材料零散或缺失，过渡期审查中的“改善见通”可能更难成立。建议您现在就把这些材料与最近一期的财务报表、税单、职员出勤记录等匹配起来，形成一个完整的开业实态文件包。\n\n下一步，您可以先对照入管官网列出的更新申请标的，或是整理现有材料后向行政书士做一次文件诊断。尤其如果您在资本金或常勤职员方面离新基准还有差距，扎实的实体证明就是过渡期内换取许可的支点。"
+    },
+    {
+      "tag": "0.8.5-card-import-B03-pr-tax-certificates",
+      "qid": "gu3dj95oiytjf6ajvzkz10gt",
+      "question_text": "永住申请是不是课税证明和纳税证明都要？我有点分不清。",
+      "status": "completed",
+      "error": null,
+      "fallback": null,
+      "chars": 480,
+      "facts": [
+        {
+          "fact_id": "eijuu-nenkin-risk",
+          "decision": "hint_only",
+          "matched_keywords": [
+            "永住",
+            "永住申请"
+          ],
+          "score": 0.05714285714285714,
+          "decision_reason": "critical_not_controlled_alpha"
+        },
+        {
+          "fact_id": "eijuu-shinsei-shorui",
+          "decision": "inject",
+          "matched_keywords": [
+            "永住申请"
+          ],
+          "score": 0.043478260869565216,
+          "decision_reason": "inject_with_withheld_fields"
+        },
+        {
+          "fact_id": "juminzei-kazei-shomeisho",
+          "decision": "inject",
+          "matched_keywords": [
+            "税证明",
+            "课税证明",
+            "纳税证明"
+          ],
+          "score": 0.10344827586206896,
+          "decision_reason": "inject_with_withheld_fields"
+        }
+      ],
+      "routes": [
+        "kika-eijuu-different-authority-and-effect",
+        "late-payment-remediation-not-erased",
+        "pr-basic-requirements-not-years-only"
+      ],
+      "findings": [],
+      "answer": "先看这里\n当前判断：永住申请确实需要住民税的课税证明和纳税证明，同时也需要国税的纳税证明。不是二选一，是全部都要。\n建议动作：先去市区町村役场申请住民税相关证明，再去税务署或e-Tax申请国税纳税证明（其3），并比对直近5年是否有未纳记录。\n暂缓事项：如果已发现未纳或滞纳，不要先交永住申请，建议先处理欠缴、咨询行政书士。\n\n简单来说，永住申请时，你需要从市区町村拿到两类住民税证明：一种是课税证明，另一种是纳税证明。课税证明主要记载前一年的所得金额和应缴税额，纳税证明则记载这些税金实际缴纳了没有、是否完纳。入管用这两份材料分别确认你的收入水平和公的义务履行情况。\n\n此外，国税方面还需向税务署申请纳税证明书（其3），用来证明没有未缴纳的国税。所以单从税收证明来看，合计至少是住民税课税证明、住民税纳税证明、国税纳税证明（其3）三种。\n\n审查会着重看直近5年的记录，尤其是住民税方面。如果过去有滞纳或迟缴，即使事后补缴，历史痕迹仍在，可能影响“公的义务适正履行”这项判断。打算申请永住的话，可以先去役所和税务署开具这几份证明，确认记录是否连贯，再决定下一步。"
+    },
+    {
+      "tag": "0.8.5-card-import-B04-dependent-renewal-sponsor-materials",
+      "qid": "p8vxnbf3qkq8ngiw2orgvsxb",
+      "question_text": "家族滞在更新时，主签证人的在职证明和纳税材料也要准备吗？",
+      "status": "completed",
+      "error": null,
+      "fallback": null,
+      "chars": 512,
+      "facts": [
+        {
+          "fact_id": "kazoku-taizai-yoken",
+          "decision": "inject",
+          "matched_keywords": [
+            "家族滞在"
+          ],
+          "score": 0.03571428571428571,
+          "decision_reason": "inject_with_withheld_fields"
+        }
+      ],
+      "routes": [
+        "renewal-change-not-automatic-discretion"
+      ],
+      "findings": [],
+      "answer": "先看这里\n当前判断：家族滞在更新时，主签证人的在职证明和纳税材料是审查核心，不是可选项。\n建议动作：立即与主签证人确认最新年份的住民税课税/纳税证明和在职证明能否取得。\n暂缓事项：不要在未确认主签证人纳税状况和雇佣稳定性的情况下，单独提交家属的更新申请。\n\n你作为家族滞在的持有者申请更新，入管的审查重点其实不在你个人，而在于你依附的那位主签证人。他们必须判断主签证人是否仍具备持续扶养你的能力和稳定的生计基础。因此，主签证人的在职证明（证实雇佣状态和收入）以及住民税/所得税的课税、纳税证明（证实是否履行了公共义务）是必需材料。\n\n家族滞在的前提是“被扶养”。如果主签证人近期有转职、收入显著减少，或存在住民税滞纳未纳的记录，这会直接影响你的更新结果。审查不仅看收入高低，更会综合评估素行和生计的安定性。纳税义务未履行，属于会影响许可判断的负面因素。\n\n接下来，请先做三件事：\n1. 确认主签证人的在留期限，如果他的在留资格也快到期，建议两人同步或合理错开申请。\n2. 去区役所替主签证人取得最新的课税证明和纳税证明，确认没有未纳记录。\n3. 请主签证人联系公司，开具最新版本的在职证明书，并准备好过去一年的工资单复印件。"
+    },
+    {
+      "tag": "0.8.5-card-import-B05-immigration-notice-materials",
+      "qid": "g5c2de6x6vlql6wbjtzkctlm",
+      "question_text": "入管寄来补材料通知，我日文看不懂，只想先知道今天要拍哪些东西给行政书士。",
+      "status": "completed",
+      "error": null,
+      "fallback": null,
+      "chars": 404,
+      "facts": [],
+      "routes": [
+        "immigration-notice-taxonomy-first",
+        "torikiji-applicant-responsibility-boundary"
+      ],
+      "findings": [],
+      "answer": "先看这里  \n当前判断：这是一封补充材料通知，必须在指定期限内交件，否则申请可能被视为撤回。  \n建议动作：今天先把通知书每一页完整拍清，尤其要拍到“提出期限”和“要求書類”的那几行字，马上发给你的行政书士。  \n暂缓事项：不要只看标题就猜测要补什么，也不要拖延到期限最后一天。\n\n你看不懂日文，这种情况下最稳妥的第一步不是自己猜材料，而是让行政书士直接看原文。通知书上会明确写清楚要补哪些证明、在哪天之前交到哪个窗口。你需要做的就是把它拍全、拍清楚发过去。\n\n发给行政书士后，请他告诉你哪几项需要你本人去开（比如去市役所拿课税证明、去公司拿在职证明），哪几项可以由他代取。然后对照期限，优先处理需要你亲自跑窗口的那部分。如果期限只剩不到两周，或者要补的材料你短期内拿不到，建议立刻请行政书士评估是否需要提前告知入管，或调整提交方式。\n\n今天的关键就是：把通知书页页拍齐，发给行政书士，再按对方的清单去准备。"
+    },
+    {
+      "tag": "0.8.5-card-import-B06-return-home-admin-materials",
+      "qid": "lvm5nouumiki8w8ulxb1xh89",
+      "question_text": "回国前区役所、税务和年金这几块，我应该先整理什么材料，免得以后再来日本麻烦？",
+      "status": "completed",
+      "error": null,
+      "fallback": null,
+      "chars": 773,
+      "facts": [
+        {
+          "fact_id": "eijuu-nenkin-risk",
+          "decision": "hint_only",
+          "matched_keywords": [
+            "年金"
+          ],
+          "score": 0.02857142857142857,
+          "decision_reason": "critical_not_controlled_alpha"
+        },
+        {
+          "fact_id": "kitaku-tetsuzuki",
+          "decision": "inject",
+          "matched_keywords": [
+            "回国前",
+            "回国前区役所"
+          ],
+          "score": 0.1111111111111111,
+          "decision_reason": "inject_with_withheld_fields"
+        },
+        {
+          "fact_id": "jumin-zei-shutsukoku",
+          "decision": "inject",
+          "matched_keywords": [
+            "税务"
+          ],
+          "score": 0.05555555555555555,
+          "decision_reason": "inject_with_withheld_fields"
+        }
+      ],
+      "routes": [],
+      "findings": [],
+      "answer": "先看这里\n当前判断：回国前把住民票转出、在留卡返还和税金清算这几块同时理清，可以大幅减少事后追缴和手续困扰。\n建议动作：①确认是否有再入国许可 ②按“住民票→税务→年金”的顺序在出国前两周内跑完窗口。\n暂缓事项：若无再入国计划，不要未提出转出届就直接离境；不要等到出国当天才去区役所。\n\n你问的是回国前要准备什么材料，主要是区役所、税务和年金三块。\n可以先做个小判断：如果你拿了再入国许可、地址还会保留在日本，手续就轻很多；如果这次是完全结束生活、注销地址的回国，那下面三块都需要跑。\n\n第一，区役所。去窗口办“国外转出届（転出届）”，一定要说明不是国内搬家而是“海外転出”。你需要：在留卡、护照、マイナンバーカード（如果有）、印章。在国外转出的手续里，国民健康保险会随转出日自动失效，保险证可以一并退还。転出届在出国14天前就能办，最晚出国后14天内要提出，建议走之前就办好。\n\n第二，税务。如果本次出国后不再回来，最好指定一名“纳税管理人”替你处理可能出现的住民税清算或追缴。特别提醒：如果你1月1日在日本，即使年中离境，次年6月起的住民税可能还是会来，没有代理人的话很容易变成滞纳，将来再入国或申请永住都可能被影响。请带：在留卡、源泉徴収票或最近一次工资单，去税务课窗口确认是否需要提前清算。\n\n第三，年金。带好年金手帳或基础年金号码通知书，去年金事务所或区役所年金窗口说明回国日期，确认是否做“资格丧失”手续。脱退一时金不是自动发的，需要回国后申请，记得保留年金手帳的复印件。如果你以后有再来日本长期生活的打算，这段时间的年金记录会影响到将来换永住时审查的完整性。\n\n最后，机场出境时，如果没有再入国许可，在留卡会在审查窗口直接返还。再入国的みなし许可只限出境后一年内且当前在留期限内回来，超过就等于失效，这点在做回国决定时也要心里有数。"
+    },
+    {
+      "tag": "0.8.5-card-import-C01-special-period-two-month",
+      "qid": "cowmxg08vmgvzsa8a6z80ol7",
+      "question_text": "我的更新已经提交了，旧在留过期快两个月了，结果还没下来，是不是继续等就行？",
+      "status": "completed",
+      "error": null,
+      "fallback": null,
+      "chars": 517,
+      "facts": [
+        {
+          "fact_id": "shinseichu-zairyu-keizoku",
+          "decision": "inject",
+          "matched_keywords": [
+            "旧在留过期",
+            "结果还没下来"
+          ],
+          "score": 0.13333333333333333,
+          "decision_reason": "inject_with_withheld_fields"
+        },
+        {
+          "fact_id": "zairyu-expiry-renewal-change",
+          "decision": "inject",
+          "matched_keywords": [
+            "更新",
+            "过期"
+          ],
+          "score": 0.04081632653061224,
+          "decision_reason": "inject_with_withheld_fields"
+        }
+      ],
+      "routes": [
+        "special-period-two-month-boundary",
+        "nonpermission-special-period-ended-boundary"
+      ],
+      "findings": [],
+      "answer": "先看这里\n当前判断：特例期间不是无限等，快两个月就已经非常接近端点，继续等有失去保护的风险。\n建议动作：今天确认旧在留期限的确切日期，如果已超过或即将满两个月，尽快联系入管窗口或专业人士问是否已有结果或能否补材料。\n暂缓事项：不要以为“还没收到通知就可以继续等”，端点一到特例期间就结束。\n\n你的情况属于在留期限内提交了更新申请，之后旧在留过期。根据规定，如果申请时在留期限还有效，到期后最久可以以原资格继续留在日本并做原活动，直到处分下来或者旧在留期满日之后两个月——哪个先到就算哪个。\n\n现在“快两个月了”，说明你离这个保护期终点已经非常近。如果超过两个月端点仍然没有收到处分，原则上特例期间就不再适用，那时即使申请还没结果，立场也会一下子变困难。这不代表一定出问题，但不能再按“照常等”来应对。\n\n接下来先做的：查你旧在留卡上的期满日，算一下是否今天还在两个月内。如果还在保护期，今天或明天就联系入管（最好是留申请受付票上的窗口）确认审查进度或是否有补材料要求。如果你已经有受付票但发现旧在留期已满两个月，那就不建议自己单等，需要立刻找行政书士或入管窗口，说明日期和申请情况，判断下一步是补材料、确认已出结果，还是其他合法路径。"
+    },
+    {
+      "tag": "0.8.5-card-import-C02-incomplete-material-before-expiry",
+      "qid": "im8tdx3bhuppgx9le3drtc00",
+      "question_text": "签证快到期了，但公司决算书还没给我。材料不齐先交上去，是不是就能保住特例期间？",
+      "status": "completed",
+      "error": null,
+      "fallback": null,
+      "chars": 598,
+      "facts": [
+        {
+          "fact_id": "zairyu-expiry-renewal-change",
+          "decision": "inject",
+          "matched_keywords": [
+            "特例"
+          ],
+          "score": 0.02040816326530612,
+          "decision_reason": "inject_with_withheld_fields"
+        }
+      ],
+      "routes": [
+        "incomplete-materials-before-expiry-no-safe-bridge"
+      ],
+      "findings": [],
+      "answer": "先看这里  \n当前判断：材料不齐时先交，不等于一定能进入特例期间。关键在于入管是否受理这份申请。  \n建议动作：今天先确认在留卡上的在留期限，再尽快联系入管窗口，说明缺少决算书的状况，询问能否先提交现有材料。  \n暂缓事项：不要未经窗口确认就把不完整的材料直接递交，也不要默认“先交就一定有保护”。\n\n你的处境是在留期限临近，但关键的公司决算书还没到手。关于“先交上去就能保住特例期间”的想法，必须先纠正一个常见误解：特例期间（最长2个月的申请审理缓冲）只有在入管正式受理你的更新申请后才会发生。如果材料缺得太多被拒收，就根本没有申请中的状态，也就没有特例期间。\n\n目前不确定你申请的是哪种在留资格（例如技術・人文知識・国際業務、経営管理等），影响会有不同。但无论哪种，决算书通常都是审查公司经营实态的核心材料，特别对于経営管理更是必须项。如果窗口认为材料严重不完整，可能不会受理。\n\n接下来先做两件事：  \n1. 翻看你的在留卡，确认具体期满日。若日期非常紧迫，优先打电话或直接去入管局就労審査部門窗口，说明情况，问“现有材料能否先提交、决算书稍后补”。  \n2. 同时催促公司尽快提供决算书，哪怕是电子版草稿也可先整理。  \n如果窗口同意受理，你会获得受付印，并进入特例期间；如果不受理，你必须在期满日前收到决算书完成提交，或考虑其他方案。这种情况不建议只靠AI判断，窗口的现场答复至关重要。"
+    },
+    {
+      "tag": "0.8.5-card-import-C03-hsp1-institution-change",
+      "qid": "sb7wx7k1p8v33oc6l3g2hzxy",
+      "question_text": "高度人才换会社，我点数还是够的，14 天内届出以后可以先去新公司上班吗？",
+      "status": "completed",
+      "error": null,
+      "fallback": null,
+      "chars": 616,
+      "facts": [
+        {
+          "fact_id": "kodo-senmon-shoku-points",
+          "decision": "inject",
+          "matched_keywords": [
+            "高度人才",
+            "点数"
+          ],
+          "score": 0.11764705882352941,
+          "decision_reason": "inject_with_withheld_fields"
+        },
+        {
+          "fact_id": "eijuu-zairyu-kikan",
+          "decision": "inject",
+          "matched_keywords": [
+            "高度人才"
+          ],
+          "score": 0.03333333333333333,
+          "decision_reason": "inject_with_withheld_fields"
+        }
+      ],
+      "routes": [
+        "hsp1-institution-change-permission-first",
+        "individual-duty-not-replaced-by-third-party",
+        "notification-duty-violation-not-harmless"
+      ],
+      "findings": [],
+      "answer": "先看这里\n当前判断：高度専門職1号的换机构需要许可，届出只是通知义务，不能代替机构变更许可。即便点数仍满足，新公司活动必须等许可下来后才能开始。\n建议动作：尽快向入管提交「高度専門職1号（イ／ロ／ハ）の所属機関変更許可申請」，并与新公司协调入职日以许可为准。\n暂缓事项：不要以14日届出为由先开始在新公司工作，也不要提前以研修、业务委托等形式实际参与新公司活动。\n\n你理解的方向对了一半：14日届出是必须做的，但它只是通知现有机构变更的事实，不是授权你为新公司劳动的许可。高度専門職1号换机构的核心是入管审查你和新职位是否仍满足点数、活动内容是否符合资格范围。只有「所属機関変更許可」下来，你才可以在新公司合法工作。\n\n目前你要先确认：新公司职务内容是否仍属于高度専門職1号的“高度学術研究活動”、“高度専門・技術活動”或“高度経営・管理活動”的相应范畴。然后准备变更许可申请材料，包括新的雇佣契约、新公司的登记簿誊本、最近年收证明以及重新计算的ポイント表等。\n\n如果点数确实够，申请通过的可能性较高，但入管的审查期间（通常1个月左右）内你仍需在原公司工作或以其他合法身份停留。不要听信“先以业务委托、外包或研修名义过去”的说法，这在许可前会被视为違法就労。稳妥的做法是：向新公司说明情况，签署以许可生效为条件的雇佣契约，并于申请提交后耐心等待许可，再正式开始上班。如果离职期限紧迫，这一点更需要尽快和行政书士或入管窗口确认时间线。"
+    },
+    {
+      "tag": "0.8.5-card-import-C04-work-qualification-certificate",
+      "qid": "pobfujf0i3t8lpimwrt83k0g",
+      "question_text": "我拿到就労資格証明書了，这是不是等于新工作已经被入管认可？",
+      "status": "completed",
+      "error": null,
+      "fallback": null,
+      "chars": 456,
+      "facts": [
+        {
+          "fact_id": "shuro-shikaku-shomeisho",
+          "decision": "inject",
+          "matched_keywords": [
+            "就労資格証明書"
+          ],
+          "score": 0.05,
+          "decision_reason": "inject_with_withheld_fields"
+        }
+      ],
+      "routes": [
+        "work-qualification-certificate-not-permission"
+      ],
+      "findings": [],
+      "answer": "先看这里  \n当前判断：你拿到的就労資格証明書，是对现有在留资格允许的工作范围的确认，不等于新工作本身被入管认定为合法。  \n建议动作：先确认你现在的工作内容，是否仍在现有在留资格允许的范围内；如果属于需要变更在留资格的活动，单凭这份证书还不够。  \n暂缓事项：不要以为有了就労資格証明書，就可以从事需要新在留资格的工作。\n\n这份证书的作用是向雇主或第三方证明“你目前在留资格允许做这类工作”，本质上是范围确认，而不是新的许可。如果你的新工作内容明显超出现在的在留资格范围，例如从翻译变成店铺现场销售，那入管并不会因为你有证书就默许。\n\n所以接下来最关键的一步是比对：你现在实际要做的职务内容，和你现有在留资格所属的活动范围是否一致。如果不一致，就需要走“在留资格变更许可申请”，而不是只靠就労資格証明書。另外，如果只是转职但活动内容没变，也要记得在14天内办理所属机构变更届出，这和证书是两回事。\n\n如果你不太确定现在这份工作是否属于“范围外”，那建议先把雇佣契约和职务内容整理好，找行政书士确认一下比较稳妥。"
+    },
+    {
+      "tag": "0.8.5-card-import-C05-nonpermission-appeal",
+      "qid": "mkx814fphdxx69rr6puf8dq6",
+      "question_text": "不许可通知来了，但朋友说可以審査請求，就还能多留一段时间对吗？",
+      "status": "completed",
+      "error": null,
+      "fallback": null,
+      "chars": 582,
+      "facts": [],
+      "routes": [
+        "immigration-notice-taxonomy-first",
+        "nonpermission-no-ordinary-appeal-no-grace"
+      ],
+      "findings": [],
+      "answer": "先看这里\n当前判断：普通在留申请（更新/变更）的不许可，官方通常没有審査請求这种申诉路径。朋友的说法很可能不准确，不能靠这个方法延长停留。\n建议动作：立刻确认不许可通知书上的标题、日期和原在留期限是否已过。今天先联系行政書士或律师，把通知书给他们确认。\n暂缓事项：不要自行提交審査請求或异议文件，这可能耽误真正有效的再申请窗口。\n\n你收到的这份不许可通知，如果是针对在留期间更新或资格变更，实务上并没有常规的行政不服申立（審査請求）途径。这不是可以一边申诉一边合法延长的流程。朋友说的那种情况，可能和更专业的案件混淆了。\n\n现在还能不能留在日本，只取决于一个硬条件：你原本的在留卡上写着的期限，现在还剩下多少天。\n如果原期限还没到，那你目前还是合法在留状态，没变成“不法滞在”。但入管已经做出了不许可判断，继续等待不会改变结果。必须抓紧在原期限届满前，确认不许可理由，并整理材料准备再申请。\n如果原期限已经过了，那就非常紧张了，很可能已经进入不法在留风险阶段，需要立刻由专业人士介入评估是否还有补救机会。\n\n接下来先做的事\n1. 把不许可通知书、在留卡、护照都放在一起，确认在留期限剩余天数。\n2. 立刻找一位靠谱的行政書士或律师，把通知书给他们看，让专业人士结合你的申请类别，判断是马上再申请还是变更别的在留资格。这种情况不建议只靠AI判断，必须找专业人士确认。"
+    },
+    {
+      "tag": "0.8.5-card-import-C06-spouse-divorce-notification",
+      "qid": "ufx7b51ofe1wt02604ugop8v",
+      "question_text": "配偶签离婚后还没告诉入管，在留卡还有一年，这段时间应该没事吧？",
+      "status": "completed",
+      "error": null,
+      "fallback": null,
+      "chars": 409,
+      "facts": [
+        {
+          "fact_id": "spouse-divorce-separation",
+          "decision": "inject",
+          "matched_keywords": [
+            "离婚"
+          ],
+          "score": 0.03125,
+          "decision_reason": "inject_with_withheld_fields"
+        }
+      ],
+      "routes": [
+        "status-cancellation-before-expiry-boundary",
+        "notification-duty-violation-not-harmless"
+      ],
+      "findings": [],
+      "answer": "先看这里\n当前判断：离婚后配偶活动基础已经消失，在留卡上的剩余期限不等于可以安全停留，存在届出义务违反和6个月规则的双重风险。\n建议动作：尽快整理离婚相关日期和文件，准备向入管履行14日内届出义务，同时规划资格变更或回国安排。\n暂缓事项：不要把在留卡有效期当作安全期，不要继续推迟届出。\n\n您目前的情况不是简单“没事”的区间。离婚后，作为“日本人配偶”的在留资格基础已经丧失，入管法规定14日内必须向入管报告这一事实，未报告属于义务违反。更重要的是，离婚后的6个月规则开始启动——从离婚日起，若连续6个月未从事配偶活动，入管可以启动在留资格取消程序。虽然取消前会有意见听取和出国缓冲期，但这仍是比更新不许可更严重的问题。\n\n建议您今天先确认准确离婚日期，再整理离婚受理证明、在留卡、护照等文件。随后找行政書士帮忙，规划届出时间点和下一步资格变更（如定住者或就劳资格）或离境安排。不要等到满6个月或临近在留卡到期才行动。"
+    },
+    {
+      "tag": "0.8.5-card-import-C07-business-manager-suspend-company",
+      "qid": "t3kuhotzmnmixve1jd76zkjr",
+      "question_text": "经管公司已经没营业了，我想先把公司休眠掉再转技人国，这样是不是比较干净？",
+      "status": "completed",
+      "error": null,
+      "fallback": null,
+      "chars": 575,
+      "facts": [
+        {
+          "fact_id": "keiei-kanri-2025-10",
+          "decision": "inject",
+          "matched_keywords": [
+            "经管"
+          ],
+          "score": 0.02857142857142857,
+          "decision_reason": "inject_with_withheld_fields"
+        },
+        {
+          "fact_id": "keiei-kanri-existing-holder-update",
+          "decision": "inject",
+          "matched_keywords": [
+            "经管"
+          ],
+          "score": 0.038461538461538464,
+          "decision_reason": "inject_with_withheld_fields"
+        }
+      ],
+      "routes": [
+        "business-manager-disposition-no-auto-success"
+      ],
+      "findings": [],
+      "answer": "先看这里\n当前判断：公司休眠不等于在留资格变更的捷径，反而可能暴露活动实态已消失的风险。\n建议动作：在向入管提交任何变更申请前，先把旧公司的经营实态和新雇主的聘用材料，拿给行政书士过一遍。\n暂缓事项：不建议你现在先去办理公司休眠手续。顺序如果弄反，会直接影响目前的在留。\n\n你想通过“先把公司休眠”来理清状况，这个想法可以理解。但从经管资格的逻辑来看，一旦公司实际停止营业，你在该资格下的活动实态就已经很薄弱了。这个风险不会因为办理了休眠而消失，入管审查时依然会关注你前一阶段的活动实态是否符合经管资格的要求。\n\n接下来转技人国，入管看的是两点：一是你的学历与工作经验的关联性；二是新公司提供的具体职务与稳定的雇佣契约。只有在拿到新雇佣内定并准备好相关材料后，才适合启动在留资格变更申请。旧公司的休眠、清算或税务终了等手续，不能在“变更许可还没下来”的阶段擅自决定顺序，否则容易造成活动空白期，反而成为不许可或审查长期化的理由。\n\n可行的下一步：第一，确认新雇主的职务内容是否与你的学历或工作经验高度匹配。第二，在留期限和可用时间是否还充裕。第三，先把公司现状、税/社保缴纳记录和新内定材料整理出来，找行政书士评估从经管到技人国变更的全套策略，再由专业方指导你以什么顺序、什么时间点去办理旧公司的休眠或清算。这样处理才有机会降低风险，不至于弄巧成拙。"
+    },
+    {
+      "tag": "0.8.5-card-import-C08-gijinkoku-restaurant-help",
+      "qid": "s9gdcp7wbo0zfkvz01t3ji29",
+      "question_text": "我技人国，在餐饮店做翻译和接待，但有时也会帮忙端菜洗杯子，公司说没关系。",
+      "status": "completed",
+      "error": null,
+      "fallback": null,
+      "chars": 475,
+      "facts": [
+        {
+          "fact_id": "gijinkoku-job-mismatch",
+          "decision": "inject",
+          "matched_keywords": [
+            "技人国"
+          ],
+          "score": 0.030303030303030304,
+          "decision_reason": "inject_with_withheld_fields"
+        }
+      ],
+      "routes": [
+        "gijinkoku-work-scope-not-any-job"
+      ],
+      "findings": [],
+      "answer": "先看这里  \n当前判断：翻译接待本身在技人国范围内，但端菜洗杯子属于单纯作业，超出范围。  \n建议动作：今天开始记录每天实际业务内容和时长比例；尽快和公司确认今后能否把范围外作业排除。  \n暂缓事项：不要只听公司说“没关系”就继续做端菜洗杯子这类单纯作业。\n\n你现在的核心风险在于业务内容不一致。技人国允许的是需要技术、人文学科知识或外国文化感受性的业务，翻译接待确实符合。但端盘子、洗杯子属于单纯体力作业，即使公司说可以、哪怕比例不大，入管只看实际从事的活动。\n\n关键边界有两条：一是如果超过3个月完全不从事翻译接待等符合资格的业务，在留资格有被取消的可能。二是即使你主要做翻译，但持续夹杂范围外作业，在更新审查时也可能被质疑。公司安排不会让范围外业务变成合法。\n\n下一步先整理：把过去一段时间的排班、工作内容描述整理出来，看范围外作业的频次和时长占比。然后和公司书面确认今后是否可以把端菜洗杯子从你的职责中完全排除。如果公司坚持让你继续做，或者实际情况已经以端菜等服务为主，就不建议自己判断合法性，找行政书士或入管窗口确认是否需要届出或变更资格。"
+    },
+    {
+      "tag": "0.8.5-card-import-D01-short-stay-meeting-negative-control",
+      "qid": "n1srhb8ceelm30zkt2kvog4b",
+      "question_text": "我短期签来日本只是参加客户会议，不拿日本这边工资，这种也会被当成工作吗？",
+      "status": "completed",
+      "error": null,
+      "fallback": null,
+      "chars": 491,
+      "facts": [],
+      "routes": [
+        "short-stay-no-work-no-shikakugai"
+      ],
+      "findings": [],
+      "answer": "先看这里\n当前判断：短期滞在允许参加客户会议这类业务联络／商谈活动，不属于“有报酬就劳活动”。但判断依据看实际在会议期间你做了什么，而不是只看工资来源。\n建议动作：出发前确认会议议程中是否有实际操作／服务交付；出差期间保留会议记录证明业务性质。\n暂缓事项：暂时没有需要暂停的动作。\n\n短期滞在可以从事的业务范围包括商谈、会议、业务联络、市场调查等，这类活动即使产生旅费或某种形式的经费负担，一般仍算商务出差而非就劳。你在会议上不拿日本方工资，这件事本身是重要事实，但不是唯一条件。关键是你没有在日本为某组织提供持续的有偿劳务。\n\n评估是否可能被当成工作，主要看三点：活动性质是不是单纯的参会、商务交流；你是否有实际为日本客户执行有报酬的服务（例如写代码、出报告、做设计）；以及出差计划是否仍然停留在“短期参加会议”，而不是“边参会边开始处理日常业务”。如果只是交换意见、讨论方案、推进项目协商，不会被自动归类为工作。\n\n建议你出境时随身携带邀请函、会议日程、出差指示等文件。入管现场询问时明确说明是商谈而不是出劳务。如果会议后对方突然提出要你留下来帮忙，应该先评估在留资格后再行动。"
+    },
+    {
+      "tag": "0.8.5-card-import-D02-pr-side-job-negative-control",
+      "qid": "p56on2658yzuoxcgpvtkrzgw",
+      "question_text": "我是永住者，想周末接一点设计副业，需要资格外活动许可吗？",
+      "status": "completed",
+      "error": null,
+      "fallback": null,
+      "chars": 401,
+      "facts": [
+        {
+          "fact_id": "shikakugai-fukugyou",
+          "decision": "inject",
+          "matched_keywords": [
+            "资格外活动",
+            "副业"
+          ],
+          "score": 0.0625,
+          "decision_reason": "inject_with_withheld_fields"
+        }
+      ],
+      "routes": [],
+      "findings": [],
+      "answer": "先看这里  \n当前判断：永住者从事有报酬的活动不需要申请资格外活动许可，因为永住者本身没有就业限制。  \n建议动作：确认在留卡上资格确实是「永住者」，然后检视税务申报义务。  \n暂缓事项：暂时没有需要暂停的动作。\n\n你作为永住者，周末接设计副业在法律上不需要资格外活动许可。按照入管法的规定，永住者、定住者、日本人配偶等属于“就劳活动无限制”的资格，不管主业还是副业，只要不违反其他法律，都可以自由进行。\n\n所以你现在可以直接开始接单，但有几件事仍然要留意：  \n- 税务方面，如果副业收入每年超过20万日元，原则上需要做确定申告（所得税），不要遗漏。  \n- 如果主业公司有明确的兼职禁止规定，这是公司内部纪律问题，不属于在留资格风险，但可能引发雇佣纠纷，建议先确认就業規則。\n\n总之，在留手续上不需要和入管打交道，先把设计工作正常运营起来就好。如果有收入规模扩大后个人事业化的疑问，可以后续再整理。"
+    },
+    {
+      "tag": "0.8.5-card-import-E01-late-tax-followup",
+      "qid": "zhsy51bbtbq4r2zhaeh8dtxx",
+      "question_text": "上次问你永住前住民税晚交的问题。我已经补交完了，这个记录是不是就没有影响了？",
+      "status": "completed",
+      "error": null,
+      "fallback": null,
+      "chars": 711,
+      "facts": [
+        {
+          "fact_id": "eijuu-nenkin-risk",
+          "decision": "hint_only",
+          "matched_keywords": [
+            "永住",
+            "住民税"
+          ],
+          "score": 0.05714285714285714,
+          "decision_reason": "critical_not_controlled_alpha"
+        }
+      ],
+      "routes": [
+        "late-payment-remediation-not-erased"
+      ],
+      "findings": [],
+      "answer": "先看这里  \n当前判断：补交住民税能解决“当前欠税”状态，但不等于入管不会看当初的迟缴历史。  \n建议动作：去市区町村窗口申请最新的“住民税課税（非課税）証明書”和“納税証明書”，确认证明上是否有迟缴备注。  \n暂缓事项：不要以为补缴后审查就一定不会质疑迟缴期间；不要在无准备的情况下直接提交永住申请。\n\n你提到的情形很常见：住民税晚交后补完了，想知道对永住的影响是否就消失了。  \n首先说确定的：补交之后，你当前的滞纳状态已清除，市区町村可以开出“完納”或“納付済”的证明。但永住审查不是只看当前欠不欠税，而是看过去数年间是否“适正履行了公的义务”。尤其直近3~5年的住民税，如果存在晚交、滞纳、催告后补缴等记录，入管可能会认为履行状况不稳定。\n\n是否会实际影响，取决于几个关键条件：  \n- 晚交发生在哪一年，距今多久。如果是在永住审查关注的直近3~5年外，影响相对小。  \n- 晚交的程度（比如只晚了一两个月，还是被催告后才补）。  \n- 所在自治体的纳税证明上是否会记载“延滞”等字眼。有的市区町村即使补交了，证明上仍会显示曾经的滞纳事实。  \n- 有无其他税务、年金、健康保险上的同步延迟，叠在一起会放大风险。\n\n接下来建议你做两件事：  \n1. 确认证明内容：去市区町村窗口申请最近3~5年的住民税課税証明書及納税証明書，看上面有没有迟缴记录。  \n2. 如果证明上出现延滞标记，或者晚交是发生在近3年内，这种情况不建议只靠 AI 判断。带上这些证明和永住申请相关材料，找行政書士或律师评估说明策略。\n\n补缴是积极的修正，但不是历史的消除。在入管面前，曾经的迟缴仍然可能成为质疑点，所以不要想当然地跳过这一步。"
+    },
+    {
+      "tag": "0.8.5-card-import-E02-spouse-separation-address-safety",
+      "qid": "s4yk7ov9bozo2c5dmhabxito",
+      "question_text": "我刚才说配偶签分居。补充一下，对方不愿意给我材料，我也不想让他知道我现在住哪里。",
+      "status": "completed",
+      "error": null,
+      "fallback": null,
+      "chars": 569,
+      "facts": [
+        {
+          "fact_id": "spouse-divorce-separation",
+          "decision": "inject",
+          "matched_keywords": [
+            "分居"
+          ],
+          "score": 0.03125,
+          "decision_reason": "inject_with_withheld_fields"
+        }
+      ],
+      "routes": [
+        "dv-address-safety-first"
+      ],
+      "findings": [],
+      "answer": "先看这里  \n当前判断：分居且对方拒绝提供协力材料，对日配/永配在留更新或变更存在显著阻碍；若无法证明仍以配偶身份活动，时间越久风险越大。  \n建议动作：优先保护地址不被泄露，联系DV/在留支援窗口说明分居无协力情况，由专业渠道判断安全后的手续路径。  \n暂缓事项：不要向配偶者告知现住所；不要仅靠自己判断去递送不完整材料；不要拖过入管通知或取消对象期间。\n\n你现在的情况，关键是“分居→活动实态”与“材料不足”的叠加。  \n日配/永配资格如果连续6个月以上实质上无法从事配偶活动，可能触发在留资格取消程序（即便在留期限未到）。现在对方不提供材料，那连日常更新或将来改为定住者的材料都难以备齐。\n\n在解决在留问题之前，住处保密是基础安全。可以联系以下窗口：  \n- DV相談支援センター：協助制定地址保密计划，提供住基支援措施。  \n- 警察（人身安全相关如骚扰跟踪）  \n- 入管局在留相談窗口或外国人支援中心：说明分居且对方不协力，询问可否受理以现有材料提出更新/变更（通常需个案判断）。  \n- 行政书士：带安全评估，商讨可否用自己持有的证据（住民票分开、积蓄、支援记录等）申请在留资格变更。\n\n另外，如果将来离婚，14日以内有届出义务；离婚后6个月取消风险更明确。现在能准备好说明分居经过和无法取得协力材料的记录，比被动等更有利。"
+    }
+  ]
+}

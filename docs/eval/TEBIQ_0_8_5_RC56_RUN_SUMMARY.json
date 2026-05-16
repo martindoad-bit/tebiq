@@ -1,0 +1,345 @@
+{
+  "generated_at": "2026-05-16T01:45:05.644Z",
+  "mode": "execute",
+  "target": {
+    "reviewer": "rc56",
+    "base_url": "http://127.0.0.1:3000",
+    "starter_prefix": "0.8.5-rc56-",
+    "limit": null,
+    "tebiq_only": true,
+    "deepseek_only": false,
+    "force_deepseek": false,
+    "force_tebiq": true,
+    "failed_only": false,
+    "allow_all": false,
+    "target_rate": 100
+  },
+  "before": {
+    "total": 56,
+    "complete": 0,
+    "rate": 0,
+    "deepseekOk": 0,
+    "tebiqOk": 0,
+    "tebiqReal": 0,
+    "failed": 0
+  },
+  "tasks": {
+    "planned": 56,
+    "ok": 46,
+    "failed": 10,
+    "breakdown": {
+      "tebiq:forced": 56
+    },
+    "sample": [
+      {
+        "starter_tag": "0.8.5-rc56-A01-address-change",
+        "question_id": "x85rmaoaidbbx7dhgq6o9ncg",
+        "kind": "tebiq",
+        "reason": "forced"
+      },
+      {
+        "starter_tag": "0.8.5-rc56-A02-card-loss",
+        "question_id": "cm134qgv8446psvwu3mdumr3",
+        "kind": "tebiq",
+        "reason": "forced"
+      },
+      {
+        "starter_tag": "0.8.5-rc56-A03-retirement-health-pension",
+        "question_id": "upa67k7te6j9yi4hw0t0mkam",
+        "kind": "tebiq",
+        "reason": "forced"
+      },
+      {
+        "starter_tag": "0.8.5-rc56-A04-minashi-reentry",
+        "question_id": "rkmke26kug035nb57ce5budo",
+        "kind": "tebiq",
+        "reason": "forced"
+      },
+      {
+        "starter_tag": "0.8.5-rc56-A05-national-tax-sono3",
+        "question_id": "bzml9j2mjqvknjdd60q4xrnx",
+        "kind": "tebiq",
+        "reason": "forced"
+      },
+      {
+        "starter_tag": "0.8.5-rc56-A06-resident-tax-january1",
+        "question_id": "ahshitv1h67bgyhen8hnpzmj",
+        "kind": "tebiq",
+        "reason": "forced"
+      },
+      {
+        "starter_tag": "0.8.5-rc56-A07-gijinkoku-renewal-materials",
+        "question_id": "ckm2gdntr8ypzzw0ayod7mc6",
+        "kind": "tebiq",
+        "reason": "forced"
+      },
+      {
+        "starter_tag": "0.8.5-rc56-A08-pr-materials",
+        "question_id": "emf9xepy5fxi5zev4rnwxgef",
+        "kind": "tebiq",
+        "reason": "forced"
+      },
+      {
+        "starter_tag": "0.8.5-rc56-A09-pension-exemption",
+        "question_id": "szzahl13quzofl34jcp1k5p6",
+        "kind": "tebiq",
+        "reason": "forced"
+      },
+      {
+        "starter_tag": "0.8.5-rc56-A10-dependent-work",
+        "question_id": "jl7asb8q6y43b3b807z2t6lc",
+        "kind": "tebiq",
+        "reason": "forced"
+      },
+      {
+        "starter_tag": "0.8.5-rc56-A11-business-manager-existing-holder",
+        "question_id": "e2rkgpinc1qbegp5372glx88",
+        "kind": "tebiq",
+        "reason": "forced"
+      },
+      {
+        "starter_tag": "0.8.5-rc56-A12-work-qualification-certificate",
+        "question_id": "g83vuw18kde0rabhcwd4tytq",
+        "kind": "tebiq",
+        "reason": "forced"
+      },
+      {
+        "starter_tag": "0.8.5-rc56-B01-gijinkoku-company-materials",
+        "question_id": "e7ue2iclwnfkmku5k6lukjdg",
+        "kind": "tebiq",
+        "reason": "forced"
+      },
+      {
+        "starter_tag": "0.8.5-rc56-B02-keiei-office-evidence",
+        "question_id": "ip3wlhri9edz04qlzcrpkfdj",
+        "kind": "tebiq",
+        "reason": "forced"
+      },
+      {
+        "starter_tag": "0.8.5-rc56-B03-pr-tax-certificates",
+        "question_id": "m4k9sdwmkm0euxgq33zx9wpm",
+        "kind": "tebiq",
+        "reason": "forced"
+      },
+      {
+        "starter_tag": "0.8.5-rc56-B04-dependent-sponsor-materials",
+        "question_id": "shr22gsyfqt7lxorjzj6tx56",
+        "kind": "tebiq",
+        "reason": "forced"
+      },
+      {
+        "starter_tag": "0.8.5-rc56-B05-spouse-separated-materials",
+        "question_id": "aifb50rqwnumhwek0xbt5fss",
+        "kind": "tebiq",
+        "reason": "forced"
+      },
+      {
+        "starter_tag": "0.8.5-rc56-B06-student-attendance-materials",
+        "question_id": "uhirj1ok40xfxmq7ts41vfr9",
+        "kind": "tebiq",
+        "reason": "forced"
+      },
+      {
+        "starter_tag": "0.8.5-rc56-B07-job-change-new-company",
+        "question_id": "kj5w1ss0pmrsmkucqj4ouaia",
+        "kind": "tebiq",
+        "reason": "forced"
+      },
+      {
+        "starter_tag": "0.8.5-rc56-B08-health-pension-certificates",
+        "question_id": "u8vjaukodnkc5ybedkws2zzp",
+        "kind": "tebiq",
+        "reason": "forced"
+      },
+      {
+        "starter_tag": "0.8.5-rc56-B09-juminhyo-household-mynumber",
+        "question_id": "fl48c2ip28vkjievhmpmf9qh",
+        "kind": "tebiq",
+        "reason": "forced"
+      },
+      {
+        "starter_tag": "0.8.5-rc56-B10-keiei-to-gijinkoku-materials",
+        "question_id": "kqcoixlr6vy1oabv3i8k2x2l",
+        "kind": "tebiq",
+        "reason": "forced"
+      },
+      {
+        "starter_tag": "0.8.5-rc56-B11-return-home-admin-materials",
+        "question_id": "wy76oebimwh8sctccbc837gk",
+        "kind": "tebiq",
+        "reason": "forced"
+      },
+      {
+        "starter_tag": "0.8.5-rc56-B12-supplemental-notice-materials",
+        "question_id": "azedw5viih1w898n3ej86qv5",
+        "kind": "tebiq",
+        "reason": "forced"
+      },
+      {
+        "starter_tag": "0.8.5-rc56-C01-special-period-two-month",
+        "question_id": "mxw7ucr7pgj0twqkcg9s5wyu",
+        "kind": "tebiq",
+        "reason": "forced"
+      },
+      {
+        "starter_tag": "0.8.5-rc56-C02-special-period-departure",
+        "question_id": "z2wvpcmg6qkuqcw70uel5wbf",
+        "kind": "tebiq",
+        "reason": "forced"
+      },
+      {
+        "starter_tag": "0.8.5-rc56-C03-incomplete-material-before-expiry",
+        "question_id": "lkdcicrnlii7emi6drsq6tjf",
+        "kind": "tebiq",
+        "reason": "forced"
+      },
+      {
+        "starter_tag": "0.8.5-rc56-C04-hsp1-institution-change",
+        "question_id": "ysmfdt8nz1vwaszoo8qhgef0",
+        "kind": "tebiq",
+        "reason": "forced"
+      },
+      {
+        "starter_tag": "0.8.5-rc56-C05-work-cert-start-job",
+        "question_id": "cyql688pnxgvsowp50smplm5",
+        "kind": "tebiq",
+        "reason": "forced"
+      },
+      {
+        "starter_tag": "0.8.5-rc56-C06-jskip-1600",
+        "question_id": "wfpdbjyg9rutoahfj6vsjcnz",
+        "kind": "tebiq",
+        "reason": "forced"
+      },
+      {
+        "starter_tag": "0.8.5-rc56-C07-nonpermission-appeal",
+        "question_id": "fhrqc462awmkl6re5cjfy4ny",
+        "kind": "tebiq",
+        "reason": "forced"
+      },
+      {
+        "starter_tag": "0.8.5-rc56-C08-postcard-permission",
+        "question_id": "x6vbtfwinws9wy4818f74nmg",
+        "kind": "tebiq",
+        "reason": "forced"
+      },
+      {
+        "starter_tag": "0.8.5-rc56-C09-spouse-divorce-notification",
+        "question_id": "asf7alh7uygchkmwrajg9w0y",
+        "kind": "tebiq",
+        "reason": "forced"
+      },
+      {
+        "starter_tag": "0.8.5-rc56-C10-dv-address-safety",
+        "question_id": "wyb3ssvpsdt8r2z3zp0kyh94",
+        "kind": "tebiq",
+        "reason": "forced"
+      },
+      {
+        "starter_tag": "0.8.5-rc56-C11-keiei-company-disposition",
+        "question_id": "oit0c4sxtcw3c7c7lnfvasod",
+        "kind": "tebiq",
+        "reason": "forced"
+      },
+      {
+        "starter_tag": "0.8.5-rc56-C12-gijinkoku-restaurant-help",
+        "question_id": "pmatw1ps68sz1eg3l549u4ts",
+        "kind": "tebiq",
+        "reason": "forced"
+      },
+      {
+        "starter_tag": "0.8.5-rc56-C13-short-stay-paid-project",
+        "question_id": "r7hbvsbmua2yxgqn06z5lwc0",
+        "kind": "tebiq",
+        "reason": "forced"
+      },
+      {
+        "starter_tag": "0.8.5-rc56-C14-renewal-not-automatic",
+        "question_id": "mbjcpn1abm1s9klsnw1uohfc",
+        "kind": "tebiq",
+        "reason": "forced"
+      },
+      {
+        "starter_tag": "0.8.5-rc56-D01-short-stay-meeting-negative-control",
+        "question_id": "wsoofblpf83podf757n1z853",
+        "kind": "tebiq",
+        "reason": "forced"
+      },
+      {
+        "starter_tag": "0.8.5-rc56-D02-pr-design-negative-control",
+        "question_id": "zl10y6uum6z008pqwb7sov3t",
+        "kind": "tebiq",
+        "reason": "forced"
+      },
+      {
+        "starter_tag": "0.8.5-rc56-D03-address-only-negative-control",
+        "question_id": "phbiyaty68gx1464c1hflt1n",
+        "kind": "tebiq",
+        "reason": "forced"
+      },
+      {
+        "starter_tag": "0.8.5-rc56-D04-gijinkoku-event-booth-negative-control",
+        "question_id": "fbuoiq421q55z1acm2d3i3wr",
+        "kind": "tebiq",
+        "reason": "forced"
+      },
+      {
+        "starter_tag": "0.8.5-rc56-D05-pr-side-job-negative-control",
+        "question_id": "ag0hpenx4u9mogeklr0oce4b",
+        "kind": "tebiq",
+        "reason": "forced"
+      },
+      {
+        "starter_tag": "0.8.5-rc56-D06-resident-tax-installment-negative-control",
+        "question_id": "cld4vlck42t2gura3fl5i9li",
+        "kind": "tebiq",
+        "reason": "forced"
+      },
+      {
+        "starter_tag": "0.8.5-rc56-D07-keiei-logo-negative-control",
+        "question_id": "axzo533re1z81wsu4z5cgfc7",
+        "kind": "tebiq",
+        "reason": "forced"
+      },
+      {
+        "starter_tag": "0.8.5-rc56-D08-spouse-short-separation-negative-control",
+        "question_id": "qxy1r4xm4j0u1jb66dvhxtnx",
+        "kind": "tebiq",
+        "reason": "forced"
+      },
+      {
+        "starter_tag": "0.8.5-rc56-E01-gijinkoku-material-followup",
+        "question_id": "oegvdg30n6c3xc3k5d3pe64p",
+        "kind": "tebiq",
+        "reason": "forced"
+      },
+      {
+        "starter_tag": "0.8.5-rc56-E02-late-tax-followup",
+        "question_id": "p0pvdrxkz13xk0e4xt19zks9",
+        "kind": "tebiq",
+        "reason": "forced"
+      },
+      {
+        "starter_tag": "0.8.5-rc56-E03-keiei-old-500man-followup",
+        "question_id": "clcw0msyw9u4eliclp5r994t",
+        "kind": "tebiq",
+        "reason": "forced"
+      },
+      {
+        "starter_tag": "0.8.5-rc56-E04-immigration-notice-followup",
+        "question_id": "dbwo6d10l2tpesy6b378bwvu",
+        "kind": "tebiq",
+        "reason": "forced"
+      }
+    ]
+  },
+  "after": {
+    "total": 56,
+    "complete": 0,
+    "rate": 0,
+    "deepseekOk": 0,
+    "tebiqOk": 52,
+    "tebiqReal": 0,
+    "failed": 10
+  }
+}

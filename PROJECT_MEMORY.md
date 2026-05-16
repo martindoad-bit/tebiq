@@ -1,7 +1,7 @@
 # TEBIQ 项目记忆 v2.0
 
 > 每次开始工作前先读这个文件。
-> 上一版归档为 PROJECT_MEMORY_v1.md，重大决策变更已在本版反映。
+> 上一版归档为 docs/archive/memory/PROJECT_MEMORY_v1.md，重大决策变更已在本版反映。
 
 ## 产品定位
 

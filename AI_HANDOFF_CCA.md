@@ -14,7 +14,7 @@
   - 新增 `/answer/[id]` 结果页、`answer_drafts` 表、`/api/answer/feedback` 和 review-lite answer draft 审核列表。
   - 新增 migration `0021_slow_maelstrom.sql`，非破坏性：创建 `answer_drafts`，给 `answer_feedback` 增加 `answer_draft_id`。
   - 本轮未接实时 AI / RAG / 支付；无 DB 时仍返回 inline answer fallback，不白屏。
-  - 报告: `ANSWER_ENGINE_V0_REPORT.md`。
+  - 报告: `docs/archive/root-reports-2026-05/ANSWER_ENGINE_V0_REPORT.md`。
 
 ## Auth + Question Intake Production Integration
 
@@ -25,7 +25,7 @@
   - 新增 magic link rate limit：同邮箱 5 分钟 3 次、同 IP 1 小时 10 次。
   - `0019_cheerful_junta.sql` / `0020_salty_spiral.sql` 已检查为非破坏性；production migration 已执行成功。
   - production 已验证 `/api/questions` 前台提交、`/admin/questions/import` 批量导入、Resend API 发送和 magic link verify route。
-  - 报告: `AUTH_INTAKE_PRODUCTION_REPORT.md`。
+  - 报告: `docs/archive/root-reports-2026-05/AUTH_INTAKE_PRODUCTION_REPORT.md`。
 
 ## Question Intake v1
 
@@ -60,7 +60,7 @@
 - base: `origin/launch/review-candidate-p0-ui` at `2174fbe382dcea2fbd5bbcf32f02d86b33b6744f`。
 - batch-04 merge 检查: `origin/content/knowledge-batch-04` 已是当前 HEAD 祖先，执行 merge 返回 Already up to date。
 - batch-05 merge: `origin/content/knowledge-batch-05` 已合入当前分支；`docs/knowledge-seed/dimensions-visa-specific/*.md` 纳入 importer/validator。
-- batch-06 / batch-07: 仅读报告和结构，未合入；规划建议写入 `HOLIDAY_ENGINEERING_UPGRADE_REPORT.md`。
+- batch-06 / batch-07: 仅读报告和结构，未合入；规划建议写入 `docs/archive/root-reports-2026-05/HOLIDAY_ENGINEERING_UPGRADE_REPORT.md`。
 - 内容接入: `/check/{visa}/{dimension}` 优先读取 `articles.category='check_dimension' + visa_type + dimension_key`，有结构化题目时展示真实单项检查；无 DB / 无内容继续显示 `该维度准备中`。
 - 验证: lint / typecheck / build / test / db:generate / validate-check-dimensions / audit:launch-copy / smoke:launch 均通过。
 - 注意: 本地无 `DATABASE_URL`，`import-check-dimensions` 已验证到 DB 前置检查，会提示配置后再导入；未执行任何 production DB 写入。
@@ -114,7 +114,7 @@
 
 ## Launch Bug Sweep（二轮）
 
-- 新增报告: `LAUNCH_BUG_SWEEP_REPORT.md`。
+- 新增报告: `docs/archive/root-reports-2026-05/LAUNCH_BUG_SWEEP_REPORT.md`。
 - 修复: `/photo/sample-result` demo 字段补全；`/pricing` 消费者保护说明补联系入口；`/knowledge` 无 DB 本地 fallback；自查题库去掉 `一定被拒`。
 - 验证通过: `npm run lint` / `npx tsc --noEmit` / `npm run build` / `npm run test`。
 - 本地 production server 抽测: 指定 17 个页面路由通过；9 个 `/check/{visa}/{dimension}` 组合 200，均走 `该维度准备中` fallback；关键内容断言通过。

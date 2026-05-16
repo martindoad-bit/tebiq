@@ -1,0 +1,627 @@
+{
+  "name": "TEBIQ 0.8.5 RC56 Provider-Backed Evaluation Pack",
+  "description": "56 real-user-style questions for the 0.8.5 Release Candidate gate. These questions test governed card import, materials usefulness, guardrails, negative controls, and follow-up context.",
+  "source": "imported",
+  "items": [
+    {
+      "starter_tag": "0.8.5-rc56-A01-address-change",
+      "scenario": "0.8.5_rc_positive_fact",
+      "source": "imported",
+      "question_text": "我刚搬家，区役所已经办了转入，在留卡背面的地址是不是也会一起改？还需要单独通知入管吗？",
+      "metadata_json": {
+        "bucket": "A",
+        "expected_route_gate": ["address-change-card-window-dual-duty"],
+        "expected_fact_hint": ["zairyu-address-change"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc56-A02-card-loss",
+      "scenario": "0.8.5_rc_positive_fact",
+      "source": "imported",
+      "question_text": "在留卡丢了，我明天还要上班，第一步应该去警察局还是入管？要带什么？",
+      "metadata_json": {
+        "bucket": "A",
+        "expected_route_gate": [],
+        "expected_fact_hint": ["zairyu-card-loss-reissue"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc56-A03-retirement-health-pension",
+      "scenario": "0.8.5_rc_positive_fact",
+      "source": "imported",
+      "question_text": "我从公司离职了，新工作还没开始，中间这段健康保险和年金要怎么切换？",
+      "metadata_json": {
+        "bucket": "A",
+        "expected_route_gate": [],
+        "expected_fact_hint": ["rishoku-kenko-hoken", "rishoku-kokumin-nenkin-kirikae"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc56-A04-minashi-reentry",
+      "scenario": "0.8.5_rc_positive_fact",
+      "source": "imported",
+      "question_text": "我有在留卡，想用みなし再入国回国一趟，最多可以离开日本多久？永住者也一样吗？",
+      "metadata_json": {
+        "bucket": "A",
+        "expected_route_gate": ["minashi-reentry-one-year-limit"],
+        "expected_fact_hint": ["minashi-sainyuukoku"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc56-A05-national-tax-sono3",
+      "scenario": "0.8.5_rc_positive_fact",
+      "source": "imported",
+      "question_text": "入管让我交国税的納税証明書その3，这个是在区役所开，还是税务署开？",
+      "metadata_json": {
+        "bucket": "A",
+        "expected_route_gate": ["national-tax-certificate-sono3-route"],
+        "expected_fact_hint": ["national-tax-certificate-sono3"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc56-A06-resident-tax-january1",
+      "scenario": "0.8.5_rc_positive_fact",
+      "source": "imported",
+      "question_text": "我去年搬过家，现在要开住民税课税证明，是去现在住的区役所，还是去 1 月 1 日住的地方？",
+      "metadata_json": {
+        "bucket": "A",
+        "expected_route_gate": ["resident-tax-fiscal-year-january-1"],
+        "expected_fact_hint": ["juminzei-kazei-shomeisho"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc56-A07-gijinkoku-renewal-materials",
+      "scenario": "0.8.5_rc_positive_fact",
+      "source": "imported",
+      "question_text": "技人国续签一般先准备哪些材料？我想先把自己能拿的东西准备好。",
+      "metadata_json": {
+        "bucket": "A",
+        "expected_route_gate": [],
+        "expected_fact_hint": ["gijinkoku-koushin-shorui"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc56-A08-pr-materials",
+      "scenario": "0.8.5_rc_positive_fact",
+      "source": "imported",
+      "question_text": "永住申请我应该先准备哪些材料？是不是住满年数就差不多可以交了？",
+      "metadata_json": {
+        "bucket": "A",
+        "expected_route_gate": ["pr-basic-requirements-not-years-only"],
+        "expected_fact_hint": ["eijuu-shinsei-shorui"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc56-A09-pension-exemption",
+      "scenario": "0.8.5_rc_positive_fact",
+      "source": "imported",
+      "question_text": "我收入低，申请过国民年金免除。这个算未交吗？以后在留或永住会不会被当成滞纳？",
+      "metadata_json": {
+        "bucket": "A",
+        "expected_route_gate": ["pension-exemption-not-arrears-not-free-pass"],
+        "expected_fact_hint": ["kokumin-nenkin-menjo"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc56-A10-dependent-work",
+      "scenario": "0.8.5_rc_positive_fact",
+      "source": "imported",
+      "question_text": "家族滞在想打工，需要先办什么？是不是只要不超过 28 小时就可以？",
+      "metadata_json": {
+        "bucket": "A",
+        "expected_route_gate": ["dependent-work-permission-required"],
+        "expected_fact_hint": ["kazoku-taizai-yoken", "shikakugai-fukugyou"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc56-A11-business-manager-existing-holder",
+      "scenario": "0.8.5_rc_positive_fact",
+      "source": "imported",
+      "question_text": "我是已经拿到经营管理签的人，2025 年新规对我下次续签有没有影响？网上说旧人没关系是真的吗？",
+      "metadata_json": {
+        "bucket": "A",
+        "expected_route_gate": ["business-manager-2025-reform-hard-fact-boundary"],
+        "expected_fact_hint": ["keiei-kanri-existing-holder-update", "keiei-kanri-2025-10"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc56-A12-work-qualification-certificate",
+      "scenario": "0.8.5_rc_positive_fact",
+      "source": "imported",
+      "question_text": "就労資格証明書到底是什么？拿到它是不是代表新公司可以直接入职了？",
+      "metadata_json": {
+        "bucket": "A",
+        "expected_route_gate": ["work-qualification-certificate-not-permission"],
+        "expected_fact_hint": ["shuro-shikaku-shomeisho"]
+      }
+    },
+
+    {
+      "starter_tag": "0.8.5-rc56-B01-gijinkoku-company-materials",
+      "scenario": "0.8.5_rc_materials",
+      "source": "imported",
+      "question_text": "技人国续签，公司让我自己准备。自己这边和公司那边分别先要哪些材料？",
+      "metadata_json": {
+        "bucket": "B",
+        "expected_route_gate": [],
+        "expected_fact_hint": ["gijinkoku-koushin-shorui", "zairyu-shinsei-category"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc56-B02-keiei-office-evidence",
+      "scenario": "0.8.5_rc_materials",
+      "source": "imported",
+      "question_text": "经营管理续签，办公室照片、门牌、租赁合同这些要不要准备？我怕材料看起来太薄。",
+      "metadata_json": {
+        "bucket": "B",
+        "expected_route_gate": [],
+        "expected_fact_hint": ["keiei-kanri-existing-holder-update"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc56-B03-pr-tax-certificates",
+      "scenario": "0.8.5_rc_materials",
+      "source": "imported",
+      "question_text": "永住申请到底要课税证明还是纳税证明？这两个是不是一个东西？",
+      "metadata_json": {
+        "bucket": "B",
+        "expected_route_gate": [],
+        "expected_fact_hint": ["eijuu-shinsei-shorui", "juminzei-kazei-shomeisho"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc56-B04-dependent-sponsor-materials",
+      "scenario": "0.8.5_rc_materials",
+      "source": "imported",
+      "question_text": "家族滞在更新，主签证人的在职证明、收入证明、住民税这些要不要一起交？",
+      "metadata_json": {
+        "bucket": "B",
+        "expected_route_gate": [],
+        "expected_fact_hint": ["kazoku-taizai-yoken"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc56-B05-spouse-separated-materials",
+      "scenario": "0.8.5_rc_materials",
+      "source": "imported",
+      "question_text": "日本人配偶者签证更新，但我们现在分居，还没离婚。材料应该怎么准备？",
+      "metadata_json": {
+        "bucket": "B",
+        "expected_route_gate": [],
+        "expected_fact_hint": ["spouse-divorce-separation", "nihonjin-haigusha-visa"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc56-B06-student-attendance-materials",
+      "scenario": "0.8.5_rc_materials",
+      "source": "imported",
+      "question_text": "留学续签，学校说要出席率和成绩材料。我应该怎么看这些材料有没有问题？",
+      "metadata_json": {
+        "bucket": "B",
+        "expected_route_gate": [],
+        "expected_fact_hint": ["ryugaku-koushin-shutsusekiRitsu"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc56-B07-job-change-new-company",
+      "scenario": "0.8.5_rc_materials",
+      "source": "imported",
+      "question_text": "我转职后要更新签证，新公司需要给我什么材料？如果是刚成立的小公司会不会不一样？",
+      "metadata_json": {
+        "bucket": "B",
+        "expected_route_gate": [],
+        "expected_fact_hint": ["tensyoku-zairyu", "gijinkoku-koushin-shorui"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc56-B08-health-pension-certificates",
+      "scenario": "0.8.5_rc_materials",
+      "source": "imported",
+      "question_text": "入管材料里如果要健康保险和年金相关证明，我应该去区役所、年金事务所还是公司拿？",
+      "metadata_json": {
+        "bucket": "B",
+        "expected_route_gate": [],
+        "expected_fact_hint": ["kokumin-kenko-hoken-kanyu", "rishoku-kokumin-nenkin-kirikae"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc56-B09-juminhyo-household-mynumber",
+      "scenario": "0.8.5_rc_materials",
+      "source": "imported",
+      "question_text": "签证材料里的住民票，是要全家都写上吗？マイナンバー要不要显示？",
+      "metadata_json": {
+        "bucket": "B",
+        "expected_route_gate": [],
+        "expected_fact_hint": ["jyumin-hyo-gaijin"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc56-B10-keiei-to-gijinkoku-materials",
+      "scenario": "0.8.5_rc_materials",
+      "source": "imported",
+      "question_text": "我从经营管理转技人国，新雇主材料和旧公司材料怎么分？旧公司要先处理掉吗？",
+      "metadata_json": {
+        "bucket": "B",
+        "expected_route_gate": ["business-manager-disposition-no-auto-success"],
+        "expected_fact_hint": ["tensyoku-zairyu"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc56-B11-return-home-admin-materials",
+      "scenario": "0.8.5_rc_materials",
+      "source": "imported",
+      "question_text": "我准备彻底回国，区役所、税务、年金这边要整理哪些手续和材料？",
+      "metadata_json": {
+        "bucket": "B",
+        "expected_route_gate": [],
+        "expected_fact_hint": ["kitaku-tetsuzuki", "jumin-zei-shutsukoku", "nenkin-dattai-ichijikin"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc56-B12-supplemental-notice-materials",
+      "scenario": "0.8.5_rc_materials",
+      "source": "imported",
+      "question_text": "入管寄来的补材料通知我看不懂，里面有期限和要追加的资料。我应该先整理什么？",
+      "metadata_json": {
+        "bucket": "B",
+        "expected_route_gate": ["immigration-notice-taxonomy-first"],
+        "expected_fact_hint": ["immigration-notice-taxonomy"]
+      }
+    },
+
+    {
+      "starter_tag": "0.8.5-rc56-C01-special-period-two-month",
+      "scenario": "0.8.5_rc_p0_p1_guardrail",
+      "source": "imported",
+      "question_text": "我更新申请还在审查，原来的签证已经过期两个多月了，还没有结果，可以继续等吗？",
+      "metadata_json": {
+        "bucket": "C",
+        "expected_route_gate": ["special-period-two-month-boundary"],
+        "expected_fact_hint": ["shinseichu-zairyu-keizoku"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc56-C02-special-period-departure",
+      "scenario": "0.8.5_rc_p0_p1_guardrail",
+      "source": "imported",
+      "question_text": "我更新中特例期间想回国一趟，反正申请已经交了，出国回来应该没事吧？",
+      "metadata_json": {
+        "bucket": "C",
+        "expected_route_gate": ["special-period-departure-deepwater"],
+        "expected_fact_hint": ["sainyukoku-kyoka", "minashi-sainyuukoku"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc56-C03-incomplete-material-before-expiry",
+      "scenario": "0.8.5_rc_p0_p1_guardrail",
+      "source": "imported",
+      "question_text": "签证快到期了，材料还没齐。我先交一部分，是不是只要窗口收了就安全？",
+      "metadata_json": {
+        "bucket": "C",
+        "expected_route_gate": ["incomplete-materials-before-expiry-no-safe-bridge"],
+        "expected_fact_hint": ["renewal-filing-window"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc56-C04-hsp1-institution-change",
+      "scenario": "0.8.5_rc_p0_p1_guardrail",
+      "source": "imported",
+      "question_text": "高度人才 1 号换公司，点数够，也会 14 天内届出。这样可以先去新公司上班吗？",
+      "metadata_json": {
+        "bucket": "C",
+        "expected_route_gate": ["hsp1-institution-change-permission-first"],
+        "expected_fact_hint": ["kodo-senmon-shoku-points"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc56-C05-work-cert-start-job",
+      "scenario": "0.8.5_rc_p0_p1_guardrail",
+      "source": "imported",
+      "question_text": "就労資格証明書已经拿到了，是不是说明入管认可我这个新工作，可以先入职？",
+      "metadata_json": {
+        "bucket": "C",
+        "expected_route_gate": ["work-qualification-certificate-not-permission"],
+        "expected_fact_hint": ["shuro-shikaku-shomeisho"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc56-C06-jskip-1600",
+      "scenario": "0.8.5_rc_p0_p1_guardrail",
+      "source": "imported",
+      "question_text": "J-Skip 是不是年收 1600 万就不用算点数，也不用看学历和职历？",
+      "metadata_json": {
+        "bucket": "C",
+        "expected_route_gate": ["j-skip-hard-eligibility-gate"],
+        "expected_fact_hint": ["j-skip"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc56-C07-nonpermission-appeal",
+      "scenario": "0.8.5_rc_p0_p1_guardrail",
+      "source": "imported",
+      "question_text": "不许可通知来了，网上说可以審査請求，所以还能多待一阵再想办法，对吗？",
+      "metadata_json": {
+        "bucket": "C",
+        "expected_route_gate": ["nonpermission-no-ordinary-appeal-no-grace"],
+        "expected_fact_hint": ["nonpermission"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc56-C08-postcard-permission",
+      "scenario": "0.8.5_rc_p0_p1_guardrail",
+      "source": "imported",
+      "question_text": "入管明信片来了，是不是已经许可了？我能不能先安排入社日期？",
+      "metadata_json": {
+        "bucket": "C",
+        "expected_route_gate": ["result-postcard-not-permission"],
+        "expected_fact_hint": ["immigration-notice-taxonomy"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc56-C09-spouse-divorce-notification",
+      "scenario": "0.8.5_rc_p0_p1_guardrail",
+      "source": "imported",
+      "question_text": "我日配离婚了，还没告诉入管。反正在留卡还有一年，是不是等下次更新再说也行？",
+      "metadata_json": {
+        "bucket": "C",
+        "expected_route_gate": ["notification-duty-violation-not-harmless", "status-cancellation-before-expiry-boundary"],
+        "expected_fact_hint": ["spouse-divorce-separation"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc56-C10-dv-address-safety",
+      "scenario": "0.8.5_rc_p0_p1_guardrail",
+      "source": "imported",
+      "question_text": "我因为家暴已经分居避难，但更新配偶签好像要对方住民票。我是不是应该先联系对方拿材料？",
+      "metadata_json": {
+        "bucket": "C",
+        "expected_route_gate": ["dv-address-safety-first"],
+        "expected_fact_hint": ["spouse-divorce-separation"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc56-C11-keiei-company-disposition",
+      "scenario": "0.8.5_rc_p0_p1_guardrail",
+      "source": "imported",
+      "question_text": "我经营管理签的公司已经休眠了。先注销公司再转工作签，是不是这样成功率更高？",
+      "metadata_json": {
+        "bucket": "C",
+        "expected_route_gate": ["business-manager-disposition-no-auto-success"],
+        "expected_fact_hint": ["business-manager-disposition"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc56-C12-gijinkoku-restaurant-help",
+      "scenario": "0.8.5_rc_p0_p1_guardrail",
+      "source": "imported",
+      "question_text": "我是技人国，在餐饮店做市场运营，但店里忙的时候会去前场帮忙点单收银，公司说没关系，可以吗？",
+      "metadata_json": {
+        "bucket": "C",
+        "expected_route_gate": ["gijinkoku-work-scope-not-any-job"],
+        "expected_fact_hint": ["gijinkoku-job-mismatch"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc56-C13-short-stay-paid-project",
+      "scenario": "0.8.5_rc_p0_p1_guardrail",
+      "source": "imported",
+      "question_text": "我短期签来日本，客户想让我现场帮他们做一个有偿项目。短期签能申请资格外活动吗？",
+      "metadata_json": {
+        "bucket": "C",
+        "expected_route_gate": ["short-stay-no-work-no-shikakugai"],
+        "expected_fact_hint": ["short-stay-work"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc56-C14-renewal-not-automatic",
+      "scenario": "0.8.5_rc_p0_p1_guardrail",
+      "source": "imported",
+      "question_text": "续签材料都齐了，去年也顺利过了，这次是不是基本一定能过？",
+      "metadata_json": {
+        "bucket": "C",
+        "expected_route_gate": ["renewal-change-not-automatic-discretion"],
+        "expected_fact_hint": ["renewal-change-discretion"]
+      }
+    },
+
+    {
+      "starter_tag": "0.8.5-rc56-D01-short-stay-meeting-negative-control",
+      "scenario": "0.8.5_rc_negative_control",
+      "source": "imported",
+      "question_text": "我短期来日本参加客户会议，不收日本这边的钱，也不做现场交付，需要工作签吗？",
+      "metadata_json": {
+        "bucket": "D",
+        "expected_route_gate": [],
+        "expected_fact_hint": []
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc56-D02-pr-design-negative-control",
+      "scenario": "0.8.5_rc_negative_control",
+      "source": "imported",
+      "question_text": "公司 PR 活动要做一张宣传卡片设计，和永住 PR 没关系。这个页面能帮我看文案吗？",
+      "metadata_json": {
+        "bucket": "D",
+        "expected_route_gate": [],
+        "expected_fact_hint": []
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc56-D03-address-only-negative-control",
+      "scenario": "0.8.5_rc_negative_control",
+      "source": "imported",
+      "question_text": "我只是搬家了，想知道区役所手续，不是问签证变更，也没有换工作。",
+      "metadata_json": {
+        "bucket": "D",
+        "expected_route_gate": [],
+        "expected_fact_hint": ["zairyu-address-change"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc56-D04-gijinkoku-event-booth-negative-control",
+      "scenario": "0.8.5_rc_negative_control",
+      "source": "imported",
+      "question_text": "我是技人国做市场企划，偶尔去展会站台说明公司产品，这算不算马上有问题？",
+      "metadata_json": {
+        "bucket": "D",
+        "expected_route_gate": [],
+        "expected_fact_hint": []
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc56-D05-pr-side-job-negative-control",
+      "scenario": "0.8.5_rc_negative_control",
+      "source": "imported",
+      "question_text": "我是永住者，想周末接一点设计副业，还需要资格外活动许可吗？",
+      "metadata_json": {
+        "bucket": "D",
+        "expected_route_gate": [],
+        "expected_fact_hint": []
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc56-D06-resident-tax-installment-negative-control",
+      "scenario": "0.8.5_rc_negative_control",
+      "source": "imported",
+      "question_text": "我只是想问住民税能不能分期缴，不是永住申请，也不是签证材料。",
+      "metadata_json": {
+        "bucket": "D",
+        "expected_route_gate": [],
+        "expected_fact_hint": []
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc56-D07-keiei-logo-negative-control",
+      "scenario": "0.8.5_rc_negative_control",
+      "source": "imported",
+      "question_text": "经营管理的公司换了 logo 和官网设计，办公室和登记地址都没变，这也需要入管通知吗？",
+      "metadata_json": {
+        "bucket": "D",
+        "expected_route_gate": [],
+        "expected_fact_hint": []
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc56-D08-spouse-short-separation-negative-control",
+      "scenario": "0.8.5_rc_negative_control",
+      "source": "imported",
+      "question_text": "我和日本人配偶吵架，暂时回娘家住几天，没有离婚，也没有家暴或更新问题，需要马上做什么吗？",
+      "metadata_json": {
+        "bucket": "D",
+        "expected_route_gate": [],
+        "expected_fact_hint": []
+      }
+    },
+
+    {
+      "starter_tag": "0.8.5-rc56-E01-gijinkoku-material-followup",
+      "scenario": "0.8.5_rc_followup_context",
+      "source": "imported",
+      "question_text": "前面我问技人国续签材料。补充一下：我刚换工作，新公司还没给我决算书，这种情况下应该先准备什么？",
+      "metadata_json": {
+        "bucket": "E",
+        "expected_route_gate": [],
+        "expected_fact_hint": ["gijinkoku-koushin-shorui", "zairyu-shinsei-category"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc56-E02-late-tax-followup",
+      "scenario": "0.8.5_rc_followup_context",
+      "source": "imported",
+      "question_text": "前面我问永住前住民税晚交的问题。补充一下：我已经补交了，是不是记录就消失了，对永住没有影响？",
+      "metadata_json": {
+        "bucket": "E",
+        "expected_route_gate": ["late-payment-remediation-not-erased"],
+        "expected_fact_hint": ["public-obligation"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc56-E03-keiei-old-500man-followup",
+      "scenario": "0.8.5_rc_followup_context",
+      "source": "imported",
+      "question_text": "前面我问经营管理续签材料。补充一下：我是旧经管，资本金还是 500 万。新规出来以后我续签是不是就不行了？",
+      "metadata_json": {
+        "bucket": "E",
+        "expected_route_gate": ["business-manager-2025-reform-hard-fact-boundary"],
+        "expected_fact_hint": ["keiei-kanri-existing-holder-update"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc56-E04-immigration-notice-followup",
+      "scenario": "0.8.5_rc_followup_context",
+      "source": "imported",
+      "question_text": "前面我说收到入管通知看不懂。补充一下：纸上写了出頭和期限，这是不是不许可？",
+      "metadata_json": {
+        "bucket": "E",
+        "expected_route_gate": ["immigration-notice-taxonomy-first"],
+        "expected_fact_hint": ["immigration-notice-taxonomy"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc56-E05-spouse-material-refusal-followup",
+      "scenario": "0.8.5_rc_followup_context",
+      "source": "imported",
+      "question_text": "前面我问配偶签分居影响。补充一下：对方不愿意给我更新材料，但没有暴力。我现在该怎么整理？",
+      "metadata_json": {
+        "bucket": "E",
+        "expected_route_gate": [],
+        "expected_fact_hint": ["spouse-divorce-separation"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc56-E06-expiry-materials-followup",
+      "scenario": "0.8.5_rc_followup_context",
+      "source": "imported",
+      "question_text": "前面我说在留卡快到期。补充一下：材料不齐，窗口会不会直接退？退了是不是就没有特例期间？",
+      "metadata_json": {
+        "bucket": "E",
+        "expected_route_gate": ["incomplete-materials-before-expiry-no-safe-bridge", "residence-card-expiry-vs-status-period"],
+        "expected_fact_hint": ["renewal-filing-window"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc56-E07-social-insurance-followup",
+      "scenario": "0.8.5_rc_followup_context",
+      "source": "imported",
+      "question_text": "前面我问离职后健保怎么办。补充一下：新公司说社保可以晚点再办，对外国人签证没关系，这样安全吗？",
+      "metadata_json": {
+        "bucket": "E",
+        "expected_route_gate": ["foreign-worker-social-insurance-not-optional"],
+        "expected_fact_hint": ["shakai-hoken-kanyu", "rishoku-kenko-hoken"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc56-E08-dependent-work-vacation-followup",
+      "scenario": "0.8.5_rc_followup_context",
+      "source": "imported",
+      "question_text": "前面我问家族滞在打工。补充一下：学校放假期间，家族滞在也能像留学生一样每天 8 小时吗？",
+      "metadata_json": {
+        "bucket": "E",
+        "expected_route_gate": ["dependent-work-permission-required"],
+        "expected_fact_hint": ["shikakugai-fukugyou", "kazoku-taizai-yoken"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc56-E09-keiei-to-employment-followup",
+      "scenario": "0.8.5_rc_followup_context",
+      "source": "imported",
+      "question_text": "前面我问经营管理公司休眠。补充一下：我想先入职别家公司，再慢慢办变更，这样可不可以？",
+      "metadata_json": {
+        "bucket": "E",
+        "expected_route_gate": ["business-manager-disposition-no-auto-success"],
+        "expected_fact_hint": ["business-manager-disposition"]
+      }
+    },
+    {
+      "starter_tag": "0.8.5-rc56-E10-reentry-expiry-followup",
+      "scenario": "0.8.5_rc_followup_context",
+      "source": "imported",
+      "question_text": "前面我问再入国许可区别。补充一下：如果我出国期间签证期限到了，还能用みなし再入国回来吗？",
+      "metadata_json": {
+        "bucket": "E",
+        "expected_route_gate": ["minashi-reentry-one-year-limit"],
+        "expected_fact_hint": ["sainyukoku-kyoka", "minashi-sainyuukoku"]
+      }
+    }
+  ]
+}

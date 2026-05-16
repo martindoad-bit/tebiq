@@ -1,0 +1,85 @@
+# Root Report Archive — 2026-05
+
+Created: 2026-05-15
+
+Purpose: remove historical implementation reports from the repository root without deleting project memory. These files are retained as evidence, but they are not current operating instructions for TEBIQ 0.8 or later.
+
+Current active entry points remain in the repository root:
+
+- `CLAUDE.md`
+- `AGENTS.md`
+- `PROJECT_MEMORY.md`
+- `AI_HANDOFF*.md`
+- `README.md`
+
+Current 0.8 operating documents live under:
+
+- `docs/product/TEBIQ_CURRENT_STATE.md`
+- `docs/ops/TEBIQ_CURRENT_WORK_STATUS_2026-05-14.md`
+- `docs/ops/TEBIQ_0_8_*`
+- `docs/eval/TEBIQ_0_8_*`
+- `docs/qa/TEBIQ_0_8_*`
+
+## Archived Files
+
+```text
+ANSWER_CORE_V1_REPORT.md
+ANSWER_ENGINE_V0_REPORT.md
+ANSWER_FULL_RELEASE_REPORT.md
+ANSWER_QUALITY_V1_REPORT.md
+ANSWER_RELIABILITY_V2_REPORT.md
+ANSWER_RESULT_UI_V0_REPORT.md
+ANSWER_TIMELINE_UX_FIX_V1_REPORT.md
+APP_COPY_ANSWER_V2_REPORT.md
+APP_FINAL_RELEASE_REPORT.md
+APP_UI_FINAL_V2_REPORT.md
+ARCHITECTURE_AUDIT.md
+AUTH_INTAKE_PRODUCTION_REPORT.md
+BLOCK1_REPORT.md
+BLOCK2_REPORT.md
+BLOCK3_REPORT.md
+BLOCK4_REPORT.md
+BLOCK5_REPORT.md
+BLOCK6_REPORT.md
+BLOCK7_REPORT.md
+BLOCK8_REPORT.md
+BLOCK9_REPORT.md
+BLOCK10_REPORT.md
+BLOCK11_REPORT.md
+BLOCK11_FINAL_REPORT.md
+BLOCK12_REPORT.md
+BLOCK13_REPORT.md
+BLOCK14_REPORT.md
+CODEX_DELIVERY_SUMMARY.md
+CODEX_VISUAL_POLISH_2_REPORT.md
+CODEX_VISUAL_REPORT.md
+CONTENT_REGISTRY_MERGE_REPORT.md
+DECISION_INTELLIGENCE_V0_REPORT.md
+HOLIDAY_ENGINEERING_UPGRADE_REPORT.md
+HOLIDAY_RELEASE_FINAL_REPORT.md
+INTEGRATION_REVIEW_REPORT.md
+INTENT_ROUTER_EMERGENCY_V1_REPORT.md
+LAUNCH_BUG_SWEEP_REPORT.md
+LLM_INTENT_ANSWER_JUDGE_V2_REPORT.md
+NO_WRONG_ANSWER_V3_REPORT.md
+P0_LAUNCH_FIXES_REPORT.md
+PRODUCTIZATION_V1_REPORT.md
+QUESTION_INTAKE_UI_V2_REPORT.md
+QUESTION_INTAKE_V1_REPORT.md
+VERCEL_CRON_HOBBY_DEPLOY_FIX_REPORT.md
+VISUAL_POLISH_12_REPORT.md
+VISUAL_POLISH_13_REPORT.md
+VISUAL_POLISH_14_REPORT.md
+VISUAL_POLISH_15_REPORT.md
+VISUAL_POLISH_15_MERGE_REPORT.md
+```
+
+## Rule For Future Windows
+
+Do not use archived root reports as current truth without first comparing them against `docs/product/TEBIQ_CURRENT_STATE.md`, `origin/main`, and production `/api/build-info`.
+
+Older project memory is archived separately at:
+
+```text
+docs/archive/memory/PROJECT_MEMORY_v1.md
+```

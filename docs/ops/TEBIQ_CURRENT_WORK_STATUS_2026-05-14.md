@@ -4,6 +4,21 @@ Owner: Codex Production Lead / AI Engineering Lead
 
 Purpose: give new FACT / DOMAIN / AQL / QA / ENGINE / CODEXUI windows one current map of the work. This document does not replace `docs/product/TEBIQ_CURRENT_STATE.md`; it records the current local workstream state around Knowledge Atlas, Materials Tab, and answer-quality evaluation.
 
+## 2026-05-15 Post-Release Update
+
+TEBIQ 0.8 is now live on production through `origin/main`.
+
+Current production:
+
+- `main_head`: `6676652` (`fix: protect internal admin surfaces (#132)`)
+- production `/api/build-info`: `6676652e8a5be3058f389c73130397d563e6eb45`, built at `2026-05-15T12:35:34.362Z`
+- PR #131 shipped the 0.8 safety-gated consultation release candidate.
+- PR #132 protected `/admin/*`, `/api/admin/*`, `/internal/*`, and `/api/internal/*` with fail-closed middleware and admin cookie support.
+- Provider-backed Loop2B composite evidence reached 17/17 completed with 0 terminal guardrail findings, and AQL/QA gave release PASS.
+- Production smoke after #132 confirmed public pages 200, uncredentialed admin/internal routes 404, and 5/5 representative answer smoke completed.
+
+This file is retained as a workstream map. For current deployment truth, read `docs/product/TEBIQ_CURRENT_STATE.md` first.
+
 ## North Star
 
 TEBIQ is not trying to make AI "beat immigration practice" or replace scriveners.
@@ -175,7 +190,7 @@ Historical P0/P1 security reminder from the takeover:
 - `/admin/*` and `/api/admin/*` access protection must be confirmed separately;
 - do not let Knowledge Atlas work hide this production security check.
 
-2026-05-15 update: production admin fail-open was confirmed again and hotfixed through PR #130. After deployment, `/admin` and `/api/admin/stats` return 404 with no key or wrong key. See:
+2026-05-15 update: production admin fail-open was confirmed and hotfixed first through PR #130, then broadened through PR #132 to include internal Eval Lab surfaces. After deployment, `/admin`, `/api/admin/stats`, `/internal/eval-lab`, and `/api/internal/eval-lab/state` return 404 with no key or wrong key. See:
 
 ```text
 docs/ops/TEBIQ_ADMIN_FAIL_CLOSED_HOTFIX_2026-05-15.md
@@ -200,14 +215,14 @@ Loop2A report:
 docs/eval/TEBIQ_0_8_LOOP2A_ENGINE_HOTFIX_REPORT.md
 ```
 
-Loop2B preparation completed:
+Loop2B preparation completed and was later executed with a valid provider environment:
 
 - `scripts/eval/run-real-user-regression.ts` now supports `--ids=RUR-036,RUR-037`;
 - targeted 17-case rerun set prepared, including `RUR-006` as a safe pending-change false-positive canary;
 - sidecar summary script added at `scripts/eval/summarize-real-user-regression-sidecar.ts`;
 - dry-run sidecar written to `docs/eval/tebiq-0.8-rur-loop2b-targeted-production-answer-results.json`.
 
-Loop2B report:
+Loop2B preparation report:
 
 ```text
 docs/eval/TEBIQ_0_8_LOOP2B_TARGETED_RERUN_PREP.md
@@ -218,6 +233,12 @@ Loop2C AQL/QA read-only review:
 ```text
 docs/eval/TEBIQ_0_8_LOOP2C_AQL_QA_READONLY_REVIEW.md
 ```
+
+Final release evidence now supersedes the earlier "provider missing" blocker:
+
+- `/tmp/tebiq-0.8-rur-loop2b-final-composite-20260515-aql.json`: 17/17 completed, guardrail findings total 0.
+- AQL/QA final review: PASS, no release-blocking P0/P1.
+- Production answer smoke after deploy: 5/5 completed.
 
 Loop2D FACT guardrail integration:
 
