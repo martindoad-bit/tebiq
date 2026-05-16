@@ -232,3 +232,100 @@ RC60 static coverage closed 30/41 → 41/41; new Eval Lab pipeline
 and 6; 2 clean commits on local branch; 52 prior-Codex files still
 uncommitted for PR-split; 11 founder/independent-window blockers
 listed above.
+
+---
+
+## 9. Addendum 2026-05-16 evening — provider-backed RC60 + hotfix
+
+After §1-§8 were written, the founder authorized using the session
+DeepSeek API key. Three more provider-backed RC60 runs and one P0
+hotfix landed.
+
+### Run 1 — RC60 with FACT_LAYER off (baseline)
+
+- 60/60 completed; 0 fallback; 53/60 route gates fired
+- 6 validator findings; spot-check confirmed **all 6 are false
+  positives** (answer contained safe disclaimer, but validator's
+  match-context window was too narrow to see it)
+- One-line validator fix shipped (`a1f6b7e`): test `safeEvidence`
+  against full answer instead of just match context. Reduced findings
+  6 → 2 against the same stored answers.
+- Results: `docs/eval/TEBIQ_0_8_5_RC60_RUN_SUMMARY.json`,
+  doc: `docs/eval/TEBIQ_0_8_5_RC60_RUN_RESULTS_2026-05-16.md`
+
+### Run 2 — RC60 with FACT_LAYER on (broke; surfaced P0)
+
+- 49/60 ok, **11 failed**:
+  - 9 `tebiq_pipeline_failed`
+  - 2 `stream_partial` (B14, F04)
+- Root cause (from `/tmp/tebiq-dev2.log`):
+  - `[consultation/stream] matchFactCards failed DrizzleQueryError
+     cause: Error: write CONNECTION_CLOSED
+     aws-1-ap-northeast-1.pooler.supabase.com:6543`
+  - `[eval-lab/tebiq-answer] submit failed production_stream_timeout`
+- Mechanism: `loadCandidateCards` ran a fresh DB select on every
+  consultation. Three concurrent /consultation/stream requests
+  saturated the Supabase pooler. fact-layer matcher started failing.
+  The `await factMatchesPromise` then dragged the whole stream past
+  `production_stream_timeout`.
+
+### Hotfix `e57f697` — module-scoped cache + RC60 Run 3 validation
+
+`lib/answer/fact-layer/matcher.ts`: added module-level cache keyed
+by `includeDryRun`, 5-minute TTL, inflight-promise dedup so
+concurrent first-callers don't each fire a query.
+`invalidateFactCardCache()` exported for the `fact-layer:sync` path
+to call after a sync run. fact_cards updates are manual operator
+actions; 5 minutes is well under any realistic sync cadence.
+
+Verification with same DeepSeek key, RC60, concurrency 3, FACT_LAYER on:
+
+```
+                                BEFORE        AFTER
+  ok / failed                   49 / 11   →   59 / 1
+  matchFactCards DB fail        7+        →   0
+  production_stream_timeout     10+       →   0
+  with_facts (cards injected)   34 / 60   →   46 / 60
+  with_routes                   45 / 60   →   53 / 60
+  with_findings (validator)     5         →   4
+```
+
+Remaining 1 failure: `DW01-special-period-departure` status=partial.
+This is an LLM-stream truncation unrelated to the cache fix — and
+arguably correct product behavior on a deep-water question that
+should be routed to a行政書士 rather than hard-answered.
+
+Verification:
+- `npm run lint`: PASS
+- `npx tsc --noEmit --pretty false`: PASS
+- `npm test`: 201/201
+
+Results: `docs/eval/TEBIQ_0_8_5_RC60_RUN_SUMMARY_FACT.json` (Run 2),
+`docs/eval/TEBIQ_0_8_5_RC60_RUN_SUMMARY_FACT_V2.json` (Run 3 post-fix).
+
+### Production impact
+
+**Production `FACT_LAYER_ENABLED=true` was confirmed by the founder.**
+That means the unfixed `matchFactCards` connection-failure bug has
+been affecting real `tebiq.jp` users since `FACT_LAYER` was enabled.
+The fix is being shipped as a separate hotfix PR cut from
+`origin/main` so it can be reviewed and deployed without bundling
+the entire convergence checkpoint.
+
+### Updated commit list (`codex/post-release-convergence`)
+
+| Commit | Title |
+|---|---|
+| `278fd7d` | docs+tooling: 0.8.5 RC convergence checkpoint (additive) |
+| `7e32331` | fix(route-gates): RC60 pattern fixes + Program 4/6 plans |
+| `451ed2e` | docs: add 2026-05-16 handoff report |
+| `929ff57` | feat(eval): RC60 provider-backed first-pass results + direct runner |
+| `a1f6b7e` | fix(validator): test safeEvidence against full answer |
+| `e57f697` | fix(fact-layer): module-scoped cache for loadCandidateCards + matcher widening |
+| (next)   | docs: handoff addendum 2026-05-16 evening (this file) |
+
+### Updated blocker count
+
+Blocker #4 (provider key) was resolved this session (founder
+authorized one-session key, used for three RC60 runs).
+Other 10 blockers in §5 remain.
