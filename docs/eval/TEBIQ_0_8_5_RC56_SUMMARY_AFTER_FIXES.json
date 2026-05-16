@@ -1,0 +1,97 @@
+{
+  "generated_at": "2026-05-16T01:50:21.538Z",
+  "mode": "summary-only",
+  "target": {
+    "reviewer": "rc56",
+    "base_url": "http://127.0.0.1:3000",
+    "starter_prefix": "0.8.5-rc56-",
+    "limit": null,
+    "tebiq_only": true,
+    "deepseek_only": false,
+    "force_deepseek": false,
+    "force_tebiq": false,
+    "failed_only": false,
+    "allow_all": false,
+    "target_rate": 100
+  },
+  "before": {
+    "total": 56,
+    "complete": 46,
+    "rate": 82,
+    "deepseekOk": 0,
+    "tebiqOk": 52,
+    "tebiqReal": 46,
+    "failed": 10
+  },
+  "tasks": {
+    "planned": 10,
+    "ok": null,
+    "failed": null,
+    "breakdown": {
+      "tebiq:failed": 10
+    },
+    "sample": [
+      {
+        "starter_tag": "0.8.5-rc56-A08-pr-materials",
+        "question_id": "emf9xepy5fxi5zev4rnwxgef",
+        "kind": "tebiq",
+        "reason": "failed"
+      },
+      {
+        "starter_tag": "0.8.5-rc56-A09-pension-exemption",
+        "question_id": "szzahl13quzofl34jcp1k5p6",
+        "kind": "tebiq",
+        "reason": "failed"
+      },
+      {
+        "starter_tag": "0.8.5-rc56-C04-hsp1-institution-change",
+        "question_id": "ysmfdt8nz1vwaszoo8qhgef0",
+        "kind": "tebiq",
+        "reason": "failed"
+      },
+      {
+        "starter_tag": "0.8.5-rc56-C10-dv-address-safety",
+        "question_id": "wyb3ssvpsdt8r2z3zp0kyh94",
+        "kind": "tebiq",
+        "reason": "failed"
+      },
+      {
+        "starter_tag": "0.8.5-rc56-D02-pr-design-negative-control",
+        "question_id": "zl10y6uum6z008pqwb7sov3t",
+        "kind": "tebiq",
+        "reason": "failed"
+      },
+      {
+        "starter_tag": "0.8.5-rc56-D06-resident-tax-installment-negative-control",
+        "question_id": "cld4vlck42t2gura3fl5i9li",
+        "kind": "tebiq",
+        "reason": "failed"
+      },
+      {
+        "starter_tag": "0.8.5-rc56-E01-gijinkoku-material-followup",
+        "question_id": "oegvdg30n6c3xc3k5d3pe64p",
+        "kind": "tebiq",
+        "reason": "failed"
+      },
+      {
+        "starter_tag": "0.8.5-rc56-E02-late-tax-followup",
+        "question_id": "p0pvdrxkz13xk0e4xt19zks9",
+        "kind": "tebiq",
+        "reason": "failed"
+      },
+      {
+        "starter_tag": "0.8.5-rc56-E03-keiei-old-500man-followup",
+        "question_id": "clcw0msyw9u4eliclp5r994t",
+        "kind": "tebiq",
+        "reason": "failed"
+      },
+      {
+        "starter_tag": "0.8.5-rc56-E05-spouse-material-refusal-followup",
+        "question_id": "diml8u5c45ntlq59bybzyb8e",
+        "kind": "tebiq",
+        "reason": "failed"
+      }
+    ]
+  },
+  "after": null
+}

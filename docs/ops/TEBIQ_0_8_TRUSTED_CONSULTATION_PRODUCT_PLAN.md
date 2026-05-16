@@ -4,7 +4,7 @@ Created: 2026-05-14
 
 Owner: Codex Production Lead / AI Engineering Lead
 
-Status: active operating plan
+Status: active operating plan; 0.8 shipped, now in post-release convergence
 
 ## Stage Name
 
@@ -207,11 +207,23 @@ Loop2A engineering hotfix is completed:
 - added P2 validator for `国税その3` mislabeled as income proof;
 - verified by unit tests, typecheck, lint, P0 cycle scripts, and private replay over Loop1 AQL package.
 
-Loop2B targeted rerun is prepared but not executed because provider/eval env is missing locally:
+Loop2B targeted rerun was prepared, then executed after a valid provider environment became available:
 
-- target sidecar: `docs/eval/tebiq-0.8-rur-loop2b-targeted-production-answer-results.json`;
 - prep doc: `docs/eval/TEBIQ_0_8_LOOP2B_TARGETED_RERUN_PREP.md`;
-- required next step when env is available: run the 16 targeted cases and send the private AQL packet for review.
+- final composite private AQL packet: `/tmp/tebiq-0.8-rur-loop2b-final-composite-20260515-aql.json`;
+- final result: 17/17 completed, terminal guardrail findings 0;
+- AQL/QA result: release PASS, no release-blocking P0/P1.
+
+0.8 production release then shipped through:
+
+- PR #131: `TEBIQ 0.8 release candidate safety gates`;
+- PR #132: `fix: protect internal admin surfaces`.
+
+Current post-release focus:
+
+1. System convergence and technical-debt cleanup.
+2. Production observation and small safety fixes only.
+3. FACT/DOMAIN quality control before more legal-source cards are connected to runtime.
 
 ## Stop / Escalation Conditions
 

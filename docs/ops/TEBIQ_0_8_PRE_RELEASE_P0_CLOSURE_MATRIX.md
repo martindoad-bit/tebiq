@@ -46,8 +46,14 @@ Latest relevant checks on the clean minimal 0.8 release slice:
 The broader research branch passed the legal-source `scripts/test/test-p0-cycle*.ts`
 gates, but those are not a minimal 0.8 runtime release gate.
 
-## Remaining Blocker For Public Release
+## Public Release Gate Result
 
-Provider-backed answer regression is still not proven in this workspace because no valid model/provider key is present in `.env.local`.
+The earlier provider-backed blocker was cleared before release:
 
-0.8 can be described internally as a deterministic guardrail-ready candidate. It should not be described as provider-answer release-ready until Loop2B or equivalent provider-backed regression completes and AQL reviews the actual generated answers.
+- Loop2B final composite: 17/17 completed, terminal guardrail findings 0;
+- AQL/QA final review: PASS, no release-blocking P0/P1;
+- production answer smoke after deployment: 5/5 completed.
+
+TEBIQ 0.8 may be described as a shipped safety-gated consultation release. It
+must not be described as a full legal-source advisory product or as replacing
+scrivener / immigration-office judgement.
