@@ -1,5 +1,11 @@
 # TEBIQ 产品文案规范（PRODUCT_COPY_BIBLE）
 
+> **历史文档 / voice lessons only。**
+>
+> 本文件仍有可参考的语气原则，但不再是当前 copy source of truth。
+> 当前冻结用户端命名和答案标签以 `docs/product/TEBIQ_COPY_CANON.md` 为准；
+> 文案流程以 `docs/product/TEBIQ_COPY_SOURCE.md` 为准。
+
 **版本**：v1
 **生成**：2026-04-30
 **适用范围**：所有 TEBIQ 产品文案 — 首页 / answer / decision card / scenario card / document card / 产品功能 UI / 营销 / 客服话术 / 客户经理转发版

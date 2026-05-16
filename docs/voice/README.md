@@ -2,11 +2,21 @@
 
 ## What This Directory Is
 
-`docs/voice/` contains all user-facing and operator-facing language assets (copy, phrasing, tone guidelines) for TEBIQ's internal console and preview integration.
+`docs/voice/` contains historical and draft user-facing / operator-facing
+language assets for TEBIQ's internal console and preview integration.
 
 "VOICE" is the TEBIQ layer responsible for what the product says — the exact words rendered in the UI for Matter outputs, fallback states, human review escalations, scope-exit routing, and system messages. It is distinct from product logic (ENGINE) and domain accuracy review (DOMAIN).
 
-This directory is the single source of truth for all copy. ENGINE must consume copy from here. Copy must NOT be invented inline in component code or left only in chat windows.
+This directory is **not** the current single source of truth for production copy.
+Current production copy rules live in:
+
+- `docs/product/TEBIQ_COPY_SOURCE.md`
+- `docs/product/TEBIQ_COPY_CANON.md`
+- `docs/product/TEBIQ_PRODUCT_UI_GUARDRAILS.md`
+
+Copy must still not be invented inline in component code or left only in chat
+windows, but any `docs/voice/` wording must be checked against the current
+product copy canon before use.
 
 ---
 

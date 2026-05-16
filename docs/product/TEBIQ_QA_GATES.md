@@ -242,7 +242,7 @@ annotation 行必须保留以下字段（缺一即视为标注未完成）：
 - 页面标题对齐规则不一致且无例外说明
 - 失败 / 未完成状态的恢复动作被放到 supporting content 后面
 - evidence card 在移动端出现窄列、竖排、截断、不可读
-- 未完成的速查能力被当作完整 tab 暴露
+- 未完成的 Materials Tab 能力被当作完整 tab 暴露
 - bottom navigation 遮挡主内容或主动作
 
 ### Required evidence
@@ -250,7 +250,7 @@ annotation 行必须保留以下字段（缺一即视为标注未完成）：
 PR / QA report 必须包含：
 
 - iPhone 13 Pro 级别截图或明确说明该路径未触发；
-- Ask / Answer / My Consultations / Quick Reference 中被改路径的检查结果；
+- Ask / Answer / My Consultations / Materials 中被改路径的检查结果；
 - 如有例外，写明例外理由和 Project Lead 是否接受。
 
 ---
@@ -373,7 +373,7 @@ PASS / BLOCK — 原因（对照 §6 清单逐项）
 
 ---
 
-## 9. P0 / P1 / P2 总表（速查）
+## 9. P0 / P1 / P2 总表
 
 > 详细规则见各分节；本表是查询入口。
 

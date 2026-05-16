@@ -13,12 +13,32 @@
 
 ---
 
+## 2026-05-16 Consumption Rule
+
+This registry contains assets from multiple product eras. A row being present
+does not automatically mean it is current production truth.
+
+Priority for consumers:
+
+1. `docs/product/TEBIQ_CURRENT_STATE.md`
+2. `docs/product/TEBIQ_CONTEXT_PACK.md`
+3. `docs/product/TEBIQ_COPY_CANON.md`
+4. assets marked `active`, `canonical`, or `current` in this registry
+5. assets marked `draft`, `preview-only`, `Alpha-only`, or old workstream rows
+   only as historical/reference material
+
+If an old asset conflicts with current state or copy canon, current state/canon
+wins.
+
+---
+
 ## Product Specs
 
 | 资产名称 | 路径 | Owner | Status | Review Required | 消费方 | Source Commit | Last Updated |
 |---------|------|-------|--------|----------------|--------|--------------|-------------|
-| Quick Reference Spec | `docs/product/TEBIQ_QUICK_REFERENCE_SPEC.md` | Codex GM-OPS + Project Lead | active / product-engineering spec | Project Lead for positioning changes | ENGINE / CODEXUI / FACT / DOMAIN / QA | — | 2026-05-12 |
+| Materials Tab / Quick Reference Spec | `docs/product/TEBIQ_QUICK_REFERENCE_SPEC.md` | Codex GM-OPS + Project Lead | active / product-engineering spec; `Quick Reference` is internal/historical naming | Project Lead for positioning changes | ENGINE / CODEXUI / FACT / DOMAIN / QA | — | 2026-05-16 |
 | Deep Water Registry | `docs/product/TEBIQ_DEEP_WATER_REGISTRY.md` | Codex GM-OPS + Project Lead | draft / pre-scrivener workshop | Scrivener + DOMAIN before production wiring | ENGINE / AQL / DOMAIN / FACT / QA | — | 2026-05-12 |
+| Copy Canon | `docs/product/TEBIQ_COPY_CANON.md` | Codex Production Lead + Product Copy | active / current copy registry | Project Lead for frozen user-visible labels | ENGINE / CODEXUI / QA / AQL / Copy / GM | — | 2026-05-16 |
 
 ## VOICE 资产
 
@@ -98,6 +118,15 @@
 | Workstream A Console Deblock | `docs/ops/WORKSTREAM_A_CONSOLE_DEBLOCK_PACK.md` | GM | ✅ done (PR #28) | ENGINE | `2d9ecaa` | 2026-05-05 |
 | Workstream B Preview Feedback | `docs/ops/WORKSTREAM_B_PREVIEW_STAGE_FEEDBACK_PACK.md` | GM | ✅ done (PR #30) | ENGINE | `2d9ecaa` | 2026-05-05 |
 | Workstream C SSE Phase 2 | `docs/ops/WORKSTREAM_C_PREVIEW_PHASE2_SSE_PACK.md` | GM | ✅ done (Issue #32 / PR #33) | ENGINE | `ab019ca` | 2026-05-05 |
+| Ops Directory README | `docs/ops/README.md` | Codex Production Lead | active / directory consumption guide | all windows | — | 2026-05-16 |
+| Document Memory Clearing 2026-05-16 | `docs/ops/TEBIQ_DOCUMENT_MEMORY_CLEARING_2026-05-16.md` | Codex Production Lead | completed / docs truth-map cleanup | all windows | — | 2026-05-16 |
+| 1.0 Six Engineering Roadmap | `docs/ops/TEBIQ_1_0_SIX_ENGINEERING_ROADMAP.md` | Codex Production Lead | active / 0.8.5 to 1.0 execution memory | all windows | — | 2026-05-16 |
+| Card Import To Product Plan | `docs/ops/TEBIQ_CARD_IMPORT_TO_PRODUCT_PLAN.md` | Codex Production Lead | active / card runtime-governance plan | ENGINE / FACT / DOMAIN / AQL / QA | — | 2026-05-16 |
+| 0.8.5 Import DOMAIN Review | `docs/domain/TEBIQ_0_8_5_IMPORT_DOMAIN_REVIEW.md` | DOMAIN / Russell | active / card import safety boundary | ENGINE / AQL / QA | — | 2026-05-16 |
+| 0.8.5 AQL Test Plan | `docs/eval/TEBIQ_0_8_5_AQL_TEST_PLAN.md` | AQL / Locke | active / first 56-question matrix and first24 plan | ENGINE / QA / DOMAIN | — | 2026-05-16 |
+| 0.8.5 First24 Eval Pack | `docs/eval/TEBIQ_0_8_5_CARD_IMPORT_FIRST24.json` | AQL + Codex Production Lead | active / Eval Lab import pack | AQL / QA / ENGINE | — | 2026-05-16 |
+| 0.8.5 First24 Run Result | `docs/eval/TEBIQ_0_8_5_FIRST24_RUN_RESULT.json` | Codex Production Lead | active / provider-backed TEBIQ current run result | AQL / QA / ENGINE / Founder | — | 2026-05-16 |
+| 0.8.5 Card Import Engineering Review | `docs/engineering/TEBIQ_0_8_5_CARD_IMPORT_ENGINEERING_REVIEW.md` | ENGINE / Hilbert | active / observability and materials connection review | ENGINE / Codex | — | 2026-05-16 |
 | QA Stabilization Pack v0.2 | `docs/ops/QA_STABILIZATION_PACK_V02.md` | GM | active (Issue #35) | QA | — | 2026-05-05 |
 | M3-C DS Batch Readiness Pack | `docs/ops/WORKSTREAM_M3C_DS_BATCH_PACK.md` | GM | ✅ done (PR #36 merged `98474c9`)| ENGINE | — | 2026-05-05 |
 | **1.0 Alpha Charter** | `docs/product/TEBIQ_1_0_ALPHA_CHARTER.md` | Project Lead + GM | active / Alpha sprint | all windows | — | 2026-05-05 |
@@ -137,7 +166,7 @@
 
 ## Roles 资产（docs/roles/）
 
-> 各窗口正式角色定义。所有文件状态：draft / internal coordination / not production。
+> 各窗口正式角色定义。AQL role is active; older role cards remain draft / internal coordination unless updated.
 
 | 资产名称 | 路径 | Owner | Status | 消费方 | Last Updated |
 |---------|------|-------|--------|--------|-------------|
@@ -146,6 +175,7 @@
 | ENGINE Role | `docs/roles/TEBIQ_ENGINE_ROLE.md` | GM | draft | ENGINE / GM | 2026-05-05 |
 | QA Role | `docs/roles/TEBIQ_QA_ROLE.md` | GM | draft | QA / GM | 2026-05-05 |
 | DOMAIN Role | `docs/roles/TEBIQ_DOMAIN_ROLE.md` | GM | draft | DOMAIN / GM | 2026-05-05 |
+| AQL Role | `docs/roles/TEBIQ_AQL_ROLE.md` | Founder + AQL | active / independent answer-quality role | AQL / Codex / QA / DOMAIN / Product Lead | 2026-05-16 |
 | VOICE Role | `docs/roles/TEBIQ_VOICE_ROLE.md` | GM | draft | VOICE / GM | 2026-05-05 |
 | CODEXUI Role | `docs/roles/TEBIQ_CODEXUI_ROLE.md` | GM | draft | CODEXUI / GM | 2026-05-05 |
 
@@ -158,6 +188,7 @@
 | 资产名称 | 路径 | Owner | Status | 消费方 | Last Updated |
 |---------|------|-------|--------|--------|-------------|
 | Product UI Guardrails | `docs/product/TEBIQ_PRODUCT_UI_GUARDRAILS.md` | Codex GM-OPS + Project Lead | canonical / prelaunch gate | ENGINE / CODEXUI / QA / Copy / GM | 2026-05-12 |
+| 0.8 Materials Tab Product UI Plan | `docs/ui/TEBIQ_0_8_MATERIALS_TAB_PRODUCT_UI_PLAN.md` | CODEXUI + Codex Production Lead | active / product UI plan | ENGINE / CODEXUI / QA / FACT / DOMAIN / Copy | 2026-05-16 |
 | UI Directory README | `docs/ui/README.md` | CODEXUI + GM | active | CODEXUI / ENGINE / QA | 2026-05-05 |
 | 1.0 UI Role | `docs/ui/TEBIQ_1_0_UI_ROLE.md` | CODEXUI + GM | draft / Alpha-only | CODEXUI / ENGINE / QA | 2026-05-05 |
 | 1.0 UI Scope | `docs/ui/TEBIQ_1_0_UI_SCOPE.md` | TEBIQ-CODEXUI | draft / internal / preview-only | GM / ENGINE / QA / VOICE / DOMAIN | 2026-05-05 |

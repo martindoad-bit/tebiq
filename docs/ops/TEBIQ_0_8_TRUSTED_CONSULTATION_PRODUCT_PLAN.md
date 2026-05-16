@@ -182,7 +182,7 @@ This section is updated by Codex as subagents complete.
 | W3 AQL | AQL protocol worker | `docs/eval/TEBIQ_0_8_AQL_ACCEPTANCE_AND_REGRESSION_PROTOCOL.md` | completed |
 | W3 User Simulation | Real User Simulator | `docs/eval/TEBIQ_0_8_REAL_USER_REGRESSION_QUESTIONS.json` | completed |
 | W3 QA | QA plan worker | `docs/qa/TEBIQ_0_8_QA_PLAN.md` | completed |
-| W4 CODEXUI | Materials Tab UI worker | `docs/ui/TEBIQ_0_8_MATERIALS_TAB_PRODUCT_UI_PLAN.md` | completed |
+| W4 CODEXUI | Materials Tab UI worker | `docs/ui/TEBIQ_0_8_MATERIALS_TAB_PRODUCT_UI_PLAN.md` | restored / active |
 | W2 ENGINE | Engineering explorer | no file; reports to Codex | completed |
 
 ## Current First Loop
