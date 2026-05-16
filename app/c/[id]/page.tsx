@@ -26,7 +26,7 @@ import {
 export const dynamic = 'force-dynamic'
 
 export const metadata = {
-  title: 'TEBIQ — 我的咨询',
+  title: 'TEBIQ — 咨询记录',
   robots: { index: false, follow: false },
 }
 
@@ -53,7 +53,7 @@ export default async function ConsultationDetailPage({ params }: PageProps) {
     <ConsultationShell tabBar={<TabBar />}>
       <div className="space-y-5">
         <BrandHeader
-          eyebrow="我的咨询"
+          eyebrow="咨询记录"
           title="这次咨询"
           description="这里用于回看本次咨询内容和补充记录。"
           action={
@@ -121,13 +121,20 @@ export default async function ConsultationDetailPage({ params }: PageProps) {
 
         <Surface className="space-y-3">
           <SectionLabel>接下来可以做</SectionLabel>
-          <div className="grid gap-2 sm:grid-cols-3">
+          <div className="grid gap-2 sm:grid-cols-4">
             <Link
               href={`/ai-consultation?q=${encodeURIComponent(`关于这条咨询，我想补充：${row.userQuestionText.slice(0, 120)}`)}`}
               className="inline-flex min-h-11 items-center justify-center gap-2 whitespace-nowrap rounded-btn bg-[var(--tebiq-ink-blue)] px-3 py-2 text-[14px] font-medium text-[var(--tebiq-off-white)]"
             >
               <MessageSquarePlus className="h-4 w-4" strokeWidth={1.6} />
               带背景提问
+            </Link>
+            <Link
+              href="/ai-consultation"
+              className="inline-flex min-h-11 items-center justify-center gap-2 whitespace-nowrap rounded-btn border border-[var(--tebiq-soft-gray)] px-3 py-2 text-[14px] font-medium text-[var(--tebiq-ink-blue)]"
+            >
+              <MessageSquarePlus className="h-4 w-4" strokeWidth={1.6} />
+              问新问题
             </Link>
             <Link
               href={`/consultation?consultation_id=${encodeURIComponent(row.id)}`}
@@ -155,9 +162,9 @@ export default async function ConsultationDetailPage({ params }: PageProps) {
         <footer className="flex flex-wrap items-center justify-between gap-3 border-t border-[var(--tebiq-soft-gray)] pt-4 text-[13px]">
           <Link href="/me/consultations" className="inline-flex min-h-9 items-center gap-1 text-[var(--tebiq-deep-slate)]">
             <ArrowLeft className="h-3.5 w-3.5" strokeWidth={1.6} />
-            返回我的咨询
+            返回咨询记录
           </Link>
-            <p className="text-[var(--tebiq-deep-slate)]">具体期限、手续和个案判断，请向行政书士或入管确认。</p>
+          <p className="text-[var(--tebiq-deep-slate)]">具体期限、手续和个案判断，请向行政书士或入管确认。</p>
         </footer>
       </div>
     </ConsultationShell>

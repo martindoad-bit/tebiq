@@ -1,6 +1,7 @@
 import { FileText } from 'lucide-react'
 import type { ConsultationFactCardAuditEntry } from '@/lib/consultation/stream-protocol'
 import {
+  getQuickReferenceTopicHref,
   getQuickReferenceTopicsForFactCards,
   type QuickReferenceTopic,
 } from '@/lib/quick-reference/topics'
@@ -43,7 +44,7 @@ export function QuickReferenceBridge({
 function QuickReferenceLink({ topic }: { topic: QuickReferenceTopic }) {
   return (
     <a
-      href={`/quick-reference#${encodeURIComponent(topic.id)}`}
+      href={getQuickReferenceTopicHref(topic.id)}
       className="inline-flex min-h-9 max-w-full items-center gap-1.5 rounded-btn border border-[var(--tebiq-soft-gray)] bg-white px-2.5 text-[13px] font-medium leading-none text-[var(--tebiq-ink-blue)]"
     >
       <span className="min-w-0 truncate">{topic.title}</span>

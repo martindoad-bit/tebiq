@@ -121,7 +121,7 @@ export default function CheckDimensionList({
       <section className="mt-5 rounded-card border border-hairline bg-surface px-4 py-4 shadow-card">
         <p className="text-[11px] font-medium text-ash">带情况提问</p>
         <p className="mt-1 text-[13px] leading-[1.6] text-ink">
-          如果自查后仍不确定，可以把当前情况写给 TEBIQ，回答会进入“我的咨询”记录。
+          如果自查后仍不确定，可以把当前情况写给 TEBIQ，回答会进入“咨询记录”。
         </p>
         <Link
           href="/ai-consultation"

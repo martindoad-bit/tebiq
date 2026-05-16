@@ -52,7 +52,7 @@ export default async function AnswerPage({
           <BrandHeader
             eyebrow="咨询记录"
             title="这条链接暂时打不开"
-            description="这可能是较早生成的回答链接，或记录已经不存在。可以回到“我的咨询”查看，或重新开始。"
+            description="这可能是较早生成的回答链接，或记录已经不存在。可以回到“咨询记录”查看，或重新开始。"
             action={
               <Link
                 href="/ai-consultation"
@@ -64,14 +64,14 @@ export default async function AnswerPage({
           />
           <Surface className="space-y-3">
             <p className="text-[14.5px] leading-[1.7] text-[var(--tebiq-deep-slate)]">
-              如果这是刚刚复制的咨询链接，请优先打开“我的咨询”；新的咨询记录请从“我的咨询”打开。
+              如果这是刚刚复制的咨询链接，请优先打开“咨询记录”；新的咨询记录请从“咨询记录”打开。
             </p>
             <div className="flex flex-wrap gap-2">
               <Link
                 href="/me/consultations"
                 className="inline-flex min-h-11 items-center whitespace-nowrap rounded-btn border border-[var(--tebiq-soft-gray)] px-3 text-[14px] font-medium text-[var(--tebiq-ink-blue)]"
               >
-                我的咨询
+                咨询记录
               </Link>
               <Link
                 href="/ai-consultation"
