@@ -1,8 +1,9 @@
 import { cookies } from 'next/headers'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { ArrowLeft, MessageSquarePlus, Pin, BookOpen, UserCheck, X } from 'lucide-react'
+import { ArrowLeft, MessageSquarePlus, BookOpen, UserCheck } from 'lucide-react'
 import TabBar from '@/app/_components/v5/TabBar'
+import CloseMatterButton from './CloseMatterButton'
 import {
   BrandHeader,
   ConsultationShell,
@@ -177,20 +178,3 @@ function statusLabel(status: string): string {
   return status
 }
 
-function CloseMatterButton({ matterId: _matterId, alreadyClosed }: { matterId: string; alreadyClosed: boolean }) {
-  // Server component placeholder; close action wired client-side in a follow-up.
-  if (alreadyClosed) {
-    return (
-      <span className="inline-flex min-h-11 items-center justify-center gap-2 whitespace-nowrap rounded-btn border border-[var(--tebiq-soft-gray)] bg-[var(--tebiq-off-white)] px-3 py-2 text-[14px] font-medium text-[var(--tebiq-cool-gray)]">
-        <X className="h-4 w-4" strokeWidth={1.6} />
-        已关闭
-      </span>
-    )
-  }
-  return (
-    <span className="inline-flex min-h-11 items-center justify-center gap-2 whitespace-nowrap rounded-btn border border-[var(--tebiq-soft-gray)] px-3 py-2 text-[14px] font-medium text-[var(--tebiq-cool-gray)]">
-      <Pin className="h-4 w-4" strokeWidth={1.6} />
-      事项关闭（待接入）
-    </span>
-  )
-}
