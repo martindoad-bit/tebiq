@@ -1641,6 +1641,8 @@ export default function EvalLabClient() {
         </div>
       </header>
 
+      <UserFeedbackPanel />
+
       <main className="grid grid-cols-12 gap-3 p-3" style={{ minHeight: 'calc(100vh - 56px)' }}>
         {/* Left — question list */}
         <aside
@@ -2566,4 +2568,233 @@ function matchesSourceFilter(q: QuestionRow, source: SourceFilter): boolean {
 
 function cleanDisplayText(text: string): string {
   return text.replace(/\uFFFD+/g, '…')
+}
+
+// ---------- UserFeedbackPanel (Q1.A) ----------
+// Renders the aggregate of production user feedback so reviewers can see
+// "how real users reacted" alongside AQL annotations. Internal-only;
+// hits /api/internal/eval-lab/user-feedback-summary.
+
+type FeedbackRange = '1d' | '7d' | 'all'
+
+interface UserFeedbackSummary {
+  total: number
+  helpful: number
+  inaccurate: number
+  add_context: number
+  human_review: number
+  saved: number
+  helpful_rate: number | null
+  inaccurate_rate: number | null
+}
+
+interface UserFeedbackRecent {
+  consultation_id: string
+  feedback_type: string
+  question_preview: string
+  created_at: string
+}
+
+interface UserFeedbackResponse {
+  ok?: boolean
+  summary?: UserFeedbackSummary
+  recent?: UserFeedbackRecent[]
+  error?: string
+  detail?: string
+}
+
+const FEEDBACK_VERDICT_STYLE: Record<string, { label: string; cls: string }> = {
+  helpful: { label: 'helpful', cls: 'border-emerald-300 bg-emerald-50 text-emerald-700' },
+  inaccurate: { label: 'inaccurate', cls: 'border-rose-300 bg-rose-50 text-rose-700' },
+  add_context: { label: 'add_context', cls: 'border-amber-300 bg-amber-50 text-amber-700' },
+  human_review: { label: 'human_review', cls: 'border-violet-300 bg-violet-50 text-violet-700' },
+  saved: { label: 'saved', cls: 'border-sky-300 bg-sky-50 text-sky-700' },
+}
+
+function isoDaysAgo(days: number): string {
+  const d = new Date()
+  d.setUTCDate(d.getUTCDate() - days)
+  return d.toISOString().slice(0, 10)
+}
+
+function formatPct(rate: number | null): string {
+  if (rate === null || rate === undefined || Number.isNaN(rate)) return '—'
+  return `${Math.round(rate * 100)}%`
+}
+
+function formatRelative(iso: string): string {
+  if (!iso) return ''
+  const t = Date.parse(iso)
+  if (Number.isNaN(t)) return iso
+  const diffMs = Date.now() - t
+  const mins = Math.floor(diffMs / 60000)
+  if (mins < 1) return '刚刚'
+  if (mins < 60) return `${mins} 分钟前`
+  const hrs = Math.floor(mins / 60)
+  if (hrs < 24) return `${hrs} 小时前`
+  const days = Math.floor(hrs / 24)
+  if (days < 7) return `${days} 天前`
+  return iso.slice(0, 10)
+}
+
+function UserFeedbackPanel() {
+  const [range, setRange] = useState<FeedbackRange>('7d')
+  const [collapsed, setCollapsed] = useState(false)
+  const [summary, setSummary] = useState<UserFeedbackSummary | null>(null)
+  const [recent, setRecent] = useState<UserFeedbackRecent[]>([])
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    let cancelled = false
+    const params = new URLSearchParams({ limit_recent: '20' })
+    if (range === '1d') params.set('from', isoDaysAgo(0))
+    else if (range === '7d') params.set('from', isoDaysAgo(7))
+    // 'all' — no from
+
+    setLoading(true)
+    setError(null)
+    fetch(`/api/internal/eval-lab/user-feedback-summary?${params.toString()}`, {
+      cache: 'no-store',
+    })
+      .then(r => r.json() as Promise<UserFeedbackResponse>)
+      .then(j => {
+        if (cancelled) return
+        if (j.ok && j.summary) {
+          setSummary(j.summary)
+          setRecent(j.recent ?? [])
+        } else {
+          setError(j.detail || j.error || '加载失败')
+          setSummary(null)
+          setRecent([])
+        }
+      })
+      .catch(err => {
+        if (cancelled) return
+        setError(err instanceof Error ? err.message : String(err))
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false)
+      })
+    return () => { cancelled = true }
+  }, [range])
+
+  const cards: Array<{ key: string; label: string; cls: string; value: string }> = useMemo(() => {
+    if (!summary) return []
+    return [
+      { key: 'total', label: '总反馈', cls: 'border-slate-200 bg-white text-slate-800', value: String(summary.total) },
+      { key: 'helpful', label: 'helpful', cls: 'border-emerald-200 bg-emerald-50 text-emerald-800', value: String(summary.helpful) },
+      { key: 'inaccurate', label: 'inaccurate', cls: 'border-rose-200 bg-rose-50 text-rose-800', value: String(summary.inaccurate) },
+      { key: 'add_context', label: 'add_context', cls: 'border-amber-200 bg-amber-50 text-amber-800', value: String(summary.add_context) },
+      { key: 'human_review', label: 'human_review', cls: 'border-violet-200 bg-violet-50 text-violet-800', value: String(summary.human_review) },
+      { key: 'saved', label: 'saved', cls: 'border-sky-200 bg-sky-50 text-sky-800', value: String(summary.saved) },
+      { key: 'helpful_rate', label: 'helpful 占比', cls: 'border-emerald-200 bg-emerald-50 text-emerald-800', value: formatPct(summary.helpful_rate) },
+      { key: 'inaccurate_rate', label: 'inaccurate 占比', cls: 'border-rose-200 bg-rose-50 text-rose-800', value: formatPct(summary.inaccurate_rate) },
+    ]
+  }, [summary])
+
+  const isEmpty = !loading && !error && summary !== null && summary.total === 0
+
+  return (
+    <section className="border-b border-slate-200 bg-white px-4 py-3">
+      <div className="flex flex-wrap items-center gap-2">
+        <button
+          type="button"
+          onClick={() => setCollapsed(c => !c)}
+          className="text-[11px] text-slate-500 hover:text-slate-800"
+          aria-expanded={!collapsed}
+        >
+          {collapsed ? '▸' : '▾'}
+        </button>
+        <h2 className="text-sm font-semibold tracking-tight">用户反馈聚合</h2>
+        <span className="text-[11px] text-slate-500">
+          {range === '1d' ? '今天' : range === '7d' ? '最近 7 天' : '全部'}
+          {loading ? ' · 加载中…' : ''}
+        </span>
+        <div className="ml-auto flex items-center gap-1">
+          {(['1d', '7d', 'all'] as FeedbackRange[]).map(r => (
+            <button
+              key={r}
+              type="button"
+              onClick={() => setRange(r)}
+              className={`text-[11px] px-2 py-0.5 border rounded ${
+                range === r
+                  ? 'bg-slate-900 text-white border-slate-900'
+                  : 'border-slate-300 bg-white text-slate-600 hover:bg-slate-100'
+              }`}
+            >
+              {r === '1d' ? '今天' : r === '7d' ? '7天' : '全部'}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {!collapsed && (
+        <div className="mt-3 space-y-3">
+          {error && (
+            <div className="text-[11px] text-red-700 bg-red-50 border border-red-200 rounded px-2 py-1">
+              用户反馈加载失败：{error}
+            </div>
+          )}
+          {isEmpty && (
+            <div className="text-[11px] text-slate-500 bg-slate-50 border border-slate-200 rounded px-2 py-3 text-center">
+              暂无用户反馈
+            </div>
+          )}
+          {summary && summary.total > 0 && (
+            <>
+              <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2">
+                {cards.map(c => (
+                  <div
+                    key={c.key}
+                    className={`border rounded px-2 py-1.5 ${c.cls}`}
+                  >
+                    <div className="text-[10px] uppercase tracking-wider opacity-70">{c.label}</div>
+                    <div className="text-base font-semibold tabular-nums">{c.value}</div>
+                  </div>
+                ))}
+              </div>
+              <div>
+                <div className="text-[11px] text-slate-500 mb-1">
+                  最近 {recent.length} 条反馈
+                </div>
+                <ul className="border border-slate-200 rounded divide-y divide-slate-100 bg-white max-h-64 overflow-y-auto">
+                  {recent.map(r => {
+                    const style = FEEDBACK_VERDICT_STYLE[r.feedback_type] ?? {
+                      label: r.feedback_type || '—',
+                      cls: 'border-slate-200 bg-slate-50 text-slate-600',
+                    }
+                    return (
+                      <li key={r.consultation_id} className="px-2 py-1.5 flex items-center gap-2 text-[11px]">
+                        <span
+                          className={`shrink-0 inline-block border rounded px-1.5 py-0.5 text-[10px] ${style.cls}`}
+                        >
+                          {style.label}
+                        </span>
+                        <a
+                          href={`/c/${r.consultation_id}`}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="truncate text-slate-700 hover:text-slate-900 hover:underline flex-1"
+                          title={r.question_preview}
+                        >
+                          {r.question_preview || '(无问题文本)'}
+                        </a>
+                        <span className="shrink-0 text-[10px] text-slate-400 tabular-nums">
+                          {formatRelative(r.created_at)}
+                        </span>
+                      </li>
+                    )
+                  })}
+                  {recent.length === 0 && (
+                    <li className="px-2 py-3 text-center text-slate-400 text-[11px]">无最近反馈</li>
+                  )}
+                </ul>
+              </div>
+            </>
+          )}
+        </div>
+      )}
+    </section>
+  )
 }
