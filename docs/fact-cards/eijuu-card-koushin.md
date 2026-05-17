@@ -26,7 +26,7 @@ official_sources:
   - url: https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00011.html
     label: 出入国在留管理庁 — 在留カード有効期間更新許可申請
     accessed: "2026-05-07"
-    note: URLは2026-05-07時点でリダイレクトが確認されており、代替URLを確認中
+    note: "2026-05-17 WB-B: URL確認済み（curl 200 + content match `在留カードの有効期間の更新申請 | 出入国在留管理庁`）。レガシー meta-refresh は同一 path で同一コンテンツに到達するため canonical URL は不変。redirect flag clear."
 applies_to:
   - 永住者（特別永住者を除く）の在留資格を有する中長期在留者
   - 高度専門職2号の在留資格を有する中長期在留者
@@ -41,7 +41,7 @@ ai_inferred_fields:
   - 在留カード期限切れのまま放置すると、銀行・マイナンバー等の各種実務手続きで支障が生じる
 needs_review_flags:
   - seven_year_validity_source: 永住者の在留カード7年有効期間は出入国管理及び難民認定法第19条の4第1項に基づくai推定。法令テキスト直接引用による確認要（e-govは{{TODAY_ISO}}時点でJS依存ページのため取得困難）。
-  - source_url_redirect: official_sources記載のURLが2026-05-07時点でリダイレクト。ISA新URLを確認して更新要。
+  # source_url_redirect: RESOLVED 2026-05-17 WB-B — URL verified live with correct content; legacy meta-refresh path returns same canonical target.
 related_links:
   - title: "出入国在留管理庁 — 在留カード有効期間更新許可申請"
     url: "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00011.html"

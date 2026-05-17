@@ -1,7 +1,7 @@
 ---
 fact_id: minashi-sainyuukoku
 title: "みなし再入国許可・通常再入国許可と長期出国による在留資格リスク"
-state: ai_verified
+state: ai_extracted   # 2026-05-17: WB-B safety debt downgrade — confidence=medium + critical + DOMAIN §2.2/§4.2 deep-water; over-one-year / 特例期間 unresolved.
 risk_level: critical
 confidence: medium
 source_quality: official

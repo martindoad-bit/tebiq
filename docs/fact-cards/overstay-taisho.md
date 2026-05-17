@@ -1,7 +1,7 @@
 ---
 fact_id: overstay-taisho
 title: 不法残留（オーバーステイ）の対処と出国命令・在留特別許可
-state: ai_verified
+state: ai_extracted   # 2026-05-17: WB-B safety debt downgrade — critical + confidence=medium + DOMAIN §4.5 / RC §4 deep-water, guardrail/source-only.
 risk_level: critical
 confidence: medium
 source_quality: official

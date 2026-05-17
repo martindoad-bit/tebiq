@@ -25,7 +25,7 @@ does_not_cover:
   - "育児休業給付金（ikuji-sangyo-kyugyo-zairyu 参照）"
 ai_pipeline: WebFetch → FACT-OPS review
 official_sources:
-  - url: https://www.kyoukaikenpo.or.jp/g7/cat710/sb3100/
+  - url: https://www.kyoukaikenpo.or.jp/benefit/injury_and_sickness_allowance/
     label: 全国健康保険協会 — 傷病手当金
     accessed: "2026-05-11"
 applies_to:
@@ -48,7 +48,7 @@ needs_review_flags:
   - kokuminkenpo_shobyo: 国民健康保険では傷病手当金は「任意給付」のため自治体によって実施状況が異なる（新型コロナ特例を除く）。DOMAIN確認要。
 related_links:
   - title: "全国健康保険協会 — 傷病手当金"
-    url: "https://www.kyoukaikenpo.or.jp/g7/cat710/sb3100/"
+    url: "https://www.kyoukaikenpo.or.jp/benefit/injury_and_sickness_allowance/"
     organization: "全国健康保険協会（協会けんぽ）"
     display_label: "全国健康保険協会 — 傷病手当金"
     locator: "ページ内で「傷病手当金」を検索"
@@ -56,7 +56,7 @@ related_links:
 evidence_points:
   - claim: "健康保険の傷病手当金：業務外の傷病で療養のため仕事に就けない場合、連続3日の待期後（4日目から）支給。支給額：「支給開始日以前12か月間の各月の標準報酬月額を平均した額の30分の1に相当する額の3分の2に相当する額」（標準報酬月額の約67%）。支給期間：「支給を始めた日から通算して1年6か月」（2022年1月1日以降の同一傷病通算）。"
     source_title: "全国健康保険協会：傷病手当金"
-    source_url: "https://www.kyoukaikenpo.or.jp/g7/cat710/sb3100/"
+    source_url: "https://www.kyoukaikenpo.or.jp/benefit/injury_and_sickness_allowance/"
     source_organization: "全国健康保険協会（協会けんぽ）"
     source_locator: "ページ内「支給要件（業務外・療養・4日目から）」「支給額（標準報酬月額の3分の2）」「支給期間（通算1年6か月）」の記述を確認"
     display_label: "傷病手当金：業務外の傷病・4日目から・標準報酬の約67%・通算1年6か月"
@@ -65,7 +65,7 @@ evidence_points:
     needs_domain_review: false
   - claim: "傷病手当金の支給期間：同一の傷病について、支給を始めた日から通算して最長1年6か月（2022年1月1日改正後は通算制に変更）。"
     source_title: "全国健康保険協会：傷病手当金"
-    source_url: "https://www.kyoukaikenpo.or.jp/g7/cat710/sb3100/"
+    source_url: "https://www.kyoukaikenpo.or.jp/benefit/injury_and_sickness_allowance/"
     source_organization: "全国健康保険協会（協会けんぽ）"
     source_locator: "ページ内「支給期間（支給を始めた日から通算して1年6か月）」「2022年1月1日改正（通算制）」に関する記述を確認"
     display_label: "傷病手当金の支給期間：支給開始日から通算して最長1年6か月（2022年1月改正）"
@@ -74,7 +74,7 @@ evidence_points:
     needs_domain_review: false
   - claim: "傷病手当金の支給額の計算式：支給開始日以前12か月間の各月の標準報酬月額を平均した額÷30日×3分の2（約67%）。"
     source_title: "全国健康保険協会：傷病手当金"
-    source_url: "https://www.kyoukaikenpo.or.jp/g7/cat710/sb3100/"
+    source_url: "https://www.kyoukaikenpo.or.jp/benefit/injury_and_sickness_allowance/"
     source_organization: "全国健康保険協会（協会けんぽ）"
     source_locator: "ページ内「支給額の計算（支給開始日以前12か月間の標準報酬月額の平均÷30日×2/3）」に関する記述を確認"
     display_label: "傷病手当金の計算：過去12か月の標準報酬月額平均÷30日×2/3（約67%）/日"

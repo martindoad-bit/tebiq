@@ -1,7 +1,7 @@
 ---
 fact_id: nihonjin-haigusha-visa
 title: 日本人の配偶者等ビザの申請要件と更新上の注意点
-state: ai_verified
+state: ai_extracted   # 2026-05-17: WB-B safety debt downgrade — confidence=medium + DOMAIN §2.4 deep-water; separation/DV/定住者/再婚 route guidance unresolved.
 risk_level: high
 confidence: medium
 source_quality: official

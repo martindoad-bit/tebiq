@@ -1,7 +1,7 @@
 ---
 fact_id: gijinkoku-category-1-2-3-4
 title: 技人国 — 受入機関カテゴリー1〜4 / 書類量と審査負担
-state: ai_extracted
+state: ai_verified   # 2026-05-17: WB-B promote — confidence=high + source_quality=official; URL `isa/applications/status/gijinkoku.html` verified ALIVE; 3 review flags are edge-detail only and won't be injected as high-risk conclusions. Keep controlled_alpha_eligible=false.
 risk_level: high
 confidence: high
 source_quality: official

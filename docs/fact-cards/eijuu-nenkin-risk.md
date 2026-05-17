@@ -1,7 +1,7 @@
 ---
 fact_id: eijuu-nenkin-risk
 title: 永住申請における年金・税金・健康保険 未納リスク
-state: ai_verified
+state: ai_extracted   # 2026-05-17: WB-B safety debt downgrade — confidence=medium + critical + DOMAIN §2.5 deep-water; remain hint/guardrail-only until DOMAIN resolves lookback fields.
 risk_level: critical
 confidence: medium   # DOMAIN-CC audit 2026-05-07: downgraded from high. Core 消極的評価 quote is high-confidence (nyukan50 direct), but nenkin/kenko_hoken 2-year + juuminhzei 3-year period fields are sourced from 高度人材 page (nyuukoku07-00133), not the general applicant page. general_applicant_lookback is ai_inference. Upgrade to high after FACT verifies from general applicant source.
 source_quality: official

@@ -1,7 +1,7 @@
 ---
 fact_id: eijuu-shinsei-shorui
 title: 永住許可申請の必要書類（就労資格者・5年納税証明・2年年金健保・了解書）
-state: ai_verified
+state: ai_extracted   # 2026-05-17: WB-B safety debt downgrade — DOMAIN §4.4 + RC §1 (资产/PR 预测) marks as materials-only; 3 unresolved flags (年収/资产 threshold、配偶 route diff、了解書 内容).
 risk_level: high
 confidence: high
 source_quality: official
