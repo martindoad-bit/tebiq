@@ -1442,5 +1442,71 @@ export const factCards = pgTable(
 export type FactCard = typeof factCards.$inferSelect
 export type NewFactCard = typeof factCards.$inferInsert
 
+// ============================================================================
+// 1.0 WB-F L2 Continuation — user_matters
+//
+// Thinnest possible "anchor" so the user can come back to the same matter
+// across multiple consultations. NOT a full Matter / case-management entity:
+//   - no deadlines
+//   - no evidence files
+//   - no project-management UI
+//   - no AI strategy decisions
+//
+// A matter is created from a single origin consultation (the question that
+// made the user want to "save and continue"). After that the user can:
+//   - add supplemental facts (free-text snippets they remember later)
+//   - link more consultations (re-ask -> new consultation -> link)
+//   - link material entities / quick-reference topics
+//   - close the matter when done
+// ============================================================================
+export const userMatters = pgTable(
+  'user_matters',
+  {
+    id: idCol(),
+    // Cookie-derived viewer id; same scoping as ai_consultations.viewer_id.
+    viewerId: varchar('viewer_id', { length: 64 }).notNull(),
+    // The consultation the user "anchored" this matter from. May be null
+    // if the matter was created some other way later; we keep it nullable
+    // and untyped (no FK) so deletions of consultations don't cascade.
+    originConsultationId: varchar('origin_consultation_id', { length: 24 }),
+    // Short user-facing label. Free text; UI suggests something based on
+    // the origin question but the user owns the value.
+    title: text('title').notNull(),
+    // 'active' | 'paused' | 'closed' — string column (not enum) so we can
+    // iterate states without a migration. Validated app-side.
+    status: text('status').notNull().default('active'),
+    // Array of { text, addedAt } strings the user adds over time. Loosely
+    // typed so the route owns the shape.
+    supplementalFacts: jsonb('supplemental_facts')
+      .$type<Array<{ text: string; addedAt: string }>>()
+      .notNull()
+      .default(sql`'[]'::jsonb`),
+    // Free-form material identifiers (quick-reference topic ids, material
+    // entity ids). String array; no FK so we can iterate the materials
+    // system without breaking matters.
+    linkedMaterialIds: jsonb('linked_material_ids')
+      .$type<string[]>()
+      .notNull()
+      .default(sql`'[]'::jsonb`),
+    // ai_consultations.id values, including the originConsultationId and
+    // any follow-on re-asks the user explicitly linked.
+    linkedConsultationIds: jsonb('linked_consultation_ids')
+      .$type<string[]>()
+      .notNull()
+      .default(sql`'[]'::jsonb`),
+    createdAt: createdAt(),
+    updatedAt: updatedAt(),
+  },
+  t => ({
+    viewerIdx: index('user_matters_viewer_idx').on(t.viewerId),
+    statusIdx: index('user_matters_status_idx').on(t.status),
+    viewerStatusIdx: index('user_matters_viewer_status_idx').on(t.viewerId, t.status),
+    originIdx: index('user_matters_origin_idx').on(t.originConsultationId),
+  }),
+)
+
+export type UserMatter = typeof userMatters.$inferSelect
+export type NewUserMatter = typeof userMatters.$inferInsert
+
 // re-export sql for callers that want raw helpers without importing drizzle
 export { sql }
