@@ -1,0 +1,21 @@
+# production-url-smoke.allowlist
+#
+# Routes listed here are KNOWN to 404 in production for a documented reason.
+# This is not a place to silence new bugs — every entry needs a "why" comment.
+# If you add a route here, also list it in the RC report's "未做（明确边界）"
+# section. Prune entries as soon as the route ships.
+#
+# Format: one route per line (must start with `/`). Lines starting with `#`
+# and blank lines are ignored.
+
+# /me — directory exists locally as a parent for /me/matters and
+# /me/consultations but has no page.tsx of its own, so production 404s
+# the bare `/me`. Pending product decision on whether `/me` should redirect
+# to `/me/matters` or render a hub page. Tracked in
+# docs/ops/TEBIQ_1_0_RC_SPRINT_REPORT_2026-05-17.md §3.
+/me
+
+# /sample-package — page.tsx exists locally on rc-polish/q1-q5 but has not
+# yet been deployed to production. Remove this entry after first production
+# deploy that includes app/sample-package/page.tsx.
+/sample-package
