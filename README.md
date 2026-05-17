@@ -3,6 +3,15 @@
 > Residence-risk consultation system for foreigners in Japan.
 > Next.js 14 + Drizzle + Postgres + Stripe + AI provider integrations.
 
+## AI agent first read
+
+If you are an AI agent (Claude Code / Codex / other) picking up work here,
+read these three before touching any code:
+
+1. [`docs/ops/TEBIQ_AI_AGENT_WORK_MODE.md`](./docs/ops/TEBIQ_AI_AGENT_WORK_MODE.md) — work block model, agent autonomy, batch sizes
+2. [`docs/ops/TEBIQ_AI_AGENT_WORK_MODE.md#53-pre-report-self-audit-强制`](./docs/ops/TEBIQ_AI_AGENT_WORK_MODE.md#53-pre-report-self-audit-强制) — the 5 mandatory checks before any "shipped" report (runnable via `npm run qa:pre-report-audit`)
+3. [`docs/ops/TEBIQ_RC_REPORT_TEMPLATE.md`](./docs/ops/TEBIQ_RC_REPORT_TEMPLATE.md) — exact shape of the report you owe at the end of a work block
+
 Before working in this repo, read:
 
 1. [`CLAUDE.md`](./CLAUDE.md)

@@ -1,6 +1,6 @@
 import { cookies } from 'next/headers'
 import Link from 'next/link'
-import { ArrowRight, BookOpen, Camera, MessageSquarePlus } from 'lucide-react'
+import { ArrowRight, BookOpen, Camera, MessageSquarePlus, Pin } from 'lucide-react'
 import TabBar from '@/app/_components/v5/TabBar'
 import ConsultationDeleteButton from './ConsultationDeleteButton'
 import {
@@ -66,6 +66,23 @@ export default async function MyConsultationsPage() {
             </p>
           </Surface>
         )}
+
+        <Surface className="flex items-center justify-between gap-3">
+          <div className="min-w-0">
+            <SectionLabel>把这件事继续下去</SectionLabel>
+            <p className="mt-1 text-[13.5px] leading-relaxed text-[var(--tebiq-deep-slate)]">
+              想把某次咨询保存起来，补充背景、关联材料、找书士？放到「我的事项」里继续处理。
+            </p>
+          </div>
+          <Link
+            href="/me/matters"
+            className="inline-flex h-10 flex-shrink-0 items-center gap-1.5 whitespace-nowrap rounded-btn border border-[var(--tebiq-soft-gray)] bg-white px-3 text-[13px] font-medium text-[var(--tebiq-ink-blue)]"
+          >
+            <Pin className="h-3.5 w-3.5" strokeWidth={1.6} />
+            想把这件事变成事项
+            <ArrowRight className="h-3.5 w-3.5" strokeWidth={1.6} />
+          </Link>
+        </Surface>
 
         {recordsUnavailable && (
           <EmptyRecordState
