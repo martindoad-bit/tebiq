@@ -1,7 +1,7 @@
 ---
 fact_id: eijuu-guideline-10years
 title: 永住ガイドライン — 原則10年継続在留（うち就労5年以上）
-state: ai_extracted
+state: ai_verified   # Knowledge Runtime Loop 1 promote: DOMAIN can_promote_now + FACT source verified/fixed.
 risk_level: high
 confidence: high
 source_quality: official
@@ -65,8 +65,23 @@ evidence_points:
 - 各種短縮特例あり
 - 納税・年金適正必須
 
+## injection_format
+
+### injection_certain_block
+
+```text
+永住許可の基本ガイドラインでは、原則として引き続き10年以上日本に在留し、そのうち就労資格または居住資格で5年以上在留していることが基準になります。日本人配偶者等、高度専門職などには短縮ルートがあります。年数を満たすだけで許可が保証されるわけではなく、納税・年金・健康保険など公的義務や素行、生活基盤も確認されます。
+```
+
+### injection_needs_review_addendum
+
+```text
+このカードは一般的な公式事実のみを注入します。個別の許可可否、例外、期限超過、違反後対応は断定せず、入管・行政書士等への確認に回してください。
+```
+
 ## changelog
 
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
 |------|------|----------|--------------|-------------|------|
 | 2026-05-17 | FACT-OPS bulk-1 | 新規作成。 | — | ai_extracted | new |
+| 2026-05-17 | Codex Knowledge Runtime Loop 1 | DOMAIN/FACT確認済み範囲で runtime 注入可能化。 | ai_extracted | ai_verified | promote |

@@ -1,7 +1,7 @@
 ---
 fact_id: visa-menjo-69-country
 title: 短期滞在 — ビザ免除国69カ国（韓国/台湾/香港等）
-state: ai_extracted
+state: disabled   # Knowledge Runtime Loop 1 REJECT: stale country count / current MOFA page uses a different total; must be re-fetched before use.
 risk_level: low
 confidence: high
 source_quality: official
@@ -69,3 +69,4 @@ evidence_points:
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
 |------|------|----------|--------------|-------------|------|
 | 2026-05-17 | FACT-OPS bulk-1 | 新規作成。 | — | ai_extracted | new |
+| 2026-05-17 | Codex Knowledge Runtime Loop 1 | FACT確認で国・地域数が現行ページと不一致。短期滞在カードとして再取材するまで disabled。 | ai_extracted | disabled | reject |

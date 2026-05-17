@@ -1,7 +1,7 @@
 ---
 fact_id: kazoku-taizai-target-status
 title: 家族滞在 — 対象となる主签证人の在留資格範囲
-state: ai_extracted
+state: ai_verified   # Knowledge Runtime Loop 1 promote: DOMAIN can_promote_now + FACT source verified/fixed.
 risk_level: medium
 confidence: high
 source_quality: official
@@ -70,8 +70,23 @@ evidence_points:
 - 親は対象外
 - 特定技能1号も対象外
 
+## injection_format
+
+### injection_certain_block
+
+```text
+家族滞在の対象は、一定の在留資格で在留する扶養者の配偶者または子です。親、内縁関係、成人した子、特定技能1号の家族などは一般的な家族滞在の対象外または個別確認が必要です。扶養能力や実際の家族関係は別途審査されます。
+```
+
+### injection_needs_review_addendum
+
+```text
+このカードは一般的な公式事実のみを注入します。個別の許可可否、例外、期限超過、違反後対応は断定せず、入管・行政書士等への確認に回してください。
+```
+
 ## changelog
 
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
 |------|------|----------|--------------|-------------|------|
 | 2026-05-17 | FACT-OPS bulk-1 | 新規作成。 | — | ai_extracted | new |
+| 2026-05-17 | Codex Knowledge Runtime Loop 1 | DOMAIN/FACT確認済み範囲で runtime 注入可能化。 | ai_extracted | ai_verified | promote |

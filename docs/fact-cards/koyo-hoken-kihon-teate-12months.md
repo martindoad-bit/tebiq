@@ -1,7 +1,7 @@
 ---
 fact_id: koyo-hoken-kihon-teate-12months
 title: 雇用保険基本手当 — 離職前2年に被保険者12か月で受給資格
-state: ai_extracted
+state: ai_verified   # Knowledge Runtime Loop 1 promote: DOMAIN can_promote_now + FACT source verified/fixed.
 risk_level: medium
 confidence: high
 source_quality: official
@@ -64,8 +64,23 @@ evidence_points:
 - 1年以内に申請
 - 90〜360日給付
 
+## injection_format
+
+### injection_certain_block
+
+```text
+雇用保険の基本手当は、原則として離職日前2年間に被保険者期間が12か月以上あることが受給資格の基準になります。受給期間や給付日数は離職理由、年齢、被保険者期間などで変わります。具体的な受給可否や金額はハローワークで確認します。
+```
+
+### injection_needs_review_addendum
+
+```text
+このカードは一般的な公式事実のみを注入します。個別の許可可否、例外、期限超過、違反後対応は断定せず、入管・行政書士等への確認に回してください。
+```
+
 ## changelog
 
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
 |------|------|----------|--------------|-------------|------|
 | 2026-05-17 | FACT-OPS bulk-1 | 新規作成。 | — | ai_extracted | new |
+| 2026-05-17 | Codex Knowledge Runtime Loop 1 | DOMAIN/FACT確認済み範囲で runtime 注入可能化。 | ai_extracted | ai_verified | promote |

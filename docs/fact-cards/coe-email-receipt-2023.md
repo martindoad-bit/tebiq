@@ -1,7 +1,7 @@
 ---
 fact_id: coe-email-receipt-2023
 title: COE電子メール受領（2023年3月17日〜）— スマホ提示で査証申請可
-state: ai_extracted
+state: ai_verified   # Knowledge Runtime Loop 1 promote: DOMAIN can_promote_now + FACT source verified/fixed.
 risk_level: low
 confidence: high
 source_quality: official
@@ -67,8 +67,23 @@ evidence_points:
 - 2023-03-17開始
 - オンライン or 窓口事前登録が対象
 
+## injection_format
+
+### injection_certain_block
+
+```text
+2023年3月17日以降、対象となるCOE手続では、電子メールで受領したCOEをスマートフォン等で提示して査証申請に使える場合があります。電子メール受領は手続上の受領方法であり、それ自体が在留許可や上陸許可を意味するものではありません。対象手続・提示方法は公式案内で確認します。
+```
+
+### injection_needs_review_addendum
+
+```text
+このカードは一般的な公式事実のみを注入します。個別の許可可否、例外、期限超過、違反後対応は断定せず、入管・行政書士等への確認に回してください。
+```
+
 ## changelog
 
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
 |------|------|----------|--------------|-------------|------|
 | 2026-05-17 | FACT-OPS bulk-1 | 新規作成。 | — | ai_extracted | new |
+| 2026-05-17 | Codex Knowledge Runtime Loop 1 | DOMAIN/FACT確認済み範囲で runtime 注入可能化。 | ai_extracted | ai_verified | promote |

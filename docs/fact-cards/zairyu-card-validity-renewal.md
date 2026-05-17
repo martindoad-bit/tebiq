@@ -1,7 +1,7 @@
 ---
 fact_id: zairyu-card-validity-renewal
 title: 在留カード有効期間更新申請 — 永住者/高度2号は満了2か月前から
-state: ai_extracted
+state: ai_verified   # Knowledge Runtime Loop 1 promote: DOMAIN can_promote_now + FACT source verified/fixed.
 risk_level: high
 confidence: high
 source_quality: official
@@ -73,8 +73,23 @@ evidence_points:
 - 16歳満了は6か月前から
 - 無料・即日
 
+## injection_format
+
+### injection_certain_block
+
+```text
+永住者や高度専門職2号など、在留カード自体に有効期間がある人は、カード有効期間の更新申請が必要です。通常は有効期間満了日の2か月前から申請できます。これは在留カードの有効期間更新であり、在留資格そのものの更新とは別です。
+```
+
+### injection_needs_review_addendum
+
+```text
+このカードは一般的な公式事実のみを注入します。個別の許可可否、例外、期限超過、違反後対応は断定せず、入管・行政書士等への確認に回してください。
+```
+
 ## changelog
 
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
 |------|------|----------|--------------|-------------|------|
 | 2026-05-17 | FACT-OPS bulk-1 | 新規作成。 | — | ai_extracted | new |
+| 2026-05-17 | Codex Knowledge Runtime Loop 1 | DOMAIN/FACT確認済み範囲で runtime 注入可能化。 | ai_extracted | ai_verified | promote |

@@ -1,7 +1,7 @@
 ---
 fact_id: houjin-touki-overview
 title: 法人登記 — 株式会社/合同会社/合資会社の選択
-state: ai_extracted
+state: disabled   # Knowledge Runtime Loop 1 REJECT: source/claim mismatch; company-form guidance blends incorporation facts with visa strategy and must be rewritten before use.
 risk_level: medium
 confidence: medium
 source_quality: official
@@ -69,3 +69,4 @@ evidence_points:
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
 |------|------|----------|--------------|-------------|------|
 | 2026-05-17 | FACT-OPS bulk-1 | 新規作成。 | — | ai_extracted | new |
+| 2026-05-17 | Codex Knowledge Runtime Loop 1 | DOMAIN/FACT抽样で source/claim mismatch と実務戦略混在を確認。runtime/material binding から外し、再取材まで disabled。 | ai_extracted | disabled | reject |
