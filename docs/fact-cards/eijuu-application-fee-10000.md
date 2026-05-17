@@ -1,7 +1,7 @@
 ---
 fact_id: eijuu-application-fee-10000
 title: 永住許可申請 — 手数料10000円（許可時支払）・処理4〜6か月
-state: ai_extracted
+state: ai_verified   # Knowledge Runtime Loop 1 promote: DOMAIN can_promote_now + FACT source verified/fixed.
 risk_level: medium
 confidence: high
 source_quality: official
@@ -68,8 +68,23 @@ evidence_points:
 - 4〜6か月
 - 不許可なら支払不要
 
+## injection_format
+
+### injection_certain_block
+
+```text
+永住許可申請の手数料は、許可時に10,000円です。標準処理期間はおおむね4〜6か月とされています。手数料や書類を準備できることは永住許可を保証するものではなく、在留歴、公的義務、生活基盤などの審査は別に行われます。
+```
+
+### injection_needs_review_addendum
+
+```text
+このカードは一般的な公式事実のみを注入します。個別の許可可否、例外、期限超過、違反後対応は断定せず、入管・行政書士等への確認に回してください。
+```
+
 ## changelog
 
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
 |------|------|----------|--------------|-------------|------|
 | 2026-05-17 | FACT-OPS bulk-1 | 新規作成。 | — | ai_extracted | new |
+| 2026-05-17 | Codex Knowledge Runtime Loop 1 | DOMAIN/FACT確認済み範囲で runtime 注入可能化。 | ai_extracted | ai_verified | promote |

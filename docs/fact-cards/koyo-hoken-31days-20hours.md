@@ -1,7 +1,7 @@
 ---
 fact_id: koyo-hoken-31days-20hours
 title: 雇用保険被保険者資格 — 31日以上雇用見込＋週20時間以上
-state: ai_extracted
+state: ai_verified   # Knowledge Runtime Loop 1 promote: DOMAIN can_promote_now + FACT source verified/fixed.
 risk_level: medium
 confidence: high
 source_quality: official
@@ -61,8 +61,23 @@ evidence_points:
 - 31日連続+週20時間
 - 事業主は翌月10日まで届出
 
+## injection_format
+
+### injection_certain_block
+
+```text
+雇用保険の被保険者となる基本条件は、31日以上の雇用見込みがあり、1週間の所定労働時間が20時間以上であることです。事業主側には雇用保険の届出義務があります。ただし、雇用保険の加入可否と、在留資格上その仕事ができるかどうかは別問題です。
+```
+
+### injection_needs_review_addendum
+
+```text
+このカードは一般的な公式事実のみを注入します。個別の許可可否、例外、期限超過、違反後対応は断定せず、入管・行政書士等への確認に回してください。
+```
+
 ## changelog
 
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
 |------|------|----------|--------------|-------------|------|
 | 2026-05-17 | FACT-OPS bulk-1 | 新規作成。 | — | ai_extracted | new |
+| 2026-05-17 | Codex Knowledge Runtime Loop 1 | DOMAIN/FACT確認済み範囲で runtime 注入可能化。 | ai_extracted | ai_verified | promote |

@@ -1,7 +1,7 @@
 ---
 fact_id: shozoku-online-system-todokede
 title: 所属機関等届出 — 電子届出システム（24/365利用可）
-state: ai_extracted
+state: ai_verified   # Knowledge Runtime Loop 1 promote: DOMAIN can_promote_now + FACT source verified/fixed.
 risk_level: low
 confidence: high
 source_quality: official
@@ -65,8 +65,23 @@ evidence_points:
 - 証明書類不要
 - 事前アカウント要
 
+## injection_format
+
+### injection_certain_block
+
+```text
+所属機関等に関する届出は、対象者が電子届出システムで24時間365日提出できる場合があります。届出は無料で、原則として証明書類の添付は不要です。ただし、所属機関届出は通知義務であり、在留資格変更許可や新しい仕事を始める許可の代わりにはなりません。
+```
+
+### injection_needs_review_addendum
+
+```text
+このカードは一般的な公式事実のみを注入します。個別の許可可否、例外、期限超過、違反後対応は断定せず、入管・行政書士等への確認に回してください。
+```
+
 ## changelog
 
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
 |------|------|----------|--------------|-------------|------|
 | 2026-05-17 | FACT-OPS bulk-1 | 新規作成。 | — | ai_extracted | new |
+| 2026-05-17 | Codex Knowledge Runtime Loop 1 | DOMAIN/FACT確認済み範囲で runtime 注入可能化。 | ai_extracted | ai_verified | promote |

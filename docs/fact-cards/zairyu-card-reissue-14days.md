@@ -1,7 +1,7 @@
 ---
 fact_id: zairyu-card-reissue-14days
 title: 在留カード再交付申請 — 紛失/盗難から14日以内・無料・即日交付
-state: ai_extracted
+state: ai_verified   # Knowledge Runtime Loop 1 promote: DOMAIN can_promote_now + FACT source verified/fixed.
 risk_level: high
 confidence: high
 source_quality: official
@@ -74,8 +74,23 @@ evidence_points:
 - 無料
 - 警察届出（盗難時）
 
+## injection_format
+
+### injection_certain_block
+
+```text
+在留カードを紛失・盗難・滅失した場合、その事実を知った日から14日以内に再交付申請を行う必要があります。紛失や盗難では、警察への届出や受理番号など、事情を示す資料が必要になることがあります。海外で紛失した場合や期限を過ぎた場合は、入管に確認します。
+```
+
+### injection_needs_review_addendum
+
+```text
+このカードは一般的な公式事実のみを注入します。個別の許可可否、例外、期限超過、違反後対応は断定せず、入管・行政書士等への確認に回してください。
+```
+
 ## changelog
 
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
 |------|------|----------|--------------|-------------|------|
 | 2026-05-17 | FACT-OPS bulk-1 | 新規作成。 | — | ai_extracted | new |
+| 2026-05-17 | Codex Knowledge Runtime Loop 1 | DOMAIN/FACT確認済み範囲で runtime 注入可能化。 | ai_extracted | ai_verified | promote |

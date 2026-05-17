@@ -1,7 +1,7 @@
 ---
 fact_id: henkou-shinsei-fee-6000
 title: 在留資格変更許可申請 — 手数料6000円（オンライン5500円）
-state: ai_extracted
+state: ai_verified   # Knowledge Runtime Loop 1 promote: DOMAIN can_promote_now + FACT source verified/fixed.
 risk_level: low
 confidence: high
 source_quality: official
@@ -18,7 +18,7 @@ does_not_cover:
   - "永住への変更（手数料1万円・別カード）"
 ai_pipeline: WebFetch → FACT-OPS extract
 official_sources:
-  - url: https://www.moj.go.jp/isa/applications/procedures/16-1.html
+  - url: https://www.moj.go.jp/isa/applications/procedures/16-2.html
     label: ISA — 在留資格変更
     accessed: "2026-05-17"
 applies_to:
@@ -38,7 +38,7 @@ needs_review_flags:
   - online_payment_method
 related_links:
   - title: "ISA — 在留資格変更"
-    url: "https://www.moj.go.jp/isa/applications/procedures/16-1.html"
+    url: "https://www.moj.go.jp/isa/applications/procedures/16-2.html"
     organization: "出入国在留管理庁"
     display_label: "在留資格変更"
     locator: "6000円"
@@ -46,7 +46,7 @@ related_links:
 evidence_points:
   - claim: "在留資格変更許可申請の手数料は2025年4月以降6000円（オンライン5500円）、旧手数料は4000円。処理1〜2か月。"
     source_title: "ISA — 在留資格変更"
-    source_url: "https://www.moj.go.jp/isa/applications/procedures/16-1.html"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/16-2.html"
     source_organization: "出入国在留管理庁"
     source_locator: "6000円・5500円・4000円"
     display_label: "変更手数料6000円"
@@ -70,8 +70,23 @@ evidence_points:
 - 6000円（オンライン5500円）
 - 1〜2か月処理
 
+## injection_format
+
+### injection_certain_block
+
+```text
+在留資格変更許可申請の手数料は、2025年4月以降、通常6,000円（オンライン申請は5,500円）です。標準処理期間はおおむね1〜2か月とされています。変更申請を出しただけでは新しい在留資格の活動は開始できず、許可を受ける前に新しい仕事や活動を始めないよう注意します。
+```
+
+### injection_needs_review_addendum
+
+```text
+このカードは一般的な公式事実のみを注入します。個別の許可可否、例外、期限超過、違反後対応は断定せず、入管・行政書士等への確認に回してください。
+```
+
 ## changelog
 
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
 |------|------|----------|--------------|-------------|------|
 | 2026-05-17 | FACT-OPS bulk-1 | 新規作成。 | — | ai_extracted | new |
+| 2026-05-17 | Codex Knowledge Runtime Loop 1 | DOMAIN/FACT確認済み範囲で runtime 注入可能化。 | ai_extracted | ai_verified | promote |

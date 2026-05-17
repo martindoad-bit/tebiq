@@ -346,6 +346,7 @@ export const MATERIAL_ENTITIES: MaterialEntity[] = [
       'maina-hoken-2024-12',
       'mainaroka-kenkou-hoken',
       'kokumin-kenko-hoken-14days',
+      'kokuho-shutoku-shoumei-2years',
       'rishoku-kenko-hoken',
       'shakai-hoken-kanyu',
     ],
@@ -687,7 +688,7 @@ export const MATERIAL_ENTITIES: MaterialEntity[] = [
     whereToObtain:
       '在留カード：新规・再交付・更新时由地方出入国管理局交付（部分手续支持オンライン受取）。パスポート：本国公民按本国规定办理 / 更新。',
     fee:
-      '在留カード再交付一般 1,600 円左右（具体看种类・原因）；パスポート按本国规定。',
+      '在留カードの手数料は手続種類で不同。紛失等の再交付や永住者カード有効期間更新は無料と案内されるものがあり、個別ページで確認する。',
     validity:
       '在留カード：到「在留期限」当日。パスポート：到「有効期限」当日；申请时通常要求残存期间 ≥ 6 か月。',
     reusedIn: [
@@ -720,6 +721,7 @@ export const MATERIAL_ENTITIES: MaterialEntity[] = [
     factCardIds: [
       'zairyu-card-keitai-gimu',
       'zairyu-card-carry-obligation',
+      'zairyu-card-reissue-14days',
       'zairyu-card-validity-renewal',
       'zairyu-card-loss-reissue',
       'zairyu-card-loss-overseas',
