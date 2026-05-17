@@ -18,7 +18,7 @@ does_not_cover:
   - "同一在留資格内の転職（届出のみ）"
 ai_pipeline: WebFetch → FACT-OPS extract
 official_sources:
-  - url: https://www.moj.go.jp/isa/applications/procedures/16-1.html
+  - url: https://www.moj.go.jp/isa/applications/procedures/henkou_00001.html
     label: ISA — 在留資格変更
     accessed: "2026-05-17"
 applies_to:
@@ -35,7 +35,7 @@ needs_review_flags:
   - reverse_changes_practice
 related_links:
   - title: "ISA — 在留資格変更"
-    url: "https://www.moj.go.jp/isa/applications/procedures/16-1.html"
+    url: "https://www.moj.go.jp/isa/applications/procedures/henkou_00001.html"
     organization: "出入国在留管理庁"
     display_label: "在留資格変更"
     locator: "業務範囲"
@@ -43,7 +43,7 @@ related_links:
 evidence_points:
   - claim: "現在の在留資格の活動範囲を超える活動を行う場合は、在留資格変更許可申請が必要。許可前に範囲外活動を始めてよいとは扱わない。"
     source_title: "ISA — 在留資格変更"
-    source_url: "https://www.moj.go.jp/isa/applications/procedures/16-1.html"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/henkou_00001.html"
     source_organization: "出入国在留管理庁"
     source_locator: "業務範囲"
     display_label: "業務範囲外変更"

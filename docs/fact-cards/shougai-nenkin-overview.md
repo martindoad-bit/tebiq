@@ -1,7 +1,7 @@
 ---
 fact_id: shougai-nenkin-overview
 title: 障害年金 — 国民年金障害基礎・厚生年金障害厚生
-state: ai_extracted
+state: ai_verified
 risk_level: medium
 confidence: medium
 source_quality: official
@@ -19,7 +19,7 @@ does_not_cover:
 ai_pipeline: WebFetch → FACT-OPS extract
 official_sources:
   - url: https://www.nenkin.go.jp/service/jukyu/seido/shougainenkin/jukyu-yoken/20150401-02.html
-    label: ISA — 永住（年金関連）
+    label: 日本年金機構 — 障害年金
     accessed: "2026-05-17"
 applies_to:
   - 公的年金加入の外国人
@@ -52,7 +52,7 @@ evidence_points:
     display_label: "障害年金"
     support_level: "direct"
     user_visible: true
-    needs_domain_review: true
+    needs_domain_review: false
 ---
 
 ## current_effective_fact
@@ -64,6 +64,23 @@ evidence_points:
 - 国民/厚生年金2本立て
 - 納付要件
 - 外国人も対象
+
+## injection_format
+
+### injection_certain_block
+
+```text
+【障害年金／{{TODAY_ISO}} 公式】
+病気やけがで一定の障害状態になった場合、公的年金の納付要件などを満たすと、障害基礎年金または障害厚生年金の対象になり得る。
+障害基礎年金は主に1級・2級、障害厚生年金は1級・2級・3級の区分がある。
+実際に対象になるかは、初診日、加入していた年金制度、保険料納付状況、障害認定の内容で確認する。
+```
+
+### injection_needs_review_addendum
+
+```text
+※ 労災、帰国後の受給、具体的な等級・金額は年金事務所や専門家に確認。
+```
 
 ## changelog
 

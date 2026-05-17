@@ -18,7 +18,7 @@ does_not_cover:
   - "在留特別許可申請（別カード）"
 ai_pipeline: WebFetch → FACT-OPS extract
 official_sources:
-  - url: https://www.moj.go.jp/isa/applications/procedures/16-9.html
+  - url: https://www.moj.go.jp/isa/deportation/procedures/tetuduki_taikyo_syutukoku_00001.html
     label: ISA — 退去強制
     accessed: "2026-05-17"
 applies_to:
@@ -36,7 +36,7 @@ needs_review_flags:
   - taikyoukyousei_history_specific
 related_links:
   - title: "ISA — 退去強制"
-    url: "https://www.moj.go.jp/isa/applications/procedures/16-9.html"
+    url: "https://www.moj.go.jp/isa/deportation/procedures/tetuduki_taikyo_syutukoku_00001.html"
     organization: "出入国在留管理庁"
     display_label: "退去強制"
     locator: "出国命令"
@@ -44,7 +44,7 @@ related_links:
 evidence_points:
   - claim: "オーバーステイ等の自首者は出国命令制度（最長15日内出国・1年再上陸制限）の対象となり得る。退去強制（5/10年制限）より軽い扱い。"
     source_title: "ISA — 退去強制"
-    source_url: "https://www.moj.go.jp/isa/applications/procedures/16-9.html"
+    source_url: "https://www.moj.go.jp/isa/deportation/procedures/tetuduki_taikyo_syutukoku_00001.html"
     source_organization: "出入国在留管理庁"
     source_locator: "出国命令"
     display_label: "不法残留自首"

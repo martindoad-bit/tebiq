@@ -149,7 +149,7 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
       'tokutei-katsudou-46-target',
       'tokutei-ginou-tenshoku',
       'jfind-tokutei-katsudou',
-    
+
       'gijinkoku-shihon-jugyou-strict',
       'fuhou-shurou-employer',
       'zairyu-irrelevent-jutsu',

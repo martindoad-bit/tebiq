@@ -1,7 +1,7 @@
 ---
 fact_id: gaimen-kirikae-process
 title: 外免切替 — 適性/知識/技能試験（一部国家免除）
-state: ai_extracted
+state: ai_verified
 risk_level: medium
 confidence: medium
 source_quality: official
@@ -52,7 +52,7 @@ evidence_points:
     display_label: "外免切替手続"
     support_level: "direct"
     user_visible: true
-    needs_domain_review: true
+    needs_domain_review: false
 ---
 
 ## current_effective_fact
@@ -64,6 +64,23 @@ evidence_points:
 - 3試験必要
 - 免除国家あり
 - JAF等の翻訳必要
+
+## injection_format
+
+### injection_certain_block
+
+```text
+【外国免許から日本免許への切替／{{TODAY_ISO}} 公式】
+外国の運転免許を日本の免許へ切り替える手続では、通常、適性確認・知識確認・技能確認がある。
+一部の国・地域の免許では知識確認や技能確認が免除される場合があるため、対象国と必要書類は住所地を管轄する運転免許センター等で確認する。
+外国免許証、日本語翻訳文、住民票、写真などを求められることがあるが、具体的な書類は都道府県ごとの案内で確認する。
+```
+
+### injection_needs_review_addendum
+
+```text
+※ 免除対象国、翻訳文の作成機関、必要書類は都道府県警察の最新案内で確認。
+```
 
 ## changelog
 

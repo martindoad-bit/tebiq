@@ -18,7 +18,7 @@ does_not_cover:
   - "離婚後の取扱（別カード）"
 ai_pipeline: WebFetch → FACT-OPS extract
 official_sources:
-  - url: https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00020.html
+  - url: https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00016.html
     label: ISA — 配偶者届出
     accessed: "2026-05-17"
 applies_to:
@@ -38,7 +38,7 @@ needs_review_flags:
   - jouin_jukyu_status_potential_change
 related_links:
   - title: "ISA — 配偶者届出"
-    url: "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00020.html"
+    url: "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00016.html"
     organization: "出入国在留管理庁"
     display_label: "配偶者届出"
     locator: "死別"
@@ -46,7 +46,7 @@ related_links:
 evidence_points:
   - claim: "日本人/永住者と死別した配偶者は14日以内届出義務。在留継続には定住者（告示外）への変更検討、子養育中等は認容されやすい。"
     source_title: "ISA — 配偶者届出"
-    source_url: "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00020.html"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00016.html"
     source_organization: "出入国在留管理庁"
     source_locator: "死別"
     display_label: "死別後配偶者ビザ"

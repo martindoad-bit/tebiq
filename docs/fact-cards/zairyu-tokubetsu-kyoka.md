@@ -18,7 +18,7 @@ does_not_cover:
   - "退去強制手続自体（別カード）"
 ai_pipeline: WebFetch → FACT-OPS extract
 official_sources:
-  - url: https://www.moj.go.jp/isa/applications/procedures/16-9.html
+  - url: https://www.moj.go.jp/isa/deportation/procedures/08_00044.html
     label: ISA — 退去強制
     accessed: "2026-05-17"
 applies_to:
@@ -36,7 +36,7 @@ needs_review_flags:
   - failure_consequences
 related_links:
   - title: "ISA — 退去強制"
-    url: "https://www.moj.go.jp/isa/applications/procedures/16-9.html"
+    url: "https://www.moj.go.jp/isa/deportation/procedures/08_00044.html"
     organization: "出入国在留管理庁"
     display_label: "退去強制"
     locator: "在留特別許可"
@@ -44,7 +44,7 @@ related_links:
 evidence_points:
   - claim: "在留特別許可は退去強制対象者でも法務大臣の裁量で出される場合があり、2023年改正で「申請」が明文化。日本人配偶者・実子養育等が考慮要素。"
     source_title: "ISA — 退去強制"
-    source_url: "https://www.moj.go.jp/isa/applications/procedures/16-9.html"
+    source_url: "https://www.moj.go.jp/isa/deportation/procedures/08_00044.html"
     source_organization: "出入国在留管理庁"
     source_locator: "在留特別許可"
     display_label: "在留特別許可"

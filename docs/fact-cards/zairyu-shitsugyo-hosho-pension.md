@@ -18,8 +18,8 @@ does_not_cover:
   - "厚生年金加入中の取扱"
 ai_pipeline: WebFetch → FACT-OPS extract
 official_sources:
-  - url: https://www.moj.go.jp/isa/applications/procedures/zairyu_eijyu03.html
-    label: ISA — 永住（年金関連）
+  - url: https://www.nenkin.go.jp/service/kokunen/menjo/20150428.html
+    label: 日本年金機構 — 国民年金保険料の免除制度・納付猶予制度
     accessed: "2026-05-17"
 applies_to:
   - 失業中の国民年金被保険者
@@ -30,22 +30,22 @@ direct_fact_fields:
   - 受給時の影響：免除分は1/2（国庫負担分）老齢年金反映
   - 追納：10年内可
 ai_inferred_fields:
-  - 永住申請の2年分要件には免除も「納付実績」として扱われる
+  - 永住申請で免除・猶予がどう評価されるかは別途確認が必要
 needs_review_flags:
   - eijuu_kanen_menjyo_treatment
   - 50for1_kokuyo_negotiation_official
   - shitsugyo_tokurei_specific_paper
 related_links:
-  - title: "年金機構"
-    url: "https://www.moj.go.jp/isa/applications/procedures/zairyu_eijyu03.html"
+  - title: "日本年金機構 — 国民年金保険料の免除制度・納付猶予制度"
+    url: "https://www.nenkin.go.jp/service/kokunen/menjo/20150428.html"
     organization: "日本年金機構"
     display_label: "年金免除"
     locator: "失業特例"
     relation: "official_reference"
 evidence_points:
   - claim: "失業等の経済理由で国民年金保険料免除/猶予申請可。失業特例制度で離職票添付により所得に算入せず判定。"
-    source_title: "年金機構"
-    source_url: "https://www.moj.go.jp/isa/applications/procedures/zairyu_eijyu03.html"
+    source_title: "日本年金機構 — 国民年金保険料の免除制度・納付猶予制度"
+    source_url: "https://www.nenkin.go.jp/service/kokunen/menjo/20150428.html"
     source_organization: "日本年金機構"
     source_locator: "失業特例"
     display_label: "失業年金免除"
@@ -62,7 +62,7 @@ evidence_points:
 
 - 4段階免除
 - 失業特例あり
-- 追納10年可
+- 永住評価は別確認
 
 ## changelog
 

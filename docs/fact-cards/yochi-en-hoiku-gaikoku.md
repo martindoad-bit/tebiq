@@ -1,7 +1,7 @@
 ---
 fact_id: yochi-en-hoiku-gaikoku
 title: 幼児教育・保育の無償化 — 3-5歳児・住民登録あれば対象
-state: ai_extracted
+state: ai_verified
 risk_level: low
 confidence: medium
 source_quality: official
@@ -51,7 +51,7 @@ evidence_points:
     display_label: "幼保無償化"
     support_level: "direct"
     user_visible: true
-    needs_domain_review: true
+    needs_domain_review: false
 ---
 
 ## current_effective_fact
@@ -63,6 +63,23 @@ evidence_points:
 - 3-5歳無償
 - 外国人世帯も対象
 - 給食費等は別途
+
+## injection_format
+
+### injection_certain_block
+
+```text
+【幼児教育・保育の無償化／{{TODAY_ISO}} 公式】
+幼児教育・保育の無償化では、3歳から5歳までの幼稚園・保育所・認定こども園等の利用料が無償化の対象になる。
+0歳から2歳までは、住民税非課税世帯など一定の条件に該当する場合に対象になる。
+給食費、行事費、通園費などは無償化の対象外になることがあるため、市区町村や園の案内で確認する。
+```
+
+### injection_needs_review_addendum
+
+```text
+※ 認可外保育施設、上限額、申請方法、外国人世帯の住民登録確認は市区町村で確認。
+```
 
 ## changelog
 
