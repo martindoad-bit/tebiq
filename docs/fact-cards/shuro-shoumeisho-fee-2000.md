@@ -1,7 +1,7 @@
 ---
 fact_id: shuro-shoumeisho-fee-2000
 title: 就労資格証明書 — 手数料2000円（オンライン1600円）・転職時に推奨
-state: ai_extracted
+state: ai_verified
 risk_level: medium
 confidence: high
 source_quality: official
@@ -70,8 +70,20 @@ evidence_points:
 - 雇用変更時は1〜3か月
 - 転職時取得推奨
 
+## injection_format
+
+### injection_certain_block
+
+```text
+- 就労資格証明書 2000円（オンライン1600円）、即日（雇用変更時は1-3か月）。
+- 2000円（オンライン1600円）
+- 雇用変更時は1〜3か月
+- 転職時取得推奨
+- 出典: ISA — 就労資格証明書 https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri07_00045.html
+```
 ## changelog
 
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
 |------|------|----------|--------------|-------------|------|
 | 2026-05-17 | FACT-OPS bulk-1 | 新規作成。 | — | ai_extracted | new |
+| 2026-05-17 | Codex Loop5 | 公式source再確認後、低/中リスクの確定事実としてruntime昇格。 | ai_extracted | ai_verified | promote |

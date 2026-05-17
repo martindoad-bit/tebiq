@@ -1,7 +1,7 @@
 ---
 fact_id: gaikokujin-soudan-center
 title: 外国人在留総合インフォメーションセンター — 0570-013904
-state: ai_extracted
+state: ai_verified
 risk_level: low
 confidence: high
 source_quality: official
@@ -64,8 +64,20 @@ evidence_points:
 - 平日8:30-17:15
 - 多言語対応
 
+## injection_format
+
+### injection_certain_block
+
+```text
+- 入管相談センター：0570-013904・多言語対応。
+- 0570-013904
+- 平日8:30-17:15
+- 多言語対応
+- 出典: ISA — 案内 https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00010.html
+```
 ## changelog
 
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
 |------|------|----------|--------------|-------------|------|
 | 2026-05-17 | FACT-OPS bulk-1 | 新規作成。 | — | ai_extracted | new |
+| 2026-05-17 | Codex Loop5 | 公式source再確認後、低/中リスクの確定事実としてruntime昇格。 | ai_extracted | ai_verified | promote |

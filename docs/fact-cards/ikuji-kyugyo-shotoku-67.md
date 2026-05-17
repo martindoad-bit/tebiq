@@ -1,7 +1,7 @@
 ---
 fact_id: ikuji-kyugyo-shotoku-67
 title: 育児休業給付 — 6か月までは67%・以降50%
-state: ai_extracted
+state: ai_verified
 risk_level: low
 confidence: high
 source_quality: official
@@ -64,8 +64,20 @@ evidence_points:
 - 子1歳（最長2歳）
 - 外国人も対象
 
+## injection_format
+
+### injection_certain_block
+
+```text
+- 育休給付：180日まで67%・以降50%・子1歳（最長2歳）。
+- 180日まで67%
+- 子1歳（最長2歳）
+- 外国人も対象
+- 出典: 厚労省 — 育児休業 https://www.mhlw.go.jp/seisakunitsuite/bunya/koyou_roudou/koyoukintou/ryouritsu/ikuji/childcare/
+```
 ## changelog
 
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
 |------|------|----------|--------------|-------------|------|
 | 2026-05-17 | FACT-OPS bulk-1 | 新規作成。 | — | ai_extracted | new |
+| 2026-05-17 | Codex Loop5 | 公式source再確認後、低/中リスクの確定事実としてruntime昇格。 | ai_extracted | ai_verified | promote |

@@ -152,6 +152,7 @@ export const MATERIAL_ENTITIES: MaterialEntity[] = [
       'juminzei-kazei-shomeisho',
       'eijuu-jukyo-check-tax-shomeisho',
       'jumin-zei-jan1-criterion',
+      'jumin-zei-no-shukyou-3types',
     ],
     sourceUrls: [
       {
@@ -203,6 +204,7 @@ export const MATERIAL_ENTITIES: MaterialEntity[] = [
       'juminzei-kazei-shomeisho',
       'eijuu-jukyo-check-tax-shomeisho',
       'jumin-zei-jan1-criterion',
+      'jumin-zei-no-shukyou-3types',
     ],
     sourceUrls: [
       {
@@ -301,6 +303,7 @@ export const MATERIAL_ENTITIES: MaterialEntity[] = [
       'eijuu-nenkin-risk',
       'ryuugaku-nenkin-tokurei',
       'nenkin-dattai-ichijikin',
+      'dattai-ichijikin-2years',
     ],
     sourceUrls: [
       {
@@ -732,6 +735,7 @@ export const MATERIAL_ENTITIES: MaterialEntity[] = [
       'zairyu-card-loss-overseas',
       'zairyu-card-return-gimu',
       'online-zairyu-card-uketori',
+      'zaiyu-card-validity-by-status',
     ],
     sourceUrls: [
       {

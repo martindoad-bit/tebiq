@@ -1,7 +1,7 @@
 ---
 fact_id: zairyu-shinsei-form-paper-online
 title: 在留申請 — 全申請書はA4片面1枚印刷・外国語書類は翻訳必須
-state: ai_extracted
+state: ai_verified
 risk_level: low
 confidence: high
 source_quality: official
@@ -64,8 +64,20 @@ evidence_points:
 - 翻訳必須
 - 証明書3か月有効
 
+## injection_format
+
+### injection_certain_block
+
+```text
+- 申請書：A4片面・翻訳必須・3か月有効。
+- A4片面1枚
+- 翻訳必須
+- 証明書3か月有効
+- 出典: ISA — 教育（共通記述） https://www.moj.go.jp/isa/applications/status/instructor.html
+```
 ## changelog
 
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
 |------|------|----------|--------------|-------------|------|
 | 2026-05-17 | FACT-OPS bulk-1 | 新規作成。 | — | ai_extracted | new |
+| 2026-05-17 | Codex Loop5 | 公式source再確認後、低/中リスクの確定事実としてruntime昇格。 | ai_extracted | ai_verified | promote |

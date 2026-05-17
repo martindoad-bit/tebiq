@@ -1,7 +1,7 @@
 ---
 fact_id: shouhi-zei-1000man-jigyousha
 title: 消費税 — 課税売上1000万円超で課税事業者・インボイス制度
-state: ai_extracted
+state: ai_verified
 risk_level: medium
 confidence: high
 source_quality: official
@@ -64,8 +64,20 @@ evidence_points:
 - 申告3月31日
 - インボイス2023-10〜
 
+## injection_format
+
+### injection_certain_block
+
+```text
+- 消費税：基準期間1000万円超で課税事業者・インボイス2023-10〜。
+- 1000万円基準
+- 申告3月31日
+- インボイス2023-10〜
+- 出典: 国税庁 — 消費税 https://www.nta.go.jp/taxes/shiraberu/shinkoku/kakutei.htm
+```
 ## changelog
 
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
 |------|------|----------|--------------|-------------|------|
 | 2026-05-17 | FACT-OPS bulk-1 | 新規作成。 | — | ai_extracted | new |
+| 2026-05-17 | Codex Loop5 | 公式source再確認後、低/中リスクの確定事実としてruntime昇格。 | ai_extracted | ai_verified | promote |

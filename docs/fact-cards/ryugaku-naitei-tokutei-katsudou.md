@@ -1,7 +1,7 @@
 ---
 fact_id: ryugaku-naitei-tokutei-katsudou
 title: 留学生 — 卒業後の内定待機（特活）
-state: ai_extracted
+state: ai_verified
 risk_level: medium
 confidence: high
 source_quality: official
@@ -62,8 +62,19 @@ evidence_points:
 - 6か月（更新1年）
 - 内定証明書必要
 
+## injection_format
+
+### injection_certain_block
+
+```text
+- 内定待機特活：最長6か月（更新1年）。
+- 6か月（更新1年）
+- 内定証明書必要
+- 出典: ISA — 特定活動 https://www.moj.go.jp/isa/applications/status/designatedactivities02_00004.html
+```
 ## changelog
 
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
 |------|------|----------|--------------|-------------|------|
 | 2026-05-17 | FACT-OPS bulk-1 | 新規作成。 | — | ai_extracted | new |
+| 2026-05-17 | Codex Loop5 | 公式source再確認後、低/中リスクの確定事実としてruntime昇格。 | ai_extracted | ai_verified | promote |

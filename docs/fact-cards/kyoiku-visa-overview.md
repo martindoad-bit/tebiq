@@ -1,7 +1,7 @@
 ---
 fact_id: kyoiku-visa-overview
 title: 教育 在留資格 — 小中高校等の語学/教育教師（5/3/1/0.25年）
-state: ai_extracted
+state: ai_verified
 risk_level: low
 confidence: high
 source_quality: official
@@ -61,8 +61,19 @@ evidence_points:
 - 小中高校が対象
 - 民間英会話は技人国
 
+## injection_format
+
+### injection_certain_block
+
+```text
+- 教育ビザ：小中高校等、5/3/1年or3月。
+- 小中高校が対象
+- 民間英会話は技人国
+- 出典: ISA — 教育 https://www.moj.go.jp/isa/applications/status/instructor.html
+```
 ## changelog
 
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
 |------|------|----------|--------------|-------------|------|
 | 2026-05-17 | FACT-OPS bulk-1 | 新規作成。 | — | ai_extracted | new |
+| 2026-05-17 | Codex Loop5 | 公式source再確認後、低/中リスクの確定事実としてruntime昇格。 | ai_extracted | ai_verified | promote |

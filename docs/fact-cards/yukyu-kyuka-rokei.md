@@ -1,7 +1,7 @@
 ---
 fact_id: yukyu-kyuka-rokei
 title: 年次有給休暇 — 雇入れ6か月+8割出勤で10日付与
-state: ai_extracted
+state: ai_verified
 risk_level: low
 confidence: high
 source_quality: official
@@ -64,8 +64,20 @@ evidence_points:
 - 最大20日
 - 年5日取得義務
 
+## injection_format
+
+### injection_certain_block
+
+```text
+- 年休：6か月+8割出勤で10日・最大20日・年5日義務。
+- 6か月+8割で10日
+- 最大20日
+- 年5日取得義務
+- 出典: 厚労省 — 労働基準 https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/roudoukijun/zigyonushi/index.html
+```
 ## changelog
 
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
 |------|------|----------|--------------|-------------|------|
 | 2026-05-17 | FACT-OPS bulk-1 | 新規作成。 | — | ai_extracted | new |
+| 2026-05-17 | Codex Loop5 | 公式source再確認後、低/中リスクの確定事実としてruntime昇格。 | ai_extracted | ai_verified | promote |

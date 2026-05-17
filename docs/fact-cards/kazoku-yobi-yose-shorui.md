@@ -1,7 +1,7 @@
 ---
 fact_id: kazoku-yobi-yose-shorui
 title: 家族呼び寄せ — COE申請書類（婚姻証明・所得証明・住宅）
-state: ai_extracted
+state: ai_verified
 risk_level: medium
 confidence: high
 source_quality: official
@@ -67,8 +67,20 @@ evidence_points:
 - 扶養者の住民税・在職
 - 翻訳添付
 
+## injection_format
+
+### injection_certain_block
+
+```text
+- 家族COE：婚姻証明・所得証明・住宅資料必須。
+- 戸籍/婚姻証明
+- 扶養者の住民税・在職
+- 翻訳添付
+- 出典: ISA — 家族滞在 https://www.moj.go.jp/isa/applications/status/dependent.html
+```
 ## changelog
 
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
 |------|------|----------|--------------|-------------|------|
 | 2026-05-17 | FACT-OPS bulk-1 | 新規作成。 | — | ai_extracted | new |
+| 2026-05-17 | Codex Loop5 | 公式source再確認後、低/中リスクの確定事実としてruntime昇格。 | ai_extracted | ai_verified | promote |

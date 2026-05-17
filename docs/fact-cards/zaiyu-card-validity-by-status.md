@@ -1,7 +1,7 @@
 ---
 fact_id: zaiyu-card-validity-by-status
 title: 在留カード有効期間 — 在留資格別/年齢別
-state: ai_extracted
+state: ai_verified
 risk_level: medium
 confidence: high
 source_quality: official
@@ -62,8 +62,19 @@ evidence_points:
 - 永住・高度2号は7年
 - 16歳未満は16歳誕生日
 
+## injection_format
+
+### injection_certain_block
+
+```text
+- 通常資格は在留期間と同じ、永住・高度2号は7年。
+- 永住・高度2号は7年
+- 16歳未満は16歳誕生日
+- 出典: ISA — 在留カード有効期間 https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00011.html
+```
 ## changelog
 
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
 |------|------|----------|--------------|-------------|------|
 | 2026-05-17 | FACT-OPS bulk-1 | 新規作成。 | — | ai_extracted | new |
+| 2026-05-17 | Codex Loop5 | 公式source再確認後、低/中リスクの確定事実としてruntime昇格。 | ai_extracted | ai_verified | promote |

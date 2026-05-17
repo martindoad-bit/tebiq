@@ -1,7 +1,7 @@
 ---
 fact_id: kaigo-hoken-40-65
 title: 介護保険 — 40歳から保険料・第2号被保険者
-state: ai_extracted
+state: ai_verified
 risk_level: low
 confidence: high
 source_quality: official
@@ -63,8 +63,20 @@ evidence_points:
 - 65歳から第1号
 - 外国人も住民票あれば対象
 
+## injection_format
+
+### injection_certain_block
+
+```text
+- 40歳から介護保険・外国人住民票あれば対象。
+- 40歳から第2号被保険者
+- 65歳から第1号
+- 外国人も住民票あれば対象
+- 出典: 厚労省 — 介護保険 https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/hukushi_kaigo/kaigo_koureisha/gaiyo/index.html
+```
 ## changelog
 
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
 |------|------|----------|--------------|-------------|------|
 | 2026-05-17 | FACT-OPS bulk-1 | 新規作成。 | — | ai_extracted | new |
+| 2026-05-17 | Codex Loop5 | 公式source再確認後、低/中リスクの確定事実としてruntime昇格。 | ai_extracted | ai_verified | promote |

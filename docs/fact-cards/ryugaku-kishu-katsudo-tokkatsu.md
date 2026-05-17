@@ -1,7 +1,7 @@
 ---
 fact_id: ryugaku-kishu-katsudo-tokkatsu
 title: 留学生 — 卒業後就職活動特活（最長1年・本邦大学卒）
-state: ai_extracted
+state: ai_verified
 risk_level: medium
 confidence: high
 source_quality: official
@@ -61,8 +61,19 @@ evidence_points:
 - 6か月（更新1年）
 - 学校推薦書
 
+## injection_format
+
+### injection_certain_block
+
+```text
+- 卒業後就活特活：最長1年・学校推薦書必要。
+- 6か月（更新1年）
+- 学校推薦書
+- 出典: ISA — 特定活動 https://www.moj.go.jp/isa/applications/status/designatedactivities02_00004.html
+```
 ## changelog
 
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
 |------|------|----------|--------------|-------------|------|
 | 2026-05-17 | FACT-OPS bulk-1 | 新規作成。 | — | ai_extracted | new |
+| 2026-05-17 | Codex Loop5 | 公式source再確認後、低/中リスクの確定事実としてruntime昇格。 | ai_extracted | ai_verified | promote |

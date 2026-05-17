@@ -1,7 +1,7 @@
 ---
 fact_id: jidou-teate-overview
 title: 児童手当 — 中長期在留者対象・所得制限あり・2024年10月拡充
-state: ai_extracted
+state: ai_verified
 risk_level: low
 confidence: high
 source_quality: official
@@ -65,8 +65,20 @@ evidence_points:
 - 2024年10月拡充
 - 市区町村申請
 
+## injection_format
+
+### injection_certain_block
+
+```text
+- 児童手当：高校生年代まで・2024年10月から所得制限撤廃。
+- 中長期在留者対象
+- 2024年10月拡充
+- 市区町村申請
+- 出典: こども家庭庁 — 児童手当 https://www.cfa.go.jp/policies/kokoseido/jidouteate/
+```
 ## changelog
 
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
 |------|------|----------|--------------|-------------|------|
 | 2026-05-17 | FACT-OPS bulk-1 | 新規作成。 | — | ai_extracted | new |
+| 2026-05-17 | Codex Loop5 | 公式source再確認後、低/中リスクの確定事実としてruntime昇格。 | ai_extracted | ai_verified | promote |
