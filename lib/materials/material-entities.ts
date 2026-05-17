@@ -99,6 +99,7 @@ export const MATERIAL_ENTITIES: MaterialEntity[] = [
       '想确认这次申请到底要「世帯全員」「マイナンバー記載」哪种住民票？可以直接问 TEBIQ。',
     factCardIds: [
       'jukyochi-mynumber-renke-juminhyo',
+      'zairyu-touriku-after-zaijuu',
       'yobi-yose-shinseki-houmon',
       'yochi-en-hoiku-gaikoku',
       'chintai-hoshou-gaikokujin',
@@ -845,6 +846,7 @@ export const MATERIAL_ENTITIES: MaterialEntity[] = [
       'gaimen-kirikae-process',
       'chintai-hoshou-gaikokujin',
       'saiyuukoku-kyoka-1year-5year',
+      'zairyu-touriku-after-zaijuu',
     
       'rikon-todoke-procedure',],
     sourceUrls: [
