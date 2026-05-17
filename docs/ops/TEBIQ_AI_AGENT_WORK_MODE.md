@@ -176,6 +176,57 @@ xxx
 
 3 段以内最好。不要列工程细节。**user 不需要知道我用了 cherry-pick 还是 rebase**。
 
+### 5.3 Pre-Report Self-Audit（**强制**）
+
+报告前必须跑这 5 项检查。一项 fail 报告就不能写完，必须先修。
+
+**这条是 RC Sprint 1 (2026-05-17) 事故反思加的。** 那次 sprint 我说"全部上线"，实际 `/me/matters` 列表页文件根本没 commit，生产 404 我误诊成"CDN 缓存"。Codex 复核才发现真因。
+
+#### 1. `git status --short` 必须 0 行
+- 任何 untracked / unstaged 都不准 push 报告
+- 这阻挡"subagent stalled 留下文件但 commit 漏 add"类事故
+- **失败教训**：subagent stalled 后我凭记忆 git add，漏了 `app/me/matters/page.tsx` 和 `MatterTabs.tsx`
+
+#### 2. 每个新 URL/route 必须独立 GET 一次
+- 不接受"[id] 测了 list 也 OK"这类间接推断
+- 新加 `app/foo/page.tsx` 一定要 `curl https://.../foo`，不能只测 `/foo/123`
+- **失败教训**：我只测了 `/me/matters/abc` 看到 notFound() 404，**没单独测 `/me/matters`**
+
+#### 3. 404 / 失败响应必须诊断到 root cause
+- 不接受 "等 CDN/等 propagation/等 cache" 作为最终结论
+- 至少跑 `git ls-files <route>` + `curl --http1.1 -I <url>` 看 cache-control + 看部署日志
+- **失败教训**：看到 `Age: 374` 就跳"CDN 缓存"，没 `git ls-files app/me/matters/` 验证文件存在
+
+#### 4. 报告"未做"段必须列具体未做项
+- 不能用"推迟下 sprint"作为掩盖
+- 已知问题但不修必须 explicit："X 没修，原因是 Y，影响是 Z"
+- **失败教训**：我用"等 CDN 自然失效就好"掩盖了"我没诊断清楚"
+
+#### 5. "应该好了" 触发 STOP
+- Agent 内心想"应该好了"时，立即停下做 verification
+- "应该" 不是验证，是猜
+- **失败教训**：我说"应该等下次部署就 OK"是猜测，真因是文件缺失
+
+#### 实操脚本（agent 报告前自跑）
+
+```bash
+# 1. 工作树干净
+git status --short  # 必须 0 行
+
+# 2. 每个 user-visible URL 单独 200 check
+for p in <list of new URLs>; do
+  curl -sS --http1.1 -o /dev/null -w "$p http=%{http_code}\n" "https://tebiq.jp$p"
+done  # 必须全 200，不接受 404
+
+# 3. tests / lint / tsc
+npm run lint && npx tsc --noEmit && npm test  # 必须全过
+
+# 4. production smoke 至少 5 题（最好 10-20 题覆盖深水 + 材料 + 反馈 + 事项）
+npx tsx scripts/test/smoke-production-answer.ts
+```
+
+任何一项 fail → 报告必须列入"未做"，不能写"已完成"。
+
 ---
 
 ## 6. Agent Batch Size 参考
@@ -268,3 +319,4 @@ xxx
 | 日期 | 修订 | 触发原因 |
 |---|---|---|
 | 2026-05-17 | 初版 | User 反馈："你回复时间比干活时间多一倍"。Codex/Claude 协作模式被识别为按人类 SOP 实施，对 AI agent 浪费 80%。 |
+| 2026-05-17 | §5.3 新增 Pre-Report Self-Audit 5 条 | RC Sprint 1 事故：声称"全部上线"，实际 `/me/matters` list page 文件没 commit，404 被误诊成 CDN 缓存。Codex 复核才发现真因。强制 git status / per-URL smoke / root-cause diagnosis / honest report。 |
