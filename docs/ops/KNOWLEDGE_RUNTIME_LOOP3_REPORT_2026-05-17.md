@@ -42,7 +42,7 @@ disabled          3
 total           269
 ```
 
-Database still requires targeted sync after merge; before sync it remains at Loop 2 waterline (`110 ai_verified + 5 human_reviewed`).
+Post-merge targeted sync has been completed. Database and filesystem now match at `126 ai_verified + 5 human_reviewed`.
 
 ## 3. Promoted Cards
 
@@ -91,6 +91,34 @@ npx tsc --noEmit --pretty false   -> pass
 ```
 
 An early `npm run qa:pre-report-audit` was intentionally not counted because it failed the git-status-clean step while these edits were still uncommitted. This is expected behavior; the formal §5.3 audit must be rerun after commit/merge when the worktree is clean.
+
+Formal pre-report audit after commit:
+
+```text
+npm run qa:pre-report-audit -> PASS 5/5
+  git_status_clean        PASS
+  npm_lint                PASS
+  tsc_noemit              PASS
+  npm_test                PASS (257/257)
+  production_url_smoke    PASS (70/70 checked)
+```
+
+Post-merge / production verification:
+
+```text
+PR #157 merged to main: 213baed4535ce3d603d506217289435d3c0b16e6
+targeted DB sync: 16/16 Loop3 promoted cards upserted
+npm run qa:card-import-audit -> filesystem/database both 126 ai_verified + 5 human_reviewed
+production build-info -> 213baed4535ce3d603d506217289435d3c0b16e6
+npm run smoke:production-answer -> 20/20 PASS after redline regex calibration
+```
+
+Smoke calibration note:
+
+- The first production smoke run after sync returned 15/20 regex PASS, but manual review found the five failures were false positives rather than dangerous answers.
+- The false positives were around negated/cautious wording: HSP1 professional routing wording, spouse remarriage not covering divorce notification, logo-only business-manager changes, resident-tax installment not being a PR question, and PR-as-public-relations vs PR-as-permanent-residence.
+- PR #158 (`346f9589b0579fba1f6fd7e3ef367a08fd8ef9d4`) narrowed those regexes while preserving dangerous-action checks.
+- Re-running `npm run smoke:production-answer` after PR #158 produced `20/20 passed`.
 
 ## 6. Risks / Deferred Items
 
