@@ -151,6 +151,7 @@ export const MATERIAL_ENTITIES: MaterialEntity[] = [
     factCardIds: [
       'juminzei-kazei-shomeisho',
       'eijuu-jukyo-check-tax-shomeisho',
+      'jumin-zei-jan1-criterion',
     ],
     sourceUrls: [
       {
@@ -201,6 +202,7 @@ export const MATERIAL_ENTITIES: MaterialEntity[] = [
     factCardIds: [
       'juminzei-kazei-shomeisho',
       'eijuu-jukyo-check-tax-shomeisho',
+      'jumin-zei-jan1-criterion',
     ],
     sourceUrls: [
       {
@@ -297,6 +299,7 @@ export const MATERIAL_ENTITIES: MaterialEntity[] = [
     factCardIds: [
       'eijuu-nenkin-2year-shomei-method',
       'eijuu-nenkin-risk',
+      'ryuugaku-nenkin-tokurei',
       'nenkin-dattai-ichijikin',
     ],
     sourceUrls: [
@@ -665,6 +668,8 @@ export const MATERIAL_ENTITIES: MaterialEntity[] = [
     factCardIds: [
       'nihonjin-haigusha-visa',
       'haigusha-todokede-14days',
+      'kekkon-todoke-procedure',
+      'shussei-todoke-14days',
       'kazoku-taizai-shussan-shutoku',
     ],
   },

@@ -612,6 +612,8 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
       'juminzei-kazei-shomeisho',
       'ryugakusei-baito-28jikan',
       'zairyu-expiry-renewal-change',
+      'kazoku-taizai-zairyu-period',
+      'kazoku-taizai-shussan-shutoku',
     ],
     relatedTopicIds: [
       'part-time-permission',
@@ -768,6 +770,9 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
       'eijuu-shinsei-shorui',
       'juminzei-kazei-shomeisho',
       'eijuu-zairyu-kikan',
+      'eijuu-haigusha-3years-route',
+      'eijuu-children-direct-route',
+      'eijuu-shotoku-haigusha-3year',
     ],
     relatedTopicIds: [
       'resident-tax-certificate-materials',
@@ -824,6 +829,8 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
     factCardIds: [
       'juminzei-kazei-shomeisho',
       'jumin-zei-gaiyo',
+      'jumin-zei-jan1-criterion',
+      'eijuu-shotoku-haigusha-3year',
     ],
     relatedTopicIds: [
       'national-tax-certificate-sono3-materials',
@@ -920,6 +927,9 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
       'kokumin-nenkin-menjo',
       'rishoku-kokumin-nenkin-kirikae',
       'shakai-hoken-kanyu',
+      'eijuu-nenkin-2year-shomei-method',
+      'maina-hoken-2024-12',
+      'kokuho-shutoku-shoumei-2years',
     ],
     relatedTopicIds: [
       'permanent-residence-application-materials',
@@ -1058,6 +1068,7 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
     factCardIds: [
       'tensyoku-zairyu',
       'gaikokujin-koyo-todokede',
+      'koyou-keiyaku-rouken-tsuchi',
     ],
     relatedTopicIds: [
       'job-change',
@@ -1649,6 +1660,8 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
     factCardIds: [
       'kosodate-ichijikin',
       'jidou-teate-gaikokujin',
+      'shussei-todoke-14days',
+      'kazoku-taizai-shussan-shutoku',
     ],
     relatedTopicIds: [
       'health-insurance-leaving-job-materials',
@@ -1835,6 +1848,8 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
     factCardIds: [
       'koyo-hoken-kyufu',
       'shitsugyo-zairyu-risk',
+      'kaiko-yokoku-30days',
+      'rousai-hoken-foreign-worker',
     ],
     relatedTopicIds: [
       'retirement-risk',

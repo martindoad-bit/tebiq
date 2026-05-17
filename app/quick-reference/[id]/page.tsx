@@ -20,6 +20,10 @@ import {
   QUICK_REFERENCE_TOPICS,
   type QuickReferenceSource,
 } from '@/lib/quick-reference/topics'
+import {
+  getMaterialEntitiesForTopic,
+  getMaterialEntityHref,
+} from '@/lib/materials/material-entities'
 
 type PageProps = {
   params: Promise<{ id: string }>
@@ -47,6 +51,7 @@ export default async function QuickReferenceTopicPage({ params }: PageProps) {
 
   const askHref = `/ai-consultation?q=${encodeURIComponent(topic.askPrompt ?? `${topic.title}，我想确认自己该怎么处理。`)}`
   const relatedTopics = getRelatedQuickReferenceTopics(topic)
+  const materialEntities = getMaterialEntitiesForTopic(topic.id)
 
   return (
     <AppShell appBar={<AppBar title="材料" />} tabBar={<TabBar />}>
@@ -127,6 +132,24 @@ export default async function QuickReferenceTopicPage({ params }: PageProps) {
                 </ul>
               </InfoPanel>
             ) : null}
+          </section>
+        )}
+
+        {materialEntities.length > 0 && (
+          <section className="rounded-card border border-hairline bg-surface px-4 py-4">
+            <h2 className="text-[16px] font-semibold text-ink">这个手续涉及的材料</h2>
+            <div className="mt-3 grid gap-2">
+              {materialEntities.map(material => (
+                <Link
+                  key={material.id}
+                  href={getMaterialEntityHref(material.id)}
+                  className="focus-ring flex min-h-12 items-center justify-between gap-3 rounded-[10px] border border-hairline bg-paper px-3 text-[14px] font-medium text-ink"
+                >
+                  <span className="min-w-0 truncate">{material.title}</span>
+                  <span aria-hidden="true" className="shrink-0 text-ash">→</span>
+                </Link>
+              ))}
+            </div>
           </section>
         )}
 
