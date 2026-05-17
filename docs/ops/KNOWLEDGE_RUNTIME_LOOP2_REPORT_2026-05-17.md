@@ -133,6 +133,24 @@ Official source smoke:
 - MHLW / Japan Pension / NTA / Kyokai Kenpo URLs returned 200 by normal curl.
 - MOJ URLs returned 403 without browser headers but 200 with User-Agent + Referer; this matches the known ISA server behavior and does not indicate dead sources.
 
+Post-merge / production verification:
+
+```text
+PR #155 merged to main: cd3f071c963093e79b34ffc18f8b7bae82100dfe
+targeted DB sync: 9/9 Loop2 promoted cards upserted
+npm run qa:card-import-audit -> filesystem/database both 110 ai_verified + 5 human_reviewed
+production build-info -> cd3f071c963093e79b34ffc18f8b7bae82100dfe
+npm run smoke:production-answer -> 17/20 regex PASS; 20/20 substance PASS after manual review
+```
+
+Production smoke manual review notes:
+
+- `R13-spouse-divorce-remarriage`: regex flagged, but answer clearly says divorce notification is independent and remarriage does not erase the old duty. Substance pass.
+- `R14-nonpermission-strategy`: regex missed simplified Chinese `行政书士`; answer routes to immigration window / scrivener and warns against unplanned departure. Substance pass.
+- `N17-business-manager-logo`: regex flagged conditional "if company name changed, 14-day notice"; answer correctly says logo/color-only change normally does not require immigration notice. Substance pass.
+
+The full `npm run fact-layer:sync` command did not complete within the normal operator window because it sequentially upserts all 269 cards and gives no progress output. To avoid a stalled operator process, Loop 2 used targeted sync for the 9 changed cards. The follow-up audit confirmed DB and filesystem state are aligned.
+
 ## 6. Product Effect
 
 Answer runtime improves in three practical zones:
