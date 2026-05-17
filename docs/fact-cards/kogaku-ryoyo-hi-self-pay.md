@@ -1,7 +1,7 @@
 ---
 fact_id: kogaku-ryoyo-hi-self-pay
 title: 高額療養費 — 自己負担上限を超えた医療費の還付
-state: ai_extracted
+state: ai_verified
 risk_level: low
 confidence: high
 source_quality: official
@@ -64,8 +64,20 @@ evidence_points:
 - 限度額認定証取得推奨
 - マイナ保険証連携で代替
 
+## injection_format
+
+### injection_certain_block
+
+```text
+- 高額療養費：自己負担上限超過分還付・認定証/マイナ保険証で窓口対応可。
+- 自己負担上限超過分還付
+- 限度額認定証取得推奨
+- マイナ保険証連携で代替
+- 出典: 厚労省 — 高額療養費 https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/iryouhoken/juuyou/kougakuiryou/index.html
+```
 ## changelog
 
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
 |------|------|----------|--------------|-------------|------|
 | 2026-05-17 | FACT-OPS bulk-1 | 新規作成。 | — | ai_extracted | new |
+| 2026-05-17 | Codex Loop5 | 公式source再確認後、低/中リスクの確定事実としてruntime昇格。 | ai_extracted | ai_verified | promote |

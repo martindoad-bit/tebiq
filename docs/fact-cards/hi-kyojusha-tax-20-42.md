@@ -1,7 +1,7 @@
 ---
 fact_id: hi-kyojusha-tax-20-42
 title: 非居住者の源泉徴収 — 国内源泉所得20.42%課税
-state: ai_extracted
+state: ai_verified
 risk_level: medium
 confidence: high
 source_quality: official
@@ -70,8 +70,20 @@ evidence_points:
 - 20.42%源泉徴収
 - 租税条約で軽減可
 
+## injection_format
+
+### injection_certain_block
+
+```text
+- 非居住者は日本源泉所得20.42%源泉徴収。
+- 国内源泉のみ
+- 20.42%源泉徴収
+- 租税条約で軽減可
+- 出典: 国税庁 — 非居住者と居住者 https://www.nta.go.jp/publication/pamph/koho/kurashi/html/02_3.htm
+```
 ## changelog
 
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
 |------|------|----------|--------------|-------------|------|
 | 2026-05-17 | FACT-OPS bulk-1 | 新規作成。 | — | ai_extracted | new |
+| 2026-05-17 | Codex Loop5 | 公式source再確認後、低/中リスクの確定事実としてruntime昇格。 | ai_extracted | ai_verified | promote |

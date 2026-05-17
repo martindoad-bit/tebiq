@@ -1,7 +1,7 @@
 ---
 fact_id: kogaku-iryo-foreigner-resident
 title: 高額療養費 — 外国人居住者も対象（住所地で算定）
-state: ai_extracted
+state: ai_verified
 risk_level: low
 confidence: high
 source_quality: official
@@ -62,8 +62,20 @@ evidence_points:
 - 前年所得ベース区分
 - 来日1年目は最低区分多
 
+## injection_format
+
+### injection_certain_block
+
+```text
+- 高額療養費は外国人も対象・前年所得ベース。
+- 外国人も対象
+- 前年所得ベース区分
+- 来日1年目は最低区分多
+- 出典: 厚労省 — 高額療養費 https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/iryouhoken/juuyou/kougakuiryou/index.html
+```
 ## changelog
 
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
 |------|------|----------|--------------|-------------|------|
 | 2026-05-17 | FACT-OPS bulk-1 | 新規作成。 | — | ai_extracted | new |
+| 2026-05-17 | Codex Loop5 | 公式source再確認後、低/中リスクの確定事実としてruntime昇格。 | ai_extracted | ai_verified | promote |

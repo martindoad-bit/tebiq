@@ -1,7 +1,7 @@
 ---
 fact_id: zairyu-kekkan-renew-document
 title: 在留更新書類 — 共通必須書類リスト（カテゴリー別）
-state: ai_extracted
+state: ai_verified
 risk_level: medium
 confidence: high
 source_quality: official
@@ -64,8 +64,20 @@ evidence_points:
 - 住民税課税納税証明
 - 資格別書類
 
+## injection_format
+
+### injection_certain_block
+
+```text
+- 更新書類：共通+資格別。住民税課税納税証明必要。
+- 申請書・写真・パスポート・カード
+- 住民税課税納税証明
+- 資格別書類
+- 出典: ISA — 在留期間更新 https://www.moj.go.jp/isa/applications/procedures/16-2.html
+```
 ## changelog
 
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
 |------|------|----------|--------------|-------------|------|
 | 2026-05-17 | FACT-OPS bulk-1 | 新規作成。 | — | ai_extracted | new |
+| 2026-05-17 | Codex Loop5 | 公式source再確認後、低/中リスクの確定事実としてruntime昇格。 | ai_extracted | ai_verified | promote |

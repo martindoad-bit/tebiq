@@ -1,7 +1,7 @@
 ---
 fact_id: mynumber-card-application
 title: マイナンバーカード — 申請から1〜2か月で交付・無料
-state: ai_extracted
+state: ai_verified
 risk_level: low
 confidence: high
 source_quality: official
@@ -65,8 +65,20 @@ evidence_points:
 - 1-2か月で交付
 - 健康保険証機能あり
 
+## injection_format
+
+### injection_certain_block
+
+```text
+- マイナカード：無料・1-2か月交付・健康保険証等機能。
+- 無料
+- 1-2か月で交付
+- 健康保険証機能あり
+- 出典: デジタル庁 — マイナンバー https://www.digital.go.jp/en/policies/mynumber_faq_02
+```
 ## changelog
 
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
 |------|------|----------|--------------|-------------|------|
 | 2026-05-17 | FACT-OPS bulk-1 | 新規作成。 | — | ai_extracted | new |
+| 2026-05-17 | Codex Loop5 | 公式source再確認後、低/中リスクの確定事実としてruntime昇格。 | ai_extracted | ai_verified | promote |

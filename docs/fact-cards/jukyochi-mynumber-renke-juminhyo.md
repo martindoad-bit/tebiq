@@ -1,7 +1,7 @@
 ---
 fact_id: jukyochi-mynumber-renke-juminhyo
 title: 中長期在留者 — 住民票発行・マイナンバー紐付け
-state: ai_extracted
+state: ai_verified
 risk_level: low
 confidence: high
 source_quality: official
@@ -63,8 +63,20 @@ evidence_points:
 - マイナンバー自動付番
 - 区役所登録で在留カード住居地届出みなし
 
+## injection_format
+
+### injection_certain_block
+
+```text
+- 中長期在留者は住民票交付・マイナンバー自動付番。
+- 住民票対象
+- マイナンバー自動付番
+- 区役所登録で在留カード住居地届出みなし
+- 出典: ISA — 住居地届出 https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00016.html
+```
 ## changelog
 
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
 |------|------|----------|--------------|-------------|------|
 | 2026-05-17 | FACT-OPS bulk-1 | 新規作成。 | — | ai_extracted | new |
+| 2026-05-17 | Codex Loop5 | 公式source再確認後、低/中リスクの確定事実としてruntime昇格。 | ai_extracted | ai_verified | promote |

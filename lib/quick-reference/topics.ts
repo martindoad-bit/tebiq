@@ -315,7 +315,11 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
     title: '税证明怎么开',
     summary: '续签、永住、收入证明时，经常会用到课税证明和纳税证明。',
     category: '税金',
-    factCardIds: ['juminzei-kazei-shomeisho'],
+    factCardIds: [
+      'juminzei-kazei-shomeisho',
+      'jumin-zei-no-shukyou-3types',
+      'zeimu-shomeisho-3types',
+    ],
     relatedTopicIds: ['renewal-review-factors', 'pension-after-leaving-job'],
     aliases: ['住民税', '课税证明', '纳税证明', '納税証明', '税证明', '永住材料'],
     deadline: '没有统一期限；取决于你的申请或提交窗口要求。',
@@ -351,7 +355,11 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
     title: '留学生/家族签打工',
     summary: '打工前先确认有没有资格外活动许可，以及时间上限。',
     category: '工作',
-    factCardIds: ['ryugakusei-baito-28jikan', 'shikakugai-fukugyou'],
+    factCardIds: [
+      'ryugakusei-baito-28jikan',
+      'shikakugai-fukugyou',
+      'ryugaku-shikakugai-individual-permission',
+    ],
     relatedTopicIds: ['renewal-review-factors'],
     aliases: ['打工', '兼职', '资格外', '資格外活動', '留学生打工', '家族滞在打工'],
     deadline: '开始打工前先确认许可；不要先开始再补。',
@@ -719,6 +727,9 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
       'ryugaku-koushin-shutsusekiRitsu',
       'nihongo-gakko-ryugaku',
       'zairyu-expiry-renewal-change',
+      'ryugaku-naitei-tokutei-katsudou',
+      'ryugaku-shikakugai-individual-permission',
+      'ryugaku-kishu-katsudo-tokkatsu',
     ],
     relatedTopicIds: [
       'part-time-permission',
@@ -773,6 +784,8 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
       'eijuu-haigusha-3years-route',
       'eijuu-children-direct-route',
       'eijuu-shotoku-haigusha-3year',
+      'eijuu-letterofunderstanding-2021',
+      'hoshou-jin-eijuu',
     ],
     relatedTopicIds: [
       'resident-tax-certificate-materials',
@@ -831,6 +844,7 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
       'jumin-zei-gaiyo',
       'jumin-zei-jan1-criterion',
       'eijuu-shotoku-haigusha-3year',
+      'jumin-zei-no-shukyou-3types',
     ],
     relatedTopicIds: [
       'national-tax-certificate-sono3-materials',
@@ -877,6 +891,7 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
     factCardIds: [
       'juminzei-kazei-shomeisho',
       'kakutei-shinkoku-gijmu',
+      'zeimu-shomeisho-3types',
     ],
     relatedTopicIds: [
       'resident-tax-certificate-materials',
@@ -1312,6 +1327,7 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
     factCardIds: [
       'shuro-shikaku-shomeisho',
       'gijinkoku-job-mismatch',
+      'shuro-shoumeisho-fee-2000',
     ],
     relatedTopicIds: [
       'job-change',
@@ -1401,6 +1417,7 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
     factCardIds: [
       'ryugakusei-baito-28jikan',
       'shikakugai-fukugyou',
+      'ryugaku-shikakugai-individual-permission',
     ],
     relatedTopicIds: [
       'part-time-permission',

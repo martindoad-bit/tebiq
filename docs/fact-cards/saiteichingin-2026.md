@@ -1,7 +1,7 @@
 ---
 fact_id: saiteichingin-2026
 title: 最低賃金 — 都道府県別・2025年10月改定（全国加重平均1055円）
-state: ai_extracted
+state: ai_verified
 risk_level: medium
 confidence: high
 source_quality: official
@@ -64,8 +64,20 @@ evidence_points:
 - 毎年10月改定
 - 外国人も適用
 
+## injection_format
+
+### injection_certain_block
+
+```text
+- 最賃2025-10改定：全国加重平均1055円・東京1163円。
+- 都道府県別
+- 毎年10月改定
+- 外国人も適用
+- 出典: 厚労省 — 最低賃金 https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/roudoukijun/minimumichiran/
+```
 ## changelog
 
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
 |------|------|----------|--------------|-------------|------|
 | 2026-05-17 | FACT-OPS bulk-1 | 新規作成。 | — | ai_extracted | new |
+| 2026-05-17 | Codex Loop5 | 公式source再確認後、低/中リスクの確定事実としてruntime昇格。 | ai_extracted | ai_verified | promote |

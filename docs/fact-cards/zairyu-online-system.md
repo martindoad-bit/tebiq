@@ -1,7 +1,7 @@
 ---
 fact_id: zairyu-online-system
 title: 在留申請オンラインシステム — 利用者登録要・手数料割安
-state: ai_extracted
+state: ai_verified
 risk_level: low
 confidence: high
 source_quality: official
@@ -65,8 +65,20 @@ evidence_points:
 - 500円割安
 - 24時間提出可
 
+## injection_format
+
+### injection_certain_block
+
+```text
+- オンライン申請：利用者登録要・割安・24時間。
+- 利用者登録必須
+- 500円割安
+- 24時間提出可
+- 出典: ISA — 在留資格変更 https://www.moj.go.jp/isa/applications/procedures/16-1.html
+```
 ## changelog
 
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
 |------|------|----------|--------------|-------------|------|
 | 2026-05-17 | FACT-OPS bulk-1 | 新規作成。 | — | ai_extracted | new |
+| 2026-05-17 | Codex Loop5 | 公式source再確認後、低/中リスクの確定事実としてruntime昇格。 | ai_extracted | ai_verified | promote |
