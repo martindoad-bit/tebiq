@@ -18,7 +18,7 @@ does_not_cover:
   - "労災給付との関係"
 ai_pipeline: WebFetch → FACT-OPS extract
 official_sources:
-  - url: https://www.moj.go.jp/isa/applications/procedures/zairyu_eijyu03.html
+  - url: https://www.nenkin.go.jp/service/jukyu/seido/shougainenkin/jukyu-yoken/20150401-02.html
     label: ISA — 永住（年金関連）
     accessed: "2026-05-17"
 applies_to:
@@ -38,7 +38,7 @@ needs_review_flags:
   - shoshin_certificate_specifics
 related_links:
   - title: "年金機構（公式整合）"
-    url: "https://www.moj.go.jp/isa/applications/procedures/zairyu_eijyu03.html"
+    url: "https://www.nenkin.go.jp/service/jukyu/seido/shougainenkin/jukyu-yoken/20150401-02.html"
     organization: "日本年金機構"
     display_label: "障害年金"
     locator: "障害年金"
@@ -46,7 +46,7 @@ related_links:
 evidence_points:
   - claim: "障害基礎年金・障害厚生年金は保険料納付要件と障害認定を満たせば受給可。外国人も加入していれば対象。"
     source_title: "年金機構"
-    source_url: "https://www.moj.go.jp/isa/applications/procedures/zairyu_eijyu03.html"
+    source_url: "https://www.nenkin.go.jp/service/jukyu/seido/shougainenkin/jukyu-yoken/20150401-02.html"
     source_organization: "日本年金機構"
     source_locator: "障害年金"
     display_label: "障害年金"

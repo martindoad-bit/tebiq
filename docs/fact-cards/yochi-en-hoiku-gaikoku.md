@@ -18,7 +18,7 @@ does_not_cover:
   - "認可外保育施設の補助詳細"
 ai_pipeline: WebFetch → FACT-OPS extract
 official_sources:
-  - url: https://www.cfa.go.jp/policies/kokoseido/jidouteate/
+  - url: https://www.cfa.go.jp/policies/kokoseido/mushouka/gaiyou
     label: こども家庭庁
     accessed: "2026-05-17"
 applies_to:
@@ -37,7 +37,7 @@ needs_review_flags:
   - authorized_unauthorized_specifics
 related_links:
   - title: "こども家庭庁"
-    url: "https://www.cfa.go.jp/policies/kokoseido/jidouteate/"
+    url: "https://www.cfa.go.jp/policies/kokoseido/mushouka/gaiyou"
     organization: "こども家庭庁"
     display_label: "保育"
     locator: "幼保無償化"
@@ -45,7 +45,7 @@ related_links:
 evidence_points:
   - claim: "3-5歳の幼稚園・認可保育所・認定こども園の利用料が無償化（2019年10月〜）。住民登録ある外国人世帯も対象。"
     source_title: "こども家庭庁"
-    source_url: "https://www.cfa.go.jp/policies/kokoseido/jidouteate/"
+    source_url: "https://www.cfa.go.jp/policies/kokoseido/mushouka/gaiyou"
     source_organization: "こども家庭庁"
     source_locator: "幼保無償化"
     display_label: "幼保無償化"

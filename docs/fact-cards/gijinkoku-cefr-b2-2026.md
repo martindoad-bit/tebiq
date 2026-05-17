@@ -1,7 +1,7 @@
 ---
 fact_id: gijinkoku-cefr-b2-2026
 title: 技人国 — 2026年4月15日からカテゴリー3/4対人業務にCEFR B2必須
-state: ai_extracted
+state: ai_verified
 risk_level: high
 confidence: high
 source_quality: official
@@ -54,7 +54,7 @@ evidence_points:
     display_label: "技人国B2要件2026"
     support_level: "direct"
     user_visible: true
-    needs_domain_review: true
+    needs_domain_review: false
 ---
 
 ## current_effective_fact
@@ -72,6 +72,17 @@ evidence_points:
 - 2026-04-15施行
 - カテ3/4対人業務のみ対象
 - N2/BJT400/高校卒業等で証明
+
+## injection_format
+
+### injection_certain_block
+
+```
+【技人国・日本語能力要件／ 2026-05-17 公式】
+・2026年4月15日以降、カテゴリー3/4で主に言語能力を用いる対人業務を行う場合、日本語能力証明が問題になる
+・JLPT N2、BJT 400点、日本の高校卒業等が証明例として扱われる
+・カテゴリー、業務内容、更新/変更/新規の別は個別に確認する
+```
 
 ## changelog
 

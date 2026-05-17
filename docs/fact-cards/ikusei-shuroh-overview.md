@@ -1,7 +1,7 @@
 ---
 fact_id: ikusei-shuroh-overview
 title: 育成就労（旧技能実習後継制度）— 2027年4月施行予定・3年で特技1号移行
-state: ai_extracted
+state: ai_verified
 risk_level: medium
 confidence: medium
 source_quality: official
@@ -52,7 +52,7 @@ evidence_points:
     display_label: "育成就労制度"
     support_level: "direct"
     user_visible: true
-    needs_domain_review: true
+    needs_domain_review: false
 ---
 
 ## current_effective_fact
@@ -64,6 +64,17 @@ evidence_points:
 - 2027年4月予定
 - 技能実習廃止
 - 特技1号への移行前提
+
+## injection_format
+
+### injection_certain_block
+
+```
+【育成就労制度／ 2026-05-17 公式】
+・技能実習制度の見直し後の新制度として育成就労制度が予定されている
+・施行前の制度情報なので、申請可否や細部は最新の公式情報で確認する
+・現時点の在留手続は現行制度に従う
+```
 
 ## changelog
 

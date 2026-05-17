@@ -18,7 +18,7 @@ does_not_cover:
   - "所得税の青色申告（別カード）"
 ai_pipeline: WebFetch → FACT-OPS extract
 official_sources:
-  - url: https://www.soumu.go.jp/main_sosiki/jichi_zeisei/czaisei/czaisei_seido/individual-jigyozei.html
+  - url: https://www.tax.metro.tokyo.lg.jp/kazei/kojin_ji.html
     label: 総務省 — 個人事業税
     accessed: "2026-05-17"
 applies_to:
@@ -38,7 +38,7 @@ needs_review_flags:
   - 290man_calculation_method
 related_links:
   - title: "総務省 — 個人事業税"
-    url: "https://www.soumu.go.jp/main_sosiki/jichi_zeisei/czaisei/czaisei_seido/individual-jigyozei.html"
+    url: "https://www.tax.metro.tokyo.lg.jp/kazei/kojin_ji.html"
     organization: "総務省"
     display_label: "個人事業税"
     locator: "290万円・3-5%"
@@ -46,7 +46,7 @@ related_links:
 evidence_points:
   - claim: "個人事業税は事業主控除290万円超の所得に業種別3〜5%課税。法定70業種が対象、都道府県課税。"
     source_title: "総務省 — 個人事業税"
-    source_url: "https://www.soumu.go.jp/main_sosiki/jichi_zeisei/czaisei/czaisei_seido/individual-jigyozei.html"
+    source_url: "https://www.tax.metro.tokyo.lg.jp/kazei/kojin_ji.html"
     source_organization: "総務省"
     source_locator: "290万円・3-5%"
     display_label: "個人事業税"

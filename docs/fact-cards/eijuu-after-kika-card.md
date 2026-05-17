@@ -18,7 +18,7 @@ does_not_cover:
   - "帰化申請自体（別カード）"
 ai_pipeline: WebFetch → FACT-OPS extract
 official_sources:
-  - url: https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00023.html
+  - url: https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00020.html
     label: ISA — 在留カード返納
     accessed: "2026-05-17"
 applies_to:
@@ -38,7 +38,7 @@ needs_review_flags:
   - bank_account_name_change_specifics
 related_links:
   - title: "ISA — 在留カード返納"
-    url: "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00023.html"
+    url: "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00020.html"
     organization: "出入国在留管理庁"
     display_label: "返納"
     locator: "帰化後"
@@ -46,7 +46,7 @@ related_links:
 evidence_points:
   - claim: "帰化後は在留カード返納14日以内、住民票国籍変更、戸籍編製、運転免許等の名義変更、原国籍喪失手続（本国大使館）が必要。"
     source_title: "ISA — 在留カード返納"
-    source_url: "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00023.html"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00020.html"
     source_organization: "出入国在留管理庁"
     source_locator: "返納"
     display_label: "帰化後の手続"

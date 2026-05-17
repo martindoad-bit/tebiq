@@ -37,7 +37,10 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
     title: '搬家后要办什么',
     summary: '搬到新地址后，通常要先到市区町村办住所变更。',
     category: '在留卡',
-    factCardIds: ['zairyu-address-change'],
+    factCardIds: [
+      'zairyu-address-change',
+      'jukyochi-90days-torikeshi',
+    ],
     relatedTopicIds: ['tax-certificate', 'renewal-review-factors'],
     aliases: ['搬家', '地址变更', '住址', '住所', '转入', '转居'],
     deadline: '搬到新住所后，原则上 14 日以内。',
@@ -69,7 +72,9 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
     title: '在留卡丢了',
     summary: '先拿遗失或被盗的证明，再向入管申请补发。',
     category: '在留卡',
-    factCardIds: ['zairyu-card-loss-reissue'],
+    factCardIds: [
+      'zairyu-card-loss-reissue',
+    ],
     relatedTopicIds: ['permanent-resident-card-renewal'],
     aliases: ['在留卡丢了', '钱包丢了', '被盗', '再交付', '补办'],
     deadline: '知道丢失、盗难、灭失等事实后，原则上 14 日以内。',
@@ -101,7 +106,9 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
     title: '在留卡要随身带吗',
     summary: '中长期在留者通常要随身带在留卡，被要求时要出示。',
     category: '在留卡',
-    factCardIds: ['zairyu-card-keitai-gimu'],
+    factCardIds: [
+      'zairyu-card-keitai-gimu',
+    ],
     relatedTopicIds: ['card-loss', 'permanent-resident-card-renewal'],
     aliases: ['随身', '忘带', '警察检查', '提示', '携带义务'],
     deadline: '不是期限问题，是日常携带和被要求时提示的问题。',
@@ -139,6 +146,8 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
       'shuro-shikaku-shomeisho',
       'foreigner-employment-info-portal',
       'tokutei-katsudou-46-target',
+      'tokutei-ginou-tenshoku',
+      'jfind-tokutei-katsudou',
     ],
     relatedTopicIds: [
       'retirement-risk',
@@ -181,6 +190,7 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
       'tensyoku-zairyu',
       'foreigner-employment-info-portal',
       'zairyu-shitsugyo-hosho-pension',
+      'shitsugyou-gijinkoku-3months',
     ],
     relatedTopicIds: [
       'job-change',
@@ -222,7 +232,12 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
     title: 'みなし再入国',
     summary: '短期回国或出境前，先确认能不能用みなし再入国。',
     category: '出入境',
-    factCardIds: ['minashi-sainyuukoku', 'sainyukoku-kyoka'],
+    factCardIds: [
+      'minashi-sainyuukoku',
+      'sainyukoku-kyoka',
+      'saiyuukoku-kyoka-1year-5year',
+      'tokurei-kikan-2months',
+    ],
     relatedTopicIds: ['renewal-review-factors', 'permanent-resident-card-renewal'],
     aliases: ['临时回国', '再入国', 'みなし', '出国', '回国', '离境'],
     deadline: '通常以出国后 1 年以内再入国为中心；在留期限更早到期时要以在留期限为准。',
@@ -259,6 +274,8 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
       'kokumin-kenko-hoken-kanyu',
       'kaigo-hoken-day1-after-40',
       'kibyou-teate-3day-byouki',
+      'shougai-nenkin-overview',
+      'zairyu-shitsugyo-hosho-pension',
     ],
     relatedTopicIds: ['retirement-risk', 'pension-after-leaving-job'],
     aliases: ['健保', '健康保险', '国保', '任意继续', '扶养', '社保'],
@@ -295,7 +312,11 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
     title: '离职后的年金',
     summary: '厚生年金结束后，通常要确认国民年金切换。',
     category: '年金',
-    factCardIds: ['rishoku-kokumin-nenkin-kirikae'],
+    factCardIds: [
+      'rishoku-kokumin-nenkin-kirikae',
+      'shougai-nenkin-overview',
+      'zairyu-shitsugyo-hosho-pension',
+    ],
     relatedTopicIds: ['retirement-risk', 'health-insurance-after-leaving-job', 'tax-certificate'],
     aliases: ['年金', '厚生年金', '国民年金', '退职', '离职', '免除'],
     deadline: '退职日翌日起 14 日以内。',
@@ -331,7 +352,6 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
       'juminzei-kazei-shomeisho',
       'jumin-zei-no-shukyou-3types',
       'zeimu-shomeisho-3types',
-      'tax-treaty-source-of-truth',
       'shoukibo-jigyou-zei',
     ],
     relatedTopicIds: ['renewal-review-factors', 'pension-after-leaving-job'],
@@ -451,6 +471,8 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
       'eijuu-renew-not-required',
       'online-zairyu-card-uketori',
       'zaihu-card-3rd-online',
+      'eijuu-after-kika-card',
+      'saiyuukoku-kyoka-1year-5year',
     ],
     relatedTopicIds: ['deemed-reentry', 'renewal-review-factors'],
     aliases: ['永住卡', '在留卡期限', '永住者', '卡更新', '有效期限'],
@@ -487,8 +509,6 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
       'zairyu-expiry-renewal-change',
       'eijuu-zairyu-kikan',
       'gijinkoku-koushin-shorui',
-      'zairyu-kikan-5years-default',
-      'tokutei-katsudo-survival',
     ],
     relatedTopicIds: ['tax-certificate', 'job-change', 'pension-after-leaving-job'],
     aliases: ['续签', '更新', '变更', '审查', '不许可', '材料', '综合判断'],
@@ -531,6 +551,8 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
       'gijinkoku-job-mismatch',
       'juminzei-kazei-shomeisho',
       'zairyu-expiry-renewal-change',
+      'gijinkoku-cefr-b2-2026',
+      'gijinkoku-shotoku-shokuin-naka',
     ],
     relatedTopicIds: [
       'job-change',
@@ -650,7 +672,6 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
       'zairyu-expiry-renewal-change',
       'kazoku-taizai-zairyu-period',
       'kazoku-taizai-shussan-shutoku',
-      'kazoku-yobi-naitei-haigusha',
     ],
     relatedTopicIds: [
       'part-time-permission',
@@ -704,6 +725,7 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
       'juminzei-kazei-shomeisho',
       'zairyu-expiry-renewal-change',
       'eijuu-haigusha-zairyu-1year',
+      'yobi-yose-shinseki-houmon',
     ],
     relatedTopicIds: [
       'resident-tax-certificate-materials',
@@ -760,7 +782,6 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
       'ryugaku-naitei-tokutei-katsudou',
       'ryugaku-shikakugai-individual-permission',
       'ryugaku-kishu-katsudo-tokkatsu',
-      'tokutei-katsudou-17go',
       'jfind-tokutei-katsudou',
     ],
     relatedTopicIds: [
@@ -819,7 +840,7 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
       'eijuu-letterofunderstanding-2021',
       'hoshou-jin-eijuu',
       'eijuu-haigusha-zairyu-1year',
-      'eijuu-junior-15-eligibility',
+      'shougai-nenkin-overview',
     ],
     relatedTopicIds: [
       'resident-tax-certificate-materials',
@@ -979,7 +1000,6 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
       'eijuu-nenkin-2year-shomei-method',
       'maina-hoken-2024-12',
       'kokuho-shutoku-shoumei-2years',
-      'shakai-hoken-kyotei-bilateral',
       'shougai-nenkin-overview',
       'zairyu-shitsugyo-hosho-pension',
     ],
@@ -1076,6 +1096,7 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
     factCardIds: [
       'zairyu-address-change',
       'jyumin-hyo-gaijin',
+      'jukyochi-90days-torikeshi',
     ],
     relatedTopicIds: [
       'address-change',
@@ -1317,7 +1338,6 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
       'rishoku-kokumin-nenkin-kirikae',
       'kokumin-nenkin-menjo',
       'zairyu-shitsugyo-hosho-pension',
-      'shakai-hoken-kyotei-bilateral',
     ],
     relatedTopicIds: [
       'pension-after-leaving-job',
@@ -1499,6 +1519,7 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
     factCardIds: [
       'minashi-sainyuukoku',
       'sainyukoku-kyoka',
+      'saiyuukoku-kyoka-1year-5year',
     ],
     relatedTopicIds: [
       'deemed-reentry',

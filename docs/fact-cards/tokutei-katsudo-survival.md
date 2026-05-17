@@ -18,7 +18,7 @@ does_not_cover:
   - "個別号別の要件詳細"
 ai_pipeline: WebFetch → FACT-OPS extract
 official_sources:
-  - url: https://www.moj.go.jp/isa/applications/status/specact02.html
+  - url: https://www.moj.go.jp/isa/applications/status/designatedactivities.html
     label: ISA — 特定活動
     accessed: "2026-05-17"
 applies_to:
@@ -36,7 +36,7 @@ needs_review_flags:
   - shitei-sho_specific_format
 related_links:
   - title: "ISA — 特定活動"
-    url: "https://www.moj.go.jp/isa/applications/status/specact02.html"
+    url: "https://www.moj.go.jp/isa/applications/status/designatedactivities.html"
     organization: "出入国在留管理庁"
     display_label: "特定活動"
     locator: "号別"
@@ -44,7 +44,7 @@ related_links:
 evidence_points:
   - claim: "特定活動は法務大臣の個別指定活動向け資格。告示活動（46号、17号等）と告示外活動（人道的事情等）に分かれる。"
     source_title: "ISA — 特定活動"
-    source_url: "https://www.moj.go.jp/isa/applications/status/specact02.html"
+    source_url: "https://www.moj.go.jp/isa/applications/status/designatedactivities.html"
     source_organization: "出入国在留管理庁"
     source_locator: "号別"
     display_label: "特活概要"

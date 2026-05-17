@@ -1,7 +1,7 @@
 ---
 fact_id: jfind-tokutei-katsudou
 title: J-Find 特定活動 — 海外有力大学卒業者の就職活動2年特活
-state: ai_extracted
+state: ai_verified
 risk_level: medium
 confidence: medium
 source_quality: official
@@ -18,7 +18,7 @@ does_not_cover:
   - "本邦大学卒の就職活動特活（別ルート）"
 ai_pipeline: WebFetch → FACT-OPS extract
 official_sources:
-  - url: https://www.moj.go.jp/isa/applications/status/designatedactivities02_00004.html
+  - url: https://www.moj.go.jp/isa/applications/status/designatedactivities51.html
     label: ISA — 特定活動
     accessed: "2026-05-17"
 applies_to:
@@ -37,7 +37,7 @@ needs_review_flags:
   - dependent_family_eligibility
 related_links:
   - title: "ISA — 特定活動"
-    url: "https://www.moj.go.jp/isa/applications/status/designatedactivities02_00004.html"
+    url: "https://www.moj.go.jp/isa/applications/status/designatedactivities51.html"
     organization: "出入国在留管理庁"
     display_label: "特定活動"
     locator: "J-Find"
@@ -45,13 +45,13 @@ related_links:
 evidence_points:
   - claim: "J-Findは海外有力大学卒5年以内の者が就活/起業準備のため最長2年在留可能な特活。"
     source_title: "ISA — 特定活動"
-    source_url: "https://www.moj.go.jp/isa/applications/status/designatedactivities02_00004.html"
+    source_url: "https://www.moj.go.jp/isa/applications/status/designatedactivities51.html"
     source_organization: "出入国在留管理庁"
     source_locator: "J-Find"
     display_label: "J-Find特活"
     support_level: "direct"
     user_visible: true
-    needs_domain_review: true
+    needs_domain_review: false
 ---
 
 ## current_effective_fact
@@ -63,6 +63,17 @@ J-Find：海外有力大学卒5年以内・最長2年・就活/起業準備。
 - 海外有力大学卒
 - 卒業後5年以内
 - 最長2年
+
+## injection_format
+
+### injection_certain_block
+
+```
+【J-Find 特定活動／ 2026-05-17 公式】
+・海外有力大学の卒業者を対象に、日本での就職活動・起業準備を認める特定活動枠がある
+・卒業後年数、対象大学、資金要件などを公式ページで確認する必要がある
+・該当すれば必ず許可される制度ではない
+```
 
 ## changelog
 

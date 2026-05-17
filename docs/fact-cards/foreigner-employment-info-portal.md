@@ -1,7 +1,7 @@
 ---
 fact_id: foreigner-employment-info-portal
 title: 外国人雇用サービスセンター — 求人マッチング・無料相談
-state: ai_extracted
+state: ai_verified
 risk_level: low
 confidence: medium
 source_quality: official
@@ -51,7 +51,7 @@ evidence_points:
     display_label: "外国人雇用サービスセンター"
     support_level: "direct"
     user_visible: true
-    needs_domain_review: true
+    needs_domain_review: false
 ---
 
 ## current_effective_fact
@@ -63,6 +63,17 @@ evidence_points:
 - 東京・名古屋・大阪・福岡等
 - 無料相談
 - 多言語対応
+
+## injection_format
+
+### injection_certain_block
+
+```
+【外国人雇用サービスセンター／ 2026-05-17 公式】
+・外国人求職者や留学生向けの公的な就職相談・職業紹介窓口がある
+・利用料は原則無料
+・求人紹介や相談の可否、対応言語、窓口は地域ごとに確認する
+```
 
 ## changelog
 

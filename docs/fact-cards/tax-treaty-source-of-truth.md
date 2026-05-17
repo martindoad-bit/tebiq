@@ -18,7 +18,7 @@ does_not_cover:
   - "個別国の租税条約詳細"
 ai_pipeline: WebFetch → FACT-OPS extract
 official_sources:
-  - url: https://www.nta.go.jp/taxes/shiraberu/shinkoku/kakutei.htm
+  - url: https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2888.htm
     label: 国税庁 — 租税条約
     accessed: "2026-05-17"
 applies_to:
@@ -36,7 +36,7 @@ needs_review_flags:
   - touki-shukugen-sho_application_form
 related_links:
   - title: "国税庁 — 租税条約"
-    url: "https://www.nta.go.jp/taxes/shiraberu/shinkoku/kakutei.htm"
+    url: "https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2888.htm"
     organization: "国税庁"
     display_label: "租税条約"
     locator: "条約一覧"
@@ -44,7 +44,7 @@ related_links:
 evidence_points:
   - claim: "日本は80カ国以上と租税条約を締結、軽減税率適用には届出書事前提出が必要。留学生向け給与所得免税の特例（日中条約等）あり。"
     source_title: "国税庁 — 租税条約"
-    source_url: "https://www.nta.go.jp/taxes/shiraberu/shinkoku/kakutei.htm"
+    source_url: "https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2888.htm"
     source_organization: "国税庁"
     source_locator: "租税条約"
     display_label: "租税条約軽減"

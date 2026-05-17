@@ -100,6 +100,9 @@ export const MATERIAL_ENTITIES: MaterialEntity[] = [
     factCardIds: [
       'jukyochi-mynumber-renke-juminhyo',
       'yobi-yose-shinseki-houmon',
+      'yochi-en-hoiku-gaikoku',
+      'chintai-hoshou-gaikokujin',
+      'ginko-account-gaijin-6months',
     ],
     sourceUrls: [
       {
@@ -158,6 +161,9 @@ export const MATERIAL_ENTITIES: MaterialEntity[] = [
       'jumin-zei-no-shukyou-3types',
       'yobi-yose-shinseki-houmon',
       'koukou-mukyo-shogakukin',
+      'kaigo-hoken-day1-after-40',
+      'shougai-nenkin-overview',
+      'zairyu-shitsugyo-hosho-pension',
     ],
     sourceUrls: [
       {
@@ -210,6 +216,8 @@ export const MATERIAL_ENTITIES: MaterialEntity[] = [
       'eijuu-jukyo-check-tax-shomeisho',
       'jumin-zei-jan1-criterion',
       'jumin-zei-no-shukyou-3types',
+      'shoukibo-jigyou-zei',
+      'zairyu-shitsugyo-hosho-pension',
     ],
     sourceUrls: [
       {
@@ -256,7 +264,11 @@ export const MATERIAL_ENTITIES: MaterialEntity[] = [
     ],
     askTebiqBridge:
       '想确认这次申请要「その1 / その2 / その3」哪几种？或不确定如何处理过去的滞纳，可以直接问 TEBIQ。',
-    factCardIds: ['zeimu-shomeisho-3types', 'eijuu-jukyo-check-tax-shomeisho'],
+    factCardIds: [
+      'zeimu-shomeisho-3types',
+      'eijuu-jukyo-check-tax-shomeisho',
+      'shoukibo-jigyou-zei',
+    ],
     sourceUrls: [
       {
         url: 'https://www.nta.go.jp/taxes/shiraberu/taxanswer/osirase/9208.htm',
@@ -309,9 +321,9 @@ export const MATERIAL_ENTITIES: MaterialEntity[] = [
       'ryuugaku-nenkin-tokurei',
       'nenkin-dattai-ichijikin',
       'dattai-ichijikin-2years',
-      'shakai-hoken-kyotei-bilateral',
       'shougai-nenkin-overview',
       'zairyu-shitsugyo-hosho-pension',
+      'kaigo-hoken-day1-after-40',
     ],
     sourceUrls: [
       {
@@ -370,6 +382,8 @@ export const MATERIAL_ENTITIES: MaterialEntity[] = [
       'shussan-ichijikin-50man',
       'shussan-teate-3day-deno',
       'sangyou-gakuei-naniwakai-tetsuzuki',
+      'shougai-nenkin-overview',
+      'zairyu-shitsugyo-hosho-pension',
     ],
     sourceUrls: [
       {
@@ -423,10 +437,10 @@ export const MATERIAL_ENTITIES: MaterialEntity[] = [
       'shuro-shikaku-shomeisho',
       'gaikokujin-koyo-todokede',
       'ginko-account-gaijin-6months',
-      'kazoku-yobi-naitei-haigusha',
       'yobi-yose-shinseki-houmon',
       'chintai-hoshou-gaikokujin',
-      'kakkoukin-mortgage-foreigner',
+      'foreigner-employment-info-portal',
+      'gijinkoku-shotoku-shokuin-naka',
     ],
   },
 
@@ -474,8 +488,10 @@ export const MATERIAL_ENTITIES: MaterialEntity[] = [
       'koyou-keiyaku-rouken-tsuchi',
       'koyo-hoken-kanyu-gijmu',
       'ginko-account-gaijin-6months',
-      'kazoku-yobi-naitei-haigusha',
       'tokutei-ginou-shien-keikaku',
+      'foreigner-employment-info-portal',
+      'gijinkoku-shotoku-shokuin-naka',
+      'tokutei-ginou-tenshoku',
     ],
   },
 
@@ -519,6 +535,8 @@ export const MATERIAL_ENTITIES: MaterialEntity[] = [
     factCardIds: [
       'houjin-touki-overview',
       'keiei-kanri-2025-10',
+      'startup-visa-meti-fukuoka',
+      'shoukibo-jigyou-zei',
     ],
     sourceUrls: [
       {
@@ -571,6 +589,7 @@ export const MATERIAL_ENTITIES: MaterialEntity[] = [
       'keiei-kanri-2025-10',
       'aoiro-shinkoku-65',
       'shoukibo-jigyou-zei',
+      'startup-visa-meti-fukuoka',
     ],
   },
 
@@ -608,7 +627,11 @@ export const MATERIAL_ENTITIES: MaterialEntity[] = [
     ],
     askTebiqBridge:
       '找不到合适的身元保証人？或保証人也是外国人不确定能不能用？可以直接问 TEBIQ。',
-    factCardIds: ['hoshou-jin-eijuu'],
+    factCardIds: [
+      'hoshou-jin-eijuu',
+      'yobi-yose-shinseki-houmon',
+      'kika-documents-list',
+    ],
     sourceUrls: [
       {
         url: 'https://www.moj.go.jp/isa/applications/procedures/16-4.html',
@@ -655,6 +678,9 @@ export const MATERIAL_ENTITIES: MaterialEntity[] = [
       'eijuu-letterofunderstanding-2021',
       'eijuu-shinsei-shorui',
       'yobi-yose-shinseki-houmon',
+      'kika-documents-list',
+      'jfind-tokutei-katsudou',
+      'startup-visa-meti-fukuoka',
     ],
   },
 
@@ -710,11 +736,10 @@ export const MATERIAL_ENTITIES: MaterialEntity[] = [
       'kazoku-taizai-shussan-shutoku',
       'eijuu-after-kika-card',
       'eijuu-haigusha-zairyu-1year',
-      'eijuu-junior-15-eligibility',
       'gaiko-souzoku-kokusai',
-      'kazoku-yobi-naitei-haigusha',
       'yobi-yose-shinseki-houmon',
       'yuigon-koseishousho-jutsu',
+      'kika-documents-list',
     ],
   },
 
@@ -784,10 +809,12 @@ export const MATERIAL_ENTITIES: MaterialEntity[] = [
       'eijuu-renew-not-required',
       'ginko-account-gaijin-6months',
       'zairyu-card-online-failure-information',
-      'zairyu-kikan-5years-default',
       'zairyu-tokubetsu-eijuusha',
       'zaihu-card-3rd-online',
       'unten-menkyo-gaijin-1year',
+      'gaimen-kirikae-process',
+      'chintai-hoshou-gaikokujin',
+      'saiyuukoku-kyoka-1year-5year',
     ],
     sourceUrls: [
       {
@@ -850,8 +877,11 @@ export const MATERIAL_ENTITIES: MaterialEntity[] = [
       'koushin-shinsei-fee-6000',
       'henkou-shinsei-fee-6000',
       'eijuu-application-fee-10000',
-      'eijuu-junior-15-eligibility',
       'online-zairyu-card-uketori',
+      'gaimen-kirikae-process',
+      'kika-documents-list',
+      'jfind-tokutei-katsudou',
+      'startup-visa-meti-fukuoka',
     ],
     sourceUrls: [
       {

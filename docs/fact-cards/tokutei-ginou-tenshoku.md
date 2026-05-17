@@ -1,7 +1,7 @@
 ---
 fact_id: tokutei-ginou-tenshoku
 title: 特定技能 — 転職時の在留資格変更必須（同分野内のみ）
-state: ai_extracted
+state: ai_verified
 risk_level: high
 confidence: high
 source_quality: official
@@ -62,6 +62,17 @@ evidence_points:
 - 変更許可必要
 - 同分野内のみ
 - 分野超は試験再合格
+
+## injection_format
+
+### injection_certain_block
+
+```
+【特定技能・転職／ 2026-05-17 公式】
+・特定技能で所属機関が変わる場合、在留資格変更許可申請が必要になる
+・同じ分野でも、受入機関、業務区分、支援計画などを確認する
+・必要な許可を得る前に新しい会社で働き始めない
+```
 
 ## changelog
 

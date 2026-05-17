@@ -1,7 +1,7 @@
 ---
 fact_id: startup-visa-meti-fukuoka
 title: スタートアップビザ（特活）— 1年間の起業準備在留（地方公共団体管轄）
-state: ai_extracted
+state: ai_verified
 risk_level: medium
 confidence: high
 source_quality: official
@@ -18,7 +18,7 @@ does_not_cover:
   - "経営管理ビザの新規申請（別カード）"
 ai_pipeline: WebFetch → FACT-OPS extract
 official_sources:
-  - url: https://www.meti.go.jp/policy/newbusiness/startupvisa/index.html
+  - url: https://www.meti.go.jp/policy/newbusiness/startupvisa/
     label: 経産省 — スタートアップビザ
     accessed: "2026-05-17"
 applies_to:
@@ -38,7 +38,7 @@ needs_review_flags:
   - 3000man_pre_satisfy_required_practice
 related_links:
   - title: "経産省 — スタートアップビザ"
-    url: "https://www.meti.go.jp/policy/newbusiness/startupvisa/index.html"
+    url: "https://www.meti.go.jp/policy/newbusiness/startupvisa/"
     organization: "経済産業省"
     display_label: "スタートアップビザ"
     locator: "1年特活"
@@ -46,7 +46,7 @@ related_links:
 evidence_points:
   - claim: "スタートアップビザは地方公共団体が外国人起業家に1年（延長で2年）の特定活動を付与し、経営管理要件整備のための在留を認める制度。"
     source_title: "経産省 — スタートアップビザ"
-    source_url: "https://www.meti.go.jp/policy/newbusiness/startupvisa/index.html"
+    source_url: "https://www.meti.go.jp/policy/newbusiness/startupvisa/"
     source_organization: "経済産業省"
     source_locator: "1年特活"
     display_label: "スタートアップビザ"
@@ -64,6 +64,17 @@ evidence_points:
 - 1年（延長で2年）
 - 地方公共団体認定
 - 経営管理準備のため
+
+## injection_format
+
+### injection_certain_block
+
+```
+【スタートアップビザ／ 2026-05-17 公式】
+・地方公共団体等の制度を通じ、起業準備活動のための在留枠が用意されている
+・対象自治体、期間、事業計画確認、後続の経営・管理への移行条件は個別確認が必要
+・取得すれば経営・管理が保証されるわけではない
+```
 
 ## changelog
 

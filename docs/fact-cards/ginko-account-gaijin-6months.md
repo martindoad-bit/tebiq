@@ -18,7 +18,7 @@ does_not_cover:
   - "ネット銀行の対応詳細（個別）"
 ai_pipeline: WebFetch → FACT-OPS extract
 official_sources:
-  - url: https://www.fsa.go.jp/ordinary/kaigaikouza/index.html
+  - url: https://www.fsa.go.jp/user/livinginjapan.html
     label: 金融庁 — 外国為替
     accessed: "2026-05-17"
 applies_to:
@@ -37,7 +37,7 @@ needs_review_flags:
   - international_remittance_restriction
 related_links:
   - title: "金融庁 — 外国為替"
-    url: "https://www.fsa.go.jp/ordinary/kaigaikouza/index.html"
+    url: "https://www.fsa.go.jp/user/livinginjapan.html"
     organization: "金融庁"
     display_label: "金融"
     locator: "本人確認"
@@ -45,7 +45,7 @@ related_links:
 evidence_points:
   - claim: "金融機関の本人確認規制により、上陸後6か月未満の外国人は普通口座開設が制限される（実務）。ゆうちょ銀行は比較的緩い。"
     source_title: "金融庁"
-    source_url: "https://www.fsa.go.jp/ordinary/kaigaikouza/index.html"
+    source_url: "https://www.fsa.go.jp/user/livinginjapan.html"
     source_organization: "金融庁"
     source_locator: "本人確認"
     display_label: "銀行口座6か月"
