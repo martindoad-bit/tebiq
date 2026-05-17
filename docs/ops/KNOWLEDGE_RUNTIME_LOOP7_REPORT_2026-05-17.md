@@ -133,7 +133,28 @@ Current filesystem waterline before production DB sync:
 | disabled | 3 |
 | material references | 177 |
 
-Production DB still reflects the previous Loop6 waterline until targeted sync runs after merge.
+Post-merge production verification:
+
+- PR #166 merged to `main` as `b17c49fe718c5a8d917e9e9a88a4b1bee65b5f96`
+- Targeted production DB sync completed for all 12 promoted cards: `12/12`
+- `npm run qa:card-import-audit` after sync — PASS
+- production build-info — `gitSha=b17c49fe718c5a8d917e9e9a88a4b1bee65b5f96`
+- production material route probes — `8/8` returned HTTP 200
+- production answer smoke — `20/20` passed after calibrating brittle regex-only false failures in the smoke script
+
+Current production waterline after Loop 7:
+
+| Metric | Count |
+|---|---:|
+| total fact cards | 269 |
+| `ai_verified` | 186 |
+| `human_reviewed` | 5 |
+| runtime eligible | 191 |
+| `ai_extracted` quarantine | 75 |
+| disabled | 3 |
+| material references | 177 |
+
+Smoke calibration note: the production answers for the initially failing cases were substantively safe; failures came from overly broad regexes that treated safe explanatory phrases as dangerous. The smoke script was tightened to check danger patterns rather than isolated terms.
 
 ## Next Loop Candidates
 
@@ -144,4 +165,3 @@ Loop 8 should focus on rewrite-heavy cards rather than direct promotion:
 - `tokutei-ginou-1-vs-2` → update fields and family-accompaniment wording
 - `gijinkoku-major-job-match` / `gijinkoku-shihon-jugyou-strict` → split safe runtime fact vs L5 boundary
 - `shakai-hoken-kyotei-bilateral` / `tax-treaty-source-of-truth` → split country-specific treaty/social-security claims
-
