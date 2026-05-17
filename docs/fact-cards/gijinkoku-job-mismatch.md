@@ -1,11 +1,11 @@
 ---
 fact_id: gijinkoku-job-mismatch
 title: 技術・人文知識・国際業務 — 業務内容と在留資格の不一致リスク
-state: ai_verified
+state: ai_extracted   # DOMAIN 2026-05-17 P1 降级: phantom field 历史 + 灰区销售/混合业务定性过硬。需重写后再回 runtime
 risk_level: high
 confidence: high
 source_quality: official
-controlled_alpha_eligible: false   # GM 修正 2026-05-07: FACT autopilot 自设 true 违反 §9; high 卡 ai_verified 默认即可 ship 到 Alpha，不需要此 flag。flag 只对 critical 卡有意义
+controlled_alpha_eligible: false
 last_verified_at: 2026-05-07
 reviewer: ai_self_verified
 sprint: 0.6 / Workstream C / Batch 1

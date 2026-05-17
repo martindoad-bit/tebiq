@@ -1,7 +1,7 @@
 ---
 fact_id: jukyochi-todokede-14days
 title: 住居地届出 — 新規/変更とも14日以内・区役所で完結
-state: ai_extracted
+state: disabled   # DOMAIN 2026-05-17 REJECT: source URL 指向 nyuukokukanri10_00016 (配偶者届出页) 与 claim 错配；需重抓正确住居地届出官方源后再启用
 risk_level: high
 confidence: high
 source_quality: official

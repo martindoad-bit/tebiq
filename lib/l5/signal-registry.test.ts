@@ -24,6 +24,9 @@ const EXPECTED_FAMILIES = [
   'additional-document-notice-protocol',
   'student-attendance-status-change',
   'late-payment-corrected-tax-filing-record-mismatch',
+  // DOMAIN 2026-05-17 P1: two new families added per DOMAIN audit
+  'pending-change-new-work',
+  'gijinkoku-job-scope',
 ] as const
 
 // Per task: needs_domain for items that depend on review-substance
@@ -39,6 +42,8 @@ const EXPECTED_STATE: Record<string, L5ContentState> = {
   'additional-document-notice-protocol': 'agent_drafted',
   'student-attendance-status-change': 'needs_domain',
   'late-payment-corrected-tax-filing-record-mismatch': 'needs_domain',
+  'pending-change-new-work': 'needs_domain',
+  'gijinkoku-job-scope': 'needs_domain',
 }
 
 // All ProfessionalKind values currently declared in deep-water-handoff.
@@ -62,16 +67,26 @@ const VALID_PROFESSIONAL_KINDS = new Set([
 
 // ----- Registry shape contracts ---------------------------------------
 
-test('registry covers all 10 WB-G families exactly once', () => {
+test('registry covers all WB-G + DOMAIN P1 families exactly once', () => {
   assert.equal(
     L5_SIGNAL_REGISTRY.length,
     EXPECTED_FAMILIES.length,
-    'registry must have one entry per family (1-2 signals planned but we shipped 1 each)',
+    'registry must have one entry per family (10 WB-G + 2 DOMAIN P1 = 12)',
   )
   const families = new Set(L5_SIGNAL_REGISTRY.map(s => s.family))
   for (const fam of EXPECTED_FAMILIES) {
     assert.ok(families.has(fam), `missing family: ${fam}`)
   }
+})
+
+test('DOMAIN P1 pending-change-new-work binds to pending-status-change gate', () => {
+  const out = getSignalsForRoutes(['pending-status-change-current-activity-only'])
+  assert.ok(out.some(s => s.family === 'pending-change-new-work'))
+})
+
+test('DOMAIN P1 gijinkoku-job-scope binds to gijinkoku-work-scope gate', () => {
+  const out = getSignalsForRoutes(['gijinkoku-work-scope-not-any-job'])
+  assert.ok(out.some(s => s.family === 'gijinkoku-job-scope'))
 })
 
 test('every signal has all required fields populated', () => {

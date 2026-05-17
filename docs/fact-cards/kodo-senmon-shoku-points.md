@@ -1,7 +1,7 @@
 ---
 fact_id: kodo-senmon-shoku-points
 title: 高度専門職1号のポイント計算 — 70点・80点で永住短縮
-state: ai_verified
+state: ai_extracted   # DOMAIN 2026-05-17 P1 降级: source URL 可疑 + HSP1 机构变更场景注入会稀释"事前変更許可"边界
 risk_level: high
 confidence: high
 source_quality: official
