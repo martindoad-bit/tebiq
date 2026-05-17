@@ -119,9 +119,26 @@ while IFS= read -r route; do
   url="${BASE_URL}${route}"
   # -L follow redirects, -o /dev/null discard body, -w get code + time,
   # --max-time 15 hard cap. We capture into a single line "code time".
-  resp="$(curl -sS -L -o /dev/null --max-time 15 \
-    -w '%{http_code} %{time_total}' "$url" 2>&1)"
-  curl_exit=$?
+  #
+  # A single edge/network hiccup should not make the audit flaky, but real HTTP
+  # failures must still fail. Therefore only curl transport errors are retried;
+  # a completed 404/5xx response is evaluated normally below.
+  attempt=1
+  max_attempts=3
+  curl_exit=1
+  resp=""
+  while [ "$attempt" -le "$max_attempts" ]; do
+    resp="$(curl -sS -L -o /dev/null --max-time 15 \
+      -w '%{http_code} %{time_total}' "$url" 2>&1)"
+    curl_exit=$?
+    if [ $curl_exit -eq 0 ]; then
+      break
+    fi
+    attempt=$((attempt + 1))
+    if [ "$attempt" -le "$max_attempts" ]; then
+      sleep 1
+    fi
+  done
 
   if [ $curl_exit -ne 0 ]; then
     hard_fail=$((hard_fail + 1))
