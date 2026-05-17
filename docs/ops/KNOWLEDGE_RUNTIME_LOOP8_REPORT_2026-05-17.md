@@ -130,11 +130,17 @@ Current filesystem waterline before production DB sync:
 | disabled | 3 |
 | material references | 193 |
 
-Production DB is not synced until after PR merge. The pre-merge database still reflects Loop 7 (`ai_verified` 186, `ai_extracted` 75).
+## Post-Merge Production Verification
 
-## Expected Post-Merge Actions
+PR #168 merged to `main` as `9aa80891448d6ea026826b8744973b2db5ad35a1`.
 
-After merge, run targeted production sync for the 12 promoted cards:
+Production fact-layer sync:
+
+- full `npm run fact-layer:sync` was stopped after it produced no output for an extended period;
+- targeted sync was run for the 12 promoted cards and completed `12/12`;
+- post-sync `npm run qa:card-import-audit` confirmed filesystem and DB now match.
+
+Targeted synced cards:
 
 - `eijuu-3000man-shisan-myth`
 - `eijuu-after-kika-card`
@@ -149,12 +155,29 @@ After merge, run targeted production sync for the 12 promoted cards:
 - `rikon-todoke-procedure`
 - `shikakugai-30jikan-rural`
 
-Then verify:
+Current production DB waterline after sync:
 
-- post-sync `npm run qa:card-import-audit`
-- production build-info equals merged SHA
-- `npm run smoke:production-answer`
-- material route probes for PR, deemed reentry, part-time permission, student, job-change, 技人国, family-stay, Japanese-spouse, and material entity pages.
+| Metric | Count |
+|---|---:|
+| total fact cards | 269 |
+| `ai_verified` | 198 |
+| `human_reviewed` | 5 |
+| runtime eligible | 203 |
+| `ai_extracted` quarantine | 63 |
+| disabled | 3 |
+| material references | 193 |
+
+Production route verification:
+
+- production build-info — `gitSha=9aa80891448d6ea026826b8744973b2db5ad35a1`
+- material / quick-reference route probes — `12/12` HTTP 200
+- production answer smoke — initially `18/20` because two redlines were word-level overblocks; complete answer review found no P0 and the smoke script was calibrated to risk-level patterns
+- calibrated production answer smoke — `20/20` PASS
+
+Smoke calibration note:
+
+- `R3-company-dormant-pension` should reject “income is low, so leave pension unpaid / exemption automatically passes,” but should not reject cautious guidance to confirm 国民年金免除・猶予 at the municipal or pension window.
+- `N16-short-stay-meeting` should reject “ordinary customer/business meetings require a work visa / are prohibited,” but should not reject ordinary short-stay business-meeting framing.
 
 ## Loop 9 Candidate Direction
 
@@ -165,4 +188,3 @@ Loop 9 should continue from the remaining 63 `ai_extracted` cards, but prioritiz
 - 技人国 role-fit cards as L5/practice-signal rather than direct answer injection;
 - business-manager 2025 cards as L5-only unless official-source wording is narrow enough;
 - source repair for any card still carrying stale ISA/MHLW URLs.
-
