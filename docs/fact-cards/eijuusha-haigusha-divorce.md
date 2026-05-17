@@ -23,7 +23,7 @@ official_sources:
   - url: https://www.moj.go.jp/isa/applications/status/spouseorchildofpermanentresident.html
     label: ISA — 永住者の配偶者等
     accessed: "2026-05-17"
-  - url: https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00020.html
+  - url: https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00016.html
     label: ISA — 配偶者に関する届出
     accessed: "2026-05-17"
 applies_to:
@@ -42,7 +42,7 @@ needs_review_flags:
   - dv_protected_exception
 related_links:
   - title: "ISA — 配偶者に関する届出"
-    url: "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00020.html"
+    url: "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00016.html"
     organization: "出入国在留管理庁"
     display_label: "配偶者届出"
     locator: "14日以内"
@@ -50,7 +50,7 @@ related_links:
 evidence_points:
   - claim: "永住者の配偶者等資格者が離婚・死別した場合は14日以内に届出義務。活動継続6か月不実施で取消事由⑦該当のリスク。"
     source_title: "ISA — 配偶者届出"
-    source_url: "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00020.html"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00016.html"
     source_organization: "出入国在留管理庁"
     source_locator: "ページ内「14日以内」"
     display_label: "離婚届出14日・6か月取消"

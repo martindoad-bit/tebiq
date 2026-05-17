@@ -18,7 +18,7 @@ does_not_cover:
   - "上陸特別許可（別カード）"
 ai_pipeline: WebFetch → FACT-OPS extract
 official_sources:
-  - url: https://www.moj.go.jp/isa/applications/procedures/16-9.html
+  - url: https://www.moj.go.jp/isa/immigration/procedures/kyohi_00001.html
     label: ISA — 上陸拒否
     accessed: "2026-05-17"
 applies_to:
@@ -42,7 +42,7 @@ needs_review_flags:
   - special_permission_actual_practice
 related_links:
   - title: "ISA — 上陸拒否"
-    url: "https://www.moj.go.jp/isa/applications/procedures/16-9.html"
+    url: "https://www.moj.go.jp/isa/immigration/procedures/kyohi_00001.html"
     organization: "出入国在留管理庁"
     display_label: "上陸拒否"
     locator: "5条"
@@ -50,7 +50,7 @@ related_links:
 evidence_points:
   - claim: "入管法第5条の上陸拒否事由には感染症、麻薬関連、1年以上の懲役・禁錮、退去強制歴等10項目あり。該当者は原則上陸不可。"
     source_title: "ISA — 上陸拒否"
-    source_url: "https://www.moj.go.jp/isa/applications/procedures/16-9.html"
+    source_url: "https://www.moj.go.jp/isa/immigration/procedures/kyohi_00001.html"
     source_organization: "出入国在留管理庁"
     source_locator: "5条"
     display_label: "上陸拒否事由"
