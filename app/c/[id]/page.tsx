@@ -16,6 +16,7 @@ import {
 } from '@/components/ui/consultation-alpha'
 import { FactReferenceBlock } from '@/components/ui/fact-reference'
 import { QuickReferenceBridge } from '@/components/ui/quick-reference-bridge'
+import { ConsultationFeedbackBar } from '@/components/ui/consultation-feedback-bar'
 import type { ConsultationFactCardAuditEntry } from '@/lib/consultation/stream-protocol'
 import {
   getAiConsultationById,
@@ -116,6 +117,11 @@ export default async function ConsultationDetailPage({ params }: PageProps) {
 
         <FactReferenceBlock audit={factCardAudit} variant="compact" />
         <QuickReferenceBridge audit={factCardAudit} />
+
+        <Surface className="space-y-2">
+          <SectionLabel>这条回答怎么样</SectionLabel>
+          <ConsultationFeedbackBar consultationId={row.id} initialFeedback={row.feedbackType} />
+        </Surface>
 
         {isChain && <ChainBlock chain={chain} currentId={row.id} />}
 
