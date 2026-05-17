@@ -62,6 +62,11 @@ export interface HandoffEntry {
   urgency: HandoffUrgency
   /** Short DOMAIN family tag, mirrors §3.x for traceability. */
   familyTag: string
+  /** L5 signal ids associated with this family. Populated at runtime by
+   *  `getHandoffForRoutes` / `getHandoffForMatches` so the answer page
+   *  can render the "为什么是深水 + 你该准备什么 + 不要做什么" block
+   *  alongside this handoff. Optional — older callers can ignore it. */
+  l5SignalIds?: string[]
 }
 
 // -- ProfessionalEntry shortcuts ---------------------------------------
@@ -263,6 +268,20 @@ export const DEEP_WATER_HANDOFF_REGISTRY: HandoffEntry[] = [
     oneLine: '工作范围咨询找行政書士；如已做范围外工作或涉嫌虚假申报，弁護士同步评估不法就労风险。',
     urgency: 'this_week',
   },
+
+  // --- L5 WB-G addition: 留学 出席率 / 在学状态 ---
+  // Added alongside the WB-G L5 student-attendance-status-change family.
+  // Wired here so the same UI surface (`找谁确认`) covers留学 cases the
+  // way it covers work and family cases; this is *binding only*, no new
+  // safety claim — student in trouble still goes to scrivener / lawyer
+  // per DOMAIN. routeIds binds the existing shikakugai 28h gate.
+  {
+    familyTag: 'student-attendance',
+    routeIds: ['student-shikakugai-28h-long-vacation-limit'],
+    kinds: [GYOUSEISHOSHI, IMMIGRATION_LAWYER],
+    oneLine: '出席率、休学、退学的入管视角和学校视角不同；处理顺序错了会影响后续更新或变更。',
+    urgency: 'this_week',
+  },
 ]
 
 // -- Public matcher ----------------------------------------------------
@@ -308,7 +327,19 @@ export function getHandoffForRoutes(routeIds: string[] | null | undefined): Hand
     return a.order - b.order
   })
 
-  return candidates[0].entry
+  // Attach L5 signal ids associated with this handoff's routeIds so the
+  // UI can render the "为什么是深水 + 准备什么 + 不要做什么" block under
+  // the handoff without a second pass. We re-query routeIds against the
+  // L5 registry to pick up any signals whose triggerRoutes overlap.
+  const winner = candidates[0].entry
+  // Lazy-require to avoid an import cycle (handoff is the lower layer;
+  // L5 sits above and re-uses ProfessionalKind from here).
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const { getSignalsForRoutes } = require('@/lib/l5/signal-registry') as
+    typeof import('@/lib/l5/signal-registry')
+  const l5Signals = getSignalsForRoutes(Array.from(idSet))
+  if (l5Signals.length === 0) return winner
+  return { ...winner, l5SignalIds: l5Signals.map(s => s.id) }
 }
 
 /** Convenience overload: pass `RouteGateMatch[]` directly. */
