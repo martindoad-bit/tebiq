@@ -1,7 +1,7 @@
 ---
 fact_id: sangyou-gakuei-naniwakai-tetsuzuki
 title: 産後パパ育休 — 出生時育児休業（2022年10月〜）
-state: ai_extracted
+state: ai_verified   # Knowledge Runtime Loop 6 promote: FACT source checked + DOMAIN narrow runtime scope.
 risk_level: low
 confidence: medium
 source_quality: official
@@ -64,8 +64,19 @@ evidence_points:
 - 2回分割可
 - 給付67%
 
+## injection_format
+
+### injection_certain_block
+
+```text
+- 出生時育児休業（産後パパ育休）は、子の出生後8週間以内に4週間まで取得でき、2回に分割して取得できる制度。
+- 給付や対象可否は雇用保険・勤務状況・会社手続により確認する。
+- 出典: 厚生労働省 — 育児・介護休業法について https://www.mhlw.go.jp/seisakunitsuite/bunya/koyou_roudou/koyoukintou/ryouritsu/ikuji/childcare/
+```
+
 ## changelog
 
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
 |------|------|----------|--------------|-------------|------|
 | 2026-05-17 | FACT-OPS bulk-1 | 新規作成。 | — | ai_extracted | new |
+| 2026-05-17 | Codex Loop6 | 公式sourceとDOMAIN境界を確認し、狭い確定事実としてruntime昇格。 | ai_extracted | ai_verified | promote |

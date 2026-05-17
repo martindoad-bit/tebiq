@@ -1,7 +1,7 @@
 ---
 fact_id: zairyu-card-online-failure-information
 title: 在留カード等番号失効情報照会 — 雇用主・賃貸保証人の確認手段
-state: ai_extracted
+state: ai_verified   # Knowledge Runtime Loop 6 promote: FACT source checked + DOMAIN narrow runtime scope.
 risk_level: low
 confidence: high
 source_quality: official
@@ -18,7 +18,7 @@ does_not_cover:
   - "在留資格の活動範囲確認（要在留カード現物）"
 ai_pipeline: WebFetch → FACT-OPS extract
 official_sources:
-  - url: https://www.moj.go.jp/isa/applications/procedures/tokureikikan_00001.html
+  - url: https://www.moj.go.jp/isa/applications/procedures/rcc-support.html
     label: ISA — 失効情報照会
     accessed: "2026-05-17"
 applies_to:
@@ -37,7 +37,7 @@ needs_review_flags:
   - mobile_app_alternative_2026
 related_links:
   - title: "ISA — 失効情報照会"
-    url: "https://www.moj.go.jp/isa/applications/procedures/tokureikikan_00001.html"
+    url: "https://www.moj.go.jp/isa/applications/procedures/rcc-support.html"
     organization: "出入国在留管理庁"
     display_label: "失効情報照会"
     locator: "オンライン"
@@ -45,7 +45,7 @@ related_links:
 evidence_points:
   - claim: "在留カード等番号失効情報照会は24時間オンラインで利用可。在留カード番号の有効/無効を確認できる。"
     source_title: "ISA — 失効情報照会"
-    source_url: "https://www.moj.go.jp/isa/applications/procedures/tokureikikan_00001.html"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/rcc-support.html"
     source_organization: "出入国在留管理庁"
     source_locator: "失効情報"
     display_label: "失効情報照会"
@@ -64,8 +64,19 @@ evidence_points:
 - 番号で確認可
 - 活動範囲は別途現物確認
 
+## injection_format
+
+### injection_certain_block
+
+```text
+- 在留カード等番号失効情報照会では、在留カード等番号が失効していないかをオンラインで確認できる。
+- この照会は在留カード番号の有効性確認であり、在留資格の活動範囲や就労可否の完全確認ではない。
+- 出典: ISA — 在留カード等番号失効情報照会 https://www.moj.go.jp/isa/applications/procedures/rcc-support.html
+```
+
 ## changelog
 
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
 |------|------|----------|--------------|-------------|------|
 | 2026-05-17 | FACT-OPS bulk-1 | 新規作成。 | — | ai_extracted | new |
+| 2026-05-17 | Codex Loop6 | 公式sourceとDOMAIN境界を確認し、狭い確定事実としてruntime昇格。 | ai_extracted | ai_verified | promote |

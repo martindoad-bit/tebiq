@@ -1,7 +1,7 @@
 ---
 fact_id: unten-menkyo-gaijin-1year
 title: 運転免許 — 国際運転免許証は1年有効・上陸後1年経過で日本免許要
-state: ai_extracted
+state: ai_verified   # Knowledge Runtime Loop 6 promote: FACT source checked + DOMAIN narrow runtime scope.
 risk_level: medium
 confidence: medium
 source_quality: official
@@ -50,7 +50,7 @@ evidence_points:
     display_label: "国際免許1年"
     support_level: "direct"
     user_visible: true
-    needs_domain_review: true
+    needs_domain_review: false
 ---
 
 ## current_effective_fact
@@ -63,8 +63,19 @@ evidence_points:
 - 外免切替必要
 - 中国は非締約国
 
+## injection_format
+
+### injection_certain_block
+
+```text
+- 外国の運転免許証や国際運転免許証で日本国内を運転できるかは、発給国・条約・上陸日からの期間などで確認する。
+- 国際運転免許証の扱いや外免切替は、住所地の運転免許センター等で確認する。
+- 出典: 警察庁 — 運転免許 https://www.npa.go.jp/policies/application/license_renewal/index.html
+```
+
 ## changelog
 
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
 |------|------|----------|--------------|-------------|------|
 | 2026-05-17 | FACT-OPS bulk-1 | 新規作成。 | — | ai_extracted | new |
+| 2026-05-17 | Codex Loop6 | 公式sourceとDOMAIN境界を確認し、狭い確定事実としてruntime昇格。 | ai_extracted | ai_verified | promote |

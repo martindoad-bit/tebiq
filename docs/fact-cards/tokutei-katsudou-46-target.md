@@ -1,7 +1,7 @@
 ---
 fact_id: tokutei-katsudou-46-target
 title: 特定活動46号 — 本邦大学卒+N1で接客等含む幅広い活動可
-state: ai_extracted
+state: ai_verified   # Knowledge Runtime Loop 6 promote: FACT source checked + DOMAIN narrow runtime scope.
 risk_level: medium
 confidence: high
 source_quality: official
@@ -18,7 +18,7 @@ does_not_cover:
   - "技人国との切り替え判断（別カード）"
 ai_pipeline: WebFetch → FACT-OPS extract
 official_sources:
-  - url: https://www.moj.go.jp/isa/applications/status/tokutei46.html
+  - url: https://www.moj.go.jp/isa/applications/status/designatedactivities11.html
     label: ISA — 特活46号
     accessed: "2026-05-17"
 applies_to:
@@ -37,7 +37,7 @@ needs_review_flags:
   - 47go_application_specifics
 related_links:
   - title: "ISA — 特活46号"
-    url: "https://www.moj.go.jp/isa/applications/status/tokutei46.html"
+    url: "https://www.moj.go.jp/isa/applications/status/designatedactivities11.html"
     organization: "出入国在留管理庁"
     display_label: "特活46号"
     locator: "本邦大学卒+N1"
@@ -45,7 +45,7 @@ related_links:
 evidence_points:
   - claim: "特活46号は本邦大学/大学院卒+N1相当が必要。接客等含む幅広い活動可。配偶者は47号。"
     source_title: "ISA — 特活46号"
-    source_url: "https://www.moj.go.jp/isa/applications/status/tokutei46.html"
+    source_url: "https://www.moj.go.jp/isa/applications/status/designatedactivities11.html"
     source_organization: "出入国在留管理庁"
     source_locator: "本邦大学卒+N1"
     display_label: "特活46号要件"
@@ -64,8 +64,19 @@ evidence_points:
 - N1相当
 - 接客含む幅広業務可
 
+## injection_format
+
+### injection_certain_block
+
+```text
+- 特定活動46号は、日本の大学等を卒業し、高い日本語能力を有する人が、日本語を用いる業務を含む幅広い活動を行うための制度。
+- 実際の職務内容が対象活動に入るかは個別確認が必要で、単純作業だけでよいという制度ではない。
+- 出典: ISA — 特定活動46号 https://www.moj.go.jp/isa/applications/status/designatedactivities11.html
+```
+
 ## changelog
 
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
 |------|------|----------|--------------|-------------|------|
 | 2026-05-17 | FACT-OPS bulk-1 | 新規作成。 | — | ai_extracted | new |
+| 2026-05-17 | Codex Loop6 | 公式sourceとDOMAIN境界を確認し、狭い確定事実としてruntime昇格。 | ai_extracted | ai_verified | promote |

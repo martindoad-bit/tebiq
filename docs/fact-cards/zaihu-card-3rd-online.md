@@ -1,7 +1,7 @@
 ---
 fact_id: zaihu-card-3rd-online
 title: 在留カード裏面 — 申請中表示は窓口申請のみ（オンライン申請は表示なし）
-state: ai_extracted
+state: ai_verified   # Knowledge Runtime Loop 6 promote: FACT source checked + DOMAIN narrow runtime scope.
 risk_level: medium
 confidence: high
 source_quality: official
@@ -62,8 +62,19 @@ evidence_points:
 - オンラインは記載なし
 - 失効情報照会で確認可
 
+## injection_format
+
+### injection_certain_block
+
+```text
+- 特例期間中、窓口申請では在留カード裏面の「在留期間更新等許可申請欄」に申請中の旨が記載されるが、オンライン申請の場合は裏面記載されない。
+- 裏面記載の有無だけで申請中かどうかを判断せず、オンライン申請時の案内や受付情報も確認する。
+- 出典: ISA — 特例期間 https://www.moj.go.jp/isa/applications/procedures/tokureikikan_00001.html
+```
+
 ## changelog
 
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
 |------|------|----------|--------------|-------------|------|
 | 2026-05-17 | FACT-OPS bulk-1 | 新規作成。 | — | ai_extracted | new |
+| 2026-05-17 | Codex Loop6 | 公式sourceとDOMAIN境界を確認し、狭い確定事実としてruntime昇格。 | ai_extracted | ai_verified | promote |
