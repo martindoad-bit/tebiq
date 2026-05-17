@@ -1,7 +1,7 @@
 ---
 fact_id: zairyu-card-return-gimu
 title: 在留カード返納義務（資格喪失・期限切れ・死亡・再入国期限超過）
-state: ai_extracted
+state: ai_verified   # LOOP2 2026-05-17: source repaired to ISA返納 page; narrow return-duty fact
 risk_level: high
 confidence: medium
 source_quality: official
@@ -22,7 +22,7 @@ does_not_cover:
   - "退去強制時の在留カード回収手続"
 ai_pipeline: WebFetch → FACT-OPS extract
 official_sources:
-  - url: https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00023.html
+  - url: https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00020.html
     label: ISA — 在留カード等の返納
     accessed: "2026-05-17"
 applies_to:
@@ -43,7 +43,7 @@ needs_review_flags:
   - special_permanent_resident_certificate_diff
 related_links:
   - title: "ISA — 在留カード等の返納"
-    url: "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00023.html"
+    url: "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00020.html"
     organization: "出入国在留管理庁"
     display_label: "ISA — 在留カード等の返納"
     locator: "ページ内「14日以内に返納」"
@@ -51,13 +51,13 @@ related_links:
 evidence_points:
   - claim: "中長期在留者または特別永住者の資格を失った場合、有効期限が切れた場合、再入国許可の期限内に帰国しなかった場合などに、失効した日から14日以内の返納が必要。死亡時は親族または同居者が返納責任を負う。"
     source_title: "ISA — 在留カード等の返納"
-    source_url: "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00023.html"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00020.html"
     source_organization: "出入国在留管理庁"
     source_locator: "ページ内「14日以内」「親族または同居者」"
     display_label: "返納14日以内・死亡時は親族責任"
     support_level: "direct"
     user_visible: true
-    needs_domain_review: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic
@@ -100,7 +100,7 @@ A: 死亡から14日以内に親族または同居者が返納する必要があ
 
 ### injection_certain_block
 
-```
+```text
 【在留カード返納義務／ {{TODAY_ISO}} 公式確認】
 ・期限：失効から14日以内
 ・死亡時：親族・同居者が責任
@@ -119,3 +119,4 @@ A: 死亡から14日以内に親族または同居者が返納する必要があ
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
 |------|------|----------|--------------|-------------|------|
 | 2026-05-17 | FACT-OPS bulk-1 | 新規作成（ai_extracted）。 | — | ai_extracted | new |
+| 2026-05-17 | Codex Loop2 | 返納ページURLを修正し、返納14日義務としてruntime昇格。 | ai_extracted | ai_verified | source-repair/promote |

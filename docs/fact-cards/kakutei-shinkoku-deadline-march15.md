@@ -1,7 +1,7 @@
 ---
 fact_id: kakutei-shinkoku-deadline-march15
 title: 確定申告 — 申告期限3月15日・延滞税と無申告加算税
-state: ai_extracted
+state: ai_verified   # LOOP2 2026-05-17: NTA direct source; tax deadline fact only
 risk_level: high
 confidence: high
 source_quality: official
@@ -77,8 +77,20 @@ evidence_points:
 - 無申告加算税・延滞税
 - e-Tax可
 
+## injection_format
+
+### injection_certain_block
+
+```text
+- 所得税の確定申告は、原則として翌年3月15日までに行う。納付期限も同日。
+- 期限後申告には無申告加算税、納付遅れには延滞税が発生することがある。
+- e-Taxで申告できるが、在留審査への影響は「期限内に申告・納付していたか」と分けて確認する。
+- 出典: 国税庁「確定申告」 https://www.nta.go.jp/taxes/shiraberu/shinkoku/kakutei.htm
+```
+
 ## changelog
 
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
 |------|------|----------|--------------|-------------|------|
 | 2026-05-17 | FACT-OPS bulk-1 | 新規作成。 | — | ai_extracted | new |
+| 2026-05-17 | Codex Loop2 | 所得税確定申告期限の一般事実としてruntime昇格。 | ai_extracted | ai_verified | promote |
