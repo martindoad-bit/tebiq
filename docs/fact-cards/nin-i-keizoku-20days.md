@@ -1,7 +1,7 @@
 ---
 fact_id: nin-i-keizoku-20days
 title: 健康保険任意継続 — 退職翌日から20日以内・最大2年・保険料2倍
-state: ai_extracted
+state: ai_verified   # LOOP2 2026-05-17: Kyokai Kenpo direct source; materials/runtime safe
 risk_level: medium
 confidence: high
 source_quality: official
@@ -64,8 +64,20 @@ evidence_points:
 - 2年間
 - 保険料2倍
 
+## injection_format
+
+### injection_certain_block
+
+```text
+- 退職前に継続して2か月以上健康保険の被保険者だった人は、退職後も「任意継続」を選べる場合がある。
+- 任意継続の申請期限は、資格喪失日（退職日の翌日）から20日以内。期限を過ぎると原則として任意継続はできない。
+- 加入期間は最長2年で、保険料は在職時と違い本人が全額負担する。
+- 出典: 全国健康保険協会「任意継続」 https://www.kyoukaikenpo.or.jp/benefit/voluntary_continuation/
+```
+
 ## changelog
 
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
 |------|------|----------|--------------|-------------|------|
 | 2026-05-17 | FACT-OPS bulk-1 | 新規作成。 | — | ai_extracted | new |
+| 2026-05-17 | Codex Loop2 | 退職後健康保険の材料・行動案内としてruntime昇格。 | ai_extracted | ai_verified | promote |

@@ -1,7 +1,7 @@
 ---
 fact_id: eijuu-nenkin-2year-shomei-method
 title: 永住申請 — 年金納付証明（ねんきん定期便/被保険者記録）
-state: ai_extracted
+state: ai_verified   # LOOP2 2026-05-17: FACT direct source + DOMAIN material-safe; promoted for narrow PR material routing
 risk_level: medium
 confidence: high
 source_quality: official
@@ -64,8 +64,20 @@ evidence_points:
 - 被保険者記録照会 or 定期便
 - ねんきんネット画面も可
 
+## injection_format
+
+### injection_certain_block
+
+```text
+- 永住許可申請では、公的年金の納付状況を確認する資料として、直近2年分の年金記録が重要になる。
+- 代表的な提出資料は、年金事務所発行の「被保険者記録照会回答票」、または「ねんきん定期便」の全期間表示画面の写し。
+- ねんきんネットの画面印刷を使う場合もあるが、未納・免除・猶予の表示を自分で都合よく省略しない。
+- 出典: 出入国在留管理庁「永住許可申請」 https://www.moj.go.jp/isa/applications/procedures/zairyu_eijyu03.html
+```
+
 ## changelog
 
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
 |------|------|----------|--------------|-------------|------|
 | 2026-05-17 | FACT-OPS bulk-1 | 新規作成。 | — | ai_extracted | new |
+| 2026-05-17 | Codex Loop2 | 直近2年分の年金証明資料として狭くruntime昇格。 | ai_extracted | ai_verified | promote |

@@ -1,7 +1,7 @@
 ---
 fact_id: kokuho-shutoku-shoumei-2years
 title: 永住申請 — 国保被保険者証コピー2年分（マイナ保険証は別資料）
-state: ai_extracted
+state: ai_verified   # LOOP2 2026-05-17: FACT direct source + material-runtime safe
 risk_level: medium
 confidence: high
 source_quality: official
@@ -63,8 +63,20 @@ evidence_points:
 - マイナ保険証はマイナポータル画面
 - 国保切替期間も対応
 
+## injection_format
+
+### injection_certain_block
+
+```text
+- 永住許可申請では、健康保険の加入・納付状況について直近2年分の確認資料が求められることがある。
+- マイナ保険証を使っている場合は、マイナポータルで資格取得年月日等を確認できる画面の写しなどが資料になる。
+- 国民健康保険に加入していた期間がある場合は、その期間の納付状況を別途確認されることがある。
+- 出典: 出入国在留管理庁「永住許可申請」 https://www.moj.go.jp/isa/applications/procedures/zairyu_eijyu03.html
+```
+
 ## changelog
 
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
 |------|------|----------|--------------|-------------|------|
 | 2026-05-17 | FACT-OPS bulk-1 | 新規作成。 | — | ai_extracted | new |
+| 2026-05-17 | Codex Loop2 | 永住の健康保険2年分資料として狭くruntime昇格。 | ai_extracted | ai_verified | promote |
