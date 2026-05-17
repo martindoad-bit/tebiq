@@ -106,7 +106,7 @@ Completed before commit:
 - `npm run lint && npx tsc --noEmit --pretty false` — PASS
 - `npm run qa:card-import-audit` — PASS
 
-Current filesystem waterline before production DB sync:
+Final filesystem + production DB waterline after targeted sync:
 
 | Metric | Count |
 |---|---:|
@@ -118,7 +118,27 @@ Current filesystem waterline before production DB sync:
 | disabled | 3 |
 | material references | 167 |
 
-Production DB still reflects the previous Loop5 waterline until targeted sync runs after merge.
+Post-merge verification:
+
+- PR #163 merged to `main` as `794e34302ddc10fd90c1dc8bebab8d370acfff15`.
+- Targeted production DB sync completed for all 13 promoted cards (`13/13`).
+- `npm run qa:card-import-audit` after sync — PASS:
+  - filesystem total 269 / DB total 269;
+  - DB `ai_verified` 174, `human_reviewed` 5, `ai_extracted` 87, `disabled` 3;
+  - missingInDb `[]`, extraInDb `[]`;
+  - Materials references 167, missing `[]`.
+- Production build reached Loop6 SHA `794e34302ddc10fd90c1dc8bebab8d370acfff15`.
+- Materials path probes — PASS:
+  - `/materials/kenpo-shikaku-kakunin`
+  - `/materials/zairyu-card-passport`
+  - `/quick-reference/childbirth-allowances-materials`
+  - `/quick-reference/bank-account-opening-materials`
+  - `/quick-reference/permanent-resident-card-renewal`
+- `npm run smoke:production-answer` — PASS 20/20 after N17 negative-control regex calibration.
+
+QA harness follow-up:
+
+- PR #164 (`e47b042af79f533f3eb373a7d2654f50e40be355`) calibrated the N17 business-manager logo negative-control redline. The production answer correctly said simple logo/site-color changes usually do not require an immigration report, while preserving the conditional warning for formal company-name or registered-item changes.
 
 ## Next Loop Candidates
 
