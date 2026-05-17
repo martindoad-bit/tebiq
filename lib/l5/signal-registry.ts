@@ -384,6 +384,84 @@ export const L5_SIGNAL_REGISTRY: L5Signal[] = [
     ],
     sourceUrls: [],
   },
+
+  // ----- 11. pending-change-new-work ---------------------------------
+  // DOMAIN 2026-05-17 P1: handoff registry already has `pending-change`
+  // family (Family 2) but no L5 signal — gap flagged as MAJOR_REWRITE.
+  // Independent signal so the route gate fires the L5 panel for queries
+  // about starting new work while a 在留資格変更許可 is pending.
+  {
+    id: 'pending-change-new-work',
+    family: 'pending-change-new-work',
+    title: '变更申请中：新工作不能先开始',
+    contentState: 'needs_domain',
+    triggerRoutes: [
+      'pending-status-change-current-activity-only',
+      'jfind-employment-transition-no-shikakugai-bridge',
+    ],
+    triggerKeywords: [
+      '变更申请中', '変更申請中', '审查中', '審査中', '先入职', '先上班',
+      '先开始', '先工作', '14日届出', '届出就能',
+    ],
+    whyThisIsDeepWater:
+      '"我已经申请变更了，是不是就能先去新工作 / 先入职 / 先做新活动？" 听起来像程序问题，其实是核心边界：申请受理 ≠ 许可下达。新活动只能在新许可发出后开始，否则可能被认定为不法就労，影响许可本身。同一句话"变更申请中"，没有 / 已入职 / 已领薪三种事实下处理路径完全不同。',
+    prepareWhat: [
+      '当前在留资格、当前在留期限的剩余时间',
+      '在留資格変更許可申請的受付日（提交日）、受付番号',
+      '申请的新在留资格种类、新活动的具体内容',
+      '是否已签新雇佣合同 / 入职日 / 是否已开始上班',
+      '是否已收过新公司任何薪酬 / 报酬',
+      '是否已停止旧活动（离职日 / 最后工作日）',
+      '与新公司之间是否有任何已书面化的开始日承诺',
+    ],
+    askWho: ['gyoseishoshi', 'immigration_lawyer'],
+    doNotDo: [
+      '不要在新许可下达前开始新工作 / 新活动',
+      '不要把"14 日届出"当作开工许可',
+      '不要假设申请受理 = 已许可',
+    ],
+    sourceUrls: [],
+  },
+
+  // ----- 12. gijinkoku-job-scope -------------------------------------
+  // DOMAIN 2026-05-17 P1: handoff registry has `gijinkoku-work-scope`
+  // family (Family 10) but no L5 signal — gap flagged as BLOCK.
+  // Without this signal the answer can only use fact-card content, which
+  // tends to over-simplify scope determinations (sales / mixed / 现场).
+  {
+    id: 'gijinkoku-job-scope',
+    family: 'gijinkoku-job-scope',
+    title: '技人国：工作范围按实际活动与合同判定',
+    contentState: 'needs_domain',
+    triggerRoutes: [
+      'gijinkoku-work-scope-not-any-job',
+      'gijinkoku-startup-management-change-first',
+      'work-status-side-job-scope-boundary',
+    ],
+    triggerKeywords: [
+      '技人国', '技術人文', '技术人文', '工作内容', '业务内容', '業務内容',
+      '副业', '兼职', '资格外', '範囲', '范围', '换岗', '调岗',
+    ],
+    whyThisIsDeepWater:
+      '技人国的"活动范围"不能只看职称或岗位说明，要看实际从事的工作内容是否需要"专业技术 / 人文知识 / 国际业务"的基础，以及雇佣合同上的职务记述与现状是否一致。同样叫"销售 / 翻译 / 客服"，在不同公司业务、学历背景、合同写法下，可能在范围内、也可能已经越界；越界事实若已发生，处理顺序错了会变成不法就労问题。',
+    prepareWhat: [
+      '当前在留卡上的资格、在留期限',
+      '雇佣合同上的职务记述、入社时点',
+      '学历 / 専門学校 / 大学的专业、毕业证、成绩单',
+      '过去职历的具体内容（不是仅职位名）',
+      '实际每日 / 每周从事的工作内容（一周一例）',
+      '是否已存在范围外工作的实绩（含副业 / 兼职 / 临时帮忙）',
+      '是否已收过任何范围外工作的报酬、报酬记录',
+      '雇主对当前职务的认知 / 是否已书面变更职务范围',
+    ],
+    askWho: ['gyoseishoshi', 'immigration_lawyer'],
+    doNotDo: [
+      '不要靠职位名判断"在 / 不在范围内"',
+      '不要在没有专业人士确认前继续从事可能范围外的工作',
+      '不要假设"会社が許可すれば大丈夫"或"少しなら OK"',
+    ],
+    sourceUrls: [],
+  },
 ]
 
 // ---------------------------------------------------------------------

@@ -1,7 +1,7 @@
 ---
 fact_id: eijuu-zairyu-keizoku-renewal-during
 title: 永住申請中 — 在留期限満了時は通常の更新申請も並行
-state: ai_extracted
+state: ai_verified   # DOMAIN 2026-05-17 PROMOTE: 永住申請不延長当前資格、官方明確且高安全価値
 risk_level: high
 confidence: high
 source_quality: official
@@ -50,7 +50,7 @@ evidence_points:
     display_label: "永住申請中更新並行"
     support_level: "direct"
     user_visible: true
-    needs_domain_review: true
+    needs_domain_review: false   # DOMAIN 2026-05-17 PROMOTE: ISA 官方 zairyu_eijyu03.html 明確記載、不需要 DOMAIN 二次審査
 ---
 
 ## current_effective_fact
@@ -62,6 +62,17 @@ evidence_points:
 - 特例期間対象外
 - 通常更新と並行
 - 永住許可時は更新不要
+
+## injection_format
+
+### injection_certain_block
+
+```text
+- 永住許可申請中であっても、現在の在留期限が満了する場合は**通常の在留期間更新許可申請を別途並行**で行う必要がある。
+- 永住申請の処理期間（標準4〜6か月）中に在留期限が切れると不法残留となるリスクがある。永住の審査が進行中であることは**現在の在留資格を自動的に延長しない**。
+- 永住が許可された時点で更新分は不要となる（更新申請が未処理であれば取り下げ可）。
+- 出典: 出入国在留管理庁「永住許可申請」 https://www.moj.go.jp/isa/applications/procedures/zairyu_eijyu03.html
+```
 
 ## changelog
 

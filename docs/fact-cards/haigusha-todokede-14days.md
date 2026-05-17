@@ -1,7 +1,7 @@
 ---
 fact_id: haigusha-todokede-14days
 title: 配偶者に関する届出 — 離婚/死別から14日以内（家滞/日配/永配）
-state: ai_extracted
+state: ai_verified   # DOMAIN 2026-05-17 PROMOTE: ISA 官方明確、簡単可検証、用戶高頻
 risk_level: high
 confidence: high
 source_quality: official
@@ -70,6 +70,19 @@ evidence_points:
 - 14日以内
 - 罰金あり
 - 6か月不活動で取消事由
+- 届出≠資格維持許可
+
+## injection_format
+
+### injection_certain_block
+
+```text
+- 家族滞在・日本人の配偶者等・永住者の配偶者等の在留資格者は、配偶者と**離婚または死別**したときは、事由発生日から**14日以内**に「配偶者に関する届出」を提出する義務がある（入管法第19条の16）。
+- 届出方法は電子届出（24/365）/ 入管窓口持参 / 郵送（東京入管）のいずれか。電子届出は証明書類不要、窓口/郵送は在留カード写しを添付。
+- **届出をしたこと自体は在留資格の維持を保証しない**。配偶者の身分を基礎とする在留資格は、離婚/死別から6か月活動実態がなければ取消事由⑦に該当しうる。次の在留資格（定住者/就労資格/別の身分）への切替は別途審査。
+- 怠ると20万円以下の罰金（入管法第71条の3）。
+- 出典: 出入国在留管理庁「配偶者に関する届出」 https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00020.html
+```
 
 ## changelog
 
