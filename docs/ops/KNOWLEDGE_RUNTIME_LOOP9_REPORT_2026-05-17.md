@@ -161,21 +161,47 @@ The DB is intentionally behind until this loop is merged and targeted sync runs.
 
 ## Post-Merge Checklist
 
-After merge:
+PR #170 merged to `main` as `85e236ed14fc90ec3f6034ff5ba2835e16a42648`.
 
-1. Target-sync only:
-   - `zairyu-touriku-after-zaijuu`
-   - `tokutei-ginou-1-vs-2`
-2. Run `npm run qa:card-import-audit` and confirm DB/file match.
-3. Wait for production build-info to match the merge SHA.
-4. Run `npm run smoke:production-answer`.
-5. Probe material/quick-reference routes:
-   - `/quick-reference/address-change`
-   - `/quick-reference/address-change-residence-card-materials`
-   - `/quick-reference/card-loss-reissue-materials`
-   - `/quick-reference/job-change`
-   - `/materials/juminhyo`
-   - `/materials/zairyu-card-passport`
+Production targeted sync:
+
+- `zairyu-touriku-after-zaijuu` — synced as `ai_verified`
+- `tokutei-ginou-1-vs-2` — synced as `ai_verified`
+
+Post-sync `npm run qa:card-import-audit` confirmed filesystem and DB match:
+
+| Metric | Count |
+|---|---:|
+| total fact cards | 269 |
+| `ai_verified` | 200 |
+| `human_reviewed` | 5 |
+| runtime eligible | 205 |
+| `ai_extracted` quarantine | 61 |
+| disabled | 3 |
+| material references | 198 |
+
+Production build-info:
+
+- `gitSha=85e236ed14fc90ec3f6034ff5ba2835e16a42648`
+- `branch=main`
+- `version=answer-core-v1.1-llm`
+
+Production material / quick-reference route probes:
+
+| Route | Result |
+|---|---|
+| `/quick-reference/address-change` | 200 |
+| `/quick-reference/address-change-residence-card-materials` | 200 |
+| `/quick-reference/card-loss-reissue-materials` | 200 |
+| `/quick-reference/job-change` | 200 |
+| `/materials/juminhyo` | 200 |
+| `/materials/zairyu-card-passport` | 200 |
+
+Production answer smoke:
+
+- `npm run smoke:production-answer`
+- result: `20/20 passed`
+- build under test: `85e236ed14fc90ec3f6034ff5ba2835e16a42648`
 
 ## Loop 10 Direction
 
