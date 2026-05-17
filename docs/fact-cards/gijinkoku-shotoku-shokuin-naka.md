@@ -1,7 +1,7 @@
 ---
 fact_id: gijinkoku-shotoku-shokuin-naka
 title: 技人国 — 給与は日本人同等以上が原則
-state: ai_extracted
+state: ai_verified
 risk_level: high
 confidence: medium
 source_quality: official
@@ -50,7 +50,7 @@ evidence_points:
     display_label: "技人国 給与同等以上"
     support_level: "direct"
     user_visible: true
-    needs_domain_review: true
+    needs_domain_review: false
 ---
 
 ## current_effective_fact
@@ -62,6 +62,17 @@ evidence_points:
 - 日本人同等以上
 - 最低賃金以下は不可
 - 業界標準考慮
+
+## injection_format
+
+### injection_certain_block
+
+```
+【技人国・報酬要件／ 2026-05-17 公式】
+・技術・人文知識・国際業務では、日本人が従事する場合に受ける報酬と同等額以上であることが求められる
+・具体的な妥当性は職務内容、雇用条件、会社資料で確認する
+・特定の年収額だけで許可/不許可は判断しない
+```
 
 ## changelog
 

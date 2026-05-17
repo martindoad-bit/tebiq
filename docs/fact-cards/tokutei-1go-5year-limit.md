@@ -1,7 +1,7 @@
 ---
 fact_id: tokutei-1go-5year-limit
 title: 特定技能1号 — 通算5年上限ルール
-state: ai_extracted
+state: ai_verified
 risk_level: high
 confidence: high
 source_quality: official
@@ -63,6 +63,17 @@ evidence_points:
 - 通算5年上限
 - 技能実習期間は含まれず
 - 2号移行 or 出国
+
+## injection_format
+
+### injection_certain_block
+
+```
+【特定技能1号／ 2026-05-17 公式】
+・特定技能1号には通算在留期間の上限がある
+・1号から2号、他資格、帰国などの後続ルートは分野と要件で異なる
+・5年満了後に自動で2号へ移行するわけではない
+```
 
 ## changelog
 

@@ -18,7 +18,7 @@ does_not_cover:
   - "国際免許の使用（別カード）"
 ai_pipeline: WebFetch → FACT-OPS extract
 official_sources:
-  - url: https://www.npa.go.jp/policies/application/license_renewal/index.html
+  - url: https://www.npa.go.jp/policies/application/license_renewal/have_DL_issed_another_country.html
     label: 警察庁 — 運転免許
     accessed: "2026-05-17"
 applies_to:
@@ -38,7 +38,7 @@ needs_review_flags:
   - jaf_translation_authority
 related_links:
   - title: "警察庁 — 運転免許"
-    url: "https://www.npa.go.jp/policies/application/license_renewal/index.html"
+    url: "https://www.npa.go.jp/policies/application/license_renewal/have_DL_issed_another_country.html"
     organization: "警察庁"
     display_label: "運転免許"
     locator: "外免切替"
@@ -46,7 +46,7 @@ related_links:
 evidence_points:
   - claim: "外免切替には適性・知識・技能試験が必要。一部国家は試験免除。"
     source_title: "警察庁 — 運転免許"
-    source_url: "https://www.npa.go.jp/policies/application/license_renewal/index.html"
+    source_url: "https://www.npa.go.jp/policies/application/license_renewal/have_DL_issed_another_country.html"
     source_organization: "警察庁"
     source_locator: "外免切替"
     display_label: "外免切替手続"

@@ -1,7 +1,7 @@
 ---
 fact_id: jukyochi-90days-torikeshi
 title: 住居地届出 — 90日以内未届で取消事由⑧⑨⑩
-state: ai_extracted
+state: ai_verified
 risk_level: high
 confidence: high
 source_quality: official
@@ -65,6 +65,17 @@ evidence_points:
 
 - 14日内届出義務（罰金）
 - 90日未届で取消事由⑧⑨
+
+## injection_format
+
+### injection_certain_block
+
+```
+【住居地届出と取消リスク／ 2026-05-17 公式】
+・正当な理由なく住居地届出をしない場合、在留資格取消事由になり得る
+・90日などの期間要件が問題になるケースがある
+・自動取消ではなく、未届に気付いたら速やかに届出し事情を整理する
+```
 
 ## changelog
 

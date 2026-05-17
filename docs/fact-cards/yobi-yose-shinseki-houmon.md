@@ -18,7 +18,7 @@ does_not_cover:
   - "ビザ免除国（外務省リスト参照）"
 ai_pipeline: WebFetch → FACT-OPS extract
 official_sources:
-  - url: https://www.mofa.go.jp/mofaj/toko/visa/tanki/himmune.html
+  - url: https://www.mofa.go.jp/mofaj/toko/visa/nagare/tanki.html
     label: 外務省 — 短期滞在
     accessed: "2026-05-17"
 applies_to:
@@ -37,7 +37,7 @@ needs_review_flags:
   - latest_form_changes
 related_links:
   - title: "外務省 — 短期滞在"
-    url: "https://www.mofa.go.jp/mofaj/toko/visa/tanki/himmune.html"
+    url: "https://www.mofa.go.jp/mofaj/toko/visa/nagare/tanki.html"
     organization: "外務省"
     display_label: "短期滞在"
     locator: "親族訪問"
@@ -45,7 +45,7 @@ related_links:
 evidence_points:
   - claim: "海外親族の短期滞在ビザは招聘理由書・滞在予定表・身元保証書・呼び寄せ側書類・本人書類が必要。"
     source_title: "外務省 — 短期滞在"
-    source_url: "https://www.mofa.go.jp/mofaj/toko/visa/tanki/himmune.html"
+    source_url: "https://www.mofa.go.jp/mofaj/toko/visa/nagare/tanki.html"
     source_organization: "外務省"
     source_locator: "親族訪問"
     display_label: "親族短期招聘書類"

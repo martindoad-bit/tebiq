@@ -18,7 +18,7 @@ does_not_cover:
   - "脱退一時金詳細（別カード）"
 ai_pipeline: WebFetch → FACT-OPS extract
 official_sources:
-  - url: https://www.moj.go.jp/isa/applications/procedures/zairyu_eijyu03.html
+  - url: https://www.nenkin.go.jp/service/shaho-kyotei/shaho.html
     label: ISA — 永住（年金関連）
     accessed: "2026-05-17"
 applies_to:
@@ -37,7 +37,7 @@ needs_review_flags:
   - bilateral_specific_provision_diff
 related_links:
   - title: "年金機構"
-    url: "https://www.moj.go.jp/isa/applications/procedures/zairyu_eijyu03.html"
+    url: "https://www.nenkin.go.jp/service/shaho-kyotei/shaho.html"
     organization: "日本年金機構"
     display_label: "社会保障協定"
     locator: "23カ国"
@@ -45,7 +45,7 @@ related_links:
 evidence_points:
   - claim: "日本は23カ国と社会保障協定締結。本国年金加入期間との通算・二重加入回避効果あり。脱退一時金受給で日本期間消滅。"
     source_title: "年金機構"
-    source_url: "https://www.moj.go.jp/isa/applications/procedures/zairyu_eijyu03.html"
+    source_url: "https://www.nenkin.go.jp/service/shaho-kyotei/shaho.html"
     source_organization: "日本年金機構"
     source_locator: "23カ国"
     display_label: "社会保障協定"

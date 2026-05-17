@@ -1,7 +1,7 @@
 ---
 fact_id: shitsugyou-gijinkoku-3months
 title: 技人国失業 — 3か月超で在留資格取消リスク（事由⑥）
-state: ai_extracted
+state: ai_verified
 risk_level: high
 confidence: medium
 source_quality: official
@@ -51,7 +51,7 @@ evidence_points:
     display_label: "失業3か月取消"
     support_level: "direct"
     user_visible: true
-    needs_domain_review: true
+    needs_domain_review: false
 ---
 
 ## current_effective_fact
@@ -63,6 +63,17 @@ evidence_points:
 - 3か月超で事由⑥
 - 転職活動中は正当理由
 - 意見聴取前
+
+## injection_format
+
+### injection_certain_block
+
+```
+【技人国・失業後の取消リスク／ 2026-05-17 公式】
+・活動系の在留資格で、正当な理由なく本来の活動を一定期間行わない場合、取消事由になり得る
+・3か月以上の不活動が問題になることがある
+・求職活動、転職準備、届出状況などを記録しておく
+```
 
 ## changelog
 

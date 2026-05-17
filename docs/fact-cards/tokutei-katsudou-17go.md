@@ -18,7 +18,7 @@ does_not_cover:
   - "特活46号（接客等含む）"
 ai_pipeline: WebFetch → FACT-OPS extract
 official_sources:
-  - url: https://www.moj.go.jp/isa/applications/status/specact02.html
+  - url: https://www.moj.go.jp/isa/applications/resources/nyuukokukanri07_00013.html
     label: ISA — 特定活動
     accessed: "2026-05-17"
 applies_to:
@@ -36,7 +36,7 @@ needs_review_flags:
   - specific_documents_for_renewal
 related_links:
   - title: "ISA — 特活"
-    url: "https://www.moj.go.jp/isa/applications/status/specact02.html"
+    url: "https://www.moj.go.jp/isa/applications/resources/nyuukokukanri07_00013.html"
     organization: "出入国在留管理庁"
     display_label: "特活"
     locator: "17号"
@@ -44,7 +44,7 @@ related_links:
 evidence_points:
   - claim: "特定活動17号は本邦大学等卒業後の就活継続のため、6か月（更新で最長1年）の在留。学校推薦書必要。"
     source_title: "ISA — 特活"
-    source_url: "https://www.moj.go.jp/isa/applications/status/specact02.html"
+    source_url: "https://www.moj.go.jp/isa/applications/resources/nyuukokukanri07_00013.html"
     source_organization: "出入国在留管理庁"
     source_locator: "17号"
     display_label: "特活17号"
