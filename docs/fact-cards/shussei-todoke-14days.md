@@ -1,7 +1,7 @@
 ---
 fact_id: shussei-todoke-14days
 title: 出生届 — 14日以内に市区町村へ提出（戸籍法）
-state: ai_extracted
+state: ai_verified   # LOOP3 2026-05-17: MOJ birth notification page direct source
 risk_level: medium
 confidence: high
 source_quality: official
@@ -18,8 +18,8 @@ does_not_cover:
   - "新生児の在留資格取得（別カード）"
 ai_pipeline: WebFetch → FACT-OPS extract
 official_sources:
-  - url: https://www.moj.go.jp/MINJI/minji78.html
-    label: 法務省民事局
+  - url: https://www.moj.go.jp/ONLINE/FAMILYREGISTER/5-1.html
+    label: 法務省 — 出生届
     accessed: "2026-05-17"
 applies_to:
   - 日本国内で出産した夫婦
@@ -35,16 +35,16 @@ needs_review_flags:
   - paternity_unmarried_handling
   - kokuseki-shutoku_dual_nationality_implication
 related_links:
-  - title: "法務省 — 戸籍"
-    url: "https://www.moj.go.jp/MINJI/minji78.html"
+  - title: "法務省 — 出生届"
+    url: "https://www.moj.go.jp/ONLINE/FAMILYREGISTER/5-1.html"
     organization: "法務省民事局"
     display_label: "戸籍"
     locator: "出生届"
     relation: "official_reference"
 evidence_points:
-  - claim: "日本国内で出生があった場合は戸籍法第49条により14日以内に市区町村へ出生届を提出する義務がある。"
-    source_title: "法務省"
-    source_url: "https://www.moj.go.jp/MINJI/minji78.html"
+  - claim: "出生届は出生の日から14日以内に、子の出生地・本籍地または届出人所在地の市区町村へ提出する。"
+    source_title: "法務省 — 出生届"
+    source_url: "https://www.moj.go.jp/ONLINE/FAMILYREGISTER/5-1.html"
     source_organization: "法務省民事局"
     source_locator: "出生届"
     display_label: "出生届14日"
@@ -63,8 +63,20 @@ evidence_points:
 - 出生地/本籍地/住所地で届出
 - 在留資格取得は別途30日
 
+## injection_format
+
+### injection_certain_block
+
+```text
+- 日本で出生があった場合、出生届は出生の日から14日以内に市区町村へ提出する。
+- 提出先は、子の出生地、本籍地、または届出人の所在地の市区町村。
+- 外国籍の子どもの在留資格取得や本国大使館での手続は、出生届とは別に確認する。
+- 出典: 法務省「出生届」 https://www.moj.go.jp/ONLINE/FAMILYREGISTER/5-1.html
+```
+
 ## changelog
 
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
 |------|------|----------|--------------|-------------|------|
 | 2026-05-17 | FACT-OPS bulk-1 | 新規作成。 | — | ai_extracted | new |
+| 2026-05-17 | Codex Loop3 | 出生届14日をMOJ direct sourceでruntime昇格。 | ai_extracted | ai_verified | source-repair/promote |
