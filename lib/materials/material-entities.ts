@@ -97,7 +97,10 @@ export const MATERIAL_ENTITIES: MaterialEntity[] = [
     ],
     askTebiqBridge:
       '想确认这次申请到底要「世帯全員」「マイナンバー記載」哪种住民票？可以直接问 TEBIQ。',
-    factCardIds: ['jukyochi-mynumber-renke-juminhyo'],
+    factCardIds: [
+      'jukyochi-mynumber-renke-juminhyo',
+      'yobi-yose-shinseki-houmon',
+    ],
     sourceUrls: [
       {
         url: 'https://www.soumu.go.jp/main_sosiki/jichi_gyousei/c-gyousei/zairyu/index.html',
@@ -153,6 +156,8 @@ export const MATERIAL_ENTITIES: MaterialEntity[] = [
       'eijuu-jukyo-check-tax-shomeisho',
       'jumin-zei-jan1-criterion',
       'jumin-zei-no-shukyou-3types',
+      'yobi-yose-shinseki-houmon',
+      'koukou-mukyo-shogakukin',
     ],
     sourceUrls: [
       {
@@ -304,6 +309,9 @@ export const MATERIAL_ENTITIES: MaterialEntity[] = [
       'ryuugaku-nenkin-tokurei',
       'nenkin-dattai-ichijikin',
       'dattai-ichijikin-2years',
+      'shakai-hoken-kyotei-bilateral',
+      'shougai-nenkin-overview',
+      'zairyu-shitsugyo-hosho-pension',
     ],
     sourceUrls: [
       {
@@ -336,6 +344,8 @@ export const MATERIAL_ENTITIES: MaterialEntity[] = [
       'health-insurance-after-leaving-job',
       'pension-social-insurance-proof-materials',
       'health-insurance-leaving-job-materials',
+      'childbirth-allowances-materials',
+      'childcare-leave-materials',
     ],
     commonMistakes: [
       '离职后忘记 14 日内国民健康保険切替 → 出现空白期。',
@@ -355,6 +365,11 @@ export const MATERIAL_ENTITIES: MaterialEntity[] = [
       'kokuho-shutoku-shoumei-2years',
       'rishoku-kenko-hoken',
       'shakai-hoken-kanyu',
+      'kaigo-hoken-day1-after-40',
+      'kibyou-teate-3day-byouki',
+      'shussan-ichijikin-50man',
+      'shussan-teate-3day-deno',
+      'sangyou-gakuei-naniwakai-tetsuzuki',
     ],
     sourceUrls: [
       {
@@ -389,6 +404,8 @@ export const MATERIAL_ENTITIES: MaterialEntity[] = [
       'work-qualification-certificate-materials',
       'rental-housing-foreigner-materials',
       'job-change-notification-materials',
+      'bank-account-opening-materials',
+      'family-stay-renewal-materials',
     ],
     commonMistakes: [
       '在職証明書 ≠「労働条件通知書 / 雇用契約書」：在留申请常常要两类一起交。',
@@ -402,7 +419,15 @@ export const MATERIAL_ENTITIES: MaterialEntity[] = [
     ],
     askTebiqBridge:
       '在职但雇主不愿意 / 来不及开证明？或想确认在留更新要不要追加？可以直接问 TEBIQ。',
-    factCardIds: ['shuro-shikaku-shomeisho', 'gaikokujin-koyo-todokede'],
+    factCardIds: [
+      'shuro-shikaku-shomeisho',
+      'gaikokujin-koyo-todokede',
+      'ginko-account-gaijin-6months',
+      'kazoku-yobi-naitei-haigusha',
+      'yobi-yose-shinseki-houmon',
+      'chintai-hoshou-gaikokujin',
+      'kakkoukin-mortgage-foreigner',
+    ],
   },
 
   // ───────────────────────────── 8 / 15
@@ -430,6 +455,8 @@ export const MATERIAL_ENTITIES: MaterialEntity[] = [
       'work-qualification-certificate-materials',
       'dependent-work-permit-materials',
       'job-change-notification-materials',
+      'foreign-employment-notification',
+      'bank-account-opening-materials',
     ],
     commonMistakes: [
       '只交「内定通知書」，但入管要的是已经签署的劳动条件 / 雇用契約。',
@@ -446,6 +473,9 @@ export const MATERIAL_ENTITIES: MaterialEntity[] = [
     factCardIds: [
       'koyou-keiyaku-rouken-tsuchi',
       'koyo-hoken-kanyu-gijmu',
+      'ginko-account-gaijin-6months',
+      'kazoku-yobi-naitei-haigusha',
+      'tokutei-ginou-shien-keikaku',
     ],
   },
 
@@ -621,7 +651,11 @@ export const MATERIAL_ENTITIES: MaterialEntity[] = [
     ],
     askTebiqBridge:
       '不确定该不该写理由書 / 要怎么写不踩雷？可以直接问 TEBIQ。',
-    factCardIds: ['eijuu-letterofunderstanding-2021', 'eijuu-shinsei-shorui'],
+    factCardIds: [
+      'eijuu-letterofunderstanding-2021',
+      'eijuu-shinsei-shorui',
+      'yobi-yose-shinseki-houmon',
+    ],
   },
 
   // ───────────────────────────── 13 / 15
@@ -674,6 +708,13 @@ export const MATERIAL_ENTITIES: MaterialEntity[] = [
       'kekkon-todoke-procedure',
       'shussei-todoke-14days',
       'kazoku-taizai-shussan-shutoku',
+      'eijuu-after-kika-card',
+      'eijuu-haigusha-zairyu-1year',
+      'eijuu-junior-15-eligibility',
+      'gaiko-souzoku-kokusai',
+      'kazoku-yobi-naitei-haigusha',
+      'yobi-yose-shinseki-houmon',
+      'yuigon-koseishousho-jutsu',
     ],
   },
 
@@ -714,6 +755,9 @@ export const MATERIAL_ENTITIES: MaterialEntity[] = [
       'deemed-reentry',
       'mynumber-card-materials',
       'driving-license-conversion-materials',
+      'bank-account-opening-materials',
+      'rental-housing-foreigner-materials',
+      'juminhyo-foreign-materials',
     ],
     commonMistakes: [
       '在留カード没随身携带（16 岁以上原则上需要持参）。',
@@ -736,6 +780,14 @@ export const MATERIAL_ENTITIES: MaterialEntity[] = [
       'zairyu-card-return-gimu',
       'online-zairyu-card-uketori',
       'zaiyu-card-validity-by-status',
+      'eijuu-after-kika-card',
+      'eijuu-renew-not-required',
+      'ginko-account-gaijin-6months',
+      'zairyu-card-online-failure-information',
+      'zairyu-kikan-5years-default',
+      'zairyu-tokubetsu-eijuusha',
+      'zaihu-card-3rd-online',
+      'unten-menkyo-gaijin-1year',
     ],
     sourceUrls: [
       {
@@ -798,6 +850,8 @@ export const MATERIAL_ENTITIES: MaterialEntity[] = [
       'koushin-shinsei-fee-6000',
       'henkou-shinsei-fee-6000',
       'eijuu-application-fee-10000',
+      'eijuu-junior-15-eligibility',
+      'online-zairyu-card-uketori',
     ],
     sourceUrls: [
       {

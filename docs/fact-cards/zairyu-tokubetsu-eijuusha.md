@@ -1,7 +1,7 @@
 ---
 fact_id: zairyu-tokubetsu-eijuusha
 title: 特別永住者 — 在日韓国・朝鮮・台湾系の特例制度
-state: ai_extracted
+state: ai_verified   # Knowledge Runtime Loop 6 promote: FACT source checked + DOMAIN narrow runtime scope.
 risk_level: low
 confidence: high
 source_quality: official
@@ -18,7 +18,7 @@ does_not_cover:
   - "通常の永住者（別カード）"
 ai_pipeline: WebFetch → FACT-OPS extract
 official_sources:
-  - url: https://www.moj.go.jp/isa/applications/status/tokubetsueijusha.html
+  - url: https://www.moj.go.jp/isa/applications/procedures/tetuduki_tokubetu_shomeisho_00001.html
     label: ISA — 特別永住者
     accessed: "2026-05-17"
 applies_to:
@@ -37,7 +37,7 @@ needs_review_flags:
   - update_period_specific_method
 related_links:
   - title: "ISA — 特別永住者"
-    url: "https://www.moj.go.jp/isa/applications/status/tokubetsueijusha.html"
+    url: "https://www.moj.go.jp/isa/applications/procedures/tetuduki_tokubetu_shomeisho_00001.html"
     organization: "出入国在留管理庁"
     display_label: "特別永住者"
     locator: "特例"
@@ -45,7 +45,7 @@ related_links:
 evidence_points:
   - claim: "特別永住者は戦前から在日の朝鮮半島・台湾系とその子孫向けの特例。特別永住者証明書（7年更新）、再入国最大6年。"
     source_title: "ISA — 特別永住者"
-    source_url: "https://www.moj.go.jp/isa/applications/status/tokubetsueijusha.html"
+    source_url: "https://www.moj.go.jp/isa/applications/procedures/tetuduki_tokubetu_shomeisho_00001.html"
     source_organization: "出入国在留管理庁"
     source_locator: "特別永住者"
     display_label: "特別永住者"
@@ -64,8 +64,19 @@ evidence_points:
 - 特別永住者証明書
 - 通常永住と別
 
+## injection_format
+
+### injection_certain_block
+
+```text
+- 特別永住者は通常の永住者とは別の制度で、在留カードではなく特別永住者証明書を持つ。
+- 証明書の有効期間更新など、特別永住者証明書に関する手続は別ページで確認する。
+- 出典: ISA — 特別永住者証明書有効期間更新申請 https://www.moj.go.jp/isa/applications/procedures/tetuduki_tokubetu_shomeisho_00001.html
+```
+
 ## changelog
 
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
 |------|------|----------|--------------|-------------|------|
 | 2026-05-17 | FACT-OPS bulk-1 | 新規作成。 | — | ai_extracted | new |
+| 2026-05-17 | Codex Loop6 | 公式sourceとDOMAIN境界を確認し、狭い確定事実としてruntime昇格。 | ai_extracted | ai_verified | promote |

@@ -1,7 +1,7 @@
 ---
 fact_id: eijuu-haigusha-zairyu-1year
 title: 永住申請 — 配偶者ルートの「在留1年以上」要件
-state: ai_extracted
+state: ai_verified   # Knowledge Runtime Loop 6 promote: FACT source checked + DOMAIN narrow runtime scope.
 risk_level: medium
 confidence: high
 source_quality: official
@@ -64,8 +64,19 @@ evidence_points:
 - 日本在留1年以上
 - 実体ある婚姻必要
 
+## injection_format
+
+### injection_certain_block
+
+```text
+- 永住ガイドラインでは、日本人・永住者等の配偶者は、実体を伴う婚姻が3年以上継続し、日本に1年以上継続在留していることが一つの短縮ルートとして示される。
+- この条件は許可保証ではなく、婚姻実体や他の永住要件は別途確認が必要。
+- 出典: ISA — 永住ガイドライン https://www.moj.go.jp/isa/applications/resources/nyukan_nyukan50.html
+```
+
 ## changelog
 
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
 |------|------|----------|--------------|-------------|------|
 | 2026-05-17 | FACT-OPS bulk-1 | 新規作成。 | — | ai_extracted | new |
+| 2026-05-17 | Codex Loop6 | 公式sourceとDOMAIN境界を確認し、狭い確定事実としてruntime昇格。 | ai_extracted | ai_verified | promote |

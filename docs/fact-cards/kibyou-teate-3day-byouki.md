@@ -1,7 +1,7 @@
 ---
 fact_id: kibyou-teate-3day-byouki
 title: 傷病手当金 — 病気/けがで4日以上の休業時1年6か月支給
-state: ai_extracted
+state: ai_verified   # Knowledge Runtime Loop 6 promote: FACT source checked + DOMAIN narrow runtime scope.
 risk_level: low
 confidence: high
 source_quality: official
@@ -18,7 +18,7 @@ does_not_cover:
   - "労災（業務上の傷病）"
 ai_pipeline: WebFetch → FACT-OPS extract
 official_sources:
-  - url: https://www.kyoukaikenpo.or.jp/g7/cat710/sb3100/
+  - url: https://www.kyoukaikenpo.or.jp/benefit/injury_and_sickness_allowance/index.html
     label: 協会けんぽ — 傷病手当金
     accessed: "2026-05-17"
 applies_to:
@@ -37,7 +37,7 @@ needs_review_flags:
   - kanpu_after_taishoku_specifics
 related_links:
   - title: "協会けんぽ — 傷病手当金"
-    url: "https://www.kyoukaikenpo.or.jp/g7/cat710/sb3100/"
+    url: "https://www.kyoukaikenpo.or.jp/benefit/injury_and_sickness_allowance/index.html"
     organization: "全国健康保険協会"
     display_label: "傷病手当金"
     locator: "1年6か月"
@@ -45,7 +45,7 @@ related_links:
 evidence_points:
   - claim: "傷病手当金は連続3日休業後4日目から、標準報酬月額の2/3が通算1年6か月支給される（2022年法改正で通算化）。"
     source_title: "協会けんぽ — 傷病手当金"
-    source_url: "https://www.kyoukaikenpo.or.jp/g7/cat710/sb3100/"
+    source_url: "https://www.kyoukaikenpo.or.jp/benefit/injury_and_sickness_allowance/index.html"
     source_organization: "全国健康保険協会"
     source_locator: "1年6か月"
     display_label: "傷病手当金"
@@ -64,8 +64,19 @@ evidence_points:
 - 通算1年6か月
 - 2/3給付
 
+## injection_format
+
+### injection_certain_block
+
+```text
+- 傷病手当金は、健康保険の被保険者が業務外の病気やけがで仕事を休み、一定条件を満たす場合に支給される制度。
+- 支給開始は連続する3日間の待期後の4日目からで、支給期間や金額は保険者の案内で確認する。
+- 出典: 協会けんぽ — 傷病手当金 https://www.kyoukaikenpo.or.jp/benefit/injury_and_sickness_allowance/index.html
+```
+
 ## changelog
 
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
 |------|------|----------|--------------|-------------|------|
 | 2026-05-17 | FACT-OPS bulk-1 | 新規作成。 | — | ai_extracted | new |
+| 2026-05-17 | Codex Loop6 | 公式sourceとDOMAIN境界を確認し、狭い確定事実としてruntime昇格。 | ai_extracted | ai_verified | promote |

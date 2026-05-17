@@ -137,6 +137,8 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
       'tensyoku-zairyu',
       'gijinkoku-job-mismatch',
       'shuro-shikaku-shomeisho',
+      'foreigner-employment-info-portal',
+      'tokutei-katsudou-46-target',
     ],
     relatedTopicIds: [
       'retirement-risk',
@@ -174,7 +176,12 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
     title: '离职后还能留多久',
     summary: '离职后不是马上失效，但通常有 14 日届出和活动空白风险。',
     category: '工作',
-    factCardIds: ['shitsugyo-zairyu-risk', 'tensyoku-zairyu'],
+    factCardIds: [
+      'shitsugyo-zairyu-risk',
+      'tensyoku-zairyu',
+      'foreigner-employment-info-portal',
+      'zairyu-shitsugyo-hosho-pension',
+    ],
     relatedTopicIds: [
       'job-change',
       'health-insurance-after-leaving-job',
@@ -247,7 +254,12 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
     title: '离职后的健康保险',
     summary: '离职后要确认继续原健保、加入国保，还是进入家属扶养。',
     category: '社保',
-    factCardIds: ['rishoku-kenko-hoken', 'kokumin-kenko-hoken-kanyu'],
+    factCardIds: [
+      'rishoku-kenko-hoken',
+      'kokumin-kenko-hoken-kanyu',
+      'kaigo-hoken-day1-after-40',
+      'kibyou-teate-3day-byouki',
+    ],
     relatedTopicIds: ['retirement-risk', 'pension-after-leaving-job'],
     aliases: ['健保', '健康保险', '国保', '任意继续', '扶养', '社保'],
     deadline: '任意继续通常退职后 20 日以内；国保通常按市区町村规则尽快办理。',
@@ -319,6 +331,8 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
       'juminzei-kazei-shomeisho',
       'jumin-zei-no-shukyou-3types',
       'zeimu-shomeisho-3types',
+      'tax-treaty-source-of-truth',
+      'shoukibo-jigyou-zei',
     ],
     relatedTopicIds: ['renewal-review-factors', 'pension-after-leaving-job'],
     aliases: ['住民税', '课税证明', '纳税证明', '納税証明', '税证明', '永住材料'],
@@ -395,7 +409,12 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
     title: '公司雇外国人要申报吗',
     summary: '公司雇用或雇用结束外国人时，通常有 Hello Work 届出义务。',
     category: '雇用',
-    factCardIds: ['gaikokujin-koyo-todokede'],
+    factCardIds: [
+      'gaikokujin-koyo-todokede',
+      'foreigner-employment-info-portal',
+      'tokutei-ginou-shien-keikaku',
+      'ikusei-shuroh-overview',
+    ],
     relatedTopicIds: ['job-change', 'retirement-risk'],
     aliases: ['雇主', '公司', '外国人雇用', 'hello work', 'ハローワーク', '届出'],
     deadline: '雇用保险被保险者和非被保险者的届出期限不同。',
@@ -427,7 +446,12 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
     title: '永住卡快到期',
     summary: '永住身份本身和在留卡有效期限是两件事。',
     category: '永住',
-    factCardIds: ['eijuu-card-koushin'],
+    factCardIds: [
+      'eijuu-card-koushin',
+      'eijuu-renew-not-required',
+      'online-zairyu-card-uketori',
+      'zaihu-card-3rd-online',
+    ],
     relatedTopicIds: ['deemed-reentry', 'renewal-review-factors'],
     aliases: ['永住卡', '在留卡期限', '永住者', '卡更新', '有效期限'],
     deadline: '16 岁以上永住者通常可从在留卡有效期限满了日的 2 个月前申请。',
@@ -463,6 +487,8 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
       'zairyu-expiry-renewal-change',
       'eijuu-zairyu-kikan',
       'gijinkoku-koushin-shorui',
+      'zairyu-kikan-5years-default',
+      'tokutei-katsudo-survival',
     ],
     relatedTopicIds: ['tax-certificate', 'job-change', 'pension-after-leaving-job'],
     aliases: ['续签', '更新', '变更', '审查', '不许可', '材料', '综合判断'],
@@ -562,6 +588,8 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
       'juminzei-kazei-shomeisho',
       'zairyu-expiry-renewal-change',
       'gijinkoku-koushin-shorui',
+      'startup-visa-meti-fukuoka',
+      'shoukibo-jigyou-zei',
     ],
     relatedTopicIds: [
       'resident-tax-certificate-materials',
@@ -622,6 +650,7 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
       'zairyu-expiry-renewal-change',
       'kazoku-taizai-zairyu-period',
       'kazoku-taizai-shussan-shutoku',
+      'kazoku-yobi-naitei-haigusha',
     ],
     relatedTopicIds: [
       'part-time-permission',
@@ -674,6 +703,7 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
       'nihonjin-haigusha-visa',
       'juminzei-kazei-shomeisho',
       'zairyu-expiry-renewal-change',
+      'eijuu-haigusha-zairyu-1year',
     ],
     relatedTopicIds: [
       'resident-tax-certificate-materials',
@@ -730,6 +760,8 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
       'ryugaku-naitei-tokutei-katsudou',
       'ryugaku-shikakugai-individual-permission',
       'ryugaku-kishu-katsudo-tokkatsu',
+      'tokutei-katsudou-17go',
+      'jfind-tokutei-katsudou',
     ],
     relatedTopicIds: [
       'part-time-permission',
@@ -786,6 +818,8 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
       'eijuu-shotoku-haigusha-3year',
       'eijuu-letterofunderstanding-2021',
       'hoshou-jin-eijuu',
+      'eijuu-haigusha-zairyu-1year',
+      'eijuu-junior-15-eligibility',
     ],
     relatedTopicIds: [
       'resident-tax-certificate-materials',
@@ -945,6 +979,9 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
       'eijuu-nenkin-2year-shomei-method',
       'maina-hoken-2024-12',
       'kokuho-shutoku-shoumei-2years',
+      'shakai-hoken-kyotei-bilateral',
+      'shougai-nenkin-overview',
+      'zairyu-shitsugyo-hosho-pension',
     ],
     relatedTopicIds: [
       'permanent-residence-application-materials',
@@ -1279,6 +1316,8 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
     factCardIds: [
       'rishoku-kokumin-nenkin-kirikae',
       'kokumin-nenkin-menjo',
+      'zairyu-shitsugyo-hosho-pension',
+      'shakai-hoken-kyotei-bilateral',
     ],
     relatedTopicIds: [
       'pension-after-leaving-job',
@@ -1505,6 +1544,8 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
       'kodomo-gakko-nyugaku',
       'kodomo-zairyu-shinsei',
       'jyumin-hyo-gaijin',
+      'koukou-mukyo-shogakukin',
+      'yochi-en-hoiku-gaikoku',
     ],
     relatedTopicIds: [
       'address-change-residence-card-materials',
@@ -1546,6 +1587,8 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
     category: '生活',
     factCardIds: [
       'unten-menkyo-gaijin',
+      'gaimen-kirikae-process',
+      'unten-menkyo-gaijin-1year',
     ],
     relatedTopicIds: [
       'address-change-residence-card-materials',
@@ -1632,6 +1675,7 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
     category: '生活',
     factCardIds: [
       'jyumin-hyo-gaijin',
+      'zairyu-tokubetsu-eijuusha',
     ],
     relatedTopicIds: [
       'address-change-residence-card-materials',
@@ -1679,6 +1723,9 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
       'jidou-teate-gaikokujin',
       'shussei-todoke-14days',
       'kazoku-taizai-shussan-shutoku',
+      'shussan-ichijikin-50man',
+      'shussan-teate-3day-deno',
+      'yochi-en-hoiku-gaikoku',
     ],
     relatedTopicIds: [
       'health-insurance-leaving-job-materials',
@@ -1727,6 +1774,8 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
     factCardIds: [
       'ikuji-sangyo-kyugyo-zairyu',
       'koyo-hoken-kyufu',
+      'sangyou-gakuei-naniwakai-tetsuzuki',
+      'shussan-teate-3day-deno',
     ],
     relatedTopicIds: [
       'childbirth-allowances-materials',
@@ -1775,6 +1824,10 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
     category: '生活',
     factCardIds: [
       'gaikokujin-chintai',
+      'chintai-hoshou-gaikokujin',
+      'jutaku-shikikin-rekkin-shuukan',
+      'kobun-jutaku-jutsu-kushu',
+      'zairyu-card-online-failure-information',
     ],
     relatedTopicIds: [
       'address-change-residence-card-materials',
@@ -1821,6 +1874,7 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
     factCardIds: [
       'ginko-kouza-gaijin',
       'mynumber-gaikokujin',
+      'ginko-account-gaijin-6months',
     ],
     relatedTopicIds: [
       'address-change-residence-card-materials',
@@ -1867,6 +1921,8 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
       'shitsugyo-zairyu-risk',
       'kaiko-yokoku-30days',
       'rousai-hoken-foreign-worker',
+      'foreigner-employment-info-portal',
+      'zairyu-shitsugyo-hosho-pension',
     ],
     relatedTopicIds: [
       'retirement-risk',
@@ -1919,6 +1975,8 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
     factCardIds: [
       'juminzei-kazei-shomeisho',
       'gijinkoku-koushin-shorui',
+      'startup-visa-meti-fukuoka',
+      'shoukibo-jigyou-zei',
     ],
     relatedTopicIds: [
       'keiei-kanri-renewal-materials',

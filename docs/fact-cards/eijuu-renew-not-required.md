@@ -1,7 +1,7 @@
 ---
 fact_id: eijuu-renew-not-required
 title: 永住者 — 永住資格自体に有効期限なし（在留カード7年とは別）
-state: ai_extracted
+state: ai_verified   # Knowledge Runtime Loop 6 promote: FACT source checked + DOMAIN narrow runtime scope.
 risk_level: medium
 confidence: high
 source_quality: official
@@ -63,8 +63,19 @@ evidence_points:
 - カードは7年更新
 - カード期限切れは要警戒
 
+## injection_format
+
+### injection_certain_block
+
+```text
+- 永住者は在留期間更新の対象ではないが、在留カード自体には有効期間があり、永住者カードは更新手続が必要。
+- 永住資格の有効期限と在留カードの有効期限を分けて確認する。
+- 出典: ISA — 在留カード https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00011.html
+```
+
 ## changelog
 
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
 |------|------|----------|--------------|-------------|------|
 | 2026-05-17 | FACT-OPS bulk-1 | 新規作成。 | — | ai_extracted | new |
+| 2026-05-17 | Codex Loop6 | 公式sourceとDOMAIN境界を確認し、狭い確定事実としてruntime昇格。 | ai_extracted | ai_verified | promote |

@@ -1,7 +1,7 @@
 ---
 fact_id: online-zairyu-card-uketori
 title: オンライン申請の在留カード — 郵送受取 or 窓口受取
-state: ai_extracted
+state: ai_verified   # Knowledge Runtime Loop 6 promote: FACT source checked + DOMAIN narrow runtime scope.
 risk_level: low
 confidence: medium
 source_quality: official
@@ -62,8 +62,19 @@ evidence_points:
 - 本人限定受取
 - 旧カード返納
 
+## injection_format
+
+### injection_certain_block
+
+```text
+- オンライン在留申請の許可後、新しい在留カードは郵送受取または地方出入国在留管理官署での窓口受取を選べる場合がある。
+- 旧在留カードの返納方法は手続案内に従って確認する。
+- 出典: ISA — 在留資格変更許可申請 https://www.moj.go.jp/isa/applications/procedures/16-1.html
+```
+
 ## changelog
 
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
 |------|------|----------|--------------|-------------|------|
 | 2026-05-17 | FACT-OPS bulk-1 | 新規作成。 | — | ai_extracted | new |
+| 2026-05-17 | Codex Loop6 | 公式sourceとDOMAIN境界を確認し、狭い確定事実としてruntime昇格。 | ai_extracted | ai_verified | promote |

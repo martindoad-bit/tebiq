@@ -1,7 +1,7 @@
 ---
 fact_id: shussan-ichijikin-50man
 title: 出産育児一時金 — 1子50万円（2023年4月〜）・直接支払制度
-state: ai_extracted
+state: ai_verified   # Knowledge Runtime Loop 6 promote: FACT source checked + DOMAIN narrow runtime scope.
 risk_level: low
 confidence: high
 source_quality: official
@@ -18,7 +18,7 @@ does_not_cover:
   - "新生児の在留資格取得（別カード）"
 ai_pipeline: WebFetch → FACT-OPS extract
 official_sources:
-  - url: https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/iryouhoken/shussanteate_00001.html
+  - url: https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/iryouhoken/shussan/index.html
     label: 厚労省 — 出産育児一時金
     accessed: "2026-05-17"
 applies_to:
@@ -38,7 +38,7 @@ needs_review_flags:
   - tantei_taizai_shussan_handling
 related_links:
   - title: "厚労省 — 出産育児一時金"
-    url: "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/iryouhoken/shussanteate_00001.html"
+    url: "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/iryouhoken/shussan/index.html"
     organization: "厚生労働省"
     display_label: "出産育児一時金"
     locator: "50万円"
@@ -46,7 +46,7 @@ related_links:
 evidence_points:
   - claim: "出産育児一時金は1子50万円（2023年4月以降）。直接支払制度で医療機関への直接支払いも可能。海外出産も事後申請可。"
     source_title: "厚労省 — 出産育児一時金"
-    source_url: "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/iryouhoken/shussanteate_00001.html"
+    source_url: "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/iryouhoken/shussan/index.html"
     source_organization: "厚生労働省"
     source_locator: "50万円"
     display_label: "出産育児一時金"
@@ -65,8 +65,19 @@ evidence_points:
 - 直接支払制度
 - 海外出産も対象
 
+## injection_format
+
+### injection_certain_block
+
+```text
+- 出産育児一時金は、健康保険等の加入者が出産した場合に支給される制度で、2023年4月以降は原則50万円の案内がある。
+- 直接支払制度の利用可否や海外出産時の必要書類は、加入中の保険者で確認する。
+- 出典: 厚生労働省 — 出産育児一時金 https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/iryouhoken/shussan/index.html
+```
+
 ## changelog
 
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
 |------|------|----------|--------------|-------------|------|
 | 2026-05-17 | FACT-OPS bulk-1 | 新規作成。 | — | ai_extracted | new |
+| 2026-05-17 | Codex Loop6 | 公式sourceとDOMAIN境界を確認し、狭い確定事実としてruntime昇格。 | ai_extracted | ai_verified | promote |

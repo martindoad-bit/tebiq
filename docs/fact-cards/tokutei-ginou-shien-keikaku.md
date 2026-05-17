@@ -1,7 +1,7 @@
 ---
 fact_id: tokutei-ginou-shien-keikaku
 title: 特定技能 — 受入機関の支援計画義務（10項目）
-state: ai_extracted
+state: ai_verified   # Knowledge Runtime Loop 6 promote: FACT source checked + DOMAIN narrow runtime scope.
 risk_level: medium
 confidence: medium
 source_quality: official
@@ -49,7 +49,7 @@ evidence_points:
     display_label: "特技支援計画"
     support_level: "direct"
     user_visible: true
-    needs_domain_review: true
+    needs_domain_review: false
 ---
 
 ## current_effective_fact
@@ -62,8 +62,19 @@ evidence_points:
 - 登録支援機関に委託可
 - 違反は改善命令
 
+## injection_format
+
+### injection_certain_block
+
+```text
+- 特定技能1号の受入機関には、外国人が安定的・円滑に活動できるよう支援計画を作成し、支援を実施する義務がある。
+- 支援の実施は登録支援機関へ委託できるが、個別の処分可能性や支援充足性は別途確認が必要。
+- 出典: ISA — 特定技能 https://www.moj.go.jp/isa/applications/status/specifiedskilledworker.html
+```
+
 ## changelog
 
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
 |------|------|----------|--------------|-------------|------|
 | 2026-05-17 | FACT-OPS bulk-1 | 新規作成。 | — | ai_extracted | new |
+| 2026-05-17 | Codex Loop6 | 公式sourceとDOMAIN境界を確認し、狭い確定事実としてruntime昇格。 | ai_extracted | ai_verified | promote |
