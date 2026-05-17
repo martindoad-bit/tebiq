@@ -2,6 +2,8 @@
 
 Date: 2026-05-17
 Branch: `codex/knowledge-runtime-loop10-source-repair`
+Merged PR: [#172](https://github.com/martindoad-bit/tebiq/pull/172)
+Production SHA: `6d56d1be29d67bac055ee6c83f7344d914ea537c`
 
 ## Scope
 
@@ -158,36 +160,62 @@ Current production DB waterline before this loop sync:
 
 The DB is intentionally behind until this loop is merged and targeted sync runs.
 
-## Post-Merge Checklist
+## Post-Merge Verification
 
-After merge:
+Merge and production verification completed.
 
-1. Target-sync the five promoted cards:
-   - `gaimen-kirikae-process`
-   - `kaigo-hoken-day1-after-40`
-   - `shougai-nenkin-overview`
-   - `shoukibo-jigyou-zei`
-   - `yochi-en-hoiku-gaikoku`
-2. Also target-sync source-repaired non-runtime cards if full sync is still unreliable:
-   - `zairyu-shitsugyo-hosho-pension`
-   - `nenkin-tsuinou-10years`
-   - `eijuusha-haigusha-divorce`
-   - `zairyu-pl-after-shibetsu`
-   - `zairyu-irrelevent-jutsu`
-   - `zairyu-tokubetsu-kyoka`
-   - `overstay-self-report-route`
-   - `nyukoku-kyohi-jiyu`
-3. Run `npm run qa:card-import-audit` and confirm DB/file match.
-4. Wait for production build-info to match the merge SHA.
-5. Run `npm run smoke:production-answer`.
-6. Probe routes:
-   - `/quick-reference/driving-license-conversion-materials`
-   - `/quick-reference/pension-social-insurance-proof-materials`
-   - `/quick-reference/tax-certificate`
-   - `/quick-reference/minor-school-enrollment-materials`
-   - `/materials/nenkin-kiroku`
-   - `/materials/kenpo-shikaku-kakunin`
-   - `/materials/shashin-shinseisho`
+| Check | Result |
+|---|---|
+| PR merge | `#172` squash-merged to main |
+| merge SHA | `6d56d1be29d67bac055ee6c83f7344d914ea537c` |
+| production build-info | matched `6d56d1b` |
+| targeted DB sync | 13/13 upserted |
+| `npm run qa:card-import-audit` after sync | PASS; filesystem and DB match |
+| `npm run smoke:production-answer` | PASS, 20/20 |
+| material / quick-reference route probes | PASS, 7/7 |
+
+Targeted DB sync covered all five promoted runtime cards:
+
+- `gaimen-kirikae-process`
+- `kaigo-hoken-day1-after-40`
+- `shougai-nenkin-overview`
+- `shoukibo-jigyou-zei`
+- `yochi-en-hoiku-gaikoku`
+
+It also covered eight source-repaired non-runtime cards:
+
+- `zairyu-shitsugyo-hosho-pension`
+- `nenkin-tsuinou-10years`
+- `eijuusha-haigusha-divorce`
+- `zairyu-pl-after-shibetsu`
+- `zairyu-irrelevent-jutsu`
+- `zairyu-tokubetsu-kyoka`
+- `overstay-self-report-route`
+- `nyukoku-kyohi-jiyu`
+
+Post-sync waterline:
+
+| Metric | Count |
+|---|---:|
+| total fact cards | 269 |
+| `ai_verified` | 205 |
+| `human_reviewed` | 5 |
+| runtime eligible | 210 |
+| `ai_extracted` quarantine | 56 |
+| disabled | 3 |
+| material references | 198 |
+
+Production route probes:
+
+| Route | HTTP |
+|---|---:|
+| `/quick-reference/driving-license-conversion-materials` | 200 |
+| `/quick-reference/pension-social-insurance-proof-materials` | 200 |
+| `/quick-reference/tax-certificate` | 200 |
+| `/quick-reference/minor-school-enrollment-materials` | 200 |
+| `/materials/nenkin-kiroku` | 200 |
+| `/materials/kenpo-shikaku-kakunin` | 200 |
+| `/materials/shashin-shinseisho` | 200 |
 
 ## Loop 11 Direction
 
