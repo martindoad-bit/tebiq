@@ -1,6 +1,6 @@
 ---
 fact_id: zairyu-irrelevent-jutsu
-title: 在留資格変更 — 業務範囲外への転職は変更許可必須
+title: 在留資格変更 — 現在の在留資格の活動範囲外は変更許可が必要
 state: ai_extracted
 risk_level: high
 confidence: high
@@ -8,7 +8,7 @@ source_quality: official
 last_verified_at: "2026-05-17"
 sprint: "fact-window-bulk-1"
 citation_label: "業務範囲外転職変更"
-citation_summary: "技人国から経営管理への転職、留学から技人国への変更等、現在の在留資格の活動範囲を超える就職・転職は在留資格変更許可申請が必要。許可前の活動は不法就労。"
+citation_summary: "現在の在留資格で許可されている活動範囲を超える活動を行う場合は、在留資格変更許可申請が必要。許可前に範囲外の報酬活動を始めてよいとは扱わない。"
 source_display_names:
   - "出入国在留管理庁"
 applies_when:
@@ -24,10 +24,9 @@ official_sources:
 applies_to:
   - 業務範囲超の転職予定者
 direct_fact_fields:
-  - 業務範囲超：変更許可必須
-  - 許可前の活動：不法就労扱い
-  - 同一資格内の転職：所属機関等届出14日のみ
-  - 就労資格証明書の取得推奨（同一資格内転職時）
+  - 現在の在留資格の活動範囲外：在留資格変更許可が必要
+  - 許可前に範囲外の報酬活動を始める判断は不可
+  - 同じ在留資格名でも職務内容が範囲内かは別途確認が必要
 ai_inferred_fields:
   - 入管に判断を仰ぐべき境界事例多数
 needs_review_flags:
@@ -42,7 +41,7 @@ related_links:
     locator: "業務範囲"
     relation: "official_reference"
 evidence_points:
-  - claim: "現在の在留資格の活動範囲を超える就職・転職は在留資格変更許可申請が必須。許可前の活動は不法就労扱い。"
+  - claim: "現在の在留資格の活動範囲を超える活動を行う場合は、在留資格変更許可申請が必要。許可前に範囲外活動を始めてよいとは扱わない。"
     source_title: "ISA — 在留資格変更"
     source_url: "https://www.moj.go.jp/isa/applications/procedures/16-1.html"
     source_organization: "出入国在留管理庁"
@@ -55,13 +54,30 @@ evidence_points:
 
 ## current_effective_fact
 
-業務範囲外転職：変更許可必須・許可前活動は不法。
+現在の在留資格の活動範囲外に出る場合は、在留資格変更許可が必要。
 
 ## must_say
 
-- 業務範囲超は変更許可
-- 許可前は不法就労
-- 同資格内は届出のみ
+- 活動範囲外は変更許可が必要
+- 許可前に範囲外の報酬活動を始めない
+- 同じ在留資格名でも職務内容の範囲確認が必要
+
+## injection_format
+
+### injection_certain_block
+
+```text
+【在留資格変更と活動範囲／{{TODAY_ISO}} 公式】
+現在の在留資格で認められている活動範囲を超える活動を行う場合は、在留資格変更許可申請が必要。
+許可が出る前に、新しい活動範囲の報酬活動を開始してよいとは扱わない。
+同じ在留資格名の転職でも、実際の職務内容が現在の資格範囲内かは別途確認する。
+```
+
+### injection_needs_review_addendum
+
+```text
+※ 同一資格内の転職、就労資格証明書、届出義務との関係は個別事情で確認。
+```
 
 ## changelog
 

@@ -64,6 +64,23 @@ evidence_points:
 - 現地警察報告書
 - 無料
 
+## injection_format
+
+### injection_certain_block
+
+```text
+【在留カード海外紛失／{{TODAY_ISO}} 公式】
+海外滞在中に在留カードを紛失・盗難等で失った場合、帰国後14日以内に地方出入国在留管理官署で再交付申請を行う。
+紛失・盗難を証明する資料を準備できない場合は、事情説明書が必要になる。
+このカードは国内紛失時の手続や再入国可否の個別判断までは扱わない。
+```
+
+### injection_needs_review_addendum
+
+```text
+※ 再入国時の空港対応、現地警察報告書の翻訳要否は個別確認が必要。
+```
+
 ## changelog
 
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |

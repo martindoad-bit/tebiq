@@ -69,6 +69,23 @@ evidence_points:
 - 1年以上前科で拒否対象
 - 上陸特別許可あり
 
+## injection_format
+
+### injection_certain_block
+
+```text
+【上陸拒否事由／{{TODAY_ISO}} 公式】
+入管法第5条には上陸拒否事由が定められており、感染症、麻薬・覚醒剤関連、一定の刑罰歴、退去強制歴などが含まれる。
+該当可能性がある場合は、通常の観光・短期入国や在留資格認定だけで解決できるとは扱わない。
+上陸特別許可などの個別判断は専門家確認が必要。
+```
+
+### injection_needs_review_addendum
+
+```text
+※ 刑罰歴・退去強制歴・上陸特別許可の可否は個別事情で大きく変わる。
+```
+
 ## changelog
 
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |

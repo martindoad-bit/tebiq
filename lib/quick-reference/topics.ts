@@ -40,6 +40,7 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
     factCardIds: [
       'zairyu-address-change',
       'jukyochi-90days-torikeshi',
+      'zairyu-touriku-after-zaijuu',
     ],
     relatedTopicIds: ['tax-certificate', 'renewal-review-factors'],
     aliases: ['搬家', '地址变更', '住址', '住所', '转入', '转居'],
@@ -150,7 +151,9 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
       'jfind-tokutei-katsudou',
     
       'gijinkoku-shihon-jugyou-strict',
-      'fuhou-shurou-employer',],
+      'fuhou-shurou-employer',
+      'zairyu-irrelevent-jutsu',
+      'tokutei-ginou-1-vs-2',],
     relatedTopicIds: [
       'retirement-risk',
       'health-insurance-after-leaving-job',
@@ -1110,6 +1113,7 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
       'zairyu-address-change',
       'jyumin-hyo-gaijin',
       'jukyochi-90days-torikeshi',
+      'zairyu-touriku-after-zaijuu',
     ],
     relatedTopicIds: [
       'address-change',
@@ -1199,6 +1203,7 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
     factCardIds: [
       'zairyu-card-loss-reissue',
       'zairyu-card-keitai-gimu',
+      'zairyu-card-loss-overseas',
     ],
     relatedTopicIds: [
       'card-loss',
