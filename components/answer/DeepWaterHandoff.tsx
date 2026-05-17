@@ -12,6 +12,27 @@
 // as a marketing card.
 
 import type { HandoffEntry, HandoffUrgency, ProfessionalKind } from '@/lib/consultation/deep-water-handoff'
+import {
+  L5_SIGNAL_REGISTRY,
+  type L5ContentState,
+  type L5Signal,
+} from '@/lib/l5/signal-registry'
+
+// State-banner copy. needs_domain entries display a banner that frames
+// the section as "points for the professional to confirm", not advice.
+const STATE_BANNER: Record<L5ContentState, string | null> = {
+  agent_drafted: null,
+  needs_domain: '以下要点供你和专业人士确认，不是最终判断。',
+  domain_reviewed: null,
+}
+
+// Lightweight static lookup so the component stays a server component
+// (no client-side fetching, no hydration cost for a content-only block).
+function lookupL5Signals(ids: string[] | undefined | null): L5Signal[] {
+  if (!ids || ids.length === 0) return []
+  const set = new Set(ids)
+  return L5_SIGNAL_REGISTRY.filter(s => set.has(s.id))
+}
 
 const URGENCY_LABEL: Record<HandoffUrgency, string> = {
   today: '今天',
@@ -101,6 +122,110 @@ export default function DeepWaterHandoff({ handoff }: { handoff: HandoffEntry })
       <p className="mt-3 text-[12.5px] leading-[1.6] text-ash [overflow-wrap:anywhere]">
         {handoff.oneLine}
       </p>
+
+      <L5SignalSection signals={lookupL5Signals(handoff.l5SignalIds)} />
     </section>
+  )
+}
+
+// ---------------------------------------------------------------------
+// L5 Practice Signal block — "为什么是深水 + 准备什么 + 不要做什么"
+// ---------------------------------------------------------------------
+//
+// Renders inside the same handoff card so the user sees routing
+// (找谁确认) and preparation (这道题为什么是深水) in one surface. Uses
+// <details>/<summary> so the section is expandable with zero JS in a
+// server component.
+
+function L5SignalSection({ signals }: { signals: L5Signal[] }) {
+  if (signals.length === 0) return null
+
+  return (
+    <div className="mt-4 grid gap-3">
+      {signals.map(signal => (
+        <details
+          key={signal.id}
+          className="group rounded-[12px] border border-hairline bg-canvas px-3 py-2.5 [&_summary::-webkit-details-marker]:hidden"
+        >
+          <summary className="flex cursor-pointer list-none items-start justify-between gap-3">
+            <span className="text-[13.5px] leading-[1.4] text-ink [overflow-wrap:anywhere]">
+              这道题为什么是深水：{signal.title}
+            </span>
+            <span className="mt-0.5 shrink-0 text-[11px] leading-none text-slate transition-transform group-open:rotate-90">
+              ›
+            </span>
+          </summary>
+
+          <div className="mt-3 grid gap-3">
+            {STATE_BANNER[signal.contentState] && (
+              <p className="rounded-[8px] bg-paper px-2.5 py-1.5 text-[11.5px] leading-[1.5] text-slate [overflow-wrap:anywhere]">
+                {STATE_BANNER[signal.contentState]}
+              </p>
+            )}
+
+            <div>
+              <h3 className="text-[12.5px] font-medium leading-none text-slate">为什么不能直答</h3>
+              <p className="mt-1.5 text-[13px] leading-[1.6] text-ink [overflow-wrap:anywhere]">
+                {signal.whyThisIsDeepWater}
+              </p>
+            </div>
+
+            {signal.prepareWhat.length > 0 && (
+              <div>
+                <h3 className="text-[12.5px] font-medium leading-none text-slate">
+                  {signal.contentState === 'needs_domain' ? '给专业人士看的事实清单' : '准备什么'}
+                </h3>
+                <ul className="mt-1.5 grid gap-1.5">
+                  {signal.prepareWhat.map(item => (
+                    <li
+                      key={item}
+                      className="text-[13px] leading-[1.55] text-ink [overflow-wrap:anywhere] before:mr-1.5 before:text-ash before:content-['·']"
+                    >
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {signal.doNotDo.length > 0 && (
+              <div>
+                <h3 className="text-[12.5px] font-medium leading-none text-slate">不要做</h3>
+                <ul className="mt-1.5 grid gap-1.5">
+                  {signal.doNotDo.map(item => (
+                    <li
+                      key={item}
+                      className="text-[13px] leading-[1.55] text-ink [overflow-wrap:anywhere] before:mr-1.5 before:text-ash before:content-['×']"
+                    >
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {signal.sourceUrls.length > 0 && (
+              <div>
+                <h3 className="text-[12.5px] font-medium leading-none text-slate">参考公式信源</h3>
+                <ul className="mt-1.5 grid gap-1">
+                  {signal.sourceUrls.map(url => (
+                    <li key={url}>
+                      <a
+                        href={url}
+                        target="_blank"
+                        rel="noreferrer noopener"
+                        className="text-[12.5px] leading-[1.55] text-slate underline [overflow-wrap:anywhere]"
+                      >
+                        {url}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        </details>
+      ))}
+    </div>
   )
 }

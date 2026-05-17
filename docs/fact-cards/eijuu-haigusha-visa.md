@@ -1,7 +1,7 @@
 ---
 fact_id: eijuu-haigusha-visa
 title: 永住者の配偶者等ビザの申請要件と注意点
-state: ai_verified
+state: ai_extracted   # 2026-05-17: WB-B safety debt downgrade — confidence=medium + DOMAIN §2.4/§4.4 deep-water; 3 unresolved flags (no_work_restriction_source, marital_substance_review, eijuu_vs_nihonjin_spouse_diff).
 risk_level: high
 confidence: medium
 source_quality: official

@@ -1,7 +1,7 @@
 ---
 fact_id: kazoku-taizai-henko
 title: 家族滞在から就労ビザへの在留資格変更（手続き・条件・在留資格取消リスク）
-state: ai_verified
+state: ai_extracted   # 2026-05-17: WB-B safety debt downgrade — 4 unresolved flags (illegal_work_impact, permission_before_work_start, etc.) in DOMAIN must-ask range; should not be ai_verified positively injected.
 risk_level: high
 confidence: medium
 source_quality: official

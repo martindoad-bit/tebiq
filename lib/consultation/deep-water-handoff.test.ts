@@ -12,10 +12,30 @@ import { ROUTE_GATE_PATTERNS, matchRouteGates } from './route-gates'
 // ----- Registry shape contracts ---------------------------------------
 
 test('registry covers all 10 DOMAIN §3 deep-water families', () => {
-  // Each entry has a familyTag; we expect exactly 10 distinct family
-  // tags per DOMAIN gate §3.1 .. §3.10.
+  // Each entry has a familyTag; DOMAIN §3 declares 10 families. WB-G
+  // L5 explicitly adds practice signal families (e.g. student
+  // attendance), so we assert *at least* 10 distinct tags rather than
+  // exactly 10 — but the 10 §3 tags must all be present.
   const tags = new Set(DEEP_WATER_HANDOFF_REGISTRY.map(e => e.familyTag))
-  assert.equal(tags.size, 10, `expected 10 distinct family tags, got ${tags.size}`)
+  assert.ok(
+    tags.size >= 10,
+    `expected at least 10 distinct family tags (DOMAIN §3), got ${tags.size}`,
+  )
+  const REQUIRED_DOMAIN_FAMILIES = [
+    'dv-address-safety-first',
+    'immigration-notice',
+    'special-period',
+    'pending-change',
+    'hsp1-institution-change',
+    'spouse-divorce-remarriage',
+    'business-manager-disposition',
+    'pr-pending',
+    'tax-pension-social-insurance',
+    'gijinkoku-work-scope',
+  ]
+  for (const f of REQUIRED_DOMAIN_FAMILIES) {
+    assert.ok(tags.has(f), `DOMAIN §3 family "${f}" missing from registry`)
+  }
 })
 
 test('every entry has at least one professional kind', () => {

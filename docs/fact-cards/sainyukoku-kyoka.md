@@ -1,7 +1,7 @@
 ---
 fact_id: sainyukoku-kyoka
 title: 再入国許可・みなし再入国 — 在留資格を保持したまま出国する
-state: ai_verified
+state: ai_extracted   # 2026-05-17: WB-B safety debt downgrade — original source_url pointed to 資格外活動 page (mismatch). URL fixed to /isa/immigration/procedures/16-5.html (verified ALIVE, title "再入国許可申請"); state held at ai_extracted pending FACT re-verification of all quotes against correct page.
 risk_level: high
 confidence: high
 source_quality: official
@@ -24,7 +24,7 @@ does_not_cover:
   - "出国後の在留資格再取得の手続き"
 ai_pipeline: WebFetch → FACT-OPS review
 official_sources:
-  - url: https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri07_00045.html
+  - url: https://www.moj.go.jp/isa/immigration/procedures/16-5.html
     label: 出入国在留管理庁 — 再入国許可
     accessed: "2026-05-11"
 applies_to:
@@ -46,7 +46,7 @@ needs_review_flags:
   - eijuusha_sainyukoku_kikan: 永住者の再入国許可の有効期間（5年超か否か）はeijuu-sainyukokuで確認要。
 related_links:
   - title: "出入国在留管理庁 — 再入国許可"
-    url: "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri07_00045.html"
+    url: "https://www.moj.go.jp/isa/immigration/procedures/16-5.html"
     organization: "出入国在留管理庁"
     display_label: "出入国在留管理庁 — 再入国許可・みなし再入国"
     locator: "ページ内で「再入国許可」「みなし再入国」を検索"
@@ -54,7 +54,7 @@ related_links:
 evidence_points:
   - claim: "みなし再入国許可：有効な旅券・在留カードを持ち、出国時に意思表示するだけで手続き不要。有効期間は出国日から1年以内（在留期限が先に来る場合は在留期限まで）。再入国許可の最長有効期間は5年。有効期間内に再入国しない場合は在留資格が失効。"
     source_title: "出入国在留管理庁：再入国許可"
-    source_url: "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri07_00045.html"
+    source_url: "https://www.moj.go.jp/isa/immigration/procedures/16-5.html"
     source_organization: "出入国在留管理庁"
     source_locator: "ページ内「みなし再入国（1年以内・在留期間内）」「再入国許可の最長有効期間5年」「在留資格の失効」の記述を確認"
     display_label: "再入国許可：みなし再入国は1年以内・再入国許可は最長5年・期間超過で在留資格失効"
@@ -63,7 +63,7 @@ evidence_points:
     needs_domain_review: false
   - claim: "みなし再入国許可の手続き：出国時に空港でEDカード（出帰国記録カード）の「みなし再入国」欄にチェックを入れるだけ。特別な申請・費用は不要。"
     source_title: "出入国在留管理庁：再入国許可"
-    source_url: "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri07_00045.html"
+    source_url: "https://www.moj.go.jp/isa/immigration/procedures/16-5.html"
     source_organization: "出入国在留管理庁"
     source_locator: "ページ内「みなし再入国の手続き（EDカードへのチェック・費用不要）」の記述を確認"
     display_label: "みなし再入国の手続き：空港でEDカードにチェックするだけ・申請費用不要"
@@ -72,7 +72,7 @@ evidence_points:
     needs_domain_review: true
   - claim: "再入国許可の申請先：出国前に最寄りの地方出入国在留管理官署に申請。オンライン申請（入管オンライン）でも申請可能。有効期間は最長5年。"
     source_title: "出入国在留管理庁：再入国許可"
-    source_url: "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri07_00045.html"
+    source_url: "https://www.moj.go.jp/isa/immigration/procedures/16-5.html"
     source_organization: "出入国在留管理庁"
     source_locator: "ページ内「再入国許可の申請先（地方出入国在留管理官署・オンライン申請）」「有効期間（最長5年）」の記述を確認"
     display_label: "再入国許可の申請：出国前に地方入管またはオンラインで申請・有効期間最長5年"
