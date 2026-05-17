@@ -77,9 +77,9 @@ test('appendSupplementalFact rejects empty/whitespace text via early return sema
   // Verify by stubbing db via an inline override.
   // We do a static-only structural check; full integration is covered
   // by the route handler tests / manual QA.
-  const mod = await import('./userMatters')
+  const _mod = await import('./userMatters')
   // The function's signature accepts (id, viewerId, text)
-  type Args = Parameters<typeof mod.appendSupplementalFact>
+  type Args = Parameters<typeof _mod.appendSupplementalFact>
   const _a: Args = ['mat_abc', 'viewer_abc', '   ']
   void _a
   assert.ok(true)
