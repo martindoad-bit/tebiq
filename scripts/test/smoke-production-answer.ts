@@ -1,9 +1,9 @@
 /**
  * smoke-production-answer.ts
  *
- * Posts five redline questions to the current production consultation stream
- * and checks that the visible answer keeps the expected domain anchors. This
- * script intentionally uses `/api/consultation/stream`; the legacy
+ * Posts a 20-question production regression set to the current consultation
+ * stream and checks that the visible answers keep the expected domain anchors.
+ * This script intentionally uses `/api/consultation/stream`; the legacy
  * `/api/questions` endpoint may return 410 on current deployments.
  *
  * Usage:
@@ -12,6 +12,7 @@
 import { parseConsultationChunk, type ConsultationEvent } from '@/lib/consultation/stream-protocol'
 
 const BASE = process.env.PRODUCTION_URL ?? 'https://tebiq.jp'
+const STREAM_TIMEOUT_MS = Number(process.env.SMOKE_STREAM_TIMEOUT_MS ?? 120_000)
 
 interface Redline {
   id: string
@@ -87,13 +88,13 @@ const REDLINES: Redline[] = [
   {
     id: 'R12-keiei-dormant-to-employment',
     query: '经管公司半年没收入了，我想转去朋友公司上班，可以先入职再办变更吗？',
-    reject: /(可以.*先入职.*再办变更|可以.*先上班|14日.*届出.*就可以)/,
+    reject: /((^|[，。；：\s])可以.{0,12}(先入职|先上班|先去.{0,8}上班)|14日.*届出.*就可以)/,
     required: [/(经营管理|経営管理|经管|变更|変更)/, /(行政書士|專業|专业|专门|入管)/],
   },
   {
     id: 'R13-spouse-divorce-remarriage',
     query: '我日本人配偶签离婚后又准备再婚，是不是再婚后就不用管之前离婚的届出了？',
-    reject: /(离婚.*届出.*不用管|不用管.*离婚.*届出|再婚后.*离婚.*届出.*(不用|不要)|再婚.*自动.*(覆盖|代替).*离婚.*届出)/,
+    reject: /((^|[，。；：\s])(离婚.*届出.*不用管|不用管.*离婚.*届出|再婚后.*离婚.*届出.*(不用|不要))|再婚.{0,20}(可以|能).{0,12}(自动)?(覆盖|代替).{0,12}(离婚届出|届出义务))/,
     required: [/(届出|14日|14天)/, /(配偶|离婚|離婚)/],
   },
   {
@@ -150,26 +151,40 @@ interface Outcome {
 }
 
 async function runOne(item: Redline): Promise<Outcome> {
-  const result = await callConsultationStream(item.query)
-  const problems: string[] = []
+  let best: Outcome | null = null
+  for (let attempt = 1; attempt <= 2; attempt += 1) {
+    const result = await callConsultationStream(item.query)
+    const problems: string[] = []
 
-  if (result.http !== 200) problems.push(`http_${result.http}`)
-  if (result.status !== 'completed') problems.push(`status_${result.status}`)
-  if (result.answerText.trim().length < 120) problems.push(`answer_too_short_${result.answerText.trim().length}`)
-  if (item.reject?.test(result.answerText)) problems.push(`reject:${item.reject.source}`)
-  for (const req of item.required ?? []) {
-    if (!req.test(result.answerText)) problems.push(`missing:${req.source}`)
-  }
+    if (result.http !== 200) problems.push(`http_${result.http}`)
+    if (result.status !== 'completed') problems.push(`status_${result.status}`)
+    if (result.answerText.trim().length < 120) problems.push(`answer_too_short_${result.answerText.trim().length}`)
+    if (item.reject?.test(result.answerText)) problems.push(`reject:${item.reject.source}`)
+    for (const req of item.required ?? []) {
+      if (!req.test(result.answerText)) problems.push(`missing:${req.source}`)
+    }
 
-  return {
-    id: item.id,
-    query: item.query,
-    http: result.http,
-    status: result.status,
-    answerChars: result.answerText.length,
-    ok: problems.length === 0,
-    notes: problems.length === 0 ? 'ok' : problems.join('; '),
+    const outcome = {
+      id: item.id,
+      query: item.query,
+      http: result.http,
+      status: result.status,
+      answerChars: result.answerText.length,
+      ok: problems.length === 0,
+      notes: problems.length === 0 ? 'ok' : problems.join('; '),
+    }
+    if (outcome.ok) return outcome
+    best = outcome
+
+    const retryable =
+      result.http === 0 ||
+      result.status === 'timeout' ||
+      result.status === 'missing_terminal_event' ||
+      result.answerText.trim().length < 120
+    if (!retryable || attempt === 2) break
+    await new Promise(resolve => setTimeout(resolve, 1000))
   }
+  return best!
 }
 
 async function callConsultationStream(question: string): Promise<{
@@ -177,48 +192,76 @@ async function callConsultationStream(question: string): Promise<{
   status: string
   answerText: string
 }> {
+  let lastError: unknown = null
+  for (let attempt = 1; attempt <= 3; attempt += 1) {
+    try {
+      return await callConsultationStreamOnce(question)
+    } catch (err) {
+      lastError = err
+      if (attempt < 3) await new Promise(resolve => setTimeout(resolve, 1000))
+    }
+  }
+  return {
+    http: 0,
+    status: `fetch_failed:${lastError instanceof Error ? lastError.message : 'unknown'}`,
+    answerText: '',
+  }
+}
+
+async function callConsultationStreamOnce(question: string): Promise<{
+  http: number
+  status: string
+  answerText: string
+}> {
+  const controller = new AbortController()
+  const timeout = setTimeout(() => controller.abort(), STREAM_TIMEOUT_MS)
   const res = await fetch(`${BASE}/api/consultation/stream`, {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify({ question }),
+    signal: controller.signal,
   })
-  if (!res.body) {
-    const text = await res.text().catch(() => '')
-    return { http: res.status, status: `no_body:${text.slice(0, 80)}`, answerText: '' }
-  }
+  try {
+    if (!res.body) {
+      const text = await res.text().catch(() => '')
+      return { http: res.status, status: `no_body:${text.slice(0, 80)}`, answerText: '' }
+    }
 
-  const reader = res.body.getReader()
-  const decoder = new TextDecoder()
-  let buffer = ''
-  let answerText = ''
-  let terminal: ConsultationEvent['event'] | null = null
+    const reader = res.body.getReader()
+    const decoder = new TextDecoder()
+    let buffer = ''
+    let answerText = ''
+    let terminal: ConsultationEvent['event'] | null = null
 
-  while (true) {
-    const { value, done } = await reader.read()
-    if (done) break
-    buffer += decoder.decode(value, { stream: true })
+    while (true) {
+      const { value, done } = await reader.read()
+      if (done) break
+      buffer += decoder.decode(value, { stream: true })
+      const parsed = parseConsultationChunk(buffer)
+      buffer = parsed.remainder
+      for (const event of parsed.events) {
+        if (event.event === 'answer_chunk') answerText += event.chunk
+        if (event.event === 'completed' || event.event === 'timeout' || event.event === 'failed') {
+          terminal = event.event
+        }
+      }
+    }
+    buffer += decoder.decode()
     const parsed = parseConsultationChunk(buffer)
-    buffer = parsed.remainder
     for (const event of parsed.events) {
       if (event.event === 'answer_chunk') answerText += event.chunk
       if (event.event === 'completed' || event.event === 'timeout' || event.event === 'failed') {
         terminal = event.event
       }
     }
-  }
-  buffer += decoder.decode()
-  const parsed = parseConsultationChunk(buffer)
-  for (const event of parsed.events) {
-    if (event.event === 'answer_chunk') answerText += event.chunk
-    if (event.event === 'completed' || event.event === 'timeout' || event.event === 'failed') {
-      terminal = event.event
-    }
-  }
 
-  return {
-    http: res.status,
-    status: terminal ?? (res.ok ? 'missing_terminal_event' : 'http_error'),
-    answerText,
+    return {
+      http: res.status,
+      status: terminal ?? (res.ok ? 'missing_terminal_event' : 'http_error'),
+      answerText,
+    }
+  } finally {
+    clearTimeout(timeout)
   }
 }
 

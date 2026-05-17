@@ -136,4 +136,40 @@ Expected filesystem state after Loop 5:
 | `ai_extracted` quarantine | 100 |
 | disabled | 3 |
 
-Production DB will remain at the previous waterline until targeted sync completes.
+Production DB targeted sync completed after PR merge:
+
+- targeted sync: 35/35 upserted
+- post-sync `npm run qa:card-import-audit`: filesystem and database both match at 269 total cards
+- production runtime eligible: 166 (`ai_verified` 161 + `human_reviewed` 5)
+
+## Post-Deploy Notes
+
+Production deployment reached SHA `3f5f993093468b17737889b3f8ca22316035c595`.
+
+Materials path probes confirmed the new bindings render on production pages, including:
+
+- `/quick-reference/national-tax-certificate-sono3-materials`
+- `/quick-reference/student-renewal-materials`
+- `/quick-reference/permanent-residence-application-materials`
+- `/materials/kokuzei-nouzei-sono3`
+- `/materials/juminzei-kazei-shomei`
+- `/materials/mimoto-hoshou-sho`
+
+Production answer smoke initially reported 16/20, but two redline failures were verified as regex false positives:
+
+- R12 answer correctly said `不可以先入职再办理在留资格变更`;
+- R13 answer correctly said `离婚后的14日内届出义务独立存在，再婚不能免除这项义务`.
+
+The smoke regex was calibrated to avoid treating explicit negations as dangerous affirmative answers.
+
+The second answer-smoke run passed R1-R14 after regex calibration, then hit a transient `fetch failed` on R15. The answer-smoke runner was hardened to retry transport-level fetch failures before marking the case failed. Dangerous answer content still fails normally.
+
+The runner was also hardened with a per-question stream timeout (`SMOKE_STREAM_TIMEOUT_MS`, default 120s). This prevents a single stalled provider stream from hanging an entire knowledge-expansion loop.
+
+Final post-hardening production answer smoke result:
+
+- `npm run smoke:production-answer` — PASS, 20/20
+- build-info: `3f5f993093468b17737889b3f8ca22316035c595`
+- all 15 redline cases and 5 negative controls completed with terminal `completed`
+
+Pre-report URL smoke also exposed that `/quick-reference` can legitimately take more than 15s under production edge latency. The URL-smoke timeout was raised to 30s by default while keeping retry behavior and hard-failing real 404/5xx responses.

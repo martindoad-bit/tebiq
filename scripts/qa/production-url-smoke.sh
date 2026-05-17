@@ -18,11 +18,12 @@
 # Notes:
 #   - macOS bash 3.2 compatible (no associative arrays, no readarray)
 #   - Never silently swallows 5xx / timeout — those are hard failures
-#   - timeout per request: 15s
+#   - timeout per request: 30s by default (`URL_SMOKE_MAX_TIME` override)
 set -u
 
 BASE_URL="https://tebiq.jp"
 ALLOWLIST_FILE=""
+URL_SMOKE_MAX_TIME="${URL_SMOKE_MAX_TIME:-30}"
 for arg in "$@"; do
   case "$arg" in
     --base-url=*) BASE_URL="${arg#--base-url=}" ;;
@@ -118,7 +119,7 @@ while IFS= read -r route; do
 
   url="${BASE_URL}${route}"
   # -L follow redirects, -o /dev/null discard body, -w get code + time,
-  # --max-time 15 hard cap. We capture into a single line "code time".
+  # --max-time hard cap. We capture into a single line "code time".
   #
   # A single edge/network hiccup should not make the audit flaky, but real HTTP
   # failures must still fail. Therefore only curl transport errors are retried;
@@ -128,7 +129,7 @@ while IFS= read -r route; do
   curl_exit=1
   resp=""
   while [ "$attempt" -le "$max_attempts" ]; do
-    resp="$(curl -sS -L -o /dev/null --max-time 15 \
+    resp="$(curl -sS -L -o /dev/null --max-time "$URL_SMOKE_MAX_TIME" \
       -w '%{http_code} %{time_total}' "$url" 2>&1)"
     curl_exit=$?
     if [ $curl_exit -eq 0 ]; then
