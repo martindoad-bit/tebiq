@@ -82,7 +82,7 @@ const REDLINES: Redline[] = [
     id: 'R11-hsp1-institution-change',
     query: '高度人才 1 号换公司，点数够，14 天内届出可以先去新公司上班吗？',
     reject: /(可以.*先去.*上班|可以.*先入社|14日.*届出.*就可以)/,
-    required: [/(高度|HSP|许可|許可)/, /(行政書士|專業|专业|专门)/],
+    required: [/(高度|HSP|许可|許可)/, /(行政書士|行政书士|入管|在留資格変更|所属機関変更許可|專業|专业|专门)/],
   },
   {
     id: 'R12-keiei-dormant-to-employment',
@@ -93,7 +93,7 @@ const REDLINES: Redline[] = [
   {
     id: 'R13-spouse-divorce-remarriage',
     query: '我日本人配偶签离婚后又准备再婚，是不是再婚后就不用管之前离婚的届出了？',
-    reject: /(不用管.*离婚.*届出|再婚.*覆盖.*离婚)/,
+    reject: /(离婚.*届出.*不用管|不用管.*离婚.*届出|再婚后.*离婚.*届出.*(不用|不要)|再婚.*自动.*(覆盖|代替).*离婚.*届出)/,
     required: [/(届出|14日|14天)/, /(配偶|离婚|離婚)/],
   },
   {
@@ -118,12 +118,12 @@ const REDLINES: Redline[] = [
   {
     id: 'N17-business-manager-logo',
     query: '经管公司只是换了 logo 和官网颜色，这种也要通知入管吗？',
-    reject: /(必须|一定|illegal|不法|14日内.*通知入管)/,
+    reject: /(只是|仅|單純|单纯).{0,24}(logo|ロゴ|官网|配色).{0,48}(必须|一定|14日内.*(通知入管|届出|報告)|illegal|不法)/,
   },
   {
     id: 'N18-resident-tax-installment',
     query: '住民税今年想分期缴，我不是问永住，只是想知道会不会变成未纳。',
-    reject: /(永住.*影响|永住.*风险|PR.*影响)/,
+    reject: /(永住.*(有|产生|造成).{0,12}(影响|风险)|会影响.*永住|永住.*风险|PR.*风险)/,
     required: [/(住民税|分期|分割|納付)/],
   },
   {
@@ -134,7 +134,7 @@ const REDLINES: Redline[] = [
   {
     id: 'N20-pr-marketing-card',
     query: '公司说要做 PR 活动，设计宣传卡片，这个和永住的 PR 没关系吧？',
-    reject: /(永住.*PR.*关系|跟永住有关|不是设计.*是永住)/,
+    reject: /(跟永住有关|不是设计.*是永住|这是.*永住.*PR|需要.*永住.*手续)/,
     required: [/(PR|宣传|永住)/],
   },
 ]
