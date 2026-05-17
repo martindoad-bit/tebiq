@@ -103,7 +103,9 @@ export const MATERIAL_ENTITIES: MaterialEntity[] = [
       'yochi-en-hoiku-gaikoku',
       'chintai-hoshou-gaikokujin',
       'ginko-account-gaijin-6months',
-    ],
+    
+      'eijuu-haigusha-visa',
+      'nihonjin-haigusha-visa',],
     sourceUrls: [
       {
         url: 'https://www.soumu.go.jp/main_sosiki/jichi_gyousei/c-gyousei/zairyu/index.html',
@@ -164,7 +166,10 @@ export const MATERIAL_ENTITIES: MaterialEntity[] = [
       'kaigo-hoken-day1-after-40',
       'shougai-nenkin-overview',
       'zairyu-shitsugyo-hosho-pension',
-    ],
+    
+      'eijuu-shinsei-shorui',
+      'eijuu-haigusha-visa',
+      'nihonjin-haigusha-visa',],
     sourceUrls: [
       {
         url: 'https://www.soumu.go.jp/main_sosiki/jichi_zeisei/czaisei/czaisei_seido/individual-inhabitant-tax.html',
@@ -218,7 +223,9 @@ export const MATERIAL_ENTITIES: MaterialEntity[] = [
       'jumin-zei-no-shukyou-3types',
       'shoukibo-jigyou-zei',
       'zairyu-shitsugyo-hosho-pension',
-    ],
+    
+      'eijuu-shinsei-shorui',
+      'eijuu-zeikin-payment',],
     sourceUrls: [
       {
         url: 'https://www.soumu.go.jp/main_sosiki/jichi_zeisei/czaisei/czaisei_seido/individual-inhabitant-tax.html',
@@ -268,7 +275,9 @@ export const MATERIAL_ENTITIES: MaterialEntity[] = [
       'zeimu-shomeisho-3types',
       'eijuu-jukyo-check-tax-shomeisho',
       'shoukibo-jigyou-zei',
-    ],
+    
+      'eijuu-shinsei-shorui',
+      'eijuu-zeikin-payment',],
     sourceUrls: [
       {
         url: 'https://www.nta.go.jp/taxes/shiraberu/taxanswer/osirase/9208.htm',
@@ -324,7 +333,9 @@ export const MATERIAL_ENTITIES: MaterialEntity[] = [
       'shougai-nenkin-overview',
       'zairyu-shitsugyo-hosho-pension',
       'kaigo-hoken-day1-after-40',
-    ],
+    
+      'eijuu-shinsei-shorui',
+      'nenkin-tsuinou-10years',],
     sourceUrls: [
       {
         url: 'https://www.nenkin.go.jp/n_net/',
@@ -384,7 +395,9 @@ export const MATERIAL_ENTITIES: MaterialEntity[] = [
       'sangyou-gakuei-naniwakai-tetsuzuki',
       'shougai-nenkin-overview',
       'zairyu-shitsugyo-hosho-pension',
-    ],
+    
+      'eijuu-nenkin-risk',
+      'eijuu-shinsei-shorui',],
     sourceUrls: [
       {
         url: 'https://www.mhlw.go.jp/stf/newpage_08277.html',
@@ -441,7 +454,12 @@ export const MATERIAL_ENTITIES: MaterialEntity[] = [
       'chintai-hoshou-gaikokujin',
       'foreigner-employment-info-portal',
       'gijinkoku-shotoku-shokuin-naka',
-    ],
+    
+      'gijinkoku-job-mismatch',
+      'gijinkoku-major-job-match',
+      'gijinkoku-shihon-jugyou-strict',
+      'kazoku-taizai-henko',
+      'kazoku-yobi-naitei-haigusha',],
   },
 
   // ───────────────────────────── 8 / 15
@@ -492,7 +510,12 @@ export const MATERIAL_ENTITIES: MaterialEntity[] = [
       'foreigner-employment-info-portal',
       'gijinkoku-shotoku-shokuin-naka',
       'tokutei-ginou-tenshoku',
-    ],
+    
+      'gijinkoku-job-mismatch',
+      'gijinkoku-major-job-match',
+      'gijinkoku-shihon-jugyou-strict',
+      'kazoku-taizai-henko',
+      'kazoku-yobi-naitei-haigusha',],
   },
 
   // ───────────────────────────── 9 / 15
@@ -537,7 +560,8 @@ export const MATERIAL_ENTITIES: MaterialEntity[] = [
       'keiei-kanri-2025-10',
       'startup-visa-meti-fukuoka',
       'shoukibo-jigyou-zei',
-    ],
+    
+      'keiei-kanri-jimu-bessho-requirement',],
     sourceUrls: [
       {
         url: 'https://www.moj.go.jp/MINJI/minji06.html',
@@ -590,7 +614,8 @@ export const MATERIAL_ENTITIES: MaterialEntity[] = [
       'aoiro-shinkoku-65',
       'shoukibo-jigyou-zei',
       'startup-visa-meti-fukuoka',
-    ],
+    
+      'keiei-kanri-jimu-bessho-requirement',],
   },
 
   // ───────────────────────────── 11 / 15
@@ -631,7 +656,9 @@ export const MATERIAL_ENTITIES: MaterialEntity[] = [
       'hoshou-jin-eijuu',
       'yobi-yose-shinseki-houmon',
       'kika-documents-list',
-    ],
+    
+      'eijuu-haigusha-visa',
+      'nihonjin-haigusha-visa',],
     sourceUrls: [
       {
         url: 'https://www.moj.go.jp/isa/applications/procedures/16-4.html',
@@ -740,7 +767,10 @@ export const MATERIAL_ENTITIES: MaterialEntity[] = [
       'yobi-yose-shinseki-houmon',
       'yuigon-koseishousho-jutsu',
       'kika-documents-list',
-    ],
+    
+      'rikon-todoke-procedure',
+      'eijuu-haigusha-visa',
+      'kazoku-yobi-naitei-haigusha',],
   },
 
   // ───────────────────────────── 14 / 15
@@ -815,7 +845,8 @@ export const MATERIAL_ENTITIES: MaterialEntity[] = [
       'gaimen-kirikae-process',
       'chintai-hoshou-gaikokujin',
       'saiyuukoku-kyoka-1year-5year',
-    ],
+    
+      'rikon-todoke-procedure',],
     sourceUrls: [
       {
         url: 'https://www.moj.go.jp/isa/applications/guide/zairyucard.html',
@@ -882,7 +913,10 @@ export const MATERIAL_ENTITIES: MaterialEntity[] = [
       'kika-documents-list',
       'jfind-tokutei-katsudou',
       'startup-visa-meti-fukuoka',
-    ],
+    
+      'eijuu-junior-15-eligibility',
+      'eijuu-shinsei-shorui',
+      'kazoku-taizai-henko',],
     sourceUrls: [
       {
         url: 'https://www.moj.go.jp/isa/applications/procedures/index.html',

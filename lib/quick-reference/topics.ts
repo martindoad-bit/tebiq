@@ -148,7 +148,9 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
       'tokutei-katsudou-46-target',
       'tokutei-ginou-tenshoku',
       'jfind-tokutei-katsudou',
-    ],
+    
+      'gijinkoku-shihon-jugyou-strict',
+      'fuhou-shurou-employer',],
     relatedTopicIds: [
       'retirement-risk',
       'health-insurance-after-leaving-job',
@@ -237,7 +239,8 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
       'sainyukoku-kyoka',
       'saiyuukoku-kyoka-1year-5year',
       'tokurei-kikan-2months',
-    ],
+    
+      'eijuu-takeoff-risk',],
     relatedTopicIds: ['renewal-review-factors', 'permanent-resident-card-renewal'],
     aliases: ['临时回国', '再入国', 'みなし', '出国', '回国', '离境'],
     deadline: '通常以出国后 1 年以内再入国为中心；在留期限更早到期时要以在留期限为准。',
@@ -393,7 +396,8 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
       'ryugakusei-baito-28jikan',
       'shikakugai-fukugyou',
       'ryugaku-shikakugai-individual-permission',
-    ],
+    
+      'shikakugai-30jikan-rural',],
     relatedTopicIds: ['renewal-review-factors'],
     aliases: ['打工', '兼职', '资格外', '資格外活動', '留学生打工', '家族滞在打工'],
     deadline: '开始打工前先确认许可；不要先开始再补。',
@@ -553,7 +557,9 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
       'zairyu-expiry-renewal-change',
       'gijinkoku-cefr-b2-2026',
       'gijinkoku-shotoku-shokuin-naka',
-    ],
+    
+      'gijinkoku-shihon-jugyou-strict',
+      'gijinkoku-major-job-match',],
     relatedTopicIds: [
       'job-change',
       'resident-tax-certificate-materials',
@@ -672,7 +678,9 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
       'zairyu-expiry-renewal-change',
       'kazoku-taizai-zairyu-period',
       'kazoku-taizai-shussan-shutoku',
-    ],
+    
+      'kazoku-shanzaihon-imin',
+      'kazoku-yobi-naitei-haigusha',],
     relatedTopicIds: [
       'part-time-permission',
       'resident-tax-certificate-materials',
@@ -726,7 +734,8 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
       'zairyu-expiry-renewal-change',
       'eijuu-haigusha-zairyu-1year',
       'yobi-yose-shinseki-houmon',
-    ],
+    
+      'rikon-todoke-procedure',],
     relatedTopicIds: [
       'resident-tax-certificate-materials',
       'renewal-review-factors',
@@ -841,7 +850,11 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
       'hoshou-jin-eijuu',
       'eijuu-haigusha-zairyu-1year',
       'shougai-nenkin-overview',
-    ],
+    
+      'eijuu-3000man-shisan-myth',
+      'eijuu-junior-15-eligibility',
+      'eijuu-takeoff-risk',
+      'eijuu-haigusha-visa',],
     relatedTopicIds: [
       'resident-tax-certificate-materials',
       'national-tax-certificate-sono3-materials',
@@ -1231,7 +1244,8 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
       'kitaku-tetsuzuki',
       'jumin-zei-shutsukoku',
       'nenkin-dattai-ichijikin',
-    ],
+    
+      'eijuu-after-kika-card',],
     relatedTopicIds: [
       'address-change',
       'pension-after-leaving-job',
@@ -1477,7 +1491,8 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
       'ryugakusei-baito-28jikan',
       'shikakugai-fukugyou',
       'ryugaku-shikakugai-individual-permission',
-    ],
+    
+      'shikakugai-30jikan-rural',],
     relatedTopicIds: [
       'part-time-permission',
       'student-renewal-materials',
@@ -1520,7 +1535,8 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
       'minashi-sainyuukoku',
       'sainyukoku-kyoka',
       'saiyuukoku-kyoka-1year-5year',
-    ],
+    
+      'eijuu-takeoff-risk',],
     relatedTopicIds: [
       'deemed-reentry',
       'permanent-resident-card-renewal',
