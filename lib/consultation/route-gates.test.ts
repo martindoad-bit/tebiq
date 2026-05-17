@@ -334,6 +334,12 @@ test('matches nonpermission appeal and grace-period traps', () => {
   assert.ok(getRouteGateIds(matches).includes('nonpermission-no-ordinary-appeal-no-grace'))
 })
 
+test('matches PR nonpermission leave-and-reapply trap', () => {
+  const matches = matchRouteGates('上次永住申请不许可了，可以出国再回来重新申请吗？')
+
+  assert.ok(getRouteGateIds(matches).includes('nonpermission-no-ordinary-appeal-no-grace'))
+})
+
 test('matches PR basic requirements not years-only traps', () => {
   const matches = matchRouteGates('我在日本住满10年了，其中留学比较久，是不是可以申请永住？税金年金会影响吗？')
 
