@@ -1,7 +1,7 @@
 ---
 fact_id: kazoku-taizai-shussan-shutoku
 title: 家族滞在 — 在日出生子的「在留資格取得申請」（30日内、超60日要求）
-state: ai_extracted
+state: ai_verified   # LOOP3 2026-05-17: ISA direct source; newborn status acquisition 30/60-day rule
 risk_level: high
 confidence: medium
 source_quality: official
@@ -58,7 +58,7 @@ evidence_points:
     display_label: "出生子の在留資格取得 — 30日以内"
     support_level: "direct"
     user_visible: true
-    needs_domain_review: true
+    needs_domain_review: false
 ---
 
 ## current_date_logic
@@ -101,7 +101,7 @@ A: 60日を超えて日本に在留する場合、出生から30日以内に住�
 
 ### injection_certain_block
 
-```
+```text
 【在留資格取得（出生子）／ {{TODAY_ISO}} 公式確認】
 ・申請期限：出生から30日以内
 ・必要となる条件：出生後60日を超えて在留する場合
@@ -120,3 +120,4 @@ A: 60日を超えて日本に在留する場合、出生から30日以内に住�
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
 |------|------|----------|--------------|-------------|------|
 | 2026-05-17 | FACT-OPS bulk-1 | 新規作成（ai_extracted）。 | — | ai_extracted | new |
+| 2026-05-17 | Codex Loop3 | 出生子の在留資格取得30/60日ルールとしてruntime昇格。 | ai_extracted | ai_verified | promote |
