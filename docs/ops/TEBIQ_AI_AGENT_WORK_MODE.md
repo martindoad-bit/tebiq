@@ -209,23 +209,39 @@ xxx
 
 #### 实操脚本（agent 报告前自跑）
 
+**一条命令**（推荐）：
+
+```bash
+npm run qa:pre-report-audit
+```
+
+这一条会顺序跑完 5 项：`git status --short` 空、`npm run lint`、`npx tsc --noEmit`、`npm test`、`bash scripts/qa/production-url-smoke.sh`（自动扫 `app/**/page.tsx` 对每个公开 route GET 一次）。任意一项 fail，整脚本 exit 1，报告必须列入"未做"。
+
+实现：
+- `scripts/qa/pre-report-audit.sh` — 5 项 audit 总闸
+- `scripts/qa/production-url-smoke.sh` — 自动 route 扫描 + 单 URL 200 check（接受 `--base-url=...` 与 `--allowlist=...`）
+- `scripts/qa/production-url-smoke.allowlist` — 已知 prod 404 白名单（每条带原因 + 何时移除）
+
+手动等价：
+
 ```bash
 # 1. 工作树干净
 git status --short  # 必须 0 行
 
 # 2. 每个 user-visible URL 单独 200 check
-for p in <list of new URLs>; do
-  curl -sS --http1.1 -o /dev/null -w "$p http=%{http_code}\n" "https://tebiq.jp$p"
-done  # 必须全 200，不接受 404
+bash scripts/qa/production-url-smoke.sh  # 自动覆盖所有 app/**/page.tsx
 
 # 3. tests / lint / tsc
 npm run lint && npx tsc --noEmit && npm test  # 必须全过
 
-# 4. production smoke 至少 5 题（最好 10-20 题覆盖深水 + 材料 + 反馈 + 事项）
-npx tsx scripts/test/smoke-production-answer.ts
+# 4. production answer smoke 5 题红线（最好 10-20 题覆盖深水 + 材料 + 反馈 + 事项）
+npm run smoke:production-answer
+
+# 一次跑 URL + answer：
+npm run smoke:production-full
 ```
 
-任何一项 fail → 报告必须列入"未做"，不能写"已完成"。
+任何一项 fail → 报告必须列入"未做"，不能写"已完成"。**`qa:pre-report-audit` 输出的最后 ~30 行要粘进 PR 模板的 "Pre-Report Self-Audit" 段、以及 RC 报告附录 A。**
 
 ---
 
@@ -320,3 +336,4 @@ npx tsx scripts/test/smoke-production-answer.ts
 |---|---|---|
 | 2026-05-17 | 初版 | User 反馈："你回复时间比干活时间多一倍"。Codex/Claude 协作模式被识别为按人类 SOP 实施，对 AI agent 浪费 80%。 |
 | 2026-05-17 | §5.3 新增 Pre-Report Self-Audit 5 条 | RC Sprint 1 事故：声称"全部上线"，实际 `/me/matters` list page 文件没 commit，404 被误诊成 CDN 缓存。Codex 复核才发现真因。强制 git status / per-URL smoke / root-cause diagnosis / honest report。 |
+| 2026-05-17 | §5.3 从文字规则升级成可执行脚本 | Q5：把 5 条 self-audit 写成 `scripts/qa/pre-report-audit.sh`（一条命令跑完），`scripts/qa/production-url-smoke.sh` 自动扫 `app/**/page.tsx` 对每个公开 route GET 一次。PR template 加 "Pre-Report Self-Audit" 段强制粘 audit 输出。新增 `docs/ops/TEBIQ_RC_REPORT_TEMPLATE.md` 作为 sprint 报告固定模板（11 维度 / 真实 URL 表 / 明确未做 / postmortem / audit 附录）。下一个 agent 没法跳过验证就声称完成。 |

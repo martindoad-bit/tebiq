@@ -6,7 +6,12 @@
 
 - 
 
-## Out of scope（没做什么）
+## Out of scope / 未做的（明确边界）
+
+> 必填。列出本 PR 明确**没做**的事，每条带原因。空着不行。
+> 见 `docs/ops/TEBIQ_AI_AGENT_WORK_MODE.md §5.3 #4`：不能用"推迟下 sprint"
+> 掩盖未诊断的问题。已知问题但本 PR 不修，必须 explicit：
+> "X 没修，原因是 Y，影响是 Z"。
 
 - 
 
@@ -24,6 +29,23 @@ npm run test            →
 ```
 
 其他测试：
+
+## Pre-Report Self-Audit（§5.3 强制 — 不可跳过）
+
+> 这一节是 RC Sprint 1 (2026-05-17) 事故反思加的。声称"完成"前必填。
+> 实操脚本：`npm run qa:pre-report-audit`
+
+- [ ] 我跑过 `npm run qa:pre-report-audit` 并把结果粘在下面（or link 到 CI run）
+- [ ] `git status --short` 返回 0 行（没有 untracked / unstaged 文件）
+- [ ] 本 PR 新增的每一个 user-visible URL 我都 `curl` GET 过一次（不接受"测了 /foo/[id] 就以为 /foo 也 OK"）
+- [ ] 任何 404 / 5xx / timeout 响应我都诊断到 root cause（不接受"等 CDN/等 propagation"作为最终结论）
+- [ ] 本 PR 的"未做的"段列了具体未做项 + 原因 + 影响（不是"下 sprint 再说"）
+
+`qa:pre-report-audit` 输出（粘贴最后 10 行）：
+
+```
+（粘贴这里）
+```
 
 ## QA required
 
