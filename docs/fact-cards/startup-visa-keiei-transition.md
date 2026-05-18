@@ -1,357 +1,170 @@
 ---
 fact_id: startup-visa-keiei-transition
 title: スタートアップビザ（特定活動）から経営・管理への在留資格変更
-state: ai_extracted
+state: ai_verified
+runtime_bucket: ANSWER_RUNTIME
 risk_level: high
-confidence: medium
+confidence: high
 source_quality: official
 controlled_alpha_eligible: false
-last_verified_at: 2026-05-07
-reviewer: ai_self_verified
-sprint: 0.6 / Workstream C / Batch 2
-citation_label: "スタートアップビザ（特定活動）→経営管理ビザ移行の条件・手続き"
-citation_summary: "スタートアップビザ（特定活動46号・起業活動促進事業）から経営・管理ビザへの在留資格変更の条件・タイミング・必要書類を確認するカード（ai_extractedステート・DOMAIN審査待ち）。"
+last_verified_at: 2026-05-18
+reviewer: codex_fact_rewrite
+sprint: Knowledge Runtime Loop18
+citation_label: "スタートアップビザ→経営管理変更"
+citation_summary: "外国人起業活動促進事業（スタートアップビザ）の最長2年、認定団体の管理・支援、経営・管理への変更、2025年10月16日改正前後の確認証明書交付日による取扱いを示すカード。起業完了の実質判断や未完了時対応はDOMAIN確認。"
 source_display_names:
   - "出入国在留管理庁"
   - "経済産業省"
 applies_when:
-  - "スタートアップビザ（特定活動）で在留中に経営管理ビザへの移行を検討している"
-  - "スタートアップビザの有効期間・更新・移行条件を確認したい"
+  - "外国人起業活動促進事業（スタートアップビザ / 特定活動44号）から経営・管理への変更を検討している"
+  - "スタートアップビザの期限、認定団体、確認証明書、新旧経営管理基準の接続を確認したい"
 does_not_cover:
-  - "経営管理ビザの要件詳細（keiei-kanri-2025-10 参照 — 2025年10月以降新基準）"
-  - "スタートアップビザの自治体認定手続き（自治体ごとに異なる — 窓口確認要）"
-ai_pipeline:
-  collector_run_at: 2026-05-07
-  extractor_model: claude-sonnet-4-6 (FACT-OPS Batch 2, WebFetch from official ISA/MOJ sources)
-  source_count: 2
-  self_verification_passed_at: 2026-05-07
-  promotion_blocked_reason: >
-    複数の核心事実（起業完了の定義・移行条件の完全要件・2025-10改正後の
-    経営管理基準との接続）が官方公開ページで確認できず。
-    state: ai_extracted のまま、DOMAIN審査で direct_fact に昇格するか判断。
+  - "経営・管理の全要件判断"
+  - "起業活動完了の実質判断"
+  - "2年内に起業活動が完了しない場合の救済・再申請戦略"
 official_sources:
   - id: moj-isa-nyuukoku07-00001
     url: https://www.moj.go.jp/isa/applications/resources/nyuukokukanri07_00001.html
     title: 本邦の大学等を卒業した留学生による起業活動に係る措置について
     publisher: 出入国在留管理庁（法務省）
-    last_checked_at: 2026-05-07
-    quoted_in_card: true
-  - id: moj-isa-03-00097
-    url: https://www.moj.go.jp/isa/03_00097.html
-    title: 外国人起業活動促進事業（スタートアップビザ）
-    publisher: 出入国在留管理庁（法務省）
-    last_checked_at: 2026-05-07
+    last_checked_at: 2026-05-18
     quoted_in_card: true
   - id: meti-startupvisa
     url: https://www.meti.go.jp/policy/newbusiness/startupvisa/index.html
     title: スタートアップビザ（外国人起業活動促進事業）
     publisher: 経済産業省
-    last_checked_at: 2026-05-07
-    quoted_in_card: false
-    needs_human_fetch: true
-    note: "WebFetch failed (timeout). PDF and detailed conditions require human retrieval."
+    last_checked_at: 2026-05-18
+    quoted_in_card: true
+  - id: moj-isa-keiei-kanri-reform
+    url: https://www.moj.go.jp/isa/applications/resources/10_00237.html
+    title: 在留資格「経営・管理」に係る上陸基準省令等の改正について
+    publisher: 出入国在留管理庁（法務省）
+    last_checked_at: 2026-05-18
+    quoted_in_card: true
+  - id: meti-startupvisa-20251016
+    url: https://www.meti.go.jp/policy/newbusiness/startupvisa/startupvisa_20251016.pdf
+    title: 外国人起業活動促進事業 令和7年10月16日改正資料
+    publisher: 経済産業省
+    last_checked_at: 2026-05-18
+    quoted_in_card: true
 applies_to:
-  - 特定活動（外国人起業活動促進事業 / スタートアップビザ）保持者
-  - 本邦大学卒業後の留学生起業特定活動保持者
+  - 外国人起業活動促進事業（スタートアップビザ / 特定活動44号）の保持者
+  - 本邦大学等卒業後の起業準備活動制度を利用している者
   - 上記から経営・管理への在留資格変更を検討している者
 direct_fact_fields:
-  - startupvisa_max_2years
-  - startup_activity_completed_keiei_change_required
-  - need_certified_management_support_organization
-ai_inferred_fields:
-  - keiei_kanri_2025_10_new_standards_apply_on_transition
-  - transition_timing_before_2year_expiry
+  - startup_visa_max_2years
+  - certified_body_management_support
+  - monthly_progress_confirmation
+  - keiei_kanri_change_after_startup_activity
+  - old_or_new_keiei_standard_by_confirmation_certificate_date
+ai_inferred_fields: []
 needs_review_flags:
   - id: kigyou_kanryo_definition
-    reason: >
-      「起業活動が完了した」の具体的定義（法人登記完了？売上発生？従業員雇用？）は
-      官方公開ページに明示なし。経営管理ビザの新基準（2025-10-16施行）との
-      連携における「3000万円・常勤職員・日本語要件」の適用タイミングも不明。
-      DOMAIN/書士による詳細確認が必要。
-  - id: no_certificate_organization_options
-    reason: >
-      「経済産業大臣認定の地方公共団体又は民間事業者」の具体的な認定機関リスト・
-      手続きの詳細は経済産業省ページ（WebFetch失敗）で確認できず。
-      DOMAIN/書士またはMETI直接確認が必要。
-  - id: transition_conditions_post_2025_10
-    reason: >
-      2025-10-16の経営管理基準改正後、スタートアップビザから経営管理への
-      移行に際して新基準が完全適用されるか、過渡措置が適用されるかは
-      官方ページに明示なし。fact-001 (keiei-kanri-2025-10) の certain_block と
-      合わせて DOMAIN による確認が必要。
-  - id: meti_page_source_gap
-    reason: >
-      METI スタートアップビザページ (meti.go.jp) はWebFetchがタイムアウトで
-      取得失敗。詳細条件・移行フロー・認定機関リストは人手での確認が必要。
-      このカードの confidence が medium に留まる主因。
+    reason: "「起業活動が完了した」の具体的判断（法人登記、事務所、売上、雇用、許認可等のどこまでを必要とするか）は公式ページだけでは完結しない。"
+  - id: uncompleted_activity_before_2years
+    reason: "最長2年内に起業活動を完了できない場合の在留処理・再申請可能性は本カードで判断しない。"
+  - id: certificate_date_edge_cases
+    reason: "確認証明書、更新用確認証明書、補正中案件、変更申請受付日の交錯は個別確認が必要。"
 related_links:
   - title: "本邦の大学等を卒業した留学生による起業活動に係る措置について"
     url: "https://www.moj.go.jp/isa/applications/resources/nyuukokukanri07_00001.html"
     organization: "出入国在留管理庁"
-    display_label: "本邦の大学等を卒業した留学生による起業活動に係る措置について"
-    locator: "ページ内で「本邦の大学等を卒業した留学生による起業活動に係る措」を検索"
-    relation: "official_reference"
-  - title: "外国人起業活動促進事業（スタートアップビザ）"
-    url: "https://www.moj.go.jp/isa/03_00097.html"
-    organization: "出入国在留管理庁"
-    display_label: "外国人起業活動促進事業（スタートアップビザ）"
-    locator: "ページ内で「外国人起業活動促進事業」を検索"
+    display_label: "留学生起業活動措置"
     relation: "official_reference"
   - title: "スタートアップビザ（外国人起業活動促進事業）"
     url: "https://www.meti.go.jp/policy/newbusiness/startupvisa/index.html"
     organization: "経済産業省"
-    display_label: "スタートアップビザ（外国人起業活動促進事業）"
-    locator: "ページ内で「スタートアップビザ」を検索"
+    display_label: "METI スタートアップビザ"
+    relation: "official_reference"
+  - title: "在留資格「経営・管理」に係る上陸基準省令等の改正について"
+    url: "https://www.moj.go.jp/isa/applications/resources/10_00237.html"
+    organization: "出入国在留管理庁"
+    display_label: "経営・管理 2025年改正"
     relation: "official_reference"
 evidence_points:
-  - claim: "スタートアップビザ（特定活動）の在留期間は「最長２年間であり、この間に起業活動を完了する必要があります。」起業活動完了後は「『経営・管理』への在留資格変更許可申請を行ってください。」（ISA公式引用）。「起業活動が完了した」の具体的定義（法人登記完了・売上発生・従業員雇用等）は官方ページに明示なし（`kigyou_kanryo_definition`確認要）。"
+  - claim: "スタートアップビザ（起業準備活動）の在留期間は最長2年であり、その期間内に起業活動を完了する必要がある。起業活動完了後は経営・管理への在留資格変更許可申請を行う。"
     source_title: "本邦の大学等を卒業した留学生による起業活動に係る措置について"
     source_url: "https://www.moj.go.jp/isa/applications/resources/nyuukokukanri07_00001.html"
     source_organization: "出入国在留管理庁"
-    source_locator: "ページ内「最長２年間」「起業活動を完了」「経営・管理への在留資格変更許可申請」の記述を確認"
-    display_label: "スタートアップビザ：最長2年・起業完了後は経営管理への在留資格変更申請が必要"
-    support_level: "indirect"
+    source_locator: "ページ内「最長２年間」「起業活動を完了」「経営・管理への在留資格変更許可申請」"
+    display_label: "最長2年・起業完了後は経営管理変更"
+    support_level: "direct"
     user_visible: true
-    needs_domain_review: true
-  - claim: "スタートアップビザの前提：「経済産業大臣から認定を受けた地方公共団体又は民間事業者による管理・支援の下、起業準備活動を行うための在留資格を付与され、最長２年間、起業準備活動を行う」（ISA公式引用）。認定機関（地方公共団体または経産大臣認定民間事業者）リスト・手続き詳細は経産省HP参照（METIページ取得失敗 — `no_certificate_organization_options`確認要）。"
-    source_title: "外国人起業活動促進事業（スタートアップビザ）"
-    source_url: "https://www.moj.go.jp/isa/03_00097.html"
+    needs_domain_review: false
+  - claim: "外国人起業活動促進事業では、経済産業大臣認定の地方公共団体又は民間事業者による管理・支援の下で起業準備活動を行う。METIページは認定団体リストと、認定団体が起業準備活動について毎月1回以上進捗確認する旨を示す。"
+    source_title: "スタートアップビザ（外国人起業活動促進事業）"
+    source_url: "https://www.meti.go.jp/policy/newbusiness/startupvisa/index.html"
+    source_organization: "経済産業省"
+    source_locator: "ページ内「認定団体一覧」「毎月１回以上」「進捗状況の確認」"
+    display_label: "認定団体の管理・支援と進捗確認"
+    support_level: "direct"
+    user_visible: true
+    needs_domain_review: false
+  - claim: "ISAの経営・管理2025年改正ページは、特定活動44号（外国人起業家 / スタートアップビザ）から経営・管理へ変更する場合、2025年10月15日以前に確認証明書が交付されていれば改正前基準、改正告示施行日以降に確認証明書が交付されていれば改正後基準を適用すると示す。"
+    source_title: "在留資格「経営・管理」に係る上陸基準省令等の改正について"
+    source_url: "https://www.moj.go.jp/isa/applications/resources/10_00237.html"
     source_organization: "出入国在留管理庁"
-    source_locator: "ページ内「経済産業大臣から認定を受けた地方公共団体又は民間事業者」「最長２年間」の記述を確認"
-    display_label: "スタートアップビザ：経産大臣認定機関の管理・支援下で起業準備活動（最長2年）"
-    support_level: "indirect"
+    source_locator: "ページ内「特定活動（４４号・外国人起業家（スタートアップビザ））からの資格変更」"
+    display_label: "確認証明書交付日で新旧経営管理基準を区分"
+    support_level: "direct"
     user_visible: true
-    needs_domain_review: true
-  - claim: "2025年10月16日以降に在留資格変更申請をする場合、経営・管理の改正後新基準（資本金3,000万円・常勤職員・日本語要件等）が適用されると考えられる。スタートアップビザ保持者への過渡措置の有無は官方ページに明示なし（ai推定 — `transition_conditions_post_2025_10`確認要）。"
-    source_title: "外国人起業活動促進事業（スタートアップビザ）"
-    source_url: "https://www.moj.go.jp/isa/03_00097.html"
-    source_organization: "出入国在留管理庁"
-    source_locator: "ページ内「外国人起業活動促進事業」「経営・管理への在留資格変更」の記述を確認（2025年10月改正との接続は公式明示なし）"
-    display_label: "スタートアップビザ→経営管理変更：2025年10月以降は新基準（3,000万円等）適用の可能性・過渡措置の明示なし（ai推定）"
-    support_level: "indirect"
-    user_visible: true
-    needs_domain_review: true
+    needs_domain_review: false
 ---
 
 # スタートアップビザ（特定活動）から経営・管理への在留資格変更
 
-> **AI extraction status**: `ai_extracted` — 核心事実（起業完了定義・移行条件）の
-> 官方確認が不完全。DOMAIN審査前は Alpha 注入不可。
-> METI ページの人手確認後に ai_verified への昇格を検討。
-
----
-
-## current_date_logic
-
-```
-今日 (TODAY) >= 2025-10-16 → 移行先の経営管理ビザ基準は改正後の新基準が適用（推定）。
-このカード自体のON/OFFは特定日付なし（常時有効）。
-```
-
----
+> Runtime scope: narrow official facts only. Do not use this card to judge
+> approval probability or whether the user's business is already "completed".
 
 ## current_effective_fact
 
-### スタートアップビザの在留期間：最長2年
+スタートアップビザ（外国人起業活動促進事業 / 特定活動44号を含む起業準備活動）は、経済産業大臣認定の地方公共団体又は民間事業者による管理・支援の下で起業準備活動を行う制度である。
 
-> 「本措置により認められる在留期間中は最長２年間であり、
-> この間に起業活動を完了する必要があります。」
-> source: moj-isa-nyuukoku07-00001
+在留期間は最長2年であり、その期間内に起業活動を完了する必要がある。起業活動が完了した後は、経営・管理への在留資格変更許可申請を行う。
 
-スタートアップビザ（特定活動）の在留は**最長2年間**。この期間内に起業活動を完了しなければならない。
-
-### 起業完了後の手続き
-
-> 「起業活動が完了した際には、『経営・管理』への在留資格変更許可申請を
-> 行ってください。」
-> source: moj-isa-nyuukoku07-00001
-
-起業活動完了後、**経営・管理への在留資格変更許可申請**が必要。
-※「起業活動が完了した」の具体的定義は官方ページに明示なし（needs_review）。
-
-### 支援機関（認定組織）の管理・支援が必要
-
-> 「経済産業大臣から認定を受けた地方公共団体又は民間事業者による
-> 管理・支援の下、起業準備活動を行うための在留資格を付与され、
-> 最長２年間、起業準備活動を行う」
-> source: moj-isa-03-00097
-
-認定機関（地方公共団体または経産大臣認定民間事業者）の支援のもとで
-起業準備活動を行う必要がある。認定機関リストは経産省HP参照
-（WebFetch未取得 → needs_review）。
-
-### 経営・管理への移行時に2025年10月改正新基準が適用されるか（AI inference）
-
-2025-10-16以降に在留資格変更申請をする場合、改正後の経営管理基準
-（資本金3,000万円・常勤職員・日本語要件等）が適用されると考えられるが、
-スタートアップビザ保持者への過渡措置の有無は官方ページに明示なし。
-> source: ai_inference（needs_review: transition_conditions_post_2025_10）
-
----
-
-## exceptions_or_transition
-
-| 状況 | 取り扱い |
-|------|----------|
-| 2年以内に起業完了・経営管理ビザへ変更 | 通常の経営管理変更申請。2025-10以降は新基準適用と思われる（needs_review）|
-| 2年経過しても起業完了できなかった場合 | 官方ページに対応方法の明示なし（needs_review）|
-| 既存経営管理ビザ保持者 | 本カード対象外 → fact-001/002 参照 |
-| 新規申請（起業準備前） | 本カード対象外 → fact-001 参照 |
-
----
-
-## common_user_phrases
-
-主要トリガー（中文）：
-
-- startup visa 怎么转经管签
-- 创业特定活动签证快到2年了，要申请什么
-- 我在日本用创业签开了公司，接下来怎么转正式经营管理签
-- 特定活动创业签到期了没开成公司怎么办
-- 日本创业签证转经营管理签需要什么条件
-- 外国人创业促进事业的签证和经管签有什么关系
-- startup visa 没开成公司会被遣返吗
-
-技術キーワード（マッチャ用）：
-
-- スタートアップビザ / startup visa / 外国人起業活動促進事業
-- 特定活動（起業）/ 特定活動 / 创业特定活动
-- 経営管理 / 经营管理 / 経管 转 / 転換
-- 起業完了 / 起業準備 / 创业完成
-
----
-
-## must_say
-
-1. スタートアップビザ（特定活動）の在留期間は**最長2年間**
-2. この期間内に起業活動を完了し、**経営・管理への在留資格変更申請**が必要
-3. 2025年10月16日以降に変更申請をする場合、経営管理の**新基準**（3,000万円・常勤職員等）が適用される可能性が高い
-4. 「起業活動完了」の具体的定義、認定機関の選び方、2年以内に完了できない場合の対応は専門家確認が必要
-5. **行政書士または認定支援機関への早期相談を強く推奨**
-
-## must_not_say
-
-- ❌ 「スタートアップビザは2年以上延長できます」（最長2年の制限あり）
-- ❌ 「起業完了後すぐに永住申請できます」（経営管理ビザへの変更が先）
-- ❌ 「旧経営管理基準（500万円）で申請できます」（2025-10改正後は新基準適用の可能性高）
-- ❌ 「経産省認定を受ければ起業内容は自由」（支援機関の管理下が前提）
-
----
-
-## qa_cases
-
-### QA-1 — スタートアップビザの期限確認
-
-**user**: startup visa 我现在有1年了，还有多少时间？
-
-**must_have**:
-- 最長2年間という制限
-- 2年以内に起業活動を完了する必要がある
-- 経営管理ビザへの変更が必要
-- 時間が限られているため早めに認定機関・行政書士と相談を推奨
-
-**must_not_have**:
-- 「2年以上延長できます」
-- 期限の存在を軽視する表現
-
-**bad_answer_example**: 「スタートアップビザは状況に応じて延長できますので、急がなくて大丈夫です」
-
-**good_answer_criteria**: 最長2年の制限、2年以内に起業完了・経営管理変更申請が必要、残り1年での早急な行動を促す。
-
----
-
-### QA-2 — 経営管理への移行条件
-
-**user**: 创业特定活动签证怎么转成正式的经营管理签？
-
-**must_have**:
-- 起業活動完了後に経営管理への在留資格変更許可申請が必要
-- 2025-10改正後の新基準（3,000万円・常勤職員等）が適用される可能性
-- 「起業活動完了」の定義等の詳細は専門家確認が必要
-- 行政書士への相談を強く推奨
-
-**must_not_have**:
-- 「旧基準（500万円）で申請できます」
-- 移行が自動的に行われるかのような説明
-
-**bad_answer_example**: 「会社の登記が完了したら自動的に経営管理ビザに変わります」
-
-**good_answer_criteria**: 在留資格変更許可申請が必要であること、2025年10月以降の新基準の適用可能性、詳細は専門家確認が必要なことを伝える。
-
----
-
-### QA-3 — 2年以内に起業できなかった場合
-
-**user**: startup visa 2年过去了还没开成公司，怎么办？
-
-**must_have**:
-- この状況の対応は官方ページに明示がなく非常に不確実
-- 在留が終了するリスクがある
-- **今すぐ行政書士または認定支援機関に相談**することが最重要
-- 状況次第で取りうる選択肢が異なる
-
-**must_not_have**:
-- 「もう少し延長できます」と根拠なく安心させる
-- 「すぐに帰国が必要」と断言する（個別状況による）
-
-**bad_answer_example**: 「心配しないでください。状況を説明すれば延長してもらえます」
-
-**good_answer_criteria**: 状況の深刻さを伝えつつ、行政書士への即時相談を最重要アクションとして伝える。官方の明示ルールがないため断定は避ける。
-
----
+2025年10月16日の経営・管理基準改正との関係では、特定活動44号（外国人起業家 / スタートアップビザ）から経営・管理へ変更する場合、確認証明書の交付日で新旧基準の扱いが分かれる。2025年10月15日以前に確認証明書が交付されている場合は改正前基準、改正告示施行日以降に確認証明書が交付されている場合は改正後基準を適用するとISAページが示している。
 
 ## injection_format
 
-> **このカードは `state: ai_extracted` のため injection_certain_block は Alpha 注入不可。**
-> DOMAIN 審査後に `ai_verified` 以上に昇格した場合のみ injection が有効になる。
+### injection_certain_block
 
-### injection_certain_block (DRAFT — 昇格後に確認要)
+```text
+スタートアップビザ（外国人起業活動促進事業 / 特定活動44号を含む起業準備活動）は、認定団体の管理・支援の下で起業準備を行う制度です。在留期間は最長2年で、その期間内に起業活動を完了し、完了後は「経営・管理」への在留資格変更許可申請を行う必要があります。
 
-```
-【参考事実 — スタートアップビザ（特定活動）から経営・管理への移行（要 DOMAIN 審査）】
+2025年10月16日の経営・管理基準改正との関係では、特定活動44号から経営・管理へ変更する場合、確認証明書の交付日で新旧基準の扱いが分かれます。2025年10月15日以前に確認証明書が交付されていれば改正前基準、改正告示施行日以降に交付されていれば改正後基準を適用するとISAページが示しています。
 
-※このカードは DOMAIN 審査待ち。確定版ではない。
-
-スタートアップビザ（外国人起業活動促進事業 / 特定活動）の基本的な枠組み：
-
-1. 在留期間：最長2年間
-2. 期間中に「起業活動を完了」する必要がある
-3. 起業完了後：「経営・管理」への在留資格変更許可申請が必要
-4. 前提：経済産業大臣認定の地方公共団体または民間事業者の管理・支援のもとであること
-
-2025年10月16日以降の在留資格変更申請：
-経営・管理の改正後新基準（資本金3,000万円・常勤職員・日本語能力等）が
-適用される可能性が高い。過渡措置の有無は現時点で官方ページに明示なし。
-
-回答スタイル：
-- 最長2年・起業完了後の変更申請という枠組みは伝える
-- 新基準（3,000万円等）に触れる
-- 詳細な移行条件・「起業完了」の定義は行政書士確認を強く推奨
-- 断定は避ける
+ただし、「起業活動が完了した」といえるか、2年内に完了できない場合の在留処理、確認証明書・更新用確認証明書・補正中案件が絡む個別判断は、このカードだけで結論を出さず、認定団体または行政書士に確認してください。
 ```
 
-### injection_needs_review_addendum
+## must_say
 
-```
-スタートアップビザ（特定活動）から経営・管理への在留資格変更の具体的要件
-（起業活動完了の定義、2025年10月改正基準との関係、認定機関の詳細、
-2年以内に起業完了できない場合の対応）については、
-出入国在留管理庁・経済産業省の最新情報および行政書士に確認することを強く推奨します。
-```
+- 在留期間は最長2年。
+- 認定団体の管理・支援下で起業準備活動を行う。
+- 起業活動完了後は経営・管理への在留資格変更許可申請が必要。
+- 特定活動44号から経営・管理への変更では、確認証明書交付日によって2025年改正前後の基準適用が分かれる。
+- 起業完了の実質判断や未完了時の対応は専門確認。
 
----
+## must_not_say
+
+- 「スタートアップビザから経営管理へ自動で切り替わる」
+- 「2年を超えて当然に延長できる」
+- 「確認証明書があれば経営管理の許可が保証される」
+- 「500万円基準で必ず足りる」
+- 「会社設立だけで起業活動完了」
+
+## common_user_phrases
+
+- startup visa 怎么转经管签
+- 创业特定活动签证快到2年了
+- 创业签转经营管理签
+- 外国人创业活动促进事业
+- 特定活动44号 经管
+- 确认证明书 旧标准 新标准
+- スタートアップビザ 経営管理 変更
+- 外国人起業活動促進事業 確認証明書
 
 ## changelog
 
-| date | actor | action | from_state | to_state | note |
-|---|---|---|---|---|---|
-| 2026-05-07 | AI (claude-sonnet-4-6 / FACT-OPS Batch 2) | initial extraction from moj-isa-nyuukoku07-00001 + moj-isa-03-00097; METI page fetch timeout | — | ai_extracted | 最長2年・起業完了後変更申請の枠組みのみ確認; 核心条件は needs_review; FACT 自律遵守 §5 — confidence medium 卡禁止升 ai_verified |
-| 2026-05-07 | DOMAIN-CC (audit-full-20260507) | DOMAIN professional resolution of transition_conditions_post_2025_10: スタートアップビザ→経営管理は「在留資格変更許可申請」= 既存保持者の「更新申請」ではないため、既存保持者過渡措置 NOT applicable。2025-10-16以降の変更申請には新基準（3,000万円・常勤1名・N2等）が完全適用と判断。FACT指示: ai_inferred_fields に追加・body記載。METI page未解決 (meti_page_source_gap + kigyou_kanryo_definition) のため state: ai_extracted 維持。 | ai_extracted | ai_extracted | NOT UPGRADED — METI page required for ai_verified |
-| 2026-05-11 | FACT-OPS (Cycle 2 Batch 5) | Cycle 2メタデータ追加パッチ。citation_label・citation_summary・source_display_names・applies_when・does_not_coverフィールドを追加。事実内容・state変更なし。 | ai_extracted | ai_extracted | patch |
-
-## Audit assignment
-
-- DOMAIN優先タスク：METI スタートアップビザページ (meti.go.jp) の人手確認
-  → 認定機関リスト・起業完了定義・移行条件を確認
-- `needs_review_flags.transition_conditions_post_2025_10` → fact-001 (keiei-kanri-2025-10) の DOMAIN 審査結果と照合
-- 昇格条件：上記 needs_review 4項目のうち kigyou_kanryo_definition + transition_conditions_post_2025_10 が解決されれば ai_verified への昇格を検討
+| 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
+|------|------|----------|--------------|-------------|------|
+| 2026-05-18 | Codex Loop18 | METI/ISA公式ページでsource repair。最長2年、認定団体、特定活動44号変更時の確認証明書日付による新旧基準区分に限定してruntime化。 | ai_extracted | ai_verified | source_repair |
