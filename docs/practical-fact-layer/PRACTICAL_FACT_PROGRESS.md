@@ -11,13 +11,13 @@
 
 | 指标 | 当前值 |
 |------|--------|
-| 已完成卡片数 | 140 |
+| 已完成卡片数 | 160 |
 | DOMAIN 队列总数 | 8 |
-| ANSWER_RUNTIME 可注入 | 135 |
+| ANSWER_RUNTIME 可注入 | 155 |
 | MATERIALS_ONLY | 5 |
 | L5_ONLY | 0 |
 | NEEDS_REWRITE | 0 |
-| 已完成批次 | 7 |
+| 已完成批次 | 8 |
 
 ---
 
@@ -290,7 +290,41 @@
 
 - 完成日: 2026-05-19
 - 担当: FACT Operator (Claude)
-- 次バッチ: Batch 8 (practical-141〜160)
+- コミット: 17f4ad7
+- DOMAIN送付済み: pending（pdom-001〜008）
+
+---
+
+## Batch 8 状態（目標: 20張）
+
+| card_id | topic | status | runtime_bucket | risk |
+|---------|-------|--------|---------------|------|
+| practical-141 | 技人国・在留中の出産・育児休業：在留資格への影響と届出 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-142 | 高度専門職の配偶者の就労許可：特定活動（就労可）の範囲 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-143 | 在留期間更新の「在留状況良好」要件：税金・保険・行政義務の実態 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-144 | 経営管理ビザの「管理者（マネージャー）」要件：雇用された外国人幹部 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-145 | 帰化申請の「独立生計要件」：年収基準・配偶者収入の合算 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-146 | 在留申請のオンライン申請：利用できる申請種類と本人確認方法 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-147 | 外国人の日本での確定申告：対象者・申告方法・在留資格との関係 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-148 | 外国人の雇用保険（失業給付）：受給資格と在留期間の関係 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-149 | 経営管理の「常勤職員2名」要件：非常勤・パートの扱い | ✅ | ANSWER_RUNTIME | P0 |
+| practical-150 | 特定技能1号の在留期間上限5年到達後の選択肢 | ✅ | ANSWER_RUNTIME | P0 |
+| practical-151 | 外国人の養子縁組と在留資格：日本での養子・海外からの養子 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-152 | 技能実習から特定技能への移行：試験免除の条件と必要書類 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-153 | 永住申請の「10年在留歴」計算：短期滞在・出国期間の扱い | ✅ | ANSWER_RUNTIME | P1 |
+| practical-154 | 技人国での「長期出張・海外赴任」：在留資格への影響 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-155 | 日系人（2世・3世）の定住者ビザと日系4世制度 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-156 | 外国人の老齢・障害・遺族年金：在留資格・国籍と年金受給権 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-157 | 経営管理ビザ更新時の「赤字・実績なし」対応：1年許可の実態 | ✅ | ANSWER_RUNTIME | P0 |
+| practical-158 | 技人国の「学歴代替：実務経験10年」：来日後就労経験は使えない | ✅ | ANSWER_RUNTIME | P1 |
+| practical-159 | 帰化申請の「日本語能力」要件：試験・基準・実際の審査 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-160 | 特定技能2号の現在の対象分野と試験：2024年11分野拡大後 | ✅ | ANSWER_RUNTIME | P1 |
+
+## Batch 8 Handoff Note
+
+- 完成日: 2026-05-19
+- 担当: FACT Operator (Claude)
+- 次バッチ: Batch 9 (practical-161〜180)
 - 新規DOMAIN: なし
 - DOMAIN送付済み: pending（pdom-001〜008）
 - コミット: pending
