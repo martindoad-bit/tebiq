@@ -2,6 +2,7 @@
 fact_id: zaijuu-haigusha-6months
 title: 配偶者ビザ — 6か月不活動で取消事由⑦
 state: ai_extracted
+runtime_bucket: L5_ONLY
 risk_level: high
 confidence: high
 source_quality: official

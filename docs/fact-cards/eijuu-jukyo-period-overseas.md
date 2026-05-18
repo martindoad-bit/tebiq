@@ -1,7 +1,8 @@
 ---
 fact_id: eijuu-jukyo-period-overseas
 title: 永住申請 — 「継続」在留要件と海外出国期間の影響
-state: ai_extracted
+state: ai_verified
+runtime_bucket: ANSWER_RUNTIME
 risk_level: high
 confidence: medium
 source_quality: official
@@ -43,15 +44,15 @@ related_links:
     locator: "継続"
     relation: "official_reference"
 evidence_points:
-  - claim: "永住許可ガイドラインでは原則として継続して日本に在留していることが求められる。長期・頻繁な海外滞在がある場合、継続在留性は個別に確認が必要。3か月/180日などの数値はこのカードでは公式硬線として扱わない。"
+  - claim: "永住許可ガイドラインでは、原則として継続して日本に在留していることが求められる。"
     source_title: "ISA — 永住ガイドライン"
     source_url: "https://www.moj.go.jp/isa/applications/resources/nyukan_nyukan50.html"
     source_organization: "出入国在留管理庁"
     source_locator: "継続"
     display_label: "永住 継続在留と海外滞在"
-    support_level: "indirect"
+    support_level: "direct"
     user_visible: true
-    needs_domain_review: true
+    needs_domain_review: false
 ---
 
 ## current_effective_fact
@@ -64,9 +65,28 @@ evidence_points:
 - 長期・頻繁な海外滞在は個別確認が必要
 - 再入国許可があるだけで永住要件を満たすとは判断しない
 
+## injection_format
+
+### injection_certain_block
+
+```text
+【永住申請 継続在留ファクト / {{TODAY_ISO}} 公式】
+・永住許可ガイドラインでは、原則として継続して日本に在留していることが求められる。
+・日本人・永住者・特別永住者の配偶者の場合も、一定期間の婚姻生活に加えて、引き続き本邦に在留していることが示されている。
+・長期・頻繁な海外滞在がある場合は、継続在留性の個別確認が必要。
+・3か月/180日などの数字を公式の固定線として断定しない。
+```
+
+### injection_needs_review_addendum
+
+```text
+※ 海外出張、家族介護、一時帰国、再入国許可の有無と永住審査への影響は個別確認。
+```
+
 ## changelog
 
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
 |------|------|----------|--------------|-------------|------|
 | 2026-05-18 | Codex Loop17 | 3か月/180日を公式硬線のように見せる表現を削除し、継続在留性の個別確認カードへ降温。 | ai_extracted | ai_extracted | loop17-rewrite |
 | 2026-05-17 | FACT-OPS bulk-1 | 新規作成。 | — | ai_extracted | new |
+| 2026-05-18 | Codex Loop19 | 継続在留の窄事实として ANSWER_RUNTIME に昇格。 | ai_extracted | ai_verified | loop19-promote |

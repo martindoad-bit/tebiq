@@ -2,6 +2,7 @@
 fact_id: eijuu-jukyo-check-tax-shomeisho
 title: 永住申請 — 引越歴ある場合は前住所地でも納税証明取得必要
 state: ai_extracted
+runtime_bucket: NEEDS_REWRITE
 risk_level: high
 confidence: medium
 source_quality: official

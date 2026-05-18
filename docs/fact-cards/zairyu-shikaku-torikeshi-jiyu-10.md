@@ -2,6 +2,7 @@
 fact_id: zairyu-shikaku-torikeshi-jiyu-10
 title: 在留資格取消事由10項目（虚偽申告・活動継続不実施・住居地未届）
 state: ai_extracted
+runtime_bucket: L5_ONLY
 risk_level: high
 confidence: medium
 source_quality: official

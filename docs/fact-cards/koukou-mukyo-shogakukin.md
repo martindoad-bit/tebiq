@@ -2,6 +2,7 @@
 fact_id: koukou-mukyo-shogakukin
 title: 高校就学支援金 — 外国人世帯の対象確認
 state: ai_extracted
+runtime_bucket: NEEDS_REWRITE
 risk_level: low
 confidence: medium
 source_quality: official

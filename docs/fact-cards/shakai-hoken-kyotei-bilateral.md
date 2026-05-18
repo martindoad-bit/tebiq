@@ -1,7 +1,8 @@
 ---
 fact_id: shakai-hoken-kyotei-bilateral
 title: 社会保障協定 — 国別確認と年金期間通算
-state: ai_extracted
+state: ai_verified
+runtime_bucket: ANSWER_RUNTIME
 risk_level: medium
 confidence: medium
 source_quality: official
@@ -49,7 +50,7 @@ evidence_points:
     display_label: "社会保障協定"
     support_level: "direct"
     user_visible: true
-    needs_domain_review: true
+    needs_domain_review: false
 ---
 
 ## current_effective_fact
@@ -62,8 +63,27 @@ evidence_points:
 - 通算可否は国ごとに異なる
 - 脱退一時金との関係は個別確認が必要
 
+## injection_format
+
+### injection_certain_block
+
+```text
+【社会保障協定ファクト / {{TODAY_ISO}} 公式】
+・日本は複数国と社会保障協定を締結している。
+・社会保障協定は、保険料の二重負担防止や年金加入期間の通算を目的とする。
+・対象制度、通算可否、発効状況は国ごとに異なるため、日本年金機構の最新一覧で確認する。
+・脱退一時金を選ぶか、期間通算を考えるかは個別確認が必要。
+```
+
+### injection_needs_review_addendum
+
+```text
+※ 国別の協定内容、脱退一時金との損得、母国年金制度との関係は個別確認。
+```
+
 ## changelog
 
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
 |------|------|----------|--------------|-------------|------|
 | 2026-05-17 | FACT-OPS bulk-1 | 新規作成。 | — | ai_extracted | new |
+| 2026-05-18 | Codex Loop19 | 社会保障協定の国別確認ファクトとして ANSWER_RUNTIME に昇格。 | ai_extracted | ai_verified | loop19-promote |

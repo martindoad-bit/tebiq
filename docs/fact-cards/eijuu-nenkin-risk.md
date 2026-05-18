@@ -1,7 +1,8 @@
 ---
 fact_id: eijuu-nenkin-risk
 title: 永住申請における年金・税金・健康保険 未納リスク
-state: ai_extracted   # 2026-05-18 Loop17: retain quarantine. Only late-payment negative-evaluation quote is safe; lookback periods, exemption impact, and gap tolerance remain unresolved.
+state: ai_extracted   # 2026-05-18 Loop19: L5_ONLY until general 永住 source periods and exemption/gap handling are rewritten.
+runtime_bucket: L5_ONLY
 risk_level: critical
 confidence: medium   # DOMAIN-CC audit 2026-05-07: downgraded from high. Core 消極的評価 quote is high-confidence (nyukan50 direct), but nenkin/kenko_hoken 2-year + juuminhzei 3-year period fields are sourced from 高度人材 page (nyuukoku07-00133), not the general applicant page. general_applicant_lookback is ai_inference. Upgrade to high after FACT verifies from general applicant source.
 source_quality: official

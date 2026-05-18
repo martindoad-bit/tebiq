@@ -1,7 +1,8 @@
 ---
 fact_id: kazoku-taizai-shotoku-280
 title: 家族滞在 — 扶養者の職業・収入資料を提出
-state: ai_extracted
+state: ai_verified
+runtime_bucket: ANSWER_RUNTIME
 risk_level: high
 confidence: medium
 source_quality: official
@@ -50,7 +51,7 @@ evidence_points:
     display_label: "家族滞在の扶養能力確認"
     support_level: "direct"
     user_visible: true
-    needs_domain_review: true
+    needs_domain_review: false
 ---
 
 ## current_effective_fact
@@ -64,9 +65,28 @@ evidence_points:
 - それ以外の扶養者は預金残高証明書又は奨学金給付に関する証明書等を提出する
 - 「年収○万円なら必ず許可／必ず不許可」と断定しない
 
+## injection_format
+
+### injection_certain_block
+
+```text
+【家族滞在 扶養能力ファクト / {{TODAY_ISO}} 公式】
+・家族滞在は、一定の在留資格で在留する者の扶養を受ける配偶者又は子として行う日常的な活動。
+・収入を伴う活動を行う扶養者については、職業及び収入を証する文書、住民税の課税又は非課税証明書及び納税証明書等が提出資料に含まれる。
+・それ以外の扶養者については、扶養者名義の預金残高証明書又は奨学金給付に関する証明書等が提出資料に含まれる。
+・公式ページ上の要件説明は固定年収額を示していない。年収額だけで許可可否は断定しない。
+```
+
+### injection_needs_review_addendum
+
+```text
+※ 内定・入社前、扶養者の収入減少、海外COE同時申請、家族構成別の必要水準は個別確認が必要。
+```
+
 ## changelog
 
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
 |------|------|----------|--------------|-------------|------|
 | 2026-05-17 | FACT-OPS bulk-1 | 新規作成。 | — | ai_extracted | new |
 | 2026-05-18 | Codex FACT rewrite | 固定年収・住居/家族構成推論を降温し、家族滞在ページの活動定義と扶養者資料に限定。 | ai_extracted | ai_extracted | rewrite |
+| 2026-05-18 | Codex Loop19 | 固定年収ライン否定と扶養資料の窄事实として ANSWER_RUNTIME に昇格。 | ai_extracted | ai_verified | loop19-promote |

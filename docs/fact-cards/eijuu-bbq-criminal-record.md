@@ -2,6 +2,7 @@
 fact_id: eijuu-bbq-criminal-record
 title: 永住申請 — 軽微な刑事罰でも素行要件で不利
 state: ai_extracted
+runtime_bucket: NEEDS_REWRITE
 risk_level: high
 confidence: medium
 source_quality: official

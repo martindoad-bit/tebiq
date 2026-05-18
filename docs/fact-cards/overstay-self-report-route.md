@@ -2,6 +2,7 @@
 fact_id: overstay-self-report-route
 title: 不法残留 — 自首制度と退去強制
 state: ai_extracted
+runtime_bucket: L5_ONLY
 risk_level: high
 confidence: medium
 source_quality: official

@@ -1,7 +1,8 @@
 ---
 fact_id: keiei-kanri-existing-3year-transition
 title: 経営・管理 — 既存保持者の3年間過渡期措置（2025-10-16〜2028-10-16）
-state: ai_extracted
+state: ai_verified
+runtime_bucket: ANSWER_RUNTIME
 risk_level: high
 confidence: high
 source_quality: official
@@ -63,8 +64,26 @@ evidence_points:
 - 既存保持者更新のみ
 - 3年後は新基準完全適用
 
+## injection_format
+
+### injection_certain_block
+
+```text
+【経営・管理 既存保持者過渡期ファクト / {{TODAY_ISO}} 公式】
+・2025年10月16日施行の経営管理改正では、既存の経営・管理在留資格保持者について、施行日から3年間（令和10年10月16日まで）の更新申請で経営状況及び新基準適合見込み等を踏まえて柔軟に判断すると説明されている。
+・3年経過後は改正後の基準に適合する必要があるとされている。
+・これは既存保持者の更新に関する過渡期であり、新規申請や変更申請の許可保証ではない。
+```
+
+### injection_needs_review_addendum
+
+```text
+※ 既存保持者が他資格へ変更する場合、会社処置、更新時期、補足資料の出し方は個別確認が必要。
+```
+
 ## changelog
 
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
 |------|------|----------|--------------|-------------|------|
 | 2026-05-17 | FACT-OPS bulk-1 | 新規作成。 | — | ai_extracted | new |
+| 2026-05-18 | Codex Loop19 | 既存保持者更新の3年過渡期を ANSWER_RUNTIME に昇格。 | ai_extracted | ai_verified | loop19-promote |

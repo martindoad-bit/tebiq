@@ -1,7 +1,8 @@
 ---
 fact_id: gijinkoku-major-job-match
 title: 技人国 — 専攻科目・実務経験と業務の関連性
-state: ai_extracted
+state: ai_verified
+runtime_bucket: ANSWER_RUNTIME
 risk_level: high
 confidence: medium
 source_quality: official
@@ -59,7 +60,7 @@ evidence_points:
     display_label: "技人国 専攻・実務経験"
     support_level: "direct"
     user_visible: true
-    needs_domain_review: true
+    needs_domain_review: false
 ---
 
 ## current_effective_fact
@@ -73,9 +74,28 @@ evidence_points:
 - 大学卒業者が翻訳・通訳又は語学指導に従事する場合の例外を落とさない
 - 個別職務と専攻・職歴の関連性の強弱は案件資料で確認する
 
+## injection_format
+
+### injection_certain_block
+
+```text
+【技術・人文知識・国際業務 専攻・職歴ファクト / {{TODAY_ISO}} 公式】
+・技術・人文知識・国際業務では、従事する業務と関連する科目の専攻、又は関連業務の実務経験等が確認点になる。
+・技術・知識業務では、関連科目の専攻又は10年以上の実務経験等が示されている。
+・国際業務では、関連業務について3年以上の実務経験等が示されている。ただし大学卒業者が翻訳・通訳又は語学指導に従事する場合はこの限りでない。
+・個別職務と専攻・職歴の関連性は案件資料で確認する。許可可否は断定しない。
+```
+
+### injection_needs_review_addendum
+
+```text
+※ 文系からIT、販売・営業・現場作業との混在、職務説明書の書き方は個別確認が必要。
+```
+
 ## changelog
 
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
 |------|------|----------|--------------|-------------|------|
 | 2026-05-17 | FACT-OPS bulk-1 | 新規作成。 | — | ai_extracted | new |
 | 2026-05-18 | Codex FACT rewrite | 許否予測・完全一致不要などの評価語を外し、ISAページと明確化資料の専攻/実務経験要件に限定。 | ai_extracted | ai_extracted | rewrite |
+| 2026-05-18 | Codex Loop19 | 専攻・実務経験の窄事实として ANSWER_RUNTIME に昇格。 | ai_extracted | ai_verified | loop19-promote |

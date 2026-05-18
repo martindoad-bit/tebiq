@@ -2,6 +2,7 @@
 fact_id: nihonjin-haigusha-divorce-teijusha
 title: 日本人の配偶者等 — 離婚後の定住者変更ルート
 state: ai_extracted
+runtime_bucket: L5_ONLY
 risk_level: high
 confidence: medium
 source_quality: official

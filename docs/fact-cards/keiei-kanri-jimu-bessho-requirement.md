@@ -2,6 +2,7 @@
 fact_id: keiei-kanri-jimu-bessho-requirement
 title: 経営・管理 — 独立した事業所の確保要件
 state: ai_extracted
+runtime_bucket: NEEDS_REWRITE
 risk_level: high
 confidence: medium
 source_quality: official
