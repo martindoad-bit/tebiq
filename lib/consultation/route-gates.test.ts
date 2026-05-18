@@ -118,6 +118,12 @@ test('matches tokubetsu kyoka not-normal-route traps', () => {
   assert.ok(getRouteGateIds(matches).includes('tokubetsu-kyoka-not-normal-route'))
 })
 
+test('matches departure order reentry-guarantee traps', () => {
+  const matches = matchRouteGates('我 overstay 了三个月，想去入管自首走出国命令，一年后是不是一定能再来日本？')
+
+  assert.ok(getRouteGateIds(matches).includes('departure-order-not-reentry-guarantee'))
+})
+
 test('matches tokutei katsudo designation-scope traps', () => {
   const matches = matchRouteGates('我是内定者特定活动，拿到内定了，可以直接入职工作吗？')
 
@@ -142,10 +148,22 @@ test('matches status cancellation before expiry traps', () => {
   assert.ok(getRouteGateIds(matches).includes('status-cancellation-before-expiry-boundary'))
 })
 
+test('matches spouse divorce/death/remarriage dedicated traps', () => {
+  const matches = matchRouteGates('我日本人配偶签离婚后马上再婚，之前离婚的14日届出是不是不用管了？')
+
+  assert.ok(getRouteGateIds(matches).includes('spouse-divorce-remarriage-procedure-boundary'))
+})
+
 test('matches false application truthfulness traps', () => {
   const matches = matchRouteGates('公司让我把实际工作内容稍微夸大写进技人国申请，这样写不准确但容易过，可以吗？')
 
   assert.ok(getRouteGateIds(matches).includes('application-truthfulness-no-false-info'))
+})
+
+test('matches teijusha kokujigai traps', () => {
+  const matches = matchRouteGates('我配偶签离婚后想转定住者，听说有告示外定住，这算不算？')
+
+  assert.ok(getRouteGateIds(matches).includes('teijusha-kokujigai-boundary'))
 })
 
 test('matches ssw1 and ssw2 boundary traps', () => {
@@ -272,6 +290,12 @@ test('matches CoE validity and entry-guarantee traps', () => {
   const matches = matchRouteGates('COE拿到了是不是一定能入国？有效期是6个月还是3个月，过期还能用吗？')
 
   assert.ok(getRouteGateIds(matches).includes('coe-not-entry-guarantee-three-month'))
+})
+
+test('matches landing denial / reentry risk traps', () => {
+  const matches = matchRouteGates('以前 overstay 被退去强制过，现在拿到日本人配偶签 COE，机场还会被上陆拒否吗？')
+
+  assert.ok(getRouteGateIds(matches).includes('landing-denial-reentry-risk'))
 })
 
 test('matches renewal filing window and post-expiry special-period traps', () => {

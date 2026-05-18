@@ -86,10 +86,10 @@ export const L5_SIGNAL_REGISTRY: L5Signal[] = [
   {
     id: 'spouse-divorce-remarriage-procedure-vs-review-substance',
     family: 'spouse-divorce-remarriage-procedure-vs-review-substance',
-    title: '日配/永配 离婚・再婚：手续名与审查实质的分离',
+    title: '日配/永配 离婚・死别・再婚：手续名与审查实质的分离',
     contentState: 'needs_domain',
-    triggerRoutes: ['status-cancellation-before-expiry-boundary'],
-    triggerKeywords: ['离婚', '再婚', '配偶者', '日本人の配偶者', '永住者の配偶者'],
+    triggerRoutes: ['spouse-divorce-remarriage-procedure-boundary'],
+    triggerKeywords: ['离婚', '死别', '死別', '再婚', '配偶者', '日本人の配偶者', '永住者の配偶者'],
     whyThisIsDeepWater:
       '离婚 / 再婚后，"更新" / "变更" 的手续名称只是表面；入管真正审查的是当前在留资格的活动基础是否仍然存在。同样叫"更新申请"，在不同事实下可能被当作"变更"处理，结果完全不同。',
     prepareWhat: [
@@ -106,6 +106,63 @@ export const L5_SIGNAL_REGISTRY: L5Signal[] = [
       '不要在没有专业人士确认前自己改写在留卡上的"在留资格"栏',
       '不要假设"先更新一次拖到下次"是安全策略',
       '不要在 14 日届出窗口过期后再补，先咨询如何呈现',
+    ],
+    sourceUrls: [],
+  },
+
+  // ----- 1b. status-cancellation-grounds-and-hearing -----------------
+  {
+    id: 'status-cancellation-grounds-and-hearing',
+    family: 'status-cancellation-grounds-and-hearing',
+    title: '在留资格取消：活动停止、虚假申告与意见听取',
+    contentState: 'needs_domain',
+    triggerRoutes: [
+      'status-cancellation-before-expiry-boundary',
+      'application-truthfulness-no-false-info',
+      'notification-duty-violation-not-harmless',
+    ],
+    triggerKeywords: ['在留资格取消', '取消', '離職', '离职', '虚假', '虚偽', '届出', '意见听取', '意見聴取'],
+    whyThisIsDeepWater:
+      '在留期限还没到，不等于不会发生在留资格取消。活动停止、虚假申告、住所/配偶/所属机关届出问题，可能对应不同取消事由；是否存在正当理由、是否进入意见听取，不能由 AI 直接判定。',
+    prepareWhat: [
+      '当前在留资格、在留期限、在留卡信息',
+      '可能对应的事实：离职日、活动停止日、离婚/死别/分居日、住所变更日、届出日',
+      '是否存在虚假申告、虚假材料、错误届出或迟报',
+      '是否收到入管照会、出头通知、意见听取相关文件',
+      '正当理由相关证据：病历、求职记录、DV 支援记录、学校/公司证明等',
+      '过去是否有不许可、补件、违法就劳或资格外活动问题',
+    ],
+    askWho: ['immigration_lawyer', 'gyoseishoshi', 'isa_window', 'legal_terrace'],
+    doNotDo: [
+      '不要把“在留期限还剩”当作取消风险不存在',
+      '不要自己判断正当理由一定成立',
+      '不要补交或改写虚假事实，未先让专业人士看原文和日期',
+    ],
+    sourceUrls: [],
+  },
+
+  // ----- 1c. teijusha-kokujigai-boundary -----------------------------
+  {
+    id: 'teijusha-kokujigai-boundary',
+    family: 'teijusha-kokujigai-boundary',
+    title: '定住者：告示 / 告示外与个案审查',
+    contentState: 'needs_domain',
+    triggerRoutes: ['teijusha-kokujigai-boundary'],
+    triggerKeywords: ['定住者', '告示定住', '告示外定住', '離婚定住', '日系', '扶養'],
+    whyThisIsDeepWater:
+      '“定住者”不是一个靠关键词自助匹配的单一路线。告示定住和告示外定住的来源、申请路径、审查重点不同；离婚定住、日系、被扶养子女等个案不能用一条固定规则下结论。',
+    prepareWhat: [
+      '当前在留资格、年龄、在日年数、学籍或就业状态',
+      '亲属关系、同居关系、抚养关系和经济来源',
+      '离婚/死别/亲子关系/收养/日系关系等证明材料',
+      '是否有未成年子女、亲权、监护或抚养事实',
+      '是否已有不许可、补件、届出迟延或资格取消风险',
+    ],
+    askWho: ['gyoseishoshi', 'immigration_lawyer'],
+    doNotDo: [
+      '不要把“在日本长大”写成一定能转定住者',
+      '不要把婚姻年数写成离婚定住的固定许可条件',
+      '不要把告示外定住写成可以随便选择的普通路线',
     ],
     sourceUrls: [],
   },
@@ -293,6 +350,58 @@ export const L5_SIGNAL_REGISTRY: L5Signal[] = [
     ],
   },
 
+  // ----- 7b. overstay-departure-order-self-report --------------------
+  {
+    id: 'overstay-departure-order-self-report',
+    family: 'overstay-departure-order-self-report',
+    title: '不法残留：出国命令 / 自ら出頭 的边界',
+    contentState: 'needs_domain',
+    triggerRoutes: ['departure-order-not-reentry-guarantee'],
+    triggerKeywords: ['overstay', 'オーバーステイ', '不法残留', '出国命令', '自首', '出頭'],
+    whyThisIsDeepWater:
+      '不法残留后的“自ら出頭”“出国命令”“退去强制”不是同一条路。是否适用出国命令、未来再上陆限制、是否存在排除因素，都取决于具体事实和入管程序阶段。',
+    prepareWhat: [
+      '原在留期限、超过期限的起算日和经过时间',
+      '是否已经收到入管通知、出头通知、退去强制相关文件',
+      '是否有退去强制史、出国命令史、刑事案件、売春等事实',
+      '护照、机票、离境计划和当前住所',
+      '在日本的配偶、子女、疾病、DV、照护等人道事实',
+    ],
+    askWho: ['immigration_lawyer', 'gyoseishoshi', 'isa_window', 'legal_terrace'],
+    doNotDo: [
+      '不要把出国命令写成一定适用',
+      '不要把“1年后”写成一定可以再入国',
+      '不要继续工作或拖延出头时点，未先确认当前程序风险',
+    ],
+    sourceUrls: [],
+  },
+
+  // ----- 7c. deportation-special-permission-boundary -----------------
+  {
+    id: 'deportation-special-permission-boundary',
+    family: 'deportation-special-permission-boundary',
+    title: '在留特別許可：不是普通兜底申请',
+    contentState: 'needs_domain',
+    triggerRoutes: ['tokubetsu-kyoka-not-normal-route'],
+    triggerKeywords: ['在留特別許可', '在留特别许可', '退去強制', '退去强制', '不法残留'],
+    whyThisIsDeepWater:
+      '在留特別許可处在退去强制相关程序中，核心是法务大臣裁量，不是普通更新/变更不许可后的自助兜底。程序阶段、通知书、家族和人道事实会改变处理路径。',
+    prepareWhat: [
+      '目前处于哪个程序阶段：不许可后、出头通知后、退去强制程序中，还是尚未收到通知',
+      '通知书/出头文书原件、期限、受领日',
+      '不法残留、违法就劳、前科、退去强制史等不利事实',
+      '日本人/永住者配偶、子女抚养、疾病、DV、长期在日等人道事实',
+      '过去的申请历史、不许可理由、补件记录',
+    ],
+    askWho: ['immigration_lawyer', 'gyoseishoshi', 'legal_terrace', 'isa_window'],
+    doNotDo: [
+      '不要把在留特別許可写成普通申请或保底选项',
+      '不要预测许可概率',
+      '不要错过通知书或出头文书上的期限',
+    ],
+    sourceUrls: [],
+  },
+
   // ----- 8. additional-document-notice-protocol -----------------------
   {
     id: 'additional-document-notice-protocol',
@@ -324,6 +433,32 @@ export const L5_SIGNAL_REGISTRY: L5Signal[] = [
     sourceUrls: [
       'https://www.moj.go.jp/isa/about/region/index.html',
     ],
+  },
+
+  // ----- 8b. landing-refusal-admissibility ---------------------------
+  {
+    id: 'landing-refusal-admissibility',
+    family: 'landing-refusal-admissibility',
+    title: '上陆拒否 / 退去史 / 前科：入境审查边界',
+    contentState: 'needs_domain',
+    triggerRoutes: ['landing-denial-reentry-risk', 'coe-not-entry-guarantee-three-month'],
+    triggerKeywords: ['上陸拒否', '上陆拒否', '退去強制', '退去强制', '前科', 'COE', '签证', '入境'],
+    whyThisIsDeepWater:
+      'CoE 和签证不是最终入境保证。过去的退去强制、不法残留、上陆拒否或刑事记录，可能在上陆审查中再次被确认；拒否期间是否届满也不能直接等同于一定能入境。',
+    prepareWhat: [
+      '过去的退去强制、出国命令、上陆拒否、刑事记录的日期和文书',
+      '当前是否已有 CoE、签证，发行日和有效期',
+      '这次来日目的、目标在留资格、邀请/受入机构材料',
+      '是否有日本人/永住者配偶、子女、人道事情或特别说明材料',
+      '是否曾被机场二次审查、拒绝上陆或要求补充说明',
+    ],
+    askWho: ['immigration_lawyer', 'gyoseishoshi', 'isa_window', 'legal_terrace'],
+    doNotDo: [
+      '不要把 CoE 或签证写成入国保证',
+      '不要隐瞒前科、退去史、不法残留史或上陆拒否史',
+      '不要把拒否期间届满写成一定可以入境',
+    ],
+    sourceUrls: [],
   },
 
   // ----- 9. student-attendance-status-change --------------------------
