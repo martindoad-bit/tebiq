@@ -11,23 +11,29 @@
 | `verified_by` | Codex Production Lead / AI Engineering Lead |
 | `production_url` | https://tebiq.jp |
 | `production_build_info_after_loop21_merge` | `gitSha=244db78e4d7d3b28b85ee06818a69e1091e2bcfb`, `builtAt=2026-05-18T12:02:32.259Z`, `version=answer-core-v1.1-llm` |
-| `active_branch_when_updated` | `codex/knowledge-runtime-loop21-report` |
-| `current_focus` | Knowledge Runtime Expansion Goal: 400+ high-quality knowledge assets, answer product 85+, Materials Tab 85+ |
+| `active_branch_when_updated` | `codex/cleanup-loop0` |
+| `current_focus` | Answer Supremacy / Cleanup Loop 0: make TEBIQ consultation answers beat DeepSeek 4 Pro with web search, while removing stale docs and answer-UI pollution |
 
 ## Current Phase
 
-TEBIQ is in **1.0 RC / Knowledge Runtime Expansion**, not yet a final 1.0
+TEBIQ is in **1.0 RC / Answer Supremacy Cleanup Loop 0**, not yet a final 1.0
 release.
 
-The system has moved beyond 0.8 safety gates. Current work is about making the
-knowledge layer thicker without letting unsafe or practice-heavy cards pollute
-ordinary answer runtime.
+The product direction has shifted from broad card-count expansion to answer
+experience superiority. Knowledge Runtime remains important infrastructure, but
+it is no longer the top-level product goal. The current product question is:
+
+> Does a user get a better consultation here than in DeepSeek 4 Pro with web
+> search?
+
+Cleanup Loop 0 exists because old docs were pulling new windows back toward
+fixed answer shells, stale work plans, and UI decoration.
 
 ## User-Facing Surfaces
 
 | Surface | Route | Current status |
 |---|---|---|
-| 提问 | `/ai-consultation` | AI consultation with fixed 4-section answer format, fact-card injection, route gates, validators, and L5/deep-water handoff |
+| 提问 | `/ai-consultation` | Current implementation still has fixed-label answer output, fact-card injection, route gates, validators, and L5/deep-water handoff. Next target is a lighter native-AI-like answer experience that preserves model reasoning instead of wrapping it in heavy shells |
 | 材料 | `/quick-reference`, `/materials` | Scenario checklists plus 15 reusable material entities; still needs deeper material binding and source refresh |
 | 咨询记录 | `/me/consultations` | History surface with feedback / matter bridge |
 | 我的事项 | `/me/matters` | L2 matter surface exists; closure and basic navigation were fixed in RC polish |
@@ -82,21 +88,25 @@ What is strong:
 
 What is still not 1.0:
 
-- The product has 243 runtime-injectable fact cards, not 400+ high-quality total
-  assets.
-- Remaining quarantine is now smaller and mostly L5/material/higher-risk route
-  assets; it should not be mass-promoted without route-specific DOMAIN work.
+- The answer experience still loses to strong native AI products in fluency,
+  density, and natural structure when the UI/prompt over-wraps the model.
+- Official-law fact cards alone miss practical filing behavior. Practitioner
+  source / practical-signal layers are required.
+- The product has 243 runtime-injectable fact cards, but more cards are not the
+  same as a better consultation.
 - Materials Tab is structurally improved, but not yet 85+ in depth; cross-links,
   source freshness, and more material entities are still needed.
-- AQL/user feedback loops exist but are not yet a mature daily quality flywheel.
-- Commercial metrics are still secondary and not part of the current Knowledge
-  Runtime goal.
+- AQL/user feedback loops exist but are not yet organized around direct
+  comparison against DeepSeek 4 Pro with web search.
 
 ## Active Product Boundaries
 
 ### 提问
 
-- Answer summaries must keep the product labels: `先看这里 / 当前判断 / 建议动作 / 暂缓事项`.
+- Legacy runtime may still emit the labels `先看这里 / 当前判断 / 建议动作 / 暂缓事项`.
+  These labels are **not** future Answer Experience canon.
+- Future answer work should preserve the model's natural logic structure and
+  remove product-manager shells when they make the consultation worse.
 - Codex itself should not speak in those labels when reporting to the founder.
 - TEBIQ does not judge immigration approval probability as a final authority.
 - High-risk, under-specified, or practice-heavy questions must route to L5 /
@@ -134,9 +144,12 @@ What is still not 1.0:
 
 ## Next Work
 
-1. Add AQL-origin provenance for `aql-rur-037-jfind-employment-bridge`.
-2. Source-repair or safely bucket `eijuu-jukyo-check-tax-shomeisho`.
-3. Continue the remaining 18 quarantine cards as small DOMAIN/L5/material
-   batches; do not mass-promote them for count.
-4. Deepen materials cross-linking and source freshness toward Materials Tab 85+.
-5. Continue production answer and materials regression after each loop.
+1. Finish Cleanup Loop 0: archive stale loop/RC reports and keep current entry
+   points aligned with `TEBIQ_ANSWER_SUPREMACY_PRINCIPLE.md`.
+2. Build the DeepSeek 4 Pro web-enabled comparison loop with 30-50 realistic
+   high-value questions per round.
+3. Rewrite Answer Experience toward a lighter native-AI chat surface and update
+   terminal guards/tests deliberately.
+4. Start a whitelist practitioner-source crawler / practical-card pipeline so
+   real filing behavior can supplement official law cards.
+5. Deepen materials cross-linking and source freshness toward Materials Tab 85+.

@@ -13,6 +13,28 @@
 
 ---
 
+## 2026-05-18 Consumption Rule
+
+This registry contains assets from multiple product eras. A row being present
+does not automatically mean it is current production truth.
+
+Priority for consumers:
+
+1. `docs/product/TEBIQ_CURRENT_STATE.md`
+2. `docs/product/TEBIQ_ANSWER_SUPREMACY_PRINCIPLE.md`
+3. `docs/ops/TEBIQ_CANONICAL_WORKSPACE_MAP.md`
+4. `docs/product/TEBIQ_CONTEXT_PACK.md`
+5. `docs/product/TEBIQ_DECISION_LOG.md`
+6. assets marked `active`, `canonical`, or `current` in this registry only when
+   they do not conflict with the files above
+7. assets marked `draft`, `preview-only`, `Alpha-only`, or old workstream rows
+   only as historical/reference material
+
+If an old asset conflicts with Answer Supremacy, current state, or a newer
+Decision Log, the old asset loses.
+
+---
+
 ## 2026-05-16 Consumption Rule
 
 This registry contains assets from multiple product eras. A row being present
@@ -36,9 +58,10 @@ wins.
 
 | 资产名称 | 路径 | Owner | Status | Review Required | 消费方 | Source Commit | Last Updated |
 |---------|------|-------|--------|----------------|--------|--------------|-------------|
+| Answer Supremacy Principle | `docs/product/TEBIQ_ANSWER_SUPREMACY_PRINCIPLE.md` | Founder + Codex Production Lead | canonical / current product direction | Founder for product target changes | all windows | — | 2026-05-18 |
 | Materials Tab / Quick Reference Spec | `docs/product/TEBIQ_QUICK_REFERENCE_SPEC.md` | Codex GM-OPS + Project Lead | active / product-engineering spec; `Quick Reference` is internal/historical naming | Project Lead for positioning changes | ENGINE / CODEXUI / FACT / DOMAIN / QA | — | 2026-05-16 |
 | Deep Water Registry | `docs/product/TEBIQ_DEEP_WATER_REGISTRY.md` | Codex GM-OPS + Project Lead | draft / pre-scrivener workshop | Scrivener + DOMAIN before production wiring | ENGINE / AQL / DOMAIN / FACT / QA | — | 2026-05-12 |
-| Copy Canon | `docs/product/TEBIQ_COPY_CANON.md` | Codex Production Lead + Product Copy | active / current copy registry | Project Lead for frozen user-visible labels | ENGINE / CODEXUI / QA / AQL / Copy / GM | — | 2026-05-16 |
+| Copy Canon | `docs/product/TEBIQ_COPY_CANON.md` | Codex Production Lead + Product Copy | active / current-app copy registry; legacy answer labels are not future Answer Experience canon | Project Lead for frozen user-visible labels | ENGINE / CODEXUI / QA / AQL / Copy / GM | — | 2026-05-18 |
 
 ## VOICE 资产
 
@@ -120,7 +143,7 @@ wins.
 | Workstream C SSE Phase 2 | `docs/ops/WORKSTREAM_C_PREVIEW_PHASE2_SSE_PACK.md` | GM | ✅ done (Issue #32 / PR #33) | ENGINE | `ab019ca` | 2026-05-05 |
 | Ops Directory README | `docs/ops/README.md` | Codex Production Lead | active / directory consumption guide | all windows | — | 2026-05-16 |
 | Document Memory Clearing 2026-05-16 | `docs/ops/TEBIQ_DOCUMENT_MEMORY_CLEARING_2026-05-16.md` | Codex Production Lead | completed / docs truth-map cleanup | all windows | — | 2026-05-16 |
-| 1.0 Six Engineering Roadmap | `docs/ops/TEBIQ_1_0_SIX_ENGINEERING_ROADMAP.md` | Codex Production Lead | active / 0.8.5 to 1.0 execution memory | all windows | — | 2026-05-16 |
+| 1.0 Six Engineering Roadmap | `docs/archive/stale-ops-2026-05/TEBIQ_1_0_SIX_ENGINEERING_ROADMAP.md` | Codex Production Lead | historical / superseded by Answer Supremacy direction | reference only | — | 2026-05-18 |
 | Card Import To Product Plan | `docs/ops/TEBIQ_CARD_IMPORT_TO_PRODUCT_PLAN.md` | Codex Production Lead | active / card runtime-governance plan | ENGINE / FACT / DOMAIN / AQL / QA | — | 2026-05-16 |
 | 0.8.5 Import DOMAIN Review | `docs/domain/TEBIQ_0_8_5_IMPORT_DOMAIN_REVIEW.md` | DOMAIN / Russell | active / card import safety boundary | ENGINE / AQL / QA | — | 2026-05-16 |
 | 0.8.5 AQL Test Plan | `docs/eval/TEBIQ_0_8_5_AQL_TEST_PLAN.md` | AQL / Locke | active / first 56-question matrix and first24 plan | ENGINE / QA / DOMAIN | — | 2026-05-16 |

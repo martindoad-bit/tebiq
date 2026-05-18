@@ -1,13 +1,14 @@
 # TEBIQ Copy Canon
 
-**Status:** active / current user-facing copy registry
+**Status:** active / current-app copy registry; legacy answer UX constraints are superseded for future Answer Experience work
 **Owner:** Codex Production Lead + Product Copy
-**Last updated:** 2026-05-16
+**Last updated:** 2026-05-18
 **Consumers:** ENGINE, CODEXUI, QA, AQL, Product Copy, GM
 
 > This file exists to stop copy drift. If another document says "final copy" but
 > conflicts with this file, this file wins unless a newer Decision Log says
-> otherwise.
+> otherwise. For future answer UX, `TEBIQ_ANSWER_SUPREMACY_PRINCIPLE.md` and
+> newer Decision Log entries override older fixed-label requirements.
 
 ---
 
@@ -45,9 +46,10 @@ For principles and workflow, also read:
 
 ---
 
-## 2. Answer Summary Labels
+## 2. Legacy Runtime Answer Labels
 
-The current answer first block must preserve these labels:
+The current production runtime may still depend on these labels through prompts,
+terminal guards, or regression tests:
 
 ```text
 先看这里
@@ -56,13 +58,21 @@ The current answer first block must preserve these labels:
 暂缓事项
 ```
 
-Rules:
+Legacy rules while the old runtime remains in place:
 
 - all four labels must appear in generated answers or terminal-guarded output;
 - do not rename `当前判断` to `结论`;
 - do not rename `建议动作` to `今天先做`;
 - do not rename `暂缓事项` to `注意事项` or `暂时不要`;
 - do not restore old answer-section systems without a new Decision Log entry.
+
+Important 2026-05-18 update:
+
+- these labels are **not** the future Answer Experience canon;
+- they must not be used as a reason to add answer cards, warning boxes, or
+  product-manager shells;
+- if the Answer Experience rewrite removes them, update prompts, terminal guards,
+  and tests together instead of preserving the labels cosmetically.
 
 Historical answer labels that are **not current canon**:
 

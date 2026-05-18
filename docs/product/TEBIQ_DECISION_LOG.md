@@ -701,3 +701,69 @@ Founder 保留产品方向和验收权。
 - Codex 可以在已批准 scope 内自主拆解、调度子代理、提交 PR 和验证。
 - AQL / DOMAIN / FACT 的指令应写输入、输出、边界、交付格式，不写方法论或替它们做专业判断。
 - 后续角色冲突以 `docs/ops/TEBIQ_ROLES_V2.md` 为准；如需调整，追加新 DL。
+
+---
+
+## DL-020 · Answer Supremacy / Cleanup Loop 0
+
+| 字段 | 值 |
+|------|-----|
+| date | 2026-05-18 |
+| owner | Founder / Codex Production Lead |
+| status | active |
+
+### Background
+
+Knowledge Runtime loops increased the number of runtime-injectable fact cards and
+improved safety infrastructure. However, real comparison against strong native AI
+products exposed a more important gap: TEBIQ can still lose on consultation
+quality when the answer is over-wrapped by fixed labels, cards, warning boxes, or
+missing practitioner-source context.
+
+The founder clarified the product target: do not keep redefining TEBIQ; make the
+answer experience better than DeepSeek 4 Pro with web search. "Better" means the
+conversation is fluent and natural, while the answer is more accurate and
+credible because TEBIQ has official sources, practitioner sources, materials, and
+professional handoff behind the scenes.
+
+### Decision
+
+Add canonical direction:
+
+- `docs/product/TEBIQ_ANSWER_SUPREMACY_PRINCIPLE.md`
+- `docs/ops/TEBIQ_CANONICAL_WORKSPACE_MAP.md`
+
+Decisions:
+
+- The current top-level product target is **Answer Supremacy**, not broad
+  card-count expansion.
+- Knowledge Runtime Expansion remains infrastructure serving answer quality,
+  materials depth, and L5/practical routing.
+- The fixed answer labels `先看这里 / 当前判断 / 建议动作 / 暂缓事项` are legacy
+  runtime constraints, not future Answer Experience canon.
+- Future answer work must compare against DeepSeek 4 Pro with web search on
+  realistic high-value user questions.
+- Cleanup Loop 0 should archive or mark stale docs so new windows stop consuming
+  older roadmaps as current strategy.
+
+### Rationale
+
+- Users compare TEBIQ against native AI products, not against internal card
+  counts.
+- Adding visible UI shells can make the answer feel less useful even when the
+  hidden system is stronger.
+- Official law cards alone do not capture practical filing behavior. Vetted
+  practitioner sources and practical-signal cards are required.
+- Materials and scrivener handoff should be used as natural bridges, not as
+  decorative UI.
+
+### Impact
+
+- New windows must read `TEBIQ_ANSWER_SUPREMACY_PRINCIPLE.md` before continuing
+  product or answer work.
+- Old 0.8 / 0.8.5 / RC / Knowledge Runtime loop reports are evidence, not
+  strategy, unless `TEBIQ_CURRENT_STATE.md` reactivates a specific item.
+- Copy canon remains valid for current app labels and navigation, but legacy
+  answer labels cannot block the Answer Experience rewrite.
+- Future work loops should score whether TEBIQ beats DeepSeek 4 Pro with web
+  search on the overall consultation experience.
