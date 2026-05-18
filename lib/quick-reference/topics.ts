@@ -155,7 +155,7 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
       'zairyu-irrelevent-jutsu',
       'tokutei-ginou-1-vs-2',
       'gijinkoku-major-job-match',
-      'tokutei-katsudou-17go',],
+    ],
     relatedTopicIds: [
       'retirement-risk',
       'health-insurance-after-leaving-job',
