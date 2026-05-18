@@ -10,8 +10,8 @@
 | `last_verified` | 2026-05-18 |
 | `verified_by` | Codex Production Lead / AI Engineering Lead |
 | `production_url` | https://tebiq.jp |
-| `production_build_info_after_loop17_merge` | `gitSha=55ca22ec990b720e599cb1163537aa17e99e2942`, `builtAt=2026-05-18T07:48:22.815Z`, `version=answer-core-v1.1-llm` |
-| `active_branch_when_updated` | `codex/knowledge-runtime-loop17-final` |
+| `production_build_info_before_loop18_merge` | `gitSha=55ca22ec990b720e599cb1163537aa17e99e2942`, `builtAt=2026-05-18T07:48:22.815Z`, `version=answer-core-v1.1-llm` |
+| `active_branch_when_updated` | `codex/knowledge-runtime-loop18` |
 | `current_focus` | Knowledge Runtime Expansion Goal: 400+ high-quality knowledge assets, answer product 85+, Materials Tab 85+ |
 
 ## Current Phase
@@ -36,17 +36,17 @@ ordinary answer runtime.
 
 ## Knowledge Layer Waterline
 
-As of Loop17 production DB sync:
+As of Loop18 branch state, before production DB sync:
 
 | State | Count | Runtime meaning |
 |---|---:|---|
 | `human_reviewed` | 5 | Strong runtime injection |
-| `ai_verified` | 222 | Runtime injection candidate |
-| `ai_extracted` | 34 | Quarantine; not used in production answer runtime |
+| `ai_verified` | 223 | Runtime injection candidate |
+| `ai_extracted` | 33 | Quarantine; not used in production answer runtime |
 | `disabled` | 8 | Rejected / disabled |
 | Total fact cards | 269 | Excludes guardrail-only FACT_PROGRESS rows as separate route-gate provenance |
 
-Runtime-injectable fact cards: **227** (`human_reviewed` + `ai_verified`).
+Runtime-injectable fact cards: **228** (`human_reviewed` + `ai_verified`).
 
 Important: 400+ target means **high-quality knowledge assets**, not "400
 ordinary answer-injection cards." The count includes answer runtime facts,
@@ -62,6 +62,7 @@ Unsafe strategy cards must not be promoted just to increase the number.
 | Loop15 | Resolved 49 guardrail-only route-gate source assets from `FACT_PROGRESS.md`; unresolved provenance reduced from 50 to 1 |
 | Loop16 | Processed remaining 39 quarantine cards: 0 runtime promote, 4 materials-only, 15 L5-only, 18 rewrite, 1 reject, 1 unknown |
 | Loop17 | Rewrote 16 of the 18 rewrite-queue cards into narrower assets: 4 answer-runtime promotions, 3 materials-only narrowed cards, 9 safer quarantine/L5 cards; 2 source-repair candidates deferred |
+| Loop18 | Source-repaired `startup-visa-keiei-transition` into a narrow runtime card and moved `kazoku-yobi-naitei-haigusha` to L5-only; added 3 quick-reference material scenes (`永住者配偶者等`, `家族滞在変更`, `家族滞在COE`) |
 
 ## Product Judgment
 
@@ -78,7 +79,7 @@ What is strong:
 
 What is still not 1.0:
 
-- The product has 227 runtime-injectable fact cards, not 400+ high-quality total
+- The product has 228 runtime-injectable fact cards, not 400+ high-quality total
   assets.
 - Many cards still need rewrite into narrow official facts before promotion.
 - Materials Tab is structurally improved, but not yet 85+ in depth; cross-links,
@@ -121,7 +122,7 @@ What is still not 1.0:
 |---|---|
 | `aql-rur-037-jfind-employment-bridge` provenance | Only unresolved route-gate source asset after Loop15; needs AQL-origin asset record |
 | Materials depth | 15 entity base is online, but support-program/material-only candidates such as `koukou-mukyo-shogakukin` need proper product placement |
-| Rewrite/source-repair queue | Loop17 reduced the old 18-card rewrite queue. The remaining work is no longer a single queue: 2 source-repair candidates (`startup-visa-keiei-transition`, `kazoku-yobi-naitei-haigusha`) plus narrowed quarantine cards that still need DOMAIN confidence before runtime use |
+| Rewrite/source-repair queue | Loop18 resolved the two Loop17 source-repair candidates: `startup-visa-keiei-transition` is narrow runtime; `kazoku-yobi-naitei-haigusha` is L5-only. Remaining quarantine work is mostly threshold/practice cards that need DOMAIN confidence before runtime use |
 | L5 content depth | Existing L5 route gates catch risk, but many panels still need richer practical preparation content |
 | Production latency | Long answers can still be slow; not part of current knowledge loop |
 | Commercial metrics | Lead-gen exists, but analytics loop is not yet mature |

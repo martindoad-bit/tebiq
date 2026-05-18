@@ -54,3 +54,20 @@ test('quick reference topics expose stable single-page links and related topics'
   assert.ok(related.includes('retirement-risk'))
   assert.ok(related.includes('health-insurance-after-leaving-job'))
 })
+
+test('Loop18 materials-only family cards bridge to distinct material scenes', () => {
+  const topicIds = getQuickReferenceTopicsForFactCards(
+    [
+      'eijuu-haigusha-visa',
+      'kazoku-taizai-henko',
+      'nihonjin-haigusha-visa',
+      'kazoku-yobi-naitei-haigusha',
+    ],
+    10,
+  ).map(topic => topic.id)
+
+  assert.ok(topicIds.includes('eijuu-haigusha-materials'))
+  assert.ok(topicIds.includes('kazoku-taizai-henko-materials'))
+  assert.ok(topicIds.includes('japanese-spouse-renewal-materials'))
+  assert.ok(topicIds.includes('family-stay-coe-materials'))
+})

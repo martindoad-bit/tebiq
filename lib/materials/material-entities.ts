@@ -79,6 +79,9 @@ export const MATERIAL_ENTITIES: MaterialEntity[] = [
       'keiei-kanri-renewal-materials',
       'family-stay-renewal-materials',
       'japanese-spouse-renewal-materials',
+      'eijuu-haigusha-materials',
+      'kazoku-taizai-henko-materials',
+      'family-stay-coe-materials',
       'juminhyo-foreign-materials',
       'mynumber-card-materials',
       'bank-account-opening-materials',
@@ -144,6 +147,9 @@ export const MATERIAL_ENTITIES: MaterialEntity[] = [
       'keiei-kanri-renewal-materials',
       'family-stay-renewal-materials',
       'japanese-spouse-renewal-materials',
+      'eijuu-haigusha-materials',
+      'kazoku-taizai-henko-materials',
+      'family-stay-coe-materials',
       'rental-housing-foreigner-materials',
     ],
     commonMistakes: [
@@ -207,6 +213,9 @@ export const MATERIAL_ENTITIES: MaterialEntity[] = [
       'gijinkoku-renewal-materials',
       'keiei-kanri-renewal-materials',
       'family-stay-renewal-materials',
+      'eijuu-haigusha-materials',
+      'kazoku-taizai-henko-materials',
+      'family-stay-coe-materials',
     ],
     commonMistakes: [
       '有未缴 / 滞纳的话窗口可能拒发完納証明；先去税务窗口处理纳付或分割。',
@@ -438,6 +447,8 @@ export const MATERIAL_ENTITIES: MaterialEntity[] = [
       'job-change-notification-materials',
       'bank-account-opening-materials',
       'family-stay-renewal-materials',
+      'kazoku-taizai-henko-materials',
+      'family-stay-coe-materials',
     ],
     commonMistakes: [
       '在職証明書 ≠「労働条件通知書 / 雇用契約書」：在留申请常常要两类一起交。',
@@ -647,6 +658,7 @@ export const MATERIAL_ENTITIES: MaterialEntity[] = [
     reusedIn: [
       'permanent-residence-application-materials',
       'japanese-spouse-renewal-materials',
+      'eijuu-haigusha-materials',
     ],
     commonMistakes: [
       '把「身元保証」当成「连带保証 / 法的金钱保证」：实际是道义性、不直接负无限连带债务。',
@@ -748,6 +760,9 @@ export const MATERIAL_ENTITIES: MaterialEntity[] = [
     reusedIn: [
       'japanese-spouse-renewal-materials',
       'family-stay-renewal-materials',
+      'eijuu-haigusha-materials',
+      'kazoku-taizai-henko-materials',
+      'family-stay-coe-materials',
       'childbirth-allowances-materials',
       'minor-school-enrollment-materials',
       'permanent-residence-application-materials',
@@ -814,6 +829,9 @@ export const MATERIAL_ENTITIES: MaterialEntity[] = [
       'keiei-kanri-renewal-materials',
       'family-stay-renewal-materials',
       'japanese-spouse-renewal-materials',
+      'eijuu-haigusha-materials',
+      'kazoku-taizai-henko-materials',
+      'family-stay-coe-materials',
       'student-renewal-materials',
       'deemed-reentry',
       'mynumber-card-materials',
