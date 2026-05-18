@@ -11,13 +11,13 @@
 
 | 指标 | 当前值 |
 |------|--------|
-| 已完成卡片数 | 300 |
+| 已完成卡片数 | 320 |
 | DOMAIN 队列总数 | 9 |
-| ANSWER_RUNTIME 可注入 | 292 |
+| ANSWER_RUNTIME 可注入 | 312 |
 | MATERIALS_ONLY | 8 |
 | L5_ONLY | 0 |
 | NEEDS_REWRITE | 0 |
-| 已完成批次 | 15 |
+| 已完成批次 | 16 |
 
 ---
 
@@ -567,6 +567,41 @@
 | practical-300 | 外国人の「特定活動（未来創造人材）」：J-Skip・J-Find制度の在留管理 | ✅ | ANSWER_RUNTIME | P1 |
 
 ## Batch 15 Handoff Note
+
+- 完成日: 2026-05-19
+- 担当: FACT Operator (Claude)
+- コミット: b22746c
+- 新規DOMAIN: なし
+- DOMAIN送付済み: pending（pdom-001〜009）
+
+---
+
+## Batch 16 状態（目標: 20張）
+
+| card_id | topic | status | runtime_bucket | risk |
+|---------|-------|--------|---------------|------|
+| practical-301 | 外国人の「DV被害」と在留資格保護：配偶者ビザから自立への経路 | ✅ | ANSWER_RUNTIME | P0 |
+| practical-302 | 在留資格「文化活動」の申請実務：無報酬研究・伝統芸能 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-303 | 外国人の「スタートアップビザ」（起業準備特定活動）の申請実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-304 | 在留申請の「代理申請」制度：誰が・どんな場合に申請できるか | ✅ | ANSWER_RUNTIME | P1 |
+| practical-305 | 在留資格「宗教」の申請実務：宗教家・聖職者の日本滞在 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-306 | 在留資格「医療」（治療目的入国）と在留申請実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-307 | 外国人の「在留資格取消」手続きの流れと対応策 | ✅ | ANSWER_RUNTIME | P0 |
+| practical-308 | 外国人が「日本の国家資格・専門資格」を取得する場合の実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-309 | 在留資格「芸術」の申請実務：芸術家・作家・写真家の日本滞在 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-310 | 外国人の「帰化申請中」の在留管理：申請から許可までの手続き | ✅ | ANSWER_RUNTIME | P1 |
+| practical-311 | 外国人が「NPO法人・一般社団法人」を設立・運営する場合の在留資格 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-312 | 在留資格「報道」の申請実務：外国メディアの記者・カメラマン | ✅ | ANSWER_RUNTIME | P1 |
+| practical-313 | 外国人の「オンラインビジネス・越境EC」と在留資格の適否 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-314 | 外国人の「自動車免許」取得・国際免許の日本での利用 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-315 | 外国人が「成年後見人」になる場合・後見を受ける場合の在留資格 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-316 | 「技能実習」から「育成就労」への移行期間の在留管理（2024〜2027年移行期） | ✅ | ANSWER_RUNTIME | P0 |
+| practical-317 | 在留資格「研究」の申請実務：大学・研究機関での研究者 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-318 | 外国人の「入国拒否歴・退去強制歴」と日本への再入国 | ✅ | ANSWER_RUNTIME | P0 |
+| practical-319 | 外国人が「高齢の親」を日本に呼び寄せる場合の在留資格 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-320 | 在留申請における「過去の違反歴・ブラックリスト」の影響 | ✅ | ANSWER_RUNTIME | P0 |
+
+## Batch 16 Handoff Note
 
 - 完成日: 2026-05-19
 - 担当: FACT Operator (Claude)
