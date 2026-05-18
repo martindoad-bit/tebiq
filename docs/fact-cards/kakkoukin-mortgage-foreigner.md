@@ -1,7 +1,7 @@
 ---
 fact_id: kakkoukin-mortgage-foreigner
 title: 住宅ローン — 外国籍申請者の審査項目（要再取材）
-state: ai_extracted
+state: disabled   # Loop12 2026-05-18 REJECT: source gap + mortgage approval generalization; rebuild before use.
 risk_level: medium
 confidence: low
 source_quality: official
@@ -72,5 +72,6 @@ evidence_points:
 
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
 |------|------|----------|--------------|-------------|------|
+| 2026-05-18 | Codex Loop12 | source gap と住宅ローン審査一般化リスクにより、再取材まで disabled。 | ai_extracted | disabled | loop12-reject |
 | 2026-05-18 | Codex Loop11 | Flat35 URL が fact-layer whitelist 外のため、白名单外断言を撤回。国交省背景源のみの再取材カードへ降温。 | ai_extracted | ai_extracted | loop11-source-safety |
 | 2026-05-17 | FACT-OPS bulk-1 | 新規作成。 | — | ai_extracted | new |

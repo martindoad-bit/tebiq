@@ -1,7 +1,7 @@
 ---
 fact_id: zairyu-shitsugyo-hosho-pension
 title: 失業時の年金 — 保険料免除/猶予申請（経済理由）
-state: ai_extracted
+state: ai_verified   # Loop12 2026-05-18: public pension procedure fact; immigration evaluation withheld.
 risk_level: medium
 confidence: medium
 source_quality: official
@@ -51,21 +51,51 @@ evidence_points:
     display_label: "失業年金免除"
     support_level: "direct"
     user_visible: true
-    needs_domain_review: true
+    needs_domain_review: false
 ---
 
 ## current_effective_fact
 
-失業時年金は免除/猶予申請可・失業特例で判定。
+失業などで国民年金保険料の納付が難しい場合、申請により全額免除、4分の3免除、半額免除、4分の1免除、または納付猶予が認められることがある。失業特例では、離職票などを添付して審査を受ける。これは年金手続きの事実であり、永住・在留審査でどう評価されるかは別問題。
+
+## common_user_phrases
+
+- 失業 年金 払えない
+- 国民年金 免除
+- 年金 猶予
+- 离职 年金 怎么办
+- 失業特例
+- 退職後 年金 免除
 
 ## must_say
 
-- 4段階免除
-- 失業特例あり
-- 永住評価は別確認
+- 国民年金には免除・納付猶予制度がある
+- 失業特例では離職票などを添付して審査を受ける
+- 永住・在留審査での評価はここでは判断しない
+
+## must_not_say
+
+- 免除なら永住に影響しない
+- 猶予を申請すれば在留審査で問題にならない
+- 失業中は年金を放置してよい
+
+## injection_format
+
+### injection_certain_block
+
+```text
+失業などで国民年金保険料の納付が難しい場合、申請により全額免除、4分の3免除、半額免除、4分の1免除、または納付猶予が認められることがあります。失業特例では離職票などを添付して審査を受けます。ただし、これは年金手続きの事実であり、永住・在留審査でどう評価されるかは別問題として扱います。
+```
+
+### injection_needs_review_addendum
+
+```text
+免除・猶予期間の永住評価、追納すべきかどうか、申請直前の補正はDOMAIN/行政書士確認へ回す。
+```
 
 ## changelog
 
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
 |------|------|----------|--------------|-------------|------|
+| 2026-05-18 | Codex Loop12 | 年金免除・失業特例の手続き事実に限定し、永住評価を明示的に除外してruntime化。 | ai_extracted | ai_verified | loop12-promote |
 | 2026-05-17 | FACT-OPS bulk-1 | 新規作成。 | — | ai_extracted | new |
