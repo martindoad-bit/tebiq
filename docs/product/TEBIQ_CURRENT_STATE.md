@@ -10,8 +10,8 @@
 | `last_verified` | 2026-05-18 |
 | `verified_by` | Codex Production Lead / AI Engineering Lead |
 | `production_url` | https://tebiq.jp |
-| `production_build_info_after_loop19_merge` | `gitSha=1cd09334cb1533179a0e06b8b4bad23662367b54`, `builtAt=2026-05-18T10:12:17.159Z`, `version=answer-core-v1.1-llm` |
-| `active_branch_when_updated` | `codex/knowledge-runtime-loop19-final` |
+| `production_build_info_after_loop20_merge` | `gitSha=d0b93bb08a95f75442cdefa5f8f6aedc7d9d41ca`, `builtAt=2026-05-18T11:02:42.654Z`, `version=answer-core-v1.1-llm` |
+| `active_branch_when_updated` | `codex/knowledge-runtime-loop20-validation` |
 | `current_focus` | Knowledge Runtime Expansion Goal: 400+ high-quality knowledge assets, answer product 85+, Materials Tab 85+ |
 
 ## Current Phase
@@ -36,17 +36,17 @@ ordinary answer runtime.
 
 ## Knowledge Layer Waterline
 
-As of Loop19 production sync:
+As of Loop20 production sync:
 
 | State | Count | Runtime meaning |
 |---|---:|---|
 | `human_reviewed` | 5 | Strong runtime injection |
-| `ai_verified` | 233 | Runtime injection candidate |
-| `ai_extracted` | 23 | Quarantine; now bucketed as L5/material/rewrite |
+| `ai_verified` | 238 | Runtime injection candidate |
+| `ai_extracted` | 18 | Quarantine; now mostly L5/material/higher-risk route assets |
 | `disabled` | 8 | Rejected / disabled |
 | Total fact cards | 269 | Excludes guardrail-only FACT_PROGRESS rows as separate route-gate provenance |
 
-Runtime-injectable fact cards: **238** (`human_reviewed` + `ai_verified`).
+Runtime-injectable fact cards: **243** (`human_reviewed` + `ai_verified`).
 
 Important: 400+ target means **high-quality knowledge assets**, not "400
 ordinary answer-injection cards." The count includes answer runtime facts,
@@ -64,6 +64,7 @@ Unsafe strategy cards must not be promoted just to increase the number.
 | Loop17 | Rewrote 16 of the 18 rewrite-queue cards into narrower assets: 4 answer-runtime promotions, 3 materials-only narrowed cards, 9 safer quarantine/L5 cards; 2 source-repair candidates deferred |
 | Loop18 | Source-repaired `startup-visa-keiei-transition` into a narrow runtime card and moved `kazoku-yobi-naitei-haigusha` to L5-only; added 3 quick-reference material scenes (`永住者配偶者等`, `家族滞在変更`, `家族滞在COE`); DB sync and production smoke completed on `a6cc73f` |
 | Loop19 | Processed the remaining 33 quarantine cards: 10 promoted to answer runtime, 3 kept as materials-only, 15 explicitly marked L5-only, 5 marked needs-rewrite; added `foreign-will-notary-materials`; production DB sync completed with 269/269 upserts, production URL smoke 70/70, and production answer smoke 25/25 |
+| Loop20 | Rewrote the 5 Loop19 `NEEDS_REWRITE` cards into narrow official-source runtime facts; added `high-school-tuition-support-materials`; targeted production DB sync completed for 5/5 cards, DB and filesystem aligned at 269 cards, production URL smoke 70/70, new material path 200, and answer smoke 25/25 |
 
 ## Product Judgment
 
@@ -80,10 +81,10 @@ What is strong:
 
 What is still not 1.0:
 
-- The product has 238 runtime-injectable fact cards, not 400+ high-quality total
+- The product has 243 runtime-injectable fact cards, not 400+ high-quality total
   assets.
-- Remaining quarantine is now bucketed, but 5 cards still need rewrite into
-  narrow official facts before any runtime promotion.
+- Remaining quarantine is now smaller and mostly L5/material/higher-risk route
+  assets; it should not be mass-promoted without route-specific DOMAIN work.
 - Materials Tab is structurally improved, but not yet 85+ in depth; cross-links,
   source freshness, and more material entities are still needed.
 - AQL/user feedback loops exist but are not yet a mature daily quality flywheel.
@@ -123,15 +124,17 @@ What is still not 1.0:
 | Area | Status |
 |---|---|
 | `aql-rur-037-jfind-employment-bridge` provenance | Only unresolved route-gate source asset after Loop15; needs AQL-origin asset record |
-| Materials depth | 15 entity base is online, but support-program/material-only candidates such as `koukou-mukyo-shogakukin` need proper product placement |
-| Rewrite/source-repair queue | Loop19 reduced the rewrite queue to 5 cards: `eijuu-bbq-criminal-record`, `eijuu-jukyo-check-tax-shomeisho`, `keiei-kanri-jimu-bessho-requirement`, `kodo-senmon-shoku-points`, `koukou-mukyo-shogakukin` |
+| Materials depth | 15 entity base is online and quick-reference topics are now 48; more source freshness and cross-linking are still needed |
+| Rewrite/source-repair queue | `eijuu-jukyo-check-tax-shomeisho` remains the main source-repair candidate; Loop20 rewrote the other named Loop19 rewrite cards |
 | L5 content depth | Existing L5 route gates catch risk, but many panels still need richer practical preparation content |
+| Sync tooling | Full `npm run fact-layer:sync` dry-run passes but production write hung in Loop20; targeted 5-card sync succeeded and DB audit aligned |
 | Production latency | Long answers can still be slow; not part of current knowledge loop |
 | Commercial metrics | Lead-gen exists, but analytics loop is not yet mature |
 
 ## Next Work
 
-1. Rewrite the remaining 5 `NEEDS_REWRITE` cards rather than forcing them into
-   runtime.
+1. Investigate and fix full production `fact-layer:sync` write hang so future
+   loops do not need targeted sync workarounds.
 2. Add AQL-origin provenance for `aql-rur-037-jfind-employment-bridge`.
-3. Continue production answer and materials regression after each loop.
+3. Source-repair or safely bucket `eijuu-jukyo-check-tax-shomeisho`.
+4. Continue production answer and materials regression after each loop.
