@@ -11,13 +11,13 @@
 
 | 指标 | 当前值 |
 |------|--------|
-| 已完成卡片数 | 100 |
-| DOMAIN 队列总数 | 7 |
-| ANSWER_RUNTIME 可注入 | 96 |
-| MATERIALS_ONLY | 4 |
+| 已完成卡片数 | 120 |
+| DOMAIN 队列总数 | 8 |
+| ANSWER_RUNTIME 可注入 | 115 |
+| MATERIALS_ONLY | 5 |
 | L5_ONLY | 0 |
 | NEEDS_REWRITE | 0 |
-| 已完成批次 | 5 |
+| 已完成批次 | 6 |
 
 ---
 
@@ -53,11 +53,13 @@
 | card_id | DOMAIN問題 | priority |
 |---------|-----------|----------|
 | practical-001 | 「正当な理由」の現場認定基準（ISA窓口の裁量範囲） | P0 |
+| practical-002 | 離婚後定住者申請の実際の審査基準（離婚理由・在留実態の評価） | P0 |
 | practical-005 | バーチャルオフィス不可の根拠と実際の合否事例 | P0 |
 | practical-006 | 赤字・休眠法人の更新で「事業継続意思」を示す書面の公式要件 | P0 |
 | practical-010 | 永住申請で「直近5年」の社会保険完納要件の具体的確認方法 | P0 |
 | practical-016 | 不許可後の在留特例期間の起算点と就労継続の法的根拠 | P0 |
 | practical-055 | 出国命令制度の「不法就労があっても適用される場合の基準」（ISA裁量範囲） | P0 |
+| practical-105 | 同性パートナー向け特定活動（人道的配慮）の具体的要件・申請実績（2023年以降） | P1 |
 
 ---
 
@@ -219,7 +221,41 @@
 
 - 完成日: 2026-05-18
 - 担当: FACT Operator (Claude)
-- 次バッチ: Batch 6 (practical-101〜120)
-- 優先トピック: 経営管理・人材要件詳細 / 技人国での派遣労働 / 家族滞在の諸問題 / 在留資格「介護」追加実務 / 外国人の不動産取得・ローン等
+- コミット: e0fdd58
 - DOMAIN送付済み: pending（pdom-001〜007）
+
+---
+
+## Batch 6 状態（目標: 20張）
+
+| card_id | topic | status | runtime_bucket | risk |
+|---------|-------|--------|---------------|------|
+| practical-101 | 経営管理の「経営者・管理者」要件：実質的権限と組織規模 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-102 | ワーキングホリデービザの実務：同一雇用主制限と一度限りルール | ✅ | ANSWER_RUNTIME | P1 |
+| practical-103 | 外国人の不動産取得・住宅ローン・賃貸契約の実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-104 | 技人国の試用期間中の在留資格と本採用不成立のリスク | ✅ | ANSWER_RUNTIME | P0 |
+| practical-105 | 配偶者が内縁関係・同性パートナーの場合の在留資格 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-106 | 在留資格変更申請中（特例期間）の転職：取下げ・再申請 | ✅ | ANSWER_RUNTIME | P0 |
+| practical-107 | 技人国での派遣社員就労：所属機関と業務適合性 | ✅ | ANSWER_RUNTIME | P0 |
+| practical-108 | 在留資格の複数保有不可：単一在留資格原則と複数活動の管理 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-109 | 技人国での業務委託契約（雇用なし）の可否 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-110 | 特定活動告示番号（主要）と在留目的別の使い分け | ✅ | ANSWER_RUNTIME | P1 |
+| practical-111 | 永住申請の身元保証人：要件・責任・保証人が見つからない場合 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-112 | 高度専門職1号の「指定書」：転職・副業への影響と手続き | ✅ | ANSWER_RUNTIME | P0 |
+| practical-113 | 経営管理ビザで複数会社を掛け持ちする経営者の在留管理 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-114 | 外国人の運転免許：外国免許の日本切替と学科試験 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-115 | 外国人の生活保護受給：在留資格別の受給資格と実務運用 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-116 | 外国人労働者の本国送金：外為規制・送金制限・マイナンバー | ✅ | ANSWER_RUNTIME | P1 |
+| practical-117 | 在留申請書類の公証・アポスティーユ：必要な場面と手続き | ✅ | ANSWER_RUNTIME | P1 |
+| practical-118 | 技人国での社内「職種変更」：業務が変わった場合の在留管理 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-119 | 海外配偶者の呼び寄せCOE申請：必要書類と審査のポイント | ✅ | ANSWER_RUNTIME | P1 |
+| practical-120 | 特定活動（EPA介護）から「介護」への在留資格変更要件 | ✅ | MATERIALS_ONLY | P1 |
+
+## Batch 6 Handoff Note
+
+- 完成日: 2026-05-19
+- 担当: FACT Operator (Claude)
+- 次バッチ: Batch 7 (practical-121〜140)
+- 新規DOMAIN: pdom-008（同性パートナー向け特定活動の要件実態）
+- DOMAIN送付済み: pending（pdom-001〜008）
 - コミット: pending
