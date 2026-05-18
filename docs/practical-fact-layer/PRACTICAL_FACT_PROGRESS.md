@@ -3,7 +3,7 @@
 > **角色**: FACT 实务层事实生产窗口  
 > **目标**: 让 TEBIQ 的答案在实务准确度、可信度、材料连接能力上超过 DeepSeek 4 Pro 联网版  
 > **批次节奏**: 每20张卡更新一次本文件 + commit + push  
-> **last_updated**: 2026-05-18
+> **last_updated**: 2026-05-19
 
 ---
 
@@ -11,13 +11,13 @@
 
 | 指标 | 当前值 |
 |------|--------|
-| 已完成卡片数 | 160 |
+| 已完成卡片数 | 180 |
 | DOMAIN 队列总数 | 8 |
-| ANSWER_RUNTIME 可注入 | 155 |
+| ANSWER_RUNTIME 可注入 | 175 |
 | MATERIALS_ONLY | 5 |
 | L5_ONLY | 0 |
 | NEEDS_REWRITE | 0 |
-| 已完成批次 | 8 |
+| 已完成批次 | 9 |
 
 ---
 
@@ -324,7 +324,41 @@
 
 - 完成日: 2026-05-19
 - 担当: FACT Operator (Claude)
-- 次バッチ: Batch 9 (practical-161〜180)
+- コミット: 4299995
 - 新規DOMAIN: なし
 - DOMAIN送付済み: pending（pdom-001〜008）
+
+---
+
+## Batch 9 状態（目標: 20張）
+
+| card_id | topic | status | runtime_bucket | risk |
+|---------|-------|--------|---------------|------|
+| practical-161 | 在留資格「興行」：外国人エンターテイナー・アーティストの就労要件 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-162 | 外国人の住宅賃貸：保証人・外国人お断り・公営住宅の実態 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-163 | 在留不許可後の「異議申出」・「再申請」：手続きと現実的選択肢 | ✅ | ANSWER_RUNTIME | P0 |
+| practical-164 | 外国人の国民健康保険：加入義務・在留資格別の扱い・未加入リスク | ✅ | ANSWER_RUNTIME | P1 |
+| practical-165 | 在留資格「研究」：大学・研究機関以外での研究活動と要件 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-166 | 外国人配偶者ビザ更新：夫婦の実態確認（偽装婚対策）審査のポイント | ✅ | ANSWER_RUNTIME | P0 |
+| practical-167 | 特定技能受入機関の支援計画・定期報告義務：怠慢による制裁 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-168 | 「帰化」vs「永住」の違いと選択：国籍・パスポート・制限の比較 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-169 | 技人国での副業・兼業：許可の可否・資格外活動許可・在留リスク | ✅ | ANSWER_RUNTIME | P1 |
+| practical-170 | 在留カード紛失・盗難：再交付手続き・罰則・悪用リスク | ✅ | ANSWER_RUNTIME | P1 |
+| practical-171 | 経営管理ビザの「500万円出資」要件の詳細：現物出資・借入金・合名義の扱い | ✅ | ANSWER_RUNTIME | P0 |
+| practical-172 | 外国人の厚生年金脱退一時金：請求要件・金額・申請期限 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-173 | 在留資格「技能」（調理師・伝統工芸）：10年実務経験の証明方法 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-174 | 不法就労（資格外活動）で雇用した企業側への罰則と入管調査 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-175 | 外国人の日本での婚姻手続き：方式・必要書類・在留資格への影響 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-176 | 「特定活動46号」：日本語能力試験N1等保有者の就労特定活動 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-177 | 留学生の在籍管理報告：大学の義務と留学生の在留への影響 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-178 | 外国人の会社設立後の経営管理ビザ申請タイミング：設立前後の注意点 | ✅ | ANSWER_RUNTIME | P0 |
+| practical-179 | 永住者が離婚した場合の在留資格への影響：永住取消のリスク | ✅ | ANSWER_RUNTIME | P1 |
+| practical-180 | 外国人の子どもの在留資格：出生後の手続きと就学・就労の制限 | ✅ | ANSWER_RUNTIME | P1 |
+
+## Batch 9 Handoff Note
+
+- 完成日: 2026-05-19
+- 担当: FACT Operator (Claude)
 - コミット: pending
+- 新規DOMAIN: なし
+- DOMAIN送付済み: pending（pdom-001〜008）
