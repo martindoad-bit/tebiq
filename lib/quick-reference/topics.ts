@@ -153,7 +153,9 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
       'gijinkoku-shihon-jugyou-strict',
       'fuhou-shurou-employer',
       'zairyu-irrelevent-jutsu',
-      'tokutei-ginou-1-vs-2',],
+      'tokutei-ginou-1-vs-2',
+      'gijinkoku-major-job-match',
+      'tokutei-katsudou-17go',],
     relatedTopicIds: [
       'retirement-risk',
       'health-insurance-after-leaving-job',
@@ -621,6 +623,9 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
       'gijinkoku-koushin-shorui',
       'startup-visa-meti-fukuoka',
       'shoukibo-jigyou-zei',
+      'keiei-kanri-capital-asset-3000man-criterion',
+      'keiei-kanri-existing-3year-transition',
+      'keiei-kanri-jimu-bessho-requirement',
     ],
     relatedTopicIds: [
       'resident-tax-certificate-materials',
@@ -795,6 +800,8 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
       'ryugaku-shikakugai-individual-permission',
       'ryugaku-kishu-katsudo-tokkatsu',
       'jfind-tokutei-katsudou',
+      'ryugaku-shusseki-ritsu-80',
+      'tokutei-katsudou-17go',
     ],
     relatedTopicIds: [
       'part-time-permission',
@@ -857,7 +864,9 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
       'eijuu-3000man-shisan-myth',
       'eijuu-junior-15-eligibility',
       'eijuu-takeoff-risk',
-      'eijuu-haigusha-visa',],
+      'eijuu-haigusha-visa',
+      'eijuu-zeikin-payment',
+      'eijuu-jukyo-period-overseas',],
     relatedTopicIds: [
       'resident-tax-certificate-materials',
       'national-tax-certificate-sono3-materials',
@@ -916,6 +925,8 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
       'jumin-zei-jan1-criterion',
       'eijuu-shotoku-haigusha-3year',
       'jumin-zei-no-shukyou-3types',
+      'eijuu-jukyo-check-tax-shomeisho',
+      'eijuu-zeikin-payment',
     ],
     relatedTopicIds: [
       'national-tax-certificate-sono3-materials',
@@ -963,6 +974,7 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
       'juminzei-kazei-shomeisho',
       'kakutei-shinkoku-gijmu',
       'zeimu-shomeisho-3types',
+      'eijuu-zeikin-payment',
     ],
     relatedTopicIds: [
       'resident-tax-certificate-materials',
@@ -1018,6 +1030,9 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
       'kokuho-shutoku-shoumei-2years',
       'shougai-nenkin-overview',
       'zairyu-shitsugyo-hosho-pension',
+      'nenkin-tsuinou-10years',
+      'shakai-hoken-kyotei-bilateral',
+      'eijuu-nenkin-risk',
     ],
     relatedTopicIds: [
       'permanent-residence-application-materials',
@@ -1586,7 +1601,6 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
       'kodomo-gakko-nyugaku',
       'kodomo-zairyu-shinsei',
       'jyumin-hyo-gaijin',
-      'koukou-mukyo-shogakukin',
       'yochi-en-hoiku-gaikoku',
     ],
     relatedTopicIds: [

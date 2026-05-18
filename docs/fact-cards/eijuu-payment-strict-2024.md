@@ -1,6 +1,6 @@
 ---
 fact_id: eijuu-payment-strict-2024
-title: 永住者 — 2024年改正で公租公課未納時の取消強化
+title: 永住者 — 公租公課不履行と永住許可制度の適正化（要確認）
 state: ai_extracted
 risk_level: high
 confidence: medium
@@ -8,7 +8,7 @@ source_quality: official
 last_verified_at: "2026-05-17"
 sprint: "fact-window-bulk-1"
 citation_label: "永住2024改正"
-citation_summary: "2024年入管法改正により、永住許可取得後の公租公課（税・年金・健保）の故意未納・遅延に対して永住資格取消が新たな取消事由として追加された。了解書（2021年〜必須）の効力が強化された格好。"
+citation_summary: "永住許可制度の適正化に関する公式Q&Aでは、公租公課の支払義務の不履行等が問題となる場合がある。具体的な取消・変更判断は個別事情によるため、このカードは runtime で断定的に使わない。"
 source_display_names:
   - "出入国在留管理庁"
 applies_when:
@@ -18,19 +18,17 @@ does_not_cover:
   - "永住申請時の納税証明要件（別カード）"
 ai_pipeline: WebFetch → FACT-OPS extract
 official_sources:
-  - url: https://www.moj.go.jp/isa/applications/procedures/zairyu_eijyu03.html
-    label: ISA — 永住申請
+  - url: https://www.moj.go.jp/isa/immigration/faq/kanri_qa_00003.html
+    label: ISA — 永住許可制度の適正化Q&A
     accessed: "2026-05-17"
 applies_to:
   - 永住資格保持者
 direct_fact_fields:
-  - 2024年改正：故意未納/遅延が取消事由として追加（概念的）
-  - 了解書：2021年10月から必須
-  - 対象：税・年金・健保
-  - 取消前に意見聴取
+  - 永住許可制度の適正化に関する公式Q&Aあり
+  - 公租公課の支払義務の不履行等が問題となる場合がある
+  - 具体的な取消・変更判断は個別事情による
 ai_inferred_fields:
-  - 「故意」と判断される基準は実務積上中
-  - 1回の延滞で即取消にはならないと想定（要確認）
+  - 一回の延滞で即取消になるかどうかは個別判断
 needs_review_flags:
   - koui_judgment_criteria_official
   - delay_threshold_practice_2026
@@ -43,9 +41,9 @@ related_links:
     locator: "了解書"
     relation: "official_reference"
 evidence_points:
-  - claim: "2024年入管法改正により、永住取得後の公租公課故意未納/遅延が取消事由として強化された。了解書は2021年から必須。"
-    source_title: "ISA — 永住"
-    source_url: "https://www.moj.go.jp/isa/applications/procedures/zairyu_eijyu03.html"
+  - claim: "永住許可制度の適正化に関する公式Q&Aでは、公租公課の支払義務の不履行等が問題となる場合がある。具体的な取消・変更判断は個別事情による。"
+    source_title: "ISA — 永住許可制度の適正化Q&A"
+    source_url: "https://www.moj.go.jp/isa/immigration/faq/kanri_qa_00003.html"
     source_organization: "出入国在留管理庁"
     source_locator: "了解書"
     display_label: "永住2024改正"
@@ -56,16 +54,17 @@ evidence_points:
 
 ## current_effective_fact
 
-永住：2024年改正で故意未納の取消事由化。
+永住許可制度の適正化に関する公式Q&Aでは、公租公課の支払義務の不履行等が問題となる場合がある。具体的な取消・変更判断は個別事情による。
 
 ## must_say
 
-- 2024年改正
-- 故意未納は取消事由
-- 了解書必須（2021〜）
+- 公租公課の支払義務不履行等は問題になり得る
+- 具体的な取消・変更判断は個別事情による
+- 一回の延滞で即取消などと断定しない
 
 ## changelog
 
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
 |------|------|----------|--------------|-------------|------|
+| 2026-05-17 | Codex Loop11 | FACT review に従い、永住申請ページから制度適正化Q&Aへ source repair。取消断定を避ける要確認カードに降温。 | ai_extracted | ai_extracted | loop11-source-repair |
 | 2026-05-17 | FACT-OPS bulk-1 | 新規作成。 | — | ai_extracted | new |

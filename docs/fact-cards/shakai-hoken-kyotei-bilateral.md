@@ -1,6 +1,6 @@
 ---
 fact_id: shakai-hoken-kyotei-bilateral
-title: 社会保障協定 — 23カ国（脱退一時金との関係）
+title: 社会保障協定 — 国別確認と年金期間通算
 state: ai_extracted
 risk_level: medium
 confidence: medium
@@ -8,7 +8,7 @@ source_quality: official
 last_verified_at: "2026-05-17"
 sprint: "fact-window-bulk-1"
 citation_label: "社会保障協定"
-citation_summary: "日本は23カ国と社会保障協定締結（米国・英国・ドイツ・韓国・中国等）。本国年金加入期間と日本年金加入期間の通算等が可能。脱退一時金との関係に注意。"
+citation_summary: "日本は複数国と社会保障協定を締結しており、国によって二重加入防止や年金加入期間の通算の扱いが異なる。協定国数・対象制度・通算可否は日本年金機構の最新一覧で確認する。"
 source_display_names:
   - "日本年金機構"
 applies_when:
@@ -24,13 +24,11 @@ official_sources:
 applies_to:
   - 協定締約国出身の在留者
 direct_fact_fields:
-  - 締約国：23カ国（米、英、独、韓、中、加、豪等）
-  - 効果：本国年金加入期間との通算
-  - 短期滞在の二重加入回避
-  - 脱退一時金との関係：受給で日本期間消滅
+  - 社会保障協定は二重加入防止や年金加入期間通算を目的とする
+  - 対象制度と通算可否は国ごとに異なる
+  - 協定国数・対象制度は日本年金機構の最新一覧で確認する
 ai_inferred_fields:
-  - 中国との協定は2019年9月発効
-  - 永住希望者は脱退一時金を受給しない方が有利
+  - 脱退一時金との関係は個別確認が必要
 needs_review_flags:
   - latest_country_list_2026
   - dattai_ichijikin_optimal_strategy
@@ -43,7 +41,7 @@ related_links:
     locator: "23カ国"
     relation: "official_reference"
 evidence_points:
-  - claim: "日本は23カ国と社会保障協定締結。本国年金加入期間との通算・二重加入回避効果あり。脱退一時金受給で日本期間消滅。"
+  - claim: "社会保障協定は二重加入防止や年金加入期間通算を目的とする。対象制度と通算可否は国ごとに異なり、日本年金機構の最新一覧で確認する。"
     source_title: "年金機構"
     source_url: "https://www.nenkin.go.jp/service/shaho-kyotei/shaho.html"
     source_organization: "日本年金機構"
@@ -56,13 +54,13 @@ evidence_points:
 
 ## current_effective_fact
 
-社会保障協定：23カ国・通算可能・脱退一時金との関係注意。
+社会保障協定は二重加入防止や年金加入期間通算を目的とする。対象制度と通算可否は国ごとに異なり、日本年金機構の最新一覧で確認する。
 
 ## must_say
 
-- 23カ国締約
-- 通算可能
-- 脱退一時金受給で日本期間消滅
+- 協定国数・対象制度は日本年金機構の最新一覧で確認する
+- 通算可否は国ごとに異なる
+- 脱退一時金との関係は個別確認が必要
 
 ## changelog
 

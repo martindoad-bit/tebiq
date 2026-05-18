@@ -1,6 +1,6 @@
 ---
 fact_id: ryugaku-shusseki-ritsu-80
-title: 留学生 — 出席率80%基準・更新審査の重要要素
+title: 留学生 — 出席状況・成績は更新審査の重要要素
 state: ai_extracted
 risk_level: high
 confidence: medium
@@ -8,7 +8,7 @@ source_quality: official
 last_verified_at: "2026-05-17"
 sprint: "fact-window-bulk-1"
 citation_label: "留学 出席率80%"
-citation_summary: "留学ビザの更新審査では学校出席率が重要な判断要素となる。一般的に80%以上が望ましいとされ、70%以下は不許可リスクが高い（実務）。"
+citation_summary: "留学の更新では、在籍状況、出席状況、成績、経費支弁能力などが確認される。具体的な数値基準は学校種別・資料・入管判断で異なるため、固定の合否ラインとして扱わない。"
 source_display_names:
   - "出入国在留管理庁"
 applies_when:
@@ -27,11 +27,9 @@ direct_fact_fields:
   - 留学資格活動：教育を受ける活動
   - 在留期間：4年3か月以内で個別指定
   - 更新時：在籍・出席状況・成績の確認あり
-  - 出席率80%以上が実務目安
-  - 70%以下は不許可リスク
+  - 具体的な数値基準は学校種別・資料・入管判断で異なる
 ai_inferred_fields:
-  - 病気等の正当な理由ある欠席は説明書添付で考慮
-  - 大学・大学院は専門学校・日本語学校より緩い傾向
+  - 病気等の欠席理由は学校資料や説明書で確認されることがある
 needs_review_flags:
   - 80percent_official_or_practice
   - eligibility_for_low_grade_seishin
@@ -44,7 +42,7 @@ related_links:
     locator: "出席率"
     relation: "official_reference"
 evidence_points:
-  - claim: "留学資格は教育を受ける活動が要件。更新時に在籍・出席状況が審査される。実務では80%以上が目安。"
+  - claim: "留学資格は教育を受ける活動が要件。更新時に在籍状況、出席状況、成績、経費支弁能力などが確認される。"
     source_title: "ISA — 留学"
     source_url: "https://www.moj.go.jp/isa/applications/status/student.html"
     source_organization: "出入国在留管理庁"
@@ -57,13 +55,13 @@ evidence_points:
 
 ## current_effective_fact
 
-留学：出席率80%目安・70%以下は不許可リスク。
+留学の更新では、在籍状況、出席状況、成績、経費支弁能力などが確認される。具体的な数値は固定の合否ラインとして扱わない。
 
 ## must_say
 
-- 80%以上目安
-- 70%以下は不許可リスク
-- 病気等は説明書
+- 出席状況と成績は更新審査の重要資料
+- 病気など理由がある欠席は学校資料や説明書を確認する
+- 「出席率○%なら必ず許可／必ず不許可」と断定しない
 
 ## changelog
 
