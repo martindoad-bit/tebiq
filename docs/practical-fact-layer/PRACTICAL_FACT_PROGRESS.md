@@ -11,13 +11,13 @@
 
 | 指标 | 当前值 |
 |------|--------|
-| 已完成卡片数 | 260 |
+| 已完成卡片数 | 280 |
 | DOMAIN 队列总数 | 9 |
-| ANSWER_RUNTIME 可注入 | 253 |
-| MATERIALS_ONLY | 7 |
+| ANSWER_RUNTIME 可注入 | 272 |
+| MATERIALS_ONLY | 8 |
 | L5_ONLY | 0 |
 | NEEDS_REWRITE | 0 |
-| 已完成批次 | 13 |
+| 已完成批次 | 14 |
 
 ---
 
@@ -497,6 +497,41 @@
 | practical-260 | 外国人の「日本での起業・経営管理ビザ」：投資家・創業者が知るべき全体像 | ✅ | ANSWER_RUNTIME | P0 |
 
 ## Batch 13 Handoff Note
+
+- 完成日: 2026-05-19
+- 担当: FACT Operator (Claude)
+- コミット: 46ae56c
+- 新規DOMAIN: なし
+- DOMAIN送付済み: pending（pdom-001〜009）
+
+---
+
+## Batch 14 状態（目標: 20張）
+
+| card_id | topic | status | runtime_bucket | risk |
+|---------|-------|--------|---------------|------|
+| practical-261 | 家族滞在から就労系在留資格への変更：日本人等と結婚・就職した場合の切替 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-262 | 外国人が日本で会社の取締役・役員に就任する場合の在留資格 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-263 | 経営管理ビザ申請の「事業計画書」作成実務：ISAが審査するポイント | ✅ | ANSWER_RUNTIME | P0 |
+| practical-264 | 外国人の国民年金：強制加入・任意加入・老齢基礎年金の受給権 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-265 | 外国人の住宅確保給付金・生活困窮者自立支援制度：在留資格別の適用範囲 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-266 | 在留申請不許可後の「不許可理由の開示」請求：知る権利と実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-267 | 特定技能「農業」「建設」「漁業」の特殊要件と転職制限 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-268 | 外国人の「ふるさと納税」：参加資格・手続き・在留資格との関係 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-269 | 外国人が民泊（Airbnb・旅館業）を経営する場合の許認可と在留資格 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-270 | 高度専門職から経営管理への在留資格変更：起業・独立時の実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-271 | 在留申請の「審査請求」（行政不服申立て）：手続きと現実的な効果 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-272 | 外国人の「マイナンバーカード」の海外転出・廃止・再取得の実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-273 | 外国人が農業・農地取得で働く場合：農地法と在留資格の関係 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-274 | 在留申請の手数料体系：無料・収入印紙・支払いタイミング | ✅ | MATERIALS_ONLY | P1 |
+| practical-275 | 外国人の「税理士・司法書士・行政書士・弁護士」への相談使い分け | ✅ | ANSWER_RUNTIME | P1 |
+| practical-276 | 留学から家族滞在への変更：留学生が日本人等と結婚した場合の切替 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-277 | 「育成就労」制度の転籍（転職）要件：同一職種・日本語能力・在留期間 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-278 | 外国人が日本で「保育士・幼稚園教諭」になる場合の在留資格と資格要件 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-279 | 「特別永住者」の在留カード更新と海外旅行の注意点 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-280 | 在留資格「特定活動」の研究活動等告示：大学・研究機関での活動 | ✅ | ANSWER_RUNTIME | P1 |
+
+## Batch 14 Handoff Note
 
 - 完成日: 2026-05-19
 - 担当: FACT Operator (Claude)
