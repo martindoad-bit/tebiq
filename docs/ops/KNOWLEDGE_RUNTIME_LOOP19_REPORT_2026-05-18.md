@@ -104,7 +104,28 @@ cards include direct, user-visible, non-domain-pending evidence.
 Materials topics increased from 46 to **47**.
 Material references increased from 226 to **232**.
 
-## Knowledge Counts Before Production Sync
+## Production Sync And Validation
+
+Loop19 was merged to `main` in PR #195 and deployed to production as
+`gitSha=1cd09334cb1533179a0e06b8b4bad23662367b54`.
+
+After deployment:
+
+| Check | Result |
+|---|---|
+| production DB sync | `fact-layer-sync: scanned=269 upserted=269 errors=0` |
+| card import audit | filesystem and DB aligned: `ai_verified=233`, `ai_extracted=23`, `disabled=8`, `human_reviewed=5` |
+| materials audit | 47 topics, 232 references, no missing references |
+| production URL smoke | 70/70 pass |
+| production answer smoke | 25/25 pass after R25 redline calibration |
+
+The first post-merge rerun reached all 25 questions with HTTP 200 but produced
+one R25 redline false positive because the answer explicitly said the 2028
+transition does **not** mean "完全不管". The R25 regex was tightened in the
+follow-up validation branch so that safe negated language such as "但并非完全不管"
+does not fail the redline. A full rerun then passed **25/25**.
+
+## Knowledge Counts After Production Sync
 
 | State | Count |
 |---|---:|
@@ -114,7 +135,7 @@ Material references increased from 226 to **232**.
 | `disabled` | 8 |
 | Total fact cards | 269 |
 
-Runtime-injectable cards after this branch: **238**.
+Runtime-injectable cards after this branch and production sync: **238**.
 
 Remaining `ai_extracted` cards are no longer an undifferentiated backlog:
 

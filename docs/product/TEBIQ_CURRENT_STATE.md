@@ -10,8 +10,8 @@
 | `last_verified` | 2026-05-18 |
 | `verified_by` | Codex Production Lead / AI Engineering Lead |
 | `production_url` | https://tebiq.jp |
-| `production_build_info_before_loop19_merge` | `gitSha=a6cc73f35a73b13ebaeefec4713b0cd2eb62dec5`, `builtAt=2026-05-18T08:41:35.811Z`, `version=answer-core-v1.1-llm` |
-| `active_branch_when_updated` | `codex/knowledge-runtime-loop19` |
+| `production_build_info_after_loop19_merge` | `gitSha=1cd09334cb1533179a0e06b8b4bad23662367b54`, `builtAt=2026-05-18T10:12:17.159Z`, `version=answer-core-v1.1-llm` |
+| `active_branch_when_updated` | `codex/knowledge-runtime-loop19-final` |
 | `current_focus` | Knowledge Runtime Expansion Goal: 400+ high-quality knowledge assets, answer product 85+, Materials Tab 85+ |
 
 ## Current Phase
@@ -36,7 +36,7 @@ ordinary answer runtime.
 
 ## Knowledge Layer Waterline
 
-As of Loop19 branch state before production DB sync:
+As of Loop19 production sync:
 
 | State | Count | Runtime meaning |
 |---|---:|---|
@@ -63,7 +63,7 @@ Unsafe strategy cards must not be promoted just to increase the number.
 | Loop16 | Processed remaining 39 quarantine cards: 0 runtime promote, 4 materials-only, 15 L5-only, 18 rewrite, 1 reject, 1 unknown |
 | Loop17 | Rewrote 16 of the 18 rewrite-queue cards into narrower assets: 4 answer-runtime promotions, 3 materials-only narrowed cards, 9 safer quarantine/L5 cards; 2 source-repair candidates deferred |
 | Loop18 | Source-repaired `startup-visa-keiei-transition` into a narrow runtime card and moved `kazoku-yobi-naitei-haigusha` to L5-only; added 3 quick-reference material scenes (`永住者配偶者等`, `家族滞在変更`, `家族滞在COE`); DB sync and production smoke completed on `a6cc73f` |
-| Loop19 | Processed the remaining 33 quarantine cards: 10 promoted to answer runtime, 3 kept as materials-only, 15 explicitly marked L5-only, 5 marked needs-rewrite; added `foreign-will-notary-materials`; production sync pending |
+| Loop19 | Processed the remaining 33 quarantine cards: 10 promoted to answer runtime, 3 kept as materials-only, 15 explicitly marked L5-only, 5 marked needs-rewrite; added `foreign-will-notary-materials`; production DB sync completed with 269/269 upserts, production URL smoke 70/70, and production answer smoke 25/25 |
 
 ## Product Judgment
 
@@ -131,8 +131,7 @@ What is still not 1.0:
 
 ## Next Work
 
-1. After Loop19 merge, run production DB sync and full production smoke.
-2. Rewrite the remaining 5 `NEEDS_REWRITE` cards rather than forcing them into
+1. Rewrite the remaining 5 `NEEDS_REWRITE` cards rather than forcing them into
    runtime.
-3. Add AQL-origin provenance for `aql-rur-037-jfind-employment-bridge`.
-4. Continue production answer and materials regression after each loop.
+2. Add AQL-origin provenance for `aql-rur-037-jfind-employment-bridge`.
+3. Continue production answer and materials regression after each loop.
