@@ -11,13 +11,13 @@
 
 | 指标 | 当前值 |
 |------|--------|
-| 已完成卡片数 | 200 |
-| DOMAIN 队列总数 | 8 |
-| ANSWER_RUNTIME 可注入 | 194 |
+| 已完成卡片数 | 220 |
+| DOMAIN 队列总数 | 9 |
+| ANSWER_RUNTIME 可注入 | 214 |
 | MATERIALS_ONLY | 6 |
 | L5_ONLY | 0 |
 | NEEDS_REWRITE | 0 |
-| 已完成批次 | 10 |
+| 已完成批次 | 11 |
 
 ---
 
@@ -60,6 +60,7 @@
 | practical-016 | 不許可後の在留特例期間の起算点と就労継続の法的根拠 | P0 |
 | practical-055 | 出国命令制度の「不法就労があっても適用される場合の基準」（ISA裁量範囲） | P0 |
 | practical-105 | 同性パートナー向け特定活動（人道的配慮）の具体的要件・申請実績（2023年以降） | P1 |
+| practical-205 | 子なし離婚後の定住者（告示外）申請における在留実績の具体的な審査基準 | P0 |
 
 ---
 
@@ -394,6 +395,41 @@
 
 - 完成日: 2026-05-19
 - 担当: FACT Operator (Claude)
-- コミット: pending
+- コミット: 31f49ff
 - 新規DOMAIN: なし
 - DOMAIN送付済み: pending（pdom-001〜008）
+
+---
+
+## Batch 11 状態（目標: 20張）
+
+| card_id | topic | status | runtime_bucket | risk |
+|---------|-------|--------|---------------|------|
+| practical-201 | 内職・在宅ワークと在留資格：報酬を得る活動は就労に当たるか | ✅ | ANSWER_RUNTIME | P1 |
+| practical-202 | 外国人の住民票と在留カード：住民登録の仕組みと生活への影響 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-203 | 外国人の介護在留資格4ルート詳細：介護・EPA・特定技能・育成就労 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-204 | 技人国の試用期間・契約→正社員転換：在留資格変更は必要か | ✅ | ANSWER_RUNTIME | P1 |
+| practical-205 | 定住者（非告示）申請・離婚後：日本人の子の親の在留実務 | ✅ | ANSWER_RUNTIME | P0 |
+| practical-206 | 外国人の印鑑登録：実印・認印・外国人が使う場面 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-207 | 技人国からフリーランスへの移行リスク：資格外活動と経営管理の壁 | ✅ | ANSWER_RUNTIME | P0 |
+| practical-208 | 高度専門職の優遇措置一覧：永住短縮・配偶者就労・親帯同 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-209 | 外国人のマイナンバー：付与義務・カード取得・在留申請への活用 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-210 | 外国人「永住者」在留カードの更新：7年更新制度と更新忘れの罰則 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-211 | 外国人の「特別養護老人ホーム」入居：在留資格・費用・日本語要件 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-212 | 在留資格「技術」「人文知識」「国際業務」の活動区分：何が違うのか | ✅ | ANSWER_RUNTIME | P1 |
+| practical-213 | 外国人の「就労ビザ→別の就労ビザ」の変更：カテゴリ間変更の実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-214 | 外国人が日本で子どもを学校に通わせる：就学義務・費用・手続き | ✅ | ANSWER_RUNTIME | P1 |
+| practical-215 | 技人国申請のカテゴリ制度（カテゴリ1〜4）：会社規模で必要書類が変わる | ✅ | ANSWER_RUNTIME | P1 |
+| practical-216 | 外国人の年金と脱退一時金：帰国時に年金保険料を取り戻せるか | ✅ | ANSWER_RUNTIME | P1 |
+| practical-217 | 卒業後の就職活動ビザ（特定活動）：留学生が卒業後に就職活動を続ける方法 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-218 | 帰化申請の流れと審査期間：日本国籍を取得するプロセス | ✅ | ANSWER_RUNTIME | P1 |
+| practical-219 | 外国人の日本での運転免許：外国免許の切り替えと新規取得 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-220 | 技能実習から特定技能1号への移行：試験免除・手続き・注意点 | ✅ | ANSWER_RUNTIME | P1 |
+
+## Batch 11 Handoff Note
+
+- 完成日: 2026-05-19
+- 担当: FACT Operator (Claude)
+- コミット: pending
+- 新規DOMAIN: pdom-009（子なし離婚後の定住者（告示外）申請における在留実績の具体的な審査基準）
+- DOMAIN送付済み: pending（pdom-001〜009）
