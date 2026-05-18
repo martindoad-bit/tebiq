@@ -91,6 +91,7 @@ Production checks:
 - `npm run qa:production-smoke`: PASS, checked 70/70 routes; `unexpected_404=0`, `hard_fail=0`.
 - `PRODUCTION_URL=https://tebiq.jp SMOKE_STREAM_TIMEOUT_MS=150000 npm run smoke:production-answer`: PASS, 25/25.
 - Build info confirmed production main at `f6ff6f3a167d388130ee5ca74e60bf32d15290a7`.
+- `npm run qa:pre-report-audit`: PASS, 5/5 (`git_status_clean`, `npm_lint`, `tsc_noemit`, `npm_test`, `production_url_smoke`).
 
 ## Notes
 
