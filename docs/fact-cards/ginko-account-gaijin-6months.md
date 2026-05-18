@@ -1,6 +1,6 @@
 ---
 fact_id: ginko-account-gaijin-6months
-title: 銀行口座 — 上陸後6か月未満は普通口座開設制限
+title: 銀行口座 — 外国人の本人確認・滞在期間確認
 state: ai_extracted
 risk_level: medium
 confidence: medium
@@ -8,7 +8,7 @@ source_quality: official
 last_verified_at: "2026-05-17"
 sprint: "fact-window-bulk-1"
 citation_label: "銀行口座6か月"
-citation_summary: "金融機関の本人確認規制（犯収法・FSA通達）により、上陸後6か月未満の外国人は普通口座開設が原則制限される（外貨預金等は別）。"
+citation_summary: "外国人の銀行口座開設では、在留カード、住所、在留期間、来日後の滞在期間、勤務先・学校情報などを金融機関が確認する。来日後6か月未満の場合の扱いは金融機関・口座種別により異なる。"
 source_display_names:
   - "金融庁"
 applies_when:
@@ -24,13 +24,11 @@ official_sources:
 applies_to:
   - 来日6か月未満の外国人
 direct_fact_fields:
-  - 6か月未満：普通口座開設制限（実務）
-  - 必要書類：在留カード、住民票、印鑑、勤務先証明
-  - ゆうちょ銀行は比較的開設可能
-  - ネット銀行は審査異なる
+  - 外国人向け預貯金口座・送金利用時の本人確認資料案内あり
+  - 金融機関は在留カード、住所、在留期間、勤務先・学校情報などを確認する
+  - 来日後6か月未満の場合の扱いは金融機関・口座種別により異なる
 ai_inferred_fields:
-  - 雇用主からの紹介状で開設しやすくなる
-  - キャッシュレス決済（PayPay等）は口座より緩い
+  - 雇用主や学校の補足資料で説明しやすくなることがある
 needs_review_flags:
   - exact_legal_basis_6months
   - yuucho_specific_practice
@@ -43,7 +41,7 @@ related_links:
     locator: "本人確認"
     relation: "official_reference"
 evidence_points:
-  - claim: "金融機関の本人確認規制により、上陸後6か月未満の外国人は普通口座開設が制限される（実務）。ゆうちょ銀行は比較的緩い。"
+  - claim: "外国人の銀行口座開設では、在留カード、住所、在留期間、来日後の滞在期間、勤務先・学校情報などを金融機関が確認する。来日後6か月未満の場合の扱いは金融機関・口座種別により異なる。"
     source_title: "金融庁"
     source_url: "https://www.fsa.go.jp/user/livinginjapan.html"
     source_organization: "金融庁"
@@ -56,13 +54,19 @@ evidence_points:
 
 ## current_effective_fact
 
-来日6か月未満は銀行口座開設制限・ゆうちょは緩い。
+外国人の銀行口座開設では、在留カード、住所、在留期間、来日後の滞在期間、勤務先・学校情報などを金融機関が確認する。来日後6か月未満の場合の扱いは金融機関・口座種別により異なる。
 
 ## must_say
 
-- 6か月制限（実務）
-- ゆうちょは比較的開設可
-- 在留カード+勤務先証明
+- 金融機関ごとに確認資料と取扱いが異なる
+- 在留カード、住所確認、勤務先・学校情報などを求められることがある
+- 「来日6か月未満は絶対に開けない」と断定しない
+
+## must_not_say
+
+- 来日6か月未満は絶対に銀行口座を開けない
+- ゆうちょなら必ず開ける
+- 友人住所や虚偽住所で申し込めばよい
 
 ## changelog
 

@@ -24,7 +24,7 @@ does_not_cover:
   - "高度専門職2号（1号からの変更要件）"
 ai_pipeline: WebFetch → FACT-OPS review
 official_sources:
-  - url: https://www.moj.go.jp/isa/applications/status/skilled_labor01.html
+  - url: https://www.moj.go.jp/isa/applications/status/designatedactivities02_00004.html
     label: 出入国在留管理庁 — 高度専門職（在留資格）
     accessed: "2026-05-11"
 applies_to:
@@ -46,7 +46,7 @@ needs_review_flags:
   - tokei_daigaku_list: 「特定大学」（ポイント加算対象）のリストはISA公式で確認要（世界上位大学・日本の指定大学等）。
 related_links:
   - title: "出入国在留管理庁 — 高度専門職（在留資格）"
-    url: "https://www.moj.go.jp/isa/applications/status/skilled_labor01.html"
+    url: "https://www.moj.go.jp/isa/applications/status/designatedactivities02_00004.html"
     organization: "出入国在留管理庁"
     display_label: "出入国在留管理庁 — 高度専門職（ポイント計算・申請）"
     locator: "ページ内で「高度専門職」を検索"
@@ -54,7 +54,7 @@ related_links:
 evidence_points:
   - claim: "高度専門職1号：「学術研究活動（イ）」「専門・技術活動（ロ）」「経営・管理活動（ハ）」の3分野でポイント計算を行い、70点以上で認定。永住短縮特例：70点以上継続3年 → 永住申請可（通常10年要件を3年に短縮）；80点以上継続1年 → 永住申請可（1年に短縮）。主なポイント項目：学歴・職歴・年収・年齢・日本語能力等。"
     source_title: "出入国在留管理庁：高度専門職（在留資格）"
-    source_url: "https://www.moj.go.jp/isa/applications/status/skilled_labor01.html"
+    source_url: "https://www.moj.go.jp/isa/applications/status/designatedactivities02_00004.html"
     source_organization: "出入国在留管理庁"
     source_locator: "ページ内「ポイント計算70点以上」「永住短縮（70点3年・80点1年）」「ポイント項目（学歴・職歴・年収・年齢・日本語）」の記述を確認"
     display_label: "高度専門職1号：70点以上で認定・80点以上継続1年で永住申請可・学歴/職歴/年収でポイント加算"
@@ -63,7 +63,7 @@ evidence_points:
     needs_domain_review: false
   - claim: "高度専門職1号の学歴ポイントの主な基準：博士号取得者は30点、修士号取得者は20点、学士号取得者は10点。日本の大学（特定の大学院等）を卒業した場合に追加加算あり（特定大学リストはISA公式で確認要）。"
     source_title: "出入国在留管理庁：高度専門職（在留資格）"
-    source_url: "https://www.moj.go.jp/isa/applications/status/skilled_labor01.html"
+    source_url: "https://www.moj.go.jp/isa/applications/status/designatedactivities02_00004.html"
     source_organization: "出入国在留管理庁"
     source_locator: "ページ内「ポイント計算表」「学歴ポイント（博士30点・修士20点・学士10点）」の記述を確認"
     display_label: "高度専門職ポイント学歴：博士30点・修士20点・学士10点"
@@ -72,7 +72,7 @@ evidence_points:
     needs_domain_review: true
   - claim: "永住短縮特例：高度専門職1号で70点以上を3年継続した場合、永住申請が可能（通常の10年要件を3年に短縮）。80点以上を1年継続した場合は、さらに短縮され1年で永住申請が可能。"
     source_title: "出入国在留管理庁：高度専門職（在留資格）"
-    source_url: "https://www.moj.go.jp/isa/applications/status/skilled_labor01.html"
+    source_url: "https://www.moj.go.jp/isa/applications/status/designatedactivities02_00004.html"
     source_organization: "出入国在留管理庁"
     source_locator: "ページ内「永住許可の特例（70点以上×3年・80点以上×1年）」「通常の10年要件の短縮」の記述を確認"
     display_label: "高度専門職の永住短縮：70点以上×3年→永住申請可・80点以上×1年→1年で申請可"

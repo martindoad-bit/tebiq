@@ -1,14 +1,14 @@
 ---
 fact_id: zairyu-card-loss-overseas
 title: 在留カード紛失 — 海外滞在中の対応・帰国後14日以内に再交付
-state: ai_extracted
+state: ai_verified
 risk_level: high
 confidence: high
 source_quality: official
 last_verified_at: "2026-05-17"
 sprint: "fact-window-bulk-1"
 citation_label: "海外在留カード紛失"
-citation_summary: "海外滞在中に在留カードを紛失した場合、帰国後最初の入国日から14日以内に地方入管で再交付申請が必要。再入国時には現地警察報告書または事情説明書を準備。"
+citation_summary: "海外滞在中に在留カードを紛失した場合、帰国後最初の入国日から14日以内に地方入管で再交付申請が必要。紛失・盗難の場合は紛失・盗難に係る陳述書等を確認する。"
 source_display_names:
   - "出入国在留管理庁"
 applies_when:
@@ -25,12 +25,10 @@ applies_to:
   - 海外で在留カード紛失/盗難の中長期在留者
 direct_fact_fields:
   - 申請期限：帰国後最初の入国日から14日以内
-  - 必要：現地警察報告書 or 事情説明書
-  - 再入国時：旅券＋みなし再入国の証明（出国カードの控え）
+  - 必要：紛失・盗難に係る陳述書等
   - 申請場所：住居地管轄地方入管
-  - 手数料：無料
 ai_inferred_fields:
-  - 入国審査時に在留カード再交付申請の意思を伝える
+  - 入国審査時の具体対応は個別確認が必要
 needs_review_flags:
   - immigration_at_entry_specific_procedure
   - foreign_police_report_translation_requirement
@@ -43,7 +41,7 @@ related_links:
     locator: "帰国後14日"
     relation: "official_reference"
 evidence_points:
-  - claim: "海外滞在中に在留カードを紛失した場合は帰国後14日以内に再交付申請。現地警察報告書または事情説明書を準備。"
+  - claim: "海外滞在中に在留カードを紛失した場合は帰国後14日以内に再交付申請。紛失・盗難の場合は紛失・盗難に係る陳述書等を確認する。"
     source_title: "ISA — 再交付"
     source_url: "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00010.html"
     source_organization: "出入国在留管理庁"
@@ -61,8 +59,8 @@ evidence_points:
 ## must_say
 
 - 帰国後14日以内
-- 現地警察報告書
-- 無料
+- 紛失・盗難に係る陳述書等
+- 再入国時の空港対応や翻訳要否は個別確認
 
 ## injection_format
 
@@ -71,7 +69,7 @@ evidence_points:
 ```text
 【在留カード海外紛失／{{TODAY_ISO}} 公式】
 海外滞在中に在留カードを紛失・盗難等で失った場合、帰国後14日以内に地方出入国在留管理官署で再交付申請を行う。
-紛失・盗難を証明する資料を準備できない場合は、事情説明書が必要になる。
+紛失・盗難の場合は、紛失・盗難に係る陳述書等を確認する。
 このカードは国内紛失時の手続や再入国可否の個別判断までは扱わない。
 ```
 
@@ -85,4 +83,6 @@ evidence_points:
 
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
 |------|------|----------|--------------|-------------|------|
+| 2026-05-18 | Codex Loop11 | 「事情説明書」を公式カード側の用語に近い「紛失・盗難に係る陳述書等」へ修正。再入国可否・翻訳要否は扱わない境界を維持。 | ai_verified | ai_verified | loop11-term-fix |
+| 2026-05-17 | Codex Loop11 | FACT/DOMAIN/AQL review 后 promote。范围限定为海外知悉后帰国後14日以内再交付申请和说明资料；不判断再入国可否。 | ai_extracted | ai_verified | loop11-promote |
 | 2026-05-17 | FACT-OPS bulk-1 | 新規作成。 | — | ai_extracted | new |

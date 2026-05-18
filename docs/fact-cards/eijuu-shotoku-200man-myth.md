@@ -1,6 +1,6 @@
 ---
 fact_id: eijuu-shotoku-200man-myth
-title: 永住申請 — 年収300万円目安（家族数で変動・公式数値なし）
+title: 永住申請 — 公式の固定年収ラインはない
 state: ai_extracted
 risk_level: high
 confidence: low
@@ -8,7 +8,7 @@ source_quality: official
 last_verified_at: "2026-05-17"
 sprint: "fact-window-bulk-1"
 citation_label: "永住 年収300万目安"
-citation_summary: "永住の独立生計要件の実務目安は年収300万円程度（単身）。家族構成（配偶者・子）の人数で増額判断。ISA公式に数値記載はない。"
+citation_summary: "永住の独立生計要件について、ISA公式ページは固定の年収額を示していない。家族構成、扶養人数、収入の安定性、資産などを個別に確認する必要がある。"
 source_display_names:
   - "出入国在留管理庁"
 applies_when:
@@ -26,12 +26,11 @@ applies_to:
 direct_fact_fields:
   - 法定：独立の生計を営むに足りる資産または技能
   - ISA公式数値記載：なし
-  - 実務目安：単身300万円程度
-  - 家族構成で変動（配偶者・子の人数）
+  - 固定の年収額はISA公式ページには記載なし
+  - 家族構成、扶養人数、収入の安定性、資産などで個別確認
   - 安定継続性が重要
 ai_inferred_fields:
-  - 配偶者ありで350-400万円
-  - 子1人で50-100万円増額目安
+  - 実務目安として語られる金額があるが、公式の固定ラインではない
 needs_review_flags:
   - 2026_specific_threshold_practice
   - haigusha_zouseii_specifics
@@ -44,12 +43,12 @@ related_links:
     locator: "独立生計"
     relation: "official_reference"
 evidence_points:
-  - claim: "永住の独立生計要件はISA公式に具体数値記載なし。実務目安は単身年収300万円程度、家族構成で変動。"
+  - claim: "永住の独立生計要件について、ISA公式ページは固定の年収額を示していない。家族構成、扶養人数、収入の安定性、資産などを個別に確認する必要がある。"
     source_title: "ISA — 永住"
     source_url: "https://www.moj.go.jp/isa/applications/procedures/zairyu_eijyu03.html"
     source_organization: "出入国在留管理庁"
     source_locator: "独立生計"
-    display_label: "永住年収300万目安"
+    display_label: "永住申請の固定年収ラインなし"
     support_level: "direct"
     user_visible: true
     needs_domain_review: true
@@ -57,13 +56,13 @@ evidence_points:
 
 ## current_effective_fact
 
-永住年収目安：単身300万・公式数値なし・家族で変動。
+永住申請の独立生計要件について、ISA公式ページに固定の年収額は示されていない。家族構成、扶養人数、収入の安定性、資産などを個別に確認する必要がある。
 
 ## must_say
 
-- 公式数値なし
-- 単身300万目安
-- 家族構成で変動
+- ISA公式ページに固定の年収額はない
+- 家族構成、扶養人数、収入の安定性、資産などを確認する
+- 「年収○万円なら必ず許可／必ず不許可」と断定しない
 
 ## changelog
 

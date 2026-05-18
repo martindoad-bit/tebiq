@@ -104,6 +104,7 @@ export const MATERIAL_ENTITIES: MaterialEntity[] = [
       'yochi-en-hoiku-gaikoku',
       'chintai-hoshou-gaikokujin',
       'ginko-account-gaijin-6months',
+      'eijuu-jukyo-period-overseas',
     
       'eijuu-haigusha-visa',
       'nihonjin-haigusha-visa',],
@@ -163,10 +164,12 @@ export const MATERIAL_ENTITIES: MaterialEntity[] = [
       'jumin-zei-jan1-criterion',
       'jumin-zei-no-shukyou-3types',
       'yobi-yose-shinseki-houmon',
-      'koukou-mukyo-shogakukin',
       'kaigo-hoken-day1-after-40',
       'shougai-nenkin-overview',
       'zairyu-shitsugyo-hosho-pension',
+      'eijuu-zeikin-payment',
+      'eijuu-shotoku-200man-myth',
+      'kazoku-taizai-shotoku-280',
     
       'eijuu-shinsei-shorui',
       'eijuu-haigusha-visa',
@@ -334,6 +337,7 @@ export const MATERIAL_ENTITIES: MaterialEntity[] = [
       'shougai-nenkin-overview',
       'zairyu-shitsugyo-hosho-pension',
       'kaigo-hoken-day1-after-40',
+      'shakai-hoken-kyotei-bilateral',
     
       'eijuu-shinsei-shorui',
       'nenkin-tsuinou-10years',],
@@ -460,7 +464,8 @@ export const MATERIAL_ENTITIES: MaterialEntity[] = [
       'gijinkoku-major-job-match',
       'gijinkoku-shihon-jugyou-strict',
       'kazoku-taizai-henko',
-      'kazoku-yobi-naitei-haigusha',],
+      'kazoku-yobi-naitei-haigusha',
+      'kodo-senmon-shoku-points',],
   },
 
   // ───────────────────────────── 8 / 15
@@ -516,7 +521,9 @@ export const MATERIAL_ENTITIES: MaterialEntity[] = [
       'gijinkoku-major-job-match',
       'gijinkoku-shihon-jugyou-strict',
       'kazoku-taizai-henko',
-      'kazoku-yobi-naitei-haigusha',],
+      'kazoku-yobi-naitei-haigusha',
+      'kodo-senmon-shoku-points',
+      'tokutei-katsudou-17go',],
   },
 
   // ───────────────────────────── 9 / 15
@@ -615,6 +622,7 @@ export const MATERIAL_ENTITIES: MaterialEntity[] = [
       'aoiro-shinkoku-65',
       'shoukibo-jigyou-zei',
       'startup-visa-meti-fukuoka',
+      'keiei-kanri-capital-asset-3000man-criterion',
     
       'keiei-kanri-jimu-bessho-requirement',],
   },
@@ -764,7 +772,6 @@ export const MATERIAL_ENTITIES: MaterialEntity[] = [
       'kazoku-taizai-shussan-shutoku',
       'eijuu-after-kika-card',
       'eijuu-haigusha-zairyu-1year',
-      'gaiko-souzoku-kokusai',
       'yobi-yose-shinseki-houmon',
       'yuigon-koseishousho-jutsu',
       'kika-documents-list',

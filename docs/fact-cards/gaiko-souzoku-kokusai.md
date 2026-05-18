@@ -1,7 +1,7 @@
 ---
 fact_id: gaiko-souzoku-kokusai
 title: 外国人の相続 — 本国法準拠・日本国内財産は日本法併用
-state: ai_extracted
+state: disabled
 risk_level: medium
 confidence: medium
 source_quality: official
@@ -18,8 +18,8 @@ does_not_cover:
   - "相続税申告（10か月以内）"
 ai_pipeline: WebFetch → FACT-OPS extract
 official_sources:
-  - url: https://www.moj.go.jp/MINJI/minji78.html
-    label: 法務省民事局
+  - url: https://laws.e-gov.go.jp/law/418AC0000000078
+    label: e-Gov — 法の適用に関する通則法
     accessed: "2026-05-17"
 applies_to:
   - 在日外国人の死亡時の相続関係者
@@ -56,16 +56,17 @@ evidence_points:
 
 ## current_effective_fact
 
-国際相続：本国法準拠、日本国内不動産は日本法併用。
+このカードは Loop11 で disabled。国際相続は、準拠法、国籍、住所、財産所在地、遺言の有無などにより判断が複雑で、旧カードの「日本国内不動産は日本法併用」「遺言で準拠法選択可」は過度に単純化されていた。
 
 ## must_say
 
-- 本国法準拠（通則法36条）
-- 日本国内不動産は日本法も
-- 遺言で準拠法選択可
+- 国際相続は専門家確認が必要
+- 日本に住んでいる／日本に財産があるだけで準拠法を断定しない
+- このカードは普通回答 runtime に使わない
 
 ## changelog
 
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
 |------|------|----------|--------------|-------------|------|
+| 2026-05-17 | Codex Loop11 | FACT review で source mismatch と危険な過度単純化を確認。runtime/material から除外するため disabled。 | ai_extracted | disabled | loop11-reject |
 | 2026-05-17 | FACT-OPS bulk-1 | 新規作成。 | — | ai_extracted | new |

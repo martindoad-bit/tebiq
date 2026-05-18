@@ -1,7 +1,7 @@
 ---
 fact_id: eijuu-zeikin-payment
 title: 永住申請 — 税・納付状況の証明は重要
-state: ai_extracted
+state: ai_verified
 risk_level: high
 confidence: high
 source_quality: official
@@ -85,4 +85,5 @@ evidence_points:
 
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
 |------|------|----------|--------------|-------------|------|
+| 2026-05-17 | Codex Loop11 | DOMAIN/AQL/QA review 后限定 promote。注入范围限于永住税证与公的义务重要性；不判断未纳/迟纳的个案影响。 | ai_extracted | ai_verified | loop11-promote |
 | 2026-05-17 | FACT-OPS bulk-1 | 新規作成。 | — | ai_extracted | new |
