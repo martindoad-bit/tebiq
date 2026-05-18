@@ -1372,6 +1372,7 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
       'rishoku-kokumin-nenkin-kirikae',
       'kokumin-nenkin-menjo',
       'zairyu-shitsugyo-hosho-pension',
+      'nenkin-tsuinou-10years',
     ],
     relatedTopicIds: [
       'pension-after-leaving-job',
@@ -1400,7 +1401,7 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
         verification: 'source-backed',
       },
     ],
-    checkNote: '马上加入新公司的厚生年金、转为配偶扶养第 3 号、或申请免除，路径不同。',
+    checkNote: '马上加入新公司的厚生年金、转为配偶扶养第 3 号、申请免除/猶予、或考虑追纳，路径不同；永住评价另行确认。',
     sources: [
       {
         label: '日本年金機構：会社を退職したときの国民年金の手続き',
@@ -1688,7 +1689,9 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
     category: '生活',
     factCardIds: [
       'mynumber-gaikokujin',
+      'mynumber-card-application',
       'mainaroka-kenkou-hoken',
+      'maina-hoken-2024-12',
     ],
     relatedTopicIds: [
       'address-change-residence-card-materials',
@@ -1876,7 +1879,7 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
   {
     id: 'rental-housing-foreigner-materials',
     title: '外国人租房 材料',
-    summary: '一般要求保証会社 + 在留资格 + 收入证明；外国人差別在法律上禁止，但实务上仍常被审查更严。',
+    summary: '租房时常会确认本人资料、在留卡、收入资料、保証会社或连带保证人；条件按物件和管理会社不同。',
     category: '生活',
     factCardIds: [
       'gaikokujin-chintai',
@@ -1905,16 +1908,16 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
     facts: [
       {
         label: '在留资格审查',
-        text: '不动产/保証会社通常要看在留资格类型 + 在留期限；期限快到时常被劝先续签。',
+        text: '不动产会社或保証会社可能确认在留资格、在留期限、住所和收入资料。',
         verification: 'source-backed',
       },
       {
-        label: '差別禁止与现实',
-        text: '法律上禁止外国人差別，但实务上不少业者仍会要求更高的初期费用或更严的审查。',
+        label: '条件差异',
+        text: '保証会社、连带保证人、初期费用和退去精算方式会按物件、管理会社、保证会社而不同。',
         verification: 'source-backed',
       },
     ],
-    checkNote: 'UR、公社住宅、外国人 OK 物件、社宅，门槛差别很大；不接受时可换业者，必要时走外国人住宅相談窗口。',
+    checkNote: 'UR、公社住宅、外国人 OK 物件、社宅，门槛差别很大；不要把单个物件的条件当成全国规则。',
     sources: [
       {
         label: '国土交通省：外国人の民間賃貸住宅入居',
@@ -1925,7 +1928,7 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
   {
     id: 'bank-account-opening-materials',
     title: '外国人 银行开户 材料',
-    summary: '一般要在留卡 + マイナンバー + 6 个月以上滞在记录；短期滞在通常不能开。',
+    summary: '银行会确认在留卡、住所、在留期限、来日后滞在期间、勤務先/学校等；具体规则按金融机构不同。',
     category: '生活',
     factCardIds: [
       'ginko-kouza-gaijin',
@@ -1937,7 +1940,7 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
       'mynumber-card-materials',
     ],
     aliases: ['银行开户', '口座開設', '口座', '送金', '振込', '通帳'],
-    deadline: '没有期限；很多银行要求来日 6 个月以上。',
+    deadline: '没有统一期限；来日后滞在期间的扱い按金融机构和账户类型不同。',
     whereToGo: '银行窗口（メガバンク / 地方银行 / 信用金庫 / ゆうちょ / ネット银行）。',
     prepare: [
       '在留卡',
@@ -1949,21 +1952,21 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
     askPrompt: '我刚来日本 3 个月，想确认能不能开户、哪家最容易。',
     facts: [
       {
-        label: '短期滞在',
-        text: '短期滞在（90 天内）资格通常不能开普通账户。',
+        label: '本人确认',
+        text: '开户时通常会确认在留卡、住所、在留期限、勤務先或学校等资料。',
         verification: 'source-backed',
       },
       {
-        label: '6 个月规则',
-        text: '不少银行按「特定取引」要求在留 6 个月以上才能开户；ゆうちょ 等部分窗口规则宽松。',
+        label: '来日未满 6 个月',
+        text: '来日后 6 个月未满时的扱い并非全国统一，金融机构和账户类型不同会有差异。',
         verification: 'source-backed',
       },
     ],
     checkNote: '送金/海外汇款 + 持有外币账户 + 法人账户，要求和审查完全不同；先确认用途再选银行。',
     sources: [
       {
-        label: '金融庁：外国人の銀行口座開設',
-        url: 'https://www.fsa.go.jp/news/r2/ginkou/20210507/20210507.html',
+        label: '金融庁：外国人の方向け金融サービス利用案内',
+        url: 'https://www.fsa.go.jp/user/livinginjapan.html',
       },
     ],
   },
@@ -1974,6 +1977,7 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
     category: '社保',
     factCardIds: [
       'koyo-hoken-kyufu',
+      'koyo-hoken-kihon-teate-12months',
       'shitsugyo-zairyu-risk',
       'kaiko-yokoku-30days',
       'rousai-hoken-foreign-worker',

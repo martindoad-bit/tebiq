@@ -1,13 +1,13 @@
 ---
 fact_id: ginko-account-gaijin-6months
-title: 銀行口座 — 外国人の本人確認・滞在期間確認
-state: ai_extracted
+title: 銀行口座 — 外国人の本人確認・在留期間確認
+state: ai_verified   # Loop12 2026-05-18: narrowed to account-opening checks; no absolute 6-month rule.
 risk_level: medium
 confidence: medium
 source_quality: official
 last_verified_at: "2026-05-17"
 sprint: "fact-window-bulk-1"
-citation_label: "銀行口座6か月"
+citation_label: "銀行口座本人確認"
 citation_summary: "外国人の銀行口座開設では、在留カード、住所、在留期間、来日後の滞在期間、勤務先・学校情報などを金融機関が確認する。来日後6か月未満の場合の扱いは金融機関・口座種別により異なる。"
 source_display_names:
   - "金融庁"
@@ -22,7 +22,7 @@ official_sources:
     label: 金融庁 — 外国為替
     accessed: "2026-05-17"
 applies_to:
-  - 来日6か月未満の外国人
+  - 日本で銀行口座開設を希望する外国人
 direct_fact_fields:
   - 外国人向け預貯金口座・送金利用時の本人確認資料案内あり
   - 金融機関は在留カード、住所、在留期間、勤務先・学校情報などを確認する
@@ -46,15 +46,24 @@ evidence_points:
     source_url: "https://www.fsa.go.jp/user/livinginjapan.html"
     source_organization: "金融庁"
     source_locator: "本人確認"
-    display_label: "銀行口座6か月"
+    display_label: "銀行口座本人確認"
     support_level: "direct"
     user_visible: true
-    needs_domain_review: true
+    needs_domain_review: false
 ---
 
 ## current_effective_fact
 
 外国人の銀行口座開設では、在留カード、住所、在留期間、来日後の滞在期間、勤務先・学校情報などを金融機関が確認する。来日後6か月未満の場合の扱いは金融機関・口座種別により異なる。
+
+## common_user_phrases
+
+- 外国人 銀行口座
+- 来日後 口座
+- 6ヶ月未満 口座
+- 银行开户 外国人
+- ゆうちょ 口座 外国人
+- 在留カード 銀行
 
 ## must_say
 
@@ -68,8 +77,23 @@ evidence_points:
 - ゆうちょなら必ず開ける
 - 友人住所や虚偽住所で申し込めばよい
 
+## injection_format
+
+### injection_certain_block
+
+```text
+外国人の銀行口座開設では、在留カード、住所、在留期間、来日後の滞在期間、勤務先・学校情報などを金融機関が確認します。来日後6か月未満の場合の扱いは金融機関や口座種別によって異なります。「6か月未満は絶対に開けない」「特定の銀行なら必ず開ける」とは断定できません。虚偽住所で申し込むべきではありません。
+```
+
+### injection_needs_review_addendum
+
+```text
+個別金融機関の審査、送金・外為制限、法人口座、短期滞在者の扱いは金融機関確認へ回す。
+```
+
 ## changelog
 
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
 |------|------|----------|--------------|-------------|------|
+| 2026-05-18 | Codex Loop12 | 6か月ルールを絶対化せず、金融機関ごとの本人確認資料に限定してruntime化。 | ai_extracted | ai_verified | loop12-promote |
 | 2026-05-17 | FACT-OPS bulk-1 | 新規作成。 | — | ai_extracted | new |

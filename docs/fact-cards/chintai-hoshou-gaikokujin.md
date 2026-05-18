@@ -1,7 +1,7 @@
 ---
 fact_id: chintai-hoshou-gaikokujin
 title: 賃貸 — 外国人入居時の保証会社・連帯保証人確認
-state: ai_extracted
+state: ai_verified   # Loop12 2026-05-18: low-risk housing procedure; no tenancy outcome judgment.
 risk_level: low
 confidence: medium
 source_quality: official
@@ -50,12 +50,21 @@ evidence_points:
     display_label: "外国人賃貸保証"
     support_level: "direct"
     user_visible: true
-    needs_domain_review: true
+    needs_domain_review: false
 ---
 
 ## current_effective_fact
 
 外国人の民間賃貸入居では、本人確認、在留カード、収入確認、保証会社または連帯保証人などを求められることがある。条件は物件・管理会社・保証会社により異なる。
+
+## common_user_phrases
+
+- 外国人 賃貸 保証人
+- 保証会社 外国人
+- 租房 保证会社
+- 外国人 入居審査
+- 日本人保証人 いない
+- 在留カード 賃貸
 
 ## must_say
 
@@ -69,9 +78,24 @@ evidence_points:
 - 保証会社を使えば必ず入居できる
 - 外国人は日本人保証人がいないと借りられない
 
+## injection_format
+
+### injection_certain_block
+
+```text
+外国人の民間賃貸入居では、本人確認、在留カード、収入確認、保証会社または連帯保証人などを求められることがあります。条件は物件、管理会社、保証会社によって異なります。「外国人だから必ず不可」「保証会社を使えば必ず入居できる」とは言えません。
+```
+
+### injection_needs_review_addendum
+
+```text
+個別物件の入居可否、保証会社審査、差別対応、低信用時の具体ルートは専門窓口・不動産会社確認へ回す。
+```
+
 ## changelog
 
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
 |------|------|----------|--------------|-------------|------|
+| 2026-05-18 | Codex Loop12 | 物件ごとに異なる前提を明示し、入居可否判断を除外してruntime化。 | ai_extracted | ai_verified | loop12-promote |
 | 2026-05-18 | Codex Loop11 | official_sources と evidence/related URL を同一の国交省賃貸支援ページへ同期。 | ai_extracted | ai_extracted | loop11-source-sync |
 | 2026-05-17 | FACT-OPS bulk-1 | 新規作成。 | — | ai_extracted | new |

@@ -933,6 +933,324 @@ export const MATERIAL_ENTITIES: MaterialEntity[] = [
       },
     ],
   },
+
+  // ───────────────────────────── Loop12 / 16
+  {
+    id: 'shikakugai-katsudo-permit',
+    title: '資格外活動許可（打工资格许可）',
+    aliases: [
+      '資格外活動許可',
+      '资格外活动许可',
+      '打工许可',
+      '留学生打工',
+      '家族滞在打工',
+      '週28時間',
+    ],
+    whatItIs:
+      '当前在留资格本来不包含工作的情况下，允许在一定范围内打工或从事报酬活动的入管许可。',
+    whoIssues: '出入国在留管理庁。',
+    whereToObtain:
+      '地方出入国在留管理局窗口、部分机场入境时、或在线申请系统（对象者限定）。',
+    fee: '申请本身通常无料。',
+    validity:
+      '通常和当前在留期限连动；换资格、退学、毕业、扶养关系变化时要重新确认。',
+    reusedIn: [
+      'part-time-permission',
+      'study-abroad-shikakugai-materials',
+      'dependent-work-permit-materials',
+    ],
+    commonMistakes: [
+      '把「学校/公司允许」当成「入管已经许可」。',
+      '多个打工合计超过每周时间上限。',
+      '毕业、退学、休学后还按留学生打工规则继续工作。',
+    ],
+    relatedMaterials: [
+      'zairyu-card-passport',
+      'koyo-keiyaku-roudou-tsuuchi',
+      'zaishoku-shomeisho',
+    ],
+    askTebiqBridge:
+      '不确定现在能不能打工、每周时间怎么算、多个工作能不能合计？可以直接问 TEBIQ。',
+    factCardIds: [
+      'shikakugai-fukugyou',
+      'ryugakusei-baito-28jikan',
+      'ryugaku-shikakugai-individual-permission',
+      'shikakugai-30jikan-rural',
+    ],
+    sourceUrls: [
+      {
+        url: 'https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri07_00045.html',
+        label: '出入国在留管理庁 — 資格外活動許可',
+      },
+    ],
+  },
+
+  // ───────────────────────────── Loop12 / 17
+  {
+    id: 'rishokuhyo-koyo-hoken-docs',
+    title: '離職票 / 雇用保険書類',
+    aliases: [
+      '離職票',
+      '离职票',
+      '雇用保険被保険者証',
+      '失業給付',
+      '基本手当',
+      'Hello Work',
+      'ハローワーク',
+    ],
+    whatItIs:
+      '退职后办理失業給付、国民健康保険、国民年金切换等手续时经常用到的一组雇用保险与离职证明资料。',
+    whoIssues: '雇用主、Hello Work（公共職業安定所）。',
+    whereToObtain:
+      '公司退职后办理离职手续，由公司向 Hello Work 办理后交付；遗失时向公司或 Hello Work 确认再交付。',
+    fee: '通常无料。',
+    validity:
+      '失業給付有受給期間限制；离职后越早确认越好，具体期限按 Hello Work 案内。',
+    reusedIn: [
+      'unemployment-benefit-materials',
+      'health-insurance-leaving-job-materials',
+      'national-pension-after-leaving-materials',
+      'retirement-risk',
+    ],
+    commonMistakes: [
+      '退职后只等公司联系，结果失業給付和国保/年金切换都拖延。',
+      '把「离职证明」和「離職票」混为一谈。',
+      '只关心能不能领钱，漏掉在留资格的活动空白风险。',
+    ],
+    relatedMaterials: [
+      'kenpo-shikaku-kakunin',
+      'nenkin-kiroku',
+      'zaishoku-shomeisho',
+    ],
+    askTebiqBridge:
+      '退职后要先办失業給付、国保、年金，还是先处理入管届出？可以直接问 TEBIQ。',
+    factCardIds: [
+      'koyo-hoken-kyufu',
+      'koyo-hoken-kihon-teate-12months',
+      'zairyu-shitsugyo-hosho-pension',
+      'shitsugyo-zairyu-risk',
+    ],
+    sourceUrls: [
+      {
+        url: 'https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000139508.html',
+        label: '厚生労働省 — 雇用保険制度',
+      },
+    ],
+  },
+
+  // ───────────────────────────── Loop12 / 18
+  {
+    id: 'mynumber-card',
+    title: 'マイナンバーカード',
+    aliases: [
+      'マイナンバーカード',
+      'My Number Card',
+      '个人番号卡',
+      'マイナカード',
+      'マイナ保険証',
+    ],
+    whatItIs:
+      '住民票登记后可申请的个人番号卡，可用于本人确认、コンビニ交付、マイナ保険証等场景。',
+    whoIssues: '住所地市区町村（制度管辖：総務省・デジタル庁等）。',
+    whereToObtain:
+      '线上、邮寄、手机、证明照机器等方式申请；收到交付通知后到市区町村领取。',
+    fee: '初回交付通常无料；再交付等可能收费。',
+    validity:
+      '中长期在留外国人的卡有效期通常与在留期限连动；在留期限延长后要确认卡的延长手续。',
+    reusedIn: [
+      'mynumber-card-materials',
+      'juminhyo-foreign-materials',
+      'bank-account-opening-materials',
+      'resident-tax-certificate-materials',
+    ],
+    commonMistakes: [
+      '在留期限延长后忘记更新マイナンバーカード有效期。',
+      '把マイナンバー记载住民票随便交给不需要番号的窗口。',
+      '以为マイナ保険証设定后，旧资料在所有窗口都会自动更新。',
+    ],
+    relatedMaterials: [
+      'juminhyo',
+      'kenpo-shikaku-kakunin',
+      'zairyu-card-passport',
+    ],
+    askTebiqBridge:
+      '刚来日本、搬家、续签后マイナンバーカード要不要更新？可以直接问 TEBIQ。',
+    factCardIds: [
+      'mynumber-gaikokujin',
+      'mynumber-card-application',
+      'mainaroka-kenkou-hoken',
+      'maina-hoken-2024-12',
+    ],
+    sourceUrls: [
+      {
+        url: 'https://www.soumu.go.jp/kojinbango_card/',
+        label: '総務省 — マイナンバー制度とマイナンバーカード',
+      },
+    ],
+  },
+
+  // ───────────────────────────── Loop12 / 19
+  {
+    id: 'bank-account-opening-docs',
+    title: '银行开户资料（口座開設書類）',
+    aliases: [
+      '口座開設',
+      '银行开户',
+      '通帳',
+      'キャッシュカード',
+      '在留カード 銀行',
+      '6ヶ月未満 口座',
+    ],
+    whatItIs:
+      '外国人在日本银行开设个人账户时用于本人确认、住所确认、在留状态确认的一组资料。',
+    whoIssues:
+      '本人准备在留卡、マイナンバー资料、住所资料；银行按自身规则确认。',
+    whereToObtain:
+      '银行窗口或线上开户；住所资料可通过住民票、マイナンバーカード、公共料金等按银行要求准备。',
+    fee: '普通个人账户开设通常无料；账户维持、汇款、证明发行等可能另收费。',
+    validity:
+      '没有统一有效期；银行通常要求资料能反映当前住所、在留期限和本人状态。',
+    reusedIn: [
+      'bank-account-opening-materials',
+      'rental-housing-foreigner-materials',
+      'mynumber-card-materials',
+    ],
+    commonMistakes: [
+      '把一个银行的规则当成所有银行的规则。',
+      '来日 6 个月未满就断定绝对不能开户。',
+      '用朋友地址或旧住所申请，导致本人确认和合规问题。',
+    ],
+    relatedMaterials: [
+      'zairyu-card-passport',
+      'juminhyo',
+      'mynumber-card',
+      'zaishoku-shomeisho',
+    ],
+    askTebiqBridge:
+      '来日未满 6 个月、没有公司、没有マイナカード，开户要怎么准备？可以直接问 TEBIQ。',
+    factCardIds: [
+      'ginko-kouza-gaijin',
+      'ginko-account-gaijin-6months',
+      'mynumber-gaikokujin',
+    ],
+    sourceUrls: [
+      {
+        url: 'https://www.fsa.go.jp/user/livinginjapan.html',
+        label: '金融庁 — 外国人の方向け金融サービス利用案内',
+      },
+    ],
+  },
+
+  // ───────────────────────────── Loop12 / 20
+  {
+    id: 'rental-application-docs',
+    title: '租房申请资料（入居申込書類）',
+    aliases: [
+      '入居申込',
+      '租房材料',
+      '保証会社',
+      '連帯保証人',
+      '敷金礼金',
+      '緊急連絡先',
+    ],
+    whatItIs:
+      '租房时提交给不动产会社、管理会社、保証会社的一组本人确认、收入确认、在留状态确认资料。',
+    whoIssues:
+      '本人、雇用主、市区町村、保证会社/不动产会社按申请流程共同形成。',
+    whereToObtain:
+      '在留卡、护照本人持有；住民票在市区町村；在职/收入资料向公司或税务窗口取得。',
+    fee:
+      '申请本身多为无料；签约时可能发生敷金、礼金、仲介手数料、保証料、前家賃等。',
+    validity:
+      '住民票、课税证明、在职证明等常要求最新或 3 か月以内；实际按管理会社要求。',
+    reusedIn: [
+      'rental-housing-foreigner-materials',
+      'address-change-residence-card-materials',
+      'bank-account-opening-materials',
+    ],
+    commonMistakes: [
+      '只看房租，没看保证料、火災保険、鍵交換、退去时精算。',
+      '在留期限太近但没有续签计划，导致审查被卡。',
+      '把保证会社审查当成入管或法律判断。',
+    ],
+    relatedMaterials: [
+      'zairyu-card-passport',
+      'juminhyo',
+      'zaishoku-shomeisho',
+      'juminzei-kazei-shomei',
+    ],
+    askTebiqBridge:
+      '租房申请被卡、没有保証人、在留期限快到期，想确认还能准备什么？可以直接问 TEBIQ。',
+    factCardIds: [
+      'gaikokujin-chintai',
+      'chintai-hoshou-gaikokujin',
+      'jutaku-shikikin-rekkin-shuukan',
+      'kobun-jutaku-jutsu-kushu',
+    ],
+    sourceUrls: [
+      {
+        url: 'https://www.mlit.go.jp/jutakukentiku/house/jutakukentiku_house_tk3_000017.html',
+        label: '国土交通省 — 外国人の民間賃貸住宅入居円滑化',
+      },
+    ],
+  },
+
+  // ───────────────────────────── Loop12 / 21
+  {
+    id: 'return-home-checkout-docs',
+    title: '永久回国手续资料（転出・税・年金・在留卡）',
+    aliases: [
+      '永久回国',
+      '帰国 手続き',
+      '転出届',
+      '脱退一時金',
+      '纳税管理人',
+      '在留カード返納',
+    ],
+    whatItIs:
+      '不再返回日本前，用于办理市区町村転出、住民税清算、年金脱退一時金、在留卡返納等手续的一组资料。',
+    whoIssues:
+      '本人、市区町村、日本年金機構、雇用主、机场入管等按手续分别处理。',
+    whereToObtain:
+      '市区町村窗口、年金事務所或年金機構邮寄申请、Hello Work、机场入管。',
+    fee: '手续本身多为无料；证明发行、邮寄、税金清算等可能另有成本。',
+    validity:
+      '転出届、税金、年金、在留卡返納各有不同期限；出国前按清单倒排。',
+    reusedIn: [
+      'return-home-procedures-materials',
+      'deemed-reentry',
+      'pension-after-leaving-job',
+    ],
+    commonMistakes: [
+      '用 みなし再入国 的心态处理永久回国，结果在留卡和住民税都没收尾。',
+      '出国后才发现住民税未缴或没有选纳税管理人。',
+      '以为年金脱退一時金会自动到账，忘记主动申请。',
+    ],
+    relatedMaterials: [
+      'zairyu-card-passport',
+      'nenkin-kiroku',
+      'juminzei-nouzei-shomei',
+      'rishokuhyo-koyo-hoken-docs',
+    ],
+    askTebiqBridge:
+      '我准备永久回国，想确认市区町村、税、年金、在留卡的顺序和期限，可以直接问 TEBIQ。',
+    factCardIds: [
+      'kitaku-tetsuzuki',
+      'jumin-zei-shutsukoku',
+      'nenkin-dattai-ichijikin',
+      'zairyu-card-return-gimu',
+    ],
+    sourceUrls: [
+      {
+        url: 'https://www.nenkin.go.jp/service/jukyu/sonota-kyufu/dattai-ichiji/20150406.html',
+        label: '日本年金機構 — 脱退一時金',
+      },
+      {
+        url: 'https://www.moj.go.jp/isa/applications/procedures/zairyu_01.html',
+        label: '出入国在留管理庁 — 在留カードに関する手続',
+      },
+    ],
+  },
 ]
 
 // ───────────────────────────────────────────────────────────────────────────
