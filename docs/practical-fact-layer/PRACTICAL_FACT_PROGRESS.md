@@ -11,13 +11,13 @@
 
 | 指标 | 当前值 |
 |------|--------|
-| 已完成卡片数 | 20 |
+| 已完成卡片数 | 40 |
 | DOMAIN 队列总数 | 6 |
-| ANSWER_RUNTIME 可注入 | 19 |
-| MATERIALS_ONLY | 1 |
+| ANSWER_RUNTIME 可注入 | 37 |
+| MATERIALS_ONLY | 3 |
 | L5_ONLY | 0 |
 | NEEDS_REWRITE | 0 |
-| 已完成批次 | 1 |
+| 已完成批次 | 2 |
 
 ---
 
@@ -85,7 +85,41 @@
 
 - 完成日: 2026-05-18
 - 担当: FACT Operator (Claude)
-- 次バッチ: Batch 2 (practical-021〜040)
-- 優先トピック: 高度専門職詳細 / 特定技能詳細 / 永住申請フロー / 在留資格取消手続き / 就労系→永住のブリッジ
+- コミット: 7d0af42
+- DOMAIN送付済み: pending
+
+---
+
+## Batch 2 状態（目標: 20張）
+
+| card_id | topic | status | runtime_bucket | risk |
+|---------|-------|--------|---------------|------|
+| practical-021 | 永住：在留歴10年の計算と5年就労・居住要件 | ✅ | ANSWER_RUNTIME | P0 |
+| practical-022 | 再入国許可：みなし1年と正規5年の選択 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-023 | 帰化：永住との違い・帰化フロー | ✅ | ANSWER_RUNTIME | P1 |
+| practical-024 | 技能実習→特定技能への移行要件 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-025 | 在留カード紛失・盗難・破損時の対応 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-026 | 「研究」と「技人国」の違い（大学研究員vs企業R&D） | ✅ | ANSWER_RUNTIME | P1 |
+| practical-027 | 在留期間の長さ（1年・3年・5年）の決定要因 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-028 | 雇用主の外国人雇用届出義務と不法就労助長罪 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-029 | 特定活動46号（日本の大卒+高度日本語）の実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-030 | 在留資格取消：類型・手続き・取消後の対応 | ✅ | ANSWER_RUNTIME | P0 |
+| practical-031 | 技人国→経営管理：代表取締役就任時の変更 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-032 | 在留申請オンラインシステムの実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-033 | 定住者：日本人の実子を養育する外国人親 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-034 | 配偶者等：申請書類と審査のポイント | ✅ | MATERIALS_ONLY | P1 |
+| practical-035 | 技人国の業務適合性：文系卒が理系業務に就く場合 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-036 | 在留資格「介護」：4ルート比較と国家資格要件 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-037 | 在留申請の補正（追加書類要求）への対応 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-038 | 特定活動の指定書と主要告示番号 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-039 | 在留資格「技能」：料理人・スポーツ選手等 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-040 | 行政書士活用：費用相場・依頼すべきケース | ✅ | ANSWER_RUNTIME | P1 |
+
+## Batch 2 Handoff Note
+
+- 完成日: 2026-05-18
+- 担当: FACT Operator (Claude)
+- 次バッチ: Batch 3 (practical-041〜060)
+- 優先トピック: 高度専門職実務詳細 / 特定技能分野別詳細 / 在留資格のグレーゾーン業務 / 海外からのCOEフロー / 子どもの在留資格
 - DOMAIN送付済み: pending
 - コミット: pending
