@@ -11,7 +11,7 @@
  *   npx tsx scripts/qa/card-import-audit.ts
  *   npx tsx --env-file=.env.local scripts/qa/card-import-audit.ts
  */
-import { readdirSync, readFileSync } from 'node:fs'
+import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import matter from 'gray-matter'
 import postgres from 'postgres'
@@ -34,6 +34,10 @@ interface DbFactCardRow {
 
 const FACT_CARDS_DIR = join(process.cwd(), 'docs/fact-cards')
 const EXCLUDED_FACT_CARD_FILES = new Set(['README.md', 'FACT_OPS_WINDOW_TASK_PACK.md'])
+const GUARDRAIL_FACT_PROGRESS_PATH = join(
+  process.cwd(),
+  'docs/knowledge-atlas/phase2/guardrails-p0p1/FACT_PROGRESS.md',
+)
 
 function countBy<T extends string>(items: ReadonlyArray<T>): Record<T, number> {
   return items.reduce((acc, item) => {
@@ -80,17 +84,45 @@ function auditRouteGateSources(factIds: ReadonlySet<string>) {
       .filter(file => file.endsWith('.md'))
       .map(file => file.replace(/\.md$/, '')),
   )
+  const guardrailSourceAssets = loadCompletedGuardrailSourceAssetIds()
   const resolvedAsFactCard = sourceIds.filter(id => factIds.has(id))
   const resolvedAsKnowledgeAtlasFile = sourceIds.filter(id => sourceFiles.has(id))
-  const unresolved = sourceIds.filter(id => !factIds.has(id) && !sourceFiles.has(id))
+  const resolvedAsGuardrailSourceAsset = sourceIds.filter(
+    id => !factIds.has(id) && !sourceFiles.has(id) && guardrailSourceAssets.has(id),
+  )
+  const unresolved = sourceIds.filter(
+    id => !factIds.has(id) && !sourceFiles.has(id) && !guardrailSourceAssets.has(id),
+  )
 
   return {
     routeGatePatterns: ROUTE_GATE_PATTERNS.length,
     sourceAssetIds: sourceIds.length,
     resolvedAsFactCard,
     resolvedAsKnowledgeAtlasFile,
+    resolvedAsGuardrailSourceAsset,
     unresolved,
   }
+}
+
+function loadCompletedGuardrailSourceAssetIds(): ReadonlySet<string> {
+  if (!existsSync(GUARDRAIL_FACT_PROGRESS_PATH)) {
+    return new Set()
+  }
+
+  const raw = readFileSync(GUARDRAIL_FACT_PROGRESS_PATH, 'utf8')
+  const completedTable = raw.match(/## Completed Cards\n([\s\S]*?)\n## In Progress/)
+  if (!completedTable) {
+    return new Set()
+  }
+
+  const rows = completedTable[1]
+    .split('\n')
+    .map(line => line.trim())
+    .filter(line => line.startsWith('|') && !line.includes('|---') && !line.includes('| card_id |'))
+    .map(line => line.split('|')[1]?.trim())
+    .filter((id): id is string => Boolean(id))
+
+  return new Set(rows)
 }
 
 async function auditDatabase(factIds: ReadonlySet<string>) {
@@ -152,7 +184,9 @@ async function main() {
       sourceAssetIds: routeGateSources.sourceAssetIds,
       resolvedAsFactCardCount: routeGateSources.resolvedAsFactCard.length,
       resolvedAsKnowledgeAtlasFileCount: routeGateSources.resolvedAsKnowledgeAtlasFile.length,
+      resolvedAsGuardrailSourceAssetCount: routeGateSources.resolvedAsGuardrailSourceAsset.length,
       unresolvedCount: routeGateSources.unresolved.length,
+      resolvedAsGuardrailSourceAsset: routeGateSources.resolvedAsGuardrailSourceAsset,
       unresolved: routeGateSources.unresolved,
     },
   }
@@ -164,4 +198,3 @@ main().catch(error => {
   console.error(error)
   process.exit(1)
 })
-
