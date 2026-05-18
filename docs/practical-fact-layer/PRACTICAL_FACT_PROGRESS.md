@@ -11,13 +11,13 @@
 
 | 指标 | 当前值 |
 |------|--------|
-| 已完成卡片数 | 80 |
+| 已完成卡片数 | 100 |
 | DOMAIN 队列总数 | 7 |
-| ANSWER_RUNTIME 可注入 | 77 |
-| MATERIALS_ONLY | 3 |
+| ANSWER_RUNTIME 可注入 | 96 |
+| MATERIALS_ONLY | 4 |
 | L5_ONLY | 0 |
 | NEEDS_REWRITE | 0 |
-| 已完成批次 | 4 |
+| 已完成批次 | 5 |
 
 ---
 
@@ -186,7 +186,40 @@
 
 - 完成日: 2026-05-18
 - 担当: FACT Operator (Claude)
-- 次バッチ: Batch 5 (practical-081〜100)
-- 優先トピック: 高度専門職→永住特例 / 育成就労制度詳細 / 留学中の休学・退学 / 在留カードの偽造対策 / 短期滞在から変更のルール等
+- コミット: 13c3ffb
+
+---
+
+## Batch 5 状態（目標: 20張）
+
+| card_id | topic | status | runtime_bucket | risk |
+|---------|-------|--------|---------------|------|
+| practical-081 | 高度専門職→永住特例：1年・3年短縮要件の詳細実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-082 | 育成就労制度：2024年法改正の内容と移行スケジュール | ✅ | ANSWER_RUNTIME | P1 |
+| practical-083 | 留学中の休学・退学と在留資格への影響 | ✅ | ANSWER_RUNTIME | P0 |
+| practical-084 | 短期滞在からの在留資格変更：禁止原則と例外 | ✅ | ANSWER_RUNTIME | P0 |
+| practical-085 | 配偶者ビザ申請の実態審査：婚姻真正性とチェックポイント | ✅ | ANSWER_RUNTIME | P1 |
+| practical-086 | 外国人が日本でフリーランス（個人事業主）として活動する在留資格 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-087 | 永住者の配偶者等から永住申請：短縮要件と必要書類 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-088 | 在留カード不携帯・提示拒否の罰則と実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-089 | 経営管理：外国企業の日本支店・支社設立と在留資格 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-090 | 在留資格「医療」：外国の医師・看護師の日本での活動 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-091 | 在留カードの偽造・借用・不正使用：罰則と関係者の責任 | ✅ | ANSWER_RUNTIME | P0 |
+| practical-092 | 技人国の「国際業務」：外国文化に基盤を置く活動の範囲 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-093 | 永住申請書類チェックリスト（2024年改定後・就労系） | ✅ | MATERIALS_ONLY | P1 |
+| practical-094 | 特定技能受入機関の義務：支援計画・定期報告・届出 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-095 | 在留資格「技能」：熟練した技能の証明と職種別要件（詳細） | ✅ | ANSWER_RUNTIME | P1 |
+| practical-096 | 技人国でのテレワーク・リモートワーク：在留資格への影響 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-097 | 在留申請の「事前相談」制度：ISAへの問い合わせの使い方 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-098 | 高度専門職2号の特典と申請：永住に近い在留資格の実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-099 | 「引き続き在留」の計算：出国日数が在留要件に与える影響 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-100 | 在留申請の不許可後の対応：審査請求・再申請の実務 | ✅ | ANSWER_RUNTIME | P0 |
+
+## Batch 5 Handoff Note
+
+- 完成日: 2026-05-18
+- 担当: FACT Operator (Claude)
+- 次バッチ: Batch 6 (practical-101〜120)
+- 優先トピック: 経営管理・人材要件詳細 / 技人国での派遣労働 / 家族滞在の諸問題 / 在留資格「介護」追加実務 / 外国人の不動産取得・ローン等
 - DOMAIN送付済み: pending（pdom-001〜007）
 - コミット: pending
