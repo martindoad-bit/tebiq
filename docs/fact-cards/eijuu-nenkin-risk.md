@@ -1,7 +1,7 @@
 ---
 fact_id: eijuu-nenkin-risk
 title: 永住申請における年金・税金・健康保険 未納リスク
-state: ai_extracted   # 2026-05-17: WB-B safety debt downgrade — confidence=medium + critical + DOMAIN §2.5 deep-water; remain hint/guardrail-only until DOMAIN resolves lookback fields.
+state: ai_extracted   # 2026-05-18 Loop17: retain quarantine. Only late-payment negative-evaluation quote is safe; lookback periods, exemption impact, and gap tolerance remain unresolved.
 risk_level: critical
 confidence: medium   # DOMAIN-CC audit 2026-05-07: downgraded from high. Core 消極的評価 quote is high-confidence (nyukan50 direct), but nenkin/kenko_hoken 2-year + juuminhzei 3-year period fields are sourced from 高度人材 page (nyuukoku07-00133), not the general applicant page. general_applicant_lookback is ai_inference. Upgrade to high after FACT verifies from general applicant source.
 source_quality: official
@@ -10,7 +10,7 @@ last_verified_at: 2026-05-07
 reviewer: ai_self_verified
 sprint: 0.6 / Workstream C / Batch 1
 citation_label: "永住申請（年金・税・健康保険の未納リスク）"
-citation_summary: "永住許可申請における年金・住民税・健康保険の未納・滞納がISAガイドラインの消極的評価要因となるリスクを確認するカード。年金・税・健保の確認期間と証明書類の概要。"
+citation_summary: "永住許可ガイドラインでは、公的義務（納税・公的年金・公的医療保険の保険料納付等）を適正に履行していることが求められ、当初の納付期限内に履行されていない場合は、申請時点で納付済みでも原則として消極的に評価される。提出対象期間や免除・空白期間の扱いは申請ルートごとの確認が必要。"
 source_display_names:
   - "出入国在留管理庁"
 applies_when:
@@ -80,9 +80,9 @@ evidence_points:
     source_organization: "出入国在留管理庁"
     source_locator: "ガイドライン内「公租公課の適切な納付」「消極的評価要因」の記述を確認"
     display_label: "永住申請：公租公課未納は消極的評価要因（ISAガイドライン）"
-    support_level: "indirect"
+    support_level: "direct"
     user_visible: true
-    needs_domain_review: true
+    needs_domain_review: false
   - claim: "高度専門職永住申請の書類要件（一般申請と同一要件かは`general_applicant_lookback_verification`確認要）：年金保険料の直近2年分の支払記録・健康保険の直近2年分の記録・住民税の直近3年分の課税証明・納税証明書の提出が求められる。"
     source_title: "出入国在留管理庁：高度人材外国人の永住許可申請における書類要件"
     source_url: "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri07_00133.html"
@@ -324,25 +324,26 @@ evidence_points:
 ### injection_certain_block
 
 ```
-【今日の有効な事実 — 永住許可申請における公的義務（年金・税金・健康保険）】
+【今日の有効な事実 — 永住許可申請と公的義務の遅延納付】
 
-以下は出入国在留管理庁「永住許可に関するガイドライン」（令和8年2月24日改訂）に基づく現行要件。
+以下は出入国在留管理庁「永住許可に関するガイドライン」（令和8年2月24日改訂）に基づく狭い事実。
 
 永住許可申請では、申請者が以下の公的義務を「適正に履行」していることが必要：
 - 納税（住民税・国税）
 - 公的年金保険料の納付
 - 公的医療保険料の納付
 
-【最重要】申請前に急いで未納分を払っても取り消せない：
+【最重要】申請前に急いで未納分を払っても、遅れた事実は消えない：
 「申請時点において納税（納付）済みであったとしても、当初の納税（納付）期間内に履行されていない場合は、原則として消極的に評価されます」
 → 遅延した事実自体が審査で不利に働く。
 
-提出対象期間は申請ルートによって確認が必要：
+提出対象期間・証明書類は申請ルートによって確認が必要：
 - 高度人材外国人向けページでは、年金・健康保険の直近2年分、住民税の直近3年分が確認されている
 - 一般永住申請者に同一の年数を断定する前に、該当ルートの公式資料または窓口で確認する
 
 回答時の注意：
 - 「払えば大丈夫」と言わない
+- 「一度遅れたら必ず不許可」とも言わない
 - 具体的な提出年数は申請ルートにより確認が必要と伝える
 - 未納・遅延歴がある場合は行政書士に事前相談を強く推奨
 - 免除期間の影響・転職時空白期間の影響は個別確認が必要と伝える（確定情報なし）
@@ -362,6 +363,7 @@ evidence_points:
 
 | date | actor | action | from_state | to_state | note |
 |---|---|---|---|---|---|
+| 2026-05-18 | Codex Loop17 | 一般申請者 lookback・免除影響・空白期間判断は quarantine 継続。遅延納付は補納済みでも原則消極評価という公式 quote に injection を限定。 | ai_extracted | ai_extracted | loop17-rewrite |
 | 2026-05-07 | AI (claude-sonnet-4-6 / FACT-OPS Batch 1) | initial extraction from moj-isa-nyukan50 + moj-isa-nyuukoku07-00133 | — | ai_extracted | ガイドライン令和8年2月24日改訂版を確認 |
 | 2026-05-07 | AI self-verification | all direct_fact_fields sourced; needs_review_flags set for lookback generalization + 免除期間; certain_block + addendum split complete | ai_extracted | ai_verified | risk=critical |
 | 2026-05-07 | GM (boundary correction) | controlled_alpha_eligible: true → false. FACT autopilot 越界 (FACT_OPS_WINDOW_TASK_PACK §9 明确：仅 PL 可设此字段为 true). critical 卡按 README state machine 默认走 human_reviewed gate. PR review 时由 PL 决定是否 signoff 翻 true. | ai_verified | ai_verified | GM correction |

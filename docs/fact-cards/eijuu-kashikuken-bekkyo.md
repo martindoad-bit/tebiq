@@ -1,6 +1,6 @@
 ---
 fact_id: eijuu-kashikuken-bekkyo
-title: 永住申請 — 直前の在留資格期間（5年以上推奨）
+title: 永住申請 — 現在の在留期間と「最長の在留期間」要件
 state: ai_extracted
 risk_level: medium
 confidence: medium
@@ -8,7 +8,7 @@ source_quality: official
 last_verified_at: "2026-05-17"
 sprint: "fact-window-bulk-1"
 citation_label: "永住直前在留資格"
-citation_summary: "永住の国益適合要件として、現に有する在留資格について「最長の在留期間をもって在留している」ことが望ましい（実務上3年/5年）。直近の在留期間が短い場合は不利。"
+citation_summary: "永住許可ガイドラインでは、現在有する在留資格について最長の在留期間をもって在留していることが求められる。3年/5年の実務上の扱いは時期・在留資格・個別事情により確認が必要で、このカードでは許可見込みを判断しない。"
 source_display_names:
   - "出入国在留管理庁"
 applies_when:
@@ -24,12 +24,12 @@ official_sources:
 applies_to:
   - 永住申請者
 direct_fact_fields:
-  - 直近の在留資格：最長の在留期間（5年）が望ましい
-  - 実務：3年以上の在留期間が一般的に要求される
-  - 1年ビザは不利
-  - 経過措置：5年ビザ要件は段階的に運用
+  - 永住許可ガイドラインでは、現在有する在留資格について最長の在留期間をもって在留していることが求められる
+  - 直近の在留期間が短い場合、永住申請の前提確認が必要
 ai_inferred_fields:
-  - 3年ビザでも実例多数
+  - 3年の在留期間がどの範囲で最長期間として扱われるか
+  - 1年の在留期間がどの程度不利に扱われるか
+  - 経過措置・運用変更の具体範囲
 needs_review_flags:
   - 5year_visa_strict_application_status
   - 3year_visa_acceptable_practice
@@ -42,29 +42,30 @@ related_links:
     locator: "在留期間"
     relation: "official_reference"
 evidence_points:
-  - claim: "永住申請では現在の在留資格について「最長の在留期間（5年）をもって在留している」ことが望ましい。実務上3年以上が一般的。"
+  - claim: "永住許可ガイドラインでは、現在有する在留資格について最長の在留期間をもって在留していることが求められる。3年/5年の具体的な扱いはこのカードでは断定しない。"
     source_title: "ISA — 永住ガイドライン"
     source_url: "https://www.moj.go.jp/isa/applications/resources/nyukan_nyukan50.html"
     source_organization: "出入国在留管理庁"
     source_locator: "在留期間"
-    display_label: "永住直前在留資格"
+    display_label: "永住 現在の在留期間"
     support_level: "direct"
     user_visible: true
-    needs_domain_review: true
+    needs_domain_review: false
 ---
 
 ## current_effective_fact
 
-永住申請：直近5年/3年ビザ望ましい・1年は不利。
+永住許可ガイドラインでは、現在有する在留資格について最長の在留期間をもって在留していることが求められる。3年/5年や1年の具体的な扱いは個別確認が必要。
 
 ## must_say
 
-- 5年ビザ望ましい
-- 3年でも実例多数
-- 1年ビザは不利
+- 「最長の在留期間」がガイドライン上の確認点
+- 3年/5年の扱いを固定的に断定しない
+- 1年だから必ず不許可、3年だから必ず可、とは言わない
 
 ## changelog
 
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
 |------|------|----------|--------------|-------------|------|
+| 2026-05-18 | Codex Loop17 | 3年/5年の実務断定を削除し、公式ガイドライン上の「最長の在留期間」事実に限定。 | ai_extracted | ai_extracted | loop17-rewrite |
 | 2026-05-17 | FACT-OPS bulk-1 | 新規作成。 | — | ai_extracted | new |
