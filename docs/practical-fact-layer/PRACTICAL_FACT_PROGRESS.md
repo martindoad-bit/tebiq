@@ -11,13 +11,13 @@
 
 | 指标 | 当前值 |
 |------|--------|
-| 已完成卡片数 | 60 |
+| 已完成卡片数 | 80 |
 | DOMAIN 队列总数 | 7 |
-| ANSWER_RUNTIME 可注入 | 57 |
+| ANSWER_RUNTIME 可注入 | 77 |
 | MATERIALS_ONLY | 3 |
 | L5_ONLY | 0 |
 | NEEDS_REWRITE | 0 |
-| 已完成批次 | 3 |
+| 已完成批次 | 4 |
 
 ---
 
@@ -153,7 +153,40 @@
 
 - 完成日: 2026-05-18
 - 担当: FACT Operator (Claude)
-- 次バッチ: Batch 4 (practical-061〜080)
-- 優先トピック: 難民認定・無国籍者 / 経営管理の追加実務 / 技能実習3年5年の計算 / 日本語学校→専門学校ルート / 仮放免制度等
-- DOMAIN送付済み: pending（pdom-007を含む計7件）
+- コミット: fc4cdd5
+
+---
+
+## Batch 4 状態（目標: 20張）
+
+| card_id | topic | status | runtime_bucket | risk |
+|---------|-------|--------|---------------|------|
+| practical-061 | 難民認定申請の実務：申請中の在留と就労 | ✅ | ANSWER_RUNTIME | P0 |
+| practical-062 | 仮放免制度：退去強制手続中の在留実態と制限 | ✅ | ANSWER_RUNTIME | P0 |
+| practical-063 | 技能実習の3年・5年計算と転籍の例外 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-064 | 経営管理：500万円投資要件の認定実務 | ✅ | ANSWER_RUNTIME | P0 |
+| practical-065 | 就労系→配偶者等への在留資格変更（日本人と結婚） | ✅ | ANSWER_RUNTIME | P1 |
+| practical-066 | 外国人の国民健康保険・厚生年金加入義務と脱退一時金 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-067 | 特定技能の転職・離職時の届出と就職活動期間中の在留 | ✅ | ANSWER_RUNTIME | P0 |
+| practical-068 | 永住申請の「素行善良」要件：交通違反・税滞納の影響 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-069 | 帰化申請の実務書類と審査期間・不許可後の再申請 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-070 | 二重国籍の取扱い：日本法における禁止と実態 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-071 | 特別永住者：コリアン・中国系の在留特典と手続き | ✅ | ANSWER_RUNTIME | P1 |
+| practical-072 | 在留資格「教授」：大学教員の申請要件と技人国との使い分け | ✅ | ANSWER_RUNTIME | P1 |
+| practical-073 | 技人国で3か月就労空白：無職期間と在留資格への影響 | ✅ | ANSWER_RUNTIME | P0 |
+| practical-074 | 経営管理の代表者給与：役員報酬の月額基準と実務審査 | ✅ | ANSWER_RUNTIME | P0 |
+| practical-075 | 国際結婚の手続き：日本での婚姻届と本国への届出 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-076 | 留学から就労への移行：卒業後の在留資格変更 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-077 | 在留資格「法律・会計業務」：外国弁護士・公認会計士 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-078 | 在留資格「研究」：企業研究者と大学研究員の使い分け | ✅ | ANSWER_RUNTIME | P1 |
+| practical-079 | 在留申請時の「理由書」作成の実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-080 | 在留資格「企業内転勤」：多国籍企業の社内転勤と実務要件 | ✅ | ANSWER_RUNTIME | P1 |
+
+## Batch 4 Handoff Note
+
+- 完成日: 2026-05-18
+- 担当: FACT Operator (Claude)
+- 次バッチ: Batch 5 (practical-081〜100)
+- 優先トピック: 高度専門職→永住特例 / 育成就労制度詳細 / 留学中の休学・退学 / 在留カードの偽造対策 / 短期滞在から変更のルール等
+- DOMAIN送付済み: pending（pdom-001〜007）
 - コミット: pending
