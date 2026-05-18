@@ -11,13 +11,13 @@
 
 | 指标 | 当前值 |
 |------|--------|
-| 已完成卡片数 | 320 |
+| 已完成卡片数 | 340 |
 | DOMAIN 队列总数 | 9 |
-| ANSWER_RUNTIME 可注入 | 312 |
+| ANSWER_RUNTIME 可注入 | 332 |
 | MATERIALS_ONLY | 8 |
 | L5_ONLY | 0 |
 | NEEDS_REWRITE | 0 |
-| 已完成批次 | 16 |
+| 已完成批次 | 17 |
 
 ---
 
@@ -602,6 +602,41 @@
 | practical-320 | 在留申請における「過去の違反歴・ブラックリスト」の影響 | ✅ | ANSWER_RUNTIME | P0 |
 
 ## Batch 16 Handoff Note
+
+- 完成日: 2026-05-19
+- 担当: FACT Operator (Claude)
+- コミット: cc11cdd
+- 新規DOMAIN: なし
+- DOMAIN送付済み: pending（pdom-001〜009）
+
+---
+
+## Batch 17 状態（目標: 20張）
+
+| card_id | topic | status | runtime_bucket | risk |
+|---------|-------|--------|---------------|------|
+| practical-321 | 外国人の「短期滞在ビザ（観光・商用）」申請実務と免除国リスト | ✅ | ANSWER_RUNTIME | P1 |
+| practical-322 | 「定住者」在留資格の告示内・告示外の区別と申請実務 | ✅ | ANSWER_RUNTIME | P0 |
+| practical-323 | 特定技能「飲食料品製造業・外食業」の在留管理実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-324 | 外国人が日本で「離婚調停・離婚裁判」を行う場合の実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-325 | 特定技能1号・2号の「家族帯同」条件と現状 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-326 | 外国人の「海外送金」：外国為替・税務・在留資格との関係 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-327 | 外国人の「ワーキングホリデービザ」詳細実務（国別の特徴と注意点）| ✅ | ANSWER_RUNTIME | P1 |
+| practical-328 | 在留申請の「身分関係書類」：外国公文書の公証・アポスティーユ・翻訳実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-329 | 外国人の「SNS・YouTuber・インフルエンサー」活動と在留資格 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-330 | 「登録日本語教員」新制度と外国人日本語教師の在留資格 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-331 | 留学生の「出席率不足・成績不振」と在留更新拒否リスク | ✅ | ANSWER_RUNTIME | P0 |
+| practical-332 | 外国人の「個人銀行口座」開設実務（在留資格別・銀行別の違い）| ✅ | ANSWER_RUNTIME | P1 |
+| practical-333 | 外国人の「テレワーク・在宅勤務」と在留資格管理 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-334 | 高齢外国人（永住者等）の在留管理と老人ホーム・介護施設入居 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-335 | 特定技能の「転職・職場変更」：届出・手続き・注意点 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-336 | 「高度専門職ポイント計算」最新要件（2024年改正後の変更点）| ✅ | ANSWER_RUNTIME | P1 |
+| practical-337 | 外国人の「老齢年金の海外受給」：老齢基礎年金・老齢厚生年金を本国で受給 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-338 | 在留資格「法律・会計業務」：弁護士・税理士・公認会計士の日本での業務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-339 | 外国人の「製造業・工場勤務」と就労ビザの使い分け | ✅ | ANSWER_RUNTIME | P1 |
+| practical-340 | 外国人の「航空機乗組員・船員」に関する在留資格 | ✅ | ANSWER_RUNTIME | P1 |
+
+## Batch 17 Handoff Note
 
 - 完成日: 2026-05-19
 - 担当: FACT Operator (Claude)
