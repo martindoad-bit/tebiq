@@ -1,7 +1,7 @@
 ---
 fact_id: zairyu-period-3months-warning
 title: 在留期間3か月の通知 — 入管からの「警告」サイン
-state: ai_extracted
+state: disabled
 risk_level: high
 confidence: medium
 source_quality: official
@@ -67,4 +67,5 @@ evidence_points:
 
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
 |------|------|----------|--------------|-------------|------|
+| 2026-05-18 | Codex Loop14 | 「3か月指定=警告サイン」という実務推定を公式事実として扱えないため無効化。期間候補の一般論は `zairyu-kikan-5years-default` に寄せる。 | ai_extracted | disabled | loop14-reject |
 | 2026-05-17 | FACT-OPS bulk-1 | 新規作成。 | — | ai_extracted | new |
