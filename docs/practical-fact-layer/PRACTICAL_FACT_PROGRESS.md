@@ -11,13 +11,13 @@
 
 | 指标 | 当前值 |
 |------|--------|
-| 已完成卡片数 | 240 |
+| 已完成卡片数 | 260 |
 | DOMAIN 队列总数 | 9 |
-| ANSWER_RUNTIME 可注入 | 234 |
-| MATERIALS_ONLY | 6 |
+| ANSWER_RUNTIME 可注入 | 253 |
+| MATERIALS_ONLY | 7 |
 | L5_ONLY | 0 |
 | NEEDS_REWRITE | 0 |
-| 已完成批次 | 12 |
+| 已完成批次 | 13 |
 
 ---
 
@@ -462,6 +462,41 @@
 | practical-240 | 外国人の「日本での出産」と子どもの在留資格・国籍 | ✅ | ANSWER_RUNTIME | P1 |
 
 ## Batch 12 Handoff Note
+
+- 完成日: 2026-05-19
+- 担当: FACT Operator (Claude)
+- コミット: 95d5bdf
+- 新規DOMAIN: なし
+- DOMAIN送付済み: pending（pdom-001〜009）
+
+---
+
+## Batch 13 状態（目標: 20張）
+
+| card_id | topic | status | runtime_bucket | risk |
+|---------|-------|--------|---------------|------|
+| practical-241 | 就労系ビザから家族滞在への変更：日本人・永住者と結婚した場合の切替 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-242 | 外国人の日本での遺産相続：被相続人が外国人の場合の準拠法と手続き | ✅ | ANSWER_RUNTIME | P1 |
+| practical-243 | 日本語能力試験（JLPT）と在留資格・帰化：N1/N2が有利になる場面 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-244 | 経営管理ビザの「常勤職員2名以上」要件：雇用の実態・非常勤・家族の扱い | ✅ | ANSWER_RUNTIME | P0 |
+| practical-245 | 外国人が刑事手続きを受けた場合の在留資格への影響：逮捕・起訴・有罪判決 | ✅ | ANSWER_RUNTIME | P0 |
+| practical-246 | 留学→技人国以外のルート：専門学校卒・在職社会人入学・大学院修了後の実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-247 | 在留申請の優先処理制度：高度専門職・J-Skip・J-Find等の審査短縮制度 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-248 | 外国人の雇用保険：加入義務・失業給付の受給・帰国時の特例 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-249 | 日本語学校を卒業・中退した場合の在留資格：次のステップと許可要件 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-250 | 外国人への日本の労働基準法の適用：在留資格に関係なく保護される権利 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-251 | 在留申請時の写真要件：サイズ・背景・服装・提出のルール | ✅ | MATERIALS_ONLY | P1 |
+| practical-252 | 外国人が日本の学校の先生になる在留資格：公立・私立・外国語指導 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-253 | 国民健康保険vs健康保険（社会保険）の違いと切り替え：外国人が知るべき実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-254 | 特定技能2号：永住申請への道と要件・2024年拡大後の現状 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-255 | 外国人のローン・クレジットカード審査：在留資格・在留期間・信用情報の実態 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-256 | 永住者が日本国外で長期在住する場合の在留管理：再入国許可・失効リスク | ✅ | ANSWER_RUNTIME | P1 |
+| practical-257 | 在留資格「技能」（スポーツ選手・職人等）：料理人以外の多様な職種と要件 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-258 | ビザなし渡航（ノービザ）から日本への移住：在留資格取得の正規の流れ | ✅ | ANSWER_RUNTIME | P1 |
+| practical-259 | 外国人の「日本での確定申告」：必要なケースと手続き・在留資格への影響 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-260 | 外国人の「日本での起業・経営管理ビザ」：投資家・創業者が知るべき全体像 | ✅ | ANSWER_RUNTIME | P0 |
+
+## Batch 13 Handoff Note
 
 - 完成日: 2026-05-19
 - 担当: FACT Operator (Claude)
