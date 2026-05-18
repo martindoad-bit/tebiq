@@ -2,6 +2,7 @@
 fact_id: teijusha-koshikai-vs-koshigai
 title: 定住者 — 告示定住者と告示外定住者の区別
 state: ai_extracted
+runtime_bucket: L5_ONLY
 risk_level: high
 confidence: medium
 source_quality: official
@@ -31,9 +32,7 @@ direct_fact_fields:
   - 告示定住例：第三国定住難民、日系3世、中国残留邦人等
   - 告示外定住例：日系2世/3世の配偶者、扶養を受ける未成年未婚実子、日本人等扶養6歳未満養子
   - 2022年4月変更：「未成年」が20歳未満から18歳未満に引下げ
-ai_inferred_fields:
-  - 告示外定住は新規認定（COE）でなく変更許可で取得が原則
-  - 離婚定住は告示外定住の典型例（実務）
+ai_inferred_fields: []
 needs_review_flags:
   - rikon_teiju_requirements
   - 2022_amendment_existing_holders
@@ -46,7 +45,7 @@ related_links:
     locator: "ページ内「告示」"
     relation: "official_reference"
 evidence_points:
-  - claim: "定住者は告示定住者（第三国定住難民、日系3世、中国残留邦人等）と告示外定住者（日系2世・3世の配偶者、扶養を受ける未成年未婚実子、6歳未満養子等）に分類される。2022年4月から未成年定義が18歳未満に引下げ。"
+  - claim: "定住者ページでは、在留期間、告示定住者の例、告示外定住者の例、2022年4月からの未成年定義変更が示されている。告示外定住の許可見込みや離婚後ルートはこのカードでは判定しない。"
     source_title: "ISA — 定住者"
     source_url: "https://www.moj.go.jp/isa/applications/status/longtermresident.html"
     source_organization: "出入国在留管理庁"
@@ -63,11 +62,12 @@ evidence_points:
 
 ## current_effective_fact
 
-定住者は告示と告示外に大別。離婚定住は告示外の典型例で、変更許可申請で取得する。
+定住者ページでは、告示定住者と告示外定住者の例が示されている。このカードは L5_ONLY とし、ユーザー向けに「離婚すれば定住者へ変更できる」等のルート案内をしない。
 
 ## exceptions_or_transition
 
 - 2022年4月から未成年定義変更（20歳→18歳）
+- 告示外定住の許可見込み、申請ルート、離婚後の変更可否は個別判断のためこのカードでは扱わない
 
 ## common_user_phrases
 
@@ -78,9 +78,9 @@ evidence_points:
 
 ## must_say
 
-- 告示定住と告示外定住に大別
-- 告示外定住は変更許可で取得
+- 告示定住者と告示外定住者の例が公式ページに示されている
 - 2022年4月から未成年は18歳未満
+- このカードは L5_ONLY。ユーザー回答では許可見込みやルート助言に使わない
 
 ## must_not_say
 
@@ -89,18 +89,19 @@ evidence_points:
 ## qa_cases
 
 **Q: 定住者にはどういう種類がありますか？**
-A: 法務大臣の告示で類型化された「告示定住者」（第三国定住難民、日系3世、中国残留邦人等）と、個別事情で変更許可される「告示外定住者」（離婚定住、日系2世・3世の配偶者等）に大別されます。
+A: 公式ページには、告示定住者の例（第三国定住難民、日系3世、中国残留邦人等）と告示外定住者の例が示されています。ただし、このカードは L5_ONLY のため、個別の変更可否や離婚後の定住者ルートは案内しません。
 
 ## injection_format
 
 ### injection_certain_block
 
 ```
-【定住者類型／ {{TODAY_ISO}} 公式】
+【定住者類型 L5材料／ {{TODAY_ISO}} 公式】
 ・告示定住：第三国定住難民、日系3世、中国残留邦人等
-・告示外定住：日系2世/3世の配偶者、離婚定住等（変更許可）
+・告示外定住：公式ページ記載の例を確認
 ・在留期間：5/3/1/0.5年または個別指定
 ・2022年4月：未成年定義 → 18歳未満
+・ユーザー回答で、離婚後の定住者変更可否や許可見込みを断定しない
 ```
 
 ### injection_needs_review_addendum

@@ -1,14 +1,14 @@
 ---
 fact_id: eijuu-shotoku-200man-myth
-title: 永住申請 — 公式の固定年収ラインはない
+title: 永住申請 — 独立生計要件は資産・技能等で見る
 state: ai_extracted
 risk_level: high
-confidence: low
+confidence: medium
 source_quality: official
-last_verified_at: "2026-05-17"
+last_verified_at: "2026-05-18"
 sprint: "fact-window-bulk-1"
-citation_label: "永住 年収300万目安"
-citation_summary: "永住の独立生計要件について、ISA公式ページは固定の年収額を示していない。家族構成、扶養人数、収入の安定性、資産などを個別に確認する必要がある。"
+citation_label: "永住 独立生計"
+citation_summary: "永住許可ガイドラインは、独立生計要件を「日常生活において公共の負担にならず、その有する資産又は技能等から見て将来において安定した生活が見込まれること」と説明している。公式ページ上の要件説明は固定年収額を示していない。"
 source_display_names:
   - "出入国在留管理庁"
 applies_when:
@@ -21,16 +21,18 @@ official_sources:
   - url: https://www.moj.go.jp/isa/applications/procedures/zairyu_eijyu03.html
     label: ISA — 永住申請
     accessed: "2026-05-17"
+  - url: https://www.moj.go.jp/isa/applications/resources/nyukan_nyukan50.html
+    label: ISA — 永住許可に関するガイドライン
+    accessed: "2026-05-18"
 applies_to:
   - 永住申請者
 direct_fact_fields:
-  - 法定：独立の生計を営むに足りる資産または技能
-  - ISA公式数値記載：なし
-  - 固定の年収額はISA公式ページには記載なし
-  - 家族構成、扶養人数、収入の安定性、資産などで個別確認
-  - 安定継続性が重要
+  - 永住許可ガイドラインの独立生計要件：独立の生計を営むに足りる資産又は技能を有すること
+  - 説明：日常生活において公共の負担にならず、資産又は技能等から見て将来において安定した生活が見込まれること
+  - 永住申請ページは申請人又は扶養者の資産を証明する資料として預貯金通帳の写し、不動産の登記事項証明書等を挙げている
+  - 公式ページ上の要件説明は固定年収額を示していない
 ai_inferred_fields:
-  - 実務目安として語られる金額があるが、公式の固定ラインではない
+  - 実務目安として語られる金額は公式の固定許可ラインとして扱わない
 needs_review_flags:
   - 2026_specific_threshold_practice
   - haigusha_zouseii_specifics
@@ -42,13 +44,19 @@ related_links:
     display_label: "永住"
     locator: "独立生計"
     relation: "official_reference"
+  - title: "ISA — 永住許可に関するガイドライン"
+    url: "https://www.moj.go.jp/isa/applications/resources/nyukan_nyukan50.html"
+    organization: "出入国在留管理庁"
+    display_label: "永住許可ガイドライン"
+    locator: "独立の生計を営むに足りる資産又は技能"
+    relation: "official_reference"
 evidence_points:
-  - claim: "永住の独立生計要件について、ISA公式ページは固定の年収額を示していない。家族構成、扶養人数、収入の安定性、資産などを個別に確認する必要がある。"
-    source_title: "ISA — 永住"
-    source_url: "https://www.moj.go.jp/isa/applications/procedures/zairyu_eijyu03.html"
+  - claim: "永住許可ガイドラインは、独立生計要件を、日常生活で公共の負担にならず、資産又は技能等から見て将来において安定した生活が見込まれることと説明している。"
+    source_title: "ISA — 永住許可に関するガイドライン"
+    source_url: "https://www.moj.go.jp/isa/applications/resources/nyukan_nyukan50.html"
     source_organization: "出入国在留管理庁"
-    source_locator: "独立生計"
-    display_label: "永住申請の固定年収ラインなし"
+    source_locator: "独立の生計を営むに足りる資産又は技能"
+    display_label: "永住 独立生計"
     support_level: "direct"
     user_visible: true
     needs_domain_review: true
@@ -56,12 +64,13 @@ evidence_points:
 
 ## current_effective_fact
 
-永住申請の独立生計要件について、ISA公式ページに固定の年収額は示されていない。家族構成、扶養人数、収入の安定性、資産などを個別に確認する必要がある。
+永住許可ガイドラインの独立生計要件は、日常生活で公共の負担にならず、資産又は技能等から見て将来において安定した生活が見込まれること。公式ページ上の要件説明は固定年収額を示していない。
 
 ## must_say
 
-- ISA公式ページに固定の年収額はない
-- 家族構成、扶養人数、収入の安定性、資産などを確認する
+- 公式ページ上の要件説明は固定年収額を示していない
+- 独立生計要件は公共の負担、資産又は技能等、将来の安定生活見込みとして説明されている
+- 申請資料には資産を証明する資料が含まれる
 - 「年収○万円なら必ず許可／必ず不許可」と断定しない
 
 ## changelog
@@ -69,3 +78,4 @@ evidence_points:
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
 |------|------|----------|--------------|-------------|------|
 | 2026-05-17 | FACT-OPS bulk-1 | 新規作成。 | — | ai_extracted | new |
+| 2026-05-18 | Codex FACT rewrite | 年収目安・家族構成推論を降温し、永住許可ガイドラインの独立生計要件と申請資料に限定。 | ai_extracted | ai_extracted | rewrite |
