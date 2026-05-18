@@ -11,13 +11,13 @@
 
 | 指标 | 当前值 |
 |------|--------|
-| 已完成卡片数 | 220 |
+| 已完成卡片数 | 240 |
 | DOMAIN 队列总数 | 9 |
-| ANSWER_RUNTIME 可注入 | 214 |
+| ANSWER_RUNTIME 可注入 | 234 |
 | MATERIALS_ONLY | 6 |
 | L5_ONLY | 0 |
 | NEEDS_REWRITE | 0 |
-| 已完成批次 | 11 |
+| 已完成批次 | 12 |
 
 ---
 
@@ -430,6 +430,41 @@
 
 - 完成日: 2026-05-19
 - 担当: FACT Operator (Claude)
-- コミット: pending
+- コミット: a6cc7a3
 - 新規DOMAIN: pdom-009（子なし離婚後の定住者（告示外）申請における在留実績の具体的な審査基準）
+- DOMAIN送付済み: pending（pdom-001〜009）
+
+---
+
+## Batch 12 状態（目標: 20張）
+
+| card_id | topic | status | runtime_bucket | risk |
+|---------|-------|--------|---------------|------|
+| practical-221 | 外国人の日本での起業：在留資格なし・就労不可の外国人が起業できるか | ✅ | ANSWER_RUNTIME | P0 |
+| practical-222 | 外国人の「特定技能」試験：職種別の試験名・実施機関・申し込み方法 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-223 | 外国人の「在留資格の取消」手続きと不服申立て：取消通知から退去まで | ✅ | ANSWER_RUNTIME | P0 |
+| practical-224 | 外国人の「配偶者ビザ更新拒否（不許可）」後の対応 | ✅ | ANSWER_RUNTIME | P0 |
+| practical-225 | 外国人が日本で不動産を購入・相続する場合の手続きと在留資格 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-226 | 技人国の「同一雇用主での業務変更」：職種が変わったら在留資格を変更すべきか | ✅ | ANSWER_RUNTIME | P1 |
+| practical-227 | 外国人の「永住申請の不許可」後の対応：再申請のタイミングと理由分析 | ✅ | ANSWER_RUNTIME | P0 |
+| practical-228 | 外国人の「会社員→業務委託（フリーランス）」移行と在留資格 | ✅ | ANSWER_RUNTIME | P0 |
+| practical-229 | 在留資格「特定活動（介護）」EPA介護福祉士候補者：制度概要と実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-230 | 外国人の「在留カード」とパスポートの関係：どちらが必要な場面か | ✅ | ANSWER_RUNTIME | P1 |
+| practical-231 | 外国人が日本で「養子縁組」をする場合：日本法の要件と国際的影響 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-232 | 外国人の「技人国での育児休業・産前産後休業」：在留資格は失効しないか | ✅ | ANSWER_RUNTIME | P1 |
+| practical-233 | 外国人の「住民基本台帳」へのアクセス：住民票の取得・使途・制限 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-234 | 技人国・就労ビザ保持者の「副業」と雇用保険・社会保険の二重加入問題 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-235 | 外国人の「在留特別許可」：強制退去対象者が日本に残るための最後の手段 | ✅ | ANSWER_RUNTIME | P0 |
+| practical-236 | 外国人の「日本での株式投資・FX・仮想通貨」：在留資格と税務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-237 | 外国人の「在留期間」と「在留期限」の違い：どちらが重要でどう管理するか | ✅ | ANSWER_RUNTIME | P1 |
+| practical-238 | 外国人の「日本国内での本国大使館への手続き」：パスポート更新・婚姻届等 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-239 | 技人国の「年収が下がった場合」の在留への影響：降給・ボーナスカット・減収 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-240 | 外国人の「日本での出産」と子どもの在留資格・国籍 | ✅ | ANSWER_RUNTIME | P1 |
+
+## Batch 12 Handoff Note
+
+- 完成日: 2026-05-19
+- 担当: FACT Operator (Claude)
+- コミット: pending
+- 新規DOMAIN: なし
 - DOMAIN送付済み: pending（pdom-001〜009）
