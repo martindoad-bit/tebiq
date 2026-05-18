@@ -11,13 +11,13 @@
 
 | 指标 | 当前值 |
 |------|--------|
-| 已完成卡片数 | 280 |
+| 已完成卡片数 | 300 |
 | DOMAIN 队列总数 | 9 |
-| ANSWER_RUNTIME 可注入 | 272 |
+| ANSWER_RUNTIME 可注入 | 292 |
 | MATERIALS_ONLY | 8 |
 | L5_ONLY | 0 |
 | NEEDS_REWRITE | 0 |
-| 已完成批次 | 14 |
+| 已完成批次 | 15 |
 
 ---
 
@@ -532,6 +532,41 @@
 | practical-280 | 在留資格「特定活動」の研究活動等告示：大学・研究機関での活動 | ✅ | ANSWER_RUNTIME | P1 |
 
 ## Batch 14 Handoff Note
+
+- 完成日: 2026-05-19
+- 担当: FACT Operator (Claude)
+- コミット: b022540
+- 新規DOMAIN: なし
+- DOMAIN送付済み: pending（pdom-001〜009）
+
+---
+
+## Batch 15 状態（目標: 20張）
+
+| card_id | topic | status | runtime_bucket | risk |
+|---------|-------|--------|---------------|------|
+| practical-281 | 外国人の「消費税・インボイス制度」：個人事業主・フリーランスとしての義務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-282 | 在留資格「興行」の審査実務：エンターテイナーのカテゴリ制度と落とし穴 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-283 | 外国人の「障害者手帳」取得と在留資格・福祉サービスの関係 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-284 | 外国人が「株式会社」を設立する場合の手続き詳細：定款・登記・資本金 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-285 | 在留申請における「身元保証人」の役割・要件・責任 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-286 | 外国人の「相続税・贈与税」：日本と本国の課税関係・二重課税防止 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-287 | 技人国申請の「理由書」作成実務：構成・記載内容・効果的な書き方 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-288 | 外国人の「育児休業給付金」：在留資格と育休給付の受給資格 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-289 | 技人国から「研究」「教授」への変更：大学・研究機関への就職実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-290 | 在留カードの「就労制限の有無」欄の見方と実務上の確認方法 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-291 | 外国人が日本で「法人カード・ビジネス口座」を開設する実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-292 | 在留資格「留学」と「研究生」：大学院入学前の研究生制度の実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-293 | 外国人の「生命保険・医療保険」：加入資格・在留資格別の実態 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-294 | 「永住者の配偶者等」の在留管理：活動制限なし・離婚後の対応 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-295 | 外国人が日本で「商標・特許・著作権」を登録・活用する場合の在留資格 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-296 | 外国人の「健康診断」と在留資格申請：結核・感染症と入国拒否 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-297 | 外国人の「収入が不安定な期間」の在留管理：無職・転職中の就労系ビザ | ✅ | ANSWER_RUNTIME | P0 |
+| practical-298 | 外国人の「雇用形態の変化（正社員→契約社員・パート）」と在留資格 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-299 | 外国人の「配偶者ビザ」申請における内縁関係・事実婚の扱い | ✅ | ANSWER_RUNTIME | P1 |
+| practical-300 | 外国人の「特定活動（未来創造人材）」：J-Skip・J-Find制度の在留管理 | ✅ | ANSWER_RUNTIME | P1 |
+
+## Batch 15 Handoff Note
 
 - 完成日: 2026-05-19
 - 担当: FACT Operator (Claude)
