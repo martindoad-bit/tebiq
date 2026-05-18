@@ -10,8 +10,8 @@
 | `last_verified` | 2026-05-18 |
 | `verified_by` | Codex Production Lead / AI Engineering Lead |
 | `production_url` | https://tebiq.jp |
-| `production_build_info_before_loop17_merge` | `gitSha=9fd274038fef209425d397746838164d7f442eb3`, `builtAt=2026-05-18T07:25:58.444Z`, `version=answer-core-v1.1-llm` |
-| `active_branch_when_updated` | `codex/knowledge-runtime-loop17` |
+| `production_build_info_after_loop17_merge` | `gitSha=55ca22ec990b720e599cb1163537aa17e99e2942`, `builtAt=2026-05-18T07:48:22.815Z`, `version=answer-core-v1.1-llm` |
+| `active_branch_when_updated` | `codex/knowledge-runtime-loop17-final` |
 | `current_focus` | Knowledge Runtime Expansion Goal: 400+ high-quality knowledge assets, answer product 85+, Materials Tab 85+ |
 
 ## Current Phase
@@ -36,7 +36,7 @@ ordinary answer runtime.
 
 ## Knowledge Layer Waterline
 
-As of Loop17 branch state, before production DB sync:
+As of Loop17 production DB sync:
 
 | State | Count | Runtime meaning |
 |---|---:|---|
@@ -128,10 +128,9 @@ What is still not 1.0:
 
 ## Next Work
 
-1. Finish Loop17 merge, production DB sync, and post-sync production smoke.
-2. Start the next expansion loop from material-entity gaps and source-repair
+1. Start the next expansion loop from material-entity gaps and source-repair
    candidates rather than forcing unsafe quarantine cards into answer runtime.
-3. Expand Materials Universe with document/material entities that users actually
+2. Expand Materials Universe with document/material entities that users actually
    reuse across scenarios.
-4. Add AQL-origin provenance for `aql-rur-037-jfind-employment-bridge`.
-5. Continue production answer and materials regression after each loop.
+3. Add AQL-origin provenance for `aql-rur-037-jfind-employment-bridge`.
+4. Continue production answer and materials regression after each loop.

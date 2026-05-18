@@ -149,6 +149,42 @@ Results:
 | production URL smoke | 70/70 pass |
 | production answer smoke | 25/25 pass |
 
+## Post-Merge Production Validation
+
+PR #191 merged to main as `55ca22ec990b720e599cb1163537aa17e99e2942`.
+Vercel production reached that SHA at `builtAt=2026-05-18T07:48:22.815Z`.
+
+Production DB sync was then run:
+
+```bash
+npm run fact-layer:sync
+```
+
+Result:
+
+```text
+fact-layer-sync: scanned=269 upserted=269 errors=0
+```
+
+Post-sync audit confirmed filesystem and database are aligned:
+
+| State | Filesystem | Database |
+|---|---:|---:|
+| `ai_verified` | 222 | 222 |
+| `human_reviewed` | 5 | 5 |
+| `ai_extracted` | 34 | 34 |
+| `disabled` | 8 | 8 |
+| Total | 269 | 269 |
+
+Post-merge production checks:
+
+| Check | Result |
+|---|---|
+| `/api/build-info` | `gitSha=55ca22ec990b720e599cb1163537aa17e99e2942` |
+| `npm run qa:card-import-audit` | no missing / extra DB cards |
+| `npm run qa:production-smoke` | 70/70 pass |
+| `PRODUCTION_URL=https://tebiq.jp SMOKE_STREAM_TIMEOUT_MS=150000 npm run smoke:production-answer` | 25/25 pass |
+
 ## Product Impact
 
 Loop17 is a quality-forward expansion loop:
