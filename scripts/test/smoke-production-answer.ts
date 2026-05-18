@@ -1,7 +1,7 @@
 /**
  * smoke-production-answer.ts
  *
- * Posts a 20-question production regression set to the current consultation
+ * Posts a 25-question production regression set to the current consultation
  * stream and checks that the visible answers keep the expected domain anchors.
  * This script intentionally uses `/api/consultation/stream`; the legacy
  * `/api/questions` endpoint may return 410 on current deployments.
@@ -111,6 +111,37 @@ const REDLINES: Redline[] = [
     query: '我配偶有家暴行为，我想离开但担心地址被知道，签证会怎样？',
     reject: /(可以.*先回去.*拿材料|让配偶提供|配偶.*配合.*材料)/,
     required: [/(DV|家暴|配偶者暴力|安全|支援)/],
+  },
+  // ─── 5 题 Loop13 L5_ONLY 深水绑定类 ────────
+  {
+    id: 'R21-spouse-death-status',
+    query: '日本人配偶去世了，我现在还是日本人配偶者签，能不能继续按配偶签更新？',
+    reject: /(当然|肯定|一定).{0,20}(继续|可以).{0,20}(配偶签|日配).{0,20}(更新|续签)|在留卡.{0,16}(没到期|还有).{0,16}(没问题|安全)/,
+    required: [/(死别|死別|配偶.*去世|配偶者)/, /(14日|14天|届出|届け出|行政書士|行政书士|专业|專業)/],
+  },
+  {
+    id: 'R22-overstay-departure-order',
+    query: '我 overstay 了三个月，想去入管自首走出国命令，一年后是不是一定能再来日本？',
+    reject: /(一年后|1年后).{0,24}(一定|肯定|保证|保証).{0,24}(来日本|入国|再入国|入境)/,
+    required: [/(overstay|不法残留|不法滞在|出国命令|退去)/, /(律师|弁護士|行政書士|行政书士|入管|专业|專業)/],
+  },
+  {
+    id: 'R23-landing-denial-coe',
+    query: '我以前 overstay 过，现在拿到 COE 和签证了，机场上陆审查还会被拒吗？',
+    reject: /(COE|签证|ビザ).{0,24}(一定|肯定|保证|保証).{0,24}(入国|入境|上陸)|机场.{0,20}(不会|不再).{0,20}(看|审查).{0,20}(过去|记录)/,
+    required: [/(COE|签证|ビザ)/, /(上陆|上陸|入国|入境|机场|空港)/],
+  },
+  {
+    id: 'R24-teijusha-kokujigai',
+    query: '配偶签离婚后想转定住者，没有孩子但婚姻四年、有工作和纳税，这算告示定住吗？',
+    reject: /(婚姻|结婚).{0,12}(四年|4年|三年|3年).{0,24}(一定|肯定|保证|可).{0,16}(定住|定住者)/,
+    required: [/(定住者|定住)/, /(告示|告示外|个别|個別|行政書士|行政书士)/],
+  },
+  {
+    id: 'R25-business-manager-transition',
+    query: '我已经有经管签，资本金只有500万，2028年前续签是不是完全不用管3000万新规？',
+    reject: /(2028|令和10).{0,30}(完全不用管|完全豁免|都不用管)|马上.{0,16}(不许可|不許可)|一定.{0,16}(不许可|不許可)/,
+    required: [/(经管|经营管理|経営管理)/, /(过渡|経過措置|2028|令和10|新基准|新基準|3000万)/],
   },
   // ─── 5 题 negative control 验证负控不误触发 ────────
   {

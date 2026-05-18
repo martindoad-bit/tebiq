@@ -27,6 +27,13 @@ const EXPECTED_FAMILIES = [
   // DOMAIN 2026-05-17 P1: two new families added per DOMAIN audit
   'pending-change-new-work',
   'gijinkoku-job-scope',
+  // Loop13 L5_ONLY binding: high-risk cards that should route to
+  // preparation/handoff rather than ordinary fact injection.
+  'status-cancellation-grounds-and-hearing',
+  'teijusha-kokujigai-boundary',
+  'overstay-departure-order-self-report',
+  'deportation-special-permission-boundary',
+  'landing-refusal-admissibility',
 ] as const
 
 // Per task: needs_domain for items that depend on review-substance
@@ -44,6 +51,11 @@ const EXPECTED_STATE: Record<string, L5ContentState> = {
   'late-payment-corrected-tax-filing-record-mismatch': 'needs_domain',
   'pending-change-new-work': 'needs_domain',
   'gijinkoku-job-scope': 'needs_domain',
+  'status-cancellation-grounds-and-hearing': 'needs_domain',
+  'teijusha-kokujigai-boundary': 'needs_domain',
+  'overstay-departure-order-self-report': 'needs_domain',
+  'deportation-special-permission-boundary': 'needs_domain',
+  'landing-refusal-admissibility': 'needs_domain',
 }
 
 // All ProfessionalKind values currently declared in deep-water-handoff.
@@ -71,7 +83,7 @@ test('registry covers all WB-G + DOMAIN P1 families exactly once', () => {
   assert.equal(
     L5_SIGNAL_REGISTRY.length,
     EXPECTED_FAMILIES.length,
-    'registry must have one entry per family (10 WB-G + 2 DOMAIN P1 = 12)',
+    'registry must have one entry per family (10 WB-G + 2 DOMAIN P1 + 5 Loop13 = 17)',
   )
   const families = new Set(L5_SIGNAL_REGISTRY.map(s => s.family))
   for (const fam of EXPECTED_FAMILIES) {
@@ -87,6 +99,30 @@ test('DOMAIN P1 pending-change-new-work binds to pending-status-change gate', ()
 test('DOMAIN P1 gijinkoku-job-scope binds to gijinkoku-work-scope gate', () => {
   const out = getSignalsForRoutes(['gijinkoku-work-scope-not-any-job'])
   assert.ok(out.some(s => s.family === 'gijinkoku-job-scope'))
+})
+
+test('Loop13 spouse family binds to dedicated spouse route, not generic cancellation only', () => {
+  const spouse = getSignalsForRoutes(['spouse-divorce-remarriage-procedure-boundary'])
+  assert.ok(spouse.some(s => s.family === 'spouse-divorce-remarriage-procedure-vs-review-substance'))
+
+  const generic = getSignalsForRoutes(['status-cancellation-before-expiry-boundary'])
+  assert.ok(generic.some(s => s.family === 'status-cancellation-grounds-and-hearing'))
+  assert.ok(!generic.some(s => s.family === 'spouse-divorce-remarriage-procedure-vs-review-substance'))
+})
+
+test('Loop13 overstay / special permission / landing routes bind to L5 signals', () => {
+  assert.ok(
+    getSignalsForRoutes(['departure-order-not-reentry-guarantee'])
+      .some(s => s.family === 'overstay-departure-order-self-report'),
+  )
+  assert.ok(
+    getSignalsForRoutes(['tokubetsu-kyoka-not-normal-route'])
+      .some(s => s.family === 'deportation-special-permission-boundary'),
+  )
+  assert.ok(
+    getSignalsForRoutes(['landing-denial-reentry-risk'])
+      .some(s => s.family === 'landing-refusal-admissibility'),
+  )
 })
 
 test('every signal has all required fields populated', () => {
@@ -237,8 +273,8 @@ test('every L5 signal is reachable via at least one HandoffEntry', () => {
 
 // ----- Per-family routing assertions (locks WB-G family list) ---------
 
-test('spouse divorce family binds to status-cancellation gate', () => {
-  const out = getSignalsForRoutes(['status-cancellation-before-expiry-boundary'])
+test('spouse divorce family binds to dedicated spouse gate', () => {
+  const out = getSignalsForRoutes(['spouse-divorce-remarriage-procedure-boundary'])
   assert.ok(out.some(s => s.family === 'spouse-divorce-remarriage-procedure-vs-review-substance'))
 })
 

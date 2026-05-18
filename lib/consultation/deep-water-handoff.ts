@@ -167,11 +167,21 @@ export const DEEP_WATER_HANDOFF_REGISTRY: HandoffEntry[] = [
       'nonpermission-special-period-ended-boundary',
       'nonpermission-no-ordinary-appeal-no-grace',
       'tokubetsu-kyoka-not-normal-route',
+      'departure-order-not-reentry-guarantee',
       'result-postcard-not-permission',
     ],
     kinds: [IMMIGRATION_LAWYER, GYOUSEISHOSHI, ISA_WINDOW, LEGAL_TERRACE],
     oneLine: '通知书类型决定路径：補正/追加資料偏行政書士，不許可/退去強制偏入管専門弁護士；先按通知书原文确认期限，再决定走哪条。',
     urgency: 'today',
+  },
+
+  // --- Family 9b: 上陸拒否 / 再入国リスク ---
+  {
+    familyTag: 'entry-refusal-admissibility',
+    routeIds: ['landing-denial-reentry-risk', 'coe-not-entry-guarantee-three-month'],
+    kinds: [IMMIGRATION_LAWYER, GYOUSEISHOSHI, ISA_WINDOW, LEGAL_TERRACE],
+    oneLine: 'CoE や査証は最終入国保証ではありません。退去歴・前科・上陸拒否歴がある場合は、上陸審査リスクを専門家に確認してください。',
+    urgency: 'before_deadline',
   },
 
   // --- Family 1: 特例期间结束 / 出国 (DOMAIN §3.1) ---
@@ -211,13 +221,33 @@ export const DEEP_WATER_HANDOFF_REGISTRY: HandoffEntry[] = [
   },
 
   // --- Family 5: 日配离婚 / 再婚 / 死别 (DOMAIN §3.5) ---
-  // No dedicated P0 route gate exists yet; bind to the adjacent
-  // `status-cancellation-before-expiry-boundary` gate per plan §2.5.
   {
     familyTag: 'spouse-divorce-remarriage',
-    routeIds: ['status-cancellation-before-expiry-boundary'],
+    routeIds: ['spouse-divorce-remarriage-procedure-boundary'],
     kinds: [GYOUSEISHOSHI, IMMIGRATION_LAWYER, DV_CENTER],
     oneLine: '14 日届出和 6 个月配偶者活动空白要分开看；如果涉及 DV、孩子争议或抚养问题，需要弁護士 + DV センター。',
+    urgency: 'this_week',
+  },
+
+  // --- Family 5b: 在留資格取消 / 意見聴取 ---
+  {
+    familyTag: 'status-cancellation',
+    routeIds: [
+      'status-cancellation-before-expiry-boundary',
+      'application-truthfulness-no-false-info',
+      'notification-duty-violation-not-harmless',
+    ],
+    kinds: [IMMIGRATION_LAWYER, GYOUSEISHOSHI, ISA_WINDOW, LEGAL_TERRACE],
+    oneLine: '在留期限が残っていても、活動停止・虚偽申告・届出違反は取消リスクになり得ます。通知や意見聴取がある場合は原文を持って専門家へ。',
+    urgency: 'this_week',
+  },
+
+  // --- Family 5c: 定住者 告示 / 告示外 ---
+  {
+    familyTag: 'teijusha-kokujigai',
+    routeIds: ['teijusha-kokujigai-boundary'],
+    kinds: [GYOUSEISHOSHI, IMMIGRATION_LAWYER],
+    oneLine: '定住者は告示・告示外で入口が違います。離婚定住、日系、被扶養子などは事実整理をして専門家に確認してください。',
     urgency: 'this_week',
   },
 

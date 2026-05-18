@@ -120,11 +120,18 @@ test('family 3 — HSP1 institution change routes today', () => {
   assert.equal(h!.urgency, 'today')
 })
 
-test('family 5 — spouse divorce / status cancellation includes DV センター as alternate', () => {
-  const h = getHandoffForRoutes(['status-cancellation-before-expiry-boundary'])
+test('family 5 — spouse divorce / death / remarriage includes DV センター as alternate', () => {
+  const h = getHandoffForRoutes(['spouse-divorce-remarriage-procedure-boundary'])
   assert.ok(h)
   assert.equal(h!.familyTag, 'spouse-divorce-remarriage')
   assert.ok(h!.kinds.some(k => k.kind === 'dv_center'), 'must include DV センター as alternate')
+})
+
+test('family 5b — generic status cancellation does not use spouse handoff', () => {
+  const h = getHandoffForRoutes(['status-cancellation-before-expiry-boundary'])
+  assert.ok(h)
+  assert.equal(h!.familyTag, 'status-cancellation')
+  assert.ok(h!.kinds.some(k => k.kind === 'immigration_lawyer'))
 })
 
 test('family 6 — 経営管理 disposition includes 税理士 + 司法書士', () => {
