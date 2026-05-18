@@ -985,7 +985,12 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
       'eijuu-takeoff-risk',
       'eijuu-haigusha-visa',
       'eijuu-zeikin-payment',
-      'eijuu-jukyo-period-overseas',],
+      'eijuu-jukyo-period-overseas',
+      'eijuu-shotoku-200man-myth',
+      'eijuu-kashikuken-bekkyo',
+      'eijuu-jukyo-check-tax-shomeisho',
+      'eijuu-nenkin-risk',
+    ],
     relatedTopicIds: [
       'resident-tax-certificate-materials',
       'national-tax-certificate-sono3-materials',
@@ -1542,6 +1547,7 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
       'kazoku-yobi-yose-shorui',
       'kazoku-yobi-naitei-haigusha',
       'kazoku-taizai-yoken',
+      'kazoku-taizai-shotoku-280',
     ],
     relatedTopicIds: [
       'family-stay-renewal-materials',
@@ -2191,6 +2197,54 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
       {
         label: '厚生労働省（ハローワーク）：雇用保険手続きのご案内',
         url: 'https://www.hellowork.mhlw.go.jp/insurance/insurance_procedure.html',
+      },
+    ],
+  },
+  {
+    id: 'foreign-will-notary-materials',
+    title: '外国人 公正证书遗言材料',
+    summary: '在日本有房产、存款或家族安排时，先确认公证役场、公正证书遗言、证人和国际相续问题。',
+    category: '生活',
+    factCardIds: [
+      'yuigon-koseishousho-jutsu',
+    ],
+    relatedTopicIds: [
+      'juminhyo-foreign-materials',
+      'company-incorporation-materials',
+    ],
+    aliases: ['遗言', '遗嘱', '公正证书遗言', '公証役場', '日本财产', '相续'],
+    deadline: '不是入管期限；建议在财产、婚姻、子女、回国或高龄风险出现前提前准备。',
+    whereToGo: '公証役場；涉及跨国相续、海外财产或税务时，同时咨询司法书士、律师或税理士。',
+    prepare: [
+      '本人确认资料',
+      '遗言内容草案',
+      '财产资料（不动产、存款、公司股份等）',
+      '继承人/受遗赠人的身份资料',
+      '证人 2 名相关安排',
+      '需要翻译或通译时的确认资料',
+    ],
+    askPrompt: '我在日本有财产，想做公正证书遗言，想确认需要准备什么、外国人有什么注意点。',
+    facts: [
+      {
+        label: '公证役场',
+        text: '公正证书遗言由公证人作成，通常在公証役場办理。',
+        verification: 'source-backed',
+      },
+      {
+        label: '国际相续',
+        text: '外国人或海外财产涉及准据法、翻译、税务和海外效力，不能只按日本国内模板处理。',
+        verification: 'needs-check',
+      },
+    ],
+    checkNote: '本页只整理准备事项；本国法律效力、海外财产、相续税和通译要求要个案确认。',
+    sources: [
+      {
+        label: '法務省：遺言',
+        url: 'https://www.moj.go.jp/MINJI/minji30.html',
+      },
+      {
+        label: '法務省：公証役場',
+        url: 'https://www.moj.go.jp/MINJI/minji78.html',
       },
     ],
   },

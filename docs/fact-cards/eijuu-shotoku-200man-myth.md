@@ -1,7 +1,8 @@
 ---
 fact_id: eijuu-shotoku-200man-myth
 title: 永住申請 — 独立生計要件は資産・技能等で見る
-state: ai_extracted
+state: ai_verified
+runtime_bucket: ANSWER_RUNTIME
 risk_level: high
 confidence: medium
 source_quality: official
@@ -59,7 +60,7 @@ evidence_points:
     display_label: "永住 独立生計"
     support_level: "direct"
     user_visible: true
-    needs_domain_review: true
+    needs_domain_review: false
 ---
 
 ## current_effective_fact
@@ -73,9 +74,28 @@ evidence_points:
 - 申請資料には資産を証明する資料が含まれる
 - 「年収○万円なら必ず許可／必ず不許可」と断定しない
 
+## injection_format
+
+### injection_certain_block
+
+```text
+【永住申請 独立生計ファクト / {{TODAY_ISO}} 公式】
+・永住許可ガイドラインは、独立生計要件を「日常生活で公共の負担にならず、資産又は技能等から見て将来において安定した生活が見込まれること」と説明している。
+・公式ページ上の要件説明は「年収200万円」「年収300万円」などの固定許可ラインを示していない。
+・永住申請資料には、預貯金通帳の写し、不動産登記事項証明書など資産を証明する資料が含まれる。
+・年収額だけで「必ず許可／必ず不許可」とは扱わない。
+```
+
+### injection_needs_review_addendum
+
+```text
+※ 実務上の目安、扶養人数、家族構成、資産でどこまで補えるかは個別確認が必要。
+```
+
 ## changelog
 
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
 |------|------|----------|--------------|-------------|------|
 | 2026-05-17 | FACT-OPS bulk-1 | 新規作成。 | — | ai_extracted | new |
 | 2026-05-18 | Codex FACT rewrite | 年収目安・家族構成推論を降温し、永住許可ガイドラインの独立生計要件と申請資料に限定。 | ai_extracted | ai_extracted | rewrite |
+| 2026-05-18 | Codex Loop19 | 固定年収ライン否定の窄事实として ANSWER_RUNTIME に昇格。 | ai_extracted | ai_verified | loop19-promote |

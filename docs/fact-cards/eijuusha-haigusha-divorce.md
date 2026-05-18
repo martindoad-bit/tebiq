@@ -2,6 +2,7 @@
 fact_id: eijuusha-haigusha-divorce
 title: 永住者の配偶者等 — 離婚・死別後の14日届出 + 在留資格見直し
 state: ai_extracted
+runtime_bucket: L5_ONLY
 risk_level: high
 confidence: high
 source_quality: official

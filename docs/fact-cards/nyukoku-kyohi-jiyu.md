@@ -2,6 +2,7 @@
 fact_id: nyukoku-kyohi-jiyu
 title: 上陸拒否事由 — 入管法第5条10項目
 state: ai_extracted
+runtime_bucket: L5_ONLY
 risk_level: high
 confidence: high
 source_quality: official

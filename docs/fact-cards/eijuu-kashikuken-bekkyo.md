@@ -1,7 +1,8 @@
 ---
 fact_id: eijuu-kashikuken-bekkyo
 title: 永住申請 — 現在の在留期間と「最長の在留期間」要件
-state: ai_extracted
+state: ai_verified
+runtime_bucket: ANSWER_RUNTIME
 risk_level: medium
 confidence: medium
 source_quality: official
@@ -63,9 +64,27 @@ evidence_points:
 - 3年/5年の扱いを固定的に断定しない
 - 1年だから必ず不許可、3年だから必ず可、とは言わない
 
+## injection_format
+
+### injection_certain_block
+
+```text
+【永住申請 現在の在留期間ファクト / {{TODAY_ISO}} 公式】
+・永住許可ガイドラインでは、現在有する在留資格について「最長の在留期間をもって在留していること」が確認点として示されている。
+・3年/5年の具体的な扱い、1年在留期間の評価、経過措置の適用範囲は個別確認が必要。
+・「1年だから必ず不許可」「3年だから必ず可」「5年でなければ必ず不可」とは断定しない。
+```
+
+### injection_needs_review_addendum
+
+```text
+※ 在留資格ごとの最長期間、3年在留期間の扱い、配偶者・高度人材等の例外は個別確認。
+```
+
 ## changelog
 
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
 |------|------|----------|--------------|-------------|------|
 | 2026-05-18 | Codex Loop17 | 3年/5年の実務断定を削除し、公式ガイドライン上の「最長の在留期間」事実に限定。 | ai_extracted | ai_extracted | loop17-rewrite |
 | 2026-05-17 | FACT-OPS bulk-1 | 新規作成。 | — | ai_extracted | new |
+| 2026-05-18 | Codex Loop19 | 最長在留期間の窄事实として ANSWER_RUNTIME に昇格。 | ai_extracted | ai_verified | loop19-promote |

@@ -1,7 +1,8 @@
 ---
 fact_id: ryugaku-shusseki-ritsu-80
 title: 留学 — 出席状況等の管理体制を申請書で確認
-state: ai_extracted
+state: ai_verified
+runtime_bucket: ANSWER_RUNTIME
 risk_level: high
 confidence: medium
 source_quality: official
@@ -59,7 +60,7 @@ evidence_points:
     display_label: "留学 出席状況"
     support_level: "direct"
     user_visible: true
-    needs_domain_review: true
+    needs_domain_review: false
 ---
 
 ## current_effective_fact
@@ -73,9 +74,28 @@ evidence_points:
 - 個別の欠席理由、成績資料、学校種別ごとの運用は申請資料・学校資料で確認する
 - 「出席率○%なら必ず許可／必ず不許可」と断定しない
 
+## injection_format
+
+### injection_certain_block
+
+```text
+【留学更新 出席状況ファクト / {{TODAY_ISO}} 公式】
+・留学は教育機関で教育を受ける活動。
+・在留期間更新許可申請書（留学）には、教育機関側の項目として留学生の出席状況、入管法19条1項の遵守状況、学習状況等の管理体制の有無がある。
+・公式ページ上の要件説明は「80%なら必ず許可／不許可」などの固定出席率ラインを示していない。
+・欠席理由、成績、学校種別、学校側説明資料は個別確認する。
+```
+
+### injection_needs_review_addendum
+
+```text
+※ 学校種別ごとの運用、退学・除籍、資格外活動違反との複合ケースは個別確認が必要。
+```
+
 ## changelog
 
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
 |------|------|----------|--------------|-------------|------|
 | 2026-05-17 | FACT-OPS bulk-1 | 新規作成。 | — | ai_extracted | new |
 | 2026-05-18 | Codex FACT rewrite | 80%ライン・成績評価の断定を外し、留学更新申請書の出席状況等管理体制欄に限定。 | ai_extracted | ai_extracted | rewrite |
+| 2026-05-18 | Codex Loop19 | 出席率固定ラインを避ける窄事实として ANSWER_RUNTIME に昇格。 | ai_extracted | ai_verified | loop19-promote |

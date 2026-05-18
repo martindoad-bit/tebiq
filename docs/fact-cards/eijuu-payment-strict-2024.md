@@ -2,6 +2,7 @@
 fact_id: eijuu-payment-strict-2024
 title: 永住者 — 公租公課不履行と永住許可制度の適正化（要確認）
 state: ai_extracted
+runtime_bucket: L5_ONLY
 risk_level: high
 confidence: medium
 source_quality: official

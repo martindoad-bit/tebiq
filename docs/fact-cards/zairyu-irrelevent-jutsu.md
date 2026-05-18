@@ -1,7 +1,8 @@
 ---
 fact_id: zairyu-irrelevent-jutsu
 title: 在留資格変更 — 現在の在留資格の活動範囲外は変更許可が必要
-state: ai_extracted
+state: ai_verified
+runtime_bucket: ANSWER_RUNTIME
 risk_level: high
 confidence: high
 source_quality: official
@@ -84,3 +85,4 @@ evidence_points:
 | 日付 | 担当 | 変更内容 | state_before | state_after | タグ |
 |------|------|----------|--------------|-------------|------|
 | 2026-05-17 | FACT-OPS bulk-1 | 新規作成。 | — | ai_extracted | new |
+| 2026-05-18 | Codex Loop19 | 変更許可前に範囲外活動を開始しない guardrail として ANSWER_RUNTIME に昇格。 | ai_extracted | ai_verified | loop19-promote |

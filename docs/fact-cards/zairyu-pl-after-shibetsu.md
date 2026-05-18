@@ -2,6 +2,7 @@
 fact_id: zairyu-pl-after-shibetsu
 title: 配偶者死別後 — 死別配偶者の在留資格の取扱
 state: ai_extracted
+runtime_bucket: L5_ONLY
 risk_level: high
 confidence: medium
 source_quality: official

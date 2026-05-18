@@ -2,6 +2,7 @@
 fact_id: zairyu-tokubetsu-kyoka
 title: 在留特別許可 — 退去強制対象者への法務大臣の裁量許可
 state: ai_extracted
+runtime_bucket: L5_ONLY
 risk_level: high
 confidence: medium
 source_quality: official

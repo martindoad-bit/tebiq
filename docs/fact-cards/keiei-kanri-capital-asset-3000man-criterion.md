@@ -2,6 +2,7 @@
 fact_id: keiei-kanri-capital-asset-3000man-criterion
 title: 経営・管理 — 3000万円以上の財産規模基準
 state: ai_extracted
+runtime_bucket: L5_ONLY
 risk_level: high
 confidence: medium
 source_quality: official
