@@ -10,8 +10,8 @@
 | `last_verified` | 2026-05-18 |
 | `verified_by` | Codex Production Lead / AI Engineering Lead |
 | `production_url` | https://tebiq.jp |
-| `production_build_info_before_loop18_merge` | `gitSha=55ca22ec990b720e599cb1163537aa17e99e2942`, `builtAt=2026-05-18T07:48:22.815Z`, `version=answer-core-v1.1-llm` |
-| `active_branch_when_updated` | `codex/knowledge-runtime-loop18` |
+| `production_build_info` | `gitSha=a6cc73f35a73b13ebaeefec4713b0cd2eb62dec5`, `builtAt=2026-05-18T08:41:35.811Z`, `version=answer-core-v1.1-llm` |
+| `active_branch_when_updated` | `codex/knowledge-runtime-loop18-final` |
 | `current_focus` | Knowledge Runtime Expansion Goal: 400+ high-quality knowledge assets, answer product 85+, Materials Tab 85+ |
 
 ## Current Phase
@@ -36,7 +36,7 @@ ordinary answer runtime.
 
 ## Knowledge Layer Waterline
 
-As of Loop18 branch state, before production DB sync:
+As of Loop18 production DB sync:
 
 | State | Count | Runtime meaning |
 |---|---:|---|
@@ -62,7 +62,7 @@ Unsafe strategy cards must not be promoted just to increase the number.
 | Loop15 | Resolved 49 guardrail-only route-gate source assets from `FACT_PROGRESS.md`; unresolved provenance reduced from 50 to 1 |
 | Loop16 | Processed remaining 39 quarantine cards: 0 runtime promote, 4 materials-only, 15 L5-only, 18 rewrite, 1 reject, 1 unknown |
 | Loop17 | Rewrote 16 of the 18 rewrite-queue cards into narrower assets: 4 answer-runtime promotions, 3 materials-only narrowed cards, 9 safer quarantine/L5 cards; 2 source-repair candidates deferred |
-| Loop18 | Source-repaired `startup-visa-keiei-transition` into a narrow runtime card and moved `kazoku-yobi-naitei-haigusha` to L5-only; added 3 quick-reference material scenes (`永住者配偶者等`, `家族滞在変更`, `家族滞在COE`) |
+| Loop18 | Source-repaired `startup-visa-keiei-transition` into a narrow runtime card and moved `kazoku-yobi-naitei-haigusha` to L5-only; added 3 quick-reference material scenes (`永住者配偶者等`, `家族滞在変更`, `家族滞在COE`); DB sync and production smoke completed on `a6cc73f` |
 
 ## Product Judgment
 

@@ -3,6 +3,7 @@
 Date: 2026-05-18  
 Branch: `codex/knowledge-runtime-loop18`  
 Scope: Loop17 source-repair candidates and Materials Universe binding gaps
+Production merge: PR #193, `gitSha=a6cc73f35a73b13ebaeefec4713b0cd2eb62dec5`
 
 ## Goal
 
@@ -87,7 +88,7 @@ Also updated:
 
 ## Current Knowledge Counts
 
-After Loop18 file edits:
+After Loop18 merge and production DB sync:
 
 | State | Count |
 |---|---:|
@@ -101,9 +102,6 @@ Runtime-injectable cards are now **228** (`ai_verified` + `human_reviewed`).
 
 Materials topics increased from 43 to **46**. Material references increased
 from 215 to **226**.
-
-Production DB still showed the Loop17 count before merge/sync:
-`ai_verified=222`, `ai_extracted=34`. Sync must run after merge.
 
 ## Validation Before Merge
 
@@ -128,6 +126,21 @@ Results:
 | unit tests | 265/265 pass |
 | lint | pass |
 | TypeScript | pass |
+
+## Production Validation After Merge
+
+Post-merge deployment and sync:
+
+| Check | Result |
+|---|---|
+| GitHub PR | PR #193 merged |
+| Production build | `gitSha=a6cc73f35a73b13ebaeefec4713b0cd2eb62dec5`, `builtAt=2026-05-18T08:41:35.811Z` |
+| Production DB sync | `fact-layer-sync: scanned=269 upserted=269 errors=0` |
+| Card import audit | filesystem and DB aligned: `ai_verified=223`, `ai_extracted=33`, `disabled=8`, `human_reviewed=5` |
+| Materials audit | 46 topics, 226 references, no missing references |
+| Route-gate unresolved source assets | 1 known unresolved AQL-origin asset: `aql-rur-037-jfind-employment-bridge` |
+| Production URL smoke | 70/70 checked routes passed |
+| Production answer smoke | 25/25 passed against `a6cc73f` |
 
 ## Product Impact
 
