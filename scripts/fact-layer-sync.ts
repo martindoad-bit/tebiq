@@ -30,7 +30,7 @@ import { readdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import matter from 'gray-matter'
 import { sql } from 'drizzle-orm'
-import { db } from '@/lib/db'
+import { closeDb, db } from '@/lib/db'
 import { factCards, type NewFactCard } from '@/lib/db/schema'
 
 // ----------------------------------------------------------------------------
@@ -622,7 +622,7 @@ interface SyncResult {
   cards: NormalizedCard[]
 }
 
-export async function runSync(opts: { dryRun?: boolean } = {}): Promise<SyncResult> {
+export async function runSync(opts: { dryRun?: boolean; progress?: boolean } = {}): Promise<SyncResult> {
   const result: SyncResult = { scanned: 0, upserted: 0, errors: [], cards: [] }
   const files = readdirSync(FACT_CARDS_DIR).filter(f =>
     f.endsWith('.md') && !EXCLUDED_FILES.has(f),
@@ -679,6 +679,9 @@ export async function runSync(opts: { dryRun?: boolean } = {}): Promise<SyncResu
         },
       })
     result.upserted += 1
+    if (opts.progress && (result.upserted % 25 === 0 || result.upserted === result.cards.length)) {
+      console.log(`fact-layer-sync progress: upserted=${result.upserted}/${result.cards.length}`)
+    }
   }
 
   return result
@@ -700,7 +703,7 @@ export const _internals = {
 const isMain = import.meta.url === `file://${process.argv[1]}`
 if (isMain) {
   const dryRun = process.argv.includes('--dry-run')
-  void runSync({ dryRun })
+  void runSync({ dryRun, progress: !dryRun })
     .then(r => {
       console.log(`fact-layer-sync: scanned=${r.scanned} upserted=${r.upserted} errors=${r.errors.length}`)
       if (r.errors.length > 0) {
@@ -716,6 +719,9 @@ if (isMain) {
           )
         }
       }
+    })
+    .finally(async () => {
+      if (!dryRun) await closeDb()
     })
     .catch(err => {
       console.error('fact-layer-sync fatal:', err)

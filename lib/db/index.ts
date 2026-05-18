@@ -42,6 +42,15 @@ function getClient() {
   return _client
 }
 
+export async function closeDb() {
+  if (!_client) return
+  await _client.end({ timeout: 5 })
+  _client = null
+  _db = null
+  const g = globalThis as { __tebiqPg?: ReturnType<typeof postgres> }
+  if (g.__tebiqPg) delete g.__tebiqPg
+}
+
 /**
  * The Drizzle DB instance. Throws on first use if DATABASE_URL is missing.
  * Tests should mock this module entirely.
