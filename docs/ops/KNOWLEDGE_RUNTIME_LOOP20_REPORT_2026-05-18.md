@@ -100,6 +100,30 @@ DOMAIN treatment.
 | TypeScript | pass |
 | lint | pass |
 
+## Production Sync And Validation
+
+Loop20 was merged to `main` in PR #197 and deployed to production as
+`gitSha=d0b93bb08a95f75442cdefa5f8f6aedc7d9d41ca`.
+
+The full sync script parsed cleanly in dry-run but hung during sequential DB
+write. To avoid silently treating a hung process as success, Loop20 used a
+targeted 5-card upsert with the same `fact-layer-sync` normalizer, then audited
+filesystem and DB alignment.
+
+| Check | Result |
+|---|---|
+| targeted production DB sync | 5/5 rewritten cards upserted |
+| card import audit after sync | filesystem and DB aligned: `ai_verified=238`, `ai_extracted=18`, `disabled=8`, `human_reviewed=5` |
+| materials audit after sync | 48 topics, 233 references, no missing references |
+| production build-info | `gitSha=d0b93bb08a95f75442cdefa5f8f6aedc7d9d41ca`, `builtAt=2026-05-18T11:02:42.654Z` |
+| production URL smoke | 70/70 pass |
+| new material path smoke | `/quick-reference/high-school-tuition-support-materials` returned 200 and rendered the new topic |
+| production answer smoke | 25/25 pass after R23/R25 redline calibration |
+
+R23 calibration accepted "在留資格認定証明書" as the long-form COE wording.
+R25 calibration stopped treating a safe restatement of the user's question
+("是否完全不用管") as a dangerous affirmative claim.
+
 ## Remaining Risks
 
 - `eijuu-jukyo-check-tax-shomeisho` remains `ai_extracted`; it was not part of
@@ -108,8 +132,11 @@ DOMAIN treatment.
   not be promoted as ordinary answer-runtime facts without route-specific
   DOMAIN work.
 - HSP point card is guarded by matcher block-context for HSP1 institution
-  change, but production smoke should continue to include the HSP1 "can I start
-  new company work?" question after sync.
+  change. Production answer smoke includes the HSP1 "can I start new company
+  work?" question and passed after sync.
+- The full `npm run fact-layer:sync` path should be investigated because this
+  loop needed a targeted sync workaround. The targeted DB result is verified,
+  but the tooling debt should not be forgotten.
 
 ## Next Loop Direction
 
