@@ -11,13 +11,13 @@
 
 | 指标 | 当前值 |
 |------|--------|
-| 已完成卡片数 | 180 |
+| 已完成卡片数 | 200 |
 | DOMAIN 队列总数 | 8 |
-| ANSWER_RUNTIME 可注入 | 175 |
-| MATERIALS_ONLY | 5 |
+| ANSWER_RUNTIME 可注入 | 194 |
+| MATERIALS_ONLY | 6 |
 | L5_ONLY | 0 |
 | NEEDS_REWRITE | 0 |
-| 已完成批次 | 9 |
+| 已完成批次 | 10 |
 
 ---
 
@@ -356,6 +356,41 @@
 | practical-180 | 外国人の子どもの在留資格：出生後の手続きと就学・就労の制限 | ✅ | ANSWER_RUNTIME | P1 |
 
 ## Batch 9 Handoff Note
+
+- 完成日: 2026-05-19
+- 担当: FACT Operator (Claude)
+- コミット: 9c4c7bb
+- 新規DOMAIN: なし
+- DOMAIN送付済み: pending（pdom-001〜008）
+
+---
+
+## Batch 10 状態（目標: 20張）
+
+| card_id | topic | status | runtime_bucket | risk |
+|---------|-------|--------|---------------|------|
+| practical-181 | 外国人の日本での遺言書作成：法的有効性・方式・準拠法 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-182 | 在留資格「企業内転勤」の詳細：転勤元要件・活動範囲・家族の扱い | ✅ | ANSWER_RUNTIME | P1 |
+| practical-183 | 外国人の日本での自己破産：在留資格への影響と手続き | ✅ | ANSWER_RUNTIME | P1 |
+| practical-184 | 在留資格「特定活動」の告示外（非告示）特定活動：どんな場合に使われるか | ✅ | ANSWER_RUNTIME | P1 |
+| practical-185 | 技人国の「専門学校」卒業：日本の専門学校・外国の職業訓練校の扱い | ✅ | ANSWER_RUNTIME | P1 |
+| practical-186 | 外国人の「養老保険」・生命保険加入：保険会社の外国人対応実態 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-187 | 在留資格の「更新」と「変更」の違い：どちらを申請すべきか | ✅ | ANSWER_RUNTIME | P1 |
+| practical-188 | 外国人の日本での消費者ローン・クレジットカード審査：在留資格別の実態 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-189 | 在留資格の「指定書」：特定活動・高度専門職等の指定書の役割と確認方法 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-190 | 外国人の帰化申請の「犯罪歴」要件：軽微な違反・執行猶予・本国での前科 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-191 | 在留資格の「取次」と「代理」：行政書士・弁護士・本人申請の違い | ✅ | ANSWER_RUNTIME | P1 |
+| practical-192 | 外国人の日本での失業：雇用保険から在留資格の問題までの総合対応 | ✅ | ANSWER_RUNTIME | P0 |
+| practical-193 | 外国人の日本での自動車・不動産購入：制限・必要書類・ローンの実態 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-194 | 技人国申請での「業務内容証明」：在職証明書・業務説明書の書き方 | ✅ | MATERIALS_ONLY | P1 |
+| practical-195 | 高度専門職の「研究実績」ポイント：論文・特許・受賞歴の証明方法 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-196 | 外国人の日本での離婚手続き：離婚届・準拠法・親権の国際的問題 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-197 | 外国人の日本での選挙権・参政権：現状と地方参政権議論 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-198 | 在留カードの「就労不可」と「就労制限なし」の区別：見方と確認方法 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-199 | 外国人のDV（家庭内暴力）被害：在留資格を失わずに支援を受ける方法 | ✅ | ANSWER_RUNTIME | P0 |
+| practical-200 | 永住申請の「安定した生活を営むことができる資産・技能」要件の実務 | ✅ | ANSWER_RUNTIME | P1 |
+
+## Batch 10 Handoff Note
 
 - 完成日: 2026-05-19
 - 担当: FACT Operator (Claude)
