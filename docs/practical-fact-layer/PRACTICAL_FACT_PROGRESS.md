@@ -11,13 +11,13 @@
 
 | 指标 | 当前值 |
 |------|--------|
-| 已完成卡片数 | 40 |
-| DOMAIN 队列总数 | 6 |
-| ANSWER_RUNTIME 可注入 | 37 |
+| 已完成卡片数 | 60 |
+| DOMAIN 队列总数 | 7 |
+| ANSWER_RUNTIME 可注入 | 57 |
 | MATERIALS_ONLY | 3 |
 | L5_ONLY | 0 |
 | NEEDS_REWRITE | 0 |
-| 已完成批次 | 2 |
+| 已完成批次 | 3 |
 
 ---
 
@@ -57,6 +57,7 @@
 | practical-006 | 赤字・休眠法人の更新で「事業継続意思」を示す書面の公式要件 | P0 |
 | practical-010 | 永住申請で「直近5年」の社会保険完納要件の具体的確認方法 | P0 |
 | practical-016 | 不許可後の在留特例期間の起算点と就労継続の法的根拠 | P0 |
+| practical-055 | 出国命令制度の「不法就労があっても適用される場合の基準」（ISA裁量範囲） | P0 |
 
 ---
 
@@ -119,7 +120,40 @@
 
 - 完成日: 2026-05-18
 - 担当: FACT Operator (Claude)
-- 次バッチ: Batch 3 (practical-041〜060)
-- 優先トピック: 高度専門職実務詳細 / 特定技能分野別詳細 / 在留資格のグレーゾーン業務 / 海外からのCOEフロー / 子どもの在留資格
-- DOMAIN送付済み: pending
+- コミット: bcfd554
+
+---
+
+## Batch 3 状態（目標: 20張）
+
+| card_id | topic | status | runtime_bucket | risk |
+|---------|-------|--------|---------------|------|
+| practical-041 | COEから入国まで：海外在住者の呼び寄せ入国フロー | ✅ | ANSWER_RUNTIME | P1 |
+| practical-042 | 外国人の子どもの在留資格（来日帯同・日本生まれ以外） | ✅ | ANSWER_RUNTIME | P1 |
+| practical-043 | 就労系在留資格とリストラ・会社倒産の影響 | ✅ | ANSWER_RUNTIME | P0 |
+| practical-044 | 永住者の義務：在留カード7年更新・住所届出等 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-045 | 技人国の月額報酬基準：日本人同等以上要件の実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-046 | 特定技能：登録支援機関と支援計画義務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-047 | 特定技能1号の転職制限：同分野内のみ | ✅ | ANSWER_RUNTIME | P1 |
+| practical-048 | 在留資格「教育」：学校教員の要件と認定 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-049 | 定住者の告示類型：日系人・中国帰国者・離婚後等 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-050 | 外国人の銀行口座・携帯電話・クレジットカード開設 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-051 | 永住者の配偶者等：活動制限なし・離婚後の取扱い | ✅ | ANSWER_RUNTIME | P1 |
+| practical-052 | 技人国の学歴要件：専門学校・高専・海外大学の扱い | ✅ | ANSWER_RUNTIME | P1 |
+| practical-053 | 在留資格「芸術」「文化活動」：芸術家・音楽家の申請実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-054 | 高度専門職ポイント計算の実務（学歴・年収・資格の詳細） | ✅ | ANSWER_RUNTIME | P1 |
+| practical-055 | 技能実習生の失踪後：不法残留・在留資格回復・特定技能移行の実態 | ✅ | ANSWER_RUNTIME | P0 |
+| practical-056 | 技人国のグレーゾーン業務：現場作業・単純労働との境界 | ✅ | ANSWER_RUNTIME | P0 |
+| practical-057 | 日本で生まれた外国人の子ども：出生後60日以内の在留資格申請 | ✅ | ANSWER_RUNTIME | P0 |
+| practical-058 | 特定技能2号への移行要件：試験・実績・対象分野の実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-059 | 在留資格「宗教」「報道」：特殊カテゴリの要件と実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-060 | 技人国・就労系在留資格からの永住申請：在留歴計算と就労歴の扱い | ✅ | ANSWER_RUNTIME | P1 |
+
+## Batch 3 Handoff Note
+
+- 完成日: 2026-05-18
+- 担当: FACT Operator (Claude)
+- 次バッチ: Batch 4 (practical-061〜080)
+- 優先トピック: 難民認定・無国籍者 / 経営管理の追加実務 / 技能実習3年5年の計算 / 日本語学校→専門学校ルート / 仮放免制度等
+- DOMAIN送付済み: pending（pdom-007を含む計7件）
 - コミット: pending
