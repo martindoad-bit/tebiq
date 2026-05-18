@@ -1779,6 +1779,7 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
     ],
     relatedTopicIds: [
       'address-change-residence-card-materials',
+      'high-school-tuition-support-materials',
     ],
     aliases: ['孩子入学', '小学入学', '公立学校', '就学相談', '日本語指導'],
     deadline: '搬入新住所或新学年开始前先和教育委员会预约就学相談。',
@@ -1807,6 +1808,52 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
       {
         label: '文部科学省：外国人の子供の就学支援',
         url: 'https://www.mext.go.jp/a_menu/shotou/clarinet/main7_a2.htm',
+      },
+    ],
+  },
+  {
+    id: 'high-school-tuition-support-materials',
+    title: '高校就学支援金 材料',
+    summary: '高校授業料の支援制度。2026 年新制度では所得制限が撤廃され、申請は学校案内に従う。',
+    category: '生活',
+    factCardIds: [
+      'koukou-mukyo-shogakukin',
+    ],
+    relatedTopicIds: [
+      'minor-school-enrollment-materials',
+    ],
+    aliases: ['高校無償化', '高校无偿化', '就学支援金', 'e-Shien', '高校学费', '高中学费补助'],
+    deadline: '学校から案内される申請期間内。申請時期や締切は学校・都道府県の案内で確認。',
+    whereToGo: '在籍または入学予定の高校等。オンライン申請は e-Shien を使う場合がある。',
+    prepare: [
+      '学校から配布される申請案内',
+      'e-Shien 等のログイン情報（学校から案内がある場合）',
+      '生徒・保護者の基本情報',
+      '学校や都道府県から求められた追加資料',
+    ],
+    askPrompt: '外国籍の子どもが日本の高校に入るので、就学支援金と申請材料を確認したい。',
+    facts: [
+      {
+        label: '制度名',
+        text: 'いわゆる「高校無償化」は、正確には授業料を支援する「高等学校等就学支援金」。',
+        verification: 'source-backed',
+      },
+      {
+        label: '2026 年新制度',
+        text: '2026 年 4 月の新制度では所得制限が撤廃され、申請手続きが必要。',
+        verification: 'source-backed',
+      },
+      {
+        label: '外国籍生徒',
+        text: '文科省ページには、日本国籍以外の生徒や外国人学校の生徒向けの案内資料・申請フローがある。',
+        verification: 'source-backed',
+      },
+    ],
+    checkNote: '授業料以外の給付金、外国人学校の個別対象可否、都道府県独自支援は別確認。自動で無料になる制度ではない。',
+    sources: [
+      {
+        label: '文部科学省：高校生等への修学支援',
+        url: 'https://www.mext.go.jp/a_menu/shotou/mushouka/',
       },
     ],
   },
