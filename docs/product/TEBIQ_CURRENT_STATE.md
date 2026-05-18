@@ -10,8 +10,8 @@
 | `last_verified` | 2026-05-18 |
 | `verified_by` | Codex Production Lead / AI Engineering Lead |
 | `production_url` | https://tebiq.jp |
-| `production_build_info_after_loop20_merge` | `gitSha=d0b93bb08a95f75442cdefa5f8f6aedc7d9d41ca`, `builtAt=2026-05-18T11:02:42.654Z`, `version=answer-core-v1.1-llm` |
-| `active_branch_when_updated` | `codex/knowledge-runtime-loop20-validation` |
+| `production_build_info_after_loop21_merge` | `gitSha=244db78e4d7d3b28b85ee06818a69e1091e2bcfb`, `builtAt=2026-05-18T12:02:32.259Z`, `version=answer-core-v1.1-llm` |
+| `active_branch_when_updated` | `codex/knowledge-runtime-loop21-report` |
 | `current_focus` | Knowledge Runtime Expansion Goal: 400+ high-quality knowledge assets, answer product 85+, Materials Tab 85+ |
 
 ## Current Phase
@@ -36,7 +36,7 @@ ordinary answer runtime.
 
 ## Knowledge Layer Waterline
 
-As of Loop20 production sync:
+As of Loop21 production sync:
 
 | State | Count | Runtime meaning |
 |---|---:|---|
@@ -65,6 +65,7 @@ Unsafe strategy cards must not be promoted just to increase the number.
 | Loop18 | Source-repaired `startup-visa-keiei-transition` into a narrow runtime card and moved `kazoku-yobi-naitei-haigusha` to L5-only; added 3 quick-reference material scenes (`永住者配偶者等`, `家族滞在変更`, `家族滞在COE`); DB sync and production smoke completed on `a6cc73f` |
 | Loop19 | Processed the remaining 33 quarantine cards: 10 promoted to answer runtime, 3 kept as materials-only, 15 explicitly marked L5-only, 5 marked needs-rewrite; added `foreign-will-notary-materials`; production DB sync completed with 269/269 upserts, production URL smoke 70/70, and production answer smoke 25/25 |
 | Loop20 | Rewrote the 5 Loop19 `NEEDS_REWRITE` cards into narrow official-source runtime facts; added `high-school-tuition-support-materials`; targeted production DB sync completed for 5/5 cards, DB and filesystem aligned at 269 cards, production URL smoke 70/70, new material path 200, and answer smoke 25/25 |
+| Loop21 | Fixed the full `npm run fact-layer:sync` production write hang by closing the DB client after CLI sync and adding progress output; verified full 269/269 production sync, DB/filesystem alignment, production URL smoke 70/70, and production answer smoke 25/25 on deployed SHA `244db78` |
 
 ## Product Judgment
 
@@ -127,14 +128,15 @@ What is still not 1.0:
 | Materials depth | 15 entity base is online and quick-reference topics are now 48; more source freshness and cross-linking are still needed |
 | Rewrite/source-repair queue | `eijuu-jukyo-check-tax-shomeisho` remains the main source-repair candidate; Loop20 rewrote the other named Loop19 rewrite cards |
 | L5 content depth | Existing L5 route gates catch risk, but many panels still need richer practical preparation content |
-| Sync tooling | Full `npm run fact-layer:sync` dry-run passes but production write hung in Loop20; targeted 5-card sync succeeded and DB audit aligned |
+| Sync tooling | Fixed in Loop21: full production `npm run fact-layer:sync` completed 269/269 and exited normally |
 | Production latency | Long answers can still be slow; not part of current knowledge loop |
 | Commercial metrics | Lead-gen exists, but analytics loop is not yet mature |
 
 ## Next Work
 
-1. Investigate and fix full production `fact-layer:sync` write hang so future
-   loops do not need targeted sync workarounds.
-2. Add AQL-origin provenance for `aql-rur-037-jfind-employment-bridge`.
-3. Source-repair or safely bucket `eijuu-jukyo-check-tax-shomeisho`.
-4. Continue production answer and materials regression after each loop.
+1. Add AQL-origin provenance for `aql-rur-037-jfind-employment-bridge`.
+2. Source-repair or safely bucket `eijuu-jukyo-check-tax-shomeisho`.
+3. Continue the remaining 18 quarantine cards as small DOMAIN/L5/material
+   batches; do not mass-promote them for count.
+4. Deepen materials cross-linking and source freshness toward Materials Tab 85+.
+5. Continue production answer and materials regression after each loop.
