@@ -11,13 +11,13 @@
 
 | 指标 | 当前值 |
 |------|--------|
-| 已完成卡片数 | 120 |
+| 已完成卡片数 | 140 |
 | DOMAIN 队列总数 | 8 |
-| ANSWER_RUNTIME 可注入 | 115 |
+| ANSWER_RUNTIME 可注入 | 135 |
 | MATERIALS_ONLY | 5 |
 | L5_ONLY | 0 |
 | NEEDS_REWRITE | 0 |
-| 已完成批次 | 6 |
+| 已完成批次 | 7 |
 
 ---
 
@@ -255,7 +255,42 @@
 
 - 完成日: 2026-05-19
 - 担当: FACT Operator (Claude)
-- 次バッチ: Batch 7 (practical-121〜140)
+- コミット: a3cb417
 - 新規DOMAIN: pdom-008（同性パートナー向け特定活動の要件実態）
+- DOMAIN送付済み: pending（pdom-001〜008）
+
+---
+
+## Batch 7 状態（目標: 20張）
+
+| card_id | topic | status | runtime_bucket | risk |
+|---------|-------|--------|---------------|------|
+| practical-121 | 在留資格「文化活動」：報酬なし要件と留学との違い | ✅ | ANSWER_RUNTIME | P1 |
+| practical-122 | 技人国の「継続的就労」：無職期間3か月ルールの詳細と就職活動記録 | ✅ | ANSWER_RUNTIME | P0 |
+| practical-123 | 日本での起業：合同会社vs株式会社と経営管理ビザの関係 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-124 | 特定技能：受入機関変更（転職）手続きと空白期間 | ✅ | ANSWER_RUNTIME | P0 |
+| practical-125 | 「投資・経営」廃止と「経営管理」への移行：歴史的経緯 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-126 | 外国人の日本での遺産相続・相続税 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-127 | 在留申請の「申請人本人申請」vs「代理人申請」 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-128 | 在留資格「教育」：外国語指導助手（ALT）と学校教員 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-129 | 「みなし再入国許可」：1年以内の出国と失効リスク | ✅ | ANSWER_RUNTIME | P1 |
+| practical-130 | 外国人労働者の労働災害（労災）：在留資格不問で適用 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-131 | 在留カードの住所と実際の住所が異なる場合のリスク | ✅ | ANSWER_RUNTIME | P0 |
+| practical-132 | 留学ビザから技人国への変更：卒業後の在留資格切替実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-133 | 永住者・定住者の就労制限なし：範囲と別法規制の関係 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-134 | 技人国の「年収基準」：300万円目安の実務的解釈 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-135 | 外国人の日本での離婚：在留資格への影響と後続手続き | ✅ | ANSWER_RUNTIME | P0 |
+| practical-136 | 在留資格「技術」と「技人国」の違い：2015年統合後の整理 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-137 | 不法残留（オーバーステイ）からの出国・正規化の選択肢 | ✅ | ANSWER_RUNTIME | P0 |
+| practical-138 | 技人国の「大学の専攻と業務の関連性」：許容範囲と実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-139 | 外国人のマイナンバーカード取得：義務・メリット・方法 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-140 | 技能実習制度廃止と育成就労制度への移行：在留中実習生の扱い | ✅ | ANSWER_RUNTIME | P1 |
+
+## Batch 7 Handoff Note
+
+- 完成日: 2026-05-19
+- 担当: FACT Operator (Claude)
+- 次バッチ: Batch 8 (practical-141〜160)
+- 新規DOMAIN: なし
 - DOMAIN送付済み: pending（pdom-001〜008）
 - コミット: pending
