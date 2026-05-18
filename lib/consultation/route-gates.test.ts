@@ -362,6 +362,8 @@ test('matches PR nonpermission leave-and-reapply trap', () => {
   const matches = matchRouteGates('上次永住申请不许可了，可以出国再回来重新申请吗？')
 
   assert.ok(getRouteGateIds(matches).includes('nonpermission-no-ordinary-appeal-no-grace'))
+  const gate = matches.find(match => match.pattern.id === 'nonpermission-no-ordinary-appeal-no-grace')?.pattern
+  assert.match(gate?.mustSay.join('\n') ?? '', /行政書士.*入管専門弁護士|入管専門弁護士.*行政書士/)
 })
 
 test('matches PR basic requirements not years-only traps', () => {
