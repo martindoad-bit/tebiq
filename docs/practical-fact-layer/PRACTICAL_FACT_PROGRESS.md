@@ -11,13 +11,13 @@
 
 | 指标 | 当前值 |
 |------|--------|
-| 已完成卡片数 | 600 |
+| 已完成卡片数 | 620 |
 | DOMAIN 队列总数 | 9 |
-| ANSWER_RUNTIME 可注入 | 592 |
+| ANSWER_RUNTIME 可注入 | 612 |
 | MATERIALS_ONLY | 8 |
 | L5_ONLY | 0 |
 | NEEDS_REWRITE | 0 |
-| 已完成批次 | 30 |
+| 已完成批次 | 31 |
 
 ---
 
@@ -1092,6 +1092,41 @@
 | practical-600 | 外国人の「日本での確定申告（所得税・住民税）」と在留資格の関係 | ✅ | ANSWER_RUNTIME | P1 |
 
 ## Batch 30 Handoff Note
+
+- 完成日: 2026-05-19
+- 担当: FACT Operator (Claude)
+- コミット: 1cbc714
+- 新規DOMAIN: なし
+- DOMAIN送付済み: pending（pdom-001〜009）
+
+---
+
+## Batch 31 状態（目標: 20張）
+
+| card_id | topic | status | runtime_bucket | risk |
+|---------|-------|--------|---------------|------|
+| practical-601 | 外国人の「在留資格申請時の写真要件」と申請書の作成実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-602 | 外国人の「難民認定申請中の在留と就労」の実務 | ✅ | ANSWER_RUNTIME | P0 |
+| practical-603 | 外国人の「家族滞在から他の在留資格への変更」の実務と条件 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-604 | 外国人の「企業内転勤ビザ（在留資格「企業内転勤」）」の要件と実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-605 | 外国人の「デジタルノマド・リモートワーク」と日本での在留資格 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-606 | 外国人の「在留資格の取消後の再申請・上陸拒否期間」の実務 | ✅ | ANSWER_RUNTIME | P0 |
+| practical-607 | 外国人の「日本でのNPO・NGO活動」と在留資格（ボランティア・非営利活動） | ✅ | ANSWER_RUNTIME | P1 |
+| practical-608 | 外国人の「特定活動（告示外）ビザ」の主な類型と申請実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-609 | 外国人の「技人国ビザの「大学卒業要件」と専門学校・実務経験代替」の実務判断 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-610 | 外国人の「特定技能1号の支援計画・登録支援機関」の義務と実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-611 | 外国人の「入管収容・被収容者の権利」と仮放免の実務 | ✅ | ANSWER_RUNTIME | P0 |
+| practical-612 | 外国人の「日本での国際養子縁組」と在留資格（養子の入国・在留） | ✅ | ANSWER_RUNTIME | P1 |
+| practical-613 | 外国人の「入管収容からの仮放免中の就労・移動制限」の実務 | ✅ | ANSWER_RUNTIME | P0 |
+| practical-614 | 外国人の「日本での成年後見制度」と在留資格（外国人が被後見人・後見人になる場合） | ✅ | ANSWER_RUNTIME | P1 |
+| practical-615 | 外国人の「在留資格申請の代理人・取次者」の実務（行政書士・弁護士・申請等取次者） | ✅ | ANSWER_RUNTIME | P1 |
+| practical-616 | 外国人の「日本での離婚調停・家事審判」と在留資格への影響 | ✅ | ANSWER_RUNTIME | P0 |
+| practical-617 | 外国人の「介護ビザ（在留資格「介護」）の申請・更新」の実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-618 | 外国人の「永住申請の素行要件・公的義務の具体的な審査実務」 | ✅ | ANSWER_RUNTIME | P0 |
+| practical-619 | 外国人の「日本でのマイナンバーカード」取得と在留資格・行政サービスへの影響 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-620 | 外国人の「技人国ビザ保持者が日本語教師になる」場合の在留資格判断 | ✅ | ANSWER_RUNTIME | P1 |
+
+## Batch 31 Handoff Note
 
 - 完成日: 2026-05-19
 - 担当: FACT Operator (Claude)
