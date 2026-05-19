@@ -1,6 +1,7 @@
 import { matchFactCards, type FactCardMatch } from '@/lib/answer/fact-layer/matcher'
 import { KEYWORD_BUCKETS, STATUS_LABEL_INITIAL_DEFAULT } from '@/lib/answer/intent/keyword-buckets'
 import { matchBuckets, topBucket } from '@/lib/answer/intent/match-buckets'
+import { matchWebContext, webMatchesToPromptContext } from '@/lib/answer/web-context/matcher'
 import {
   CONSULTATION_ALPHA_MODEL,
   CONSULTATION_ALPHA_MAX_TOKENS,
@@ -10,6 +11,7 @@ import {
   CONSULTATION_FINAL_OUTPUT_GUARD,
   buildConsultationMessages,
 } from '@/lib/answer/prompt/consultation-alpha-v1'
+import { matchPracticalCards, practicalMatchesToPromptContext } from '@/lib/answer/practical-layer/matcher'
 import { anchorsToPromptContext, matchAnchors } from '@/lib/consultation/fact-anchors'
 import { createForbiddenFilter } from '@/lib/consultation/forbidden-phrases'
 import { selectTerminalGuardrailFindings, validateAnswer } from '@/lib/consultation/guardrail-validator'
@@ -180,6 +182,22 @@ export async function POST(req: Request) {
         return [] as FactCardMatch[]
       })
     : Promise.resolve([] as FactCardMatch[])
+
+  const practicalLayerEnabled = process.env.PRACTICAL_LAYER_ENABLED === 'true'
+  const practicalMatchesPromise = practicalLayerEnabled
+    ? Promise.resolve(matchPracticalCards(question)).catch(err => {
+        console.warn('[consultation/stream] matchPracticalCards failed', err)
+        return []
+      })
+    : Promise.resolve([])
+
+  const webContextPromise = matchWebContext({
+    question,
+    imageSummary: trimmedImageSummary || null,
+  }).catch(err => {
+    console.warn('[consultation/stream] matchWebContext failed', err)
+    return []
+  })
 
   // Create the row before opening the stream so the consultation_id is
   // emitted in the very first 'received' frame.
@@ -402,6 +420,10 @@ export async function POST(req: Request) {
       if (factLayerEnabled) {
         emit({ event: 'fact_cards_injected', ts: Date.now(), items: factCardAudit })
       }
+      const practicalMatches = await practicalMatchesPromise
+      const practicalSystemMessage = practicalMatchesToPromptContext(practicalMatches)
+      const webContextMatches = await webContextPromise
+      const webContextSystemMessage = webMatchesToPromptContext(webContextMatches)
 
       // 5. Open DS streaming connection
       const dsAbort = new AbortController()
@@ -426,7 +448,9 @@ export async function POST(req: Request) {
       // message is explicitly the sanctioned injection mechanism per
       // Pack §2 / design doc §"Injection point".
       const injectedSystemMessages = [
+        webContextSystemMessage,
         factSystemMessage,
+        practicalSystemMessage,
         routeGatePrompt,
       ].filter((message): message is string => Boolean(message))
 

@@ -11,13 +11,13 @@ import './globals.css'
  */
 export const metadata: Metadata = {
   metadataBase: new URL('https://tebiq.jp'),
-  title: 'TEBIQ — 下一步怎么做',
+  title: 'TEBIQ — 在留咨询和材料',
   manifest: '/manifest.webmanifest',
   description:
-    '签证、税金、年金、会社手续和日文通知。先看下一步、材料、期限和办理窗口。',
+    '签证、税金、年金、会社手续和日文通知。核对手续、材料、期限和办理窗口。',
   openGraph: {
-    title: 'TEBIQ — 下一步怎么做',
-    description: '签证、税金、年金、会社手续和日文通知。先看下一步、材料、期限和办理窗口。',
+    title: 'TEBIQ — 在留咨询和材料',
+    description: '签证、税金、年金、会社手续和日文通知。核对手续、材料、期限和办理窗口。',
     url: 'https://tebiq.jp',
     siteName: 'TEBIQ',
     locale: 'zh_CN',
@@ -25,8 +25,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'TEBIQ — 下一步怎么做',
-    description: '签证、税金、年金、会社手续和日文通知。先看下一步、材料、期限和办理窗口。',
+    title: 'TEBIQ — 在留咨询和材料',
+    description: '签证、税金、年金、会社手续和日文通知。核对手续、材料、期限和办理窗口。',
   },
 }
 

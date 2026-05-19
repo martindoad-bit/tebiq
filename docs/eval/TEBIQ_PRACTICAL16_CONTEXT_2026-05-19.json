@@ -1,0 +1,346 @@
+{
+  "benchmark_id": "TEBIQ-PRACTICAL16-20260519",
+  "created_at": "2026-05-19",
+  "note": "Sixteen-question benchmark for the first 30-card practical runtime slice. Every question includes curated web context. Q001-Q010 are intended to hit practical cards; Q011-Q016 are ordinary life/admin controls intended not to hit this first practical slice.",
+  "questions": [
+    {
+      "question_id": "WEB10-Q001",
+      "source_question_id": "custom-spouse-remarriage",
+      "persona": "王女士",
+      "background": "中国籍，日本人配偶者等。前婚因出轨离婚，现已与另一名日本人再婚。",
+      "question": "我客户是日配，出轨离婚后，和另一个日本人结婚，他是更新还是变更签证？",
+      "web_context": [
+        {
+          "source": "ISA 配偶者に関する届出",
+          "url": "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00016.html",
+          "summary": "日本人配偶者等等の配偶者身分者が離婚・死別した場合は、事由発生日から14日以内に出入国在留管理庁長官へ届出が必要。"
+        },
+        {
+          "source": "UBIQ 配偶者ビザ更新",
+          "url": "https://ubiq.jp/practices/spouse-extension/",
+          "summary": "日本人配偶者等保有者が日本人と離婚後、別の日本人と再婚した場合、手続名称自体は在留期間更新申請に該当するが、実務上は変更許可申請と同じ取扱いになると説明。"
+        },
+        {
+          "source": "Visajapan 離婚後再婚",
+          "url": "https://www.visajapan.jp/jirei_haigusha5.html",
+          "summary": "離婚後に別の日本人と再婚した場合でも、現在の婚姻に実体があれば次回の在留期間更新で新しい配偶者として更新を目指すことは可能。ただし通常より慎重に確認される。"
+        },
+        {
+          "source": "Kekkonvisa spouse extension",
+          "url": "https://kekkonvisa.tokyo/extension/",
+          "summary": "単純更新と、離婚や死別を経て再婚後に行う更新では必要書類や審査難易度が大きく異なる。"
+        }
+      ]
+    },
+    {
+      "question_id": "WEB10-Q002",
+      "source_question_id": "CEB01-Q002",
+      "persona": "Minh",
+      "background": "越南籍，永住者配偶，在便利店打工。",
+      "question": "我太太是永住，我是永住者配偶，这个签证是不是可以随便打工？店长说没关系但我还是怕。",
+      "web_context": [
+        {
+          "source": "MOJ 永住者の在留資格について PDF",
+          "url": "https://www.moj.go.jp/isa/content/930003741.pdf",
+          "summary": "身分・地位に基づく在留資格（日本人の配偶者等、永住者の配偶者等、定住者）は活動に制限はないが、身分又は地位を有する者としての活動を逸脱しないことに留意。"
+        },
+        {
+          "source": "ISA Q&A 外国人雇用",
+          "url": "https://www.moj.go.jp/isa/immigration/faq/kanri_qa.html?hl=ja",
+          "summary": "在留資格が日本人の配偶者等、永住者の配偶者等、定住者又は永住者であれば雇用可能。留学や家族滞在は資格外活動許可と時間・内容制限に注意。"
+        },
+        {
+          "source": "ISA 永住者の配偶者等",
+          "url": "https://www.moj.go.jp/isa/applications/status/spouseorchildofpermanentresident.html",
+          "summary": "永住者等の配偶者又は永住者等の子として本邦で出生し引き続き在留する者が対象。"
+        }
+      ]
+    },
+    {
+      "question_id": "WEB10-Q003",
+      "source_question_id": "CEB01-Q006",
+      "persona": "Chen Wei",
+      "background": "中国籍，高度専門職1号，奖金下降。",
+      "question": "高才积分当时是80分，今年奖金少了可能不到80，这样下次更新会被取消吗？",
+      "web_context": [
+        {
+          "source": "ISA 高度専門職",
+          "url": "https://www.moj.go.jp/isa/applications/status/designatedactivities02_00004.html?hl=ja",
+          "summary": "入国後に年齢ポイントや年収ポイントが減少して70点未満になった時点で直ちに高度専門職1号として在留できなくなるわけではない。ただし更新時にポイント合計が70点未満の場合は更新許可を受けることはできない。"
+        },
+        {
+          "source": "ISA 高度人材ポイント制Q&A",
+          "url": "https://www.moj.go.jp/isa/applications/resources/newimmiact_3_qa.html",
+          "summary": "高度外国人材と認定されるにはポイント合計70点以上が必要。高度専門・技術活動及び高度経営・管理活動では年収300万円に達しない場合、他項目で70点を超えても高度外国人材として認定されない。"
+        }
+      ]
+    },
+    {
+      "question_id": "WEB10-Q004",
+      "source_question_id": "CEB01-Q012",
+      "persona": "Nana",
+      "background": "尼泊尔籍，家族滞在，丈夫技人国。",
+      "question": "我老公换公司了，我的家族滞在也要跟着办什么吗？还是下次更新再说？",
+      "web_context": [
+        {
+          "source": "ISA 届出案内 PDF",
+          "url": "https://www.moj.go.jp/isa/content/930004717.pdf",
+          "summary": "技術・人文知識・国際業務など契約機関との契約に基づく在留資格では、契約機関との契約終了や新たな契約締結等について14日以内の届出が必要。"
+        },
+        {
+          "source": "ISA 家族滞在",
+          "url": "https://www.moj.go.jp/isa/applications/status/dependent.html",
+          "summary": "家族滞在は扶養を受ける配偶者又は子としての日常的活動を行う在留資格。更新では扶養者の在留カード/旅券写し、在職証明、課税・納税証明などで扶養状況を確認する。"
+        }
+      ]
+    },
+    {
+      "question_id": "WEB10-Q005",
+      "source_question_id": "CEB01-Q025",
+      "persona": "Ravi",
+      "background": "印度籍，技人国，公司要转业务委托。",
+      "question": "公司说要我转成业务委托，不是正社员了，工资按项目给。我的技人国还能用吗？",
+      "web_context": [
+        {
+          "source": "ISA 技人国明確化 PDF",
+          "url": "https://www.moj.go.jp/isa/content/001413639.pdf",
+          "summary": "技術・人文知識・国際業務の『契約』には、雇用のほか、委任、委託、嘱託等が含まれる。"
+        },
+        {
+          "source": "名古屋ビザ申請サポート 業務委託",
+          "url": "https://nagoyavisa.com/2269/",
+          "summary": "業務委託契約であっても、継続性、業務内容、報酬、指揮命令関係などの要件を満たせば技人国で許可される可能性がある。"
+        },
+        {
+          "source": "Fukuoka Hakata 技人国",
+          "url": "https://jp.fukuoka-hakata.com/foreign-visa/technology-humanities-international",
+          "summary": "就労先との契約の典型は雇用契約だが、特定機関との継続的な契約であれば業務委託等も問題ないと説明。"
+        }
+      ]
+    },
+    {
+      "question_id": "WEB10-Q006",
+      "source_question_id": "CEB01-Q026",
+      "persona": "Linh",
+      "background": "越南籍，特定技能，想辞职换公司。",
+      "question": "我想辞职，但登録支援机关说不可以自己找工作，要他们安排。可是公司很压榨，我可以先跑吗？",
+      "web_context": [
+        {
+          "source": "ISA 特定技能",
+          "url": "https://www.moj.go.jp/isa/applications/status/specifiedskilledworker.html",
+          "summary": "在留資格『特定技能』の方が所属機関を変更する場合は、在留資格変更許可申請が必要。"
+        },
+        {
+          "source": "SSW Support Site 必要書類",
+          "url": "https://www.ssw.go.jp/jp/about/apply/",
+          "summary": "特定技能許可には健康診断書などの書類が必要。本人・受入機関・登録支援機関が準備する資料がある。"
+        },
+        {
+          "source": "MHLW 特定技能書類未準備時",
+          "url": "https://www.mhlw.go.jp/content/11130500/001338375.pdf",
+          "summary": "在留期間中に受入れ機関の書類を準備できない場合は、特定活動への在留資格変更許可申請を行うよう案内がある。"
+        }
+      ]
+    },
+    {
+      "question_id": "WEB10-Q007",
+      "source_question_id": "CEB01-Q028",
+      "persona": "Chen Wei",
+      "background": "中国籍，高才，准备永住，源泉票收入写错。",
+      "question": "我高才准备申请永住，但公司去年源泉票收入写错了，少写几十万，现在能改吗？怕被说虚假。",
+      "web_context": [
+        {
+          "source": "NTA 法定調書Q&A",
+          "url": "https://www.e-tax.nta.go.jp/toiawase/qaindex/choshoqa.htm",
+          "summary": "法定調書や源泉徴収票等の訂正についてのQ&Aがある。提出済情報に誤りがある場合は訂正手続の対象となる。"
+        },
+        {
+          "source": "NTA 源泉所得税",
+          "url": "https://www.nta.go.jp/taxes/shiraberu/zeimokubetsu/gensen.htm",
+          "summary": "源泉所得税・給与所得の源泉徴収事務や法定調書関係手続は国税庁の所管。"
+        },
+        {
+          "source": "大阪国際法務 高度人材年収",
+          "url": "https://oilo.jp/staff_blog/3448/",
+          "summary": "高度人材相当の永住申請では、過去の源泉徴収票や所得・課税証明の金額が無条件に年収として扱われるわけではなく、仕事の対価として確定的に得られる収入が対象になると説明。"
+        }
+      ]
+    },
+    {
+      "question_id": "WEB10-Q008",
+      "source_question_id": "CEB01-Q031",
+      "persona": "李娜",
+      "background": "中国籍，日配续签，本人无收入。",
+      "question": "日配更新材料到底要哪些？课税证明、纳税证明是我老公的还是我的？我自己没收入。",
+      "web_context": [
+        {
+          "source": "ISA 日本人配偶者等",
+          "url": "https://www.moj.go.jp/isa/applications/status/spouseorchildofjapanese01.html?hl=ja",
+          "summary": "在留期間更新では、滞在費用を支弁する方の直近1年分の住民税課税/非課税証明書及び納税証明書を提出。申請人が自ら支弁する場合は申請人の証明書を提出。配偶者（日本人）の身元保証書も必要。"
+        },
+        {
+          "source": "ISA 提出書類一覧 PDF",
+          "url": "https://www.moj.go.jp/isa/content/001426542.pdf",
+          "summary": "日本人配偶者等（配偶者）の更新書類には、申請書、写真、日本人配偶者の戸籍謄本、滞在費用を支弁する方の住民税課税/非課税証明・納税証明、日本人配偶者の身元保証書、住民票等が含まれる。"
+        }
+      ]
+    },
+    {
+      "question_id": "WEB10-Q009",
+      "source_question_id": "CEB01-Q038",
+      "persona": "Aisha",
+      "background": "印尼籍，家族滞在，想申请打工许可。",
+      "question": "我想申请资格外活动许可，是不是只要表格？需要老公公司资料吗？我还没找到打工。",
+      "web_context": [
+        {
+          "source": "ISA 家族滞在資格外活動許可",
+          "url": "https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri07_00004.html?hl=en",
+          "summary": "家族滞在の包括許可（1週28時間以内）の必要書類は申請書のみ。個別許可は活動機関名・業務内容等を定めて個別に許可される。包括許可と個別許可の両方を受けることも可能。"
+        },
+        {
+          "source": "資格外活動申請記入例",
+          "url": "https://column.jfbfe.or.jp/shikakugaikatsudou_work_permit/",
+          "summary": "申請書の勤務先欄は勤務先が決まっていなければ未定と記入する実務例が示されている。"
+        }
+      ]
+    },
+    {
+      "question_id": "WEB10-Q010",
+      "source_question_id": "CEB01-Q040",
+      "persona": "Linh",
+      "background": "越南籍，特定技能，换公司。",
+      "question": "新公司说他们会办，但叫我准备履历书、评价调书、健康诊断。我不知道哪些是必须的。",
+      "web_context": [
+        {
+          "source": "ISA 特定技能",
+          "url": "https://www.moj.go.jp/isa/applications/status/specifiedskilledworker.html",
+          "summary": "特定技能で所属機関を変更する場合は在留資格変更許可申請が必要。"
+        },
+        {
+          "source": "SSW Support Site 必要書類",
+          "url": "https://www.ssw.go.jp/jp/about/apply/",
+          "summary": "特定技能許可には健康診断書（病院で取る）等の書類が必要と案内されている。"
+        },
+        {
+          "source": "特定技能制度運用要領 PDF",
+          "url": "https://www.moj.go.jp/isa/content/930004945.pdf",
+          "summary": "特定技能外国人の受入れ、雇用契約、支援計画、転職等に関する運用要領。受入れ機関・支援機関側の届出や書類準備が関係する。"
+        }
+      ]
+    },
+    {
+      "question_id": "PRACT16-Q011",
+      "source_question_id": "control-driver-license",
+      "persona": "周先生",
+      "background": "中国籍，技人国，在日本刚买车。",
+      "question": "我有中国驾照，想在日本开车，是不是翻译一下就能直接开？",
+      "web_context": [
+        {
+          "source": "警察庁 外国免許切替",
+          "url": "https://www.npa.go.jp/bureau/traffic/menkyo/gaimen/index.html",
+          "summary": "外国免許を日本の免許に切り替える制度（外免切替）では、外国免許の有効性や取得後の滞在期間等を確認し、都道府県公安委員会で手続きする。"
+        },
+        {
+          "source": "JAF 外国運転免許証の日本語翻訳文",
+          "url": "https://jaf.or.jp/common/visitor-procedures/switch-to-japanese-license",
+          "summary": "JAF は外国運転免許証の日本語翻訳文を発行するが、翻訳文だけで日本国内を運転できるわけではなく、日本で運転するには国際運転免許証、日本の免許、または一部国・地域免許と翻訳文等の条件が関係する。"
+        }
+      ]
+    },
+    {
+      "question_id": "PRACT16-Q012",
+      "source_question_id": "control-rent-deposit",
+      "persona": "陈女士",
+      "background": "中国籍，留学，准备退租搬家。",
+      "question": "房东说退房要扣我20万日元敷金，说墙纸全部要换。我该怎么判断是不是合理？",
+      "web_context": [
+        {
+          "source": "国土交通省 原状回復ガイドライン",
+          "url": "https://www.mlit.go.jp/jutakukentiku/house/jutakukentiku_house_tk3_000020.html",
+          "summary": "国土交通省は賃貸住宅の原状回復をめぐるトラブルとガイドラインを公開しており、通常損耗・経年変化と借主負担範囲の考え方を示している。"
+        },
+        {
+          "source": "消費者庁 賃貸住宅トラブル",
+          "url": "https://www.caa.go.jp/policies/policy/consumer_policy/caution/caution_011/",
+          "summary": "賃貸住宅退去時の原状回復費用や敷金精算では、契約書、入居時・退去時の状態、通常損耗か故意過失かの確認が重要。"
+        }
+      ]
+    },
+    {
+      "question_id": "PRACT16-Q013",
+      "source_question_id": "control-nursery-fee",
+      "persona": "Nguyen",
+      "background": "越南籍，家族滞在，孩子3岁。",
+      "question": "外国人小孩上保育园，保育料无偿化也适用吗？我需要什么材料？",
+      "web_context": [
+        {
+          "source": "こども家庭庁 幼児教育・保育の無償化",
+          "url": "https://www.cfa.go.jp/policies/kokoseido/mushouka",
+          "summary": "幼児教育・保育の無償化は3歳から5歳までの子ども等を対象に、認可保育所・幼稚園・認定こども園等の利用料を無償化する制度。"
+        },
+        {
+          "source": "デジタル庁 子育てワンストップ",
+          "url": "https://www.digital.go.jp/policies/childcare-one-stop",
+          "summary": "保育所等利用申込や児童手当等の子育て関連手続きは自治体窓口やマイナポータル等を通じて行う。必要書類は自治体・世帯状況により異なる。"
+        }
+      ]
+    },
+    {
+      "question_id": "PRACT16-Q014",
+      "source_question_id": "control-credit-card",
+      "persona": "Siti",
+      "background": "印尼籍，技人国，日本来日半年。",
+      "question": "我信用卡一直被拒，会影响以后签证续签吗？是不是信用记录不好会被入管看到？",
+      "web_context": [
+        {
+          "source": "CIC 信用情報とは",
+          "url": "https://www.cic.co.jp/confidence/",
+          "summary": "CIC はクレジット契約等の信用情報を扱う信用情報機関。支払状況等が登録され、加盟会社の審査に利用される。"
+        },
+        {
+          "source": "ISA 在留資格変更・更新ガイドライン",
+          "url": "https://www.moj.go.jp/isa/applications/resources/nyuukokukanri07_00058.html",
+          "summary": "在留資格の変更・更新では、素行、生計、活動内容、在留必要性等が総合的に考慮される。クレジットカード審査結果そのものを在留審査項目として明示しているわけではない。"
+        }
+      ]
+    },
+    {
+      "question_id": "PRACT16-Q015",
+      "source_question_id": "control-bank-account",
+      "persona": "刘先生",
+      "background": "中国籍，准备完全回国。",
+      "question": "我回国前日本银行账户要不要关？不关会影响以后再来日本吗？",
+      "web_context": [
+        {
+          "source": "金融庁 外国人向け金融サービス利用者相談",
+          "url": "https://www.fsa.go.jp/ordinary/gaikokujin/",
+          "summary": "金融庁は外国人利用者向けに銀行口座や送金等の情報を提供している。口座売買・譲渡は犯罪に悪用されるリスクがある。"
+        },
+        {
+          "source": "全国銀行協会 口座売買の注意喚起",
+          "url": "https://www.zenginkyo.or.jp/article/tag-f/14945/",
+          "summary": "銀行口座の売買や譲渡は犯罪に利用されるおそれがあり、口座名義人自身も責任を問われる可能性がある。帰国時は不要口座の管理・解約や銀行への住所変更等が重要。"
+        }
+      ]
+    },
+    {
+      "question_id": "PRACT16-Q016",
+      "source_question_id": "control-hospital-expense",
+      "persona": "Maria",
+      "background": "菲律宾籍，永住者配偶者，刚做完手术。",
+      "question": "住院花了很多钱，日本有高额医疗费制度吗？外国人也能用吗？",
+      "web_context": [
+        {
+          "source": "厚生労働省 高額療養費制度",
+          "url": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/iryouhoken/iryouhoken13/index.html",
+          "summary": "高額療養費制度は、医療機関や薬局の窓口で支払った額が1か月で上限額を超えた場合に、その超えた額を支給する制度。上限額は年齢や所得で異なる。"
+        },
+        {
+          "source": "協会けんぽ 高額療養費",
+          "url": "https://www.kyoukaikenpo.or.jp/g3/sb3030/r150/",
+          "summary": "協会けんぽ加入者は高額療養費や限度額適用認定証等の制度を利用できる。加入している健康保険により申請先が異なる。"
+        }
+      ]
+    }
+  ]
+}

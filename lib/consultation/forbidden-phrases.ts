@@ -20,16 +20,37 @@
 // longer "应该没问题" must precede the shorter "没问题" in the array so
 // applyReplace consumes it whole; otherwise "没问题" matches first and
 // leaves a dangling "应该" prefix in the output.
+//
+// 2026-05-20 product fix: do NOT redact the bare word "保证/保証".
+// It is a valid immigration/material term in 身元保证书 / 保証会社 /
+// 保証人. We only redact promise-language uses where 保证/保証 is
+// followed by approval/success/no-problem claims nearby.
 export const FORBIDDEN_PHRASES: ReadonlyArray<string> = Object.freeze([
   '一定可以',
   '应该没问题',
   '没问题',
   '不会影响',
-  '保证',
   '必ず',
   '絶対',
   '100%',
   '大丈夫',
+])
+
+const FORBIDDEN_PATTERNS: ReadonlyArray<{
+  label: string
+  pattern: RegExp
+  replacement: string
+}> = Object.freeze([
+  {
+    label: '保证',
+    pattern: /保证(?=[^。！？\n]{0,16}(?:通过|通[过過]|获批|許可|许可|下签|更新成功|不会被拒|不被拒|没问题|没有问题|可以|能过|会过|不影响))/g,
+    replacement: '',
+  },
+  {
+    label: '保証',
+    pattern: /保証(?=[^。！？\n]{0,16}(?:される|できる|許可|通る|大丈夫|問題ない|不許可にならない))/g,
+    replacement: '',
+  },
 ])
 
 const NORMALIZATION_REPLACEMENTS: ReadonlyArray<readonly [string, string]> = Object.freeze([
@@ -43,7 +64,8 @@ const MAX_PHRASE_LEN = [
   ...FORBIDDEN_PHRASES,
   ...NORMALIZATION_REPLACEMENTS.map(([from]) => from),
 ].reduce((m, p) => Math.max(m, p.length), 0)
-const HOLD_LEN = Math.max(0, MAX_PHRASE_LEN - 1)
+const PATTERN_LOOKAHEAD_HOLD_LEN = 20
+const HOLD_LEN = Math.max(0, Math.max(MAX_PHRASE_LEN - 1, PATTERN_LOOKAHEAD_HOLD_LEN))
 
 export interface ForbiddenFilter {
   push(chunk: string): string
@@ -73,6 +95,13 @@ export function createForbiddenFilter(): ForbiddenFilter {
         }
         out = out.split(phrase).join('')
       }
+    }
+    for (const { label, pattern, replacement } of FORBIDDEN_PATTERNS) {
+      pattern.lastIndex = 0
+      out = out.replace(pattern, () => {
+        redactions.push(label)
+        return replacement
+      })
     }
     return out
   }

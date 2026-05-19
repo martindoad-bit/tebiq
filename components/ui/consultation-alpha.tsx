@@ -14,7 +14,7 @@ import {
 import type { LucideIcon } from 'lucide-react'
 
 export const ALPHA_NOTICE =
-  'TEBIQ 帮你整理风险、下一步和可核对资料，不代表最终审查结果。'
+  'TEBIQ 帮你核对在留问题和相关资料，不代表最终审查结果。'
 
 export const RISK_HINT =
   '这个问题可能影响在留手续或之后的判断，建议先核对期限和材料。'

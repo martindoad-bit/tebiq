@@ -8,6 +8,7 @@ import {
   Surface,
 } from '@/components/ui/consultation-alpha'
 import { MATERIAL_ENTITIES } from '@/lib/materials/material-entities'
+import { MaterialsSearchClient } from './MaterialsSearchClient'
 
 export const dynamic = 'force-dynamic'
 
@@ -23,8 +24,10 @@ export default function MaterialsIndexPage() {
         <BrandHeader
           eyebrow="材料"
           title="按材料找"
-          description="同一份材料在不同手续里反复用。这里列出每份材料的取得方式、有效期、复用场景。"
+          description="输入材料俗称或手续名称，先找到可能要看的材料和清单。"
         />
+
+        <MaterialsSearchClient />
 
         <Surface className="space-y-2">
           <SectionLabel>常用材料（{MATERIAL_ENTITIES.length}）</SectionLabel>

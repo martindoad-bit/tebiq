@@ -1269,6 +1269,54 @@ export const MATERIAL_ENTITIES: MaterialEntity[] = [
       },
     ],
   },
+  {
+    id: 'kenko-shindan-sho',
+    title: '健康診断書 / 雇入時健康診断',
+    aliases: [
+      '健康診断',
+      '健康診断書',
+      '雇入時健康診断',
+      '定期健康診断',
+      '健診',
+      '体检',
+      '体检报告',
+      '健康检查',
+    ],
+    whatItIs:
+      '公司录用或定期劳动安全卫生管理中使用的健康检查资料。它通常是雇主侧劳动手续，不是一般在留申请的标准材料。',
+    whoIssues:
+      '实施健康診断的医疗机构；安排主体通常是雇主，费用原则上由事业主负担。',
+    whereToObtain:
+      '按雇主指定的医疗机构或公司安排受诊；已经受诊的结果可向公司或医疗机构确认取得方式。',
+    fee: '雇入时・定期健康診断的费用原则上由事业主负担。',
+    validity:
+      '劳动手续和公司内部要求按雇主指示；在留申请是否需要提交，要按在留资格和窗口指示确认。',
+    reusedIn: [
+      'job-change',
+      'foreign-employment-notification',
+    ],
+    commonMistakes: [
+      '把公司录用手续需要的健康診断，误以为一定是入管要求的在留申请材料。',
+      '一般技人国、永住、配偶者等申请通常不把健康診断書作为标准材料；特定国家/类别的结核检查等另行确认。',
+      '公司要求提交时，先确认是入社手续、派遣/受入机构内部资料，还是入管补件要求。',
+    ],
+    relatedMaterials: [
+      'zaishoku-shomeisho',
+      'koyo-keiyaku-roudou-tsuuchi',
+      'kenpo-shikaku-kakunin',
+    ],
+    askTebiqBridge:
+      '公司让你交健康診断，但不确定是入社手续还是入管材料？可以把公司原话发给 TEBIQ 确认。',
+    factCardIds: [
+      'gaikokujin-kenko-shindan',
+    ],
+    sourceUrls: [
+      {
+        url: 'https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/roudoukijun/anzen/anzeneisei02.html',
+        label: '厚生労働省 — 健康診断について',
+      },
+    ],
+  },
 ]
 
 // ───────────────────────────────────────────────────────────────────────────
