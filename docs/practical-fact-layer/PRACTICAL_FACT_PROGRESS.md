@@ -11,13 +11,13 @@
 
 | 指标 | 当前值 |
 |------|--------|
-| 已完成卡片数 | 420 |
+| 已完成卡片数 | 440 |
 | DOMAIN 队列总数 | 9 |
-| ANSWER_RUNTIME 可注入 | 412 |
+| ANSWER_RUNTIME 可注入 | 432 |
 | MATERIALS_ONLY | 8 |
 | L5_ONLY | 0 |
 | NEEDS_REWRITE | 0 |
-| 已完成批次 | 21 |
+| 已完成批次 | 22 |
 
 ---
 
@@ -780,6 +780,41 @@
 
 - 完成日: 2026-05-19
 - 担当: FACT Operator (Claude)
-- コミット: pending
+- コミット: 2b9d609
+- 新規DOMAIN: なし
+- DOMAIN送付済み: pending（pdom-001〜009）
+
+---
+
+## Batch 22 状態（目標: 20張）
+
+| card_id | topic | status | runtime_bucket | risk |
+|---------|-------|--------|---------------|------|
+| practical-421 | 外国人の「日本語学校（日本語教育機関）」と新認定制度（2024年法改正）| ✅ | ANSWER_RUNTIME | P1 |
+| practical-422 | 特定技能「ビルクリーニング業」の申請実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-423 | 特定技能「宿泊分野」の申請実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-424 | 外国人の「相続・遺産分割」と在留資格への影響 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-425 | 外国人の「NPO・ボランティア活動」と在留資格の関係 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-426 | 特定技能「農業分野」の申請実務と派遣型受入の特徴 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-427 | 外国人の「特許・知的財産権業務」と在留資格 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-428 | 外国人の「スタートアップビザ・起業支援プログラム」活用実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-429 | 外国人の「家事使用人・家政婦・ベビーシッター」として就労する場合の在留資格 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-430 | 外国人の「海外出張・長期出国」が在留資格・永住申請に与える影響 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-431 | 在留資格「特定活動（告示46号）」の実務—日本語能力を活かした業務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-432 | 外国人の「宗教活動・宗教法人での就労」と在留資格 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-433 | 外国人の「日本での自動車免許取得・外国免許の切り替え」 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-434 | 特定技能「飲食料品製造業」の申請実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-435 | 外国人の「雇用保険の失業給付」と在留資格管理 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-436 | 外国人の「日本での投資・株式・証券口座開設」と在留資格 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-437 | 外国人の「技人国ビザと副業・複数雇用主」の関係 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-438 | 外国人の「特定技能から技人国への変更」要件と実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-439 | 特定技能「外食業」の申請実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-440 | 外国人の「在留カードと住民票の住所不一致」の問題とリスク | ✅ | ANSWER_RUNTIME | P1 |
+
+## Batch 22 Handoff Note
+
+- 完成日: 2026-05-19
+- 担当: FACT Operator (Claude)
+- コミット: TBD
 - 新規DOMAIN: なし
 - DOMAIN送付済み: pending（pdom-001〜009）
