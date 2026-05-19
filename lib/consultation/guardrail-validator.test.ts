@@ -914,6 +914,15 @@ test('detects gijinkoku translation side-job no-permit language', () => {
   assert.ok(findings.some(f => f.id === 'answer-gijinkoku-translation-side-job-no-permit'))
 })
 
+test('detects gijinkoku side-job 28h total work cap language', () => {
+  const findings = validatePermissionStateContradictions(
+    '我是技人国，周末想做自由翻译副业接单，28小时以内可以吗？',
+    '准备资料时，算好总工时，确保加上本职不超过每周28小时。',
+  )
+
+  assert.ok(findings.some(f => f.id === 'answer-gijinkoku-side-job-28h-total-work-cap'))
+})
+
 test('detects SSW job-change free or notification-only language', () => {
   const findings = validatePermissionStateContradictions(
     '我是特定技能1号，想从外食转到宿泊，听说特定技能可以自由转职，只要届出就行吗？',
