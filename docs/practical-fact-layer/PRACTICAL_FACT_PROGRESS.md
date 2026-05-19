@@ -11,13 +11,13 @@
 
 | 指标 | 当前值 |
 |------|--------|
-| 已完成卡片数 | 540 |
+| 已完成卡片数 | 560 |
 | DOMAIN 队列总数 | 9 |
-| ANSWER_RUNTIME 可注入 | 532 |
+| ANSWER_RUNTIME 可注入 | 552 |
 | MATERIALS_ONLY | 8 |
 | L5_ONLY | 0 |
 | NEEDS_REWRITE | 0 |
-| 已完成批次 | 27 |
+| 已完成批次 | 28 |
 
 ---
 
@@ -987,6 +987,41 @@
 | practical-540 | 外国人の「日本での印鑑登録・実印」と在留資格・各種手続き | ✅ | ANSWER_RUNTIME | P1 |
 
 ## Batch 27 Handoff Note
+
+- 完成日: 2026-05-19
+- 担当: FACT Operator (Claude)
+- コミット: 749e5b1
+- 新規DOMAIN: なし
+- DOMAIN送付済み: pending（pdom-001〜009）
+
+---
+
+## Batch 28 状態（目標: 20張）
+
+| card_id | topic | status | runtime_bucket | risk |
+|---------|-------|--------|---------------|------|
+| practical-541 | 外国人の「パスポート有効期限切れ」と在留資格への対応 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-542 | 外国人の「就職活動ビザ（特定活動・就職活動）」の取得と活動制限 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-543 | 外国人の「在留資格「研究」と研究者・大学教員」の申請実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-544 | 外国人の「経営管理ビザの更新審査」の重要書類と審査ポイント | ✅ | ANSWER_RUNTIME | P0 |
+| practical-545 | 外国人の「留学生の奨学金・支援制度」と在留資格 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-546 | 外国人の「特定技能での転職・雇用主変更」の手続き実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-547 | 外国人の「経営管理ビザ申請用の事業計画書作成」の実務ポイント | ✅ | ANSWER_RUNTIME | P0 |
+| practical-548 | 外国人の「出入国在留管理庁への審査状況照会」の方法と活用 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-549 | 外国人の「特定技能2号」の対象分野拡大（2023年〜）と申請実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-550 | 外国人の「国民年金・厚生年金の加入義務」と在留資格別の実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-551 | 外国人の「永住者の再入国許可」と長期出国の在留管理 | ✅ | ANSWER_RUNTIME | P0 |
+| practical-552 | 外国人の「法人代表者交代・役員変更」と経営管理ビザへの影響 | ✅ | ANSWER_RUNTIME | P0 |
+| practical-553 | 外国人の「日本の医師・看護師国家資格」取得と在留資格 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-554 | 外国人の「同一会社での部署異動・業務内容変更」と技人国ビザの届出義務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-555 | 外国人の「在留期間更新・変更の標準処理期間」と審査待機中の対応 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-556 | 外国人の「不動産賃貸と外国人差別・保証会社」の実務対応 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-557 | 外国人の「特定技能1号から2号への移行」の要件と実務手続き | ✅ | ANSWER_RUNTIME | P1 |
+| practical-558 | 外国人の「日本語能力試験（JLPT）」と在留資格申請への活用 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-559 | 外国人の「交通違反・行政処分」と在留資格への影響 | ✅ | ANSWER_RUNTIME | P0 |
+| practical-560 | 外国人の「ワーキングホリデービザ（特定活動）」の活用と在留管理 | ✅ | ANSWER_RUNTIME | P1 |
+
+## Batch 28 Handoff Note
 
 - 完成日: 2026-05-19
 - 担当: FACT Operator (Claude)
