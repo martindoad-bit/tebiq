@@ -6,21 +6,17 @@ import {
   Camera,
   CheckCircle2,
   ClipboardCheck,
-  FileText,
   Loader2,
   MessageSquarePlus,
   RefreshCcw,
   Send,
   Share2,
-  ShieldAlert,
 } from 'lucide-react'
 import {
   BrandHeader,
   ConsultationShell,
   MetaPill,
-  RiskHintBanner,
   SectionLabel,
-  StatusBadge,
   Surface,
   type AlphaDisplayState,
 } from '@/components/ui/consultation-alpha'
@@ -862,10 +858,11 @@ function ActiveConsultationView({
 
   return (
     <section className="space-y-4">
-      <Surface className="space-y-2">
-        <SectionLabel>你的问题</SectionLabel>
-        <p className="text-[17px] leading-[1.75] text-[var(--tebiq-ink-blue)]">{active.question}</p>
-      </Surface>
+      <div className="flex justify-end">
+        <div className="max-w-[92%] rounded-[18px] bg-[var(--tebiq-ink-blue)] px-4 py-3 text-[16.5px] leading-[1.7] text-white shadow-sm">
+          {active.question}
+        </div>
+      </div>
 
       {active.photoSummary && (
         <Surface className="flex gap-3">
@@ -881,19 +878,7 @@ function ActiveConsultationView({
         </Surface>
       )}
 
-      <Surface className="space-y-4">
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          <div className="flex items-center gap-2">
-            <FileText className="h-4 w-4 text-[var(--tebiq-ink-blue)]" strokeWidth={1.6} />
-            <SectionLabel>咨询回答</SectionLabel>
-          </div>
-          <StatusBadge state={displayState} />
-        </div>
-
-        <RiskHintBanner hits={active.risk_keywords} />
-        <CrisisActionCard
-          action={getCrisisAction(active.risk_keywords)}
-        />
+      <section className="space-y-4">
         {hasEncodingIssue(active.answer) && (
           <EncodingIssueNotice />
         )}
@@ -950,7 +935,7 @@ function ActiveConsultationView({
           </div>
         )}
 
-        <article className="min-h-[7.5rem] text-[17px] leading-[1.8] text-[var(--tebiq-ink-blue)]">
+        <article className="min-h-[7.5rem] text-[17px] leading-[1.82] text-[var(--tebiq-ink-blue)]">
           {displayState === 'fallback' && active.fallback_text && (
             <p className="mb-3 text-[16px] leading-[1.7] text-[var(--tebiq-deep-slate)]">{active.fallback_text}</p>
           )}
@@ -1021,7 +1006,7 @@ function ActiveConsultationView({
             {activeSafeDetail}
           </p>
         )}
-      </Surface>
+      </section>
 
       {active.followUps.map((turn, index) => (
         <FollowUpTurnCard key={turn.localId} turn={turn} index={index} />
@@ -1126,26 +1111,18 @@ function ActiveConsultationView({
           <MetaPill tone="focus">{userSafeDetail(error, 'failed')}</MetaPill>
         </div>
       )}
-      {active.feedback_sent === 'human_review' && (
-        <HumanReviewNotice consultationId={active.id} />
-      )}
+      {active.feedback_sent === 'human_review' && <HumanReviewNotice />}
     </section>
   )
 }
 
-function HumanReviewNotice({ consultationId }: { consultationId: string }) {
+function HumanReviewNotice() {
   return (
     <Surface className="space-y-2 border-[var(--tebiq-soft-gray)] p-3.5">
       <SectionLabel>已标记需确认</SectionLabel>
       <p className="text-[14px] leading-[1.7] text-[var(--tebiq-deep-slate)]">
         已标记需确认。具体期限、材料或个案判断，请带记录向行政书士或入管确认。
       </p>
-      <a
-        href={`/consultation?consultation_id=${encodeURIComponent(consultationId)}`}
-        className="inline-flex min-h-10 items-center justify-center rounded-btn border border-[var(--tebiq-soft-gray)] px-3 py-2 text-[13.5px] font-medium text-[var(--tebiq-ink-blue)]"
-      >
-        带记录预约
-      </a>
     </Surface>
   )
 }
@@ -1160,19 +1137,15 @@ function FollowUpTurnCard({ turn, index }: { turn: FollowUpTurn; index: number }
 
   return (
     <Surface className="space-y-4 border-l-2 border-l-[var(--tebiq-soft-gray)]">
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <div>
-          <SectionLabel>补充 {index + 1}</SectionLabel>
-          <p className="mt-1 text-[14.5px] leading-[1.7] text-[var(--tebiq-ink-blue)]">{turn.addition}</p>
-        </div>
-        <StatusBadge state={displayState} />
+      <div>
+        <SectionLabel>补充 {index + 1}</SectionLabel>
+        <p className="mt-1 text-[14.5px] leading-[1.7] text-[var(--tebiq-ink-blue)]">{turn.addition}</p>
       </div>
 
       <div className="rounded-card border border-[var(--tebiq-soft-gray)] bg-[var(--tebiq-off-white)] px-3 py-2 text-[13.5px] leading-[1.65] text-[var(--tebiq-deep-slate)]">
         这条补充沿用上面的咨询主题和已生成回答，不作为新的咨询事项。
       </div>
 
-      <RiskHintBanner hits={turn.risk_keywords} />
       {hasEncodingIssue(turn.answer) && (
         <EncodingIssueNotice />
       )}
@@ -1322,85 +1295,16 @@ function FollowUpLimitCard({
   )
 }
 
-type CrisisAction = {
-  title: string
-  body: string
-  steps: string[]
-}
-
-function CrisisActionCard({
-  action,
-}: {
-  action: CrisisAction | null
-}) {
-  if (!action) return null
-  return (
-    <div className="rounded-card border border-[var(--tebiq-warm-amber)] bg-[var(--tebiq-soft-gray)]/30 px-3.5 py-3 text-[13px] leading-[1.65] text-[var(--tebiq-ink-blue)]">
-      <div className="flex items-start gap-2.5">
-        <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0 text-[var(--tebiq-warm-amber)]" strokeWidth={1.6} />
-        <div className="min-w-0 flex-1">
-          <p className="font-semibold">{action.title}</p>
-          <p className="mt-1 text-[12.5px] text-[var(--tebiq-deep-slate)]">{action.body}</p>
-          <ol className="mt-2 space-y-1.5">
-            {action.steps.map((step, index) => (
-              <li key={step} className="flex gap-2">
-                <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[var(--tebiq-off-white)] text-[11px] font-semibold text-[var(--tebiq-ink-blue)]">
-                  {index + 1}
-                </span>
-                <span className="min-w-0">{step}</span>
-              </li>
-            ))}
-          </ol>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-function getCrisisAction(hits: string[]): CrisisAction | null {
-  const hitSet = new Set(hits)
-  if (hitSet.has('家暴')) {
-    return {
-      title: '先保护人身安全，再整理签证影响',
-      body: '如果人身安全受威胁，先离开危险场所并留下记录，签证路径可以随后整理。',
-      steps: ['有当下危险时先联系警察或 DV 支援窗口。', '保留聊天、照片、诊断书、报警或相談记录。', '再确认住所、配偶关系和在留期限会怎样影响下一步。'],
-    }
-  }
-  if (hitSet.has('证件扣押')) {
-    return {
-      title: '先确认并保留证件相关记录',
-      body: '在留卡、护照等证件被扣押时，先处理证件本身和沟通记录，再判断工作或在留影响。',
-      steps: ['保存公司要求、聊天记录和证件被收走的经过。', '必要时联系警察、入管相談或支援窗口确认取回方式。', '不要只听公司口头说法，再整理是否涉及退职、转职或在留期限。'],
-    }
-  }
-  if (hitSet.has('入管通知')) {
-    return {
-      title: '先守住通知期限',
-      body: '入管通知、说明书或补材料不能放着不管，先确认期限和要提交的内容。',
-      steps: ['拍照保存通知书，确认提交期限、提交地点和材料名称。', '把事实经过按时间顺序整理，不要临时编理由。', '期限紧或内容不清楚时，尽快带通知书找专业人士确认。'],
-    }
-  }
-  return null
-}
-
 type AnswerBlock =
   | { kind: 'heading'; text: string }
   | { kind: 'paragraph'; lines: string[] }
   | { kind: 'list'; items: string[] }
 
-interface FirstLookBlock {
-  conclusion: string
-  action: string
-  avoid: string | null
-}
-
 function AnswerProse({ text }: { text: string }) {
   const safeText = cleanDisplayText(text)
-  const { firstLook, rest } = extractFirstLook(safeText)
-  const blocks = buildAnswerBlocks(rest)
+  const blocks = buildAnswerBlocks(safeText)
   return (
     <div className="space-y-4">
-      {firstLook && <FirstLookCard firstLook={firstLook} />}
       {blocks.map((block, index) => {
         if (block.kind === 'heading') {
           return (
@@ -1429,53 +1333,6 @@ function AnswerProse({ text }: { text: string }) {
       })}
     </div>
   )
-}
-
-function FirstLookCard({ firstLook }: { firstLook: FirstLookBlock }) {
-  return (
-    <div className="rounded-card border border-[var(--tebiq-soft-gray)] bg-[var(--tebiq-soft-gray)]/35 px-3.5 py-3">
-      <SectionLabel>先看这里</SectionLabel>
-      <div className="mt-2 space-y-1.5 text-[16px] leading-[1.65] text-[var(--tebiq-ink-blue)]">
-        <p><span className="font-medium">当前判断：</span>{renderInline(firstLook.conclusion)}</p>
-        <p><span className="font-medium">建议动作：</span>{renderInline(firstLook.action)}</p>
-        {firstLook.avoid && (
-          <p><span className="font-medium">暂缓事项：</span>{renderInline(firstLook.avoid)}</p>
-        )}
-      </div>
-    </div>
-  )
-}
-
-function extractFirstLook(text: string): { firstLook: FirstLookBlock | null; rest: string } {
-  const normalized = text.replace(/\r\n/g, '\n').trimStart()
-  const lines = normalized.split('\n')
-  const firstNonEmpty = lines.findIndex(line => line.trim().length > 0)
-  if (firstNonEmpty < 0) return { firstLook: null, rest: text }
-
-  let cursor = firstNonEmpty
-  const heading = lines[cursor].trim().replace(/^#+\s*/, '')
-  if (/^(?:摘要|简要判断|先看这里)[:：]?$/.test(heading)) cursor += 1
-
-  const take = (labels: string[]): string | null => {
-    const raw = lines[cursor]?.trim() ?? ''
-    const escaped = labels.map(label => label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')
-    const re = new RegExp(`^(?:[-*]\\s*)?(?:${escaped})[：:]\\s*(.+)$`)
-    const match = raw.match(re)
-    if (!match) return null
-    cursor += 1
-    return match[1].trim()
-  }
-
-  const conclusion = take(['当前判断', '判断', '结论', '先看方向'])
-  const action = take(['建议动作', '下一步', '优先行动', '今天先做', '今天可以先确认', '今天先确认', '先做'])
-  const avoid = take(['暂缓事项', '注意', '注意事项', '先别这样做', '先不要做', '先避免', '暂时不要', '暂时不要做'])
-  if (!conclusion || !action) return { firstLook: null, rest: text }
-
-  while (cursor < lines.length && lines[cursor].trim() === '') cursor += 1
-  return {
-    firstLook: { conclusion, action, avoid },
-    rest: lines.slice(cursor).join('\n').trimStart(),
-  }
 }
 
 function hasEncodingIssue(text: string | null | undefined): boolean {

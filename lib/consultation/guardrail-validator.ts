@@ -15,13 +15,6 @@ export interface AnswerValidationInput {
   routeGateMatches?: RouteGateMatch[]
 }
 
-const REQUIRED_SUMMARY_LABELS = [
-  '先看这里',
-  '当前判断',
-  '建议动作',
-  '暂缓事项',
-] as const
-
 const TERMINAL_PUNCTUATION_RE = /[。！？!?）」』）]$/
 const OPEN_LIST_MARKER_RE = /(?:^|\n)\s*(?:[-*•]|\d+[.)、]|[一二三四五六七八九十]+[、.])\s*$/
 const TRAILING_CONNECTOR_RE =
@@ -448,6 +441,14 @@ const STATUS_PERMISSION_CONTRADICTIONS: ReadonlyArray<{
     message: '工作签副业回答疑似把就劳签副业写成自由、少额无风险、或用资格外活动许可/28小时规则解决。',
   },
   {
+    id: 'answer-gijinkoku-translation-side-job-no-permit',
+    severity: 'P1',
+    questionNeedle: /(?=.*(技人国|人文签|技術・人文知識・国際業務|工作签|工签))(?=.*(副业|副業|兼职|フリーランス|freelance|外包|接单))(?=.*(翻译|翻訳|通译|通訳|口译|翻译接单))/,
+    answerBad: /((翻译|翻訳|通译|通訳|口译).{0,80}(技人国|人文签|国际业务|国際業務|范围内|範囲内|同じ分野|同一分野).{0,80}(不需要|无需|不要|不用|無需|いらない).{0,40}(資格外活動|资格外活动|许可|許可|额外许可|追加许可|別途許可))|((資格外活動|资格外活动|许可|許可|额外许可|追加许可|別途許可).{0,40}(不需要|无需|不要|不用|無需|いらない).{0,80}(翻译|翻訳|通译|通訳|口译))/,
+    safeEvidence: /((外部|副业|副業|兼职|フリーランス|委托|委託|接单|另一个|另一份|別会社|别的公司|客户).{0,90}(資格外活動|资格外活动|许可|許可|入管|行政书士|行政書士|就業規則|就业规则).{0,90}(确认|確認|需要|必要|可能|先))|((資格外活動|资格外活动|许可|許可|入管|行政书士|行政書士).{0,90}(外部|副业|副業|兼职|フリーランス|委托|委託|接单|另一个|另一份|別会社|别的公司|客户).{0,90}(确认|確認|需要|必要|可能|先))/,
+    message: '技人国翻译/通译副业疑似被写成同领域所以不需要额外许可。',
+  },
+  {
     id: 'answer-ssw-job-change-free-or-notification-only',
     severity: 'P1',
     questionNeedle: /(特定技能|特定技能1号|特定技能１号|SSW|ssw).{0,120}(转职|転職|换工作|换公司|换雇主|雇用主変更|受入機関|跳槽|辞职|离职|別の会社|別会社|另一个公司|另一家公司|另一家|别的公司|分野|领域|業務区分|外食|宿泊|介護|农业|農業)/,
@@ -511,7 +512,6 @@ export function validateAnswer(input: AnswerValidationInput): GuardrailFinding[]
   const routeGateMatches = input.routeGateMatches ?? matchRouteGates(question)
   const findings = [
     ...validateAnswerCompleteness(answer, { routeGateMatches }),
-    ...validateRequiredSummaryLabels(answer),
     ...validatePermissionStateContradictions(question, answer),
   ]
 
@@ -532,7 +532,6 @@ export function selectTerminalGuardrailFindings(
     if (finding.id === 'answer-too-short') return hasRouteGate
     if (finding.id === 'answer-no-terminal-punctuation') return finding.severity === 'P1'
     if (TERMINAL_CONTRADICTION_IDS.has(finding.id)) return true
-    if (finding.id.startsWith('answer-missing-label-')) return true
     return false
   })
 }
@@ -593,19 +592,6 @@ export function validateAnswerCompleteness(
   }
 
   return findings
-}
-
-export function validateRequiredSummaryLabels(answer: string | null | undefined): GuardrailFinding[] {
-  const text = answer ?? ''
-  if (!text.trim()) return []
-
-  return REQUIRED_SUMMARY_LABELS
-    .filter(label => !text.includes(label))
-    .map(label => ({
-      id: `answer-missing-label-${label}`,
-      severity: 'P1' as const,
-      message: `回答缺少固定摘要标题：${label}`,
-    }))
 }
 
 export function validatePermissionStateContradictions(

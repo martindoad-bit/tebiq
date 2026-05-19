@@ -3,7 +3,7 @@
 'use client'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Archive, MessageSquarePlus, SearchCheck, UserCheck } from 'lucide-react'
+import { Archive, MessageSquarePlus, SearchCheck } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import { trackClient } from '@/lib/analytics/client'
 import { EVENT } from '@/lib/analytics/events'
@@ -20,12 +20,6 @@ const TABS: { href: string; label: string; Icon: LucideIcon; match: (p: string) 
     label: '咨询记录',
     Icon: Archive,
     match: p => p.startsWith('/me/consultations') || p.startsWith('/c/'),
-  },
-  {
-    href: '/scrivener',
-    label: '找书士',
-    Icon: UserCheck,
-    match: p => p.startsWith('/scrivener') || p.startsWith('/consultation'),
   },
   {
     href: '/quick-reference',
@@ -46,7 +40,7 @@ export default function TabBar() {
         paddingBottom: 'env(safe-area-inset-bottom)',
       }}
     >
-      <ul className="grid h-[68px] w-full min-w-0 max-w-full grid-cols-4">
+      <ul className="grid h-[68px] w-full min-w-0 max-w-full grid-cols-3">
         {TABS.map(({ href, label, Icon, match, disabled }) => {
           const active = !disabled && match(pathname)
           const className = `focus-ring flex h-full w-full min-w-0 max-w-full flex-col items-center justify-center gap-0.5 rounded-none px-0.5 transition-colors ${

@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, Camera, GitBranch, MessageSquarePlus, UserCheck } from 'lucide-react'
+import { ArrowLeft, Camera, GitBranch, MessageSquarePlus } from 'lucide-react'
 import ConsultationShareButton from '@/app/_components/ConsultationShareButton'
 import TabBar from '@/app/_components/v5/TabBar'
 import {
@@ -8,9 +8,7 @@ import {
   ConsultationShell,
   FeedbackLabel,
   MetaPill,
-  RiskHintBanner,
   SectionLabel,
-  StatusBadge,
   Surface,
   type AlphaDisplayState,
 } from '@/components/ui/consultation-alpha'
@@ -40,7 +38,6 @@ export default async function ConsultationDetailPage({ params }: PageProps) {
   if (!row) notFound()
 
   const answer = row.finalAnswerText ?? row.aiAnswerText ?? ''
-  const riskHits = (row.riskKeywordHits ?? []) as string[]
   const displayState = displayStateForRow(row)
   const factCardAudit = parseFactCardAudit(row)
   // 0.6 Pack 2.3: when this consultation is part of a multi-round
@@ -68,13 +65,11 @@ export default async function ConsultationDetailPage({ params }: PageProps) {
           }
         />
 
-        <Surface className="space-y-2">
-          <div className="flex items-center justify-between gap-3">
-            <SectionLabel>你的问题</SectionLabel>
-            <StatusBadge state={displayState} />
+        <div className="flex justify-end">
+          <div className="max-w-[92%] rounded-[18px] bg-[var(--tebiq-ink-blue)] px-4 py-3 text-[16.5px] leading-[1.7] text-white shadow-sm">
+            {row.userQuestionText}
           </div>
-          <p className="text-[17px] leading-relaxed text-[var(--tebiq-ink-blue)]">{row.userQuestionText}</p>
-        </Surface>
+        </div>
 
         {row.hasImage && row.imageSummary && (
           <Surface className="space-y-2">
@@ -87,13 +82,7 @@ export default async function ConsultationDetailPage({ params }: PageProps) {
           </Surface>
         )}
 
-        <RiskHintBanner hits={riskHits} />
-
-        <Surface className="space-y-3">
-          <div className="flex items-center justify-between gap-3">
-          <SectionLabel>咨询回答</SectionLabel>
-            <StatusBadge state={displayState} />
-          </div>
+        <section className="space-y-3">
           {(displayState === 'partial' || displayState === 'fallback' || displayState === 'timeout' || displayState === 'failed') && (
             <div className="rounded-card border border-[var(--tebiq-warm-amber)] px-3 py-2 text-[13.5px] leading-relaxed text-[var(--tebiq-ink-blue)]">
               {displayState === 'partial' && '这条记录只保留了部分内容。'}
@@ -113,7 +102,7 @@ export default async function ConsultationDetailPage({ params }: PageProps) {
           ) : (
             <p className="text-[14px] text-[var(--tebiq-deep-slate)]">还没有可显示的回答正文。</p>
           )}
-        </Surface>
+        </section>
 
         <FactReferenceBlock audit={factCardAudit} variant="compact" />
         <QuickReferenceBridge audit={factCardAudit} />
@@ -127,7 +116,7 @@ export default async function ConsultationDetailPage({ params }: PageProps) {
 
         <Surface className="space-y-3">
           <SectionLabel>接下来可以做</SectionLabel>
-          <div className="grid gap-2 sm:grid-cols-4">
+          <div className="grid gap-2 sm:grid-cols-3">
             <Link
               href={`/ai-consultation?q=${encodeURIComponent(`关于这条咨询，我想补充：${row.userQuestionText.slice(0, 120)}`)}`}
               className="inline-flex min-h-11 items-center justify-center gap-2 whitespace-nowrap rounded-btn bg-[var(--tebiq-ink-blue)] px-3 py-2 text-[14px] font-medium text-[var(--tebiq-off-white)]"
@@ -141,13 +130,6 @@ export default async function ConsultationDetailPage({ params }: PageProps) {
             >
               <MessageSquarePlus className="h-4 w-4" strokeWidth={1.6} />
               问新问题
-            </Link>
-            <Link
-              href={`/consultation?consultation_id=${encodeURIComponent(row.id)}`}
-              className="inline-flex min-h-11 items-center justify-center gap-2 whitespace-nowrap rounded-btn border border-[var(--tebiq-soft-gray)] px-3 py-2 text-[14px] font-medium text-[var(--tebiq-ink-blue)]"
-            >
-              <UserCheck className="h-4 w-4" strokeWidth={1.6} />
-              带记录预约
             </Link>
             <ConsultationShareButton url={`/c/${encodeURIComponent(row.id)}`} />
           </div>
@@ -276,66 +258,13 @@ function hasEncodingIssue(text: string | null | undefined): boolean {
   return typeof text === 'string' && /\uFFFD/.test(text)
 }
 
-interface FirstLookBlock {
-  conclusion: string
-  action: string
-  avoid: string | null
-}
-
 function AnswerDetailProse({ text }: { text: string }) {
   const safeText = cleanDisplayText(text)
-  const { firstLook, rest } = extractFirstLook(safeText)
   return (
-    <div className="space-y-4">
-      {firstLook && (
-        <div className="rounded-card border border-[var(--tebiq-soft-gray)] bg-[var(--tebiq-soft-gray)]/35 px-3.5 py-3">
-          <SectionLabel>先看这里</SectionLabel>
-          <div className="mt-2 space-y-1.5 text-[15px] leading-[1.65] text-[var(--tebiq-ink-blue)]">
-            <p><span className="font-medium">当前判断：</span>{firstLook.conclusion}</p>
-            <p><span className="font-medium">建议动作：</span>{firstLook.action}</p>
-            {firstLook.avoid && <p><span className="font-medium">暂缓事项：</span>{firstLook.avoid}</p>}
-          </div>
-        </div>
-      )}
-      {rest && (
-        <article className="whitespace-pre-wrap text-[16px] leading-[1.8] text-[var(--tebiq-ink-blue)]">
-          {rest}
-        </article>
-      )}
-    </div>
+    <article className="whitespace-pre-wrap text-[16px] leading-[1.8] text-[var(--tebiq-ink-blue)]">
+      {safeText}
+    </article>
   )
-}
-
-function extractFirstLook(text: string): { firstLook: FirstLookBlock | null; rest: string } {
-  const normalized = text.replace(/\r\n/g, '\n').trimStart()
-  const lines = normalized.split('\n')
-  const firstNonEmpty = lines.findIndex(line => line.trim().length > 0)
-  if (firstNonEmpty < 0) return { firstLook: null, rest: text }
-
-  let cursor = firstNonEmpty
-  const heading = lines[cursor].trim().replace(/^#+\s*/, '')
-  if (/^(?:摘要|简要判断|先看这里)[:：]?$/.test(heading)) cursor += 1
-
-  const take = (labels: string[]): string | null => {
-    const raw = lines[cursor]?.trim() ?? ''
-    const escaped = labels.map(label => label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')
-    const re = new RegExp(`^(?:[-*]\\s*)?(?:${escaped})[：:]\\s*(.+)$`)
-    const match = raw.match(re)
-    if (!match) return null
-    cursor += 1
-    return match[1].trim()
-  }
-
-  const conclusion = take(['当前判断', '判断', '结论', '先看方向'])
-  const action = take(['建议动作', '下一步', '优先行动', '今天先做', '今天可以先确认', '今天先确认', '先做'])
-  const avoid = take(['暂缓事项', '注意', '注意事项', '先别这样做', '先不要做', '先避免', '暂时不要', '暂时不要做'])
-  if (!conclusion || !action) return { firstLook: null, rest: text }
-
-  while (cursor < lines.length && lines[cursor].trim() === '') cursor += 1
-  return {
-    firstLook: { conclusion, action, avoid },
-    rest: lines.slice(cursor).join('\n').trimStart(),
-  }
 }
 
 function cleanDisplayText(text: string): string {

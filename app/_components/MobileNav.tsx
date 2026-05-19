@@ -5,7 +5,6 @@ import { usePathname } from 'next/navigation'
 const ITEMS = [
   { href: '/ai-consultation', label: '提问', match: (p: string) => p === '/' || p.startsWith('/ai-consultation') },
   { href: '/me/consultations', label: '咨询记录', match: (p: string) => p.startsWith('/me/consultations') || p.startsWith('/c/') },
-  { href: '/scrivener', label: '找书士', match: (p: string) => p.startsWith('/scrivener') || p.startsWith('/consultation') },
   { href: '/quick-reference', label: '材料', match: (p: string) => p.startsWith('/quick-reference') },
 ] as const
 
@@ -19,7 +18,7 @@ export default function MobileNav() {
       className="md:hidden fixed bottom-0 inset-x-0 z-20 bg-white border-t border-line"
       style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
     >
-      <ul className="grid grid-cols-4 h-16">
+      <ul className="grid grid-cols-3 h-16">
         {ITEMS.map(item => {
           const active = item.match(pathname)
           return (
@@ -58,16 +57,6 @@ function Icon({ name, active }: { name: string; active: boolean }) {
         <path d="M21 8v13H3V8" />
         <path d="M1 3h22v5H1z" />
         <path d="M10 12h4" />
-      </svg>
-    )
-  }
-  if (name === '/scrivener') {
-    return (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={stroke} strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M16 21v-2a4 4 0 0 0-8 0v2" />
-        <circle cx="12" cy="7" r="4" />
-        <path d="M19 8v6" />
-        <path d="M22 11h-6" />
       </svg>
     )
   }
