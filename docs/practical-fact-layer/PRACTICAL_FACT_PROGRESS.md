@@ -11,13 +11,13 @@
 
 | 指标 | 当前值 |
 |------|--------|
-| 已完成卡片数 | 560 |
+| 已完成卡片数 | 580 |
 | DOMAIN 队列总数 | 9 |
-| ANSWER_RUNTIME 可注入 | 552 |
+| ANSWER_RUNTIME 可注入 | 572 |
 | MATERIALS_ONLY | 8 |
 | L5_ONLY | 0 |
 | NEEDS_REWRITE | 0 |
-| 已完成批次 | 28 |
+| 已完成批次 | 29 |
 
 ---
 
@@ -1022,6 +1022,41 @@
 | practical-560 | 外国人の「ワーキングホリデービザ（特定活動）」の活用と在留管理 | ✅ | ANSWER_RUNTIME | P1 |
 
 ## Batch 28 Handoff Note
+
+- 完成日: 2026-05-19
+- 担当: FACT Operator (Claude)
+- コミット: 6caa332
+- 新規DOMAIN: なし
+- DOMAIN送付済み: pending（pdom-001〜009）
+
+---
+
+## Batch 29 状態（目標: 20張）
+
+| card_id | topic | status | runtime_bucket | risk |
+|---------|-------|--------|---------------|------|
+| practical-561 | 外国人の「技人国ビザの在職中の大学院進学」と在留資格の扱い | ✅ | ANSWER_RUNTIME | P1 |
+| practical-562 | 外国人の「海外在住の親族を日本に呼び寄せる」方法と在留資格 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-563 | 外国人の「日本での帰化申請（日本国籍取得）」の要件と実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-564 | 外国人の「技人国から特定技能への在留資格変更」の実務と判断基準 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-565 | 外国人の「日本での会計・税理士・社会保険労務士（士業）」と在留資格 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-566 | 外国人の「在留申請のオンライン化・デジタル化」と手続きの変化 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-567 | 外国人の「日本での離島・特定地域への移住支援」と在留資格の特例 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-568 | 外国人の「健康診断・予防接種と在留資格申請」の関係 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-569 | 外国人の「日本での宗教活動・宗教法人」と在留資格 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-570 | 外国人の「日本での転職エージェント・ハローワーク活用」と在留資格管理 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-571 | 外国人の「失業給付（雇用保険）」の受給と在留資格の関係 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-572 | 外国人の「日本でのマンション・不動産を購入」と在留資格・登記の実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-573 | 外国人の「J-Skip・J-Find（高度人材向け優遇制度）」の申請実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-574 | 外国人の「技人国ビザの年収基準・日本人との同等報酬」の実務判断 | ✅ | ANSWER_RUNTIME | P0 |
+| practical-575 | 外国人の「日本での自動車運転免許」取得と在留資格の関係 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-576 | 外国人の「技人国での会社員→フリーランス（個人事業主）への転換」の在留資格変更 | ✅ | ANSWER_RUNTIME | P0 |
+| practical-577 | 外国人の「在留資格と社会保険（健康保険・厚生年金）の加入義務」の詳細 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-578 | 外国人の「配偶者ビザの素行要件・夫婦の実態調査」の実務 | ✅ | ANSWER_RUNTIME | P0 |
+| practical-579 | 外国人の「日本での仲裁・ADR（裁判外紛争解決）」と在留資格紛争 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-580 | 外国人の「入管庁の審査で追加書類（補正）を求められた場合」の対応 | ✅ | ANSWER_RUNTIME | P0 |
+
+## Batch 29 Handoff Note
 
 - 完成日: 2026-05-19
 - 担当: FACT Operator (Claude)
