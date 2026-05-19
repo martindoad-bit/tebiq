@@ -11,13 +11,13 @@
 
 | 指标 | 当前值 |
 |------|--------|
-| 已完成卡片数 | 620 |
+| 已完成卡片数 | 640 |
 | DOMAIN 队列总数 | 9 |
-| ANSWER_RUNTIME 可注入 | 612 |
+| ANSWER_RUNTIME 可注入 | 632 |
 | MATERIALS_ONLY | 8 |
 | L5_ONLY | 0 |
 | NEEDS_REWRITE | 0 |
-| 已完成批次 | 31 |
+| 已完成批次 | 32 |
 
 ---
 
@@ -1127,6 +1127,41 @@
 | practical-620 | 外国人の「技人国ビザ保持者が日本語教師になる」場合の在留資格判断 | ✅ | ANSWER_RUNTIME | P1 |
 
 ## Batch 31 Handoff Note
+
+- 完成日: 2026-05-19
+- 担当: FACT Operator (Claude)
+- コミット: f21a949
+- 新規DOMAIN: なし
+- DOMAIN送付済み: pending（pdom-001〜009）
+
+---
+
+## Batch 32 状態（目標: 20張）
+
+| card_id | topic | status | runtime_bucket | risk |
+|---------|-------|--------|---------------|------|
+| practical-621 | 外国人の「在留資格申請不許可の理由開示・情報公開請求」と再申請戦略 | ✅ | ANSWER_RUNTIME | P0 |
+| practical-622 | 外国人の「永住者の地位の喪失・失効」と再取得の手続き | ✅ | ANSWER_RUNTIME | P0 |
+| practical-623 | 外国人の「DV被害者と配偶者ビザ」の在留資格保護・変更の実務 | ✅ | ANSWER_RUNTIME | P0 |
+| practical-624 | 外国人の「海外勤務中の日本の在留資格維持」と長期出国の管理 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-625 | 外国人の「高度専門職ビザの更新・永住への切り替え」の実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-626 | 外国人の「技人国から経営管理への変更」（会社員から独立起業）の実務 | ✅ | ANSWER_RUNTIME | P0 |
+| practical-627 | 外国人の「日本人との事実婚（内縁関係）」と在留資格 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-628 | 外国人の「日本での遺言・相続手続き」と在留資格 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-629 | 外国人の「在留資格「教育」ビザ（小中高校教師・ALT等）」の要件と実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-630 | 外国人の「芸術・文化活動ビザ（在留資格「芸術」「文化活動」）」の要件と実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-631 | 外国人の「永住申請の在留期間要件（通算10年・就労5年）の計算方法」の実務 | ✅ | ANSWER_RUNTIME | P0 |
+| practical-632 | 外国人の「特定技能評価試験・日本語能力要件」の詳細（分野別） | ✅ | ANSWER_RUNTIME | P1 |
+| practical-633 | 外国人の「出入国在留管理庁オンライン申請システム」の利用方法と注意点 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-634 | 外国人の「日本での労働組合加入・団体交渉」と在留資格 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-635 | 外国人の「在留資格の複数所持・二重申請の禁止」実務 | ✅ | ANSWER_RUNTIME | P0 |
+| practical-636 | 外国人の「在留期間の期限切れ直前・超過（オーバーステイ）の緊急対応」 | ✅ | ANSWER_RUNTIME | P0 |
+| practical-637 | 外国人の「特定技能外国人の母国への帰国費用・帰国支援」の実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-638 | 外国人の「永住申請後の在留カード有効期限切れと特例期間」の管理 | ✅ | ANSWER_RUNTIME | P0 |
+| practical-639 | 外国人の「日本での不動産投資（賃貸経営）」と在留資格（事業規模による判断） | ✅ | ANSWER_RUNTIME | P1 |
+| practical-640 | 外国人の「在留資格「宗教」ビザ」の要件と申請実務 | ✅ | ANSWER_RUNTIME | P1 |
+
+## Batch 32 Handoff Note
 
 - 完成日: 2026-05-19
 - 担当: FACT Operator (Claude)
