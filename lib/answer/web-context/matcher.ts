@@ -185,6 +185,7 @@ export async function matchWebContext(input: {
 
 export function webMatchesToPromptContext(matches: ReadonlyArray<WebContextMatch>): string | null {
   if (matches.length === 0) return null
+  const resolutionNotes = buildResolutionNotes(matches)
   const blocks = matches.map((match, index) => [
     `【白名单网页 ${index + 1}: ${match.source.title}】`,
     `source_type: ${match.source.type === 'official' ? 'official' : 'practice'}`,
@@ -202,9 +203,23 @@ export function webMatchesToPromptContext(matches: ReadonlyArray<WebContextMatch
     '- 如果网页上下文与事实卡或实务卡冲突，说明需要确认，不要硬凑结论。',
     '- 不要把网页摘要逐字堆给用户；吸收后自然回答。',
     '- 若使用具体电话号码、期限、材料名或政策日期，必须来自这些来源或系统事实卡。',
+    ...resolutionNotes,
     '',
     ...blocks,
   ].join('\n')
+}
+
+function buildResolutionNotes(matches: ReadonlyArray<WebContextMatch>): string[] {
+  const ids = new Set(matches.map(match => match.source.id))
+  const notes: string[] = []
+
+  if (ids.has('practice-spouse-remarriage-ubiq')) {
+    notes.push(
+      '- 特别纠偏：日本人の配偶者等持有人离婚后又与另一名日本人再婚，用户问“更新还是变更”时，不要回答“不是更新，是变更”。手续名称/申请表层通常按「在留期間更新許可申請」处理，因为在留资格名称仍是日本人の配偶者等；但审查实质接近新规/变更，会重新看新婚姻真实性、同居、生计和前婚时间线。',
+    )
+  }
+
+  return notes
 }
 
 function scoreSources(input: string): Array<{ source: WebContextSource; score: number }> {
