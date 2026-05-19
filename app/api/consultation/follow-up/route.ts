@@ -34,6 +34,7 @@
 //     fact_cards.
 
 import { matchFactCards, type FactCardMatch } from '@/lib/answer/fact-layer/matcher'
+import { matchWebContext, webMatchesToPromptContext } from '@/lib/answer/web-context/matcher'
 import {
   FOLLOW_UP_LIMIT_MESSAGE,
   MAX_FOLLOW_UP_ROUNDS,
@@ -189,6 +190,10 @@ export async function POST(req: Request): Promise<Response> {
   const matcherInput = composeMatcherInput(priorSummary, userAddition, root.userQuestionText)
   const routeGateMatches = matchRouteGates(matcherInput)
   const routeGatePrompt = routeGatesToPromptContext(routeGateMatches)
+  const webContextPromise = matchWebContext({ question: matcherInput }).catch(err => {
+    console.warn('[consultation/follow-up] matchWebContext failed', err)
+    return []
+  })
   const factLayerEnabled = process.env.FACT_LAYER_ENABLED === 'true'
   const factMatchesPromise: Promise<FactCardMatch[]> = factLayerEnabled
     ? matchFactCards(matcherInput).catch(err => {
@@ -328,6 +333,8 @@ export async function POST(req: Request): Promise<Response> {
       )
 
       // 4b. fact_cards_injected (Pack 2.2 emission, run on follow-up too)
+      const webContextMatches = await webContextPromise
+      const webContextSystemMessage = webMatchesToPromptContext(webContextMatches)
       const factMatches = await factMatchesPromise
       const todayIso = new Date().toISOString().slice(0, 10)
       factCardAudit = factMatches.map(m => ({
@@ -378,6 +385,9 @@ export async function POST(req: Request): Promise<Response> {
       const messages: Array<{ role: 'system' | 'user'; content: string }> = []
       // Slice: every system message in baseMessages...
       for (const m of baseMessages.slice(0, -1)) messages.push(m)
+      if (webContextSystemMessage) {
+        messages.push({ role: 'system', content: webContextSystemMessage })
+      }
       if (factSystemMessage) {
         messages.push({ role: 'system', content: factSystemMessage })
       }

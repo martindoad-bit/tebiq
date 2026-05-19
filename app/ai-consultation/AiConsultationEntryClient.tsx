@@ -21,6 +21,7 @@ import {
   type AlphaDisplayState,
 } from '@/components/ui/consultation-alpha'
 import { FactReferenceBlock } from '@/components/ui/fact-reference'
+import { MaterialBridge } from '@/components/ui/material-bridge'
 import { QuickReferenceBridge } from '@/components/ui/quick-reference-bridge'
 import TabBar from '@/app/_components/v5/TabBar'
 import {
@@ -1001,6 +1002,10 @@ function ActiveConsultationView({
           <QuickReferenceBridge audit={active.fact_cards} />
         )}
 
+        {answerHasStarted && !canRecover && (
+          <MaterialBridge query={active.question} />
+        )}
+
         {activeSafeDetail && active.phase !== 'streaming' && (
           <p className="border-t border-[var(--tebiq-soft-gray)] pt-3 text-[12px] leading-relaxed text-[var(--tebiq-deep-slate)]">
             {activeSafeDetail}
@@ -1196,6 +1201,10 @@ function FollowUpTurnCard({ turn, index }: { turn: FollowUpTurn; index: number }
 
       {turn.answer.trim() && (
         <QuickReferenceBridge audit={turn.fact_cards} />
+      )}
+
+      {turn.answer.trim() && (
+        <MaterialBridge query={turn.addition} />
       )}
 
       {turnSafeDetail && turn.phase !== 'streaming' && turn.phase !== 'limit_reached' && (

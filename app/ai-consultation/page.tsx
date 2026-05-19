@@ -15,7 +15,7 @@ export const dynamic = 'force-dynamic'
 
 export const metadata = {
   title: 'TEBIQ — 在留咨询',
-  description: '输入在留问题，整理风险、下一步和可核对资料。',
+  description: '输入在留问题，核对手续、风险和相关资料。',
   robots: { index: false, follow: false }, // Alpha — limited release per Charter §9
 }
 

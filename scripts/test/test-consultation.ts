@@ -140,8 +140,8 @@ async function main() {
   })
 
   // ---- 3. Forbidden phrases ----
-  check('3a. FORBIDDEN_PHRASES has exactly 9 entries (Issue #61: +大丈夫 +应该没问题)', () => {
-    assert.equal(filterMod.FORBIDDEN_PHRASES.length, 9)
+  check('3a. FORBIDDEN_PHRASES has exactly 8 literal entries (保证 is pattern-gated)', () => {
+    assert.equal(filterMod.FORBIDDEN_PHRASES.length, 8)
   })
   check('3b. redactForbiddenPhrases: removes 一定可以', () => {
     const r = filterMod.redactForbiddenPhrases('这种情况一定可以申请永住')
@@ -155,9 +155,14 @@ async function main() {
     assert.ok(!r.text.includes('不会影响'))
     assert.equal(r.redactions.length, 3)
   })
-  check('3d. redactForbiddenPhrases: counts duplicates', () => {
-    const r = filterMod.redactForbiddenPhrases('保证。 保证。 保证。')
+  check('3d. redactForbiddenPhrases: redacts promise-use duplicates', () => {
+    const r = filterMod.redactForbiddenPhrases('保证通过。 保证没问题。 保证获批。')
     assert.equal(r.redactions.length, 3)
+  })
+  check('3d2. redactForbiddenPhrases: keeps legitimate 保证/保証 material terms', () => {
+    const r = filterMod.redactForbiddenPhrases('请准备身元保证书、保証会社资料和保证人身份证明。')
+    assert.equal(r.text, '请准备身元保证书、保証会社资料和保证人身份证明。')
+    assert.equal(r.redactions.length, 0)
   })
   check('3e. redactForbiddenPhrases: leaves clean text untouched', () => {
     const r = filterMod.redactForbiddenPhrases('这种情况通常需要找行政書士确认')

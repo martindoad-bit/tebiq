@@ -1,6 +1,7 @@
 import { matchFactCards, type FactCardMatch } from '@/lib/answer/fact-layer/matcher'
 import { KEYWORD_BUCKETS, STATUS_LABEL_INITIAL_DEFAULT } from '@/lib/answer/intent/keyword-buckets'
 import { matchBuckets, topBucket } from '@/lib/answer/intent/match-buckets'
+import { matchWebContext, webMatchesToPromptContext } from '@/lib/answer/web-context/matcher'
 import {
   CONSULTATION_ALPHA_MODEL,
   CONSULTATION_ALPHA_MAX_TOKENS,
@@ -189,6 +190,14 @@ export async function POST(req: Request) {
         return []
       })
     : Promise.resolve([])
+
+  const webContextPromise = matchWebContext({
+    question,
+    imageSummary: trimmedImageSummary || null,
+  }).catch(err => {
+    console.warn('[consultation/stream] matchWebContext failed', err)
+    return []
+  })
 
   // Create the row before opening the stream so the consultation_id is
   // emitted in the very first 'received' frame.
@@ -413,6 +422,8 @@ export async function POST(req: Request) {
       }
       const practicalMatches = await practicalMatchesPromise
       const practicalSystemMessage = practicalMatchesToPromptContext(practicalMatches)
+      const webContextMatches = await webContextPromise
+      const webContextSystemMessage = webMatchesToPromptContext(webContextMatches)
 
       // 5. Open DS streaming connection
       const dsAbort = new AbortController()
@@ -437,6 +448,7 @@ export async function POST(req: Request) {
       // message is explicitly the sanctioned injection mechanism per
       // Pack §2 / design doc §"Injection point".
       const injectedSystemMessages = [
+        webContextSystemMessage,
         factSystemMessage,
         practicalSystemMessage,
         routeGatePrompt,

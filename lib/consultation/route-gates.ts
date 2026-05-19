@@ -1842,7 +1842,7 @@ export function routeGatesToPromptContext(matches: RouteGateMatch[]): string | n
   if (matches.length === 0) return null
 
   const blocks = matches.map(({ pattern }, index) => [
-    `【Route Gate ${index + 1}: ${pattern.title}】`,
+    `【安全边界 ${index + 1}: ${pattern.title}】`,
     `severity: ${pattern.severity}`,
     `source_assets: ${pattern.sourceAssetIds.join(', ')}`,
     '',
@@ -1857,7 +1857,8 @@ export function routeGatesToPromptContext(matches: RouteGateMatch[]): string | n
   ].join('\n'))
 
   return [
-    '以下是 TEBIQ 0.8 P0/P1 route gates。它们只用于防止危险捷径，不用于预测许可结果。',
+    '以下是 TEBIQ 的内部安全边界资料。它们只用于防止危险捷径，不用于预测许可结果。',
+    '不要在用户答案里出现“Route Gate”“route gate”“P0/P1”等内部工程术语。',
     '回答要求:',
     '- 用简体中文回答，保留用户能执行的下一步。',
     '- 先区分状态、手续、材料、窗口和活动许可，不要把一个词直接当成结论。',
