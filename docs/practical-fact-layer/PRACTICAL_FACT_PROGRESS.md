@@ -11,13 +11,13 @@
 
 | 指标 | 当前值 |
 |------|--------|
-| 已完成卡片数 | 400 |
+| 已完成卡片数 | 420 |
 | DOMAIN 队列总数 | 9 |
-| ANSWER_RUNTIME 可注入 | 392 |
+| ANSWER_RUNTIME 可注入 | 412 |
 | MATERIALS_ONLY | 8 |
 | L5_ONLY | 0 |
 | NEEDS_REWRITE | 0 |
-| 已完成批次 | 20 |
+| 已完成批次 | 21 |
 
 ---
 
@@ -742,6 +742,41 @@
 | practical-400 | 外国人の「特別養子縁組・養子縁組」と在留資格 | ✅ | ANSWER_RUNTIME | P1 |
 
 ## Batch 20 Handoff Note
+
+- 完成日: 2026-05-19
+- 担当: FACT Operator (Claude)
+- コミット: 6d109b9
+- 新規DOMAIN: なし
+- DOMAIN送付済み: pending（pdom-001〜009）
+
+---
+
+## Batch 21 状態（目標: 20張）
+
+| card_id | topic | status | runtime_bucket | risk |
+|---------|-------|--------|---------------|------|
+| practical-401 | 特定技能「自動車整備業」の申請実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-402 | 外国人の「会計・経理・簿記業務」と在留資格（技人国の業務適合性）| ✅ | ANSWER_RUNTIME | P1 |
+| practical-403 | 特定技能「電気・電子情報関連産業」の申請実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-404 | 外国人の「転入届・転出届」と在留管理（住所変更の実務）| ✅ | ANSWER_RUNTIME | P1 |
+| practical-405 | 「日系4世」定住者ビザ制度の詳細と要件 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-406 | 外国人の「帰国後の在留再申請」—一度帰国した外国人が再び日本で働く | ✅ | ANSWER_RUNTIME | P1 |
+| practical-407 | 外国人の「住民税非課税世帯」認定と行政サービスへのアクセス | ✅ | ANSWER_RUNTIME | P1 |
+| practical-408 | 外国人の「交通事故・損害賠償」と在留資格への影響 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-409 | 特定技能「航空分野」の申請実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-410 | 外国人の「映像制作・映画製作・動画クリエイター」と在留資格 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-411 | 在留申請における「カテゴリ制度」（技人国・経営管理の必要書類の区分）| ✅ | ANSWER_RUNTIME | P1 |
+| practical-412 | 外国人の「日本での遺族年金・障害年金」受給と在留資格 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-413 | 外国人の「日本でのインターンシップ（有償・無償）」と在留資格 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-414 | 外国人の「育成就労」制度への移行期間の実務（2024〜2027年）| ✅ | ANSWER_RUNTIME | P1 |
+| practical-415 | 外国人が日本で「パン職人・菓子職人（パティシエ）」として働く場合の在留資格 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-416 | 外国人の「マイナ保険証（健康保険証のマイナンバーカード化）」と在留管理 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-417 | 外国人の「育児休業・産前産後休業」中の在留資格管理 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-418 | 外国人の「会社設立後の経営管理ビザ申請タイミング」と事業開始前の在留管理 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-419 | 外国人が日本で「音楽家・バンドマン・ミュージシャン」として活動する場合の在留資格 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-420 | 外国人の「留学から定住者・永住者への直接変更」は可能か | ✅ | ANSWER_RUNTIME | P1 |
+
+## Batch 21 Handoff Note
 
 - 完成日: 2026-05-19
 - 担当: FACT Operator (Claude)
