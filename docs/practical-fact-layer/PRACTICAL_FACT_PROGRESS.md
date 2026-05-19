@@ -11,13 +11,13 @@
 
 | 指标 | 当前值 |
 |------|--------|
-| 已完成卡片数 | 340 |
+| 已完成卡片数 | 360 |
 | DOMAIN 队列总数 | 9 |
-| ANSWER_RUNTIME 可注入 | 332 |
+| ANSWER_RUNTIME 可注入 | 352 |
 | MATERIALS_ONLY | 8 |
 | L5_ONLY | 0 |
 | NEEDS_REWRITE | 0 |
-| 已完成批次 | 17 |
+| 已完成批次 | 18 |
 
 ---
 
@@ -637,6 +637,41 @@
 | practical-340 | 外国人の「航空機乗組員・船員」に関する在留資格 | ✅ | ANSWER_RUNTIME | P1 |
 
 ## Batch 17 Handoff Note
+
+- 完成日: 2026-05-19
+- 担当: FACT Operator (Claude)
+- コミット: 492371d
+- 新規DOMAIN: なし
+- DOMAIN送付済み: pending（pdom-001〜009）
+
+---
+
+## Batch 18 状態（目標: 20張）
+
+| card_id | topic | status | runtime_bucket | risk |
+|---------|-------|--------|---------------|------|
+| practical-341 | 在留資格「技能（外国料理人・コック）」の詳細申請実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-342 | ギグワーク・フードデリバリー配達員（Uber Eats等）と在留資格 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-343 | COE（在留資格認定証明書）取得から入国までの完全フロー | ✅ | ANSWER_RUNTIME | P1 |
+| practical-344 | 不法残留（オーバーステイ）の自首制度（出国命令）と対処法 | ✅ | ANSWER_RUNTIME | P0 |
+| practical-345 | パスポート紛失・有効期限切れと在留カードへの影響 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-346 | 雇用保険失業給付と外国人在留資格管理 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-347 | 外国人が賃貸住宅を借りる際の保証・差別・在留資格の実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-348 | 奨学金（JASSO等）と留学生の在留資格要件 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-349 | 仮放免制度の詳細と実務 | ✅ | ANSWER_RUNTIME | P0 |
+| practical-350 | 個人事業主（フリーランス）として独立する外国人の在留資格全体像 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-351 | 難民申請（難民認定制度）の基礎と実務（2023年改正後） | ✅ | ANSWER_RUNTIME | P0 |
+| practical-352 | 在留申請オンライン申請システムの使い方と注意点 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-353 | 外国人の日本での選挙権・政治参加の可否 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-354 | 特定技能「宿泊業」の申請実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-355 | 改正入管法（2023〜2026年）外国人への主な変更点 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-356 | 外国人の相続放棄手続きの実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-357 | 外国人の専門学校（日本語以外）入学と在留資格 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-358 | 技人国（国際業務）の語学・通訳・翻訳業務の典型ケース | ✅ | ANSWER_RUNTIME | P1 |
+| practical-359 | 在留資格申請の審査状況照会と審査期間の目安 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-360 | 特定技能のキャリアパス（1号→2号→永住）の全体像 | ✅ | ANSWER_RUNTIME | P1 |
+
+## Batch 18 Handoff Note
 
 - 完成日: 2026-05-19
 - 担当: FACT Operator (Claude)
