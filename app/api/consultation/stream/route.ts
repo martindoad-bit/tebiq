@@ -3,7 +3,10 @@ import { KEYWORD_BUCKETS, STATUS_LABEL_INITIAL_DEFAULT } from '@/lib/answer/inte
 import { matchBuckets, topBucket } from '@/lib/answer/intent/match-buckets'
 import {
   CONSULTATION_ALPHA_MODEL,
+  CONSULTATION_ALPHA_MAX_TOKENS,
   CONSULTATION_ALPHA_PROMPT_VERSION,
+  CONSULTATION_ALPHA_REASONING_EFFORT,
+  CONSULTATION_ALPHA_THINKING_ENABLED,
   CONSULTATION_FINAL_OUTPUT_GUARD,
   buildConsultationMessages,
 } from '@/lib/answer/prompt/consultation-alpha-v1'
@@ -77,7 +80,6 @@ export const maxDuration = 300
 
 const DEEPSEEK_ENDPOINT = 'https://api.deepseek.com/chat/completions'
 const TEMPERATURE = 0.3
-const MAX_TOKENS = 1500
 
 // 0.6 ENGINE Pack 1: routing_status `specific` layer fires after this
 // delay if first_token still hasn't arrived. PL §3 spec: "3-5s 仍无正文";
@@ -438,19 +440,25 @@ export async function POST(req: Request) {
         : baseMessages
 
       try {
+        const requestBody: Record<string, unknown> = {
+          model: CONSULTATION_ALPHA_MODEL,
+          stream: true,
+          temperature: TEMPERATURE,
+          max_tokens: CONSULTATION_ALPHA_MAX_TOKENS,
+          messages,
+        }
+        if (CONSULTATION_ALPHA_THINKING_ENABLED) {
+          requestBody.thinking = { type: 'enabled' }
+          requestBody.reasoning_effort = CONSULTATION_ALPHA_REASONING_EFFORT
+        }
+
         const dsRes = await fetch(DEEPSEEK_ENDPOINT, {
           method: 'POST',
           headers: {
             'content-type': 'application/json',
             authorization: `Bearer ${apiKey}`,
           },
-          body: JSON.stringify({
-            model: CONSULTATION_ALPHA_MODEL,
-            stream: true,
-            temperature: TEMPERATURE,
-            max_tokens: MAX_TOKENS,
-            messages,
-          }),
+          body: JSON.stringify(requestBody),
           signal: dsAbort.signal,
         })
 

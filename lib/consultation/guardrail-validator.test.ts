@@ -6,7 +6,6 @@ import {
   validateAnswer,
   validateAnswerCompleteness,
   validatePermissionStateContradictions,
-  validateRequiredSummaryLabels,
 } from './guardrail-validator'
 import { matchRouteGates } from './route-gates'
 
@@ -18,15 +17,6 @@ test('detects incomplete answer tails in a critical route family', () => {
 
   assert.ok(findings.some(f => f.id === 'answer-trailing-connector'))
   assert.equal(findings.find(f => f.id === 'answer-trailing-connector')?.severity, 'P1')
-})
-
-test('detects missing fixed answer-summary labels', () => {
-  const findings = validateRequiredSummaryLabels('先看方向\n现在大概可以这样处理。')
-
-  assert.ok(findings.some(f => f.id === 'answer-missing-label-先看这里'))
-  assert.ok(findings.some(f => f.id === 'answer-missing-label-当前判断'))
-  assert.ok(findings.some(f => f.id === 'answer-missing-label-建议动作'))
-  assert.ok(findings.some(f => f.id === 'answer-missing-label-暂缓事项'))
 })
 
 test('detects overconfident special-period departure answer', () => {
@@ -915,6 +905,15 @@ test('detects work-status side-job unrestricted language', () => {
   assert.ok(findings.some(f => f.id === 'answer-work-status-side-job-unrestricted'))
 })
 
+test('detects gijinkoku translation side-job no-permit language', () => {
+  const findings = validatePermissionStateContradictions(
+    '我是技人国，周末想做自由翻译副业接单，需要资格外活动许可吗？',
+    '翻译属于技人国国际业务范围内，所以这种翻译副业不需要额外许可。',
+  )
+
+  assert.ok(findings.some(f => f.id === 'answer-gijinkoku-translation-side-job-no-permit'))
+})
+
 test('detects SSW job-change free or notification-only language', () => {
   const findings = validatePermissionStateContradictions(
     '我是特定技能1号，想从外食转到宿泊，听说特定技能可以自由转职，只要届出就行吗？',
@@ -996,13 +995,12 @@ test('detects employer wage supplement replacing social insurance language', () 
   assert.ok(findings.some(f => f.id === 'answer-foreign-worker-social-insurance-optional'))
 })
 
-test('validateAnswer combines route-gate, label, and contradiction checks', () => {
+test('validateAnswer combines route-gate and contradiction checks without fixed headings', () => {
   const findings = validateAnswer({
     question: '我年收1200万，可以走J-Skip吗？',
-    answer: '当前判断：J-Skip 可能走。建议动作：准备材料。',
+    answer: 'J-Skip 可能走。你可以先准备材料。',
   })
 
-  assert.ok(findings.some(f => f.id === 'answer-missing-label-先看这里'))
   assert.ok(findings.some(f => f.id === 'answer-jskip-1200-1600-possible'))
 })
 
@@ -1016,7 +1014,7 @@ test('selects terminal findings for stream completion gating', () => {
   const terminal = selectTerminalGuardrailFindings(findings, { routeGateMatches })
 
   assert.ok(terminal.some(f => f.id === 'answer-no-terminal-punctuation'))
-  assert.ok(terminal.some(f => f.id === 'answer-missing-label-暂缓事项'))
+  assert.ok(!terminal.some(f => f.id.startsWith('answer-missing-label-')))
 })
 
 test('terminal-gates Loop2L high-risk answer contradictions', () => {

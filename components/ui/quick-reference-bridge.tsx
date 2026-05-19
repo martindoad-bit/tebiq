@@ -20,24 +20,20 @@ export function QuickReferenceBridge({
   if (topics.length === 0) return null
 
   return (
-    <div className="rounded-card border border-[var(--tebiq-soft-gray)] bg-[var(--tebiq-off-white)] px-3.5 py-3">
-      <div className="flex min-w-0 items-start gap-2.5">
-        <FileText className="mt-0.5 h-4 w-4 shrink-0 text-[var(--tebiq-ink-blue)]" strokeWidth={1.6} />
-        <div className="min-w-0 flex-1">
-          <p className="text-[13.5px] font-medium leading-snug text-[var(--tebiq-ink-blue)]">
-            也可以看清单
-          </p>
-          <p className="mt-1 text-[12.5px] leading-[1.6] text-[var(--tebiq-cool-gray)]">
-            有对应资料时，可以直接看期限、窗口和来源。
-          </p>
-          <div className="mt-2 flex flex-wrap gap-2">
-            {topics.map(topic => (
-              <QuickReferenceLink key={topic.id} topic={topic} />
-            ))}
-          </div>
-        </div>
+    <details className="group rounded-[12px] border border-[var(--tebiq-soft-gray)] bg-white px-3 py-2.5">
+      <summary className="flex cursor-pointer list-none items-center justify-between gap-3 text-[13.5px] text-[var(--tebiq-deep-slate)] marker:hidden">
+        <span className="inline-flex min-w-0 items-center gap-2">
+          <FileText className="h-3.5 w-3.5 shrink-0 text-[var(--tebiq-ink-blue)]" strokeWidth={1.6} />
+          <span className="truncate">相关材料 {topics.length} 项</span>
+        </span>
+        <span aria-hidden="true" className="shrink-0 text-[15px] text-[var(--tebiq-cool-gray)] transition-transform group-open:rotate-180">⌄</span>
+      </summary>
+      <div className="mt-3 flex flex-wrap gap-2">
+        {topics.map(topic => (
+          <QuickReferenceLink key={topic.id} topic={topic} />
+        ))}
       </div>
-    </div>
+    </details>
   )
 }
 

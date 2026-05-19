@@ -41,10 +41,44 @@ export function FactReferenceBlock({
     0,
   )
 
+  if (variant === 'compact') {
+    return (
+      <details className="group rounded-[12px] border border-[var(--tebiq-soft-gray)] bg-white px-3 py-2.5">
+        <summary className="flex cursor-pointer list-none items-center justify-between gap-3 text-[13.5px] text-[var(--tebiq-deep-slate)] marker:hidden">
+          <span className="inline-flex min-w-0 items-center gap-2">
+            <BookOpen className="h-3.5 w-3.5 shrink-0 text-[var(--tebiq-ink-blue)]" strokeWidth={1.7} />
+            <span className="truncate">参考资料 {cards.length} 条</span>
+            {exactCount > 0 && (
+              <span className="shrink-0 text-[12px] text-[var(--tebiq-cool-gray)]">
+                {exactCount} 条可核对
+              </span>
+            )}
+          </span>
+          <span aria-hidden="true" className="shrink-0 text-[15px] text-[var(--tebiq-cool-gray)] transition-transform group-open:rotate-180">⌄</span>
+        </summary>
+        <div className="mt-3 space-y-3">
+          {reviewCount > 0 && (
+            <p className="text-[12.5px] leading-[1.6] text-[var(--tebiq-cool-gray)]">
+              部分资料仍需结合个案确认。
+            </p>
+          )}
+          {cards.map(({ card, items }) => (
+            <FactReferenceCard
+              key={card.fact_id}
+              card={card}
+              items={items}
+              limit={2}
+            />
+          ))}
+        </div>
+      </details>
+    )
+  }
+
   return (
     <section className={cx(
       'rounded-card border border-[var(--tebiq-soft-gray)] bg-[var(--tebiq-off-white)]',
-      variant === 'compact' ? 'px-3 py-2.5' : 'p-4 sm:p-5',
+      'p-4 sm:p-5',
     )}>
       <div className="flex items-start gap-2.5">
         <BookOpen className="mt-0.5 h-4 w-4 shrink-0 text-[var(--tebiq-ink-blue)]" strokeWidth={1.7} />
@@ -75,7 +109,7 @@ export function FactReferenceBlock({
             key={card.fact_id}
             card={card}
             items={items}
-            limit={variant === 'compact' ? 2 : 3}
+            limit={3}
           />
         ))}
       </div>
