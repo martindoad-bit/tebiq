@@ -11,13 +11,13 @@
 
 | 指标 | 当前值 |
 |------|--------|
-| 已完成卡片数 | 460 |
+| 已完成卡片数 | 480 |
 | DOMAIN 队列总数 | 9 |
-| ANSWER_RUNTIME 可注入 | 452 |
+| ANSWER_RUNTIME 可注入 | 472 |
 | MATERIALS_ONLY | 8 |
 | L5_ONLY | 0 |
 | NEEDS_REWRITE | 0 |
-| 已完成批次 | 23 |
+| 已完成批次 | 24 |
 
 ---
 
@@ -847,6 +847,41 @@
 | practical-460 | 外国人の「日本での専門学校卒業後の就職・在留資格」| ✅ | ANSWER_RUNTIME | P1 |
 
 ## Batch 23 Handoff Note
+
+- 完成日: 2026-05-19
+- 担当: FACT Operator (Claude)
+- コミット: 367db63
+- 新規DOMAIN: なし
+- DOMAIN送付済み: pending（pdom-001〜009）
+
+---
+
+## Batch 24 状態（目標: 20張）
+
+| card_id | topic | status | runtime_bucket | risk |
+|---------|-------|--------|---------------|------|
+| practical-461 | 外国人の「日本での裁判員制度」と在留資格 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-462 | 外国人の「特定技能2号」の申請実務と対象分野 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-463 | 外国人の「高校・義務教育段階の子ども」の就学義務と在留資格 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-464 | 外国人の「日本での遺言書の作成」と国際的な相続の準拠法 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-465 | 外国人の「日本での研修医・医学部生・看護学部生」としての在留資格 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-466 | 外国人の「日本での刑事事件・逮捕」と在留資格への影響 | ✅ | ANSWER_RUNTIME | P0 |
+| practical-467 | 外国人の「日本でのゲーム・e-sports・プロゲーマー」としての就労と在留資格 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-468 | 外国人の「SNSインフルエンサー・YouTuber」活動と在留資格（広告収益・スポンサー料） | ✅ | ANSWER_RUNTIME | P1 |
+| practical-469 | 外国人の「日本での不動産購入・投資」と在留資格 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-470 | 外国人の「ワーキングホリデービザ（特定活動）」の実務と日本の対象国・活用方法 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-471 | 外国人の「日本での自己破産・個人再生」が在留資格に与える影響 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-472 | 外国人の「在留期限切れ・更新漏れ」のリスクと緊急対処 | ✅ | ANSWER_RUNTIME | P0 |
+| practical-473 | 外国人の「家族滞在ビザの子どもが18歳・大学卒業後の在留資格」変更の実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-474 | 外国人の「永住者の配偶者等」在留資格の取得要件と実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-475 | 外国人の「パスポート有効期限切れ・国籍変更（帰化）の届出」と在留資格管理 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-476 | 外国人の「日本での生活保護」の受給資格と在留資格との関係 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-477 | 外国人の「DV被害（家庭内暴力）」と在留資格の保護・支援制度 | ✅ | ANSWER_RUNTIME | P0 |
+| practical-478 | 外国人の「遺族年金・健康保険の被扶養者」の権利と在留資格 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-479 | 外国人の「海外からのリモートワーク（日本企業・外資系企業向け）」と在留資格 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-480 | 外国人の「技能実習監理団体・登録支援機関」の役割と支援内容 | ✅ | ANSWER_RUNTIME | P1 |
+
+## Batch 24 Handoff Note
 
 - 完成日: 2026-05-19
 - 担当: FACT Operator (Claude)
