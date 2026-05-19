@@ -11,13 +11,13 @@
 
 | 指标 | 当前值 |
 |------|--------|
-| 已完成卡片数 | 500 |
+| 已完成卡片数 | 520 |
 | DOMAIN 队列总数 | 9 |
-| ANSWER_RUNTIME 可注入 | 492 |
+| ANSWER_RUNTIME 可注入 | 512 |
 | MATERIALS_ONLY | 8 |
 | L5_ONLY | 0 |
 | NEEDS_REWRITE | 0 |
-| 已完成批次 | 25 |
+| 已完成批次 | 26 |
 
 ---
 
@@ -917,6 +917,41 @@
 | practical-500 | 外国人の「日本での看護師・介護福祉士国家試験（EPA）受験と在留資格」 | ✅ | ANSWER_RUNTIME | P1 |
 
 ## Batch 25 Handoff Note
+
+- 完成日: 2026-05-19
+- 担当: FACT Operator (Claude)
+- コミット: 567cef4
+- 新規DOMAIN: なし
+- DOMAIN送付済み: pending（pdom-001〜009）
+
+---
+
+## Batch 26 状態（目標: 20張）
+
+| card_id | topic | status | runtime_bucket | risk |
+|---------|-------|--------|---------------|------|
+| practical-501 | 外国人の「確定申告漏れ・税務コンプライアンス」と在留資格への影響 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-502 | 外国人の「自然災害後の在留資格特例措置・支援制度」 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-503 | 外国人の「特定技能1号の通算5年間の計算方法」と実務的注意点 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-504 | 外国人の「日本での身元保証人・身元引受人」の役割と在留資格申請 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-505 | 外国人の「技能ビザ（技能）から特定技能・技人国への変更」の実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-506 | 外国人の「日本での会社清算・解散手続き」と経営管理ビザへの影響 | ✅ | ANSWER_RUNTIME | P0 |
+| practical-507 | 外国人の「永住申請の素行要件：交通違反・軽微な前科」の詳細基準 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-508 | 外国人の「マイナンバーカードと在留資格管理」の実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-509 | 外国人の子どもの「高校進学・高校入試」と在留資格 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-510 | 外国人の「保育所・幼稚園の入所」と在留資格・子ども関連給付 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-511 | 外国人の「特定技能で海外から来日する際の入国前手続き」の実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-512 | 外国人の「通名・英語名・パスポート名と在留カードの整合性管理」の実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-513 | 外国人の「農業・農地取得と在留資格」の実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-514 | 外国人の「永住申請の提出先・管轄入管局」と審査窓口の実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-515 | 外国人の「住所変更・転居届と在留カード管理」の実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-516 | 外国人の「特定商取引法・マルチ商法と在留資格上のリスク」の実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-517 | 外国人の「日本での公正証書作成」と在留資格・法的手続きへの活用 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-518 | 外国人の「消費者被害・詐欺被害」と在留資格・被害救済の実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-519 | 外国人の「日本での遺産相続・相続手続き」と在留資格 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-520 | 外国人の「在留資格取消手続き」の詳細—通知から聴聞まで | ✅ | ANSWER_RUNTIME | P0 |
+
+## Batch 26 Handoff Note
 
 - 完成日: 2026-05-19
 - 担当: FACT Operator (Claude)
