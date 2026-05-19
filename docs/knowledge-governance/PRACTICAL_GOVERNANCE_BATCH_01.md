@@ -1,4 +1,16 @@
-# Practical Governance Batch 01
+> # ⚠ INVALIDATED 2026-05-19 — 不可 ingest，不可注入 answer 系统
+>
+> **本批次产出未做事实核查、未对照 docs/domain/ DOMAIN 资产、未对照 docs/eval/ guardrail。**
+> ANSWER_RUNTIME 分桶大量错误：例如 practical-005/031/064/089/123/149/171 把「経営管理 500 万円」当作核心事实，
+> 而 2025-10-16 经管改革后的真相基准是 3000 万円 + 1 人以上限定身份常勤 + B2 日语 + 经管经验 + 专家审过事业计划。
+> practical-149 的「常勤2名 or 500万 选择要件」直接踩 `TEBIQ_0_8_LOOP2M_BUSINESS_MANAGER_2025_REFORM_GUARDRAIL_INTEGRATION` 的 must_not_say。
+>
+> 失败复盘 + 新工作纪律见 `docs/knowledge-governance/PRACTICAL_GOVERNANCE_AUDIT_LOG.md`。
+> 真正的审计产出在 `docs/knowledge-governance/audits/`。
+
+---
+
+# Practical Governance Batch 01 [INVALIDATED]
 
 > 治理対象: `docs/practical-fact-layer/cards/practical-001.md` 〜 `practical-050.md`
 > 治理日: 2026-05-19

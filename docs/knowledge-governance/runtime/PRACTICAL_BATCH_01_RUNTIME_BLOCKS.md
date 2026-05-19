@@ -1,4 +1,14 @@
-# Practical Batch 01 — Runtime Blocks (practical-001〜practical-050)
+> # ⚠ INVALIDATED 2026-05-19 — 不可 ingest 到 answer 系统
+>
+> **本文件的 yaml runtime block 不可被 Codex 主工程读取或注入 answer 系统。**
+> 未做事实核查、未对照 DOMAIN/guardrail。
+> 已知严重错误：practical-005/031 把「資本金 500 万円」当作经管现行核心事实，
+> 与 2025-10-16 经管改革后的真相（3000 万円基准）冲突。
+> 详见 `docs/knowledge-governance/PRACTICAL_GOVERNANCE_AUDIT_LOG.md`。
+
+---
+
+# Practical Batch 01 — Runtime Blocks (practical-001〜practical-050) [INVALIDATED]
 
 > 既存実務カードから抽出した短版 runtime block 集。答案ランタイムへ直接注入する場合の source-of-truth。
 > 1 張 = 1 yaml block。short_answer ≤ 80 字、practical_rule ≤ 200 字、全体 ≤ 500 字。

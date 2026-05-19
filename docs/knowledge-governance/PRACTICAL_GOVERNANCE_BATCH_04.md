@@ -1,4 +1,11 @@
-# Practical Governance Batch 04
+> # ⚠ INVALIDATED 2026-05-19 — 不可 ingest，不可注入 answer 系统
+>
+> 同 Batch 01。本批次产出未做事实核查、未对照 DOMAIN/guardrail 资产，ANSWER_RUNTIME 分桶不可信。
+> 详见 `docs/knowledge-governance/PRACTICAL_GOVERNANCE_AUDIT_LOG.md`。
+
+---
+
+# Practical Governance Batch 04 [INVALIDATED]
 
 > 治理対象: `docs/practical-fact-layer/cards/practical-151.md` 〜 `practical-200.md`
 > 治理日: 2026-05-19

@@ -1,4 +1,13 @@
-# Practical Batch 03 — Runtime Blocks (practical-101〜practical-150)
+> # ⚠ INVALIDATED 2026-05-19 — 不可 ingest 到 answer 系统
+>
+> 本文件 yaml runtime block 未做事实核查、未对照 DOMAIN/guardrail。
+> 已知严重错误：practical-149 写「常勤2名 or 500万 选择要件」直接踩 Loop2M must_not_say。
+> practical-123/144 经管要件未对照 2025 改革。
+> 详见 `docs/knowledge-governance/PRACTICAL_GOVERNANCE_AUDIT_LOG.md`。
+
+---
+
+# Practical Batch 03 — Runtime Blocks (practical-101〜practical-150) [INVALIDATED]
 
 > 既存実務カードから抽出した短版 runtime block 集。
 > 生成日: 2026-05-19 / Batch 03

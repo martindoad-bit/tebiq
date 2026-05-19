@@ -1,4 +1,13 @@
-# Practical Batch 02 — Runtime Blocks (practical-051〜practical-100)
+> # ⚠ INVALIDATED 2026-05-19 — 不可 ingest 到 answer 系统
+>
+> 本文件 yaml runtime block 未做事实核查、未对照 DOMAIN/guardrail。
+> 已知严重错误：practical-064 整张是「経営管理 500 万円投资认定」，
+> practical-074 经营者役员报酬目安未对照 2025 改革。
+> 详见 `docs/knowledge-governance/PRACTICAL_GOVERNANCE_AUDIT_LOG.md`。
+
+---
+
+# Practical Batch 02 — Runtime Blocks (practical-051〜practical-100) [INVALIDATED]
 
 > 既存実務カードから抽出した短版 runtime block 集。
 > 1 張 = 1 yaml block。short_answer ≤ 80 字、practical_rule ≤ 200 字。

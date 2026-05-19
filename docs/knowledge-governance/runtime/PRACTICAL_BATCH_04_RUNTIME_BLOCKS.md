@@ -1,4 +1,14 @@
-# Practical Batch 04 — Runtime Blocks (practical-151〜practical-200)
+> # ⚠ INVALIDATED 2026-05-19 — 不可 ingest 到 answer 系统
+>
+> 本文件 yaml runtime block 未做事实核查、未对照 DOMAIN/guardrail。
+> 已知严重错误：practical-157 经管赤字更新未区分新申请/更新/既存持有人/过渡期，
+> practical-171 整张「500万円出资详解」与 2025 改革冲突，
+> practical-178 经管申请时机未对照新基准。
+> 详见 `docs/knowledge-governance/PRACTICAL_GOVERNANCE_AUDIT_LOG.md`。
+
+---
+
+# Practical Batch 04 — Runtime Blocks (practical-151〜practical-200) [INVALIDATED]
 
 > 生成日: 2026-05-19 / Batch 04 / 母カード参照は `docs/practical-fact-layer/cards/practical-XXX.md`
 
