@@ -11,13 +11,13 @@
 
 | 指标 | 当前值 |
 |------|--------|
-| 已完成卡片数 | 360 |
+| 已完成卡片数 | 380 |
 | DOMAIN 队列总数 | 9 |
-| ANSWER_RUNTIME 可注入 | 352 |
+| ANSWER_RUNTIME 可注入 | 372 |
 | MATERIALS_ONLY | 8 |
 | L5_ONLY | 0 |
 | NEEDS_REWRITE | 0 |
-| 已完成批次 | 18 |
+| 已完成批次 | 19 |
 
 ---
 
@@ -672,6 +672,41 @@
 | practical-360 | 特定技能のキャリアパス（1号→2号→永住）の全体像 | ✅ | ANSWER_RUNTIME | P1 |
 
 ## Batch 18 Handoff Note
+
+- 完成日: 2026-05-19
+- 担当: FACT Operator (Claude)
+- コミット: 6b5c861
+- 新規DOMAIN: なし
+- DOMAIN送付済み: pending（pdom-001〜009）
+
+---
+
+## Batch 19 状態（目標: 20張）
+
+| card_id | topic | status | runtime_bucket | risk |
+|---------|-------|--------|---------------|------|
+| practical-361 | 外国人のクレジットカード・ローン審査と在留資格の影響 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-362 | 在留資格「興行」の申請実務（アーティスト・スポーツ選手・ダンサー等）| ✅ | ANSWER_RUNTIME | P1 |
+| practical-363 | 外国人の子どもの教育（就学義務・公立学校入学・無償教育）| ✅ | ANSWER_RUNTIME | P1 |
+| practical-364 | 特定技能「建設業」の申請実務と建設業特有の要件 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-365 | 外国人の日本での不動産購入と在留資格の関係 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-366 | 「高度専門職2号」への変更申請の実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-367 | 外国人の会社役員（取締役・監査役）就任と在留資格 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-368 | 在留資格「教育」（学校の先生）の申請実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-369 | 外国人の遺言書作成と遺産相続実務（在留管理との関係）| ✅ | ANSWER_RUNTIME | P1 |
+| practical-370 | 特定技能「介護」の申請実務（EPA介護福祉士との違い）| ✅ | ANSWER_RUNTIME | P1 |
+| practical-371 | 外国人の健康保険の傷病手当金と在留資格管理 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-372 | 在留資格「研修」の申請実務（企業内研修・政府派遣研修）| ✅ | ANSWER_RUNTIME | P1 |
+| practical-373 | 外国人が日本で起業するキャリアパス（合同会社・株式会社設立と在留資格）| ✅ | ANSWER_RUNTIME | P1 |
+| practical-374 | 在留資格「特定活動46号」（本邦大学卒業者）の詳細 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-375 | 外国人が仮想通貨・NFT・クラウドファンディングで収益を得る場合の在留資格 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-376 | 特定技能「農業」の申請実務と季節性・派遣型の特徴 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-377 | 外国人の自然災害時の在留資格管理と支援（地震・台風・洪水等）| ✅ | ANSWER_RUNTIME | P1 |
+| practical-378 | 在留資格「特定活動（出国準備）」と滞在期限 | ✅ | ANSWER_RUNTIME | P0 |
+| practical-379 | 外国人の労働基準法適用と労働トラブルへの対応 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-380 | 技人国「IT系業種」の典型申請ケース（SE・プログラマー・データサイエンティスト）| ✅ | ANSWER_RUNTIME | P1 |
+
+## Batch 19 Handoff Note
 
 - 完成日: 2026-05-19
 - 担当: FACT Operator (Claude)
