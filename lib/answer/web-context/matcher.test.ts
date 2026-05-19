@@ -42,3 +42,21 @@ test('web context prompt carries source metadata without internal engineering te
   assert.match(prompt, /14日以内/)
   assert.doesNotMatch(prompt, /Route Gate|P0\/P1|guardrail/i)
 })
+
+test('web context prompt hard-corrects spouse remarriage procedure wording', () => {
+  const source = WEB_CONTEXT_SOURCES.find(item => item.id === 'practice-spouse-remarriage-ubiq')
+  assert.ok(source)
+
+  const prompt = webMatchesToPromptContext([
+    {
+      source,
+      fetched: false,
+      snippets: ['日本人と再婚した場合も、手続名称は在留期間更新許可申請に該当する。'],
+    } satisfies WebContextMatch,
+  ])
+
+  assert.ok(prompt)
+  assert.match(prompt, /不要回答“不是更新，是变更”/)
+  assert.match(prompt, /在留期間更新許可申請/)
+  assert.match(prompt, /审查实质接近新规\/变更/)
+})
