@@ -11,13 +11,13 @@
 
 | 指标 | 当前值 |
 |------|--------|
-| 已完成卡片数 | 440 |
+| 已完成卡片数 | 460 |
 | DOMAIN 队列总数 | 9 |
-| ANSWER_RUNTIME 可注入 | 432 |
+| ANSWER_RUNTIME 可注入 | 452 |
 | MATERIALS_ONLY | 8 |
 | L5_ONLY | 0 |
 | NEEDS_REWRITE | 0 |
-| 已完成批次 | 22 |
+| 已完成批次 | 23 |
 
 ---
 
@@ -812,6 +812,41 @@
 | practical-440 | 外国人の「在留カードと住民票の住所不一致」の問題とリスク | ✅ | ANSWER_RUNTIME | P1 |
 
 ## Batch 22 Handoff Note
+
+- 完成日: 2026-05-19
+- 担当: FACT Operator (Claude)
+- コミット: d6f6863
+- 新規DOMAIN: なし
+- DOMAIN送付済み: pending（pdom-001〜009）
+
+---
+
+## Batch 23 状態（目標: 20張）
+
+| card_id | topic | status | runtime_bucket | risk |
+|---------|-------|--------|---------------|------|
+| practical-441 | 外国人の「日本での出産・育児」と在留資格管理 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-442 | 特定技能「介護分野」の申請実務と他の介護在留資格との違い | ✅ | ANSWER_RUNTIME | P1 |
+| practical-443 | 外国人の「在留資格と所得税・住民税の扶養控除」の実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-444 | 外国人の「日本語学校から専門学校・大学への進学」と在留資格 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-445 | 外国人の「日本での開業医・歯科医・医療専門職」と在留資格 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-446 | 外国人の「在留特別許可（在特）」の申請と許可基準 | ✅ | ANSWER_RUNTIME | P0 |
+| practical-447 | 外国人の「日本でのクレジットカード・銀行口座開設」の実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-448 | 外国人の「技人国から経営管理への変更」要件と実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-449 | 特定技能「建設分野」の申請実務と特有の要件 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-450 | 外国人の「日本での賃貸住宅」の契約と外国人差別・支援制度 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-451 | 外国人の「日本でのフリーランス・個人事業主」として就労する際の在留資格 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-452 | 外国人の「日本での年金（国民年金・厚生年金）」の脱退一時金と社会保障協定 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-453 | 外国人の「会社転籍・出向・グループ企業間の異動」と在留資格の届出 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-454 | 外国人の「日本での離婚調停・離婚裁判」と在留資格 | ✅ | ANSWER_RUNTIME | P0 |
+| practical-455 | 外国人の「日本での起業（会社設立）手続き」の実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-456 | 外国人の「日本語能力試験（JLPT）不合格と在留資格・特定技能への影響」| ✅ | ANSWER_RUNTIME | P1 |
+| practical-457 | 外国人の「日本でのIT・エンジニア転職」と在留資格（技人国での転職実務）| ✅ | ANSWER_RUNTIME | P1 |
+| practical-458 | 外国人の「日本での起業後の事業失敗・廃業」と経営管理ビザの管理 | ✅ | ANSWER_RUNTIME | P0 |
+| practical-459 | 外国人の「日本での選挙権・政治活動」と在留資格 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-460 | 外国人の「日本での専門学校卒業後の就職・在留資格」| ✅ | ANSWER_RUNTIME | P1 |
+
+## Batch 23 Handoff Note
 
 - 完成日: 2026-05-19
 - 担当: FACT Operator (Claude)
