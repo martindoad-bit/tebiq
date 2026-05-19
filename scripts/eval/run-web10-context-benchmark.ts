@@ -2,6 +2,11 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 import { CONSULTATION_ALPHA_MAX_TOKENS, buildConsultationMessages } from '@/lib/answer/prompt/consultation-alpha-v1'
+import {
+  matchPracticalCards,
+  practicalMatchesToPromptContext,
+  type PracticalCardMatch,
+} from '@/lib/answer/practical-layer/matcher'
 
 type SystemId = 'tebiq-native-v2-web-context' | 'deepseek-v4-flash-thinking-web-context' | 'deepseek-v4-pro-thinking-web-context'
 
@@ -130,7 +135,7 @@ function userWithContext(item: QuestionItem): string {
 async function callSystem(item: QuestionItem, systemId: SystemId, args: Args): Promise<AnswerRecord> {
   const started = Date.now()
   try {
-    const messages = buildMessages(item, systemId)
+    const { messages, practicalMatches } = buildMessages(item, systemId)
     const model = systemId === 'deepseek-v4-pro-thinking-web-context' ? 'deepseek-v4-pro' : 'deepseek-v4-flash'
     const answer = await callDeepseek(messages, model, args)
     return {
@@ -150,6 +155,8 @@ async function callSystem(item: QuestionItem, systemId: SystemId, args: Args): P
         finish_reason: answer.finishReason,
         reasoning_chars: answer.reasoningChars,
         source_count: item.web_context.length,
+        practical_card_ids: practicalMatches.map(match => match.practical_card_id),
+        practical_card_titles: practicalMatches.map(match => match.title),
       },
     }
   } catch (err) {
@@ -170,20 +177,37 @@ async function callSystem(item: QuestionItem, systemId: SystemId, args: Args): P
   }
 }
 
-function buildMessages(item: QuestionItem, systemId: SystemId): Array<{ role: 'system' | 'user'; content: string }> {
+function buildMessages(
+  item: QuestionItem,
+  systemId: SystemId,
+): { messages: Array<{ role: 'system' | 'user'; content: string }>; practicalMatches: PracticalCardMatch[] } {
   if (systemId === 'tebiq-native-v2-web-context') {
-    return buildConsultationMessages({
+    const practicalMatches = matchPracticalCards(item.question)
+    const practicalSystemMessage = practicalMatchesToPromptContext(practicalMatches)
+    const baseMessages = buildConsultationMessages({
       userQuestion: `用户背景：${item.background}\n用户问题：${item.question}`,
       factAnchors: item.web_context.map((source, index) => ({
         id: `web${index + 1}:${source.source}`,
         text: `${source.summary} URL: ${source.url}`,
       })),
     })
+    if (!practicalSystemMessage) return { messages: baseMessages, practicalMatches }
+    return {
+      messages: [
+        ...baseMessages.slice(0, -2),
+        { role: 'system', content: practicalSystemMessage },
+        ...baseMessages.slice(-2),
+      ],
+      practicalMatches,
+    }
   }
-  return [
-    { role: 'system', content: RAW_SYSTEM_PROMPT },
-    { role: 'user', content: userWithContext(item) },
-  ]
+  return {
+    practicalMatches: [],
+    messages: [
+      { role: 'system', content: RAW_SYSTEM_PROMPT },
+      { role: 'user', content: userWithContext(item) },
+    ],
+  }
 }
 
 async function callDeepseek(

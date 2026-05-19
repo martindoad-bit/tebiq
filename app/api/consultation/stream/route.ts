@@ -10,6 +10,7 @@ import {
   CONSULTATION_FINAL_OUTPUT_GUARD,
   buildConsultationMessages,
 } from '@/lib/answer/prompt/consultation-alpha-v1'
+import { matchPracticalCards, practicalMatchesToPromptContext } from '@/lib/answer/practical-layer/matcher'
 import { anchorsToPromptContext, matchAnchors } from '@/lib/consultation/fact-anchors'
 import { createForbiddenFilter } from '@/lib/consultation/forbidden-phrases'
 import { selectTerminalGuardrailFindings, validateAnswer } from '@/lib/consultation/guardrail-validator'
@@ -180,6 +181,14 @@ export async function POST(req: Request) {
         return [] as FactCardMatch[]
       })
     : Promise.resolve([] as FactCardMatch[])
+
+  const practicalLayerEnabled = process.env.PRACTICAL_LAYER_ENABLED === 'true'
+  const practicalMatchesPromise = practicalLayerEnabled
+    ? Promise.resolve(matchPracticalCards(question)).catch(err => {
+        console.warn('[consultation/stream] matchPracticalCards failed', err)
+        return []
+      })
+    : Promise.resolve([])
 
   // Create the row before opening the stream so the consultation_id is
   // emitted in the very first 'received' frame.
@@ -402,6 +411,8 @@ export async function POST(req: Request) {
       if (factLayerEnabled) {
         emit({ event: 'fact_cards_injected', ts: Date.now(), items: factCardAudit })
       }
+      const practicalMatches = await practicalMatchesPromise
+      const practicalSystemMessage = practicalMatchesToPromptContext(practicalMatches)
 
       // 5. Open DS streaming connection
       const dsAbort = new AbortController()
@@ -427,6 +438,7 @@ export async function POST(req: Request) {
       // Pack §2 / design doc §"Injection point".
       const injectedSystemMessages = [
         factSystemMessage,
+        practicalSystemMessage,
         routeGatePrompt,
       ].filter((message): message is string => Boolean(message))
 
