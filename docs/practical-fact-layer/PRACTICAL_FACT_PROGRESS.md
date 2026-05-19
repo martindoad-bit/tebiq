@@ -11,13 +11,13 @@
 
 | 指标 | 当前值 |
 |------|--------|
-| 已完成卡片数 | 520 |
+| 已完成卡片数 | 540 |
 | DOMAIN 队列总数 | 9 |
-| ANSWER_RUNTIME 可注入 | 512 |
+| ANSWER_RUNTIME 可注入 | 532 |
 | MATERIALS_ONLY | 8 |
 | L5_ONLY | 0 |
 | NEEDS_REWRITE | 0 |
-| 已完成批次 | 26 |
+| 已完成批次 | 27 |
 
 ---
 
@@ -952,6 +952,41 @@
 | practical-520 | 外国人の「在留資格取消手続き」の詳細—通知から聴聞まで | ✅ | ANSWER_RUNTIME | P0 |
 
 ## Batch 26 Handoff Note
+
+- 完成日: 2026-05-19
+- 担当: FACT Operator (Claude)
+- コミット: 8e24edf
+- 新規DOMAIN: なし
+- DOMAIN送付済み: pending（pdom-001〜009）
+
+---
+
+## Batch 27 状態（目標: 20張）
+
+| card_id | topic | status | runtime_bucket | risk |
+|---------|-------|--------|---------------|------|
+| practical-521 | 外国人の「宅地建物取引士（宅建）・不動産業開業」と在留資格 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-522 | 外国人の「日本での生命保険・損害保険の加入」と在留資格 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-523 | 外国人の「難民申請・難民認定」の手続きと在留資格 | ✅ | ANSWER_RUNTIME | P0 |
+| practical-524 | 外国人の「高度専門職ポイント計算」の具体的な審査実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-525 | 外国人の「外資系・グローバル企業での就労」と技人国ビザの審査実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-526 | 外国人の「日本での受刑・出所後」の在留資格管理 | ✅ | ANSWER_RUNTIME | P0 |
+| practical-527 | 外国人の「二重国籍・複数国籍」と日本の在留資格管理 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-528 | 外国人の「日本でのスポーツ選手・プロ契約」と在留資格 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-529 | 外国人の「日本での電子商取引（EC・越境EC）事業」と在留資格 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-530 | 外国人の「在留資格の種類・分類」の全体マップと選び方 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-531 | 外国人の「法務省の在留申請オンライン申請」の実務と使い方 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-532 | 外国人の「日本での出入国記録・EDカード」と在留資格管理 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-533 | 外国人の「技人国ビザの業務適合性—グレーゾーン業種」の審査実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-534 | 外国人の「日本の離島・過疎地域移住」と在留資格の特例・支援 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-535 | 外国人の「日本でのアルバイト複数掛け持ち」と在留資格 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-536 | 外国人の「在留申請における収入証明書・課税証明書」の取得と活用 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-537 | 外国人の「日本の裁判・民事訴訟」への関与と在留資格 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-538 | 外国人の「介護職への転職（技人国から特定技能介護等への変更）」の実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-539 | 外国人の「在留資格申請の不許可後の再申請」の実務と戦略 | ✅ | ANSWER_RUNTIME | P0 |
+| practical-540 | 外国人の「日本での印鑑登録・実印」と在留資格・各種手続き | ✅ | ANSWER_RUNTIME | P1 |
+
+## Batch 27 Handoff Note
 
 - 完成日: 2026-05-19
 - 担当: FACT Operator (Claude)
