@@ -11,13 +11,13 @@
 
 | 指标 | 当前值 |
 |------|--------|
-| 已完成卡片数 | 380 |
+| 已完成卡片数 | 400 |
 | DOMAIN 队列总数 | 9 |
-| ANSWER_RUNTIME 可注入 | 372 |
+| ANSWER_RUNTIME 可注入 | 392 |
 | MATERIALS_ONLY | 8 |
 | L5_ONLY | 0 |
 | NEEDS_REWRITE | 0 |
-| 已完成批次 | 19 |
+| 已完成批次 | 20 |
 
 ---
 
@@ -707,6 +707,41 @@
 | practical-380 | 技人国「IT系業種」の典型申請ケース（SE・プログラマー・データサイエンティスト）| ✅ | ANSWER_RUNTIME | P1 |
 
 ## Batch 19 Handoff Note
+
+- 完成日: 2026-05-19
+- 担当: FACT Operator (Claude)
+- コミット: 1a9e099
+- 新規DOMAIN: なし
+- DOMAIN送付済み: pending（pdom-001〜009）
+
+---
+
+## Batch 20 状態（目標: 20張）
+
+| card_id | topic | status | runtime_bucket | risk |
+|---------|-------|--------|---------------|------|
+| practical-381 | 「定住者」在留資格から永住申請への移行要件 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-382 | 外国人の医療保険証の利用と在留資格別の加入制度 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-383 | 外国人の日本での婚活・国際結婚サービスの利用と在留資格 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-384 | 日本で生まれた外国人の子どもの在留資格手続き（出生後60日） | ✅ | ANSWER_RUNTIME | P1 |
+| practical-385 | 外国人の年末調整・確定申告の実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-386 | 特定技能「漁業」の申請実務と派遣型受入の特徴 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-387 | 外国人が日本でペットを連れて生活する場合の入国規制・生活実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-388 | 在留資格取消処分への不服申立て・異議申立ての実務 | ✅ | ANSWER_RUNTIME | P0 |
+| practical-389 | 外国人の18歳未満の子どもの在留管理 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-390 | 帰化後の手続き（国籍変更・名前変更・在留カード返還） | ✅ | ANSWER_RUNTIME | P1 |
+| practical-391 | 在留申請における「理由書（申請理由書）」の効果的な書き方 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-392 | 外国人が日本の大学院（修士・博士）に進学する際の在留資格 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-393 | 特定技能「造船・舶用工業」の申請実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-394 | 外国人の「連続不在（長期出国）」が在留資格更新・永住申請に与える影響 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-395 | 外国人の薬・処方箋・持参薬と在留資格・税関 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-396 | 外国人の「通訳ボランティア・社会貢献活動」と在留資格 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-397 | ワーキングホリデー後の就職活動と在留資格 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-398 | 外国人が「日本語能力試験（JLPT）」を在留資格申請で活用する方法 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-399 | 在留資格「技能（スポーツ指導員・インストラクター）」の申請実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-400 | 外国人の「特別養子縁組・養子縁組」と在留資格 | ✅ | ANSWER_RUNTIME | P1 |
+
+## Batch 20 Handoff Note
 
 - 完成日: 2026-05-19
 - 担当: FACT Operator (Claude)
