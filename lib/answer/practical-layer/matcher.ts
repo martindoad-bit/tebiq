@@ -1,6 +1,13 @@
 import { existsSync, readdirSync, readFileSync } from 'fs'
 import { join } from 'path'
 import matter from 'gray-matter'
+import {
+  parseRuntimeBlock,
+  runtimeBlockFromLegacySections,
+  runtimeBlockToPromptBlock,
+  type PracticalRuntimeBlock,
+  type PracticalRuntimeBlockSource,
+} from './runtime-block'
 
 export interface PracticalCardMatch {
   practical_card_id: string
@@ -12,6 +19,11 @@ export interface PracticalCardMatch {
   matched_keywords: string[]
   score: number
   prompt_block: string
+  prompt_chars: number
+  runtime_block: PracticalRuntimeBlock | null
+  runtime_block_source: PracticalRuntimeBlockSource
+  material_bridge: string[]
+  source_urls: string[]
 }
 
 interface PracticalCard {
@@ -24,6 +36,11 @@ interface PracticalCard {
   runtime_bucket: string
   body: string
   prompt_block: string
+  prompt_chars: number
+  runtime_block: PracticalRuntimeBlock | null
+  runtime_block_source: PracticalRuntimeBlockSource
+  material_bridge: string[]
+  source_urls: string[]
   trigger_keywords: string[]
 }
 
@@ -102,30 +119,66 @@ function compactMarkdown(text: string, maxChars: number): string {
     : compacted
 }
 
-function promptBlockFor(cardId: string, data: Record<string, unknown>, body: string): string {
+function promptBlockFor(cardId: string, data: Record<string, unknown>, body: string): {
+  prompt_block: string
+  runtime_block: PracticalRuntimeBlock
+  runtime_block_source: PracticalRuntimeBlockSource
+} {
+  const title = String(data.title ?? cardId)
+  const topic = String(data.topic ?? '')
+  const risk = String(data.risk_level ?? '')
+  const parsedRuntimeBlock = parseRuntimeBlock(data, body)
+  if (parsedRuntimeBlock.block && parsedRuntimeBlock.source) {
+    const promptBlock = runtimeBlockToPromptBlock({
+      cardId,
+      title,
+      topic,
+      riskLevel: risk,
+      block: parsedRuntimeBlock.block,
+    })
+    return {
+      prompt_block: promptBlock,
+      runtime_block: parsedRuntimeBlock.block,
+      runtime_block_source: parsedRuntimeBlock.source,
+    }
+  }
+
   const safeWording = extractSection(body, ['可注入答案', '安全表述'])
   const facts = extractSection(body, ['核心事実', '核心事实'])
   const difference = extractSection(body, ['法条層', '法条层'])
   const l5 = extractSection(body, ['L5', '深水'])
   const materials = extractSection(body, ['材料'])
+  const sourceUrls = extractUrls(body)
+  const legacyRuntimeBlock = runtimeBlockFromLegacySections({
+    userSituation: extractSection(body, ['用户場景', '用户场景', '用者場景']),
+    shortAnswer: firstUsefulLine(safeWording || facts),
+    practicalRule: compactMarkdown(safeWording || facts, 360),
+    officialAnchor: firstUsefulLine(difference),
+    risk: linesFromMarkdown(l5).slice(0, 3),
+    materialBridge: linesFromMarkdown(materials).slice(0, 4),
+    sourceUrls,
+  })
+  const factsForPrompt = safeWording ? '' : facts
   const parts = [
-    safeWording && `可直接采用的实务口径：\n${compactMarkdown(safeWording, 900)}`,
-    facts && `核心事实：\n${compactMarkdown(facts, 900)}`,
-    difference && `法条/实务差异：\n${compactMarkdown(difference, 500)}`,
-    materials && `材料提示：\n${compactMarkdown(materials, 500)}`,
-    l5 && `高风险信号：\n${compactMarkdown(l5, 450)}`,
+    safeWording && `可直接采用的实务口径：\n${compactMarkdown(safeWording, 460)}`,
+    factsForPrompt && `核心事实：\n${compactMarkdown(factsForPrompt, 420)}`,
+    difference && `法条/实务差异：\n${compactMarkdown(difference, 260)}`,
+    materials && `材料提示：\n${compactMarkdown(materials, 220)}`,
+    l5 && `高风险信号：\n${compactMarkdown(l5, 220)}`,
   ].filter(Boolean)
 
-  const title = String(data.title ?? cardId)
-  const topic = String(data.topic ?? '')
-  const risk = String(data.risk_level ?? '')
-  return [
+  const promptBlock = [
     `【实务卡 ${cardId}】${title}`,
     topic ? `主题：${topic}` : '',
     risk ? `风险级别：${risk}` : '',
     '',
     parts.join('\n\n'),
   ].filter(Boolean).join('\n')
+  return {
+    prompt_block: promptBlock,
+    runtime_block: legacyRuntimeBlock,
+    runtime_block_source: 'legacy_sections',
+  }
 }
 
 function loadCards(): PracticalCard[] {
@@ -146,6 +199,7 @@ function loadCards(): PracticalCard[] {
       const topic = String(data.topic ?? '')
       const scene = extractSection(parsed.content, ['用户場景', '用户场景', '用者場景'])
       const sceneKeywords = scene.match(/[一-龥ぁ-んァ-ヶーA-Za-z0-9]{2,}/g) ?? []
+      const prompt = promptBlockFor(id, data, parsed.content)
       return {
         practical_card_id: id,
         title,
@@ -155,7 +209,12 @@ function loadCards(): PracticalCard[] {
         source_type: String(data.source_type ?? ''),
         runtime_bucket: String(data.runtime_bucket ?? ''),
         body: parsed.content,
-        prompt_block: promptBlockFor(id, data, parsed.content),
+        prompt_block: prompt.prompt_block,
+        prompt_chars: prompt.prompt_block.length,
+        runtime_block: prompt.runtime_block,
+        runtime_block_source: prompt.runtime_block_source,
+        material_bridge: prompt.runtime_block.material_bridge,
+        source_urls: prompt.runtime_block.source_urls,
         trigger_keywords: unique([...aliases, title, topic, ...sceneKeywords.slice(0, 30)]),
       }
     })
@@ -193,6 +252,11 @@ export function matchPracticalCards(question: string): PracticalCardMatch[] {
     matched_keywords: item.matched,
     score: item.score,
     prompt_block: item.card.prompt_block,
+    prompt_chars: item.card.prompt_chars,
+    runtime_block: item.card.runtime_block,
+    runtime_block_source: item.card.runtime_block_source,
+    material_bridge: item.card.material_bridge,
+    source_urls: item.card.source_urls,
   }))
 }
 
@@ -205,4 +269,23 @@ export function practicalMatchesToPromptContext(matches: readonly PracticalCardM
     '',
     matches.map(match => match.prompt_block).join('\n\n---\n\n'),
   ].join('\n')
+}
+
+function firstUsefulLine(text: string): string {
+  return linesFromMarkdown(text)[0] ?? ''
+}
+
+function linesFromMarkdown(text: string): string[] {
+  return text
+    .split(/\r?\n/)
+    .map(line => line
+      .replace(/^\s*[-*]\s+/, '')
+      .replace(/^\s*\d+[.)]\s+/, '')
+      .replace(/^\s*#+\s+/, '')
+      .trim())
+    .filter(line => line.length > 0 && !/^```/.test(line))
+}
+
+function extractUrls(text: string): string[] {
+  return unique(text.match(/https?:\/\/[^\s)）"'<>]+/g) ?? [])
 }

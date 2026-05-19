@@ -37,6 +37,7 @@
     "qa:pre-report-audit": "bash scripts/qa/pre-report-audit.sh",
     "smoke:production-full": "bash scripts/qa/production-url-smoke.sh && tsx scripts/test/smoke-production-answer.ts",
     "eval:provider-preflight": "tsx scripts/eval/preflight-provider-env.ts",
+    "eval:context-benchmark": "tsx scripts/eval/run-web10-context-benchmark.ts",
     "eval:loop2b-targeted": "bash scripts/eval/run-loop2b-targeted.sh",
     "eval:0.8.5:first24-routes": "tsx scripts/eval/check-card-import-first24-route-gates.ts",
     "eval:0.8.5:routes": "tsx scripts/eval/check-card-import-first24-route-gates.ts",

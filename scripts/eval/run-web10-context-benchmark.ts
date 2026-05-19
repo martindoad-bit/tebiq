@@ -39,6 +39,7 @@ interface Args {
   concurrency: number
   timeoutMs: number
   deepseekBaseUrl: string
+  tebiqPracticalLayer: boolean
 }
 
 interface AnswerRecord {
@@ -77,6 +78,7 @@ function parseArgs(argv: string[]): Args {
     concurrency: 3,
     timeoutMs: 240000,
     deepseekBaseUrl: 'https://api.deepseek.com',
+    tebiqPracticalLayer: true,
   }
   for (const arg of argv) {
     if (arg.startsWith('--input=')) args.input = arg.slice('--input='.length)
@@ -84,6 +86,7 @@ function parseArgs(argv: string[]): Args {
     else if (arg.startsWith('--concurrency=')) args.concurrency = clamp(arg.slice('--concurrency='.length), 1, 5, 'concurrency')
     else if (arg.startsWith('--timeout-ms=')) args.timeoutMs = clamp(arg.slice('--timeout-ms='.length), 10000, 600000, 'timeout-ms')
     else if (arg.startsWith('--systems=')) args.systems = parseSystems(arg.slice('--systems='.length))
+    else if (arg.startsWith('--tebiq-practical=')) args.tebiqPracticalLayer = parseBoolean(arg.slice('--tebiq-practical='.length), 'tebiq-practical')
   }
   return args
 }
@@ -101,6 +104,12 @@ function parseSystems(raw: string): SystemId[] {
     if (!allowed.has(system as SystemId)) throw new Error(`unknown system: ${system}`)
   }
   return systems as SystemId[]
+}
+
+function parseBoolean(raw: string, label: string): boolean {
+  if (raw === 'true' || raw === '1' || raw === 'on') return true
+  if (raw === 'false' || raw === '0' || raw === 'off') return false
+  throw new Error(`invalid --${label}=${raw}; expected true/false`)
 }
 
 function readPack(path: string): Pack {
@@ -135,7 +144,7 @@ function userWithContext(item: QuestionItem): string {
 async function callSystem(item: QuestionItem, systemId: SystemId, args: Args): Promise<AnswerRecord> {
   const started = Date.now()
   try {
-    const { messages, practicalMatches } = buildMessages(item, systemId)
+    const { messages, practicalMatches } = buildMessages(item, systemId, args)
     const model = systemId === 'deepseek-v4-pro-thinking-web-context' ? 'deepseek-v4-pro' : 'deepseek-v4-flash'
     const answer = await callDeepseek(messages, model, args)
     return {
@@ -155,8 +164,13 @@ async function callSystem(item: QuestionItem, systemId: SystemId, args: Args): P
         finish_reason: answer.finishReason,
         reasoning_chars: answer.reasoningChars,
         source_count: item.web_context.length,
+        practical_layer_enabled: systemId === 'tebiq-native-v2-web-context' ? args.tebiqPracticalLayer : false,
         practical_card_ids: practicalMatches.map(match => match.practical_card_id),
         practical_card_titles: practicalMatches.map(match => match.title),
+        practical_card_runtime_block_sources: practicalMatches.map(match => match.runtime_block_source),
+        practical_prompt_chars: practicalMatches.reduce((sum, match) => sum + match.prompt_chars, 0),
+        practical_material_bridge: Array.from(new Set(practicalMatches.flatMap(match => match.material_bridge))),
+        practical_source_urls: Array.from(new Set(practicalMatches.flatMap(match => match.source_urls))),
       },
     }
   } catch (err) {
@@ -180,9 +194,10 @@ async function callSystem(item: QuestionItem, systemId: SystemId, args: Args): P
 function buildMessages(
   item: QuestionItem,
   systemId: SystemId,
+  args: Args,
 ): { messages: Array<{ role: 'system' | 'user'; content: string }>; practicalMatches: PracticalCardMatch[] } {
   if (systemId === 'tebiq-native-v2-web-context') {
-    const practicalMatches = matchPracticalCards(item.question)
+    const practicalMatches = args.tebiqPracticalLayer ? matchPracticalCards(item.question) : []
     const practicalSystemMessage = practicalMatchesToPromptContext(practicalMatches)
     const baseMessages = buildConsultationMessages({
       userQuestion: `用户背景：${item.background}\n用户问题：${item.question}`,
@@ -312,7 +327,7 @@ async function main() {
   const outDir = resolve(args.out)
   const tasks = pack.questions.flatMap(question => args.systems.map(system => ({ question, system })))
   const answers: AnswerRecord[] = []
-  console.log(`[WEB10] questions=${pack.questions.length} systems=${args.systems.length} tasks=${tasks.length} concurrency=${args.concurrency}`)
+  console.log(`[WEB10] questions=${pack.questions.length} systems=${args.systems.length} tasks=${tasks.length} concurrency=${args.concurrency} tebiq_practical=${args.tebiqPracticalLayer}`)
   console.log(`[WEB10] out=${outDir}`)
   const started = Date.now()
   await runWithConcurrency(tasks, args.concurrency, async (task, index) => {
@@ -329,6 +344,7 @@ async function main() {
     generated_at: new Date().toISOString(),
     duration_ms: Date.now() - started,
     note: pack.note,
+    tebiq_practical_layer_enabled: args.tebiqPracticalLayer,
     systems: args.systems,
     questions: pack.questions,
     answers: sorted,
@@ -337,6 +353,7 @@ async function main() {
     benchmark_id: pack.benchmark_id,
     generated_at: new Date().toISOString(),
     duration_ms: Date.now() - started,
+    tebiq_practical_layer_enabled: args.tebiqPracticalLayer,
     by_system: summary(sorted),
   })
   console.log(`[WEB10] done duration=${Date.now() - started}ms`)
