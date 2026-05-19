@@ -11,13 +11,13 @@
 
 | 指标 | 当前值 |
 |------|--------|
-| 已完成卡片数 | 580 |
+| 已完成卡片数 | 600 |
 | DOMAIN 队列总数 | 9 |
-| ANSWER_RUNTIME 可注入 | 572 |
+| ANSWER_RUNTIME 可注入 | 592 |
 | MATERIALS_ONLY | 8 |
 | L5_ONLY | 0 |
 | NEEDS_REWRITE | 0 |
-| 已完成批次 | 29 |
+| 已完成批次 | 30 |
 
 ---
 
@@ -1057,6 +1057,41 @@
 | practical-580 | 外国人の「入管庁の審査で追加書類（補正）を求められた場合」の対応 | ✅ | ANSWER_RUNTIME | P0 |
 
 ## Batch 29 Handoff Note
+
+- 完成日: 2026-05-19
+- 担当: FACT Operator (Claude)
+- コミット: c87463f
+- 新規DOMAIN: なし
+- DOMAIN送付済み: pending（pdom-001〜009）
+
+---
+
+## Batch 30 状態（目標: 20張）
+
+| card_id | topic | status | runtime_bucket | risk |
+|---------|-------|--------|---------------|------|
+| practical-581 | 外国人の「日本での特許・知的財産権」の権利保護と在留資格 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-582 | 外国人の「育成就労制度への移行（技能実習からの切り替え）」の実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-583 | 外国人の「日本で不法就労させた雇用主への罰則」と通報・被害申告 | ✅ | ANSWER_RUNTIME | P0 |
+| practical-584 | 外国人の「日本での国際結婚（国際私法・準拠法）」の実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-585 | 外国人の「日本での株主・出資者」としての権利と在留資格 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-586 | 外国人の「介護現場での夜勤・宿直・宿泊勤務」と在留資格の活動範囲 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-587 | 外国人の「日本での遺族給付・死亡退職金」の受給と在留資格 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-588 | 外国人の「産前産後・育児休業取得」と技人国ビザの在留資格への影響 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-589 | 外国人の「日本での古物商・リサイクルショップ開業」と在留資格 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-590 | 外国人の「日本での法人設立（株式会社・合同会社）」の実務と経営管理ビザ | ✅ | ANSWER_RUNTIME | P1 |
+| practical-591 | 外国人の「国民健康保険」の加入・切り替えと医療費の実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-592 | 外国人の「日本での生命保険・損害保険」加入と在留資格の関係 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-593 | 外国人の「日本での住宅ローン・銀行融資」と在留資格の関係 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-594 | 外国人の「日本での刑事事件」と在留資格への影響・退去強制との関係 | ✅ | ANSWER_RUNTIME | P0 |
+| practical-595 | 外国人の「日本での保育所・幼稚園・学童保育」利用と在留資格 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-596 | 外国人の「日本でのFX・仮想通貨・株式投資」と在留資格（資格外活動との関係） | ✅ | ANSWER_RUNTIME | P1 |
+| practical-597 | 外国人の「身元保証人制度」と在留資格申請での身元保証の実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-598 | 外国人の「日本の大学・専門学校入学」と留学ビザの更新・在留管理 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-599 | 外国人の「在留カードの偽造・不正使用・紛失」と法的リスク | ✅ | ANSWER_RUNTIME | P0 |
+| practical-600 | 外国人の「日本での確定申告（所得税・住民税）」と在留資格の関係 | ✅ | ANSWER_RUNTIME | P1 |
+
+## Batch 30 Handoff Note
 
 - 完成日: 2026-05-19
 - 担当: FACT Operator (Claude)
