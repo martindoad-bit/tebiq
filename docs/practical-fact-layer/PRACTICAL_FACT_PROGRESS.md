@@ -11,13 +11,13 @@
 
 | 指标 | 当前值 |
 |------|--------|
-| 已完成卡片数 | 480 |
+| 已完成卡片数 | 500 |
 | DOMAIN 队列总数 | 9 |
-| ANSWER_RUNTIME 可注入 | 472 |
+| ANSWER_RUNTIME 可注入 | 492 |
 | MATERIALS_ONLY | 8 |
 | L5_ONLY | 0 |
 | NEEDS_REWRITE | 0 |
-| 已完成批次 | 24 |
+| 已完成批次 | 25 |
 
 ---
 
@@ -882,6 +882,41 @@
 | practical-480 | 外国人の「技能実習監理団体・登録支援機関」の役割と支援内容 | ✅ | ANSWER_RUNTIME | P1 |
 
 ## Batch 24 Handoff Note
+
+- 完成日: 2026-05-19
+- 担当: FACT Operator (Claude)
+- コミット: d007218
+- 新規DOMAIN: なし
+- DOMAIN送付済み: pending（pdom-001〜009）
+
+---
+
+## Batch 25 状態（目標: 20張）
+
+| card_id | topic | status | runtime_bucket | risk |
+|---------|-------|--------|---------------|------|
+| practical-481 | 外国人の「再入国許可・特定再入国許可（みなし再入国）」の実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-482 | 外国人の「日本での労災保険（労働者災害補償保険）」の適用と給付 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-483 | 外国人の「就労中の会社倒産・雇用契約解除」と在留資格継続の緊急対応 | ✅ | ANSWER_RUNTIME | P0 |
+| practical-484 | 外国人の「日本人の配偶者等ビザ」の更新審査ポイントと「偽装婚姻」審査の実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-485 | 外国人の「在留資格申請での虚偽記載・不正申請」のリスクと罰則 | ✅ | ANSWER_RUNTIME | P0 |
+| practical-486 | 外国人の「技人国ビザで業務内容が変わった場合（社内異動・業種変更）」の在留資格管理 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-487 | 外国人の「日本でのフリマアプリ・オークション（メルカリ・ヤフオク等）」による収益と在留資格 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-488 | 外国人の「日本での外国人同士の婚姻手続き」の実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-489 | 外国人の「育成就労制度（2024年法改正）」の概要と技能実習との違い | ✅ | ANSWER_RUNTIME | P1 |
+| practical-490 | 外国人の「資格外活動違反（就労制限違反）の摘発・処分」の実務 | ✅ | ANSWER_RUNTIME | P0 |
+| practical-491 | 外国人の「特定技能外国人を受け入れる企業」の義務と注意点 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-492 | 外国人の「採用内定取り消し（COE取得後・入国前）」と在留資格への影響 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-493 | 外国人の「特定技能2号から永住申請」のルートと実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-494 | 外国人の「日本での消費税・インボイス制度」と個人事業主・フリーランスの在留資格管理 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-495 | 外国人の「日本での家庭裁判所・調停・ADR」の活用と在留資格 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-496 | 外国人の「特定技能から高度専門職へのキャリアアップ」の実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-497 | 外国人の「日本での育児休業給付金」の受給と在留資格管理 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-498 | 外国人の「日本での同一労働同一賃金・賃金差別禁止」の適用と実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-499 | 外国人の「日本での建設業許可・建設業での独立開業」と在留資格 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-500 | 外国人の「日本での看護師・介護福祉士国家試験（EPA）受験と在留資格」 | ✅ | ANSWER_RUNTIME | P1 |
+
+## Batch 25 Handoff Note
 
 - 完成日: 2026-05-19
 - 担当: FACT Operator (Claude)
