@@ -11,13 +11,15 @@
 
 | 指标 | 当前值 |
 |------|--------|
-| 已完成卡片数 | 640 |
+| 已完成卡片数 | 646 |
 | DOMAIN 队列总数 | 9 |
-| ANSWER_RUNTIME 可注入 | 632 |
+| ANSWER_RUNTIME 可注入 | 638 |
 | MATERIALS_ONLY | 8 |
 | L5_ONLY | 0 |
 | NEEDS_REWRITE | 0 |
-| 已完成批次 | 32 |
+| 已完成批次 | 32 + 1 partial (Batch 33: 6 cards) |
+
+> **2026-05-19 ピボット**: Founder の新指示により、カード量産は停止。これ以降は既存カードの治理（分桶・runtime_block 生成・冲突标注）に切り替え。報告先は `docs/knowledge-governance/PRACTICAL_GOVERNANCE_BATCH_XX.md`。
 
 ---
 
@@ -1165,6 +1167,28 @@
 
 - 完成日: 2026-05-19
 - 担当: FACT Operator (Claude)
-- コミット: TBD
+- コミット: 600d1f6
 - 新規DOMAIN: なし
 - DOMAIN送付済み: pending（pdom-001〜009）
+
+---
+
+## Batch 33 状態（部分・6張のみ／ピボット前のクローズ）
+
+| card_id | topic | status | runtime_bucket | risk |
+|---------|-------|--------|---------------|------|
+| practical-641 | 特定技能2号の申請要件と移行手続き（2号分野拡大後の実務） | ✅ | ANSWER_RUNTIME | P1 |
+| practical-642 | 運転免許取得・外国免許の切り替えと在留資格 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-643 | 帰化申請の素行要件・日本語能力要件の実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-644 | 就職内定後のCOE申請の実務フロー | ✅ | ANSWER_RUNTIME | P1 |
+| practical-645 | 在留資格変更申請中の転職・就業先変更の実務 | ✅ | ANSWER_RUNTIME | P1 |
+| practical-646 | 企業倒産・解散と在留資格の緊急対応 | ✅ | ANSWER_RUNTIME | P0 |
+
+## Batch 33 Handoff Note（部分クローズ）
+
+- 完成日: 2026-05-19
+- 担当: FACT Operator (Claude)
+- 状態: ピボット前のクローズ（20→6 カードで打ち止め）
+- コミット: TBD
+- 理由: Founder 指示により以降は新規生産を停止し、既存カード治理に切り替え
+- 次の作業: `docs/knowledge-governance/PRACTICAL_GOVERNANCE_BATCH_01.md` 以降
