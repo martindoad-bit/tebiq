@@ -1,11 +1,16 @@
 'use client'
 
 import Link from 'next/link'
+import type { ReactNode } from 'react'
 import { useEffect, useMemo, useState } from 'react'
-import { BookOpen, FileText, Search, Sparkles } from 'lucide-react'
-import type { MaterialSearchCandidate, MaterialSearchResult } from '@/lib/materials/search'
+import { AlertTriangle, BookOpen, FileText, Search, Sparkles } from 'lucide-react'
+import type {
+  MaterialSearchCandidate,
+  MaterialSearchGuidance,
+  MaterialSearchResult,
+} from '@/lib/materials/search'
 
-const EXAMPLE_QUERIES = ['日配更新要什么', '税证明', '永住年金材料', '公司让我交健康诊断']
+const EXAMPLE_QUERIES = ['日配更新要什么', '税证明', '永住年金材料', '日配离婚再婚材料', '公司让我交健康诊断']
 
 export function MaterialsSearchClient() {
   const [query, setQuery] = useState('')
@@ -50,23 +55,26 @@ export function MaterialsSearchClient() {
     }
   }, [trimmedQuery])
 
-  const candidates = result?.candidates ?? []
+  const procedureCandidates = result?.procedureCandidates ?? []
+  const materialCandidates = result?.materialCandidates ?? []
+  const guidance = result?.guidance ?? []
+  const resultCount = procedureCandidates.length + materialCandidates.length
   const hasQuery = trimmedQuery.length >= 2
   const helperText = useMemo(() => {
-    if (!hasQuery) return '可以输入材料俗称、手续名称，TEBIQ 会匹配可能的材料或清单。'
+    if (!hasQuery) return '材料名说不准也没关系，可以直接写手续或情况。'
     if (loading) return '正在匹配材料和清单…'
-    if (candidates.length > 0) return `找到 ${candidates.length} 个可能结果。`
-    return '没有稳定匹配结果。试试更具体地写手续或材料名。'
-  }, [candidates.length, hasQuery, loading])
+    if (resultCount > 0 || guidance.length > 0) return `找到 ${resultCount} 个候选，另有 ${guidance.length} 条确认提示。`
+    return '没有稳定匹配结果。试试更具体地写手续、材料名或窗口要求。'
+  }, [guidance.length, hasQuery, loading, resultCount])
 
   return (
-    <div className="space-y-3 rounded-[14px] border border-[var(--tebiq-soft-gray)] bg-white p-3">
+    <div className="space-y-3 rounded-[14px] border border-[var(--tebiq-soft-gray)] bg-white p-3 shadow-[0_18px_50px_rgba(15,35,55,0.05)]">
       <div className="flex items-center gap-2 rounded-[12px] border border-[var(--tebiq-soft-gray)] bg-[var(--tebiq-warm-white)] px-3 py-2.5">
         <Search className="h-4 w-4 shrink-0 text-[var(--tebiq-cool-gray)]" strokeWidth={1.7} />
         <input
           value={query}
           onChange={event => setQuery(event.target.value)}
-          placeholder="搜材料或清单，比如：税证明 / 日配更新要什么"
+          placeholder="比如：税证明 / 日配更新要什么 / 公司叫我交健康诊断"
           className="min-w-0 flex-1 bg-transparent text-[15px] text-[var(--tebiq-ink-blue)] outline-none placeholder:text-[var(--tebiq-cool-gray)]"
           aria-label="搜索材料或手续清单"
         />
@@ -95,14 +103,71 @@ export function MaterialsSearchClient() {
         </p>
       )}
 
-      {candidates.length > 0 && (
-        <ul className="space-y-2">
-          {candidates.map(candidate => (
+      {hasQuery && guidance.length > 0 && (
+        <ResultSection title="可能需要先确认">
+          {guidance.map(item => (
+            <GuidanceCard key={item.id} guidance={item} />
+          ))}
+        </ResultSection>
+      )}
+
+      {hasQuery && procedureCandidates.length > 0 && (
+        <ResultSection title="可能的手续清单">
+          {procedureCandidates.map(candidate => (
             <SearchCandidateCard key={`${candidate.type}:${candidate.id}`} candidate={candidate} />
           ))}
-        </ul>
+        </ResultSection>
+      )}
+
+      {hasQuery && materialCandidates.length > 0 && (
+        <ResultSection title="相关材料">
+          {materialCandidates.map(candidate => (
+            <SearchCandidateCard key={`${candidate.type}:${candidate.id}`} candidate={candidate} />
+          ))}
+        </ResultSection>
       )}
     </div>
+  )
+}
+
+function ResultSection({
+  title,
+  children,
+}: {
+  title: string
+  children: ReactNode
+}) {
+  return (
+    <section className="space-y-2 border-t border-[var(--tebiq-soft-gray)] pt-3">
+      <p className="text-[12px] font-medium text-[var(--tebiq-cool-gray)]">{title}</p>
+      <ul className="space-y-2">{children}</ul>
+    </section>
+  )
+}
+
+function GuidanceCard({ guidance }: { guidance: MaterialSearchGuidance }) {
+  return (
+    <li>
+      <Link
+        href={guidance.href}
+        className="block rounded-[12px] border border-amber-200 bg-amber-50/70 px-3 py-3 transition-colors hover:border-amber-300"
+      >
+        <div className="flex items-start gap-2.5">
+          <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" strokeWidth={1.7} />
+          <div className="min-w-0 flex-1">
+            <p className="text-[14.5px] font-medium leading-snug text-[var(--tebiq-ink-blue)]">
+              {guidance.title}
+            </p>
+            <p className="mt-1 text-[12.5px] leading-[1.55] text-[var(--tebiq-deep-slate)]">
+              {guidance.summary}
+            </p>
+            <p className="mt-2 text-[12px] font-medium text-[var(--tebiq-ink-blue)]">
+              带这个问题去提问
+            </p>
+          </div>
+        </div>
+      </Link>
+    </li>
   )
 }
 
@@ -153,4 +218,3 @@ function SearchCandidateCard({ candidate }: { candidate: MaterialSearchCandidate
     </li>
   )
 }
-

@@ -788,7 +788,7 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
   {
     id: 'japanese-spouse-renewal-materials',
     title: '日本人配偶者 续签材料',
-    summary: '只覆盖正常婚姻状态下的续签材料；分居 / 离婚 / 再婚 / DV 情况请走 Ask。',
+    summary: '只覆盖正常婚姻状态下的续签材料；分居 / 离婚 / 再婚 / DV 情况请先确认手续方向。',
     category: '更新变更',
     factCardIds: [
       'nihonjin-haigusha-visa',
@@ -829,7 +829,7 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
         verification: 'needs-check',
       },
     ],
-    checkNote: '分居、离婚、再婚、DV 等情况不在本页处理；不要直接套用本页材料清单，建议走 Ask 或专业窗口个案确认。',
+    checkNote: '分居、离婚、再婚、DV 等情况不在本页处理；不要直接套用本页材料清单，建议先提问确认，或向专业窗口个案确认。',
     sources: [
       {
         label: '出入国在留管理庁：「日本人の配偶者等」',
@@ -889,7 +889,7 @@ export const QUICK_REFERENCE_TOPICS: QuickReferenceTopic[] = [
         verification: 'needs-check',
       },
     ],
-    checkNote: '如果有别居、离婚、再婚、DV、收入下降或滞纳，不要直接套材料清单；应先走 Ask 或专业确认。',
+    checkNote: '如果有别居、离婚、再婚、DV、收入下降或滞纳，不要直接套材料清单；应先提问确认，或向专业窗口确认。',
     sources: [
       {
         label: '出入国在留管理庁：「永住者の配偶者等」',
