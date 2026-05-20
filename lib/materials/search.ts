@@ -29,10 +29,23 @@ export interface MaterialSearchCandidate {
   materials: MaterialSearchLinkedMaterial[]
 }
 
+export interface MaterialSearchGuidance {
+  id: string
+  title: string
+  summary: string
+  href: string
+  reason: string
+  matchedTerms: string[]
+  severity: 'ask-first' | 'check-first'
+}
+
 export interface MaterialSearchResult {
   query: string
   normalizedQuery: string
   candidates: MaterialSearchCandidate[]
+  procedureCandidates: MaterialSearchCandidate[]
+  materialCandidates: MaterialSearchCandidate[]
+  guidance: MaterialSearchGuidance[]
 }
 
 interface SearchOptions {
@@ -65,6 +78,54 @@ const QUERY_EXPANSIONS: Array<[RegExp, string[]]> = [
 const PROCEDURE_INTENT_PATTERN =
   /要什么|要啥|材料|清单|申请|更新|续签|变更|办理|准备|怎么交|需要哪些|必要書類|提出書類/
 
+const VISIBLE_GROUP_MIN_SCORE = 10
+
+const COMPLEX_GUIDANCE_RULES: Array<{
+  id: string
+  pattern: RegExp
+  title: string
+  summary: string
+  reason: string
+  severity: MaterialSearchGuidance['severity']
+}> = [
+  {
+    id: 'spouse-divorce-remarriage',
+    pattern: /離婚|离婚|再婚|出轨|不倫|分居|別居|dv|家暴/i,
+    title: '先确认手续方向，再看材料',
+    summary:
+      '配偶者相关问题如果包含离婚、再婚、分居或 DV，不要直接套普通续签清单。先确认是届出、更新、变更还是其他路径，再准备材料。',
+    reason: '包含配偶者关系变化或安全风险词',
+    severity: 'ask-first',
+  },
+  {
+    id: 'business-manager-disposition',
+    pattern: /经管|経営|经营|管理|公司.*休眠|休眠|注销|廃業|清算|转让|譲渡|赤字|亏损|3000万|500万/i,
+    title: '经营管理问题先确认适用规则',
+    summary:
+      '经营管理涉及公司状态、2025 年改正、过渡期和个案经营实态。材料可以先看，但不要只按清单判断能否更新或变更。',
+    reason: '包含经营管理或公司处置词',
+    severity: 'ask-first',
+  },
+  {
+    id: 'immigration-result-notice',
+    pattern: /不许可|不許可|补件|補正|追加資料|通知|はがき|特例期間|期限过了|期限切れ|超期|overstay/i,
+    title: '先看通知和期限',
+    summary:
+      '入管通知、不许可、补件或期限相关问题通常先看通知种类和日期。材料清单只能辅助，建议先确认当前期限和处理方向。',
+    reason: '包含通知、不许可、补件或期限风险词',
+    severity: 'ask-first',
+  },
+  {
+    id: 'work-scope-change',
+    pattern: /换工作|换公司|跳槽|转职|転職|新公司|内定|职务|職務|兼职|副业|資格外|先上班|开始工作/i,
+    title: '先确认工作范围和申请状态',
+    summary:
+      '换工作、兼职、副业或先上班的问题，不只是材料问题。先确认当前在留资格允许的活动范围，再看需要哪些合同或证明。',
+    reason: '包含工作范围或申请中开始活动词',
+    severity: 'check-first',
+  },
+]
+
 export function searchMaterials(
   query: string,
   options: SearchOptions = {},
@@ -72,25 +133,45 @@ export function searchMaterials(
   const limit = clampLimit(options.limit ?? 5)
   const normalizedQuery = normalize(query)
   if (!normalizedQuery || normalizedQuery.length < 2) {
-    return { query, normalizedQuery, candidates: [] }
+    return {
+      query,
+      normalizedQuery,
+      candidates: [],
+      procedureCandidates: [],
+      materialCandidates: [],
+      guidance: [],
+    }
   }
 
   const queryTerms = expandQueryTerms(query)
-  const candidates = [
+  const scored = [
     ...scoreProcedures(query, normalizedQuery, queryTerms),
     ...scoreMaterials(query, normalizedQuery, queryTerms),
   ]
     .filter(item => item.score > 0)
     .sort((a, b) => b.score - a.score || sortCandidateTie(a.candidate, b.candidate))
-    .slice(0, limit)
-    .map(item => ({
-      ...item.candidate,
-      score: roundScore(item.score),
-      matchedTerms: Array.from(item.matchedTerms).slice(0, 6),
-      reason: buildReason(item),
-    }))
 
-  return { query, normalizedQuery, candidates }
+  const toCandidate = (item: ScoredCandidate): MaterialSearchCandidate => ({
+    ...item.candidate,
+    score: roundScore(item.score),
+    matchedTerms: Array.from(item.matchedTerms).slice(0, 6),
+    reason: buildReason(item),
+  })
+
+  const candidates = scored.slice(0, limit).map(toCandidate)
+  const procedureCandidates = scored
+    .filter(item => item.candidate.type === 'procedure')
+    .filter(item => item.score >= VISIBLE_GROUP_MIN_SCORE)
+    .slice(0, Math.min(3, limit))
+    .map(toCandidate)
+  const materialCandidates = scored
+    .filter(item => item.candidate.type === 'material')
+    .filter(item => item.score >= VISIBLE_GROUP_MIN_SCORE)
+    .slice(0, Math.min(5, limit))
+    .map(toCandidate)
+  const guidance = buildGuidance(query, queryTerms)
+
+  return { query, normalizedQuery, candidates, procedureCandidates, materialCandidates, guidance }
 }
 
 function scoreMaterials(
@@ -229,6 +310,21 @@ function expandQueryTerms(query: string): string[] {
 
   const whole = normalize(query)
   return Array.from(new Set([whole, ...base, ...expansions].filter(Boolean)))
+}
+
+function buildGuidance(query: string, queryTerms: string[]): MaterialSearchGuidance[] {
+  return COMPLEX_GUIDANCE_RULES
+    .filter(rule => rule.pattern.test(query))
+    .slice(0, 2)
+    .map(rule => ({
+      id: rule.id,
+      title: rule.title,
+      summary: rule.summary,
+      href: `/ai-consultation?q=${encodeURIComponent(query)}`,
+      reason: rule.reason,
+      matchedTerms: queryTerms.slice(0, 5),
+      severity: rule.severity,
+    }))
 }
 
 function normalize(input: string): string {
